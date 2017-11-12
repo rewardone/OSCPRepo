@@ -1,0 +1,169 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux, AIX, Solaris
+
+if [ -z "${kernelincluded}" ]
+then
+
+kernelincluded=1
+
+. lib/misc/dependencies
+. lib/misc/file
+. lib/misc/validate
+
+kernel_aslr_pax() {
+	if [ -n "`cat /proc/1/status | grep \"PaX:\" | grep \"R\"`" ]
+	then
+		printf -- "1\n"
+	else
+
+		printf -- "0\n"
+	fi
+}
+
+kernel_aslr() {
+	if [ "`uname`" = "Linux" ]
+	then
+		sysctl kernel.randomize_va_space | while read _ _ value
+		do
+			printf -- "${value}\n"
+			break
+		done
+	else
+		printf -- "0\n"
+	fi
+}
+
+kernel_nx() {
+	if [ "`uname`" = "Linux" ]
+	then
+		if [ -n "`egrep -- \"^flags\" /proc/cpuinfo | egrep -- \"nx\"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	elif [ "`uname`" = "SunOS" ]
+	then
+		if [ -n "`egrep -- \"noexec_user_stack\" /etc/system | egrep -v \"_log\" | egrep -- \"1\"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	# TODO does uname return HP-UX or HPUX?
+	elif [ "`uname`" = "HP-UX" ]
+	then
+		kmtune -q "executable_stack" | egrep -- \"executable_stack\" | while read _ value _
+		do
+			case "${value}" in
+				0)
+					printf -- "1\n"
+					;;
+				1)
+					printf -- "0\n"
+					;;
+			esac
+		done
+	fi
+}
+
+kernel_nx_logging () {
+	if [ "`uname`" = "SunOS" ]
+	then
+		if [ -n "`egrep -- \"noexec_user_stack_log\" /etc/system | egrep -- \"1\"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	# TODO does uname return HP-UX or HPUX?
+	elif [ "`uname`" = "HP-UX" ]
+	then
+		kmtune -q "executable_stack" | egrep -- \"executable_stack\" | while read _ value _
+		do
+			case "${value}" in
+				2)
+					printf -- "0\n"
+					;;
+				*)
+					printf -- "1\n"
+					;;
+			esac
+		done
+	else
+		printf -- "0\n"
+	fi
+}
+
+kernel_nx_audit () {
+	if [ "`uname`" = "SunOS" ]
+	then
+		if [ -n "`egrep -- \"c2audit:audit_load\" /etc/system | egrep -- \"1\"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	else
+		printf -- "0\n"
+	fi
+}
+
+kernel_mmap_zero_allowed () {
+	if [ "`uname`" = "Linux" ]
+	then
+		if [ "`cat /proc/sys/vm/mmap_min_addr`" -eq 0 -o -z "`cat /proc/sys/vm/mmap_min_addr`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	else
+		printf -- "0\n"
+	fi
+
+}
+
+kernel_selinux_enforce () {
+	if [ "`file_exists_file \"/selinux/enforce\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+kernel_release() {
+	printf -- "`uname -r`\n"
+}
+
+kernel_release_is_backported() {
+	if [ -n "`kernel_version | egrep -- \"-\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+fi

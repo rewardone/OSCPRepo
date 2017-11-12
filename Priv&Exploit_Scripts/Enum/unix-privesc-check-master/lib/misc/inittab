@@ -1,0 +1,58 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${inittabincluded}" ]
+then
+
+inittabincluded=1
+
+. lib/misc/file
+
+inittab_check () {
+	if [ "`file_is_readable \"/etc/inittab\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+inittab_list () {
+	if [ "`inittab_check`" -eq 1 ]
+	then
+		oldifs="${IFS}"
+		IFS=":"
+		egrep -v "^#|^$" "/etc/inittab" | while read _ _ _ filename _
+		do
+			IFS="${oldifs}"
+			if [ "`file_is_regular \"${filename}\"`" -eq 1 ]
+			then
+				printf -- "root ${filename}\n"
+			fi
+			IFS=":"
+		done
+		IFS="${oldifs}"
+	fi
+}
+
+fi

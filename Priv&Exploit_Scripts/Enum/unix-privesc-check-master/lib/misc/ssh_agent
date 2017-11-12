@@ -1,0 +1,53 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${ssh_agentincluded}" ]
+then
+
+ssh_agentincluded=1
+
+. lib/misc/validate
+
+ssh_agent_list () {
+	parentprocessid="${1}"
+	[ "`validate_is_number \"${parentprocessid}\"`" ] || false
+	# when ssh-agent parent process id is 10571, the temporary agent file is
+	# /tmp/ssh-???????10570/agent.10570 (not 10571) - tested on Ubuntu 12.04
+	processid="`expr ${2} - 1`"
+	for pid in ${parentprocessid} ${processid}
+ 	do
+		SSH_AUTH_SOCK="`ls /tmp/ssh-*/agent.${pid}`"
+		if [ -n "${SSH_AUTH_SOCK}" ]
+		then
+			export SSH_AUTH_SOCK
+
+			ssh-add -l | grep -v "The agent has no identities" | while read _ _ filename _
+			do
+				printf -- "${filename}\n"
+			done
+		fi
+		unset SSH_AUTH_SOCK
+	done
+}
+
+fi

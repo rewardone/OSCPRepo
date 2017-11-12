@@ -1,0 +1,96 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${processincluded}" ]
+then
+
+processincluded=1
+
+. lib/misc/parse
+. lib/misc/validate
+
+process_list () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	ps -aeo ruser,rgroup,pid,ppid,args | grep -v "PID" | grep "${pattern}" | grep -v "grep" | while read userid groupid processid parentid command arguments
+	do
+		printf -- "${processid}\n"
+	done
+}
+
+process_show_userid () {
+	pattern="${1}"
+	[ "`validate_is_number \"${pattern}\"`" ] || false
+	ps -aeo ruser,rgroup,pid,ppid,args | grep -v "PID" | grep "${pattern}" | grep -v "grep" | while read userid groupid processid parentid command arguments
+	do
+		if [ "${processid}" -eq "${pattern}" ]
+		then
+			printf -- "${userid}\n"
+		fi
+	done
+}
+
+process_show_parentid () {
+	pattern="${1}"
+	[ "`validate_is_number \"${pattern}\"`" ] || false
+	ps -aeo ruser,rgroup,pid,ppid,args | grep -v "PID" | grep "${pattern}" | grep -v "grep" | while read userid groupid processid parentid command arguments
+	do
+		if [ "${processid}" -eq "${pattern}" ]
+		then
+			printf -- "${parentid}\n"
+		fi
+	done
+}
+
+process_show_command () {
+	pattern="${1}"
+	[ "`validate_is_number \"${pattern}\"`" ] || false
+	ps -aeo ruser,rgroup,pid,ppid,args | grep -v "PID" | grep "${pattern}" | grep -v "grep" | while read userid groupid processid parentid command argument _
+	do
+		if [ "${processid}" -eq "${pattern}" ]
+		then
+			if [ -n "`printf -- \"${command}\" | egrep -- \"awk|ruby|python|perl|/sh|bash|dash|ksh|csh|expect\"`" ]
+			then
+				case "${argument}" in
+					/*)
+						printf -- "${argument}\n"
+						;;
+					# for cases where the script has been executed following a cd into its parent path it will show in the ps output as follows:
+					#	foobar foobar  pid  ppid /bin/sh ./scriptname.sh
+					./*)
+						filepath="`parse_environ_cwd \"${processid}\"`"
+						if [ -n "${filepath}" ]
+						then
+							# the cut is to strip the './' as filepath is the absolute path
+							printf -- "${filepath}/`printf -- \"${argument}\" | cut -c3-`\n"
+						fi
+						;;
+				esac
+			else
+				printf -- "${command}\n"
+			fi
+		fi
+	done
+}
+
+fi

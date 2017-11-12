@@ -1,0 +1,1279 @@
+#!/bin/sh
+
+#################################################################################
+#
+#   Lynis
+# ------------------
+#
+# Copyright 2007-2013, Michael Boelen
+# Copyright 2007-2017, CISOfy
+#
+# Website  : https://cisofy.com
+# Blog     : http://linux-audit.com
+# GitHub   : https://github.com/CISOfy/lynis
+#
+# Lynis comes with ABSOLUTELY NO WARRANTY. This is free software, and you are
+# welcome to redistribute it under the terms of the GNU General Public License.
+# See LICENSE file for usage of this software.
+#
+#################################################################################
+#
+# Ports and packages
+#
+#################################################################################
+#
+    InsertSection "Ports and packages"
+    PACKAGE_MGR_PKG=0
+    PACKAGE_AUDIT_TOOL=""
+    PACKAGE_AUDIT_TOOL_FOUND=0
+    INSTALLED_PACKAGES=""
+#
+#################################################################################
+#
+    Display --indent 2 --text "- Searching package managers"
+#
+#################################################################################
+#
+    # Test        : PKGS-7301
+    # Description : Query FreeBSD pkg
+    if [ -x ${ROOTDIR}usr/sbin/pkg ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7301 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Query NetBSD pkg"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FIND=$(pkg -N 2>&1; echo $?)
+        if [ "${FIND}" = "0" ]; then
+            Display --indent 4 --text "- Searching packages with pkg" --result "${STATUS_FOUND}" --color GREEN
+            Report "package_manager[]=pkg"
+            PACKAGE_MGR_PKG=1
+            LogText "Result: Found pkg"
+            LogText "Test: Querying pkg to get package list"
+            Display --indent 6 --text "- Querying pkg for installed packages"
+            LogText "Output:"; LogText "-----"
+            SPACKAGES=$(${ROOTDIR}usr/sbin/pkg query %n,%v)
+            for ITEM in ${SPACKAGES}; do
+                sPKG_NAME=$(echo ${ITEM} | ${CUTBINARY} -d ',' -f1)
+                sPKG_VERSION=$(echo ${ITEM} | ${CUTBINARY} -d ',' -f2)
+                LogText "Installed package: ${sPKG_NAME} (version: ${sPKG_VERSION})"
+                INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${ITEM}"
+            done
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7302
+    # Description : Query FreeBSD/NetBSD pkg_info
+    if [ -x ${ROOTDIR}usr/sbin/pkg_info ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7302 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Query FreeBSD/NetBSD pkg_info"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        Display --indent 4 --text "- Checking pkg_info" --result "${STATUS_FOUND}" --color GREEN
+        LogText "Result: Found pkg_info"
+        Report "package_manager[]=pkg_info"
+        LogText "Test: Querying pkg_info to get package list"
+        Display --indent 6 --text "- Querying pkg_info for installed packages"
+        LogText "Output:"; LogText "-----"
+        SPACKAGES=$(${ROOTDIR}usr/sbin/pkg_info 2>&1 | ${SORTBINARY} | ${TRBINARY} -s ' ' | ${CUTBINARY} -d ' ' -f1 | ${SEDBINARY} -e 's/^\(.*\)-\([0-9].*\)$/\1,\2/g')
+        for ITEM in ${SPACKAGES}; do
+            COUNT=$((COUNT + 1))
+            sPKG_NAME=$(echo ${ITEM} | ${CUTBINARY} -d ',' -f1)
+            sPKG_VERSION=$(echo ${ITEM} | ${CUTBINARY} -d ',' -f2)
+            LogText "Installed package: ${sPKG_NAME} (version: ${sPKG_VERSION})"
+            INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${ITEM}"
+        done
+        Report "installed_packages=${COUNT}"
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7303
+    # Description : Query brew package manager
+    FIND=$(which brew 2> /dev/null | grep -v "no [^ ]* in ")
+    if [ ! -z "${FIND}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7303 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Query brew package manager"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        Display --indent 4 --text "- Searching brew" --result "${STATUS_FOUND}" --color GREEN
+        LogText "Result: Found brew"
+        PACKAGE_MGR_PKG=1
+        Report "package_manager[]=brew"
+        LogText "Test: Querying brew to get package list"
+        Display --indent 4 --text "- Querying brew for installed packages"
+        LogText "Output:"; LogText "-----"
+        GPACKAGES=$(brew list)
+        for J in ${GPACKAGES}; do
+            LogText "Found package ${J}"
+            INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${J}"
+        done
+    else
+        LogText "Result: brew can NOT be found on this system"
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7304
+    # Description : Gentoo packages
+    if [ -x ${ROOTDIR}usr/bin/emerge -a -x ${ROOTDIR}usr/bin/equery ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7304 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Querying Gentoo packages"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        Display --indent 4 --text "- Searching emerge" --result "${STATUS_FOUND}" --color GREEN
+        LogText "Result: Found Gentoo emerge"
+        Report "package_manager[]=emerge"
+        LogText "Test: Querying portage to get package list"
+        Display --indent 4 --text "- Querying portage for installed packages"
+        LogText "Output:"; LogText "-----"
+        GPACKAGES=$(equery l '*' | ${SEDBINARY} -e 's/[.*]//g')
+        for PKG in ${GPACKAGES}; do
+            LogText "Found package ${PKG}"
+            INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${PKG},0,"
+        done
+    else
+        LogText "Result: emerge can NOT be found on this system"
+    fi
+#
+#
+#################################################################################
+#
+    # Test        : PKGS-7306
+    # Description : Solaris packages
+    if [ -x ${ROOTDIR}usr/bin/pkginfo ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7306 --os Solaris --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Querying Solaris packages"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        Display --indent 4 --text "- Searching pkginfo" --result "${STATUS_FOUND}" --color GREEN
+            LogText "Result: Found Solaris pkginfo"
+            Report "package_manager[]=pkginfo"
+            PACKAGE_MGR_PKG=1
+            LogText "Test: Querying pkginfo to get package list"
+            Display --indent 4 --text "- Querying pkginfo for installed packages"
+            LogText "Output:"; LogText "-----"
+            # Strip SUNW from strings
+            SPACKAGES=$(${ROOTDIR}usr/bin/pkginfo -i | ${TRBINARY} -s ' ' | ${CUTBINARY} -d ' ' -f2 | ${SEDBINARY} "s#^SUNW##")
+            for J in ${SPACKAGES}; do
+                LogText "Found package ${J}"
+                INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${J},0,"
+            done
+    else
+        LogText "Result: pkginfo can NOT be found on this system"
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7308
+    # Description : RPM package based systems
+    if [ ! -z "${RPMBINARY}" -a -z "${DNFBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7308 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking package list with RPM"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        Display --indent 4 --text "- Searching RPM package manager" --result "${STATUS_FOUND}" --color GREEN
+        LogText "Result: Found rpm binary (${RPMBINARY})"
+        Report "package_manager[]=rpm"
+        LogText "Test: Querying 'rpm -qa' to get package list"
+        Display --indent 6 --text "- Querying RPM package manager"
+        LogText "Output:"; LogText "--------"
+        SPACKAGES=$(${RPMBINARY} -qa --queryformat "%{NAME},%{VERSION}-%{RELEASE}.%{ARCH}\n" 2> /dev/null | sort)
+        if [ -z "${SPACKAGES}" ]; then
+            LogText "Result: RPM binary available, but package list seems to be empty"
+            LogText "Info: looks like the rpm binary is installed, but not used for package installation"
+            ReportSuggestion "${TEST_NO}" "Check RPM database as RPM binary available but does not reveal any packages"
+        else
+            for PKG in ${SPACKAGES}; do
+                COUNT=$((COUNT + 1))
+                PACKAGE_NAME=$(echo ${PKG} | ${AWKBINARY} -F, '{print $1}')
+                PACKAGE_VERSION=$(echo ${PKG} | ${AWKBINARY} -F, '{print $2}')
+                LogText "Found package: ${PKG}"
+                INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${PACKAGE_NAME},${PACKAGE_VERSION},"
+            done
+            Report "installed_packages=${COUNT}"
+        fi
+    else
+        LogText "Result: RPM binary NOT found on this system, test skipped"
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7310
+    # Description : pacman package based systems
+    if [ ! -z "${PACMANBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7310 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking package list with pacman"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        Display --indent 4 --text "- Searching pacman package manager" --result "${STATUS_FOUND}" --color GREEN
+        LogText "Result: Found pacman binary (${PACMANBINARY})"
+        Report "package_manager[]=pacman"
+        PACKAGE_MGR_PKG=1
+        LogText "Test: Querying 'pacman -Q' to get package list"
+        Display --indent 6 --text "- Querying pacman package manager"
+        LogText "Output:"; LogText "--------"
+        SPACKAGES=$(${PACMANBINARY} -Q | ${SORTBINARY} | ${SEDBINARY} 's/ /,/g')
+        if [ -z "${SPACKAGES}" ]; then
+            LogText "Result: pacman binary available, but package list seems to be empty"
+            LogText "Info: looks like the pacman binary is installed, but not used for package installation"
+        else
+            for PKG in ${SPACKAGES}; do
+                COUNT=$((COUNT + 1))
+                PACKAGE_NAME=$(echo ${PKG} | ${AWKBINARY} -F, '{ print $1 }')
+                PACKAGE_VERSION=$(echo ${PKG} | ${AWKBINARY} -F, '{ print $2 }')
+                LogText "Found package: ${PACKAGE_NAME} (version: ${PACKAGE_VERSION})"
+                INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${PKG}"
+            done
+            Report "installed_packages=${COUNT}"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7312
+    # Description : Check for available package updates when pacman package is used
+    if [ ! -z "${PACMANBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7312 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking available updates for pacman based system"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        FIND=$(which checkupdates 2> /dev/null | grep -v "no [^ ]* in ")
+        if [ ! -z "${FIND}" ]; then
+            FIND=$(checkupdates)
+            for I in ${FIND}; do
+                LogText "Result: update available for ${I}"
+                Report "available_update[]=${I}"
+                FOUND=1
+            done
+            if [ ${FOUND} -eq 1 ]; then
+                Display --indent 4 --text "- Searching update status (checkupdates)" --result "OUTDATED" --color YELLOW
+                ReportSuggestion "${TEST_NO}" "Perform update of system updates as this system uses rolling updates"
+            else
+                Display --indent 4 --text "- Searching update status (checkupdates)" --result "UP-TO-DATE" --color GREEN
+            fi
+        else
+            LogText "Result: skipping this test, can't find checkupdates binary"
+        fi
+    else
+        LogText "Result: pacman binary NOT found on this system, test skipped"
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7314
+    # Description : Check pacman.conf options
+    PACMANCONF="/etc/pacman.conf"
+    if [ ! -z "${PACMANBINARY}" -a -f ${PACMANCONF} ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7314 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking pacman configuration options"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        # Check configuration options (options start with a capital)
+        LogText "Test: searching configured options in ${PACMANCONF}"
+        FIND=$(${GREPBINARY} "^[A-Z]" ${PACMANCONF} | ${SORTBINARY} -u | ${SEDBINARY} 's/ /:space:/g')
+        for I in ${FIND}; do
+            PMOPTION=$(echo ${I} | ${SEDBINARY} 's/:space:/ /g' | ${AWKBINARY} -F= '{ print $1 }')
+            PMVALUE=$(echo ${I} | ${SEDBINARY} 's/:space:/ /g' | ${AWKBINARY} -F= '{ print $2 }')
+            LogText "Result: found option ${PMOPTION} configured with value ${PMVALUE}"
+            Report "pacman_option[]=${PMOPTION}:${PMVALUE}:"
+        done
+
+        # Check software repositories
+        LogText "Test: checking available repositories"
+        FIND=$(${GREPBINARY} "^\[.*\]$" ${PACMANCONF} | ${TRBINARY} -d '[]')
+        for I in ${FIND}; do
+            COUNT=$((COUNT + 1))
+            Report "package_repository[]=${I}"
+        done
+        LogText "Result: found ${COUNT} repositories"
+    fi
+#
+#################################################################################
+#
+    # TODO
+
+    ## Test        : PKGS-7318
+    ## Description : APT configuration
+    #if [ -x ${ROOTDIR}usr/bin/apt-config ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    #Register --test-no PKGS-7318 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "APT configuration"
+    #if [ ${SKIPTEST} -eq 0 ]; then
+    #    LogText "Test: check APT configuration"
+    #    if ! SkipAtomicTest ${TEST_NO}:atomicname; then
+    #    # Acquire::AllowInsecureRepositories should be 0 (could be 1)
+    #    # Acquire::AllowDowngradeToInsecureRepositories should be 0
+    #    # Binary::apt::Acquire::AllowInsecureRepositories should be 0
+    #fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7320
+    # Description : Check available of arch-audit
+    if [ "${OS_FULLNAME}" = "Arch Linux" ]; then PREQS_MET="YES"; SKIPREASON=""; else PREQS_MET="NO"; SKIPREASON="Test only applies to Arch Linux"; fi
+    Register --test-no PKGS-7320 --os "Linux" --preqs-met ${PREQS_MET} --skip-reason "${SKIPREASON}" --weight L --network NO --category security --description "Checking for arch-audit tooling"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ -z "${ARCH_AUDIT_BINARY}" ]; then
+            LogText "Result: no arch-audit binary found"
+            AddHP 1 2
+            ReportSuggestion "${TEST_NO}" "Consider installing arch-audit to determine vulnerable packages" "arch-audit" "text:Install arch-audit"
+        else
+            PACKAGE_AUDIT_TOOL_FOUND=1
+            PACKAGE_AUDIT_TOOL="arch-audit"
+            LogText "Result: arch-audit binary found (${ARCH_AUDIT_BINARY})"
+            AddHP 3 3
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7322
+    # Description : Discover vulnerable packages with arch-audit
+    if [ ! -z "${ARCH_AUDIT_BINARY}" ]; then PREQS_MET="YES"; SKIPREASON=""; else PREQS_MET="NO"; SKIPREASON="arch-audit not found"; fi
+    Register --test-no PKGS-7322 --os "Linux" --preqs-met ${PREQS_MET} --skip-reason "${SKIPREASON}" --weight L --network NO --category security --description "Discover vulnerable packages with arch-audit"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: checking arch-audit output for vulnerable packages"
+        FIND=$(${ARCH_AUDIT_BINARY} | ${SEDBINARY} 's/\.\..*$//' | ${SEDBINARY} 's/, //g' | ${SEDBINARY} 's/\(\["\|"\]\)//g' | ${SEDBINARY} 's/""/,/g' | ${AWKBINARY} '{ if($1=="Package") { print $2"|"$6"|"}}' | ${AWKBINARY} -F'|' 'NF>1{a[$1] = a[$1]","$2}END{for(i in a){print i""a[i]"|"}}' | ${SEDBINARY} 's/,/|cve=/' | ${SORTBINARY})
+        if [ -z "${FIND}" ]; then
+            LogText "Result: no vulnerable packages found with arch-audit"
+            AddHP 10 10
+        else
+            LogText "Result: found one or more vulnerable packages"
+            for ITEM in ${FIND}; do
+                LogText "Found line: ${ITEM}"
+                Report "vulnerable_package[]=${ITEM}"
+                AddHP 1 2
+            done
+            ReportWarning "${TEST_NO}" "Vulnerable packages found" "arch-audit has output" "text:Update packages with pacman -Suy"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7328
+    # Description : Check installed packages with Zypper
+    if [ ! -z "${ZYPPERBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7328 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Querying Zypper for installed packages"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        PACKAGE_AUDIT_TOOL_FOUND=1
+        PACKAGE_AUDIT_TOOL="zypper"
+        FIND=$(${ZYPPERBINARY} -n se -t package -i | ${AWKBINARY} '{ if ($1=="i") { print $3 } }')
+        if [ ! -z "${FIND}" ]; then
+            for PKG in ${FIND}; do
+                COUNT=$((COUNT + 1))
+                LogText "Installed package: ${PKG}"
+                INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${PKG},0,"
+            done
+            Report "installed_packages=${COUNT}"
+        else
+            # Could not find any installed packages
+            ReportException "${TEST_NO}" "No installed packages found with Zypper"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7330
+    # Description : Check vulnerable packages with Zypper
+    if [ ! -z "${ZYPPERBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7330 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Querying Zypper for vulnerable packages"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FIND=$(${ZYPPERBINARY} -n pchk | ${GREPBINARY} "(0 security patches)")
+        if [ ! -z "${FIND}" ]; then
+            LogText "Result: No security updates found with Zypper"
+            Display --indent 2 --text "- Using Zypper to find vulnerable packages" --result "${STATUS_NONE}" --color GREEN
+        else
+            Display --indent 2 --text "- Using Zypper to find vulnerable packages" --result "${STATUS_WARNING}" --color RED
+            LogText "Result: Zypper found one or more installed packages which are vulnerable."
+            ReportWarning ${TEST_NO} "Found one or more vulnerable packages installed"
+            # Unfortunately zypper does not properly give back which package it is. Usually best guess is last word on the line
+            FIND=$(${ZYPPERBINARY} -n lp | ${AWKBINARY} '{ if ($5=="security" || $7=="security") { print $NF }}' | ${SEDBINARY} 's/:$//' | ${GREPBINARY} -v "^$" | ${SORTBINARY} -u)
+            LogText "List of vulnerable packages/version:"
+            for PKG in ${FIND}; do
+                VULNERABLE_PACKAGES_FOUND=1
+                Report "vulnerable_package[]=${PKG}"
+                LogText "Vulnerable package: ${PKG}"
+                # Decrease hardening points for every found vulnerable package
+                AddHP 1 2
+            done
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7332
+    # Description : Query macOS ports
+    if [ -x ${ROOTDIR}opt/local/bin/port ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7332 --os "macOS" --preqs-met ${PREQS_MET} --weight L --network NO --description "Query macOS ports"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FIND=$(${ROOTDIR}opt/local/bin/port installed 2>&1 | ${GREPBINARY} active | ${SORTBINARY}; ${ROOTDIR}bin/echo $?)
+        if [ "${FIND}" = "0" ]; then
+            Display --indent 4 --text "- Searching packages with port" --result "{STATUS_FOUND}" --color GREEN
+            Report "package_manager[]=port"
+            PACKAGE_MGR_PKG=1
+            LogText "Result: Found port utility"
+            LogText "Test: Querying port to get package list"
+            Display --indent 6 --text "- Querying port for installed packages"
+            LogText "Output:"; LogText "-----"
+            SPACKAGES=$(${ROOTDIR}opt/local/bin/port installed | ${GREPBINARY} active)
+            for ITEM in ${SPACKAGES}; do
+                SPORT_NAME=$(echo ${ITEM} | ${CUTBINARY} -d@ -f1)
+                SPORT_VERSION=$(echo ${ITEM} | ${CUTBINARY} -d@ -f2 | ${CUTBINARY} -d' ' -f1)
+                LogText "Installed package: ${SPORT_NAME} (version: ${SPORT_VERSION})"
+                INSTALLED_PACKAGES="${INSTALLED_PORTS}|${ITEM}"
+            done
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7334
+    # Description : Query macOS ports for available port upgrades
+    if [ -x ${ROOTDIR}opt/local/bin/port ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7334 --os "macOS" --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Query port for port upgrades"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        LogText "Test: Querying ports for possible port upgrades"
+        UPACKAGES=$(${ROOTDIR}opt/local/bin/port outdated 2> /dev/null | ${CUTBINARY} -d' ' -f1)
+        for J in ${UPACKAGES}; do
+            COUNT=$((COUNT + 1))
+            LogText "Upgrade available (new version): ${J}"
+            Report "upgrade_available[]=${J}"
+        done
+        Report "upgrade_available_count=${COUNT}"
+        if [ ${COUNT} -eq 0 ]; then
+            LogText "Result: no upgrades found"
+            Display --indent 2 --text "- Checking ports for updates" --result "${STATUS_NONE}" --color GREEN
+            AddHP 2 2
+        else
+            Display --indent 2 --text "- Checking ports for updates" --result "${STATUS_FOUND}" --color YELLOW
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7345
+    # Description : Debian package based systems (dpkg)
+    if [ -x ${ROOTDIR}usr/bin/dpkg ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7345 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Querying dpkg"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        Display --indent 4 --text "- Searching dpkg package manager" --result "${STATUS_FOUND}" --color GREEN
+        LogText "Result: Found dpkg binary"
+        Report "package_manager[]=dpkg"
+        PACKAGE_MGR_PKG=1
+        LogText "Test: Querying dpkg -l to get package list"
+        Display --indent 6 --text "- Querying package manager"
+        LogText "Output:"
+        SPACKAGES=$(dpkg -l 2>/dev/null | ${GREPBINARY} "^ii" | ${TRBINARY} -s ' ' | ${TRBINARY} ' ' ',' | sort)
+        for J in ${SPACKAGES}; do
+            COUNT=$((COUNT + 1))
+            PACKAGE_NAME=$(echo ${J} | ${CUTBINARY} -d ',' -f2)
+            PACKAGE_VERSION=$(echo ${J} | ${CUTBINARY} -d ',' -f3)
+            LogText "Found package: ${PACKAGE_NAME} (version: ${PACKAGE_VERSION})"
+            INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${PACKAGE_NAME},${PACKAGE_VERSION}"
+        done
+        Report "installed_packages=${COUNT}"
+    else
+        LogText "Result: dpkg can NOT be found on this system, test skipped"
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7346
+    # Description : Check packages which are removed, but still own configuration files, cron jobs etc
+    # Notes       : Cleanup: for pkg in $(dpkg -l | ${GREPBINARY} "^rc" | ${CUTBINARY} -d' ' -f3); do aptitude purge ${pkg}; done
+    if [ -x ${ROOTDIR}usr/bin/dpkg ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7346 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Search unpurged packages on system"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        LogText "Test: Querying dpkg -l to get unpurged packages"
+        SPACKAGES=$(${ROOTDIR}usr/bin/dpkg -l 2>/dev/null | ${GREPBINARY} "^rc" | ${CUTBINARY} -d ' ' -f3 | sort)
+        if [ -z "${SPACKAGES}" ]; then
+            Display --indent 4 --text "- Query unpurged packages" --result "${STATUS_NONE}" --color GREEN
+            LogText "Result: no packages found with left overs"
+        else
+            Display --indent 4 --text "- Query unpurged packages" --result "${STATUS_FOUND}" --color YELLOW
+            LogText "Result: found one or more packages with left over configuration files, cron jobs etc"
+            LogText "Output:"
+            for J in ${SPACKAGES}; do
+                COUNT=$((COUNT + 1))
+                LogText "Found unpurged package: ${J}"
+            done
+            ReportSuggestion ${TEST_NO} "Purge old/removed packages (${COUNT} found) with aptitude purge or dpkg --purge command. This will cleanup old configuration files, cron jobs and startup scripts."
+        fi
+    else
+        LogText "Result: dpkg can NOT be found on this system, test skipped"
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7348
+    # Description : Show unneeded distfiles if present
+    # Notes       : Portsclean seems to be gone from the ports, so no suggestion or warning is
+    #               issued when it's missing.
+    #               Add portmaster --clean-distfiles-all
+    Register --test-no PKGS-7348 --os FreeBSD --weight L --network NO --category security --description "Check for old distfiles"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ -x ${ROOTDIR}usr/local/sbin/portsclean ]; then
+            FIND=$(${ROOTDIR}usr/local/sbin/portsclean -n -DD | ${GREPBINARY} 'Delete' | wc -l | ${TRBINARY} -d ' ')
+            if [ ${FIND} -eq 0 ]; then
+                Display --indent 2 --text "- Checking presence old distfiles" --result "${STATUS_OK}" --color GREEN
+                LogText "Result: no unused distfiles found"
+            else
+                Display --indent 2 --text "- Checking presence old distfiles" --result "${STATUS_WARNING}" --color YELLOW
+                LogText "Result: found ${FIND} unused distfiles"
+                ReportSuggestion ${TEST_NO} "Unused distfiles found. Use portsclean to delete these files. For example: portsclean -DD."
+            fi
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7350
+    # Description : Use Dandified YUM to gather installed packages
+    # Notes       : Possible replacement for YUM in the long term
+    if [ ! -z "${DNFBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no "PKGS-7350" --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking for installed packages with DNF utility"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        Display --indent 4 --text "- Searching DNF package manager" --result "${STATUS_FOUND}" --color GREEN
+        LogText "Result: found DNF (Dandified YUM) utility (binary: ${DNFBINARY})"
+        Report "package_manager[]=dnf"
+        Display --indent 6 --text "- Querying DNF package manager"
+
+        PACKAGE_AUDIT_TOOL_FOUND=1
+        PACKAGE_AUDIT_TOOL="dnf"
+        SPACKAGES=$(${DNFBINARY} -q list installed 2> /dev/null | ${AWKBINARY} '{ if ($1!="Installed" && $1!="Last") {print $1","$2 }}')
+        for PKG in ${SPACKAGES}; do
+            COUNT=$((COUNT + 1))
+            PACKAGE_NAME=$(echo ${PKG} | ${CUTBINARY} -d ',' -f1)
+            PACKAGE_VERSION=$(echo ${PKG} | ${CUTBINARY} -d ',' -f2)
+            LogText "Found package: ${PACKAGE_NAME} (version: ${PACKAGE_VERSION})"
+            INSTALLED_PACKAGES="${INSTALLED_PACKAGES}|${PACKAGE_NAME},${PACKAGE_VERSION}"
+        done
+        Report "installed_packages=${COUNT}"
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7352
+    # Description : Use Dandified YUM to detect security updates
+    if [ ! -z "${DNFBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no "PKGS-7352" --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking for security updates with DNF utility"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        # Check for security updates
+        LogText "Action: checking updateinfo for security updates"
+        FIND=$(${DNFBINARY} -q updateinfo list sec 2> /dev/null | ${AWKBINARY} '{ if ($2=="security") { print $3 }}')
+        if [ ! -z "${FIND}" ]; then
+            VULNERABLE_PACKAGES_FOUND=1
+            LogText "Result: found vulnerable packages, upgrade of system needed."
+            for PKG in ${FIND}; do
+                Report "vulnerable_package[]=${PKG}"
+                LogText "Vulnerable package: ${PKG}"
+                # Decrease hardening points for every found vulnerable package
+                AddHP 1 2
+            done
+            ReportWarning ${TEST_NO} "Found one or more vulnerable packages. Run: dnf upgrade"
+            Display --indent 2 --text "- Using DNF to find vulnerable packages" --result "${STATUS_WARNING}" --color RED
+        else
+            LogText "Result: no security updates found"
+            Display --indent 2 --text "- Using DNF to find vulnerable packages" --result "${STATUS_NONE}" --color GREEN
+            AddHP 5 5
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7354
+    # Description : Perform integrity tests for package database
+    if [ ! -z "${DNFBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no "PKGS-7354" --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking package database integrity"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        # Check if repoquery plugin is available
+        FIND=$(${DNFBINARY} 2>&1 | ${GREPBINARY} "^repoquery")
+        if [ ! -z "${FIND}" ]; then
+            LogText "Action: checking integrity of package database"
+            FIND=$(${DNFBINARY} -q repoquery --duplicated)
+            if [ ! -z "${FIND}" ]; then
+                LogText "Result: found unexpected result on repoquery --duplicated"
+                ReportSuggestion "${TEST_NO}" "Check output of: dnf repoquery --duplicated"
+            fi
+            FIND=$(${DNFBINARY} -q repoquery --unsatisfied)
+            if [ ! -z "${FIND}" ]; then
+                LogText "Result: found unexpected result on repoquery --unsatisfied"
+                ReportSuggestion "${TEST_NO}" "Check output of: dnf repoquery --unsatisfied"
+            fi
+        else
+            LogText "Result: repoquery plugin not installed."
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7366
+    # Description : Checking if debsecan is installed and enabled on Debian systems
+    if [ ! -z "${DEBSECANBINARY}" -a "${OS}" = "Linux" -a "${LINUX_VERSION}" = "Debian" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no "PKGS-7366" --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking for debsecan utility"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ ! -z "${DEBSECANBINARY}" ]; then
+            LogText "Result: debsecan utility is installed"
+            Display --indent 4 --text "- debsecan utility" --result "${STATUS_FOUND}" --color GREEN
+            AddHP 3 3
+            PACKAGE_AUDIT_TOOL_FOUND=1
+            PACKAGE_AUDIT_TOOL="debsecan"
+            FIND=$(${FINDBINARY} ${ROOTDIR}etc/cron* -name debsecan)
+            if [ ! -z "${FIND}" ]; then
+                LogText "Result: cron job is configured for debsecan"
+                Display --indent 6 --text "- debsecan cron job" --result "${STATUS_FOUND}" --color GREEN
+                AddHP 3 3
+            else
+                LogText "Result: no cron job is configured for debsecan"
+                Display --indent 4 --text "- debsecan cron job" --result "${STATUS_NOT_FOUND}" --color YELLOW
+                AddHP 1 3
+                ReportSuggestion ${TEST_NO} "Check debsecan cron job and ensure it is enabled"
+            fi
+        else
+            LogText "Result: debsecan is not installed."
+            Display --indent 4 --text "- debsecan utility" --result "${STATUS_NOT_FOUND}" --color YELLOW
+            AddHP 0 2
+            ReportSuggestion ${TEST_NO} "Install debsecan to check for vulnerabilities on installed packages."
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7370
+    # Description : Checking debsums installation status and presence in cron job
+    # Note        : Run this only when it is a DPKG based system
+    if [ ! -z "${DPKGBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no "PKGS-7370" --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking for debsums utility"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ ! -z "${DEBSUMSBINARY}" ]; then
+            LogText "Result: debsums utility is installed"
+            Display --indent 4 --text "- debsums utility" --result "${STATUS_FOUND}" --color GREEN
+            AddHP 1 1
+            # Check in /etc/cron.hourly, daily, weekly, monthly etc
+            COUNT=$(find /etc/cron* -name debsums | wc -l)
+            if [ ${COUNT} -gt 0 ]; then
+                LogText "Result: Cron job is configured for debsums utility."
+                Display --indent 6 --text "- Cron job for debsums" --result "${STATUS_FOUND}" --color GREEN
+                AddHP 3 3
+            else
+                LogText "Result: Cron job is not configured for debsums utility."
+                Display --indent 6 --text "- Cron job for debsums" --result "${STATUS_NOT_FOUND}" --color YELLOW
+                AddHP 1 3
+                ReportSuggestion "${TEST_NO}" "Check debsums configuration and enable checking regurlarly via a cron job."
+            fi
+        else
+            LogText "Result: debsums utility is not installed."
+            AddHP 0 2
+            ReportSuggestion ${TEST_NO} "Install debsums utility for the verification of packages with known good database."
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7378
+    # Description : Query FreeBSD portmaster for available port upgrades
+    if [ -x ${ROOTDIR}usr/local/sbin/portmaster ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7378 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Query portmaster for port upgrades"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        LogText "Test: Querying portmaster for possible port upgrades"
+        UPACKAGES=$(${ROOTDIR}usr/local/sbin/portmaster -L | ${GREPBINARY} "version available" | ${AWKBINARY} '{ print $5 }')
+        for PKG in ${UPACKAGES}; do
+            COUNT=$((COUNT + 1))
+            LogText "Upgrade available (new version): ${PKG}"
+            Report "upgrade_available[]=${PKG}"
+        done
+        Report "upgrade_available_count=${COUNT}"
+        if [ ${COUNT} -eq 0 ]; then
+            LogText "Result: no updates found"
+            Display --indent 2 --text "- Checking portmaster for updates" --result "${STATUS_NONE}" --color GREEN
+        else
+            LogText "Result: found ${COUNT} updates"
+            Display --indent 2 --text "- Checking portmaster for updates" --result "${STATUS_FOUND}" --color YELLOW
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7380
+    # Description : Check for vulnerable NetBSD packages (with pkg_admin)
+    Register --test-no PKGS-7380 --os NetBSD --weight L --network NO --category security --description "Check for vulnerable NetBSD packages"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ -x ${ROOTDIR}usr/sbin/pkg_admin ]; then
+            PACKAGE_AUDIT_TOOL_FOUND=1
+            PACKAGE_AUDIT_TOOL="pkg_admin audit"
+            if [ -f ${ROOTDIR}var/db/pkg/pkg-vulnerabilities ]; then
+                FIND=$(${ROOTDIR}usr/sbin/pkg_admin audit)
+                if [ -z "${FIND}" ]; then
+                    LogText "Result: pkg_admin audit results are clean"
+                    Display --indent 2 --text "- Checking pkg_admin audit to obtain vulnerable packages" --result "${STATUS_NONE}" --color GREEN
+                    AddHP 10 10
+                else
+                    Display --indent 2 --text "- Checking pkg_admin audit to obtain vulnerable packages" --result "${STATUS_WARNING}" --color RED
+                    LogText "Result: pkg_admin audit found one or more installed packages which are vulnerable."
+                    ReportWarning ${TEST_NO} "Found one or more vulnerable packages."
+                    LogText "List of vulnerable packages/version:"
+                    for I in $(${ROOTDIR}usr/sbin/pkg_admin audit | ${AWKBINARY} '{ print $2 }' | ${SORTBINARY} -u); do
+                        VULNERABLE_PACKAGES_FOUND=1
+                        Report "vulnerable_package[]=${I}"
+                        LogText "Vulnerable package: ${I}"
+                        # Decrease hardening points for every found vulnerable package
+                        AddHP 1 2
+                    done
+                fi
+            else
+                ReportSuggestion "${TEST_NO}" "Fetch the package database with pkg_admin fetch-pkg-vulnerabilities"
+                AddHP 0 2
+            fi
+        else
+            Display --indent 2 --text "- pkg_admin audit not installed" --result "${STATUS_NOT_FOUND}" --color WHITE
+            LogText "Result: pkg_admin audit not installed, skipping this vulnerability test."
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7381
+    # Description : Check for vulnerable FreeBSD packages (with pkg)
+    # Notes       : Related vulnerability file is /var/db/pkg/vuln.xml
+    # TODO        : Run this in any jail
+    if [ ! -z "${PKG_BINARY}" ]; then PREQS_MET="YES"; SKIPREASON=""; else PREQS_MET="NO"; SKIPREASON="pkg tool not available"; fi
+    Register --test-no PKGS-7381 --preqs-met ${PREQS_MET} --skip-reason "${SKIPREASON}" --weight L --network NO --category security --description "Check for vulnerable FreeBSD packages with pkg"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        COUNT=0
+        PACKAGE_AUDIT_TOOL_FOUND=1
+        PACKAGE_AUDIT_TOOL="pkg audit"
+        if [ -f ${ROOTDIR}var/db/pkg/vuln.xml ]; then
+            # Query pkg audit, with optional refresh of vulnerability data (-F)
+            if [ ${REFRESH_REPOSITORIES} -eq 1 ]; then
+                FIND=$(${PKG_BINARY} audit -F -q 2> /dev/null)
+            else
+                FIND=$(${PKG_BINARY} audit -q 2> /dev/null)
+            fi
+            if [ $? -eq 0 ]; then
+                LogText "Result: pkg audit results are clean"
+                Display --indent 2 --text "- Checking pkg audit to obtain vulnerable packages" --result "${STATUS_NONE}" --color GREEN
+                AddHP 10 10
+            elif [ $? -eq 1 ]; then
+                if [ ! -z "${FIND}" ]; then
+                    VULNERABLE_PACKAGES_FOUND=1
+                    Display --indent 2 --text "- Checking pkg audit to obtain vulnerable packages" --result "${STATUS_FOUND}" --color YELLOW
+                    for ITEM in ${FIND}; do
+                        COUNT=$((COUNT + 1))
+                        Report "vulnerable_package[]=${ITEM}"
+                        LogText "Vulnerable package: ${ITEM}"
+                        AddHP 1 2
+                    done
+                    ReportWarning ${TEST_NO} "Found vulnerable packages" "${COUNT} vulnerable packages" "text:Run pkg audit"
+                else
+                    LogText "Result: found an exit code greater than zero, yet no output"
+                fi
+            else
+                LogText "Result: exited with code $?"
+                ReportException "${TEST_NO}" "Found an unknown exit code for pkg audit. Please create an issue at ${PROJECT_SOURCE}"
+            fi
+        else
+            LogText "Result: could not find vulnerability database"
+            ReportWarning "${TEST_NO}" "No vulnerability database available" "pkg audit" "text:Run pkg audit -F"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7382
+    # Description : Check for vulnerable FreeBSD packages
+    # Notes       : Newer machines should use pkg audit instead of portaudit
+    if [ -x ${ROOTDIR}usr/local/sbin/portaudit ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7382 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Check for vulnerable FreeBSD packages with portaudit"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        PACKAGE_AUDIT_TOOL_FOUND=1
+        FIND=$(${ROOTDIR}usr/local/sbin/portaudit | ${GREPBINARY} 'problem(s) in your installed packages found' | ${GREPBINARY} -v '0 problem(s) in your installed packages found')
+        if [ -z "${FIND}" ]; then
+            LogText "Result: Portaudit results are clean"
+            Display --indent 2 --text "- Checking portaudit to obtain vulnerable packages" --result "${STATUS_NONE}" --color GREEN
+            AddHP 10 10
+        else
+            Display --indent 2 --text "- Checking portaudit to obtain vulnerabilities" --result "${STATUS_WARNING}" --color RED
+            LogText "Result: Portaudit found one or more installed packages which are vulnerable."
+            ReportWarning ${TEST_NO} "Found one or more vulnerable packages."
+            ReportSuggestion ${TEST_NO} "Update your system with portupgrade or other tools"
+            LogText "List of vulnerable packages/version:"
+            for PKG in $(${ROOTDIR}usr/local/sbin/portaudit | ${GREPBINARY} "Affected package" | ${CUTBINARY} -d ' ' -f3 | ${SORTBINARY} -u); do
+                VULNERABLE_PACKAGES_FOUND=1
+                Report "vulnerable_package[]=${PKG}"
+                LogText "Vulnerable package: ${PKG}"
+                # Decrease hardening points for every found vulnerable package
+                AddHP 1 2
+            done
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7383
+    # Description : Check for YUM package Update management
+    # Notes       : Skip if DNF is used as package manager
+    if [ ! -z "${YUMBINARY}" -a -z "${DNFBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7383 --preqs-met ${PREQS_MET} --os Linux --weight M --network NO --category security --description "Check for YUM package update management"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: YUM package update management"
+        FIND=$(${YUMBINARY} repolist 2>/dev/null | ${GREPBINARY} repolist | ${SEDBINARY} 's/ //g' | ${SEDBINARY} 's/[,.]//g' | ${AWKBINARY} -F ":" '{print $2}' | ${EGREPBINARY} "^[0-9]+$")
+        if [ -z "${FIND}" -o "${FIND}" = "0" ]; then
+            LogText "Result: YUM package update management failed"
+            Display --indent 2 --text "- YUM package management consistency" --result "${STATUS_WARNING}" --color RED
+            ReportWarning ${TEST_NO} "YUM is not properly configured or registered for this platform (no repolist found)"
+        else
+            LogText "Result: YUM repository available (${FIND})"
+            Display --indent 2 --text "- YUM package management consistency" --result "${STATUS_OK}" --color GREEN
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7384
+    # Description : Search for YUM utils package
+    if [ ! -z "${YUMBINARY}" -a -z "${DNFBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7384 --preqs-met ${PREQS_MET} --os Linux --weight L --network NO --category security --description "Check for YUM utils package"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ -x ${ROOTDIR}usr/bin/package-cleanup ]; then
+            LogText "Result: found YUM utils package (${ROOTDIR}usr/bin/package-cleanup)"
+            # Check for duplicates
+            LogText "Test: Checking for duplicate packages"
+            FIND=$(${ROOTDIR}usr/bin/package-cleanup -q --dupes > /dev/null; echo $?)
+            if [ "${FIND}" = "0" ]; then
+                LogText "Result: No duplicate packages found"
+                Display --indent 2 --text "- Checking package database duplicates" --result "${STATUS_OK}" --color GREEN
+            else
+                LogText "Result: One or more duplicate packages found"
+                Display --indent 2 --text "- Checking package database duplicates" --result "${STATUS_WARNING}" --color RED
+                ReportWarning ${TEST_NO} "Found one or more duplicate packages installed"
+                ReportSuggestion ${TEST_NO} "Run package-cleanup to solve duplicate package problems"
+            fi
+
+            # Check for package database problems
+            LogText "Test: Checking for database problems"
+            FIND=$(${ROOTDIR}usr/bin/package-cleanup --problems > /dev/null; echo $?)
+            if [ "${FIND}" = "0" ]; then
+                LogText "Result: No package database problems found"
+                Display --indent 2 --text "- Checking package database for problems" --result "${STATUS_OK}" --color GREEN
+            else
+                LogText "Result: One or more problems found in package database"
+                Display --indent 2 --text "- Checking package database for problems" --result "${STATUS_WARNING}" --color RED
+                ReportWarning ${TEST_NO} "Found one or more problems in the package database"
+                ReportSuggestion ${TEST_NO} "Run package-cleanup to solve package problems"
+            fi
+        else
+            Display --indent 2 --text "- yum-utils package not installed" --result "${STATUS_SUGGESTION}" --color YELLOW
+            LogText "Result: YUM utils package not found"
+            ReportSuggestion ${TEST_NO} "Install package 'yum-utils' for better consistency checking of the package database"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7386
+    # Description : Search for YUM security package
+    # Notes       : This test does not apply to CentOS and clones, as --security is not available
+    #             : RHEL 7: plugin default installed
+    #             : RHEL 6: yum-security-plugin (plugin)
+    #             : RHEL 5: yum-security (plugin)
+    if [ -x ${ROOTDIR}usr/bin/yum -a -z "${DNFBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7386 --preqs-met ${PREQS_MET} --os Linux --weight L --network NO --category security --description "Check for YUM security package"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        DO_TEST=0
+        LogText "Test: Determining if yum-security package installed"
+
+        # Check for built-in --security option
+        if [ ${DO_TEST} -eq 0 ]; then
+            FileExists ${ROOTDIR}usr/share/yum-cli/cli.py
+            if [ ${FILE_FOUND} -eq 1 ]; then
+                SearchItem "\-\-security" "${ROOTDIR}usr/share/yum-cli/cli.py"
+                if [ ${ITEM_FOUND} -eq 1 ]; then
+                    DO_TEST=1
+                    LogText "Result: found built-in security in yum"
+                else
+                    LogText "Result: did not find --security in ${ROOTDIR}usr/share/yum-cli/cli.py"
+                fi
+            fi
+        fi
+
+        if [ ${DO_TEST} -eq 0 ]; then
+            FileExists ${ROOTDIR}etc/yum/pluginconf.d/security.conf
+            if [ ${FILE_FOUND} -eq 1 ]; then
+                SearchItem "^enabled=1$" "${ROOTDIR}etc/yum/pluginconf.d/security.conf"
+                if [ ${ITEM_FOUND} -eq 1 ]; then
+                    DO_TEST=1
+                    LogText "Result: found enabled plugin"
+                else
+                    LogText "Result: plugin NOT enabled in ${ROOTDIR}etc/yum/pluginconf.d/security.conf"
+                fi
+            fi
+        fi
+
+        # Check if it's installed as package (this is old style)
+        if [ ${DO_TEST} -eq 0 ]; then
+            FIND=$(rpm -q yum-security yum-plugin-security | ${GREPBINARY} -v "not installed")
+            if [ ! -z "${FIND}" ]; then
+                LogText "Result: found yum-plugin-security package"
+                DO_TEST=1
+            fi
+        fi
+
+        # If we have the module of yum active, continue testing
+        if [ ${DO_TEST} -eq 1 ]; then
+            PACKAGE_AUDIT_TOOL_FOUND=1
+            PACKAGE_AUDIT_TOOL="yum-security"
+            LogText "Test: Checking for vulnerable packages"
+            FIND2=$(${ROOTDIR}usr/bin/yum list-sec security | ${AWKBINARY} '{ if($2=="security" || $2~"Sec") print $3","$5 }')
+            if [ -z "${FIND2}" ]; then
+                LogText "Result: no vulnerable packages found"
+                Display --indent 2 --text "- Checking missing security packages" --result "${STATUS_OK}" --color GREEN
+            else
+                LogText "Result: found vulnerable package(s)"
+                Display --indent 2 --text "- Checking missing security packages" --result "${STATUS_WARNING}" --color RED
+                for I in ${FIND2}; do
+                    VULNERABLE_PACKAGES_FOUND=1
+                    Report "vulnerable_package[]=${I}"
+                    LogText "Vulnerable package: ${I}"
+                    AddHP 1 2
+                done
+                ReportWarning ${TEST_NO} "Found one or more vulnerable packages."
+                ReportSuggestion ${TEST_NO} "Use 'yum --security update' to update your system"
+            fi
+        else
+            LogText "Result: yum-security package not found"
+            Display --indent 2 --text "- Checking missing security packages" --result "${STATUS_SKIPPED}" --color YELLOW
+            ReportSuggestion ${TEST_NO} "Install package yum-plugin-security if possible, to maintain security updates easier (yum install yum-plugin-security)"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7387
+    # Description : Search for YUM GPG check
+    if [ -x ${ROOTDIR}usr/bin/yum -a -z "${DNFBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7387 --preqs-met ${PREQS_MET} --os Linux --weight L --network NO --category security --description "Check for GPG signing in YUM security package"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ ! -z "${PYTHONBINARY}" ]; then
+            LogText "Test: checking enabled repositories"
+            REPOS=$(${PYTHONBINARY} -c 'import yum ; yb = yum.YumBase() ; print [(r.id + "=" + str(r.gpgcheck)) for r in yb.repos.listEnabled()]' | ${GREPBINARY} "^\[" | ${TRBINARY} -d '[] ' | ${TRBINARY} -d "'" | ${SEDBINARY} 's/,/ /g')
+            if [ -z "${REPOS}" ]; then LogText "Result: found no repositories"; fi
+            for I in ${REPOS}; do
+                REPO=$(echo ${I} | ${AWKBINARY} -F= '{print $1}')
+                GPGSIGNED=$(echo ${I} | ${AWKBINARY} -F= '{print $2}')
+                if [ "${GPGSIGNED}" = "False" ]; then
+                    LogText "Result: software repository '${REPO}' is NOT signed"
+                    Report "software_repository_unsigned[]=${REPO}"
+                    AddHP 3 4
+                elif [ "${GPGSIGNED}" = "True" ]; then
+                    LogText "Result: software repository '${REPO}' is signed"
+                    AddHP 4 4
+                else
+                    LogText "Result: unknown status for repository (data: ${I})"
+                fi
+            done
+        fi
+        FOUND=0
+        FileExists ${ROOTDIR}etc/yum.conf
+        if [ ${FILE_FOUND} -eq 1 ]; then
+            SearchItem "^gpgenabled\s*=\s*1$" "${ROOTDIR}etc/yum.conf"; if [ ${ITEM_FOUND} -eq 1 ]; then FOUND=1; fi
+            SearchItem "^gpgcheck\s*=\s*1$" "${ROOTDIR}etc/yum.conf"; if [ ${ITEM_FOUND} -eq 1 ]; then FOUND=1; fi
+            if [ ${FOUND} -eq 1 ]; then
+                LogText "Result: GPG check is enabled"
+                Display --indent 2 --text "- Checking GPG checks (yum.conf)" --result "${STATUS_OK}" --color GREEN
+                AddHP 3 3
+            else
+                Display --indent 2 --text "- Checking GPG checks (yum.conf)" --result "${STATUS_DISABLED}" --color RED
+                ReportWarning ${TEST_NO} "No GPG signing option found in yum.conf"
+                AddHP 2 3
+            fi
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7388
+    # Description : Check security repository in Debian/ubuntu apt sources.list file
+    if [ -f ${ROOTDIR}etc/apt/sources.list -a -d ${ROOTDIR}etc/apt/sources.list.d ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7388 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Check security repository in Debian/ubuntu apt sources.list file"
+    if [ $SKIPTEST -eq 0 ]; then
+        FOUND=0
+        if [ ${OPTION_DEBIAN_SKIP_SECURITY_REPOSITORY} -eq 0 ]; then
+            if [ -f ${ROOTDIR}etc/apt/sources.list ]; then
+                LogText "Searching for security.debian.org/security.ubuntu.com or security repositories in /etc/apt/sources.list file"
+                FIND=$(${EGREPBINARY} "security.debian.org|security.ubuntu.com|security " ${ROOTDIR}etc/apt/sources.list | ${GREPBINARY} -v '#' | ${SEDBINARY} 's/ /!space!/g')
+                if [ ! -z "${FIND}" ]; then
+                    FOUND=1
+                    Display --indent 2 --text "- Checking security repository in sources.list file" --result "${STATUS_OK}" --color GREEN
+                    LogText "Result: Found security repository in ${ROOTDIR}etc/apt/sources.list"
+                    for REPO in ${FIND}; do
+                        REPO=$(echo ${REPO} | ${SEDBINARY} 's/!space!/ /g')
+                        LogText "Output: ${REPO}"
+                    done
+                fi
+            fi
+            if [ -d /etc/apt/sources.list.d ]; then
+                LogText "Searching for security.debian.org/security.ubuntu.com or security repositories in /etc/apt/sources.list.d directory"
+                FIND=$(${EGREPBINARY} -r "security.debian.org|security.ubuntu.com|security " /etc/apt/sources.list.d | ${GREPBINARY} -v '#' | ${SEDBINARY} 's/ /!space!/g')
+                if [ ! -z "${FIND}" ]; then
+                    FOUND=1
+                    Display --indent 2 --text "- Checking security repository in sources.list.d directory" --result "${STATUS_OK}" --color GREEN
+                    LogText "Result: Found security repository in one or more files in directory /etc/apt/sources.list.d"
+                    for REPO in ${FIND}; do
+                        REPO=$(echo ${REPO} | ${SEDBINARY} 's/!space!/ /g')
+                        LogText "Output: ${REPO}"
+                    done
+                fi
+            fi
+            if [ ${FOUND} -eq 1 ]; then
+                LogText "Result: security repository was found"
+                AddHP 3 3
+            else
+                Display --indent 2 --text "- Checking security repository in sources.list file or directory" --result "${STATUS_WARNING}" --color RED
+                ReportWarning ${TEST_NO} "Can't find any security repository in /etc/apt/sources.list or sources.list.d directory"
+                AddHP 0 3
+            fi
+        else
+            LogText "Skipped as option is set to ignore security repository"
+        fi
+        unset FIND FOUND REPO
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7390
+    # Description : Check Ubuntu database consistency
+    if [ "${LINUX_VERSION}" = "Ubuntu" -a -x ${ROOTDIR}usr/bin/apt-get ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7390 --os Linux --preqs-met ${PREQS_MET} --root-only YES --weight L --network NO --category security --description "Check Ubuntu database consistency"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Package database consistency by running apt-get check"
+        FIND=$(${ROOTDIR}usr/bin/apt-get -q=2 check 2> /dev/null; echo $?)
+        if [ "${FIND}" = "0" ]; then
+            Display --indent 2 --text "- Checking APT package database" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: package database seems to be consistent."
+        else
+            LogText "Result: package database is most likely NOT consistent"
+            Display --indent 2 --text "- Checking APT package database" --result "${STATUS_WARNING}" --color RED
+            ReportWarning ${TEST_NO} "apt-get check returned a non successful exit code."
+            ReportSuggestion ${TEST_NO} "Run apt-get to perform a manual package database consistency check."
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7392
+    # Description : Check Debian/Ubuntu vulnerable packages
+    if [ -x ${ROOTDIR}usr/bin/apt-get ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7392 --os Linux --preqs-met ${PREQS_MET} --root-only YES --weight L --network YES --category security --description "Check for Debian/Ubuntu security updates"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        VULNERABLE_PACKAGES_FOUND=0
+        SCAN_PERFORMED=0
+        # If apt-get is installed, then it's a reasonable option for a Package Audit tool
+        # If apt-check exists, it will be preferred and will overwrite the PACKAGE_AUDIT_TOOL setting
+        PACKAGE_AUDIT_TOOL="apt-get"
+        PACKAGE_AUDIT_TOOL_FOUND=1
+        # Update the repository, outdated repositories don't give much information
+        if [ ${REFRESH_REPOSITORIES} -eq 1 ]; then
+            LogText "Action: updating package repository with apt-get"
+            ${ROOTDIR}usr/bin/apt-get -q=2 update
+            LogText "Result: apt-get finished"
+        else
+            LogText "Result: using a possibly outdated repository, as updating is disabled via configuration"
+        fi
+        LogText "Test: Checking if ${ROOTDIR}usr/lib/update-notifier/apt-check exists"
+        if [ -x ${ROOTDIR}usr/lib/update-notifier/apt-check ]; then
+            PACKAGE_AUDIT_TOOL="apt-check"
+            LogText "Result: found ${ROOTDIR}usr/lib/update-notifier/apt-check"
+            LogText "Test: checking if any of the updates contain security updates"
+            # apt-check binary is a script and translated. Do not search for normal text strings, but use numbered output only
+            FIND=$(${ROOTDIR}usr/lib/update-notifier/apt-check 2>&1 | ${AWKBINARY} -F\; '{ print $2 }')
+            # Check if we get the proper line back and amount of security patches available
+            if [ -z "${FIND}" ]; then
+                LogText "Result: did not find security updates line"
+                ReportSuggestion ${TEST_NO} "Check if system is up-to-date, security updates test (apt-check) gives an unexpected result"
+                ReportException "${TEST_NO}:1" "Apt-check did not provide any result"
+            else
+                if [ "${FIND}" = "0" ]; then
+                    LogText "Result: no vulnerable packages found via apt-check"
+                    SCAN_PERFORMED=1
+                else
+                    VULNERABLE_PACKAGES_FOUND=1
+                    SCAN_PERFORMED=1
+                    LogText "Result: found ${FIND} security updates via apt-check"
+                    AddHP 0 25
+                fi
+            fi
+        else
+            LogText "Result: apt-check (update-notifier-common) not found"
+        fi
+
+        # Trying also with apt-get directly (does not always work, as updates are distributed on both -security and -updates)
+        # Show packages which would be upgraded and match 'security' in repository name
+        FIND=$(${ROOTDIR}usr/bin/apt-get --dry-run --show-upgraded upgrade 2> /dev/null | ${GREPBINARY} '-security' | ${GREPBINARY} "^Inst" | ${CUTBINARY} -d ' ' -f2 | ${SORTBINARY} -u)
+        if [ ! -z "${FIND}" ]; then
+            VULNERABLE_PACKAGES_FOUND=1
+            SCAN_PERFORMED=1
+            LogText "Result: found vulnerable package(s) via apt-get (-security channel)"
+            PACKAGE_AUDIT_TOOL="apt-get"
+            PACKAGE_AUDIT_TOOL_FOUND=1
+            for PKG in ${FIND}; do
+                LogText "Found vulnerable package: ${PKG}"
+                Report "vulnerable_package[]=${PKG}"
+            done
+        fi
+        if [ ${SCAN_PERFORMED} -eq 1 ]; then
+            if [ ${VULNERABLE_PACKAGES_FOUND} -eq 1 ]; then
+                ReportWarning ${TEST_NO} "Found one or more vulnerable packages."
+                ReportSuggestion ${TEST_NO} "Update your system with apt-get update, apt-get upgrade, apt-get dist-upgrade and/or unattended-upgrades"
+                Display --indent 2 --text "- Checking vulnerable packages" --result "${STATUS_WARNING}" --color RED
+            else
+                Display --indent 2 --text "- Checking vulnerable packages" --result "${STATUS_OK}" --color GREEN
+                LogText "Result: no vulnerable packages found"
+            fi
+        else
+            Display --indent 2 --text "- Checking vulnerable packages (apt-get only)" --result "${STATUS_DONE}" --color GREEN
+            LogText "Result: test not fully executed (missing apt-check output)"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7393
+    # Description : Check Gentoo vulnerable packages
+    if [ -x ${ROOTDIR}usr/bin/emerge-webrsync ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7393 --preqs-met ${PREQS_MET} --weight L --network YES --category security --description "Check for Gentoo vulnerable packages"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        VULNERABLE_PACKAGES_FOUND=0
+        SCAN_PERFORMED=0
+        # Update portage.
+        # Multiple ways to do this.  Some require extra packages to be installed,
+        # others require potential firewall ports to be open, outbound.  This is the
+        # "most friendly" way.
+        if [ ${REFRESH_REPOSITORIES} -eq 1 ]; then
+            LogText "Action: updating portage with emerge-webrsync"
+            ${ROOTDIR}usr/bin/emerge-webrsync --quiet 2> /dev/null
+            LogText "Result: emerge-webrsync finished"
+        else
+            LogText "Result: using a possibly outdated repository, as updating is disabled"
+        fi
+        LogText "Test: checking if ${ROOTDIR}usr/bin/glsa-check exists"
+        if [ -x ${ROOTDIR}usr/bin/glsa-check ]; then
+            PACKAGE_AUDIT_TOOL_FOUND=1
+            PACKAGE_AUDIT_TOOL="glsa-check"
+            LogText "Result: found ${ROOTDIR}usr/bin/glsa-check"
+            LogText "Test: checking if there are any vulnerable packages"
+            # glsa-check reports the GLSA date/ID string, not the vulnerable package.
+            FIND=$(${ROOTDIR}usr/bin/glsa-check -t all 2>&1 | ${GREPBINARY} -v "This system is affected by the following GLSAs:" | ${GREPBINARY} -v "This system is not affected by any of the listed GLSAs" | ${WCBINARY} -l)
+            if [ -z "${FIND}" ]; then
+                LogText "Result: unexpected result: wc should report 0 if no vulnerable packages are found."
+                LogText "Notes: Check if system is up-to-date, security updates check (glsa-check) gives and unexpected result"
+                ReportException "${TEST_NO}:1" "glsa-check did not provide any result, which is unexpected"
+            else
+                if [ "${FIND}" = "0" ]; then
+                    LogText "Result; no vulnerable packages found via glsa-check"
+                    Display --indent 2 --text "- Checking vulnerable packages (glsa-check)" --result "${STATUS_OK}" --color GREEN
+                else
+                    VULNERABLE_PACKAGES_FOUND=1
+                    Display --indent 2 --text "- Checking vulnerable packages (glsa-check)" --result "${STATUS_FOUND}" --color RED
+                    LogText "Result: found ${FIND} security updates with glsa-check"
+                    ReportWarning "${TEST_NO}" "Found ${FIND} security update(s) with glsa-check."
+                    LogText "Notes: Run 'glsa-check -t all' to see which GLSA(s) were identified."
+                    AddHP 0 25
+                fi
+            fi
+        else
+            LogText "Result: glsa-check tool not found"
+            ReportSuggestion ${TEST_NO} "Use Emerge to install the gentoolkit package, which includes glsa-check tool for additional security checks."
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PKGS-7394
+    # Description : Check Ubuntu upgradeable packages
+    if [ "${LINUX_VERSION}" = "Ubuntu" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PKGS-7394 --os Linux --preqs-met ${PREQS_MET} --weight L --network YES --category security --description "Check for Ubuntu updates"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: checking ${ROOTDIR}usr/bin/apt-show-versions"
+        if [ -x ${ROOTDIR}usr/bin/apt-show-versions ]; then
+            LogText "Result: found ${ROOTDIR}usr/bin/apt-show-versions"
+            LogText "Test: Checking packages which can be upgraded via apt-show-versions"
+            FIND=$(${ROOTDIR}usr/bin/apt-show-versions -u | ${SEDBINARY} 's/ /!space!/g')
+            if [ -z "${FIND}" ]; then
+                LogText "Result: no packages found which can be upgraded"
+                Display --indent 2 --text "- Checking upgradeable packages" --result "${STATUS_NONE}" --color GREEN
+                AddHP 3 3
+            else
+                LogText "Result: found one or more packages which can be upgraded"
+                Display --indent 2 --text "- Checking upgradeable packages" --result "${STATUS_FOUND}" --color YELLOW
+                # output: program/repository upgradeable from version X to Y
+                for ITEM in ${FIND}; do
+                    ITEM=$(echo ${ITEM} | ${SEDBINARY} 's/!space!/ /g')
+                    LogText "${ITEM}"
+                done
+            fi
+        else
+            LogText "Result: ${ROOTDIR}usr/bin/apt-show-versions not found"
+            Display --indent 2 --text "- Checking upgradeable packages" --result "${STATUS_SKIPPED}" --color WHITE
+            ReportSuggestion ${TEST_NO} "Install package apt-show-versions for patch management purposes"
+        fi
+    fi
+
+#
+#################################################################################
+#
+    # Test        : PKGS-7398
+    # Description : Check package audit tool
+    Register --test-no PKGS-7398 --weight L --network YES --category security --description "Check for package audit tool"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: checking for package audit tool"
+        if [ ${PACKAGE_AUDIT_TOOL_FOUND} -eq 0 ]; then
+            Display --indent 2 --text "- Checking package audit tool" --result "${STATUS_NONE}" --color RED
+            ReportSuggestion ${TEST_NO} "Install a package audit tool to determine vulnerable packages"
+            LogText "Result: no package audit tool found"
+        else
+            Display --indent 2 --text "- Checking package audit tool" --result INSTALLED --color GREEN
+            Display --indent 4 --text "Found: ${PACKAGE_AUDIT_TOOL}"
+            LogText "Result: found package audit tool: ${PACKAGE_AUDIT_TOOL}"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Description : HP-UX packages
+    # Notes       : swlist -l fileset (|${GREPBINARY} patch) / print_manifest
+#
+#################################################################################
+#
+    # Description : AIX patches
+    # Notes       : ${ROOTDIR}usr/sbin/instfix -c -i | ${CUTBINARY} -d":" -f1
+#
+#################################################################################
+#
+    # Test        : PKGS-7410
+    # Description : Count number of installed kernel packages
+    Register --test-no PKGS-7410 --weight L --network NO --category security --description "Count installed kernel packages"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        KERNELS=0
+        if [ ! -z "${RPMBINARY}" ]; then
+            LogText "Test: Checking how many kernel packages are installed"
+            KERNELS=$(${RPMBINARY} -q kernel 2> /dev/null | ${WCBINARY} -l)
+            if [ ${KERNELS} -eq 0 ]; then
+                LogText "Result: found no kernels from rpm -q kernel output, which is unexpected"
+                ReportException "KRNL-5840:1" "Could not find any kernel packages from RPM output"
+            elif [ ${KERNELS} -gt 5 ]; then
+                LogText "Result: found more than 5 kernel packages on the system, which might indicate lack of regular cleanups"
+                ReportSuggestion "${TEST_NO}" "Remove any unneeded kernel packages with package-cleanup utility (--old-kernels)"
+                AddHP 4 5
+            else
+                LogText "Result: found ${KERNELS} on the system, which is fine"
+                AddHP 1 1
+            fi
+        fi
+    fi
+#
+#################################################################################
+#
+
+if [ ! -z "${INSTALLED_PACKAGES}" ]; then Report "installed_packages_array=${INSTALLED_PACKAGES}"; fi
+
+Report "package_audit_tool=${PACKAGE_AUDIT_TOOL}"
+Report "package_audit_tool_found=${PACKAGE_AUDIT_TOOL_FOUND}"
+Report "vulnerable_packages_found=${VULNERABLE_PACKAGES_FOUND}"
+
+WaitForKeyPress
+
+#
+#================================================================================
+# Lynis - Security Auditing and System Hardening for Linux and UNIX - https://cisofy.com

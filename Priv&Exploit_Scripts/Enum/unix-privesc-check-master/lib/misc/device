@@ -1,0 +1,216 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${deviceincluded}" ]
+then
+
+deviceincluded=1
+
+. lib/misc/file
+. lib/misc/validate
+
+device_fstab_check () {
+	if [ "`file_is_readable \"/etc/fstab\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+device_fstab_list () {
+	if [ "`device_fstab_check`" -eq 1 ]
+	then
+		cat "/etc/fstab" | egrep -v "^#|^$" | while read device mountpoint filesystem options _ _
+		do
+			if [ -n "`printf -- \"${device}\" | egrep -- \"^/\"`" ]
+			then
+				printf -- "${device}\n"
+			fi
+		done | sort | uniq
+	fi
+}
+
+device_mounted_list () {
+	if [ "`uname`" = "SunOS" ]
+	then
+		mount | egrep -- "xattr" | while read device _ mountpoint _ filesystem options
+		do
+			if [ "`printf -- \"${device}\" | egrep -- \"^/\"`" ]
+			then
+				printf -- "${device}\n"
+			fi
+		done | sort | uniq
+	else
+		mount | while read device _ mountpoint _ filesystem options
+		do
+			if [ "`printf -- \"${device}\" | egrep -- \"^/\"`" ]
+			then
+				printf -- "${device}\n"
+			fi
+		done | sort | uniq
+	fi
+}
+
+device_blkid_list () {
+	[ "`file_show_real_filename \"blkid\"`" ] || false
+	blkid="`file_show_real_filename \"blkid\"`"
+	blkid -o device | while read device
+	do
+		printf -- "${device}\n"
+	done | sort | uniq
+}
+
+device_swap_list () {
+	# TODO does uname return HP-UX or HPUX?
+	if [ "`uname`" = "HP-UX" ]
+	then
+		swapinfo | egrep -v "^dev" | egrep -- "^/" | while read _ _ _ _ _ _ _ _ device _
+		do
+			printf -- "${device}\n"
+		done | sort | uniq
+	else
+		swapon -s | egrep -- "^/" | while read device _ _ _ _
+		do
+			printf -- "${device}\n"
+		done | sort | uniq
+	fi
+}
+
+device_list () {
+	device_mounted_list
+	device_fstab_list
+	device_blkid_list
+	device_swap_list
+}
+
+device_list_options () {
+	if [ "`device_fstab_check`" -eq 1 ]
+	then
+		cat "/etc/fstab" | egrep -v "^#|^$" | while read device mountpoint filesystem options _ _
+		do
+			# retrieve device file path from UUID representation
+			if [ -n "`printf -- \"${device}\" | egrep -- \"^UUID=\"`" ]
+			then
+				uuid="`printf \"${device}\" | cut -c6-`"
+				device="`device_uuid_to_filename \"${uuid}\"`"
+			# ignore swap
+			elif [ "${filesystem}" = "swap" ]
+			then
+				continue
+			fi
+			printf -- "${device} ${options}\n"
+		done
+	fi
+}
+
+device_get_mountpoint_from_blkid () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	[ "`file_show_real_filename \"blkid\"`" ] || false
+	blkid="`file_show_real_filename \"blkid\"`"
+	#blkid -o list | while read device filesystem label mountpoint uuid
+	blkid -o list | while read device filesystem mountpoint uuid
+	do
+		if [ "${device}" = "${pattern}" ]
+		then
+			printf -- "${mountpoint}\n"
+		fi
+	done
+}
+
+device_get_mountpoint_from_fstab () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	if [ "`device_fstab_check`" -eq 1 ]
+	then
+		cat "/etc/fstab" | egrep -v "^#|^$" | while read device mountpoint filesystem options _ _
+		do
+			if [ "${device}" = "${pattern}" ]
+			then
+				printf -- "${mountpoint}\n"
+			fi
+		done
+	fi
+}
+
+device_get_mountpoint_from_mount () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	mount | egrep -- "^${pattern}" | while read device _ mountpoint _ _ _
+	do
+		if [ "${device}" = "${pattern}" ]
+		then
+			printf -- "${mountpoint}\n"
+		fi
+	done
+}
+
+device_get_mountpoint () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	if [ -n "`device_get_mountpoint_from_mount \"${pattern}\" | egrep -- \"^/\"`" ]
+	then
+		printf -- "`device_get_mountpoint_from_mount \"${pattern}\" | egrep -- \"^/\"`\n"
+	elif [ -n "`device_get_mountpoint_from_fstab \"${pattern}\" | egrep -- \"^/\"`" ]
+	then
+		printf -- "`device_get_mountpoint_from_fstab \"${pattern}\" | egrep -- \"^/\"`\n"
+	elif [ -n "`device_get_mountpoint_from_blkid \"${pattern}\" | egrep -- \"^/\"`" ]
+	then
+		printf -- "`device_get_mountpoint_from_blkid \"${pattern}\" | egrep -- \"^/\"`\n"
+
+	fi
+}
+
+device_uuid_to_filename () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	[ "`file_show_real_filename \"blkid\"`" ] || false
+	blkid="`file_show_real_filename \"blkid\"`"
+	#blkid -o list | while read device filesystem label mountpoint uuid
+	blkid -o list | while read device filesystem mountpoint uuid
+	do
+		if [ "${uuid}" = "${pattern}" ]
+		then
+			printf -- "${device}\n"
+			break
+		fi
+	done
+}
+
+device_is_swap () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	ret="0"
+	device_swap_list | while read device
+	do
+		if [ "${device}" = "${pattern}" ]
+		then
+			ret="1"
+			break
+		fi
+	done
+	printf -- "${ret}\n"
+}
+
+fi

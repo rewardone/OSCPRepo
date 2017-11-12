@@ -1,0 +1,161 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Check for write permissions over privileged files and processes'
+# linked libraries
+
+. lib/misc/file
+. lib/misc/group
+. lib/misc/linker
+. lib/misc/permission
+. lib/misc/privileged
+. lib/misc/stdio
+. lib/misc/user
+
+privileged_dependency_init () {
+	stdio_message_log "privileged_dependency" "Starting: `date`"
+}
+
+privileged_dependency_traverse () {
+	pattern="${1}"
+	privfilename="${2}"
+	filetype="${3}"
+	library="${4}"
+	pathtype="${5}"
+	file_parent_traverse "${pattern}" | while read filename
+	do
+		# /etc/ld.so.conf.d/ files can contain files which we are not interested here, only directories
+		if [ ! -d "${filename}" ]
+		then
+			continue
+		fi
+		file_show_non_symlink_perms " ${filename}$" | while read filepath permissions userid groupid
+		do
+			#stdio_message_debug "privileged_dependency" "Checking permissions of ${pathtype} ${filepath} ($permissions) for privileged file ${filetype} is ${privfilename} and library is ${library}"
+			case "${permissions}" in
+				????????w?)
+					if [ "`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1 ]
+					then
+						stdio_message_log "privileged_dependency" "${filetype} ${privfilename} depends on ${library} - ${pathtype} ${filepath} is owned by user ${userid} (group ${groupid}) and is world-writable with sticky bit (${permissions})"
+					else
+						stdio_message_warn "privileged_dependency" "${filetype} ${privfilename} depends on ${library} - ${pathtype} ${filepath} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"
+					fi
+					;;
+				?????w????)
+					if [ "`group_is_in_group_name \"${groupid}\"`" -eq 1 ]
+					then
+						stdio_message_warn "privileged_dependency" "${filetype} ${privfilename} depends on ${library} - ${pathtype} ${filepath} is owned by user ${userid} (group ${groupid}: YOU) and is group-writable (${permissions})"
+					else
+						stdio_message_log "privileged_dependency" "${filetype} ${privfilename} depends on ${library} - ${pathtype} ${filepath} is owned by user ${userid} (group ${groupid}) and is group-writable (${permissions})"
+					fi
+					;;
+				??w???????)
+					if [ "`user_is_root \"${userid}\"`" -ne 1 -a "`user_show_user_name`" = "${userid}" ]
+					then
+						stdio_message_debug "privileged_dependency" "${filetype} ${privfilename} depends on ${library} - ${pathtype} ${filepath} is owned by user ${userid} (YOU) (group ${groupid}), non-root user (${permissions})"
+					elif [ "`user_is_root \"${userid}\"`" -ne 1 ]
+					then
+						stdio_message_log "privileged_dependency" "${filetype} ${privfilename} depends on ${library} - ${pathtype} ${filepath} is owned by user ${userid} (group ${groupid}), non-root user (${permissions})"
+					fi
+					;;
+			esac
+		done
+	done
+}
+
+privileged_dependency_permissions () {
+	library="${1}"
+	privfilename="${2}"
+	filetype="${3}"
+	file_show_non_symlink_perms " ${library}$" | while read filename permissions userid groupid
+	do
+		#stdio_message_debug "privileged_dependency" "Checking permissions for privileged file ${filetype} ${privfilename}'s library ${filename} ($permissions)"
+		case "${permissions}" in
+			????????w?)
+				if [ "`group_is_in_group_name \"${groupid}\"`" -eq 1 ]
+				then
+					stdio_message_log "privileged_dependency" "${filetype} ${privfilename} depends on ${filename}, this is owned by user ${userid} (group ${groupid}) and is world-writable with sticky bit (${permissions})"
+				else
+					stdio_message_warn "privileged_dependency" "${filetype} ${privfilename} depends on ${filename}, this is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"
+				fi
+				;;
+			?????w????)
+				if [ "`group_is_in_group_name \"${groupid}\"`" -eq 1 ]
+				then
+					stdio_message_warn "privileged_dependency" "${filetype} ${privfilename} depends on ${filename}, this is owned by user ${userid} (group ${groupid}: YOU) and is group-writable (${permissions})"
+				else
+					stdio_message_log "privileged_dependency" "${filetype} ${privfilename} depends on ${filename}, this is owned by user ${userid} (group ${groupid}) and is group-writable (${permissions})"
+				fi
+				;;
+			??w???????)
+				if [ "`user_is_root \"${userid}\"`" -ne 1 ]
+				then
+					stdio_message_log "privileged_dependency" "${filetype} ${privfilename} depends on ${filename}, this is owned by user ${userid} (group ${groupid}), non-root user (${permissions})"
+				fi
+				;;
+		esac
+	done
+}
+
+privileged_dependency_main () {
+	privileged_list | while read filetype filename usergroupid
+	do
+		#stdio_message_debug "privileged_dependency" "Processing privileged file ${filetype} ${filename}"
+		linker_list_dependencies "${filename}" | while read library
+		do
+			#stdio_message_debug "privileged_dependency" "Processing privileged file ${filetype} ${filename}'s library ${library}"
+			# when the library needed by the program does not exist, ldd returns "not found" - i.e. "	libname.so.2 => not found", however the following if condition is cautious and checks both if the file exist and if the ldd output returned "not found" (hence the linker library returned the library relative path (relativelibrary))
+			if [ ! -e "${library}" -o -n "`printf -- \"${library}\" | grep -v \"^/\"`" ]
+			then
+				case "${library}" in
+					# if the library is a absolute file path, we check for write permissions on its parent directories
+					/*)
+						#stdio_message_debug "privileged_dependency" "Library ${library} does not exist, traversing parent paths"
+						privileged_dependency_traverse "${library}" "${filename}" "${filetype}" "${library}" "parent path"
+						;;
+					# if the library is a relative file path, we check for write permissions on all system libraries file paths
+					*)
+						#stdio_message_debug "privileged_dependency" "Library ${library} does not exist, traversing system library paths"
+						linker_list_system_filenames | while read filepath
+						do
+							privileged_dependency_traverse "${filepath}" "${filename}" "${filetype}" "${library}" "system library path"
+						done
+						;;
+				esac
+				continue
+			elif [ -h "${library}" ]
+			then
+				linkedlibrary="`file_show_symlinked_filename "${library}"`"
+				if [ -n "${linkedlibrary}" ]
+				then
+					#stdio_message_debug "privileged_dependency" "Privileged file ${filetype} ${filename} depends on library ${library}, a symlink to ${linkedlibrary}"
+					privileged_dependency_permissions "${linkedlibrary}" "${filename}" "${filetype}"
+				fi
+			else
+				privileged_dependency_permissions "${library}" "${filename}" "${filetype}"
+			fi
+		done
+	done
+}
+
+privileged_dependency_fini () {
+	stdio_message_log "privileged_dependency" "Ending: `date`"
+}

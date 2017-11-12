@@ -1,0 +1,75 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${initincluded}" ]
+then
+
+initincluded=1
+
+. lib/misc/file
+. lib/misc/parse
+. lib/misc/user
+. lib/misc/validate
+
+init_list () {
+	file_show_perms " /etc/init.d/" | while read filename permissions userid groupid
+	do
+		if [ -h "${filename}" ]
+		then
+			symlinkedfilename="`file_show_symlinked_filename \"${filename}\"`"
+			if [ -n "${symlinkedfilename}" -a "`file_is_directory \"${symlinkedfilename}\"`" -ne 1 ]
+			then
+				printf -- "root ${symlinkedfilename}\n"
+			fi
+		else
+			printf -- "root ${filename}\n"
+		fi
+	done
+}
+
+init_file_extract_paths () {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	parse_extract_absolute_filepaths "`cat -- \"${filename}\"`" | while read filepath
+	do
+		# do not return file paths that do not exist, are device files or are within /proc
+		if [ "`file_exists \"${filepath}\"`" -ne 1 -o -n "`printf -- \"${filepath}\" | egrep -- \"^/dev/\"`" -o -n "`printf -- \"${filepath}\" | egrep -- \"^/proc/\"`" ]
+		then
+			continue
+		# follow symbolic links
+		elif [ -h "${filepath}" ]
+		then
+			symlinkedfilepath="`file_show_symlinked_filename \"${filepath}\"`"
+			if [ -n "${symlinkedfilepath}" -a "`file_is_directory \"${symlinkedfilepath}\"`" -ne 1 ]
+			then
+				printf -- "root ${symlinkedfilepath}\n"
+			fi
+		# ignore directories
+		elif [ "`file_is_directory \"${filepath}\"`" -ne 1 ]
+		then
+			printf -- "root ${filepath}\n"
+		fi
+	done
+}
+
+fi

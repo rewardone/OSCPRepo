@@ -1,0 +1,1378 @@
+#!/bin/sh
+
+#################################################################################
+#
+#   Lynis
+# ------------------
+#
+# Copyright 2007-2013, Michael Boelen
+# Copyright 2007-2017, CISOfy
+#
+# Website  : https://cisofy.com
+# Blog     : http://linux-audit.com
+# GitHub   : https://github.com/CISOfy/lynis
+#
+# Lynis comes with ABSOLUTELY NO WARRANTY. This is free software, and you are
+# welcome to redistribute it under the terms of the GNU General Public License.
+# See LICENSE file for usage of this software.
+#
+#################################################################################
+#
+# User, Group and authentication tests
+#
+#################################################################################
+#
+    LDAP_AUTH_ENABLED=0
+    LDAP_PAM_ENABLED=0
+    LDAP_CONF_LOCATIONS="${ROOTDIR}etc/ldap.conf ${ROOTDIR}etc/ldap/ldap.conf ${ROOTDIR}etc/openldap/ldap.conf ${ROOTDIR}usr/local/etc/ldap.conf ${ROOTDIR}usr/local/etc/openldap/ldap.conf"
+    PAM_FILE_LOCATIONS="${ROOTDIR}lib/i386-linux-gnu/security ${ROOTDIR}lib/security ${ROOTDIR}lib/x86_64-linux-gnu/security ${ROOTDIR}lib64/security ${ROOTDIR}usr/lib /usr/lib/security"
+    SUDOERS_LOCATIONS="${ROOTDIR}etc/sudoers ${ROOTDIR}usr/local/etc/sudoers ${ROOTDIR}usr/pkg/etc/sudoers"
+    SUDOERS_FILE=""
+#
+#################################################################################
+#
+    InsertSection "Users, Groups and Authentication"
+
+    # Test        : AUTH-9204
+    # Description : Check users with UID zero (0)
+    # Notes       : Ignores :0: in file if match is in NIS related line
+    Register --test-no AUTH-9204 --weight L --network NO --category security --description "Check users with an UID of zero"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        # Search accounts with UID 0
+        LogText "Test: Searching accounts with UID 0"
+        FIND=$(${GREPBINARY} ':0:' ${ROOTDIR}etc/passwd | ${EGREPBINARY} -v '^#|^root:|^(\+:\*)?:0:0:::' | ${CUTBINARY} -d ":" -f1,3 | ${GREPBINARY} ':0')
+        if [ ! -z "${FIND}" ]; then
+            Display --indent 2 --text "- Administrator accounts" --result "${STATUS_WARNING}" --color RED
+            LogText "Result: Found more than one administrator accounts"
+            ReportWarning "${TEST_NO}" "Multiple users with UID 0 found in passwd file"
+            for USER in ${FIND}; do
+                LogText "Administrator account: ${USER}"
+                Report "user_with_uid_zero[]=${USER}"
+                if [ "${USER}" = "toor" ]; then
+                    LogText "BSD note: default there is a user 'toor' installed. This account is considered useless unless it"
+                    LogText "is assigned a password and used for daily operations or emergencies. ie: bad shell for root user."
+                    ReportSuggestion ${TEST_NO} "Use vipw to delete the 'toor' user if not used."
+                fi
+            done
+        else
+            Display --indent 2 --text "- Administrator accounts" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: No accounts found with UID 0 other than root."
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9208
+    # Description : Check non-unique accounts
+    Register --test-no AUTH-9208 --weight L --network NO --category security --description "Check non-unique accounts in passwd file"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking for non-unique accounts"
+        if  [ "${OS}" = "DragonFly" -o "${OS}" = "FreeBSD" -o "${OS}" = "NetBSD" -o "${OS}" = "OpenBSD" ]; then
+            PASSWD_FILE="${ROOTDIR}etc/master.passwd"
+          else
+            PASSWD_FILE="${ROOTDIR}etc/passwd"
+        fi
+        # Check password file
+        if [ -f ${PASSWD_FILE} ]; then
+            FIND=$(${GREPBINARY} -v '^#' ${PASSWD_FILE} | ${CUTBINARY} -d ':' -f3 | ${SORTBINARY} | uniq -d)
+            if [ "${FIND}" = "" ]; then
+                Display --indent 2 --text "- Unique UIDs" --result "${STATUS_OK}" --color GREEN
+                LogText "Result: all accounts found in ${PASSWD_FILE} are unique"
+            else
+                Display --indent 2 --text "- Unique UIDs" --result "${STATUS_WARNING}" --color RED
+                LogText "Result: found multiple accounts with same UID"
+                LogText "Output (non-unique UIDs): ${FIND}"
+                ReportWarning ${TEST_NO} "Multiple accounts found with same UID"
+            fi
+          else
+            Display --indent 2 --text "- Unique UIDs" --result "${STATUS_SKIPPED}" --color WHITE
+            LogText "Result: test skipped, ${PASSWD_FILE} file not available"
+        fi
+        LogText "Remarks: Non unique UIDs can be a risk for the system or part of a configuration mistake"
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9212
+    # Description : Test group file with chkgrp tool (ie FreeBSD)
+    LogText "Prerequisite test: /usr/sbin/chkgrp"
+    if [ -x ${ROOTDIR}usr/sbin/chkgrp ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9212 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Test group file"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        Display --indent 2 --text "- Checking chkgrp tool" --result "${STATUS_FOUND}" --color GREEN
+        LogText "Result: /usr/sbin/chkgrp binary found. Using this to perform next test(s)."
+        LogText "Test: Testing consistency of /etc/group file"
+        FIND=$(${ROOTDIR}usr/sbin/chkgrp | ${GREPBINARY} -v 'is fine')
+        if [ "${FIND}" = "" ]; then
+            Display --indent 4 --text "- Checking consistency of /etc/group file" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: chkgrp test performed, Group file seems to be ok."
+          else
+            Display --indent 4 --text "- Checking consistency of /etc/group file" --result "${STATUS_WARNING}" --color RED
+            LogText "Result: chkgrp found some errors. Run the tool manually to see details."
+            LogText "chkgrp output: ${FIND}"
+            ReportWarning ${TEST_NO} "chkgrp reported inconsistencies in /etc/group file"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9216
+    # Description : Check /etc/group and shadow group files
+    # Notes       : Run grpck to test group files (most likely /etc/group and shadow group files)
+    if [ ! -z "${GRPCKBINARY}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9216 --preqs-met ${PREQS_MET} --weight L --network NO --root-only YES --category security --description "Check group and shadow group files"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking for grpck binary output"
+
+        case ${OS} in
+            "AIX")  FIND=$(${GRPCKBINARY} -n ALL 2> /dev/null ; echo $?) ;;
+            "Linux")
+                if [ "${LINUX_VERSION}" = "SuSE" ]; then
+                    FIND=$(${GRPCKBINARY} -q -r > /dev/null ; echo $?)
+                else
+                    FIND=$(${GRPCKBINARY} -r 2> /dev/null ; echo $?)
+                fi
+                ;;
+            *)      FIND=$(${GRPCKBINARY} 2> /dev/null ; echo $?) ;;
+        esac
+
+        # Check exit-code
+        if [ "${FIND}" = "0" ]; then
+            Display --indent 2 --text "- Consistency of group files (grpck)" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: grpck binary didn't find any errors in the group files"
+        else
+            Display --indent 2 --text "- Consistency of group files (grpck)" --result "${STATUS_WARNING}" --color RED
+            ReportWarning ${TEST_NO} "grpck binary found errors in one or more group files"
+        fi
+        unset FIND
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9218
+    # Description : Check login shells for passwordless accounts
+    # Notes       : Results should be checked
+    Register --test-no AUTH-9218 --os FreeBSD --weight L --network NO --category security --description "Check login shells for passwordless accounts"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        LogText "Test: Checking login shells"
+        if [ -f ${ROOTDIR}etc/master.passwd ]; then
+            # Check for all shells, except: (/usr)/sbin/nologin /nonexistent
+            FIND=$(${GREPBINARY} "[a-z]:\*:" /etc/master.passwd | ${EGREPBINARY} -v '^#|/sbin/nologin|/usr/sbin/nologin|/nonexistent' | ${SEDBINARY} 's/ /!space!/g')
+            if [ "${FIND}" = "" ]; then
+                Display --indent 2 --text "- Login shells" --result "${STATUS_OK}" --color GREEN
+            else
+                Display --indent 2 --text "- Login shells" --result "${STATUS_WARNING}" --color RED
+                for LINE in ${FIND}; do
+                    LINE=$(echo ${LINE} | ${SEDBINARY} 's/!space!/ /g')
+                    SHELL=$(echo ${LINE} | ${AWKBINARY} -F: '{ print $10 }')
+                    LogText "Output: ${LINE}"
+                    if [ -z "${SHELL}" ]; then
+                        LogText "Result: found no shell on line"
+                    else
+                        LogText "Result: found possible harmful shell ${SHELL}"
+                        if [ -f ${SHELL} ]; then
+                            LogText "Result: shell ${SHELL} does exist"
+                            FOUND=1
+                        else
+                            LogText "Result: shell ${SHELL} does not exist"
+                            ReportSuggestion ${TEST_NO} "Determine if account is needed, as shell ${SHELL} does not exist"
+                        fi
+                    fi
+                done
+                if [ ${FOUND} -eq 1 ]; then
+                    ReportWarning ${TEST_NO} "Possible harmful shell found (for passwordless account!)"
+                fi
+            fi
+          else
+            Display --indent 2 --text "- Login shells" --result "${STATUS_SKIPPED}" --color WHITE
+            LogText "Result: No /etc/master.passwd file found"
+        fi
+        unset LINE SHELL
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9489
+    # Description : Check login shells for passwordless accounts
+    # Notes       : Results should be checked
+    Register --test-no AUTH-9489 --os DragonFly --weight L --network NO --category security --description "Check login shells for passwordless accounts"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        LogText "Test: Checking login shells"
+        if [ -f ${ROOTDIR}etc/master.passwd ]; then
+            # Check for all shells, except: (/usr)/sbin/nologin /nonexistent
+            FIND=$(${GREPBINARY} "[a-z]:\*:" ${ROOTDIR}etc/master.passwd | ${EGREPBINARY} -v '^#|/sbin/nologin|/usr/sbin/nologin|/nonexistent' | ${SEDBINARY} 's/ /!space!/g')
+            if [ -z "${FIND}" ]; then
+                Display --indent 2 --text "- Login shells" --result "${STATUS_OK}" --color GREEN
+            else
+                Display --indent 2 --text "- Login shells" --result "${STATUS_WARNING}" --color RED
+                for LINE in ${FIND}; do
+                    LINE=$(echo ${LINE} | ${SEDBINARY} 's/!space!/ /g')
+                    SHELL=$(echo ${LINE} | ${AWKBINARY} -F: '{ print $10 }')
+                    LogText "Output: ${LINE}"
+                    if [ -z "${SHELL}" ]; then
+                        LogText "Result: found no shell on line"
+                    else
+                        LogText "Result: found possible harmful shell ${SHELL}"
+                        if [ -f ${SHELL} ]; then
+                            LogText "Result: shell ${SHELL} does exist"
+                            FOUND=1
+                        else
+                            LogText "Result: shell ${SHELL} does not exist"
+                            ReportSuggestion ${TEST_NO} "Determine if account is needed, as shell ${SHELL} does not exist"
+                        fi
+                    fi
+                done
+                if [ ${FOUND} -eq 1 ]; then
+                    ReportWarning ${TEST_NO} "Possible harmful shell found (for passwordless account!)"
+                fi
+            fi
+          else
+            Display --indent 2 --text "- Login shells" --result "${STATUS_SKIPPED}" --color WHITE
+            LogText "Result: No ${ROOTDIR}etc/master.passwd file found"
+        fi
+        unset LINE SHELL
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9222
+    # Description : Check unique group IDs
+    Register --test-no AUTH-9222 --weight L --network NO --category security --description "Check unique groups (IDs)"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking for non unique group ID's in /etc/group"
+        FIND=$(${GREPBINARY} -v '^#' ${ROOTDIR}etc/group | ${GREPBINARY} -v '^$' | ${AWKBINARY} -F: '{ print $3 }' | ${SORTBINARY} | uniq -d)
+        if [ -z "${FIND}" ]; then
+            Display --indent 2 --text "- Unique group IDs" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: All group ID's are unique"
+            Report "auth_group_ids_unique=1"
+        else
+            Display --indent 2 --text "- Unique group IDs" --result "${STATUS_WARNING}" --color RED
+            LogText "Result: Found the same group ID multiple times"
+            for I in ${FIND}; do
+                Report "auth_groups_nonunique[]=${I}"
+                LogText "Non-unique group: ${I}"
+            done
+            ReportSuggestion ${TEST_NO} "Check your /etc/group file and correct any inconsistencies"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9226
+    # Description : Check unique group names
+    if [ -f ${ROOTDIR}etc/group ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9226 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Check unique group names"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking for non unique group names in ${ROOTDIR}etc/group"
+        FIND=$(${GREPBINARY} -v '^#' ${ROOTDIR}etc/group | ${GREPBINARY} -v '^$' | ${AWKBINARY} -F: '{ print $1 }' | ${SORTBINARY} | uniq -d)
+        if [ -z "${FIND}" ]; then
+            Display --indent 2 --text "- Unique group names" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: All group names are unique"
+            Report "auth_group_names_unique=1"
+        else
+            Display --indent 2 --text "- Unique group names" --result "${STATUS_WARNING}" --color RED
+            LogText "Result: Found the same group name multiple times"
+            for I in ${FIND}; do
+                Report "auth_groups_nonunique[]=${I}"
+                LogText "Non-unique group: ${I}"
+            done
+            ReportSuggestion ${TEST_NO} "Check your ${ROOTDIR}etc/group file and correct any inconsistencies"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9228
+    # Description : Check password file consistency with pwck
+    # Notes       : Operating systems include Linux, Solaris
+    if [ -x ${ROOTDIR}usr/sbin/pwck ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9228 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Check password file consistency with pwck"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking password file consistency (pwck)"
+        TESTED=0
+        case ${OS} in
+            "Linux")
+                FIND=$(${ROOTDIR}usr/sbin/pwck -q -r 2> /dev/null; echo $?)
+                TESTED=1
+            ;;
+            "Solaris")
+                FIND=$(${ROOTDIR}usr/sbin/pwck 2> /dev/null; echo $?)
+                TESTED=1
+            ;;
+            *)
+                LogText "Dev: found ${ROOTDIR}usr/sbin/pwck, but unsure how to call it on this operating system"
+                ReportException "${TEST_NO}:1" "Found ${ROOTDIR}usr/sbin/pwck, but unsure how to call it on this operating system"
+            ;;
+        esac
+        # Only display if this test has been executed
+        if [ ${TESTED} -eq 1 -a "${FIND}" = "0" ]; then
+            Display --indent 2 --text "- Password file consistency" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: pwck check didn't find any problems"
+            AddHP 2 2
+        else
+            Display --indent 2 --text "- Password file consistency" --result "${STATUS_SUGGESTION}" --color YELLOW
+            LogText "Result: pwck found one or more errors/warnings in the password file."
+            ReportSuggestion ${TEST_NO} "Run pwck manually and correct any errors in the password file"
+            AddHP 0 2
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9234
+    # Description : Query user accounts
+    # Notes       : AIX: 100+
+    #               HPUX: 100+
+    #               macOS doesn't have any user info in /etc/passwd, users are managed with opendirectoryd)
+    #               OpenBSD/NetBSD: unknown
+    #               Arch Linux / CentOS / Ubuntu: 1000+
+    Register --test-no AUTH-9234 --weight L --network NO --category security --description "Query user accounts"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Read system users (including root user) from password database (e.g. /etc/passwd)"
+        FIND=""
+
+        case ${OS} in
+            "AIX")
+                LogText "AIX real users output (ID = 0, or 100+):"
+                FIND=$(${AWKBINARY} -F: '($3 >= 100 && $3 != 65534) || ($3 == 0) { print $1","$3 }' /etc/passwd)
+            ;;
+
+            "FreeBSD")
+                LogText "FreeBSD real users output (ID = 0, or 1000+, but not 65534):"
+                FIND=$(${AWKBINARY} -F: '($3 >= 1000 && $3 != 65534) || ($3 == 0) { print $1","$3 }' /etc/passwd)
+            ;;
+
+            "Linux")
+                UID_MIN=""
+                if [ -f ${ROOTDIR}etc/login.defs ]; then
+                    UID_MIN=$(${GREPBINARY} "^UID_MIN" /etc/login.defs | ${AWKBINARY} '{print $2}')
+                    LogText "Result: found minimal user id specified: ${UID_MIN}"
+                fi
+                if [ "${UID_MIN}" = "" ]; then UID_MIN="1000"; fi
+                LogText "Linux real users output (ID = 0, or ${UID_MIN}+, but not 65534):"
+                FIND=$(${AWKBINARY} -v UID_MIN="${UID_MIN}" -F: '($3 >= UID_MIN && $3 != 65534) || ($3 == 0) { print $1","$3 }' /etc/passwd)
+            ;;
+
+            "macOS")
+                LogText "macOS real users output (ID = 0, or 500-599) using dscacheutil"
+                FIND_USERS=$(dscacheutil -q user | ${GREPBINARY} -A 3 -B 2 -e "^uid: 5[0-9][0-9]" | ${GREPBINARY} "^name: " | ${AWKBINARY} '{print $2}')
+                if [ ! -z "${FIND_USERS}" ]; then
+                    for FUSERNAME in ${FIND_USERS}; do
+                        FDETAILS=$(dscacheutil -q user -a name ${FUSERNAME} | ${GREPBINARY} "^uid: " | ${AWKBINARY} '{print $2}')
+                        FIND="${FUSERNAME},${FDETAILS} ${FIND}"
+                    done
+                else
+                    FIND=""
+                fi
+            ;;
+
+            "OpenBSD")
+                LogText "OpenBSD real users output (ID = 0, or 1000-60000, but not 32767):"
+                FIND=$(${AWKBINARY} -F: '($3 >= 1000 && $3 <= 60000 && $3 != 32767) || ($3 == 0) { print $1","$3 }' /etc/passwd)
+            ;;
+
+            "Solaris")
+                LogText "Solaris real users output (ID =0, or 100+, but not 60001/65534):"
+                FIND=$(${AWKBINARY} -F: '($3 >= 100 && $3 != 60001 && $3 != 65534) || ($3 == 0) { print $1","$3 }' /etc/passwd)
+            ;;
+
+            *)
+                # Want to help improving Lynis? Determine what user IDs belong to normal user accounts
+                ReportException "${TEST_NO}:1" "Can not determine user accounts"
+            ;;
+        esac
+
+        # Check if we got any output
+        if [ -z "${FIND}" ]; then
+            Display --indent 4 --text "Result: No users found/unknown result"
+            LogText "Result: Querying of system users skipped"
+            Display --indent 2 --text "- Query system users (non daemons)" --result "${STATUS_UNKNOWN}" --color YELLOW
+        else
+            Display --indent 2 --text "- Query system users (non daemons)" --result "${STATUS_DONE}" --color GREEN
+            for I in ${FIND}; do
+                if [ ! -z "${I}" ]; then
+                    LogText "Real user: ${I}"
+                    Report "real_user[]=${I}"
+                fi
+            done
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9240
+    # Description : Query NIS+ authentication support
+    Register --test-no AUTH-9240 --weight L --network NO --category security --description "Query NIS+ authentication support"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ -f /etc/nsswitch.conf ]; then
+            FIND=$(${EGREPBINARY} "^passwd" /etc/nsswitch.conf | ${EGREPBINARY} "compat|nisplus")
+            if [ -z "${FIND}" ]; then
+                LogText "Result: NIS+ authentication not enabled"
+                Display --indent 2 --text "- NIS+ authentication support" --result "NOT ENABLED" --color WHITE
+            else
+                FIND2=$(${EGREPBINARY} "^passwd_compat" ${ROOTDIR}etc/nsswitch.conf | ${GREPBINARY} "nisplus")
+                FIND3=$(${EGREPBINARY} "^passwd" ${ROOTDIR}etc/nsswitch.conf | ${GREPBINARY} "nisplus")
+                if [ ! -z "${FIND2}" -o ! -z "${FIND3}" ]; then
+                    LogText "Result: NIS+ authentication enabled"
+                    Display --indent 2 --text "- NIS+ authentication support" --result "${STATUS_ENABLED}" --color GREEN
+                else
+                    LogText "Result: NIS+ authentication not enabled"
+                    Display --indent 2 --text "- NIS+ authentication support" --result "NOT ENABLED" --color WHITE
+                fi
+            fi
+          else
+            LogText "Result: /etc/nsswitch.conf not found"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9242
+    # Description : Query NIS authentication support
+    Register --test-no AUTH-9242 --weight L --network NO --category security --description "Query NIS authentication support"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ -f /etc/nsswitch.conf ]; then
+            FIND=$(${EGREPBINARY} "^passwd" /etc/nsswitch.conf | ${EGREPBINARY} "compat|nis" | ${GREPBINARY} -v "nisplus")
+            if [ -z "${FIND}" ]; then
+                LogText "Result: NIS authentication not enabled"
+                Display --indent 2 --text "- NIS authentication support" --result "NOT ENABLED" --color WHITE
+            else
+                FIND2=$(${EGREPBINARY} "^passwd_compat" /etc/nsswitch.conf | ${GREPBINARY} "nis" | ${GREPBINARY} -v "nisplus")
+                FIND3=$(${EGREPBINARY} "^passwd" /etc/nsswitch.conf | ${GREPBINARY} "nis" | ${GREPBINARY} -v "nisplus")
+                if [ ! -z "${FIND2}" -o ! -z "${FIND3}" ]; then
+                    LogText "Result: NIS authentication enabled"
+                    Display --indent 2 --text "- NIS authentication support" --result "${STATUS_ENABLED}" --color GREEN
+                else
+                    LogText "Result: NIS authentication not enabled"
+                    Display --indent 2 --text "- NIS authentication support" --result "NOT ENABLED" --color WHITE
+                fi
+            fi
+        else
+            LogText "Result: /etc/nsswitch.conf not found"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9250
+    # Description : Check for sudoers file
+    Register --test-no AUTH-9250 --weight L --network NO --category security --description "Checking sudoers file"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        for I in ${SUDOERS_LOCATIONS}; do
+            LogText "Test: checking presence ${I}"
+            if [ -f ${I} ]; then
+                FOUND=1
+                SUDOERS_FILE="${I}"
+                LogText "Result: found file (${SUDOERS_FILE})"
+            else
+                LogText "Result: file ${I} not found"
+            fi
+        done
+        if [ ${FOUND} -eq 1 ]; then
+            LogText "Result: sudoers file found (${SUDOERS_FILE})"
+            Display --indent 2 --text "- sudoers file" --result "${STATUS_FOUND}" --color GREEN
+        else
+            LogText "Result: sudoers file NOT found"
+            Display --indent 2 --text "- sudoers file" --result "${STATUS_NOT_FOUND}" --color YELLOW
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9252
+    # Description : Check for sudoers file permissions
+    if [ ! -z "${SUDOERS_FILE}" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9252 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Check sudoers file"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: checking sudoers file (${SUDOERS_FILE}) permissions"
+        FIND=$(ls -l ${SUDOERS_FILE} | ${CUTBINARY} -c 2-10)
+        LogText "Result: Found file permissions: ${FIND}"
+        if [ "${FIND}" = "rw-------" -o "${FIND}" = "rw-rw----" -o "${FIND}" = "r--r-----" ]; then
+            LogText "Result: file ${SUDOERS_FILE} has correct permissions"
+            Display --indent 4 --text "- Check sudoers file permissions" --result "${STATUS_OK}" --color GREEN
+        else
+            LogText "Result: file has possibly unsafe file permissions"
+            Display --indent 4 --text "- Check sudoers file permissions" --result "${STATUS_WARNING}" --color RED
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9254
+    # Description : Solaris test to check passwordless accounts
+    Register --test-no AUTH-9254 --os Solaris --weight L --network NO --root-only YES --category security --description "Solaris passwordless accounts"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FIND=$(logins -p | ${AWKBINARY} '{ print $1 }')
+        if [ -z "${FIND}" ]; then
+            LogText "Result: no passwordless accounts found"
+            Display --indent 2 --text "- Passwordless accounts on Solaris" --result "${STATUS_OK}" --color GREEN
+        else
+            for I in ${FIND}; do
+                ReportWarning ${TEST_NO} "Found passwordless account (${I})"
+            done
+            Display --indent 2 --text "- Passwordless accounts on Solaris" --result "${STATUS_WARNING}" --color RED
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9262
+    # Description : Search for PAM password strength testing libraries
+    Register --test-no AUTH-9262 --weight L --network NO --category security --description "Checking presence password strength testing tools (PAM)"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        FOUND_CRACKLIB=0
+        FOUND_PASSWDQC=0
+        FOUND_PWQUALITY=0
+
+        # Cracklib
+        LogText "Searching PAM password testing modules (cracklib, passwdqc, pwquality)"
+        for I in ${PAM_FILE_LOCATIONS}; do
+
+            if [ -f ${I}/pam_cracklib.so ]; then
+                FOUND_CRACKLIB=1
+                FOUND=1
+                LogText "Result: found pam_cracklib.so (crack library PAM) in ${I}"
+            fi
+
+            if [ -f ${I}/pam_passwdqc.so ]; then
+                FOUND_PASSWDQC=1
+                FOUND=1
+                LogText "Result: found pam_passwdqc.so (passwd quality control PAM) in ${I}"
+            fi
+
+            if [ -f ${I}/pam_pwquality.so ]; then
+                FOUND_PWQUALITY=1
+                FOUND=1
+                LogText "Result: found pam_pwquality.so (password quality control PAM) in ${I}"
+            fi
+        done
+
+        # Cracklib
+        if [ ${FOUND_CRACKLIB} -eq 1 ]; then
+            LogText "Result: pam_cracklib.so found"
+            Report "pam_cracklib=1"
+        else
+            LogText "Result: pam_cracklib.so NOT found (crack library PAM)"
+        fi
+
+        # Password quality control
+        if [ ${FOUND_PASSWDQC} -eq 1 ]; then
+            LogText "Result: pam_passwdqc.so found"
+            Report "pam_passwdqc=1"
+        else
+            LogText "Result: pam_passwdqc.so NOT found (passwd quality control PAM)"
+        fi
+
+        # pwquality module
+        if [ ${FOUND_PWQUALITY} -eq 1 ]; then
+            LogText "Result: pam_pwquality.so found"
+            Report "pam_pwquality=1"
+        else
+            LogText "Result: pam_pwquality.so NOT found (pwquality control PAM)"
+        fi
+
+        if [ ${FOUND} -eq 0 ]; then
+            Display --indent 2 --text "- PAM password strength tools" --result "${STATUS_SUGGESTION}" --color YELLOW
+            LogText "Result: no PAM modules for password strength testing found"
+            ReportSuggestion ${TEST_NO} "Install a PAM module for password strength testing like pam_cracklib or pam_passwdqc"
+            AddHP 0 3
+        else
+            Display --indent 2 --text "- PAM password strength tools" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: found at least one PAM module for password strength testing"
+            AddHP 3 3
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9264
+    # Description : Scan /etc/pam.conf file
+    Register --test-no AUTH-9264 --weight L --network NO --category security --description "Checking presence pam.conf"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking file /etc/pam.conf"
+        if [ -f ${ROOTDIR}etc/pam.conf ]; then
+            LogText "Result: file ${ROOTDIR}etc/pam.conf exists"
+            Display --indent 2 --text "- PAM configuration files (pam.conf)" --result "${STATUS_FOUND}" --color GREEN
+            LogText "Test: searching PAM configuration files"
+            FIND=$(${EGREPBINARY} -v "^#" ${ROOTDIR}etc/pam.conf | ${EGREPBINARY} -v "^$" | ${SEDBINARY} 's/[[:space:]]/ /g' | ${SEDBINARY} 's/  / /g' | ${SEDBINARY} 's/ /:space:/g')
+            if [ -z "${FIND}" ]; then
+                LogText "Result: File has no configuration options defined (empty, or only filled with comments and empty lines)"
+            else
+                LogText "Result: found one or more configuration lines"
+                for LINE in ${FIND}; do
+                    LINE=$(echo ${LINE} | ${SEDBINARY} 's/:space:/ /g')
+                    LogText "Found line: ${LINE}"
+                done
+            fi
+        else
+            LogText "Result: file /etc/pam.conf could not be found"
+            Display --indent 2 --text "- PAM configuration file (pam.conf)" --result "${STATUS_NOT_FOUND}" --color WHITE
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9266
+    # Description : Searching available PAM configurations (/etc/pam.d)
+    Register --test-no AUTH-9266 --weight L --network NO --category security --description "Checking presence pam.d files"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking directory /etc/pam.d"
+        if [ -d ${ROOTDIR}etc/pam.d ]; then
+            LogText "Result: directory /etc/pam.d exists"
+            Display --indent 2 --text "- PAM configuration files (pam.d)" --result "${STATUS_FOUND}" --color GREEN
+            LogText "Test: searching PAM configuration files"
+            FIND=$(find /etc/pam.d -type f -print | sort)
+            for FILE in ${FIND}; do
+                LogText "Found file: ${FILE}"
+            done
+        else
+            LogText "Result: directory /etc/pam.d could not be found"
+            Display --indent 2 --text "- PAM configuration files (pam.d)" --result "${STATUS_NOT_FOUND}" --color WHITE
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9268
+    # Description : Searching available PAM files
+    # Notes       : PAM is used on AIX, FreeBSD, Linux, HPUX, Solaris
+    if [ ${OS} = "AIX" -o ${OS} = "Linux" -o ${OS} = "HPUX" -o ${OS} = "Solaris" ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9268 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking presence pam.d files"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        LogText "Test: Searching pam modules"
+        for DIR in ${PAM_FILE_LOCATIONS}; do
+            LogText "Test: Checking ${DIR}"
+            if [ -d ${DIR} -a ! -L ${DIR} ]; then
+                LogText "Result: directory ${DIR} exists"
+                # Search in the specified directory
+                if [ "${OS}" = "Solaris" ]; then
+                    # Solaris does not support -maxdepth
+                    FIND=$(find ${DIR} -type f -name "pam_*.so" -print | sort)
+                else
+                    FIND=$(find ${DIR} -maxdepth 1 -type f -name "pam_*.so" -print | sort)
+                fi
+                if [ ! -z "${FIND}" ]; then FOUND=1; fi
+                for FILE in ${FIND}; do
+                    LogText "Found file: ${FILE}"
+                    Report "pam_module[]=${FILE}"
+                done
+            else
+                LogText "Result: directory ${DIR} could not be found or is a symlink to another directory"
+            fi
+        done
+        # Check if we found at least one module
+        if [ ${FOUND} -eq 0 ]; then
+            Display --indent 2 --text "- PAM modules" --result "${STATUS_NOT_FOUND}" --color WHITE
+            LogText "Result: no PAM modules found"
+        else
+            Display --indent 2 --text "- PAM modules" --result "${STATUS_FOUND}" --color GREEN
+        fi
+        unset DIR; unset FILE; unset FIND
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9278
+    # Description : Search LDAP support in PAM files
+    Register --test-no AUTH-9278 --weight L --network NO --category security --description "Checking LDAP pam status"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: checking presence /etc/pam.d/common-auth"
+        if [ -f /etc/pam.d/common-auth ]; then
+            LogText "Result: file /etc/pam.d/common-auth exists"
+            LogText "Test: checking presence LDAP module"
+            FIND=$(${GREPBINARY} "^auth.*ldap" /etc/pam.d/common-auth)
+            if [ ! "${FIND}" = "" ]; then
+                LogText "Result: LDAP module present"
+                LogText "Output: ${FIND}"
+                Display --indent 2 --text "- LDAP module in PAM" --result "${STATUS_FOUND}" --color GREEN
+                LDAP_AUTH_ENABLED=1
+                LDAP_PAM_ENABLED=1
+            else
+                LogText "Result: LDAP module not found"
+                Display --indent 2 --text "- LDAP module in PAM" --result "${STATUS_NOT_FOUND}" --color WHITE
+            fi
+        else
+            LogText "Result: file /etc/pam.d/common-auth not found, skipping test"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9282 and AUTH-9283
+    # Note        : Every Linux based operating system seem to have different passwd
+    #               options, so we have to check the version first.
+    if [ "${OS}" = "Linux" ]; then
+        if [ ${OS_REDHAT_OR_CLONE} -eq 0 ]; then
+            case ${LINUX_VERSION} in
+                "SuSE")
+                    PREQS_MET="YES"
+                    FIND=$(passwd -a -S 2> /dev/null | ${AWKBINARY} '{ if ($2=="P" && $5=="99999") print $1 }')
+                    FIND2=$(passwd -a -S 2> /dev/null | ${AWKBINARY} '{ if ($2=="NP") print $1 }')
+                    ;;
+                *)
+                    PREQS_MET="YES"
+                    FIND=$(passwd --all --status 2> /dev/null | ${AWKBINARY} '{ if ($2=="P" && $5=="99999") print $1 }')
+                    FIND2=$(passwd --all --status 2> /dev/null | ${AWKBINARY} '{ if ($2=="NP") print $1 }')
+                    ;;
+            esac
+        else
+            LogText "Result: skipping test for this Linux version"
+            ReportManual "AUTH-9282:01"
+            PREQS_MET="NO"
+            FIND=""
+            FIND2=""
+        fi
+     else
+        PREQS_MET="NO"
+    fi
+
+    # Test        : AUTH-9282
+    # Description : Search password protected accounts without expire (Linux)
+    Register --test-no AUTH-9282 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking password protected account without expire date"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking Linux version and password expire date status"
+        if [ -z "${FIND}" ]; then
+            LogText "Result: all accounts seem to have an expire date"
+            Display --indent 2 --text "- Accounts without expire date" --result "${STATUS_OK}" --color GREEN
+        else
+            LogText "Result: found one or more accounts with expire date set"
+            for I in ${FIND}; do
+                LogText "Account without expire date: ${I}"
+            done
+            Display --indent 2 --text "- Accounts without expire date" --result "${STATUS_SUGGESTION}" --color YELLOW
+            ReportSuggestion ${TEST_NO} "When possible set expire dates for all password protected accounts"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9283
+    # Description : Search passwordless accounts
+    Register --test-no AUTH-9283 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking accounts without password"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking passwordless accounts"
+        if [ "${FIND2}" = "" ]; then
+            LogText "Result: all accounts seem to have a password"
+            Display --indent 2 --text "- Accounts without password" --result "${STATUS_OK}" --color GREEN
+        else
+            LogText "Result: found one or more accounts without password"
+            for I in ${FIND2}; do
+                LogText "Account without password: ${I}"
+                Report "account_without_password=${I}"
+            done
+            Display --indent 2 --text "- Accounts without password" --result "${STATUS_WARNING}" --color RED
+            ReportWarning ${TEST_NO} "Found accounts without password"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9286
+    # Description : Check user password aging
+    # Notes       : MIN = minimum age, avoid rotation of passwords too quickly
+    #             : MAX = maximum age, ensure regular change of passwords
+    if [ -f ${ROOTDIR}etc/login.defs ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9286 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Checking user password aging"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking PASS_MIN_DAYS option in ${ROOTDIR}etc/login.defs"
+        FIND=$(${GREPBINARY} "^PASS_MIN_DAYS" ${ROOTDIR}etc/login.defs | ${AWKBINARY} '{ if ($1=="PASS_MIN_DAYS") { print $2 } }')
+        if [ "${FIND}" = "" -o "${FIND}" = "0" ]; then
+            LogText "Result: password minimum age is not configured"
+            Display --indent 2 --text "- Checking user password aging (minimum)" --result "${STATUS_DISABLED}" --color YELLOW
+            ReportSuggestion ${TEST_NO} "Configure minimum password age in /etc/login.defs"
+            AddHP 0 1
+        else
+            LogText "Result: password needs to be at least ${FIND} days old"
+            PASSWORD_MINIMUM_DAYS=${FIND}
+            Display --indent 2 --text "- User password aging (minimum)" --result CONFIGURED --color GREEN
+            AddHP 3 3
+        fi
+
+        LogText "Test: Checking PASS_MAX_DAYS option in ${ROOTDIR}etc/login.defs "
+        FIND=$(${GREPBINARY} "^PASS_MAX_DAYS" ${ROOTDIR}etc/login.defs | ${AWKBINARY} '{ if ($1=="PASS_MAX_DAYS") { print $2 } }')
+        if [ -z "${FIND}" -o "${FIND}" = "99999" ]; then
+            LogText "Result: password aging limits are not configured"
+            Display --indent 2 --text "- User password aging (maximum)" --result "${STATUS_DISABLED}" --color YELLOW
+            ReportSuggestion ${TEST_NO} "Configure maximum password age in /etc/login.defs"
+            AddHP 0 1
+        else
+            LogText "Result: max password age is ${FIND} days"
+            PASSWORD_MAXIMUM_DAYS=${FIND}
+            Display --indent 2 --text "- User password aging (maximum)" --result CONFIGURED --color GREEN
+            AddHP 3 3
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9288
+    # Description : Determine which accounts have an expired password
+    # Notes       : This test might not work (yet) on all platforms
+    if [ -f ${ROOTDIR}etc/shadow ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9288 --preqs-met ${PREQS_MET} --weight L --network NO --root-only YES --category security --description "Checking for expired passwords"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if FileIsReadable ${ROOTDIR}etc/shadow; then
+
+            if [ "${OS}" = "Solaris" ]; then
+                NOW=$(nawk 'BEGIN{print srand()}')
+            else
+                NOW=$(date "+%s")
+            fi
+
+            DAYS_SINCE_EPOCH=$((${NOW}/86400))
+            LogText "Data: Days since epoch is ${DAYS_SINCE_EPOCH}"
+            LogText "Test: collecting accounts which have an expired password (last day changed + maximum change time)"
+            # Skip fields with a !, *, or x, or !* (field $3 is last changed, $5 is maximum changed)
+            FIND=$(${EGREPBINARY} -v ":[\!\*x]([\*\!])?:" /etc/shadow | ${AWKBINARY} -v today=${DAYS_SINCE_EPOCH} -F: '{ if (($5!="") && (today>$3+$5)) { print $1 }}')
+            if [ ! -z "${FIND}" ]; then
+                for ACCOUNT in ${FIND}; do
+                    LogText "Result: password of user ${ACCOUNT} has been expired"
+                    Report "account_password_expired[]=${ACCOUNT}"
+                done
+                AddHP 0 10
+                Display --indent 2 --text "- Checking expired passwords" --result "${STATUS_FOUND}" --color RED
+                ReportSuggestion "${TEST_NO}" "Delete accounts which are no longer used"
+            else
+                LogText "Result: good, no passwords have been expired"
+                Display --indent 2 --text "- Checking expired passwords" --result "${STATUS_OK}" --color GREEN
+                AddHP 10 10
+            fi
+        else
+            Display --indent 2 --text "- Checking expired passwords" --result "${STATUS_SKIPPED}" --color YELLOW
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9304
+    # Description : Check if single user mode login is properly configured in Solaris
+    # Notes       : sulogin should be called from svm script (Solaris <10) in /etc/rcS.d
+    Register --test-no AUTH-9304 --os Solaris --weight L --network NO --category security --description "Check single user login configuration"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        # Check if file exists (Solaris 10 does not have this file by default)
+        if [ -f ${ROOTDIR}etc/default/sulogin ]; then
+            LogText "Result: file ${ROOTDIR}etc/default/sulogin exists"
+            LogText "Test: checking presence PASSREQ=NO"
+            FIND=$(${GREPBINARY} "^PASSREQ=NO" ${ROOTDIR}etc/default/sulogin)
+            if [ -z "${FIND}" ]; then
+                LogText "Result: option not present or configured to request a password at single user mode login"
+                Display --indent 2 --text "- Checking Solaris /etc/default/sulogin file" --result "${STATUS_OK}" --color GREEN
+                AddHP 1 1
+            else
+                LogText "Result: option present, no password needed at single user mode login"
+                Display --indent 2 --text "- Checking Solaris /etc/default/sulogin file" --result "${STATUS_WARNING}" --color RED
+                ReportWarning ${TEST_NO} "No password needed for single user mode login"
+                AddHP 0 1
+            fi
+        else
+            LogText "Result: file /etc/default/sulogin does not exist"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9306
+    # Description : Check if authentication is needed to boot the system
+    # Notes       : :d_boot_authenticate: is a good option for production machines to
+    #               avoid unauthorized booting of systems. Option :d_boot_autentication@:
+    #               disabled a required login.
+    Register --test-no AUTH-9306 --os HP-UX --weight L --network NO --category security --description "Check single boot authentication"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        # Check if file exists
+        LogText "Test: Searching /tcb/files/auth/system/default"
+        if [ -f ${ROOTDIR}tcb/files/auth/system/default ]; then
+            LogText "Result: file ${ROOTDIR}tcb/files/auth/system/default exists"
+            LogText "Test: checking presence :d_boot_authenticate@:"
+            FIND=$(${GREPBINARY} "^:d_boot_authenticate@" /tcb/files/auth/system/default)
+            if [ -z "${FIND}" ]; then
+                LogText "Result: option not set, password is needed at boot"
+                Display --indent 2 --text "- Checking HP-UX boot authentication" --result "${STATUS_OK}" --color GREEN
+                AddHP 1 1
+            else
+                LogText "Result: option present, no password needed at single user mode login"
+                Display --indent 2 --text "- Checking HP-UX boot authentication" --result "${STATUS_SUGGESTION}" --color YELLOW
+                ReportSuggestion ${TEST_NO} "Set password for system boot"
+                AddHP 0 1
+            fi
+        else
+            LogText "Result: file ${ROOTDIR}tcb/files/auth/system/default does not exist"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9308
+    # Description : Check single user mode login for Linux
+    Register --test-no AUTH-9308 --os Linux --weight L --network NO --category security --description "Check single user login configuration"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        TEST_PERFORMED=0
+
+        if [ ${HAS_SYSTEMD} -eq 0 ]; then
+            # Check inittab
+            LogText "Test: Searching ${ROOTDIR}etc/inittab"
+            if [ -f ${ROOTDIR}etc/inittab ]; then
+                TEST_PERFORMED=1
+                LogText "Result: file ${ROOTDIR}etc/inittab exists"
+                LogText "Test: checking presence sulogin for single user mode"
+                FIND=$(${EGREPBINARY} "^[a-zA-Z0-9~]+:S:(respawn|wait):/sbin/sulogin" /etc/inittab)
+                FIND2=$(${EGREPBINARY} "^su:S:(respawn|wait):/sbin/sulogin" /etc/inittab)
+                if [ ! -z "${FIND}" -o ! -z "${FIND2}" ]; then
+                    FOUND=1
+                    LogText "Result: found sulogin, so single user is protected"
+                fi
+            else
+                LogText "Result: file ${ROOTDIR}etc/inittab does not exist"
+            fi
+
+            # Check init
+            LogText "Test: Searching ${ROOTDIR}etc/sysconfig/init"
+            if [ -f ${ROOTDIR}etc/sysconfig/init ]; then
+                TEST_PERFORMED=1
+                LogText "Result: file ${ROOTDIR}etc/sysconfig/init exists"
+                LogText "Test: checking presence sulogin for single user mode"
+                FIND=$(${GREPBINARY} "^SINGLE=/sbin/sulogin" ${ROOTDIR}etc/sysconfig/init)
+                if [ ! -z "${FIND}" ]; then
+                    FOUND=1
+                    LogText "Result: found sulogin, so single user is protected"
+                fi
+            else
+                LogText "Result: file ${ROOTDIR}etc/sysconfig/init does not exist"
+            fi
+        fi
+
+        # Systemd support
+        SYSTEMD_DIRECTORY="/lib/systemd/system"
+        if [ -d ${SYSTEMD_DIRECTORY} ]; then
+            FILES="console-shell.service emergency.service rescue.service"
+            LogText "Test: going to check several systemd targets now"
+            for I in ${FILES}; do
+                FILE="${SYSTEMD_DIRECTORY}/${I}"
+                LogText "Test: checking if target ${I} is available (${FILE})"
+                if [ -f ${FILE} ]; then
+                    # Mark test as performed only when at least 1 target exists (e.g. Ubuntu 14.04 has limited systemd support)
+                    TEST_PERFORMED=1
+                    LogText "Result: found target ${I}"
+                    FIND=$(${EGREPBINARY} "^ExecStart=" ${FILE} | ${GREPBINARY} "/sulogin")
+                    if [ "${FIND}" = "" ]; then
+                        LogText "Result: did not find sulogin specified, possible risk of getting into single user mode without authentication"
+                    else
+                        LogText "Result: sulogin was found, which is a good measure to protect single user mode"
+                        FOUND=1
+                    fi
+                else
+                    LogText "Result: target ${I} not found"
+                fi
+            done
+        fi
+
+        if [ ${TEST_PERFORMED} -eq 1 ]; then
+            if [ ${FOUND} -eq 0 ]; then
+                LogText "Result: option not set, no password needed at single user mode boot"
+                Display --indent 2 --text "- Checking Linux single user mode authentication" --result "${STATUS_WARNING}" --color RED
+                ReportWarning ${TEST_NO} "No password set for single mode"
+                ReportSuggestion ${TEST_NO} "Set password for single user mode to minimize physical access attack surface"
+                AddHP 0 2
+            else
+                LogText "Result: option set, password is needed at single user mode boot"
+                Display --indent 2 --text "- Checking Linux single user mode authentication" --result "${STATUS_OK}" --color GREEN
+                AddHP 2 2
+            fi
+        else
+            LogText "Result: no tests performed"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9328
+    # Description : Check default umask in common files
+    # Notes:        This test should be moved later to shells section
+    # /etc/login.defs
+    # pam_umask
+    Register --test-no AUTH-9328 --weight L --network NO --category security --description "Default umask values"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        Display --indent 2 --text "- Determining default umask"
+        GOOD_UMASK=0
+        WEAK_UMASK=0
+
+        # /etc/profile.d
+        LogText "Test: Checking ${ROOTDIR}etc/profile.d directory"
+        if [ -d ${ROOTDIR}etc/profile.d ]; then
+            FOUND=0
+            FIND=$(ls ${ROOTDIR}etc/profile.d/* 2> /dev/null)
+            if [ ! -z "${FIND}" ]; then
+                LogText "Result: found /etc/profile.d, with one or more files in it"
+                for FILE in ${FIND}; do
+                    HAS_MASK=$(${GREPBINARY} umask ${FILE} | ${SEDBINARY} 's/^[ \t]*//' | ${GREPBINARY} -v "^#" | ${AWKBINARY} '{ print $2 }')
+                    for MASK in ${HAS_MASK}; do
+                        if [ "${MASK}" = "077" -o "${MASK}" = "027" -o "${MASK}" = "0077" -o "${MASK}" = "0027" ]; then
+                            LogText "Result: found a strong umask '${MASK}' set in ${FILE}"
+                            GOOD_UMASK=1
+                        else
+                            LogText "Result: found a weak umask '${MASK}' set in ${FILE}"
+                            WEAK_UMASK=1
+                        fi
+                    done
+                done
+            else
+                LogText "Result: found /etc/profile.d, but it does not contain any files"
+            fi
+        else
+            LogText "Result: /etc/profile.d not found"
+        fi
+
+        # Test /etc/profile (only if we didn't find a good umask in profile.d)
+        LogText "Test: Checking /etc/profile"
+        if [ -f /etc/profile -a ${GOOD_UMASK} -eq 0 ]; then
+            LogText "Result: file /etc/profile exists"
+            LogText "Test: Checking umask value in /etc/profile"
+            FIND=$(${GREPBINARY} "umask" /etc/profile | ${SEDBINARY} 's/^[ \t]*//' | ${GREPBINARY} -v "^#" | ${AWKBINARY} '{ print $2 }')
+            FIND2=$(${GREPBINARY} "umask" /etc/profile | ${SEDBINARY} 's/^[ \t]*//' | ${GREPBINARY} -v "^#" | ${AWKBINARY} '{ print $2 }' | wc -l)
+            FOUND_UMASK=0
+            if [ "${FIND2}" = "0" ]; then
+                LogText "Result: did not find umask in /etc/profile"
+            elif [ "${FIND2}" = "1" ]; then
+                LogText "Result: found umask (prefixed with spaces)"
+                FOUND_UMASK=1
+                if [ ! "${FIND}" = "077" -a ! "${FIND}" = "027" -a ! "${FIND}" = "0077" -a ! "${FIND}" = "0027" ]; then
+                    LogText "Result: found umask ${FIND}, which could be more strict"
+                    WEAK_UMASK=1
+                else
+                    LogText "Result: found umask ${FIND}, which is fine"
+                    GOOD_UMASK=1
+                fi
+              # Found more than 1 umask value in profile
+            else
+                LogText "Result: found multiple umask values configured in /etc/profile"
+                FOUND_UMASK=1
+                for I in ${FIND}; do
+                    if [ ! "${I}" = "077" -a ! "${I}" = "027" -a ! "${I}" = "0077" -a ! "${I}" = "0027" ]; then
+                        LogText "Result: umask ${I} could be more strict"
+                        WEAK_UMASK=1
+                        AddHP 1 2
+                    else
+                        LogText "Result: Found umask ${I}, which is fine"
+                        AddHP 2 2
+                    fi
+                done
+            fi
+
+            if [ ${FOUND_UMASK} -eq 1 ]; then
+                if [ ${WEAK_UMASK} -eq 0 ]; then
+                    Display --indent 4 --text "- umask (/etc/profile and /etc/profile.d)" --result "${STATUS_OK}" --color GREEN
+                    AddHP 2 2
+                elif [ ${GOOD_UMASK} -eq 1 -a ${WEAK_UMASK} -eq 1 ]; then
+                    Display --indent 4 --text "- umask (/etc/profile and /etc/profile.d)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                    ReportSuggestion ${TEST_NO} "Some umasks found could be more strict (e.g. 027)"
+                    AddHP 1 2
+                else
+                    Display --indent 4 --text "- umask (/etc/profile and /etc/profile.d)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                    ReportSuggestion ${TEST_NO} "Default umask in /etc/profile or /etc/profile.d/custom.sh could be more strict (e.g. 027)"
+                    AddHP 0 2
+                fi
+              else
+                # Some operating systems don't have a default umask defined in /etc/profile (Debian)
+                LogText "Result: found no umask. Please check if this is correct"
+                Display --indent 4 --text "- umask (/etc/profile)" --result "${STATUS_NOT_FOUND}" --color YELLOW
+            fi
+          else
+            LogText "Result: file /etc/profile does not exist"
+        fi
+
+        # /etc/passwd
+        LogText "Test: Checking umask entries in /etc/passwd (pam_umask)"
+        if [ -f /etc/passwd ]; then
+            LogText "Result: file /etc/passwd exists"
+            LogText "Test: Checking umask value in /etc/passwd"
+            FIND=$(${GREPBINARY} "umask=" /etc/passwd)
+            if [ "${FIND}" = "" ]; then
+                ReportManual "AUTH-9328:03"
+            fi
+          else
+            LogText "Result: file /etc/passwd does not exist"
+        fi
+
+        # /etc/login.defs
+        LogText "Test: Checking /etc/login.defs"
+        if [ -f /etc/login.defs ]; then
+            LogText "Result: file /etc/login.defs exists"
+            LogText "Test: Checking umask value in /etc/login.defs"
+            FIND=$(${GREPBINARY} "^UMASK" /etc/login.defs | ${AWKBINARY} '{ print $2 }')
+            if [ "${FIND}" = "" ]; then
+                LogText "Result: umask value is not configured (most likely it will have the default 022 value)"
+                Display --indent 4 --text "- umask (/etc/login.defs)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                ReportSuggestion ${TEST_NO} "Default umask in /etc/login.defs could not be found and defaults usually to 022, which could be more strict like 027"
+                AddHP 1 2
+            elif [ "${FIND}" = "077" -o "${FIND}" = "027" -o "${FIND}" = "0077" -o "${FIND}" = "0027" ]; then
+                LogText "Result: umask is ${FIND}, which is fine"
+                Display --indent 4 --text "- umask (/etc/login.defs)" --result "${STATUS_OK}" --color GREEN
+                AddHP 2 2
+            else
+                LogText "Result: found umask ${FIND}, which could be improved"
+                Display --indent 4 --text "- umask (/etc/login.defs)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                ReportSuggestion ${TEST_NO} "Default umask in /etc/login.defs could be more strict like 027"
+                AddHP 0 2
+            fi
+        else
+            LogText "Result: file /etc/login.defs does not exist"
+        fi
+
+        # Red Hat /etc/init.d/functions
+        LogText "Test: Checking /etc/init.d/functions"
+        if [ -f /etc/init.d/functions ]; then
+            LogText "Result: file /etc/init.d/functions exists"
+            LogText "Test: Checking umask value in /etc/init.d/functions"
+            FIND=$(${GREPBINARY} "^umask" /etc/init.d/functions | ${AWKBINARY} '{ print $2 }')
+            if [ "${FIND}" = "" ]; then
+                LogText "Result: umask is not configured"
+                Display --indent 4 --text "- umask (/etc/init.d/functions)" --result "${STATUS_NONE}" --color WHITE
+            elif [ "${FIND}" = "077" -o "${FIND}" = "027" -o "${FIND}" = "0077" -o "${FIND}" = "0027" ]; then
+                LogText "Result: umask is ${FIND}, which is fine"
+                Display --indent 4 --text "- umask (/etc/init.d/functions)" --result "${STATUS_OK}" --color GREEN
+                AddHP 2 2
+            else
+                LogText "Result: found umask ${FIND}, which could be improved"
+                Display --indent 4 --text "- umask (/etc/init.d/functions)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                AddHP 0 2
+            fi
+        else
+            LogText "Result: file /etc/init.d/functions does not exist"
+        fi
+
+        # /etc/init.d/rc
+        LogText "Test: Checking /etc/init.d/rc"
+        if [ -f /etc/init.d/rc ]; then
+            LogText "Result: file /etc/init.d/rc exists"
+            LogText "Test: Checking UMASK value in /etc/init.d/rc"
+            FIND=$(${GREPBINARY} -i "^UMASK" /etc/init.d/rc | ${AWKBINARY} '{ print $2 }')
+            if [ "${FIND}" = "" ]; then
+                LogText "Result: UMASK value is not configured (most likely it will have the default 022 value)"
+                Display --indent 4 --text "- Checking umask (/etc/init.d/rc)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                ReportSuggestion ${TEST_NO} "Default umask in /etc/init.d/rc could not be found and defaults usually to 022, which could be more strict like 027"
+                AddHP 1 2
+            elif [ "${FIND}" = "077" -o "${FIND}" = "027" -o "${FIND}" = "0077" -o "${FIND}" = "0027" ]; then
+                LogText "Result: umask is ${FIND}, which is fine"
+                Display --indent 4 --text "- umask (/etc/init.d/rc)" --result "${STATUS_OK}" --color GREEN
+                AddHP 2 2
+            else
+                LogText "Result: found umask ${FIND}, which could be improved"
+                Display --indent 4 --text "- umask (/etc/init.d/rc)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                ReportSuggestion ${TEST_NO} "Default umask in /etc/init.d/rc could be more strict like 027"
+                AddHP 0 2
+            fi
+          else
+            LogText "Result: file /etc/init.d/rc does not exist"
+        fi
+
+        # FreeBSD
+        if [ -f /etc/login.conf ]; then
+            FOUND=0
+            WEAK_UMASK=0
+            LogText "Result: file /etc/login.conf exists"
+            FIND=$(${GREPBINARY} "umask" /etc/login.conf | ${SEDBINARY} 's/#.*//' | ${SEDBINARY} -E 's/^[[:cntrl:]]//' | ${GREPBINARY} -v '^$' | ${AWKBINARY} -F: '{ print $2}' | ${AWKBINARY} -F= '{ if ($1=="umask") { print $2 }}')
+            if [ ! "${FIND}" = "" ]; then
+                for UMASK_VALUE in ${FIND}; do
+                    case ${UMASK_VALUE} in
+                        027|0027|077|0077)
+                            LogText "Result: found umask value ${UMASK_VALUE}, which is fine"
+                            AddHP 2 2
+                            FOUND=1
+                        ;;
+                        *)
+                            AddHP 0 2
+                            FOUND=1
+                            WEAK_UMASK=1
+                            LogText "Result: found umask value ${UMASK_VALUE}, which can be more strict"
+                        ;;
+                    esac
+                done
+            fi
+            if [ ${FOUND} -eq 1 ]; then
+                if [ ${WEAK_UMASK} -eq 0 ]; then
+                    Display --indent 4 --text "- umask (/etc/login.conf)" --result "${STATUS_OK}" --color GREEN
+                  else
+                    Display --indent 4 --text "- umask (/etc/login.conf)" --result WEAK --color YELLOW
+                    ReportSuggestion ${TEST_NO} "Umask in /etc/login.conf could be more strict like 027"
+                fi
+            else
+                LogText "Result: no umask setting found in /etc/login.conf, which is unexpected"
+                Display --indent 4 --text "- umask (/etc/login.conf)" --result "${STATUS_NONE}" --color YELLOW
+            fi
+        fi
+
+        # /etc/init.d/rcS
+        LogText "Test: Checking /etc/init.d/rcS"
+        if [ -f /etc/init.d/rcS ]; then
+            LogText "Result: file /etc/init.d/rcS exists"
+            LogText "Test: Checking if script runs another script."
+            FIND=$(${GREPBINARY} -i "^exec " /etc/init.d/rcS | ${AWKBINARY} '{ print $2 }')
+            if [ "${FIND}" = "" ]; then
+                FIND2=$(${GREPBINARY} -i "^UMASK" /etc/init.d/rcS | ${AWKBINARY} '{ print $2 }')
+                if [ "${FIND2}" = "" ]; then
+                    LogText "Result: UMASK value is not configured (most likely it will have the default 022 value)"
+                    Display --indent 4 --text "- Checking umask (/etc/init.d/rcS)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                    ReportSuggestion ${TEST_NO} "Default umask in /etc/init.d/rcS could not be found and defaults usually to 022, which could be more strict like 027"
+                    AddHP 1 2
+                elif [ "${FIND2}" = "077" -o "${FIND2}" = "027" ]; then
+                    LogText "Result: umask is ${FIND2}, which is fine"
+                    Display --indent 4 --text "- umask (/etc/init.d/rcS)" --result "${STATUS_OK}" --color GREEN
+                    AddHP 2 2
+                else
+                    LogText "Result: found umask ${FIND2}, which could be improved"
+                    Display --indent 4 --text "- umask (/etc/init.d/rcS)" --result "${STATUS_SUGGESTION}" --color YELLOW
+                    ReportSuggestion ${TEST_NO} "Default umask in /etc/init.d/rcS could be more strict like 027"
+                    AddHP 0 2
+                fi
+            else
+                # Improve check
+                LogText "Result: exec line present in file, setting of umask not needed in this script"
+                LogText "Output: ${FIND}"
+            fi
+          else
+            LogText "Result: file /etc/init.d/rcS does not exist"
+        fi
+
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9340
+    # Description : Solaris account locking
+    Register --test-no AUTH-9340 --os Solaris --weight L --network NO --category security --description "Solaris account locking"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        if [ -f ${ROOTDIR}etc/security/policy.conf ]; then
+            LogText "Result: found ${ROOTDIR}etc/security/policy.conf"
+            FIND=$(${GREPBINARY} "^LOCK_AFTER_RETRIES" /etc/security/policy.conf)
+            if [ ! "${FIND}" = "" ]; then
+                FOUND=1
+                LogText "Result: account locking option set"
+                LogText "Output: ${FIND}"
+                AddHP 2 2
+            else
+                LogText "Result: option LOCK_AFTER_RETRIES not set"
+                AddHP 1 2
+            fi
+        else
+            LogText "Result: ${ROOTDIR}etc/security/policy.conf does not exist"
+        fi
+        # If policy.conf does not exist, we most likely deal with a Solaris version below 10
+        # and we proceed with checking the softer option RETRIES in /etc/default/login
+        # which does not lock account, but discourages brute force password attacks.
+        if [ ${FOUND} -eq 0 ]; then
+            LogText "Test: checking ${ROOTDIR}etc/default/login"
+            if [ -f ${ROOTDIR}etc/default/login ]; then
+                LogText "Result: file ${ROOTDIR}etc/default/login exists"
+                FIND=$(${GREPBINARY} "^RETRIES" ${ROOTDIR}etc/default/login)
+                if [ ! -z "${FIND}" ]; then
+                    FOUND=1
+                    LogText "Result: retries option configured"
+                    LogText "Output: ${FIND}"
+                    AddHP 2 2
+                else
+                    LogText "Result: retries option not configured"
+                    AddHP 1 2
+                fi
+            else
+                LogText "Result: file ${ROOTDIR}etc/default/login does not exist"
+            fi
+        fi
+        if [ ${FOUND} -eq 1 ]; then
+            Display --indent 2 --text "- Checking account locking" --result "${STATUS_ENABLED}" --color GREEN
+        else
+            Display --indent 2 --text "- Checking account locking" --result "NOT ENABLED" --color YELLOW
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9402
+    # Description : Query LDAP authentication support
+    Register --test-no AUTH-9402 --weight L --network NO --category security --description "Query LDAP authentication support"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        if [ -f ${ROOTDIR}etc/nsswitch.conf ]; then
+            FIND=$(${EGREPBINARY} "^passwd" ${ROOTDIR}etc/nsswitch.conf | ${GREPBINARY} "ldap")
+            if [ "${FIND}" = "" ]; then
+                LogText "Result: LDAP authentication not enabled"
+                Display --indent 2 --text "- LDAP authentication support" --result "NOT ENABLED" --color WHITE
+            else
+                LogText "Result: LDAP authentication enabled"
+                Display --indent 2 --text "- LDAP authentication support" --result "${STATUS_ENABLED}" --color GREEN
+                LDAP_AUTH_ENABLED=1
+            fi
+        else
+            LogText "Result: /etc/nsswitch.conf not found"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9406
+    # Description : Check LDAP servers in client configuration
+    if [ ${LDAP_AUTH_ENABLED} -eq 1 ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9406 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Query LDAP servers in client configuration"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: checking ldap.conf options"
+        for FILE in ${LDAP_CONF_LOCATIONS}; do
+            LogText "Test: checking ${FILE}"
+            if [ -f ${FILE} ]; then
+                LogText "Result: file ${FILE} exists, LDAP being used"
+                LDAP_CLIENT_CONFIG_FILE="${FILE}"
+                LogText "Test: checking LDAP servers in file ${FILE}"
+                FIND=$(${EGREPBINARY} "^host " ${FILE} | ${AWKBINARY} '{ print $2 }')
+                for SERVER in ${FIND}; do
+                    Display --indent 6 --text "LDAP server: ${SERVER}"
+                    LogText "Result: found LDAP server ${SERVER}"
+                    Report "ldap_server[]=${SERVER}"
+                done
+            else
+                LogText "Result: ${FILE} does NOT exist"
+            fi
+        done
+        unset FILE FIND SERVER
+    fi
+#
+#################################################################################
+#
+    # Test        : AUTH-9408
+    # Description : Logging of failed login attempts
+    if [ -f ${ROOTDIR}etc/login.defs ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no AUTH-9408 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Logging of failed login attempts via /etc/login.defs"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking FAILLOG_ENAB option in ${ROOTDIR}etc/login.defs "
+        FIND=$(${GREPBINARY} "^FAILLOG_ENAB" ${ROOTDIR}etc/login.defs | ${AWKBINARY} '{ if ($1=="FAILLOG_ENAB") { print $2 } }')
+        # Search for enabled status (yes), otherwise consider it to be disabled (e.g. empty, or other value)
+        if [ "${FIND}" = "yes" ]; then
+            AUTH_FAILED_LOGINS_LOGGED=1
+            LogText "Result: failed login attempts are logged in /var/log/faillog"
+            Display --indent 2 --text "- Logging failed login attempts" --result "${STATUS_ENABLED}" --color GREEN
+            AddHP 3 3
+        else
+            LogText "Result: failed login attempts are not logged"
+            Display --indent 2 --text "- Logging failed login attempts" --result "${STATUS_DISABLED}" --color YELLOW
+            #ReportSuggestion ${TEST_NO} "Configure failed login attempts to be logged in /var/log/faillog"
+            AddHP 0 1
+        fi
+    fi
+#
+#################################################################################
+#
+
+Report "auth_failed_logins_logged=${AUTH_FAILED_LOGINS_LOGGED}"
+Report "ldap_auth_enabled=${LDAP_AUTH_ENABLED}"
+Report "ldap_pam_enabled=${LDAP_PAM_ENABLED}"
+if [ ! -z "${LDAP_CLIENT_CONFIG_FILE}" ]; then Report "ldap_config_file=${LDAP_CLIENT_CONFIG_FILE}"; fi
+Report "password_min_days=${PASSWORD_MINIMUM_DAYS}"
+Report "password_max_days=${PASSWORD_MAXIMUM_DAYS}"
+
+WaitForKeyPress
+
+#
+#================================================================================
+# Lynis - Security Auditing and System Hardening for Linux and UNIX - https://cisofy.com

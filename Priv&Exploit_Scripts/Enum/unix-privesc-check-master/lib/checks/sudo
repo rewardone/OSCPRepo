@@ -1,0 +1,71 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# 
+
+. lib/misc/stdio
+. lib/misc/sudo
+
+sudo_init () {
+	stdio_message_log "sudo" "Starting at: `date`"
+}
+
+sudo_main () {
+	if [ "`sudo_sudoers_check`" -eq 1 ]
+	then
+		if [ -n "`sudo_sudoers_list`" ]
+		then
+			stdio_message_warn "sudo" "/etc/sudoers is readable and configured"
+
+			# TODO: if privilegeduser is a group (e.g. %admin), notify the user accordingly
+			sudo_sudoers_list | while read privilegeduser passwd filepath
+			do
+				asuser="`printf -- \"${passwd}\" | cut -f2 -d\"=\" | tr -d \"(\" | tr -d \")\"`"
+				# for cases where the asuser is ALL:ALL (e.g. in Ubuntu there is always the following sudoers entry):
+				#	root    ALL=(ALL:ALL) ALL
+				if [ "${asuser}" = "ALL:ALL" ]
+				then
+					asuser="any user"
+				else
+					asuser="user ${asuser}"
+				fi
+				# for cases where the user can run any command. For example:
+				#	foobar ALL=NOPASSWD: ALL
+				if [ "${filepath}" = "ALL" ]
+				then
+					filepath="any command"
+				fi
+				if [ -n "`printf -- \"${passwd}\" | egrep -- \"NOPASSWD\"`" ]
+				then
+					stdio_message_warn "sudo" "${privilegeduser} can run ${filepath} without providing a password"
+				else
+					stdio_message_log "sudo" "${privilegeduser} can run ${filepath} as ${asuser}"
+				fi
+			done
+		else
+			stdio_message_log "sudo" "/etc/sudoers is readable, but not configured"
+		fi
+	fi
+}
+
+sudo_fini () {
+	stdio_message_log "sudo" "Ending at: `date`"
+}

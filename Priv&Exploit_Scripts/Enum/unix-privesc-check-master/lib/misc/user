@@ -1,0 +1,127 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${userincluded}" ]
+then
+
+userincluded=1
+
+. lib/misc/passwd
+. lib/misc/validate
+
+user_is_trusted () {
+	username="${1}"
+	[ "`validate_is_string \"${username}\"`" ] || false
+	# TODO write this
+	false
+}
+
+user_is_root () {
+	username="${1}"
+	[ "`validate_is_string \"${username}\"`" ] || false
+	if [ "`id -u \"${username}\"`" = "0" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+user_is_user_root () {
+	if [ "`user_show_user_id`" = "0" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+user_is_user_id () {
+	userid="${1}"
+	[ "`validate_is_number \"${userid}\"`" ] || false
+	if [ "`user_show_user_id`" = "${userid}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+user_is_user_name () {
+	username="${1}"
+	[ "`validate_is_string \"${username}\"`" ] || false
+	if [ "`user_show_user_name`" = "${username}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+user_is_in_group_id () {
+	username="${1}"
+	groupid="${2}"
+	[ "`validate_is_string \"${username}\"`" ] || false
+	[ "`validate_is_number \"${groupid}\"`" ] || false
+	# TODO write this
+	false
+}
+
+user_is_in_group_name () {
+	username="${1}"
+	group="${2}"
+	ret="0"
+	[ "`validate_is_string \"${username}\"`" ] || false
+	[ "`validate_is_string \"${group}\"`" ] || false
+	groups "${username}" | while read usergroup
+	do
+		if [ "${usergroup}" = "${group}" ]
+		then
+			ret="1"
+			break
+		fi
+	done
+	printf -- "${ret}\n"
+}
+
+user_show_user_id () {
+	printf -- "`id -u`\n"
+}
+
+user_show_user_name () {
+	printf -- "`id -u -n`\n"
+}
+
+user_match_user_name () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	passwd_list | while read username
+	do
+		if [ -n "`printf -- \"${username}\" | egrep -- \"${pattern}\"`" ]
+		then
+			printf -- "${username}\n"
+		fi
+	done
+}
+
+fi

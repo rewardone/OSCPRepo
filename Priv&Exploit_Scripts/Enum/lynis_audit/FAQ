@@ -1,0 +1,101 @@
+
+================================================================================
+
+  Lynis - Frequently Asked Questions
+
+================================================================================
+
+  Author:                   2007-2013, Michael Boelen (michael.boelen@cisofy.com)
+                            2013-now, CISOfy development team
+  Description:              Security and system auditing tool
+  Web site:                 https://cisofy.com/lynis/
+  GitHub:                   https://github.com/CISOfy/lynis
+  Support address:          lynis-dev@cisofy.com
+  Development:              May 2007 - Now
+  Support:                  See README file and https://cisofy.com/support/
+  Documentation:            See web site, README, FAQ and CHANGELOG file
+
+================================================================================
+
+[+] General
+-------------------------------
+
+  Q: I don't understand the program (output), what to do?
+  A: Keep reading this FAQ. Also useful are the README file and the log file
+     (default: /var/log/lynis.log). Or check out the documentation on the
+     website: https://cisofy.com/support/
+
+  Q: I can't find any configuration file for Lynis, where is it?
+  A: Lynis uses profiles. They are similar to a configuration file and determine
+     how a security scan should be performed. 
+
+  Q: My version is outdated, what can I do to upgrade?
+     Check out the upgrade guide: https://cisofy.com/documentation/lynis/upgrading/
+
+  Q: Why is there no port/package for my operating system?
+  A: Because there is no maintainer for it yet. If you have the time to keep
+     the port/package current for your preferred operating system, let us know.
+
+  Q: What to do with the report files?
+  A: The output could be used for monitoring (baseline checks). For users of the
+     Lynis Enterprise Suite, they will be used to upload data.
+
+
+
+[+] Bugs or issues
+-------------------------------
+  Q: Where can I report an issue or bug?
+  A: GitHub, or use the developer e-mail address lynis-dev@cisofy.com
+
+
+
+[+] Usage problems
+-------------------------------
+  Q: Lynis hangs while testing the group files (grpck)
+  A: Run the grpck command manually. It will most likely need user input, to
+     repair incorrect groups.
+
+  Q: Lynis doesn't display all messages on a white background
+  A: White text is used for general (and important) messages. Most terminals
+     have a dark background, so it gives extra attention to the message. However
+     if you have a white background (for example Mac OS X), you can run Lynis
+     with --no-colors to strip colors or --reverse-colors to reverse the color
+     scheme. Another option is to change your terminal colors within Mac OS.
+
+  Q: Some tests take very long to finish, what to do?
+  A: Use a second console (or connection) and check the output of ps/lsof etc,
+     to see the status of the active subroutine. If a specific test hangs for a
+     very long time, try to kill that specific process (ie grpck) and see if
+     Lynis continues. Afterwards, run the command manually to see the cause.
+     Check the log file for additional information. Usually the last few lines
+     will indicate what test is stuck.
+
+  Q: When running Lynis, it shows me the usage help even while using correct
+     parameters, why?
+  A: This can happen with alternative shells. Try using a different shell to
+     invoke Lynis (example: bash lynis -c).
+
+  Q: One or more tests are giving incorrect output. How to solve that?
+  A: Check the log file. If that also has incorrect data, let us know via GitHub
+     or the developer e-mail address.
+
+  Q: The program takes long to complete and also uses too much resources. Can it
+     be tuned?
+  A: The time it takes to complete depends on the amount of tests to run.
+     However the resources it take can be slighty lowered by increasing the
+     pause_between_tests profile option. Keep in mind this increases the total
+     length of the scan to complete.
+
+
+
+[+] Network related issues
+-------------------------------
+
+  Q: Lynis reports promiscuous interfaces, but they are needed for normal operation,
+     how can I hide this warning?
+  A: Whitelist the interface in the profile file (if_promisc).
+
+
+
+================================================================================
+ Lynis - Copyright 2007-2017, Michael Boelen, CISOfy - https://cisofy.com

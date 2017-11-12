@@ -1,0 +1,255 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: AIX, Solaris, Linux
+
+if [ -z "${fileincluded}" ]
+then
+
+fileincluded=1
+filecachefilename="files_cache.$$"
+filecacherootpath="/"
+
+. lib/misc/stdio
+. lib/misc/validate
+
+file_check_or_generate_cache () {
+	if [ ! -f "${filecachefilename}" ]
+	then
+		stdio_message_log "file" "Generating file cache..."
+		# the below looks a bit odd but it's the best way to normalise file's output since we're not interested in inodes, device major/minor numbers etc
+		find "${filecacherootpath}" -ls | sed "s/%/%%/g" | while read _ _ permissions _ userid groupid _ _ _ _ filename restofline
+		do
+			printf -- "${permissions} ${userid} ${groupid} ${filename}"
+			if [ -n "${restofline}" ]
+			then
+				printf -- " ${restofline}"
+			fi
+			printf "\n"
+		done >"${filecachefilename}"
+		stdio_message_log "file" "Cache generated..."
+	fi
+}
+
+file_list_by_perm () {
+	# patterns must always take the form "^.......... " i.e. regular expressions. for example "^...s...... |^....S...... " will select setuid binaries 
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	egrep -- "${pattern}" "${filecachefilename}" | while read permissions userid groupid filename _
+	do
+		printf -- "${filename}\n"
+	done
+}
+
+file_list_by_filename () {
+	# patterns must always take the form " /path/*/find" i.e. regular expressions
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	# this will only work for files, not dirs - mostly what we want I think
+	egrep -- "^-.*${pattern}" "${filecachefilename}" | while read permissions userid groupid filename _
+	do
+		# TODO what if pattern matches on symlink? we may still revert to glob() style checking
+		printf -- "${filename}\n"
+	done
+}
+
+file_show_perms () {
+	# patterns must always take the form " /path/*/find" (permission are allowed too i.e. "^........w. ") regular expressions
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	egrep -- "${pattern}" "${filecachefilename}" | while read permissions userid groupid filename _
+	do
+		# TODO what if pattern matches on symlink? we may still revert to glob() style checking
+		printf -- "${filename} ${permissions} ${userid} ${groupid}\n"
+	done
+}
+
+file_show_non_symlink_perms () {
+	# patterns must always take the form " /path/*/find" (permission are allowed too i.e. "^........w. ") regular expressions
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	egrep -- "${pattern}" "${filecachefilename}" | while read permissions userid groupid filename _
+	do
+		case "${permissions}" in
+			l?????????)
+				continue
+				;;
+			*)
+				printf -- "${filename} ${permissions} ${userid} ${groupid}\n"
+				;;
+		esac
+	done
+}
+
+file_show_real_filename () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	# TODO we could be smarter about this, but for now, which should suffice.. alternatives could include whereis, locate etc
+	case "${pattern}" in
+		/*)
+			printf -- "${pattern}\n"
+			;;
+		*)
+			# AIX errors to stdout, ideally we'd use $? but which on Solaris doesn't exit() differently depending on result :(
+			# TODO maybe we should break it out with uname checks?
+			realfilename="`which \"\`basename \\\"${pattern}\\\"\`\" 2>&1 | egrep -v \"There is no |^(which: )?no \"`"
+			if [ -n "${realfilename}" ]
+			then
+				printf -- "${realfilename}\n"
+			fi
+			;;
+	esac
+}
+
+file_show_symlinked_filename () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	# leave grep here otherwise libraries with ++ in the name will not be grepped properly (i.e. /usr/lib/i386-linux-gnu/libstdc++.so.6.0.16)
+	grep -- " ${pattern} ->" "${filecachefilename}" | while read permissions userid groupid filename _ linkedfilename
+	# FIXME The grep above is not always effective.  Example: if file_show_symlinked_filename is passed "/lib64/ld-linux-x86-64.so.2"
+	#       "/lib64/ld-linux-x86-64.so.2" does not appear in files_cache.temp
+	#       Why? Because /lib64 is a symlink to /lib.  The "find" therefore never recurses through /lib64.
+	#       I have enabled lots of debug statements.  To recreate the bug, run ./upc.sh --check binary_dependency
+	#       and look for "linkedlibrary=" in the output - i.e. the linkedlibrary is empty.
+	do
+		# echo "file_show_symlinked_filename in loop with ${linkedfilename}" 1>&2
+		case "${linkedfilename}" in
+			/*)
+				if [ -h "${linkedfilename}" ]
+				then
+					file_show_symlinked_filename "${linkedfilename}"
+				else
+					printf -- "${linkedfilename}\n"
+					#stdio_message_debug "file" "file_show_symlinked_filename returning ${linkedfilename}"
+				fi
+				;;
+			# TODO handle the case where symlinked file is a relative path (e.g. ../linkedfilename)
+			*)
+				if [ -n "${linkedfilename}" ]
+				then
+					printf -- "`dirname \"${filename}\"`/${linkedfilename}\n"
+					#stdio_message_debug "file" "file_show_symlinked_filename returning `dirname \"${filename}\"`/${linkedfilename}"
+				fi
+				;;
+		esac
+	done
+}
+
+file_matches_string () {
+	filename="${1}"
+	pattern="${2}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	if [ -n "`egrep \"${pattern}\" \"${filename}\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+file_parent_traverse () {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	# start with the dependency itself and then use dirname to find the parent directory
+	while [ "${filename}" != "/" ]
+	do
+		printf -- "${filename}\n"
+		# find the parent directory
+		filename="`dirname \"${filename}\"`"
+	done
+}
+
+file_is_textual () {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	if [ -n "`file \"${filename}\" | grep -i \" text\"`" ]
+	then
+		printf -- "1\n"
+	# consider empty files as textual files
+	elif [ -n "`file \"${filename}\" | grep -i \" empty\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+file_exists () {
+	filename="${1}"
+	[ "`validate_is_string \"${filename}\"`" ] || false
+	if [ -e "${filename}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+file_is_regular () {
+	filename="${1}"
+	[ "`validate_is_string \"${filename}\"`" ] || false
+	if [ -f "${filename}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+file_is_readable () {
+	filename="${1}"
+	[ "`validate_is_string \"${filename}\"`" ] || false
+	if [ -r "${filename}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+file_is_directory () {
+	filename="${1}"
+	[ "`validate_is_string \"${filename}\"`" ] || false
+	if [ -d "${filename}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+file_is_basename () {
+	filepath="${1}"
+	filename="${2}"
+	[ "`validate_is_string \"${filepath}\"`" ] || false
+	[ "`validate_is_string \"${filename}\"`" ] || false
+	if [ "`basename \"${filepath}\"`" = "${filename}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+file_check_or_generate_cache
+
+fi

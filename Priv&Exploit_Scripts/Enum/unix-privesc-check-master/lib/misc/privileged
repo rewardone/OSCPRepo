@@ -1,0 +1,193 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+
+if [ -z "${privilegedincluded}" ]
+then
+
+privilegedincluded=1
+
+. lib/misc/cron
+. lib/misc/file
+. lib/misc/inetd
+. lib/misc/init
+. lib/misc/inittab
+. lib/misc/process
+. lib/misc/stdio
+. lib/misc/sudo
+
+privilegedcachefilename="privileged_cache.$$"
+
+privileged_check_or_generate_cache () {
+	if [ ! -f "${privilegedcachefilename}" ]
+	then
+		stdio_message_debug "privileged" "Generating privileged cache"
+		file_list_by_perm "^-..s...... |^-..S...... " | while read filename
+		do
+			file_show_perms " ${filename}$" | while read filename permissions userid groupid
+			do
+				printf -- "setuid ${filename} ${userid}\n"
+			done
+		done >>"${privilegedcachefilename}"
+		file_list_by_perm "^-.....s... |^-.....S... " | while read filename
+		do
+			file_show_perms " ${filename}$" | while read filename permissions userid groupid
+			do
+				printf -- "setgid ${filename} ${groupid}\n"
+			done
+		done >>"${privilegedcachefilename}"
+		inetd_list | while read portnumberprotocol
+		do
+			privilegedfilename="`inetd_show_command \"${portnumberprotocol}\"`"
+			file_show_real_filename "${privilegedfilename}" | while read realfilename
+			do
+				userid="`inetd_show_userid \"${portnumberprotocol}\"`"
+				printf -- "inetd ${realfilename} ${userid}\n"
+			done
+			privilegedarguments="`inetd_show_arguments \"${portnumberprotocol}\"`"
+			file_show_real_filename "${privilegedarguments}" | while read realfilename
+			do
+				userid="`inetd_show_userid \"${portnumberprotocol}\"`"
+				printf -- "inetd-argument ${realfilename} ${userid}\n"
+			done
+		done >>"${privilegedcachefilename}"
+		inittab_list | while read userid filename
+		do
+			file_show_real_filename "${filename}" | while read realfilename
+			do
+				printf -- "inittab ${realfilename} ${userid}\n"
+			done
+		done >>"${privilegedcachefilename}"
+		init_list | while read userid filename
+		do
+			printf -- "init.d ${filename} ${userid}\n"
+			init_file_extract_paths "${filename}" | while read userid filepath
+			do
+				# avoid duplicates' file paths
+				if [ -n "`egrep \"^init.d-path ${filepath} ${userid}$\" ${privilegedcachefilename}`" ]
+				then
+					continue
+				else
+					printf -- "init.d-path ${filepath} ${userid}\n"
+				fi
+			done
+		done >>"${privilegedcachefilename}"
+		sudo_list | while read privilegeduser passwd privilegedfilename
+		do
+			file_show_real_filename "${privilegedfilename}" | while read realfilename
+			do
+				printf -- "sudo-${passwd} ${realfilename} ${privilegeduser}\n"
+			done
+		done >>"${privilegedcachefilename}"
+		sudo_sudoers_list | while read privilegeduser passwd privilegedfilename
+		do
+			file_show_real_filename "${privilegedfilename}" | while read realfilename
+			do
+				printf -- "sudoers-${passwd} ${realfilename} ${privilegeduser}\n"
+			done
+		done >>"${privilegedcachefilename}"
+		cron_crontab_list | while read userid filename
+		do
+			file_show_real_filename "${filename}" | while read realfilename
+			do
+				printf -- "crontab ${realfilename} ${userid}\n"
+			done
+		done >>"${privilegedcachefilename}"
+		cron_crontabs_list | while read userid filename
+		do
+			printf -- "crontabs ${filename} ${userid}\n"
+			cron_file_extract_paths "${filename}" | while read userid filepath
+			do
+				# avoid duplicates' file paths
+				if [ -n "`egrep \"^crontabs-path ${filepath} ${userid}$\" ${privilegedcachefilename}`" ]
+				then
+					continue
+				else
+					printf -- "crontabs-path ${filepath} ${userid}\n"
+				fi
+			done
+		done >>"${privilegedcachefilename}"
+		# crontab can set a different PATH for its process, hence we need to prepend the crontab PATH to ours
+		oldpath="${PATH}"
+		if [ "`file_is_readable \"/etc/crontab\"`" ]
+		then
+			cronpath="`egrep -o \"^PATH=.*\n\" \"/etc/crontab\" | cut -c6-`"
+			PATH="${cronpath}:${PATH}"
+			export PATH
+		fi
+		cron_system_crontab_list | while read userid filename
+		do
+			file_show_real_filename "${filename}" | while read realfilename
+			do
+				printf -- "crontab-system ${realfilename} ${userid}\n"
+			done
+		done >>"${privilegedcachefilename}"
+		cron_system_list | while read userid filename
+		do
+			printf -- "cron-system ${filename} ${userid}\n"
+			cron_file_extract_paths "${filename}" | while read userid filepath
+			do
+				# avoid duplicates' file paths
+				if [ -n "`egrep \"^cron-system-path ${filepath} ${userid}$\" ${privilegedcachefilename}`" ]
+				then
+					continue
+				else
+					printf -- "cron-system-path ${filepath} ${userid}\n"
+				fi
+			done
+		done >>"${privilegedcachefilename}"
+		# reset PATH to ours
+		PATH="${oldpath}"
+		process_list ".*" | while read processid
+		do
+			filename="`process_show_command \"${processid}\"`"
+			if [ -z "${filename}" ]
+			then
+				continue
+			fi
+			file_show_real_filename "${filename}" | while read realfilename
+			do
+				if [ -n "${realfilename}" ]
+				then
+					userid="`process_show_userid "${processid}"`"
+					# avoid duplicates' processes
+					if [ -n "`egrep \"^running ${realfilename} ${userid}$\" ${privilegedcachefilename}`" ]
+					then
+						continue
+					else
+						printf -- "running ${realfilename} ${userid}\n"
+					fi
+				fi
+			done
+		done >>"${privilegedcachefilename}"
+		# TODO still need to add similar checks for stuff spawned from init, fscaps and binds a listening port not via inetd
+		stdio_message_debug "privileged" "Cache generated"
+	fi
+}
+
+privileged_list () {
+	cat "${privilegedcachefilename}"
+}
+
+# TODO what we really need is a privileged_matches function for binary_dependency etc
+
+privileged_check_or_generate_cache
+
+fi

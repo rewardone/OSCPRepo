@@ -1,0 +1,62 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# List all .*_history files
+
+. lib/misc/file
+. lib/misc/group
+. lib/misc/stdio
+. lib/misc/user
+
+history_readable_init () {
+	stdio_message_log "history_readable" "Starting at: `date`"
+}
+
+history_readable_main () {
+	file_show_non_symlink_perms " *\.*_history$" | while read filename permissions userid groupid
+	do
+		case "${permissions}" in
+			???????r??)
+				stdio_message_warn "history_readable" "${filename} is owned by user ${userid} (group ${groupid}) and is world-readable (${permissions})"
+				;;
+			????r?????)
+				if [ "`group_is_in_group_name \"${groupid}\"`" -eq 1 ]
+				then
+					stdio_message_warn "history_readable" "${filename} is owned by user ${userid} (group ${groupid}: YOU) and is group-readable (${permissions})"
+				else
+					stdio_message_log "history_readable" "${filename} is owned by user ${userid} (group ${groupid}) and is group-readable (${permissions})"
+				fi
+				;;
+			?r????????)
+				if [ "`user_is_user_name \"${userid}\"`" -eq 1 ]
+				then
+					stdio_message_log "history_readable" "${filename} is owned by user ${userid} (YOU) (group ${groupid}) (${permissions})"
+				else
+					stdio_message_debug "history_readable" "${filename} is owned by user ${userid} (group ${groupid}) (${permissions})"
+				fi
+				;;
+		esac
+	done
+}
+
+history_readable_fini () {
+	stdio_message_log "history_readable" "Ending at: `date`"
+}

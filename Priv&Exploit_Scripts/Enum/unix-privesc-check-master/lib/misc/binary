@@ -1,0 +1,247 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux, AIX, Solaris
+
+if [ -z "${binaryincluded}" ]
+then
+
+binaryincluded=1
+
+. lib/misc/dependencies
+. lib/misc/validate
+
+binary_list_rpath () {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	# skip textual files (bash scripts, python scripts, etc)
+	if [ "`file_is_textual \"${filename}\"`" -eq 1 ]
+	then
+		printf -- ""
+	elif [ "`uname`" = "AIX" ]
+	then
+		dumpflag=0
+		dump -Hv -X 32_64 "${filename}" | while read line
+		do
+			if [ "${dumpflag}" -eq 1 ]
+			then
+				printf -- "${line}\n" | while read index base member
+				do
+					if [ "${index}" -eq 0 ]
+					then
+						printf -- "${base}\n" | tr ":" "\n" | while read filename
+						do
+							printf -- "${filename}\n"
+						done
+					fi
+				done
+			fi
+			if [ -n "`printf -- "${line}\n" | grep "INDEX"`" ]
+			then
+				dumpflag=1
+			fi
+		done | sort | uniq
+	elif [ "`uname`" = "SunOS" ]
+	then
+		dump -Lv "${filename}" | grep "RPATH" | while read _ header rpath
+		do
+			printf -- "${rpath}\n" | tr ":" "\n" | while read filename
+			do
+				printf -- "${filename}\n"
+			done
+		done | sort | uniq
+		dump -Lv "${filename}" | grep "RUNPATH" | while read _ header rpath
+		do
+			printf -- "${rpath}\n" | tr ":" "\n" | while read filename
+			do
+				printf -- "${filename}\n"
+			done
+		done | sort | uniq
+	else
+		objdump -x "${filename}" | grep -i "RPATH" | while read header rpath
+		do
+			printf -- "${rpath}\n" | tr ":" "\n" | while read filename
+			do
+				printf -- "${filename}\n"
+			done
+		done | sort | uniq
+		objdump -x "${filename}" | grep -i "RUNPATH" | while read header rpath
+		do
+			printf -- "${rpath}\n" | tr ":" "\n" | while read filename
+			do
+				printf -- "${filename}\n"
+			done
+		done | sort | uniq
+	fi
+}
+
+binary_pie() {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	# skip textual files (bash scripts, python scripts, etc)
+	if [ "`file_is_textual \"${filename}\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	elif [ "`uname`" = "Linux" ]
+	then
+		if [ -n "`objdump -x "${filename}" | head -5 | grep "DYNAMIC"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	else
+		printf -- "0\n"
+	fi
+}
+
+binary_relro_full() {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	# skip textual files (bash scripts, python scripts, etc)
+	if [ "`file_is_textual \"${filename}\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	elif [ "`uname`" = "Linux" ]
+	then
+		if [ -n "`objdump -x "${filename}" | grep "BIND_NOW"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	else
+		printf -- "0\n"
+	fi
+}
+
+binary_relro() {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	# skip textual files (bash scripts, python scripts, etc)
+	if [ "`file_is_textual \"${filename}\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	elif [ "`uname`" = "Linux" ]
+	then
+		if [ -n "`objdump -x "${filename}" | head -30 | grep "RELRO"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	else
+		printf -- "0\n"
+	fi
+}
+
+binary_nx() {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	# skip textual files (bash scripts, python scripts, etc)
+	if [ "`file_is_textual \"${filename}\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	elif [ "`uname`" = "Linux" ]
+	then
+		isstackline="0"
+		oldifs="${IFS}"
+		IFS="\n"
+		objdump -x "${filename}" | head -30 | while read line
+		do
+			if [ "${isstackline}" -eq 1 ]
+			then
+				if [ -n "`printf -- \"${line}\" | egrep -- \" rw-$\"`" ]
+				then
+					printf -- "1\n"
+				else
+					printf -- "0\n"
+				fi
+				break
+			elif [ -n "`printf -- \"${line}\" | grep "STACK "`" ]
+			then
+				isstackline="1"
+			fi
+		done
+		IFS="${oldifs}"
+	else
+		printf -- "0\n"
+	fi
+}
+
+binary_matches_string () {
+	filename="${1}"
+	pattern="${2}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	if [ -n "`strings \"${filename}\" | egrep -- \"${pattern}\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+binary_matches_string_grep () {
+	filename="${1}"
+	pattern="${2}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	if [ -n "`strings \"${filename}\" | grep -- \"${pattern}\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+binary_matches_function () {
+	filename="${1}"
+	pattern="${2}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	# skip textual files (bash scripts, python scripts, etc)
+	if [ "`file_is_textual \"${filename}\"`" -eq 1 ]
+	then
+		printf -- "0\n"
+	elif [ -n "`objdump -T "${filename}" | egrep "${pattern}"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+binary_banned_api () {
+	filename="${1}"
+	pattern="${2}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	# skip textual files (bash scripts, python scripts, etc)
+	if [ "`file_is_textual \"${filename}\"`" -eq 1 ]
+	then
+		printf -- ""
+	else
+		printf -- "`objdump -T "${filename}" | egrep -o "${pattern}" | sort -u | xargs | tr " " ","`"
+	fi
+}
+
+fi

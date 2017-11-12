@@ -1,0 +1,54 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Check if the ssh-agent is running and list SSH unencrypted keys
+
+. lib/misc/stdio
+. lib/misc/process
+. lib/misc/ssh_agent
+. lib/misc/file
+. lib/misc/ssh_key
+
+ssh_agent_init () {
+	stdio_message_log "ssh_agent" "Starting at: `date`"
+}
+
+ssh_agent_main () {
+	process_list "ssh-agent" | while read processid
+	do
+		stdio_message_log "ssh_agent" "ssh-agent is running as `process_show_userid ${processid}` (`process_show_command ${processid}`)"
+		ssh_agent_list `process_show_parentid ${processid}` ${processid} | while read filename
+		do
+			stdio_message_debug "ssh_agent" "ssh-agent uses key from ${filename}"
+			ssh_key_permissions "${filename}"
+			if [ "`file_matches_string "${filename}" "ENCRYPTED"`" -ne 1 ]
+			then
+				stdio_message_warn "ssh_key" "${filename} is unencrypted"
+			else
+				stdio_message_log "ssh_key" "${filename} is encrypted"
+			fi
+		done
+	done
+}
+
+ssh_agent_fini () {
+	stdio_message_log "ssh_agent" "Ending at: `date`"
+}

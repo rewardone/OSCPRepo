@@ -1,0 +1,465 @@
+2015-01-06 unix-privesc-check trunk
+
+* Cleaned up file structure
+* Bug fix: Renamed environment variable from CHECKTYPE to TYPE to match flag
+* Bug fix: Renamed flag from --check to --checks to match environment variable
+* Bug fix: UNIX not Unix
+* Bug fix: Make flag processing match help order
+* Bug fix: Cleaned up file_is functions in lib/misc/file
+* Bug fix: Output erronous value where value is not a string
+* Bug fix: Make file cache filename less racey
+* Bug fix: Make privileged cache filename less racey
+
+2012-11-14 unix-privesc-check trunk
+
+* Tidied docs/CHANGELOG
+* Updated docs/HACKING
+* Tidied upc.sh
+* Added tools/generate_docs.sh to generate stub documentation for
+  lib/misc/* and lib/checks/*
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2012-11-05 unix-privesc-check trunk
+
+* Add support for PostgreSQL
+  * Added lib/checks/postgresql_configuration
+  * Added lib/checks/postgresql_connection
+  * Added lib/checks/postgresql_trust
+  * Added lib/misc/postgresql
+* Added lib/misc/ldap and lib/checks/ldap_authentication
+* Added lib/misc/nis and lib/checks/nis_authentication
+* Added lib/checks/privileged_arguments to verify if textual
+  privileged files (like bash scripts) accept arguments from command line
+* Added lib/misc/init and support in lib/misc/privileged
+* Added security check to verify device mount options: dev, suid, user
+* Added function file_is_basename to lib/misc/file
+* Renamed lib/checks/devices to lib/checks/devices_permission
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-11-02 unix-privesc-check trunk
+
+* Bug fix: uname on Solaris returns SunOS
+* Added lib/misc/device and lib/checks/devices to verify world-readable and
+  world-writable permission on all device files including swap device(s)
+* Improved lib/misc/cron to correctly handle PATH variable from /etc/crontab
+  and to differentiate programs lauched by /etc/crontab with
+  /etc/cron.[hourly|daily|monthly]
+* Added lib/checks/privileged_environment_variables to verify if textual
+  privileged files (like bash scripts) use environment variables
+* Improved lib/checks/privileged_tmp to also process textual privileged
+  files (like bash scripts)
+* Added binary_matches_string_grep function to lib/misc/binary to avoid
+  interpreting the pattern as an extended regular expression
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-11-01 unix-privesc-check trunk
+
+* Bug fix: Return value in lib/misc/binary
+* Bug fix: Avoid recursing the linker_list_dependencies function
+* Added lib/misc/inittab and support in lib/misc/privileged
+* Improved lib/checks/system_configuration check to display also sensitive
+  directories and their content
+* Improved lic/checks/system_configuration to notify about writable
+  configuration files by non-root users
+* More detailed stdout messages for file owner condition across
+  lib/checks/*
+* Updated the lib/misc/shadow and lib/checks/shadow_hash to display a
+  warning message when the password hashes file is readable
+* Cleaned the code of libs/checks/privileged_dependency
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-31 unix-privesc-check trunk
+
+* Added lib/misc/cron to parse /etc/cron*, /var/spool/cron/crontabs/*,
+  crontab -l and used it in lib/misc/privileged
+* Enhanced process_show_command function to process /proc/PID/environ and
+  return script file path instead of ruby, perl, bash, etc
+* Added parse_environ_cwd function to parse /proc/PID/environ file and
+  extract the process current working directory
+* Added a preliminary check to all functions that call objdump to ensure
+  the file is not a textual file (like a bash script, etc)
+* Added other file paths to check for permissions in
+  lib/checks/system_configuration
+* Added file_is_directory function to lib/misc/file
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-30 unix-privesc-check trunk
+
+* Added lib/checks/sudo to verify permissions on /etc/sudoers and its
+  entries
+  * Added functions to parse /etc/sudoers to lib/misc/sudo
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-28 unix-privesc-check trunk
+
+* Added lib/checks/history_readable to list all readable .*_history
+  files
+* Added lib/checks/homedirs_executable and lib/checks/homedirs_writable
+* Added lib/checks/system_configuration to list writable permissions on
+  system configuration files and directories
+* Added support for --verbose switch
+* Added passwd_show_homedir function to lib/misc/passwd
+* Aligned test types (symlinks) to all recently developed security checks
+* Bug fix: group_is_in_group_name function
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-22 unix-privesc-check trunk
+
+* Added lib/checks/privileged_nx
+* Added lib/checks/privileged_relro
+* Added lib/misc/kernel
+* Added lib/checks/system_aslr
+* Added lib/checks/system_mmap
+* Added lib/checks/system_nx
+* Added lib/checks/system_selinux
+* Added permission_is_world_writable_sticky_bit function to
+  lib/misc/permission
+* Added support to verify sticky bit against world-writable directories
+* Renamed lib/checks/banned_* to lib/checks/privileged_*
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-22 unix-privesc-check trunk
+
+* Added lib/misc/validation and modified lib/misc/* to use it.
+  The aim is to sanity check that libraries are being called
+  correctly.  We can improve this over time
+* Bug fix: Renamed validation_is_regex to validation_matches_regex
+  in lib/misc/validation
+* Bug fix: validation_matches_regex test was wrong, should be -n
+  not -r in lib/misc/validation
+* Bug fix: Added inclusion checks to prevent multiple inclusions
+* Bug fix: Changed lib/misc/* to catch data returned by
+  validate_is_*
+* Removed unnecessary calls to file_check_or_generate_cache in
+  lib/misc/checks/*
+* Updated symlinks for different types of scan
+* Removed tools/banned.h
+* Tidied up formatting
+* Fixed AIX specific bug with checking users don't have a password
+  of ! in lib/checks/passwd_hashes
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2012-10-21 unix-privesc-check trunk
+
+* Added library to parse patterns, for now implements only one function to
+  extract and return all absolute file paths, parse_extract_absolute_filepaths
+* Added lib/misc/sudo
+* Added sudo support to lib/misc/privileged
+* Added lib/misc/user
+* Added lib/misc/group
+* Added lib/misc/permission
+* Added file_is_readable function to lib/misc/file
+* Added two functions to lib/misc/file
+  * file_exists_file and file_is_regular_file
+* Added validate_is_boolean function to lib/misc/validate
+* Added support for --color switch to enable output coloring
+* Updated lib/checks/jar and lib/checks/key_material
+  * Removed one cycle, minor refactoring and use lib/misc/user and
+    lib/misc/group
+* Ported all calls to id command through the code to their relevant
+  user/group libraries functions
+* Bug fix: Missing import bug in lib/checks/binary_rpath
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-21 unix-privesc-check trunk
+
+* Bug fix: Changed $VERSION to ${VERSION} etc in upc.sh
+* Removed old TODOs from lib/checks/set[ug]id
+* Bug fix: Removed symlink exclusion in lib/misc/file cache
+  generation
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2012-10-20 unix-privesc-check trunk
+
+* Minor improvements to lib/misc/linker
+* Bug fix: Avoid using file as variable name
+* Bug fix: Use grep instead of egrep in one file function
+* Consolidated the stdout to clarify where the warning message throughout
+  lib/checks/binary_*
+* Improved lib/checks/key_material and lib/checks/jar to show more detailed stdout
+* Major speedup to lib/checks/group_writable and lib/checks/world_writable
+* Re-engineered lib/checks/binary_dependency
+* Improved lib/checks/binary_rpath and lib/checks/binary_writable to also verify
+  write access by non-root users
+* Refactored lib/checks/system_libraries code
+* Added function to check for SSH key files permissions to lib/checks/ssh_agent
+* Renamed lib/checks/ssh_key_unencrypted to lib/checks/ssh_key
+* Consolidated lib/checks/ssh_agent and lib/checks/ssh_key checks to also
+  show encrypted key files
+* Removed exclusions from lib/checks/credentials
+* Created lib/misc/file function file_is_textual
+* Improved file_show_symlinked_filename function to be recursive and always
+  return the real linked filename
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-19 unix-privesc-check trunk
+
+* Re-engineered check lib/checks/binary_rpath
+* Fixed the file_parent_traverse function call in lib/checks/binary_writable
+  and lib/checks/system_libraries
+* Fixed some more checks' descriptions
+* Bug fix: Syntax fix in lib/misc/binary
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-18 unix-privesc-check trunk
+
+* Tidied up upc.sh, added an additional error check
+* Purged dummy, replaced with _ after suggestion from BDA
+* Bug fix: No longer considers "enabled" as a check
+* Changed lib/misc/privileged to split out cache generation so that it
+  happens on inclusion
+* Bug fix: Removed unintentional trailing space from file cache
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2012-10-18 unix-privesc-check trunk
+
+* Bug fix: Fixed regexp patterns to avoid returning directories in
+  lib/misc/privileged and lib/misc/file
+
+-- <pentestmonkey@pentestmonkey.net>
+
+2012-10-18 unix-privesc-check trunk
+
+* Added check lib/checks/binary_writable
+* Bug fix: Proper use of dirname in file_show_symlinked_filename function
+* Bug fix: Replaced STDIN redirection with cat for inetd configuration
+  files parsing in lib/misc/linker
+* Bug fix: Avoid escaping a path with an asterisk in lib/misc/ssh_agent
+* Refactored check lib/checks/system_libraries code
+* Refactored check lib/checks/world_writable code
+* Refactored check lib/checks/binary_dependency code
+* Refactored checks lib/checks/setuid and lib/checks/setgid code
+* Improved a lot speed of lib/checks/jar and lib/checks/key_material
+* Improved lib/misc/ssh_agent to work on recent Linux distributions too
+  and inspect /tmp folder for both SSH agent parent process and pid-1
+* Avoid duplicate processes entries in lib/misc/privileged
+* Improved regular expression patterns throughout the code
+* Added --check and --version switches to upc.sh
+* Added description to missing checks
+* Added verbose comment to lib/checks/ssh_key_unencrypted with suggestions
+  for improvements
+* Set subversion properties on all missing files
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-10-18 unix-privesc-check trunk
+
+* Changed lib/misc/shadow to favour 1 egrep over 2 greps
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2012-10-17 unix-privesc-check trunk
+
+* Added lib/checks/binary_path
+* Added lib/checks/binary_random
+* Changed stdio_message_error to output to STDERR
+  in lib/misc/stdio
+* Removed date from output (reverting BDA change)
+* Updated lib/misc/ssh_agent
+* Updated lib/misc/shadow
+* Updated lib/misc/process (reverting BDA change)
+* Updated lib/misc/privileged (partially reverting BDA change)
+  * Kept the caching code
+  * Kept variable name changed to make the code more readable
+* Updated lib/misc/passwd
+* Updated lib/misc/linker (reverting BDA change)
+* Updated lib/misc/inetd (reverting BDA change)
+* Updated lib/misc/dependencies to disable for now.  The
+  principal is solid, but it needs more consideration.  
+  For example, why does only lib/misc/binary need dependencies,
+  what happens on non-Linux systems etc
+* Added docs/HACKING.  I will need to work on it but it should
+  help to smooth the path for new hackers :)
+* Updated lib/misc/file (partially reverting BDA change)
+  * Kept symlink related code
+  * Kept permissions related code
+* Changed lib/misc/privileged to use file_list_by_perms
+  correctly.  Bonus, reduction of loops
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2012-10-17 unix-privesc-check trunk
+
+* Added binary_banned_api function to lib/misc/binary
+* Added file_show_symlinked_file function to lib/misc/file
+* Added code comments to lib/misc/file
+* Added cashing mechanism to lib/misc/privileged
+* Added file headers throughout the source code
+* Added checks' description in comment headers
+* Added date to standard output function
+* Added an error message log function
+* Added notification of needed dependencies (binutils package)
+* Narrowed down regular expression patterns in some checks
+* Refactored check lib/checks/credentials code and exclude man pages and
+  python/ruby/perl libraries
+* Refactored check lib/checks/binary_dependency code
+* Refactored check lib/checks/group_writable code
+* Removed unnecessary Linux-specific code from lib/misc/process
+* Standardized checks' standard output and removed unnecessary lines
+
+-- Bernardo Damele A. G. <bernardo.damele@gmail.com>
+
+2012-09-23 unix-privesc-check trunk
+
+* Bug fix: Changed from stdio_message_debug to stdio_message_warn
+  in lib/checks/binary_banned
+* Bug fix: Incorrect symlink checking in binary_dependency,
+  binary_rpath, world_writable and group_writable
+* Added support for PIE to lib/misc/binary
+* Added lib/checks/binary_pie
+  
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2012-09-22 unix-privesc-check trunk
+
+* Started adding --help
+* Removed date from output
+* Bug fix: Changed $1 to ${1} etc
+* Added message when generating cache
+* Bug fix: Checking wrong variable in lib/misc/process
+* Added lib/misc/privileged
+* Changed string checks from "" to -n etc
+* Standardised variable names
+* Changed how checks are enabled, it is now possible to have
+  different types of scan using --type
+* Added check for encryption to lib/checks/ssh_key_unencrypted
+* Renamed lib/checks/binary_changeprivs to
+  lib/checks/binary_change_privileges
+* Updated docs/COPYING.UNIX-PRIVESC-CHECK to reference
+  version 1 explicitly.  This will allow version 2 into
+  Debian and other free distributions
+* Added lib/checks/binary_banned
+* Added check for lack of XXX in lib/checks/tmp
+* Added check for DT_RUNPATH to lib/checks/binary_rpath
+* Started work on porting lib/misc/* to Solaris
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2012-09-11 unix-privesc-check trunk
+
+* Branching 1.x at revision 26
+* 2.0 released
+* Bug fix: Typo in lib/checks/binary_dependency
+* Improved output of lib/checks/system_libraries,
+  lib/checks/binary_dependency, lib/checks/binary_rpath
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2010-12-30 unix-privesc-check trunk
+
+* Bug fix: Cleaned up a typo
+* Added support for fscaps
+* Updated CHANGELOG
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2010-11-09 unix-privesc-check trunk
+
+* Bug fix: False positive if svn.simple directory is empty
+
+-- <pentestmonkey@pentestmonkey.net>
+
+2010-11-04 unix-privesc-check trunk
+
+* Added unique issue numbers. Should help to generate reports
+
+-- <pentestmonkey@pentestmonkey.net>
+
+2010-04-17 unix-privesc-check trunk
+
+* Bug fix: Now checks HP-UX swap permissions correctly
+* Bug fix: Cleaned up a few typos
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2010-09-27 unix-privesc-check trunk
+
+* Added check for cleartext subversion passwords in home directory
+
+-- <pentestmonkey@pentestmonkey.net>
+
+2010-01-06 unix-privesc-check trunk
+
+* Added support for exploit mitigations (HP-UX and Solaris)
+* Checks if shadow and passwd are writable, thanks jdv
+* Checks for SetUID shell scripts which might be racey
+* Improved NX and SSP checks (Linux only)
+* Bug fix: Cleaned up a few typos
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2009-09-23 unix-privesc-check trunk
+
+* Bug fix: Cron jobs starting with '(' parsed properly
+* Checks perms on Java classpath
+
+-- <pentestmonkey@pentestmonkey.net>
+
+2009-09-06 unix-privesc-check trunk
+
+* Added MMAP allows map to 0 exploit mitigation (Linux ATM)
+* Added SELinux exploit mitigation (Linux only)
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2009-07-30 unix-privesc-check v1.5
+
+* Initial AIX support added
+* Check for exploit mitigations (Linux only ATM)
+* Brain dumped some more interesting things to check for into TODOs
+* Bug fix: Fixed typos in comments
+* Added SSP exploit mitigation (Linux only ATM)
+
+-- Tim Brown <timb@nth-dimension.org.uk>
+
+2008-11-23 unix-privesc-check v1.4
+
+* Added check of file perms of shared libraries used by SUID programs
+* Tidied output slightly
+
+2008-11-09 unix-privesc-check v1.3
+
+* Bug fix: Parts of the script only worked with /bin/bash and not /bin/sh
+* Bug fix: Fixed typos in reporting for privescs via cron
+
+2008-07-06 unix-privesc-check v1.2
+
+* Added check of library dirs (/etc/ld.so.conf) for Linux
+* Crude check of programs called from shell scripts
+* Check of libraries used by each binary program (using ldd)
+* Check of hard-coded paths within binaries (using strings)
+* More verbose WARNING messages.  All the explanation for a WARNING
+  should now be on one line so you can grep for 'WARNING' and still
+  understand the results
+* Check of file perms on open file handles of running processes
+* Check for running SSH agent.  Lists keys if possible
+* Check for public and private SSH keys in home directories
+* Check for running GPG agent
+* Check for cron jobs in /var/spool/cron/tabs
+* Extra non-priv check for local postgres trusts
+* Bug fix: lanscan now used on HPUX to get interface names
+* Check if system is an NFS client (HPUX only)
+* Check if swap space is readable / writable
+
+2008-04-17 unix-privesc-check v1.1
+
+* Added check for accounts with no password in /etc/passwd
+* Record some basic info about the host (hostname, uname -a, interface IPs)
+
+2008-02-01 unix-privesc-check v1.0
+
+* Initial public release

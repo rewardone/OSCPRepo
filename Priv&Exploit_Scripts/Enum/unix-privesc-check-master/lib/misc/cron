@@ -1,0 +1,144 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${cronincluded}" ]
+then
+
+cronincluded=1
+
+. lib/misc/file
+. lib/misc/parse
+. lib/misc/user
+. lib/misc/validate
+
+cron_crontab_list () {
+	crontab -l | egrep -v "^#|^$" | while read minute hour dom mon dow command arguments
+	do
+		# Examples of ${command} ${arguments}:
+		#    0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+		#    30 6 * * * id > /tmp/test
+		printf -- "`user_show_user_name` ${command}\n"
+	done
+}
+
+cron_crontabs_list () {
+	file_show_perms " /var/spool/cron/crontabs/" | while read filename permissions userid groupid
+	do
+		case "${permissions}" in
+			-?????????)
+				# ignore user's own crontab file as it is retrieved by cron_crontab_list function
+				if [ "${filename}" != "`user_show_user_name`" ]
+				then
+					printf -- "${userid} ${filename}\n"
+				fi
+				;;
+			l?????????)
+				printf -- "${userid} `file_show_symlinked_filename \"${filename}\"`\n"
+				;;
+			d?????????)
+				# ignore directories
+				continue
+				;;
+		esac
+	done
+}
+
+cron_system_crontab_list () {
+	cat "/etc/crontab" | egrep -v "^#|^$" | egrep -v "run-parts " | while read minute hour dom mon dow user command arguments
+	do
+		# Example of /etc/crontab lines:
+		#    18 23	2 * *	luther	command args
+		#    19 21	3 * *	wu	dir > /tmp/dir
+		if [ -n "${user}" -a -n "${command}" ]
+		then
+			printf -- "${user} ${command}\n"
+		fi
+	done
+}
+
+cron_system_get_user () {
+	filepath="${1}"
+	[ "`validate_is_string \"${filepath}\"`" ] || false
+	filepath="`dirname \"${filepath}\"`"
+	cat "/etc/crontab" | egrep -v "^#|^$" | egrep -- "run-parts " | while read minute hour dom mon dow user command arguments
+	do
+		# Example of /etc/crontab lines:
+		#    17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+		#    25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+		if [ -n "`printf -- \"${arguments}\" | egrep -- \" ${filepath}\"`" ]
+		then
+			printf -- "${user}\n"
+			break
+		fi
+	done
+}
+
+cron_system_list () {
+	file_show_perms " /etc/cron\." | while read filename permissions _ _
+	do
+		userid="`cron_system_get_user \"${filename}\"`"
+		if [ -z "${userid}" ]
+		then
+			userid="root"
+		fi
+		case "${permissions}" in
+			-?????????)
+				printf -- "${userid} ${filename}\n"
+				;;
+			l?????????)
+				printf -- "${userid} `file_show_symlinked_filename \"${filename}\"`\n"
+				;;
+			d?????????)
+				# ignore directories
+				continue
+				;;
+		esac
+	done
+}
+
+cron_file_extract_paths () {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	parse_extract_absolute_filepaths "`cat -- \"${filename}\"`" | while read filepath
+	do
+		# do not return file paths that do not exist, are device files or are within /proc
+		if [ "`file_exists \"${filepath}\"`" -ne 1 -o -n "`printf -- \"${filepath}\" | egrep -- \"^/dev/\"`" -o -n "`printf -- \"${filepath}\" | egrep -- \"^/proc/\"`" ]
+		then
+			continue
+		# follow symbolic links
+		elif [ -h "${filepath}" ]
+		then
+			symlinkedfilepath="`file_show_symlinked_filename \"${filepath}\"`"
+			if [ -n "${symlinkedfilepath}" -a "`file_is_directory \"${symlinkedfilepath}\"`" -ne 1 ]
+			then
+				printf -- "root ${symlinkedfilepath}\n"
+			fi
+		# ignore directories
+		elif [ "`file_is_directory \"${filepath}\"`" -ne 1 ]
+		then
+			printf -- "root ${filepath}\n"
+		fi
+	done
+}
+
+fi

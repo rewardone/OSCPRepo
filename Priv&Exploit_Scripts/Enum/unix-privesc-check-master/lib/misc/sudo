@@ -1,0 +1,114 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${sudoincluded}" ]
+then
+
+sudoincluded=1
+
+. lib/misc/file
+. lib/misc/parse
+. lib/misc/validate
+
+sudo_is_password_required () {
+	pattern="${1}"
+	[ "`validate_is_string \"${pattern}\"`" ] || false
+	if [ -z "`sudo -l | egrep -- \"${pattern}\" | egrep \"NOPASSWD\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+sudo_list () {
+	sudo -l | egrep -v "^#|^$" | egrep -- "^    \(" | tr -d "(" | tr -d ")" | while read privilegeduser settings
+	do
+		if [ "`sudo_is_password_required \"${settings}\"`" -eq 1 ]
+		then
+			passwd="passwd"
+		else
+			passwd="nopasswd"
+		fi
+		# Examples of ${settings} (sudo -l relevant lines):
+		#    /bin/su operator
+		#    NOPASSWD: /usr/bin/test
+		#    /sbin/, (foobar) /usr/sbin, (foobar) /usr/local/apps/check.pl
+		#    /usr/sbin/lpc, /usr/bin/lprm
+		# All of the above cases are correctly handled here
+		# TODO this does not consider the common case (i.e. in Ubuntu) where a user can run all commands and the sudo -l output is "    (root) NOPASSWD: ALL"
+		parse_extract_absolute_filepaths "${settings}" | while read filepath
+		do
+			case "${filepath}" in
+				/*/)
+					printf -- "${privilegeduser} ${passwd} ${filepath}*\n"
+					;;
+				/*)
+					printf -- "${privilegeduser} ${passwd} ${filepath}\n"
+					;;
+			esac
+		done
+	done
+}
+
+sudo_sudoers_check () {
+	if [ "`file_is_readable \"/etc/sudoers\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+sudo_sudoers_list () {
+	if [ "`sudo_sudoers_check`" -eq 1 ]
+	then
+		sudoers_entries="`egrep -v \"^#\" \"/etc/sudoers\" | egrep -v \"^[ \t]*$\" | egrep -v \"^[ \t]*Default\" | egrep -- \"=\"`"
+		# FIXME this printf fails when the an entry starts with percentage character (%) which is common for sudoers group
+		printf -- "${sudoers_entries}" | while read privilegeduser passwd settings
+		do
+			if [ -n "`printf -- \"${privilegeduser}\" | egrep -- \"_Alias\"`" ]
+			then
+				continue
+			fi
+			# TODO this does not consider command aliases (Cmnd_Alias setting)
+			if [ -z "`parse_extract_absolute_filepaths \"${settings}\"`" ]
+			then
+				printf -- "${privilegeduser} ${passwd} ${settings}\n"
+			fi
+			parse_extract_absolute_filepaths "${settings}" | while read filepath
+			do
+				case "${filepath}" in
+					/*/)
+						printf -- "${privilegeduser} ${passwd} ${filepath}*\n"
+						;;
+					/*)
+						printf -- "${privilegeduser} ${passwd} ${filepath}\n"
+						;;
+				esac
+			done
+		done
+	fi
+}
+
+fi

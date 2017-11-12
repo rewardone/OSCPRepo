@@ -1,0 +1,12 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - docker pull dhiru/fedora:26
+    - docker run --name fedora -v /home/ubuntu:/base -i -t dhiru/fedora:26 /base/JohnTheRipper/src/CircleCI-MinGW.sh
+
+general:
+  artifacts:
+    - /home/ubuntu/builds

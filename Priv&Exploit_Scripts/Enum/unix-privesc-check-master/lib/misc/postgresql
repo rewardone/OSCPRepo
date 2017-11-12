@@ -1,0 +1,70 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: AIX, Linux
+
+if [ -z "${postgresqlincluded}" ]
+then
+
+postgresqlincluded=1
+
+. lib/misc/validate
+
+postgresql_query () {
+	host="${1}"
+	port="${2}"
+	dbuser="${3}"
+	dbname="${4}"
+	query="${5}"
+	[ "`validate_is_string \"${host}\"`" ] || false
+	[ "`validate_is_number \"${port}\"`" ] || false
+	[ "`validate_is_string \"${dbuser}\"`" ] || false
+	[ "`validate_is_string \"${dbname}\"`" ] || false
+	[ "`validate_is_string \"${query}\"`" ] || false
+	psql -h "${host}" -p "${port}" -U "${dbuser}" -W "${dbname}" -c "${query}" -q -w 2>/dev/null
+}
+
+postgresql_version () {
+	host="${1}"
+	port="${2}"
+	dbuser="${3}"
+	dbname="${4}"
+	[ "`validate_is_string \"${host}\"`" ] || false
+	[ "`validate_is_number \"${port}\"`" ] || false
+	[ "`validate_is_string \"${dbuser}\"`" ] || false
+	[ "`validate_is_string \"${dbname}\"`" ] || false
+	postgresql_query "${host}" "${port}" "${dbuser}" "${dbname}" "SELECT version()"
+}
+
+postgresql_check_no_password () {
+	port="${1}"
+	dbuser="${2}"
+	[ "`validate_is_number \"${port}\"`" ] || false
+	[ "`validate_is_string \"${dbuser}\"`" ] || false
+	if [ -n "`postgresql_version \"127.0.0.1\" \"${port}\" \"${dbuser}\" \"template1\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+fi

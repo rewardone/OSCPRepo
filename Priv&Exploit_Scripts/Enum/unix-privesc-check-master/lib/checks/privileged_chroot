@@ -1,0 +1,49 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Check if privileged files calling chroot() function call also chdir() function
+# Based on ideas found at http://people.redhat.com/sgrubb/security/
+
+. lib/misc/stdio
+. lib/misc/privileged
+. lib/misc/binary
+
+privileged_chroot_init () {
+	stdio_message_log "privileged_chroot" "Starting at: `date`"
+}
+
+privileged_chroot_main () {
+	privileged_list | while read filetype filename usergroupid
+	do
+		match="`binary_matches_function "${filename}" "chroot"`"
+		if [ $match -eq 1 ]
+		then
+			if [ "`binary_matches_function "${filename}" "chdir"`" -ne 1 ]
+			then
+				stdio_message_warn "privileged_chroot" "${filetype} ${filename} (${usergroupid}) and may use chroot() unsafely - no chdir() call"
+			fi
+		fi
+	done
+}
+
+privileged_chroot_fini () {
+	stdio_message_log "privileged_chroot" "Ending at: `date`"
+}

@@ -1,0 +1,26 @@
+$Revision$
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+(c) Tim Brown, 2012
+(c) pentestmonkey@pentestmonkey.net, 2008
+<mailto:timb@nth-dimension.org.uk>
+<http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+
+[UPC001] WARNING: $O_MESSAGE_STACK The user $O_FILE_USER can write to $O_FILE
+[UPC002] WARNING: $O_MESSAGE_STACK The group $O_FILE_GROUP can write to $O_FILE
+[UPC003] WARNING: $O_MESSAGE_STACK World write is set for $O_FILE (but sticky bit set)
+[UPC004] WARNING: $O_MESSAGE_STACK World write is set for $O_FILE
+[UPC043] WARNING: fscaps shell script, may be vulnerable to race attacks

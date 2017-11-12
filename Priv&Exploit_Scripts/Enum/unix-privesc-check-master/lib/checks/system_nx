@@ -1,0 +1,61 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Check if the CPU supports NX (NoExecute)
+
+. lib/misc/kernel
+. lib/misc/stdio
+
+system_nx_init () {
+	stdio_message_log "system_nx" "Starting at: `date`"
+}
+
+system_nx_main () {
+	if [ "`kernel_nx`" -eq 0 ]
+	then
+		stdio_message_warn "system_nx" "The CPU does not support NX"
+	else
+		stdio_message_debug "system_nx" "The CPU supports NX"
+	fi
+	# TODO does uname return HP-UX or HPUX?
+	if [ "`uname`" = "SunOS" -o "`uname`" = "HP-UX" ]
+	then
+		if [ "`kernel_nx_logging`" -eq 0 ]
+		then
+			stdio_message_log "system_nx" "The system does not log NX violations"
+		else
+			stdio_message_debug "system_nx" "The system logs NX violations"
+		fi
+	fi
+	if [ "`uname`" = "SunOS" ]
+	then
+		if [ "`kernel_nx_audit`" -eq 0 ]
+		then
+			stdio_message_log "system_nx" "NX auditing not enabled"
+		else
+			stdio_message_debug "system_nx" "NX auditing enabled"
+		fi
+	fi
+}
+
+system_nx_fini () {
+	stdio_message_log "system_nx" "Ending at: `date`"
+}

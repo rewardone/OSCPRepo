@@ -1,0 +1,59 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: AIX, Linux
+
+if [ -z "${ldapincluded}" ]
+then
+
+ldapincluded=1
+
+. lib/misc/file
+
+ldap_authentication_in_use () {
+	# ldap_nis    Uses LDAP NIS services for resolving names
+	# ldap4       Uses LDAP services for resolving only IPv4 addresses
+	# ldap6       Uses LDAP services for resolving only IPv6 addresses
+	# ldap_nis4   Uses NIS LDAP services for resolving only IPv4 addresses
+	# ldap_nis6   Uses NIS LDAP services for resolving only IPv6 addresses
+	# ldap        Uses LDAP services for resolving names
+	if [ "`uname`" = "AIX" -a "`file_is_readable \"/etc/netsvc.conf\"`" -eq 1 ]
+	then
+		if [ -n "`egrep -- \"^host\" \"/etc/netsvc.conf\" | egrep -- \"ldap\"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	elif [ "`file_is_readable \"/etc/nsswitch.conf\"`" -eq 1 ]
+	then
+		if [ -n "`egrep -- \"^passwd\" \"/etc/nsswitch.conf\" | egrep -- \"ldap\"`" ]
+		then
+			printf -- "1\n"
+		else
+			printf -- "0\n"
+		fi
+	else
+		printf -- "0\n"
+	fi
+}
+
+fi

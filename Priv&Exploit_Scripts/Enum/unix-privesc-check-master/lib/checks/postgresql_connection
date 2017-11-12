@@ -1,0 +1,56 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Verify PostgreSQL trust relationships by connecting to localhost with
+# common usernames and no password
+
+. lib/misc/file
+. lib/misc/postgresql
+. lib/misc/stdio
+
+postgresql_connection_init () {
+	stdio_message_log "postgresql_connection" "Starting at: `date`"
+}
+
+postgresql_connection_main () {
+	file_show_perms "/postgresql.conf$" | while read filename permissions userid groupid
+	do
+		if [ "`file_is_readable \"${filename}\"`" -eq 1 ]
+		then
+			egrep "^port = " "${filename}" | while read _ _ port _
+			do
+				dbusers="psql pgsql postgres postgresql root admin"
+				printf -- "${dbusers}" | tr " " "\n" | while read dbuser
+				do
+					if [ "`postgresql_check_no_password \"${port}\" \"${dbuser}\"`" -eq 1 ]
+					then
+						stdio_message_warn "postgresql_connection" "User ${dbuser} can connect to PostgreSQL instance on port ${port}/tcp with no password"
+						break
+					fi
+				done
+			done
+		fi
+	done
+}
+
+postgresql_connection_fini () {
+	stdio_message_log "postgresql_connection" "Ending at: `date`"
+}

@@ -1,0 +1,99 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# List group-writable and world-writable privileged files (their parent
+# directories too) and processes
+
+. lib/misc/file
+. lib/misc/group
+. lib/misc/permission
+. lib/misc/privileged
+. lib/misc/stdio
+. lib/misc/user
+
+privileged_writable_init () {
+	stdio_message_log "privileged_writable" "Starting: `date`"
+}
+
+privileged_writable_permissions () {
+	filename="${1}"
+	permissions="${2}"
+	userid="${3}"
+	groupid="${4}"
+	privfilename="${5}"
+	filetype="${6}"
+
+	# TODO: Replace with trusted users
+	if [ "`user_is_root \"${userid}\"`" -ne 1 ]
+	then
+		if [ "`user_show_user_name`" = "${userid}" ]
+		then
+			stdio_message_warn "privileged_writable" "(${filetype} ${privfilename}) ${filename} is owned by user ${userid} (YOU) (group ${groupid}), non-root user (${permissions})"
+		else
+			stdio_message_warn "privileged_writable" "(${filetype} ${privfilename}) ${filename} is owned by user ${userid} (group ${groupid}), non-root user (${permissions})"
+		fi
+	fi
+
+	case "${permissions}" in
+		????????w?)
+			if [ "`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1 ]
+			then
+				stdio_message_log "privileged_writable" "(${filetype} ${privfilename}) ${filename} is owned by user ${userid} (group ${groupid}) and is world-writable with sticky bit (${permissions})"
+			else
+				stdio_message_warn "privileged_writable" "(${filetype} ${privfilename}) ${filename} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"
+			fi
+		;;
+		?????w????)
+			# TODO: Replace with trusted groups
+			if [ "`group_is_root \"${groupid}\"`" -ne 1 ]
+			then
+				if [ "`group_is_in_group_name \"${groupid}\"`" -eq 1 ]
+				then
+					stdio_message_warn "privileged_writable" "(${filetype} ${privfilename}) ${filename} is owned by user ${userid} (group ${groupid}: YOU) and is group-writable (${permissions})"
+				else
+					stdio_message_warn "privileged_writable" "(${filetype} ${privfilename}) ${filename} is owned by user ${userid} (group ${groupid}) and is group-writable (${permissions})"
+				fi
+			fi
+		;;
+	esac
+}
+
+privileged_writable_main () {
+	privileged_list | while read filetype filename usergroupid
+	do
+		# the privileged file might not exist for example when inetd calls it, but the executable has been uninstalled/removed (and inetd configuration not aligned)
+		if [ ! -e "${filename}" ]
+		then
+			stdio_message_debug "privileged_writable" "${filetype} ${filename} does not exist"
+		fi
+		file_parent_traverse "${filename}" | while read filepath
+		do
+			file_show_non_symlink_perms " ${filepath}$" | while read filepath permissions userid groupid
+			do
+				privileged_writable_permissions "${filepath}" "${permissions}" "${userid}" "${groupid}" "${filename}" "${filetype}"
+			done
+		done
+	done
+}
+
+privileged_writable_fini () {
+	stdio_message_log "privileged_writable" "Ending at: `date`"
+}

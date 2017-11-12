@@ -1,0 +1,101 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux, AIX
+
+if [ -z "${linkerincluded}" ]
+then
+
+linkerincluded=1
+
+. lib/misc/file
+
+linker_list_dependencies () {
+	filename="${1}"
+	[ "`file_is_regular \"${filename}\"`" ] || false
+	[ "`file_is_textual \"${filename}\"`" -eq 0 ] || false
+	if [ "`uname`" = "AIX" ]
+	then
+		ldd "${filename}" | grep -v "needs:" | while read library
+		do
+			case "${library}" in
+				/*)
+					library="`printf -- \"${library}\" | sed \"s/(.*//g\"`"
+					printf -- "${library}\n"
+					;;
+			esac
+		done | sort | uniq
+	else
+		ldd "${filename}" | while read relativelibrary _ library _
+		do
+			case "${library}" in
+				/*)
+					printf -- "${library}\n"
+					;;
+				not)
+					printf -- "${relativelibrary}\n"
+					;;
+			esac
+		done | sort | uniq
+		# this is for cases where the first column of the ldd is not a symlink (for example a ldd /bin/umount has amongst its libraries also /lib/ld-linux.so.2 (0xb76e6000), not symlinked)
+		ldd "${filename}" | while read library _ _ _
+		do
+			case "${library}" in
+				/*)
+					printf -- "${library}\n"
+					;;
+			esac
+		done | sort | uniq
+	fi
+}
+
+linker_list_system_filenames () {
+	if [ "`uname`" = "AIX" ]
+	then
+		printf -- "/lib\n"
+		printf -- "/usr/lib\n"
+	elif [ "`uname`" = "Linux" ]
+	then
+		while read line
+		do
+			case "${line}" in
+				/*)
+					printf -- "${line}\n"
+					;;
+				include*)
+					printf -- "${line}\n" | while read _ filename
+					do
+						cat ${filename} | while read line
+						do
+							case "${line}" in
+								/*)
+									printf -- "${line}\n"
+									;;
+							esac
+						done
+					done
+					;;
+			esac
+		done <"/etc/ld.so.conf" | sort | uniq
+	fi
+}
+
+fi

@@ -1,0 +1,288 @@
+#!/bin/sh
+
+#################################################################################
+#
+#   Lynis
+# ------------------
+#
+# Copyright 2007-2013, Michael Boelen
+# Copyright 2007-2017, CISOfy
+#
+# Website  : https://cisofy.com
+# Blog     : http://linux-audit.com
+# GitHub   : https://github.com/CISOfy/lynis
+#
+# Lynis comes with ABSOLUTELY NO WARRANTY. This is free software, and you are
+# welcome to redistribute it under the terms of the GNU General Public License.
+# See LICENSE file for usage of this software.
+#
+#################################################################################
+#
+# Printers and spools
+#
+#################################################################################
+#
+    CUPSD_CONFIG_LOCS="${ROOTDIR}etc/cups ${ROOTDIR}usr/local/etc/cups ${ROOTDIR}private/etc/cups"
+    CUPSD_CONFIG_FILE=""
+    CUPSD_RUNNING=0
+    CUPSD_FOUND=0
+    LPD_RUNNING=0
+    PRINTING_DAEMON=""
+    QDAEMON_CONFIG_ENABLED=0
+    QDAEMON_CONFIG_FILE=""
+    QDAEMON_RUNNING=0
+#
+#################################################################################
+#
+    InsertSection "Printers and Spools"
+#
+#################################################################################
+#
+    # Test        : PRNT-2302
+    # Description : Check printcap file consistency
+    Register --test-no PRNT-2302 --os FreeBSD --weight L --network NO --category security --description "Check for printcap consistency"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Searching /usr/sbin/chkprintcap"
+        if [ ! -f ${ROOTDIR}usr/sbin/chkprintcap ]; then
+            Display --indent 2 --text "- Checking chkprintcap" --result "${STATUS_NOT_FOUND}" --color WHITE
+            LogText "Result: ${ROOTDIR}usr/sbin/chkprintcap NOT found, test skipped"
+        else
+            LogText "Result: ${ROOTDIR}usr/sbin/chkprintcap found"
+            FIND=$(${ROOTDIR}usr/sbin/chkprintcap > /dev/null ; echo $?)
+            # Only an exit code of zero should come back. Use string instead of integer, due unexpected trash
+            if [ "${FIND}" = "0" ]; then
+                Display --indent 2 --text "- Integrity check of printcap file" --result "${STATUS_OK}" --color GREEN
+                LogText "Result: chkprintcap did NOT gave any warnings"
+            else
+                Display --indent 2 --text "- Integrity check of printcap file" --result "${STATUS_WARNING}" --color RED
+                ReportSuggestion ${TEST_NO} "Run chkprintcap manually to test printcap file"
+                LogText "Output from chkprintcap: ${FIND}"
+                LogText "Run chkprintcap and check the ${ROOTDIR}etc/printcap file"
+            fi
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PRNT-2304
+    # Description : Check cupsd status
+    Register --test-no PRNT-2304 --weight L --network NO --category security --description "Check cupsd status"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking cupsd status"
+        IsRunning cupsd
+        if [ ${RUNNING} -eq 1 ]; then
+            Display --indent 2 --text "- Checking cups daemon" --result "${STATUS_RUNNING}" --color GREEN
+            LogText "Result: cups daemon running"
+            CUPSD_RUNNING=1; PRINTING_DAEMON="cups"
+        else
+            Display --indent 2 --text "- Checking cups daemon" --result "${STATUS_NOT_FOUND}" --color WHITE
+            LogText "Result: cups daemon not running, cups daemon tests skipped"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PRNT-2306
+    # Description : Check CUPSd configuration file
+    if [ ${CUPSD_RUNNING} -eq 1 ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PRNT-2306 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Check CUPSd configuration file"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Searching cupsd configuration file"
+        for DIR in ${CUPSD_CONFIG_LOCS}; do
+            if [ -f ${DIR}/cupsd.conf ]; then
+                if FileIsReadable ${DIR}/cupsd.conf; then
+                    CUPSD_CONFIG_FILE="${DIR}/cupsd.conf"
+                    LogText "Result: found ${CUPSD_CONFIG_FILE}"
+                fi
+            fi
+        done
+        if HasData "${CUPSD_CONFIG_FILE}"; then
+            Display --indent 2 --text "- Checking CUPS configuration file" --result "${STATUS_OK}" --color GREEN
+            LogText "Result: configuration file found (${CUPSD_CONFIG_FILE})"
+            CUPSD_FOUND=1
+        else
+            Display --indent 2 --text "- Checking CUPS configuration file" --result "${STATUS_NOT_FOUND}" --color RED
+            LogText "Result: configuration file not found"
+            LogText "Development: no CUPS configuration file found"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PRNT-2307
+    # Description : Check CUPSd configuration file permissions
+    # TODO        : Add function
+    if [ ${CUPSD_FOUND} -eq 1 ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PRNT-2307 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Check CUPSd configuration file permissions"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking CUPS configuration file permissions"
+        FIND=$(${LSBINARY} -l ${CUPSD_CONFIG_FILE} | ${CUTBINARY} -c 2-10)
+        LogText "Result: found ${FIND}"
+        if [ "${FIND}" = "r--------" -o "${FIND}" = "rw-------" -o "${FIND}" = "rw-r-----" -o "${FIND}" = "rw-rw----" ]; then
+            Display --indent 4 --text "- File permissions" --result "${STATUS_OK}" --color GREEN
+            AddHP 1 1
+        else
+            Display --indent 4 --text "- File permissions" --result "${STATUS_WARNING}" --color RED
+            ReportSuggestion ${TEST_NO} "Access to CUPS configuration could be more strict."
+            AddHP 1 2
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PRNT-2308
+    # Description : Check CUPS daemon network configuration
+    if [ ${CUPSD_FOUND} -eq 1 ]; then PREQS_MET="YES"; else PREQS_MET="NO"; fi
+    Register --test-no PRNT-2308 --preqs-met ${PREQS_MET} --weight L --network NO --category security --description "Check CUPSd network configuration"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        FOUND=0
+        # Checking network addresses
+        LogText "Test: Checking CUPS daemon listening network addresses"
+        FIND=$(${GREPBINARY} "^Listen" ${CUPSD_CONFIG_FILE} | ${GREPBINARY} -v "/" | ${AWKBINARY} '{ print $2 }')
+        COUNT=0
+        for ITEM in ${FIND}; do
+            LogText "Found network address: ${ITEM}"
+            COUNT=$((COUNT + 1))
+            FOUND=1
+        done
+
+        # Check if daemon is only running on localhost
+        if [ ${FOUND} -eq 0 ]; then
+            LogText "Result: no listen statement found in CUPS configuration file"
+        elif [ ${COUNT} -eq 1 ]; then
+            if [ "${FIND}" = "localhost:631" -o "${FIND}" = "127.0.0.1:631" ]; then
+                LogText "Result: CUPS daemon only running on localhost"
+                AddHP 2 2
+            else
+                LogText "Result: CUPS daemon running on one or more interfaces (not limited to localhost)"
+                ReportSuggestion ${TEST_NO} "Check CUPS configuration if it really needs to listen on the network"
+                AddHP 1 2
+            fi
+        else
+            LogText "Result: CUPS daemon is running on several network addresses"
+            ReportSuggestion ${TEST_NO} "Check CUPS configuration if it really needs to run on several network addresses"
+            AddHP 1 2
+        fi
+
+        # Checking sockets
+        LogText "Test: Checking cups daemon listening sockets"
+        FIND=$(${GREPBINARY} "^Listen" ${CUPSD_CONFIG_FILE} | ${GREPBINARY} "/" | ${AWKBINARY} '{ print $2 }')
+        for ITEM in ${FIND}; do
+            LogText "Found socket address: ${ITEM}"
+            COUNT=$((COUNT + 1))
+        done
+
+        if [ ${COUNT} -eq 0 ]; then
+            Display --indent 2 --text "- Checking CUPS addresses/sockets" --result "${STATUS_NONE}" --color WHITE
+            LogText "Result: no addresses found on which CUPS daemon is listening"
+        else
+            Display --indent 2 --text "- Checking CUPS addresses/sockets" --result "${STATUS_FOUND}" --color GREEN
+            LogText "Result: CUPS daemon is listening on network/socket"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PRNT-2314
+    # Description : Check lpd status
+    Register --test-no PRNT-2314 --weight L --network NO --category security --description "Check lpd status"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking lpd status"
+        IsRunning lpd
+        if [ ${RUNNING} -eq 1 ]; then
+            Display --indent 2 --text "- Checking lp daemon" --result "${STATUS_RUNNING}" --color GREEN
+            LogText "Result: lp daemon running"
+            LPD_RUNNING=1; PRINTING_DAEMON="lp"
+        else
+            Display --indent 2 --text "- Checking lp daemon" --result "${STATUS_NOT_RUNNING}" --color WHITE
+            LogText "Result: lp daemon not running"
+            AddHP 4 4
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PRNT-2416
+    # Description : Check /etc/qconfig file
+    Register --test-no PRNT-2316 --os AIX --weight L --network NO --category security --description "Checking /etc/qconfig file"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking ${ROOTDIR}etc/qconfig"
+        QDAEMON_CONFIG_FILE="${ROOTDIR}etc/qconfig"
+        FileIsReadable ${QDAEMON_CONFIG_FILE}
+        if [ ${CANREAD} -eq 1 ]; then
+            FIND=$(${GREPBINARY} -v "^\*" ${QDAEMON_CONFIG_FILE} | ${EGREPBINARY} "backend|device")
+            if [ ! -z "${FIND}" ]; then
+                LogText "Result: printers are defined in ${QDAEMON_CONFIG_FILE}"
+                Display --indent 2 --text "- Checking /etc/qconfig file" --result "${STATUS_FOUND}" --color GREEN
+                QDAEMON_CONFIG_ENABLED=1
+            else
+                LogText "Result: ${QDAEMON_CONFIG_FILE} is empty. No printers are defined"
+                Display --indent 2 --text "- Checking /etc/qconfig file" --result EMPTY --color WHITE
+            fi
+        else
+            LogText "Result: Can not read ${QDAEMON_CONFIG_FILE} (no permission)"
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PRNT-2418
+    # Description : Check qdaemon printer spooler status
+    Register --test-no PRNT-2418 --os AIX --weight L --network NO --category security --description "Checking qdaemon printer spooler status"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking qdaemon status"
+        IsRunning qdaemon
+        if [ ${RUNNING} -eq 1 ]; then
+            LogText "Result: qdaemon daemon running"
+            Display --indent 2 --text "- Checking qdaemon daemon" --result "${STATUS_RUNNING}" --color GREEN
+            QDAEMON_RUNNING=1; PRINTING_DAEMON="qdaemon"
+        else
+            if [ ${QDAEMON_CONFIG_ENABLED} -eq 1 ]; then
+                LogText "Result: qdaemon daemon not running"
+                Display --indent 2 --text "- Checking qdaemon daemon" --result "${STATUS_NOT_RUNNING}" --color RED
+                ReportSuggestion ${TEST_NO} "Activate print spooler daemon (qdaemon) in order to process print jobs"
+            else
+                LogText "Result: qdaemon daemon not running"
+                Display --indent 2 --text "- Checking qdaemon daemon" --result "${STATUS_NOT_RUNNING}" --color WHITE
+            fi
+        fi
+    fi
+#
+#################################################################################
+#
+    # Test        : PRNT-2420
+    # Description : Checking old print jobs
+    Register --test-no PRNT-2420 --os AIX --weight L --network NO --category security --description "Checking old print jobs"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        LogText "Test: Checking old print jobs"
+        DirectoryExists ${ROOTDIR}var/spool/lpd/qdir
+        if [ ${DIRECTORY_FOUND} -eq 1 ]; then
+            FIND=$(find ${ROOTDIR}var/spool/lpd/qdir -type f -mtime +1 2> /dev/null | ${SEDBINARY} 's/ /!space!/g')
+            if HasData "${FIND}"; then
+                COUNT=0
+                for ITEM in ${FIND}; do
+                    FILE=$(echo ${ITEM} | ${SEDBINARY} 's/!space!/ /g')
+                    LogText "Found old print job: ${FILE}"
+                    COUNT=$((COUNT + 1))
+                done
+                LogText "Result: Found ${COUNT} old print jobs in /var/spool/lpd/qdir"
+                Display --indent 4 --text "- Checking old print jobs" --result "${STATUS_FOUND}" --color YELLOW
+                ReportSuggestion ${TEST_NO} "Check old print jobs in /var/spool/lpd/qdir to prevent new jobs from being processed"
+                LogText "Risk: Failed or defunct print jobs can occupy a lot of space and in some cases, prevent new jobs from being processed"
+            else
+                LogText "Result: Old print jobs not found in /var/spool/lpd/qdir"
+                Display --indent 4 --text "- Checking old print jobs" --result "${STATUS_NONE}" --color GREEN
+            fi
+        fi
+    fi
+#
+#################################################################################
+#
+
+if [ ! -z ${PRINTING_DAEMON} ]; then Report "printing_daemon=${PRINTING_DAEMON}"; fi
+
+WaitForKeyPress
+
+#
+#================================================================================
+# Lynis - Security Auditing and System Hardening for Linux and UNIX - https://cisofy.com

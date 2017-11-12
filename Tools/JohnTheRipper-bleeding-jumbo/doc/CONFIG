@@ -1,0 +1,243 @@
+	Customizing John the Ripper.
+
+John the Ripper's behavior can be customized by editing its
+configuration file.  The configuration file can be named either
+john.conf (on Unix-like systems) or john.ini (on systems which have a
+notion of filename "extensions" and limit them to 3 characters).
+
+This file is searched for in private John's "home directory" and, if
+not found in the private directory and John is installed system-wide,
+also in John's system-wide shared data files directory.
+
+You can set global options, define wordlist and "single crack" mode
+rules, define parameters for "incremental" modes, or even define a new
+external cracking mode.
+
+The configuration file consists of several sections.  Each section
+starts with a line containing its name, in brackets ("[...]").  Sections
+consist either of "variable = value" assignments (each on its own line)
+or of some other content specific to the particular section's type
+(names of such sections start with "List.").  Section and variable names
+are not case sensitive.  Comment lines start with a hash character ("#")
+or a semicolon (";") and are ignored.  Also ignored are any empty lines.
+
+
+	General options.
+
+Some global options can be defined in the [Options] section.  Currently,
+you can set the following options:
+
+Wordlist = FILENAME
+
+Set this to your wordlist file name, to be used in batch mode (which is
+activated when you start John with password files, but not specifying a
+cracking mode).  The default is "$JOHN/password.lst", that is, the file
+named "password.lst" in John's "home directory".
+
+Idle = Y|N
+
+If set to "Y" (yes), John will try to use idle processor cycles only,
+thereby greatly reducing its impact on other system processes.  The
+impact on performance of John itself is negligible except on otherwise
+overloaded systems.  This setting does not affect John's startup time
+and non-cracking invocations of John; it only affects the actual
+cracking.  The default is "Y" (yes).
+
+Starting with version 1.7.7, this setting is ignored for OpenMP-enabled
+hash types when the actual number of threads is greater than 1.
+Unfortunately, it did not work right at least with GNU libgomp on Linux.
+
+Save = SECONDS
+
+This is the time interval (in seconds) between crash recovery file
+updates.  The default is 600 seconds (10 minutes).
+
+Beep = Y|N
+
+If set to "Y" (yes), John will beep when a password is found.  On
+Unix-like systems, it does this by sending the bell character (ASCII
+code 7) to the "standard error" file descriptor (which is normally
+directed to the terminal).  The default is "N" (no).
+
+
+	Defining wordlist and "single crack" modes rules.
+
+The word mangling rules for wordlist and "single crack" modes are
+defined in separate sections, [List.Rules:Wordlist] and
+[List.Rules:Single], respectively.  John the Ripper uses an extension of
+Crack's syntax for the rules.  John supports all of the commands of
+Crack 5.0a plus a few more and, most importantly, it adds a
+preprocessor, which can generate multiple rules from a single source
+line.
+
+When defining rules, simply place one rule (which may include
+preprocessor commands) per line.  See RULES for information on the rules
+syntax and on the preprocessor.
+
+
+	"Incremental" mode parameters.
+
+To define the incremental mode parameters you need to create a section
+called [Incremental:MODE], where MODE is any name that you assign to the
+mode.  There are some pre-defined incremental modes in the default
+configuration file supplied with John, you can use them as templates.
+
+The following parameters are supported:
+
+File = FILENAME
+
+Set this to your charset file name.  See EXAMPLES for an example on how
+to generate a custom charset file.  There's no default.
+
+MinLen = LENGTH
+
+Minimum password length (the number of characters) to try.  The default
+is 0.
+
+MaxLen = LENGTH
+
+Maximum password length to try.  The default is 8 (or CHARSET_LENGTH as
+defined in src/params.h at compile time).
+
+CharCount = COUNT
+
+This allows you to limit the number of different characters (or rather,
+character indices) used.  The effect is that John would favor simple
+longer candidate passwords over more complicated shorter ones, and would
+never attempt rare characters and character combinations, not even for
+really short passwords.  Most of the time, this is undesired.  Another
+use for this option is to make John print a warning if the charset only
+defines less than CharCount characters; this is how the pre-defined
+"incremental" modes use it.  The default is to use as many different
+characters as are defined.
+
+Extra = CHARACTERS
+
+This can be used to make John try some extra characters that don't
+appear in the charset file.  Just list all those characters here and
+they will be added, but considered the least probable.
+
+
+	Temporarily disabling formats
+
+If you have problems with some format(s) and just want to disable them,
+you can add them to john.conf (or john-local.conf) by adding them as
+booleans to a [Disabled:Formats] section, set as true:
+
+[Disabled:Formats]
+LM = Y
+
+A disabled format will not be auto-selected for test or cracking, but
+can still be selected explicitly. Entries are case insensitive.
+
+
+	"include" syntax within the john.conf file.
+
+At version 1.7.8-jumbo6 (and later), include syntax was added to john.conf
+file format.  The syntax is one of these 3 types:
+.include "file"
+.include 'file'
+.include <file>
+.include [section]
+
+The include of a file, will load a file, and drop it right into where
+the .include is located at.  This is similar to how #include "" and
+#include <> works in the C language.  Some of the larger sections in
+the jumbo john, have been moved out of the 'john.conf' file, into their
+own .conf file (the dumb16/32 and the generic scripting sections)
+Using the single quotes 'file' will work similar to the double quotes,
+but when loading if the file can not be found, then john silently
+continues forward.  If double quotes (or <> ) are used, then if the
+file can not be found, john will exit telling you about the missing
+file.
+
+the .include [section], will take all of the lines found within [section]
+and place them into the current 'building' section.  Thus, things like
+numerous small rules sections can be made, and then a couple of 'super'
+rules sections can be created, which will .include several of these
+smaller rules sections to make the body of this rules section.  Also
+it can be used to load common information among several incremental
+sections, or a common init function (or other functions), in a pair
+of extern sections.
+
+See [List.Rules:Single-Extra] and several others around there for examples.
+
+
+	Local configuration file.
+
+The file john.conf is a file that is 'owned' by JtR.  In other words,
+when you make local edits to this file, it is assured that these
+changes will be lost (overwritten) when you update JtR out of the
+version control system.  However, there is a file, which is NOT owned
+by JtR, but which john.conf will include at the very bottom. This file
+is john-local.conf.  It is highly recommended that a user make edits to
+this local file, as much as possible, leaving the original john.conf
+file intact.  There is also a special naming convention added to the
+latest JtR bleeding code, where these local edits can modify an
+existing non "List." section within john.conf.  The naming convention
+is [Local:original_section:name]  So to modify existing params in the
+[Options] section of john.conf, you can add a [Local:Options] to the
+john-local.conf and any param found in there will update the param
+within john.conf's [Options] section.
+
+For instance, if you wanted to NOT run in idle mode, and always want
+to have dynamic hashes load raw hash lines, you can put this into
+john-local.conf, instead of editing john.conf:
+
+[Local:Options]
+DynamicAlwaysUseBareHashes = Y
+Idle = N
+
+Editing the local file is good for setting custom local options, for
+setting items specific to this machine (i.e. [Local:Options:OpenCL])
+for setting things like MinLen and MaxLen within the incremental
+sections, and setting things like local Markov settings. Yes, each of
+these can be done by editing john.conf.  However, keep in mind that
+all of these changes to a john.conf file 'can' be lost. If they are
+modified within john-local.conf then they are safe from being lost
+during an update.
+
+This file (john-local.conf) can be located in the $JOHN directory
+(where the john executable resides). It can also be in the local
+working directory, AND it can even be in both places.  These files
+will be loaded in this order:
+   1. all of $JOHN/john.conf
+   2. $JOHN/john-local.conf
+   3. ./john-local.conf
+So each john-local.conf can add, or modify the existing config
+data. The absolute last file loaded will be ./john-local.conf, so
+the changes this file makes will always be used. The changes done
+in $JOHN/john-local.conf will override what was set in $JOHN/john.conf
+BUT these settings can also be overridden by changes in ./john-local.conf
+
+The one and ONLY time that the JtR environment will ever edit or
+modify the john-local.conf file, is if it does not exist when the
+configure script is run. If that is the case, configure will building
+a initial skeleton john-local.conf file. This file will have a comment
+section explaining things, and then have blank skeleton Local sections
+for each non 'List.' section found in the john.conf file. From that
+point on, the john-local.conf file is the users file. The version control
+system will not touch it, and configure will not touch it again.
+
+
+	Multiple .pot files (new addition in 1.8.0-jumbo-2)
+
+This new config list section allows john to read additional .pot files
+when loading hashes.
+
+[List.Extra:Potfiles]
+$JOHN/somefile.pot
+someother.pot
+...
+mylast.pot
+
+These additional .pot files will be used to scrub off candidates which
+were already found, but which are not in the .pot file we want john to
+write to. Names of files that does not exist will be silently ignored.
+
+
+	Defining an external mode.
+
+See EXTERNAL.
+
+$Owl$

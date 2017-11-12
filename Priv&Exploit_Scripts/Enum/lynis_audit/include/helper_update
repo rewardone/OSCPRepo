@@ -1,0 +1,112 @@
+#!/bin/sh
+
+#################################################################################
+#
+#   Lynis
+# ------------------
+#
+# Copyright 2007-2013, Michael Boelen
+# Copyright 2007-2017, CISOfy
+#
+# Website  : https://cisofy.com
+# Blog     : http://linux-audit.com
+# GitHub   : https://github.com/CISOfy/lynis
+#
+# Lynis comes with ABSOLUTELY NO WARRANTY. This is free software, and you are
+# welcome to redistribute it under the terms of the GNU General Public License.
+# See LICENSE file for usage of this software.
+#
+######################################################################
+#
+# Helper program to support automatic updates of Lynis
+#
+######################################################################
+#
+# Options:
+# ---------
+# 1) lynis update info     - Show version information (external)
+#
+# How to use:
+# ------------
+# Run option 1 to know about current and latest release information.
+#
+######################################################################
+
+LOCAL_VERSION="-"
+RUN_UPDATE_CHECK=1
+SERVER_VERSION=""
+PERFORM_UPGRADE=0
+QUIET=0
+
+WGET_EXISTS=$(which wget 2> /dev/null | grep -v "no [^ ]* in ")
+CURL_EXISTS=$(which curl 2> /dev/null | grep -v "no [^ ]* in ")
+FETCH_EXISTS=$(which fetch 2> /dev/null | grep -v "no [^ ]* in ")
+
+# Update version
+if [ "$1" = "release" ]; then
+
+    ${ECHOCMD} "Deprecated: this function is no longer available. Use a package (https://packages.cisofy.com), or deploy via a custom package or script."
+
+# Update check
+elif [ "$1" = "info" ]; then
+
+        # CV - Current Version
+        PROGRAM_AC=$(echo ${PROGRAM_VERSION} | awk '{ print $1 }' | sed 's/[.]//g')
+        PROGRAM_LV=0
+
+        CheckUpdates
+
+        # Reset everything if we can't determine our current version or the latest
+        # available version (due lack of internet connectivity for example)
+        if [ "${PROGRAM_AC}" = "" -o "${PROGRAM_LV}" = "" ]; then
+            # Set both to safe values
+            PROGRAM_AC=0; PROGRAM_LV=0
+        fi
+
+        echo ""; echo " == ${WHITE}${PROGRAM_NAME}${NORMAL} =="
+        echo ""
+        echo "  Version            : ${PROGRAM_VERSION}"
+        echo -n "  Status             : "
+        if [ ${PROGRAM_LV} -eq 0 ]; then
+            echo "${RED}Unknown${NORMAL}";
+        elif [ ${PROGRAM_LV} -gt ${PROGRAM_AC} ]; then
+            echo "${YELLOW}Outdated${NORMAL}";
+            echo "  Installed version  : ${PROGRAM_AC}"
+            echo "  Latest version     : ${PROGRAM_LV}"
+        else
+            echo "${GREEN}Up-to-date${NORMAL}"
+        fi
+        echo "  Release date       : ${PROGRAM_RELEASE_DATE}"
+        echo "  Update location    : ${PROGRAM_WEBSITE}"
+        echo ""; echo ""
+        echo "${PROGRAM_COPYRIGHT}"
+        echo ""
+
+# Check if there is an update, display status on screen and use exit code to tell status as well
+elif [ "$1" = "check" ]; then
+        # CV - Current Version, LV - Latest Version
+        PROGRAM_CV=$(echo ${PROGRAM_VERSION} | awk '{ print $1 }' | sed 's/[.]//g')
+        PROGRAM_LV=0
+        CheckUpdates
+        if [ "${PROGRAM_CV}" = "" -o "${PROGRAM_LV}" = "" ]; then PROGRAM_AC=0; PROGRAM_LV=0; fi
+        if [ ${PROGRAM_LV} -eq 0 ]; then
+            echo "status=unknown";
+            ExitCustom 1
+        elif [ ${PROGRAM_LV} -gt ${PROGRAM_CV} ]; then
+            echo "status=outdated";
+            ExitCustom 1
+        else
+            echo "status=up-to-date"
+            ExitClean
+        fi
+
+else
+    ${ECHOCMD} "${RED}Error: ${WHITE}Unknown parameter $1.${NORMAL} Aborting.."
+    ExitFatal
+fi
+
+ExitClean
+
+QUIET=1
+
+# The End

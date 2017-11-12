@@ -1,0 +1,65 @@
+#!/bin/sh
+
+#################################################################################
+#
+#   Lynis
+# ------------------
+#
+# Copyright 2007-2013, Michael Boelen
+# Copyright 2007-2017, CISOfy
+#
+# Website  : https://cisofy.com
+# Blog     : http://linux-audit.com
+# GitHub   : https://github.com/CISOfy/lynis
+#
+# Lynis comes with ABSOLUTELY NO WARRANTY. This is free software, and you are
+# welcome to redistribute it under the terms of the GNU General Public License.
+# See LICENSE file for usage of this software.
+#
+#################################################################################
+#
+#  File permissions
+#
+#################################################################################
+#
+    InsertSection "File Permissions"
+#
+#################################################################################
+#
+    # Test        : FILE-7524
+    # Description : Perform file permissions check
+    Register --test-no FILE-7524 --weight L --network NO --category security --description "Perform file permissions check"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        Display --indent 2 --text "- Starting file permissions check"
+        LogText "Test: Checking file permissions"
+        for PROFILE in ${PROFILES}; do
+            LogText "Using profile ${PROFILE} for baseline."
+            FIND=$(${EGREPBINARY} '^permfile:|^permdir:' ${PROFILE} | ${CUTBINARY} -d: -f2)
+            for I in ${FIND}; do
+                LogText "Checking ${I}"
+                CheckFilePermissions ${I}
+                LogText "  Expected permissions: ${PROFILEVALUE}"
+                LogText "  Actual permissions: ${FILEVALUE}"
+                LogText "  Result: $PERMS"
+                if [ "${PERMS}" = "FILE_NOT_FOUND" ]; then
+                    if IsVerbose; then Display --indent 4 --text "${I}" --result "${STATUS_NOT_FOUND}" --color WHITE; fi
+                elif [ "${PERMS}" = "OK" ]; then
+                    Display --indent 4 --text "${I}" --result "${STATUS_OK}" --color GREEN
+                elif [ "${PERMS}" = "BAD" ]; then
+                    Display --indent 4 --text "${I}" --result "${STATUS_WARNING}" --color RED
+                    ReportWarning ${TEST_NO} "Incorrect permissions for file ${I}"
+                else
+                    LogText "UNKNOWN status for file"
+                fi
+            done
+        done
+    fi
+#
+#################################################################################
+#
+
+WaitForKeyPress
+
+#
+#================================================================================
+# Lynis - Copyright 2007-2017, CISOfy - https://cisofy.com

@@ -1,0 +1,61 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Check PostgreSQL trust relationships
+
+. lib/misc/file
+. lib/misc/stdio
+
+postgresql_trust_init () {
+	stdio_message_log "postgresql_trust" "Starting at: `date`"
+}
+
+postgresql_trust_main () {
+	file_show_perms "/pg_hba.conf$" | while read filename permissions userid groupid
+	do
+		if [ "`file_is_readable \"${filename}\"`" -eq 1 ]
+		then
+			egrep -v "^#" "${filename}" | egrep -v "^[ \t]*$" | while read authtype database user address method
+			do
+				if [ "${method}" = "trust" ]
+				then
+					if [ "${user}" = "all" ]
+					then
+						usermsg="all users"
+					else
+						usermsg="user ${user}"
+					fi
+					if [ "${database}" = "all" ]
+					then
+						dbmsg="all databases"
+					else
+						dbmsg="database ${database}"
+					fi
+					stdio_message_warn "postgresql_trust" "PostgreSQL trust is configured in ${filename} for ${usermsg} to ${dbmsg} from address ${address}"
+				fi
+			done
+		fi
+	done
+}
+
+postgresql_trust_fini () {
+	stdio_message_log "postgresql_trust" "Ending at: `date`"
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>telnet</string>
+  <key>nodeid</key><string>6259d0bb-9960-45e3-9687-4b1e0df6510d</string>
+  <key>modified_time</key><integer>1508437979</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1508437850</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

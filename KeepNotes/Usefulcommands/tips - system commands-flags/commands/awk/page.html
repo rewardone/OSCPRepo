@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>awk</title>
+</head><body>Have a bunch of files you want to merge together and make unique? Super super fast command:<br/>
+<br/>
+awk '!a[$0]++' &lt;folder&gt;/&lt;folder&gt;/* &gt; combined<br/>
+<br/>
+<span style="color: #666666">### note '{ print }' '{ print $0 }' '1' all are same ###</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{ print }'</span>&nbsp;<span style="color: #000000">/</span>path<span style="color: #000000">/</span>to<span style="color: #000000">/</span><span style="color: #c20cb9">file</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{}1'</span>&nbsp;<span style="color: #000000">/</span>path<span style="color: #000000">/</span>to<span style="color: #000000">/</span><span style="color: #c20cb9">file</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'1'</span>&nbsp;<span style="color: #000000">/</span>path<span style="color: #000000">/</span>to<span style="color: #000000">/</span><span style="color: #c20cb9">file</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{ print $0 }'</span>&nbsp;<span style="color: #000000">/</span>path<span style="color: #000000">/</span>to<span style="color: #000000">/</span><span style="color: #c20cb9">file</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{}1'</span>&nbsp;<span style="color: #000000">/</span>etc<span style="color: #000000">/</span><span style="color: #c20cb9">passwd</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{print $0}'</span>&nbsp;<span style="color: #000000">/</span>etc<span style="color: #000000">/</span>hosts <br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{print}'</span>&nbsp;<span style="color: #000000">/</span>etc<span style="color: #000000">/</span>hosts</body></html>

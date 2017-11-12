@@ -1,0 +1,2 @@
+* Rewrite the filesystem caching (ATM it only gets generated on first run to reduce testing time)
+* Add support for other OS

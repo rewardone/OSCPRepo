@@ -1,0 +1,118 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux
+
+if [ -z "${groupincluded}" ]
+then
+
+groupincluded=1
+
+. lib/misc/validate
+
+group_is_trusted () {
+	group="${1}"
+	[ "`validate_is_string \"${group}\"`" ] || false
+	# TODO write this
+	false
+}
+
+group_is_root () {
+	group="${1}"
+	[ "`validate_is_string \"${group}\"`" ] || false
+	root="`grep -E '[^:]+:[^:]+:0:' /etc/passwd | head -1 | cut -d: -f1`"
+	if [ "${group}" = "`id -g -n \"${root}\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+group_is_group_id () {
+	groupid="${1}"
+	[ "`validate_is_number \"${groupid}\"`" ] || false
+	if [ "`group_show_group_id`" = "${groupid}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+group_is_group_name () {
+	group="${1}"
+	[ "`validate_is_string \"${group}\"`" ] || false
+	if [ "`group_show_group_name`" = "${group}" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+group_is_in_group_id () {
+	groupid="${1}"
+	ret="0"
+	[ "`validate_is_number \"${groupid}\"`" ] || false
+	group_show_group_ids | while read usergroupid
+	do
+		if [ "${usergroupid}" = "${groupid}" ]
+		then
+			ret="1"
+			break
+		fi
+	done
+	printf -- "${ret}\n"
+}
+
+group_is_in_group_name () {
+	group="${1}"
+	ret="0"
+	[ "`validate_is_string \"${group}\"`" ] || false
+	group_show_group_names | while read usergroup
+	do
+		if [ "${usergroup}" = "${group}" ]
+		then
+			ret="1"
+			break
+		fi
+	done
+	printf -- "${ret}\n"
+}
+
+group_show_group_id () {
+	printf -- "`id -g`\n"
+}
+
+group_show_group_ids () {
+	printf -- "`id -G | tr \" \" \"\n\"`\n"
+}
+
+group_show_group_name () {
+	printf -- "`id -g -n`\n"
+}
+
+group_show_group_names () {
+	printf -- "`id -G -n | tr \" \" \"\n\"`\n"
+}
+
+fi

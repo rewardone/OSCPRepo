@@ -1,0 +1,86 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux, AIX, Solaris, HP-UX
+
+if [ -z "${stdioincluded}" ]
+then
+
+stdioincluded=1
+
+. lib/misc/validate
+
+stdio_message_log () {
+	check="${1}"
+	message="${2}"
+	[ "`validate_is_string \"${check}\"`" ] || false
+	[ "`validate_is_string \"${message}\"`" ] || false
+	if [ "${VERBOSE}" -ge 1 ]
+	then
+		stdio_format_message "32" "I" "${check}" "${message}"
+	fi
+}
+
+stdio_message_warn () {
+	check="${1}"
+	message="${2}"
+	[ "`validate_is_string \"${check}\"`" ] || false
+	[ "`validate_is_string \"${message}\"`" ] || false
+	stdio_format_message "33" "W" "${check}" "${message}"
+}
+
+stdio_message_debug () {
+	check="${1}"
+	message="${2}"
+	[ "`validate_is_string \"${check}\"`" ] || false
+	[ "`validate_is_string \"${message}\"`" ] || false
+	if [ "${VERBOSE}" -ge 2 ]
+	then
+		stdio_format_message "35" "D" "${check}" "${message}" >&2
+	fi
+}
+
+stdio_message_error () {
+	check="${1}"
+	message="${2}"
+	[ "`validate_is_string \"${check}\"`" ] || false
+	[ "`validate_is_string \"${message}\"`" ] || false
+	stdio_format_message "31" "E" "${check}" "${message}" >&2
+}
+
+stdio_format_message () {
+	color="${1}"
+	type="${2}"
+	check="${3}"
+	message="${4}"
+	[ "`validate_is_string \"${type}\"`" ] || false
+	[ "`validate_is_string \"${check}\"`" ] || false
+	[ "`validate_is_string \"${message}\"`" ] || false
+	[ "`validate_is_number \"${color}\"`" ] || false
+	if [ "${COLORING}" -eq 1 ]
+	then
+		printf "\033[${color}m${type}: [${check}] ${message}\033[m\n"
+	else
+		printf "${type}: [${check}] ${message}\n"
+	fi
+}
+
+fi

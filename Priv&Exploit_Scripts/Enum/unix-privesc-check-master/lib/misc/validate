@@ -1,0 +1,75 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Supports: Linux, AIX, Solaris, HP-UX
+
+if [ -z "${validateincluded}" ]
+then
+
+validateincluded=1
+
+. lib/misc/stdio
+
+validate_matches_regex () {
+	value="${1}"
+	regex="${2}"
+	if [ -n "`printf -- \"${value}\" | egrep -- \"$regex\"`" ]
+	then
+		printf -- "1\n"
+	else
+		printf -- "0\n"
+	fi
+}
+
+validate_is_string () {
+	value="${1}"
+	if [ "`validate_matches_regex \"${value}\" \".*\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	else
+		stdio_message_error "validate" "invalid string: ${value}"
+		printf -- "0\n"
+	fi
+}
+
+validate_is_number () {
+	value="${1}"
+	if [ "`validate_matches_regex \"${value}\" \"^[0-9]+$\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	else
+		stdio_message_error "validate" "invalid number: ${value}"
+		printf -- "0\n"
+	fi
+}
+
+validate_is_boolean () {
+	value="${1}"
+	if [ "`validate_is_regex \"${value}\" \"^[0-1]$\"`" -eq 1 ]
+	then
+		printf -- "1\n"
+	else
+		stdio_message_error "validate" "invalid boolean: ${value}"
+		printf -- "0\n"
+	fi
+}
+
+fi

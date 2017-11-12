@@ -1,0 +1,47 @@
+#!/bin/sh
+# $Revision$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+# (c) Tim Brown, 2012
+# <mailto:timb@nth-dimension.org.uk>
+# <http://www.nth-dimension.org.uk/> / <http://www.machine.org.uk/>
+#
+# Check for RELRO support
+
+. lib/misc/stdio
+. lib/misc/privileged
+. lib/misc/binary
+
+privileged_relro_init () {
+	stdio_message_log "privileged_relro" "Starting at: `date`"
+}
+
+privileged_relro_main () {
+	privileged_list | while read filetype filename usergroupid
+	do
+		if [ "`binary_relro "${filename}"`" -ne 1 ]
+		then
+			stdio_message_warn "privileged_relro" "${filetype} ${filename} (${usergroupid}) and is not compiled with RELRO"
+		elif [ "`binary_relro_full "${filename}"`" -ne 1 ]
+		then
+			stdio_message_log "privileged_relro" "${filetype} ${filename} (${usergroupid}) and is compiled with partial RELRO"
+		fi
+	done
+}
+
+privileged_relro_fini () {
+	stdio_message_log "privileged_relro" "Ending at: `date`"
+}

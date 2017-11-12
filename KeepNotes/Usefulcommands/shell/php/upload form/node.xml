@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Upload form</string>
+  <key>nodeid</key><string>18e0169c-a44d-4074-b384-64487658c88c</string>
+  <key>modified_time</key><integer>1485706161</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1485706161</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

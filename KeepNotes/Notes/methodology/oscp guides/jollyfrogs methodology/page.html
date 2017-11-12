@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jollyfrog's methodology</title>
+</head><body><span style="font-family: sans"><span style="font-size: 10pt"><div style="text-align: left">I stuck to my well reversed approach that I perfected in the labs and it paid off. </div><br/>
+<div style="text-align: left">The approach I used in the labs and in the exam was as follows:</div><br/>
+<div style="text-align: left">1) Revert the machine you are about to attack (not required in the exam)</div><br/>
+<div style="text-align: left">2) Run single machine port scans on the machines you are attacking:</div><br/>
+<div style="text-align: left">- Single host TCP scan:</div><br/>
+<div style="text-align: left">nmap -Pn -sS --stats-every 3m --max-retries 1 --max-scan-delay 20 --defeat-rst-ratelimit -T4 -p1-65535 -oA /root/192_168_15_201T 192.168.15.201</div><br/>
+<div style="text-align: left">- Single host UDP scan:</div><br/>
+<div style="text-align: left">nmap -Pn --top-ports 1000 -sU --stats-every 3m --max-retries 1 -T3 -oA /root/192_168_15_201U 192.168.15.201</div><br/>
+<div style="text-align: left">- Detailed single host TCP scan:</div><br/>
+<div style="text-align: left">nmap -nvv -Pn -sSV -T1 -p$(cat 192_168_15_201T.xml | grep portid | grep protocol=\"tcp\" | cut -d'"' -f4 | paste -sd "," -) --version-intensity 9 -A -oA /root/192_168_15_201T_DETAILED 192.168.15.201</div><br/>
+<div style="text-align: left">3) Analyze the port scan results. Some ports might stand out (you will learn in the labs which ports stand out and why).</div><br/>
+<div style="text-align: left">4) Detailed port attacks. You will learn in the labs which work best for you. </div><br/>
+<div style="text-align: left">- nikto and dirb for webservers</div><br/>
+<div style="text-align: left">- nmap smb-check-vulns script and enum4linux for samba and CIFS services</div><br/>
+<div style="text-align: left">- etc </div><br/>
+<div style="text-align: left">5) Kali "searchsploit" with the service/software version of each port.</div><br/>
+<div style="text-align: left">6) Exploit the vulnerability you found with searchsploit to gain a limited or root shell</div><br/>
+<div style="text-align: left">7) If limited shell then use the linux or windows exploit suggesters, "searchsploit kernel x.x" and search for common weaknesses in the software.</div>&nbsp; <br/>
+<br/>
+</span><span style="font-size: 11pt"><div style="text-align: left">I have used a lot of websites during my OSCP to gain experience, but there are some websites that stand out in this respect and which I came back to time and time again: hashkiller, rebootuser pages 1758 and 1721 for linux, and fuzzysecurity tutorial 16 for windows.</div>&nbsp; </span></span></body></html>
