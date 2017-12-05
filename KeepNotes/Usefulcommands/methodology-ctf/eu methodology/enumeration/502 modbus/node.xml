@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>04238295-dd2f-4ca5-860a-97338e4d8e9f</string>
+  <key>title</key><string>502: Modbus</string>
+  <key>nodeid</key><string>9d061163-5e9f-40c6-95d2-0672a39df3ff</string>
+  <key>modified_time</key><integer>1509374433</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509374422</integer>
+  <key>order</key><integer>15</integer>
+</dict>
+</node>

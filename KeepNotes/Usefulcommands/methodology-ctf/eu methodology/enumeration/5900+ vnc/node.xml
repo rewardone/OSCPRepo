@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>6d9a81ca-8bf6-4d83-9cbe-80490233e8d0</string>
+  <key>title</key><string>5900+: VNC</string>
+  <key>nodeid</key><string>01dd4b48-0d08-441d-947c-7eb8e7c4da5e</string>
+  <key>modified_time</key><integer>1509374795</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509374765</integer>
+  <key>order</key><integer>27</integer>
+</dict>
+</node>

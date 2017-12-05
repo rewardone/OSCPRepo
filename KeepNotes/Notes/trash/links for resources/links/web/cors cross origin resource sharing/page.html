@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CORS: Cross Origin Resource Sharing</title>
+</head><body><a href="https://deadliestwebattacks.com/tag/cors/">https://deadliestwebattacks.com/tag/cors/</a>&nbsp;. . . Preview:<br/>
+For example, imagine an HTML injection vulnerability in a site that uses the <a href="http://angularjs.org/">AngularJS</a> library. The attacker could use a payload like:<br/>
+<br/>
+angular.bind(self, alert, 9)()<br/>
+<br/>
+In Ember.js the payload might look like:<br/>
+<br/>
+Ember.run(null, alert, 9)<br/>
+The pervasive jQuery might have a string like:<br/>
+<br/>
+$.globalEval(alert(9))<br/>
+And the Underscore library might be leveraged with:<br/>
+<br/>
+_.defer(alert, 9)<br/>
+These are nice tricks. They might seem to do little more than offer fancy ways of triggering an alert() message, but the code is trivially modifiable to a more lethal version worthy of a vorpal blade.<br/>
+<br/>
+More importantly, these libraries provide the means to load — and execute! — JavaScript from a different origin. After all, browsers don’t really know the difference between a CDN and a malicious domain.</body></html>

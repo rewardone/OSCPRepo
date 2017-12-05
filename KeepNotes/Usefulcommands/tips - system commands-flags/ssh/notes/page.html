@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Notes</title>
+</head><body>SSH notes: <br/>
+root and default dir for ssh (enterprise often different): /home/&lt;user&gt;/.ssh/<br/>
+default host keys: /etc/ssh/ssh_host_&lt;ALGORITHM&gt;_key<br/>
+known_hosts: server fingerprints. advanced MITM, change so user doesn't know MITM warning. <br/>
+id_&lt;ALGORITHM&gt; (ie, id_rsa, id_dsa, etc): ssh private key<br/>
+id_&lt;ALGORITHM&gt;.pub (ie, id_rsa.pub, id_dsa.pub, etc): ssh public key<br/>
+<br/>
+<br/>
+Check /etc/ssh/sshd_config for interesting locations (ie auth_keys location)<br/>
+Check /etc/ssh/ssh_config for other options</body></html>

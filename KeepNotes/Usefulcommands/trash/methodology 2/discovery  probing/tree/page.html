@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tree</title>
+</head><body><div style="text-align: left"><span style="font-family: sans-serif">Discovery &amp; Probing. Enumeration can serve two distinct purposes in an assessment: OS Fingerprinting Remote applications being served. OS fingerprinting or TCP/IP stack fingerprinting is the process of determining the operating system being utilised on a remote host. This is carried out by analyzing packets received from the host in question. There are two distinct ways to OS fingerprint, actively (i.e. nmap) or passively (i.e. scanrand). Passive OS fingerprinting determines the remote OS utilising the packets received only and does not require any packets to be sent. Active OS fingerprinting is very noisy and requires packets to be sent to the remote host and waits for a reply, (or lack thereof). Disparate OS's respond differently to certain types of packet, (the response is governed by an RFC and any proprietary responses the vendor (notably Microsoft) has enabled within the system) and so custom packets may be sent. Remote applications being served on a host can be determined by an open port on that host. By port scanning it is then possible to build up a picture of what applications are running and tailor the test accordingly.<br/>
+<br/>
+<br/>
+</span></div><br/>
+Sections: Port lists, Enum tools/techniques, Active Hosts<br/>
+<ul><li>Default Port Lists</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.vulnerabilityassessment.co.uk/ports.htm">Windows</a> <a href="http://www.vulnerabilityassessment.co.uk/ports.htm"><img src="image.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/ports.htm">*nix</a> <a href="http://www.vulnerabilityassessment.co.uk/ports.htm"><img src="image 2.png" /></a></li>
+</ul>
+</li>
+<li>Enumeration tools and techniques - The vast majority can be used generically, however, certain bespoke application require there own specific toolsets to be used. Default passwords are platform and vendor specific</li>
+<li style="list-style-type: none"><ul><li>General Enumeration Tools</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.insecure.org/">nmap</a> <a href="http://www.insecure.org/"><img src="image 3.png" /></a></li>
+<li style="list-style-type: none"><ul><li>nmap -n -A -PN -p- -T Agressive -iL nmap.targetlist -oX nmap.syn.results.xml</li>
+<li>nmap -sU -PN -v -O -p 1-30000 -T polite -iL nmap.targetlist &gt; nmap.udp.results</li>
+<li>nmap -sV -PN -v -p 21,22,23,25,53,80,443,161 -iL nmap.targets &gt; nmap.version.results</li>
+<li>nmap -A -sS -PN -n --script:all ip_address --reason</li>
+<li>grep "appears to be up" nmap_saved_filename | awk -F\( '{print $2}' | awk -F\) '{print $1}' &gt; ip_list</li>
+</ul>
+</li>
+<li><a href="http://netcat.sourceforge.net/">netcat</a> <a href="http://netcat.sourceforge.net/"><img src="image 4.png" /></a></li>
+<li style="list-style-type: none"><ul><li>nc -v -n IP_Address port</li>
+<li>nc -v -w 2 -z IP_Address port_range/port_number</li>
+</ul>
+</li>
+<li><a href="http://www.thc.org/releases.php">amap</a> <a href="http://www.thc.org/releases.php"><img src="image 5.png" /></a></li>
+<li style="list-style-type: none"><ul><li>amap -bqv 192.168.1.1 80</li>
+<li>amap [-A|-B|-P|-W] [-1buSRHUdqv] [[-m] -o &lt;file&gt;] [-D &lt;file&gt;] [-t/-T sec] [-c cons] [-C retries] [-p proto] [-i &lt;file&gt;] [target port [port] ...]</li>
+</ul>
+</li>
+<li><a href="http://xprobe.sourceforge.net/">xprobe2</a> <a href="http://xprobe.sourceforge.net/"><img src="image 6.png" /></a></li>
+<li style="list-style-type: none"><ul><li>xprobe2 192.168.1.1</li>
+</ul>
+</li>
+<li><a href="http://sourceforge.net/project/showfiles.php?group_id=167489">sinfp</a> <a href="http://sourceforge.net/project/showfiles.php?group_id=167489"><img src="image 7.png" /></a></li>
+<li style="list-style-type: none"><ul><li>./sinfp.pl -i -p</li>
+</ul>
+</li>
+<li><a href="http://www.packetstormsecurity.nl/">nbtscan</a> <a href="http://www.packetstormsecurity.nl/"><img src="image 8.png" /></a></li>
+<li style="list-style-type: none"><ul><li>nbtscan [-v] [-d] [-e] [-l] [-t timeout] [-b bandwidth] [-r] [-q] [-s separator] [-m retransmits] (-f filename) | (&lt;scan_range&gt;) <a href="http://www.vulnerabilityassessment.co.uk/Penetration%20Test.html#FMFreemind_Link_889225045FM"><img src="image 9.png" /></a></li>
+</ul>
+</li>
+<li><a href="http://www.hping.org/download.html">hping</a> <a href="http://www.hping.org/download.html"><img src="image 10.png" /></a></li>
+<li style="list-style-type: none"><ul><li>hping ip_address</li>
+</ul>
+</li>
+<li><a href="http://www.doxpara.com/read.php/code/paketto.html">scanrand</a> <a href="http://www.doxpara.com/read.php/code/paketto.html"><img src="image 11.png" /></a></li>
+<li style="list-style-type: none"><ul><li>scanrand ip_address:all</li>
+</ul>
+</li>
+<li><a href="http://www.unicornscan.org/">unicornscan</a> <a href="http://www.unicornscan.org/"><img src="image 12.png" /></a></li>
+<li style="list-style-type: none"><ul><li>unicornscan [options `b:B:d:De:EFhi:L:m:M:pP:q:r:R:s:St:T:w:W:vVZ:' ] IP_ADDRESS/ CIDR_NET_MASK: S-E</li>
+</ul>
+</li>
+<li><a href="http://www.phenoelit.de/irpas/">netenum</a> <a href="http://www.phenoelit.de/irpas/"><img src="image 13.png" /></a></li>
+<li style="list-style-type: none"><ul><li>netenum network/netmask timeout</li>
+</ul>
+</li>
+<li><a href="http://www.fping.com/">fping</a> <a href="http://www.fping.com/"><img src="image 14.png" /></a></li>
+<li style="list-style-type: none"><ul><li>fping -a -d hostname/ (Network/Subnet_Mask)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Firewall Specific Tools</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.packetfactory.net/Projects/">firewalk</a> <a href="http://www.packetfactory.net/Projects/"><img src="image 15.png" /></a></li>
+<li style="list-style-type: none"><ul><li>firewalk -p [protocol] -d [destination_port] -s [source_port] [internal_IP] [gateway_IP]</li>
+</ul>
+</li>
+<li><a href="http://dev.inversepath.com/trac/ftester">ftester</a> <a href="http://dev.inversepath.com/trac/ftester"><img src="image 16.png" /></a></li>
+<li style="list-style-type: none"><ul><li>host 1 ./ftestd -i eth0 -v host 2 ./ftest -f ftest.conf -v -d 0.01 then ./freport ftest.log ftestd.log</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwords.htm">Default Passwords (Examine list)</a> <a href="http://www.vulnerabilityassessment.co.uk/passwords.htm"><img src="image 17.png" /></a></li>
+<li style="list-style-type: none"><ul><li><a href="http://www.vulnerabilityassessment.co.uk/passwordsA.htm">Passwords A</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsA.htm"><img src="image 18.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsB.htm">Passwords B</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsB.htm"><img src="image 19.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsC.htm">Passwords C</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsC.htm"><img src="image 20.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsD.htm">Passwords D</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsD.htm"><img src="image 21.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsE.htm">Passwords E</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsE.htm"><img src="image 22.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsF.htm">Passwords F</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsF.htm"><img src="image 23.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsG.htm">Passwords G</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsG.htm"><img src="image 24.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsH.htm">Passwords H</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsH.htm"><img src="image 25.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsI.htm">Passwords I</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsI.htm"><img src="image 26.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsJ.htm">Passwords J</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsJ.htm"><img src="image 27.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsK.htm">Passwords K</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsK.htm"><img src="image 28.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsL.htm">Passwords L</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsL.htm"><img src="image 29.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsM.htm">Passwords M</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsM.htm"><img src="image 30.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsN.htm">Passwords N</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsN.htm"><img src="image 31.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsO.htm">Passwords O</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsO.htm"><img src="image 32.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsP.htm">Passwords P</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsP.htm"><img src="image 33.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsR.htm">Passwords R</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsR.htm"><img src="image 34.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsS.htm">Passwords S</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsS.htm"><img src="image 35.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsT.htm">Passwords T</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsT.htm"><img src="image 36.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsU.htm">Passwords U</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsU.htm"><img src="image 37.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsV.htm">Passwords V</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsV.htm"><img src="image 38.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsW.htm">Passwords W</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsW.htm"><img src="image 39.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsX.htm">Passwords X</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsX.htm"><img src="image 40.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsY.htm">Passwords Y</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsY.htm"><img src="image 41.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsZ.htm">Passwords Z</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsZ.htm"><img src="image 42.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/passwordsNO.htm">Passwords (Numeric)</a> <a href="http://www.vulnerabilityassessment.co.uk/passwordsNO.htm"><img src="image 43.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Active Hosts</li>
+<li style="list-style-type: none"><ul><li>Open TCP Ports</li>
+<li>Closed TCP Ports</li>
+<li>Open UDP Ports</li>
+<li>Closed UDP Ports</li>
+<li>Service Probing</li>
+<li style="list-style-type: none"><ul><li>SMTP Mail Bouncing</li>
+<li>Banner Grabbing</li>
+<li style="list-style-type: none"><ul><li>Other</li>
+<li>HTTP</li>
+<li style="list-style-type: none"><ul><li>Commands</li>
+<li style="list-style-type: none"><ul><li>JUNK / HTTP/1.0</li>
+<li>HEAD / HTTP/9.3</li>
+<li>OPTIONS / HTTP/1.0</li>
+<li>HEAD / HTTP/1.0</li>
+</ul>
+</li>
+<li>Extensions</li>
+<li style="list-style-type: none"><ul><li>WebDAV</li>
+<li>ASP.NET</li>
+<li>Frontpage</li>
+<li>OWA</li>
+<li>IIS ISAPI</li>
+<li>PHP</li>
+<li>OpenSSL</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>HTTPS</li>
+<li style="list-style-type: none"><ul><li>Use stunnel to encapsulate traffic.</li>
+</ul>
+</li>
+<li>SMTP</li>
+<li>POP3</li>
+<li>FTP</li>
+<li style="list-style-type: none"><ul><li>If banner altered, attempt anon logon and execute: 'quote help' and 'syst' commands.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ICMP Responses</li>
+<li style="list-style-type: none"><ul><li>Type 3 (Port Unreachable)</li>
+<li>Type 8 (Echo Request)</li>
+<li>Type 13 (Timestamp Request)</li>
+<li>Type 15 (Information Request)</li>
+<li>Type 17 (Subnet Address Mask Request)</li>
+<li>Responses from broadcast address</li>
+</ul>
+</li>
+<li>Source Port Scans</li>
+<li style="list-style-type: none"><ul><li>TCP/UDP 53 (DNS)</li>
+<li>TCP 20 (FTP Data)</li>
+<li>TCP 80 (HTTP)</li>
+<li>TCP/UDP 88 (Kerberos)</li>
+</ul>
+</li>
+<li>Firewall Assessment</li>
+<li style="list-style-type: none"><ul><li>Firewalk</li>
+<li>TCP/UDP/ICMP responses</li>
+</ul>
+</li>
+<li>OS Fingerprint</li>
+</ul>
+</li>
+</ul>
+&nbsp;<br/>
+&nbsp;</body></html>

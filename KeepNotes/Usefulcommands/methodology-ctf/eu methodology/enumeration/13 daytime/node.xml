@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>8979870a-808f-4be6-8655-632436deaeef</string>
+  <key>title</key><string>13: Daytime</string>
+  <key>nodeid</key><string>9e74b3aa-267a-4503-bc0f-1e426a96b800</string>
+  <key>modified_time</key><integer>1509373663</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509373638</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

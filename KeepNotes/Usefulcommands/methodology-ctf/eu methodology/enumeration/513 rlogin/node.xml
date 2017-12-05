@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>2c0c63db-8982-4dd2-a536-7c6943073f37</string>
+  <key>title</key><string>513: rlogin</string>
+  <key>nodeid</key><string>b83818aa-9e27-45bc-ba76-ebee54b34026</string>
+  <key>modified_time</key><integer>1509374452</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509374434</integer>
+  <key>order</key><integer>16</integer>
+</dict>
+</node>

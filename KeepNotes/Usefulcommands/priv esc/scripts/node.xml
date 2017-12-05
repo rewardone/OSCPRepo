@@ -2,9 +2,11 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Scripts</string>
   <key>nodeid</key><string>e8ac78c3-c91a-41ca-b6cb-fe6bb1ecc1ee</string>
   <key>modified_time</key><integer>1507418946</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1507418946</integer>

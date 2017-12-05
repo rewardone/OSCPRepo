@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>161: SNMP</title>
+</head><body><div style="text-align: left"><span style="font-family: sans-serif">SNMP port 161 open</span></div><ul><li><img src="image.png" /> Default Community Strings</li>
+<li style="list-style-type: none"><ul><li>public</li>
+<li>private</li>
+<li>cisco</li>
+<li style="list-style-type: none"><ul><li>cable-docsis</li>
+<li>ILMI</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 2.png" /> MIB enumeration</li>
+<li style="list-style-type: none"><ul><li>Windows NT</li>
+<li style="list-style-type: none"><ul><li>.1.3.6.1.2.1.1.5 Hostnames</li>
+<li>.1.3.6.1.4.1.77.1.4.2 Domain Name</li>
+<li>.1.3.6.1.4.1.77.1.2.25 Usernames</li>
+<li>.1.3.6.1.4.1.77.1.2.3.1.1 Running Services</li>
+<li>.1.3.6.1.4.1.77.1.2.27 Share Information</li>
+</ul>
+</li>
+<li><a href="http://www.solarwinds.net/Download-Tools.htm">Solarwinds MIB walk</a> <a href="http://www.solarwinds.net/Download-Tools.htm"><img src="image 3.png" /></a></li>
+<li><a href="http://www.wtcs.org/snmp4tpc/getif.htm">Getif</a> <a href="http://www.wtcs.org/snmp4tpc/getif.htm"><img src="image 4.png" /></a></li>
+<li>snmpwalk</li>
+<li style="list-style-type: none"><ul><li>snmpwalk -v &lt;Version&gt; -c &lt;Community string&gt; &lt;IP&gt;</li>
+</ul>
+</li>
+<li><a href="http://www.foundstone.com/">Snscan</a> <a href="http://www.foundstone.com/"><img src="image 5.png" /></a></li>
+<li>Applications</li>
+<li style="list-style-type: none"><ul><li>ZyXel</li>
+<li style="list-style-type: none"><ul><li>snmpget -v2c -c &lt;Community String&gt; &lt;IP&gt; 1.3.6.1.4.1.890.1.2.1.2.6.0</li>
+<li>snmpwalk -v2c -c &lt;Community String&gt; &lt;IP&gt; 1.3.6.1.4.1.890.1.2.1.2</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>nmap nse script</li>
+<li style="list-style-type: none"><ul><li><a href="http://nmap.org/nsedoc/scripts/snmp-sysdescr.html">snmp-sysdescr</a> <a href="http://nmap.org/nsedoc/scripts/snmp-sysdescr.html"><img src="image 6.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 7.png" /> SNMP Bruteforce</li>
+<li style="list-style-type: none"><ul><li>onesixtyone</li>
+<li style="list-style-type: none"><ul><li>onesixytone -c SNMP.wordlist &lt;IP&gt;</li>
+</ul>
+</li>
+<li>cat</li>
+<li style="list-style-type: none"><ul><li>./cat -h &lt;IP&gt; -w SNMP.wordlist</li>
+</ul>
+</li>
+<li><a href="http://www.solarwinds.net/Download-Tools.htm">Solarwinds SNMP Brute Force</a> <a href="http://www.solarwinds.net/Download-Tools.htm"><img src="image 8.png" /></a></li>
+<li><a href="http://adm.freelsd.net/ADM/">ADMsnmp</a> <a href="http://adm.freelsd.net/ADM/"><img src="image 9.png" /></a></li>
+<li>nmap nse script</li>
+<li style="list-style-type: none"><ul><li><a href="http://nmap.org/nsedoc/scripts/snmp-brute.html">snmp-brute</a> <a href="http://nmap.org/nsedoc/scripts/snmp-brute.html"><img src="image 10.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 11.png" /> Examine SNMP Configuration files</li>
+<li style="list-style-type: none"><ul><li>snmp.conf</li>
+<li>snmpd.conf</li>
+<li>snmp-config.xml</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

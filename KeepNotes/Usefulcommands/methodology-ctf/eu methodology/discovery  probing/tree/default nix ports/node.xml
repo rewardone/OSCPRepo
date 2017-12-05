@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>a54bc1e2-ae0d-4512-a53f-9f6534e55689</string>
+  <key>title</key><string>Default Nix Ports</string>
+  <key>nodeid</key><string>37fb147a-ec57-4ad8-8bb4-f78bf757947c</string>
+  <key>modified_time</key><integer>1508956944</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1508956920</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

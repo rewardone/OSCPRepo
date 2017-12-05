@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>b2f7e659-2966-4b96-bf96-95a376654de6</string>
+  <key>title</key><string>2301,2381: HP Insight Manager</string>
+  <key>nodeid</key><string>bfa2d5f7-7974-45a6-a456-f29af1921865</string>
+  <key>modified_time</key><integer>1509374645</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509374601</integer>
+  <key>order</key><integer>22</integer>
+</dict>
+</node>

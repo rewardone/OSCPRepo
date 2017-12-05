@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>d1fe0201-92e3-4b85-9dd1-65d219fa9fdb</string>
+  <key>title</key><string>VOIP Security</string>
+  <key>nodeid</key><string>034f9dcc-f45d-4037-a146-aa61821c5481</string>
+  <key>modified_time</key><integer>1508956615</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1508956615</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>13</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

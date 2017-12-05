@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>ebc3e611-fe3b-46ad-9c3f-c3711c1fee82</string>
+  <key>title</key><string>69: TFTP</string>
+  <key>nodeid</key><string>07f5dca4-33df-49a6-92f2-80ce2af0360d</string>
+  <key>modified_time</key><integer>1509373827</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509373808</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

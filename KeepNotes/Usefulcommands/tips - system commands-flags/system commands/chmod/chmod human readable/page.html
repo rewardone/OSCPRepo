@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>chmod human readable</title>
+</head><body>If someone else runs the file (ie not root), they will run the file as the user/group who created it (ie look for files created as root. when exec by non root, they will still run as root). <br/>
+<br/>
+Using it on a directory is slightly different. "Executing" a directory means the possiblity to access anythign in the dirctory (either file or subdir). This is different from read (r) permission on a directory, which allows you ro tread the names of the files/subdirectories. <br/>
+<br/>
+Using chmod +s on a directory, changes the user/group as which you "execute" the directory. This implie that, whenver a new file or subdir is created, it will "inherit" the group ownership of the parent directory if the "setGID" bit is set. Inheriting the owner is not possible. Ownership of new files/subdirs always belongs to the user who created it. <br/>
+<br/>
+Using the find command to locate suid and guid files is a common practice to locate candidate programs to uninstall<br/>
+IE: you can use the find command to help locate some files that may run with different permissions<br/>
+<br/>
+<br/>
+Easy way to add: chmod +rwx (permission)<br/>
+Easy way to set: chmod ugo=rwx<br/>
+&nbsp;u = user<br/>
+&nbsp;g = group<br/>
+&nbsp;o = others</body></html>

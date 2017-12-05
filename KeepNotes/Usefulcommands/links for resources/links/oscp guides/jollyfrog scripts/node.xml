@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>8b9c0e35-e637-44bd-a9cf-ec6c3c42e5b0</string>
+  <key>title</key><string>jollyfrog scripts</string>
+  <key>nodeid</key><string>34f3ba2d-7740-42c0-b74e-09ca9e08c6d5</string>
+  <key>modified_time</key><integer>1509382183</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509381858</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>3</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

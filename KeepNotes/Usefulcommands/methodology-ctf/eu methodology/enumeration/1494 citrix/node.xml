@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>aab2da8c-05db-49ba-8e31-d980ed209909</string>
+  <key>title</key><string>1494: Citrix</string>
+  <key>nodeid</key><string>47fd2a9b-bb79-41a3-b0ea-afb1b6425f55</string>
+  <key>modified_time</key><integer>1509374512</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509374496</integer>
+  <key>order</key><integer>19</integer>
+</dict>
+</node>

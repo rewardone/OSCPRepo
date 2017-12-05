@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>edfa23f7-7114-4961-9ea4-5f284f2e41ab</string>
+  <key>title</key><string>3306: MySQL</string>
+  <key>nodeid</key><string>4542a020-cb72-4de3-aae8-b03823aef6ea</string>
+  <key>modified_time</key><integer>1509374714</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509374649</integer>
+  <key>order</key><integer>23</integer>
+</dict>
+</node>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>title</key><string>Network Recon</string>
+  <key>nodeid</key><string>b8affaf6-1396-4180-b7ae-53b35def38bf</string>
+  <key>modified_time</key><integer>1512495760</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1512495760</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

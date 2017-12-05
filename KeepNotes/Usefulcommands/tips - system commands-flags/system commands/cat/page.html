@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>cat</title>
+</head><body>When you can't cat<br/>
+<br/>
+&nbsp;Using cat <br/>
+Since your file is short, you can use <a href="http://en.wikipedia.org/wiki/Cat_%28Unix%29">cat</a>.<br/>
+&nbsp;cat filename &nbsp;<br/>
+<br/>
+Using less <br/>
+If you have to view the contents of a longer file, you can use a pager such as <a href="http://en.wikipedia.org/wiki/Less_%28Unix%29">less</a>.<br/>
+&nbsp;less filename &nbsp;<br/>
+You can make less behave like cat when invoked on small files and behave normally otherwise by passing it the -F and -X flags.<br/>
+&nbsp;less -FX filename &nbsp;<br/>
+<br/>
+&nbsp;Using od <br/>
+If your file contains strange or unprintable characters, you can use <a href="http://linux.die.net/man/1/od">od</a>&nbsp;to examine the characters. For example,<br/>
+&nbsp;$ cat file (ÐZ4 ?o=÷jï <br/>
+&nbsp;$ od -c test 0000000 202 233 ( 320 K j 357 024 J 017 h Z 4 240 ? o 0000020 = 367 \n 0000023 &nbsp;<br/>
+<br/>
+&nbsp;Using awk<br/>
+<span style="color: #666666">### note '{ print }' '{ print $0 }' '1' all are same ###</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{ print }'</span>&nbsp;<span style="color: #000000">/</span>path<span style="color: #000000">/</span>to<span style="color: #000000">/</span><span style="color: #c20cb9">file</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{}1'</span>&nbsp;<span style="color: #000000">/</span>path<span style="color: #000000">/</span>to<span style="color: #000000">/</span><span style="color: #c20cb9">file</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'1'</span>&nbsp;<span style="color: #000000">/</span>path<span style="color: #000000">/</span>to<span style="color: #000000">/</span><span style="color: #c20cb9">file</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{ print $0 }'</span>&nbsp;<span style="color: #000000">/</span>path<span style="color: #000000">/</span>to<span style="color: #000000">/</span><span style="color: #c20cb9">file</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{}1'</span>&nbsp;<span style="color: #000000">/</span>etc<span style="color: #000000">/</span><span style="color: #c20cb9">passwd</span>&nbsp;<br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{print $0}'</span>&nbsp;<span style="color: #000000">/</span>etc<span style="color: #000000">/</span>hosts <br/>
+<span style="color: #c20cb9">awk</span>&nbsp;<span style="color: #ff0000">'{print}'</span>&nbsp;<span style="color: #000000">/</span>etc<span style="color: #000000">/</span>hosts<br/>
+<br/>
+&nbsp;Using grep<br/>
+grep '[a-zA-Z0-9]'</body></html>

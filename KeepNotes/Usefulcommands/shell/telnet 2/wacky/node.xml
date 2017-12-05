@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Wacky</string>
+  <key>nodeid</key><string>8b8c7c89-d051-4e72-b5da-89a80c6e39a1</string>
+  <key>modified_time</key><integer>1508438053</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1508437982</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>1</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>
