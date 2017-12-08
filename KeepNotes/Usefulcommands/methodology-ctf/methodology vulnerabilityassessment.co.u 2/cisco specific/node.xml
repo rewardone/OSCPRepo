@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>fa684fd8-356e-4464-98fd-a54370abbbf5</string>
+  <key>title</key><string>CISCO Specific</string>
+  <key>nodeid</key><string>dfdfffd5-0c4a-470a-9f74-a50d29d042b9</string>
+  <key>modified_time</key><integer>1509375199</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1509375199</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>8</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

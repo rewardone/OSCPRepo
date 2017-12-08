@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>OS Logs</string>
+  <key>nodeid</key><string>ac12751a-403a-4e10-9939-039c7b0fff52</string>
+  <key>modified_time</key><integer>1512676169</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1512676169</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>e7e3bf1b-55ac-414f-b8bd-c958617249f6</string>
+  <key>title</key><string>Server Specific Tests</string>
+  <key>nodeid</key><string>77f7202f-a29d-4e04-aaf1-4152406b7415</string>
+  <key>modified_time</key><integer>1509375671</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1509375671</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>12</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

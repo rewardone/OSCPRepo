@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>543eea8f-e809-4c53-b557-89394def8de1</string>
+  <key>title</key><string>5060: SIP</string>
+  <key>nodeid</key><string>0aa4fa9c-513b-4aea-829b-eb8eca7200ef</string>
+  <key>modified_time</key><integer>1509374764</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509374745</integer>
+  <key>order</key><integer>26</integer>
+</dict>
+</node>

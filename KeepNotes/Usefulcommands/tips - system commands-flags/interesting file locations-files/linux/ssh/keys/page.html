@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Keys</title>
+</head><body>You've got the root user to try but if you've managed some user enumeration then you might be able to check their home directories as well. The files you are looking for are all in the .ssh directory:<br/>
+&nbsp;authorized_keys<br/>
+&nbsp;id_rsa<br/>
+&nbsp;id_rsa.keystore<br/>
+&nbsp;id_rsa.pub<br/>
+&nbsp;known_hosts<br/>
+<br/>
+If you manage to get the known_hosts file then you can use this tool from XME to decode it - <a href="http://blog.rootshell.be/2010/11/03/bruteforcing-ssh-known_hosts-files/">Bruteforcing SSH Known_Hosts Files</a>.<br/>
+&nbsp;</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>e9c1b462-1b9a-4c33-9b2a-b0777b92d221</string>
+  <key>title</key><string>79: Finger</string>
+  <key>nodeid</key><string>0366fc77-6af9-4d8c-b6ee-3cc10c9992fd</string>
+  <key>modified_time</key><integer>1509373841</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509373829</integer>
+  <key>order</key><integer>7</integer>
+</dict>
+</node>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>9ec41030-b277-4ab2-a7e8-326c48e5f383</string>
+  <key>title</key><string>23: Telnet</string>
+  <key>nodeid</key><string>d4718dad-4c9c-41fb-928c-db26b29689c6</string>
+  <key>modified_time</key><integer>1509373738</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509373724</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

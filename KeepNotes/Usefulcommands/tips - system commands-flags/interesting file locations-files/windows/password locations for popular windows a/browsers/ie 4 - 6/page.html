@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IE 4 - 6</title>
+</head><body><div style="text-align: left"><span style="font-family: Times New Roman">Internet Explorer 4.00 - 6.00: <br/>
+</span></div><div style="text-align: left"><span style="font-family: Times New Roman">The passwords are stored in a secret location in the Registry known as the "Protected Storage". The base key of the Protected Storage is located under the following key: "HKEY_CURRENT_USER\Software\Microsoft\Protected Storage System Provider". In order to view the subkeys of this key in RegEdit, you must do the same process as explained for the LSA secrets. </span></div><br/>
+<div style="text-align: left"><span style="font-family: Times New Roman">Even when you browse the above key in the Registry Editor (RegEdit), you won't be able to watch the passwords, because they are encrypted. Also, this key cannot easily moved from one computer to another, like you do with regular Registry keys.</span></div><br/>
+<div style="text-align: left"><span style="font-family: Times New Roman"><a href="http://www.nirsoft.net/utils/internet_explorer_password.html">IE PassView</a> and <a href="http://www.nirsoft.net/utils/pspv.html">Protected Storage PassView</a> utilities allow you to recover these passwords.<br/>
+</span></div>&nbsp; <br/>
+<br/>
+<div style="text-align: left"><span style="font-family: Times New Roman">Internet Explorer 7.00 - 8.00: <br/>
+</span></div><div style="text-align: left"><span style="font-family: Times New Roman">The new versions of Internet Explorer stores the passwords in 2 different locations. AutoComplete passwords are stored in the Registry under HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\IntelliForms\Storage2. HTTP Authentication passwords are stored in the Credentials file under Documents and Settings\Application Data\Microsoft\Credentials , together with login passwords of LAN computers and other passwords.</span></div><br/>
+<div style="text-align: left"><span style="font-family: Times New Roman"><a href="http://www.nirsoft.net/utils/internet_explorer_password.html">IE PassView</a> can be used to recover these passwords.<br/>
+</span></div>&nbsp; </body></html>

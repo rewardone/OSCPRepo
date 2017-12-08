@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Shared folders</string>
+  <key>nodeid</key><string>eb873180-b204-47f7-80f7-218b7b89317c</string>
+  <key>modified_time</key><integer>1512669250</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1512669228</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

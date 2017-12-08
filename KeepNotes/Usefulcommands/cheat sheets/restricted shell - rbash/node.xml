@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>duplicate_of</key><string>6c6b8d07-020a-4ec3-82f9-63b09f3ca373</string>
+  <key>nodeid</key><string>8527a51a-cdcc-4a35-9176-85c4400c5b1d</string>
+  <key>modified_time</key><integer>1509551344</integer>
+  <key>expanded2</key><true/>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509551344</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>Restricted Shell / rbash</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>6</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

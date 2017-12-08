@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tree</title>
+</head><body><div style="text-align: left"><span style="font-family: sans-serif"><span style="font-size: 17pt">AS/400 Auditing<br/>
+<br/>
+</span></span></div><br/>
+Sections: Remote [info, user enum, exploit], Local [System security, password policy, audit level, documentation]<br/>
+<ul><li>Remote</li>
+<li style="list-style-type: none"><ul><li>Information Gathering</li>
+<li style="list-style-type: none"><ul><li><img src="image.png" /> Nmap using common iSeries (AS/400) services.</li>
+<li style="list-style-type: none"><ul><li>Unsecured services (Port;name;description)</li>
+<li style="list-style-type: none"><ul><li><img src="image 2.png" /> </li>
+<li>446;ddm;DDM Server is used to access data via DRDA and for record level access</li>
+<li>449;As-svrmap; Port Mapper returns the port number for the requested server</li>
+<li>2001;As-admin-http;HTTP server administration</li>
+<li>5544;As-mtgctrlj;Management Central Server used to manage multiple AS/400S in a net</li>
+<li>5555;As-mtgctrl;Management Central Server used to manage multiple AS/400S in a net</li>
+<li>8470;As-Central;Central Server used when a client Access licence is required for downloading translation tables</li>
+<li>8471;As-Database;Database server used for accessing the AS/400 database</li>
+<li>8472;As-dtaq;Data Queue server allows access to the AS/400 data queues used for passing data between applications</li>
+<li>8473;As-file;File Server is used for accessing any part of the AS/400</li>
+<li>8474;as-netprt; Printer Server used to access printers known to the AS/400</li>
+<li>8475;as-rmtcmd;Remote Command Server used to send commands from PC to an AS/400</li>
+<li>8476;as-signon;Sign-on server is used for every client Access connection to authenticate users and to change passwords</li>
+<li>8480;as-usf;Ultimedia facilities used for multimedia data</li>
+<li></li>
+</ul>
+</li>
+<li>Secured services (Port;name;description)</li>
+<li style="list-style-type: none"><ul><li><img src="image 3.png" /> </li>
+<li>447;ddm-ssl;DDM Server is used to access data via DRDA and for record level access</li>
+<li>448;ddm;DDM Server is used to access data via DRDA and for record level access</li>
+<li>992;telnet-ssl;Telnet Server</li>
+<li>2010;As-admin-https;HTTP server administration</li>
+<li>5566;As-mtgctrl-ss;Management Central Server used to manage multiple AS/400S in a net</li>
+<li>5577;As-mtgctrl-cs;Management Central Server used to manage multiple AS/400S in a net</li>
+<li>9470;as-central-s;Central Server used when a client Access licence is required for downloading translation tables</li>
+<li>9471;as-database-s;Database Server</li>
+<li>9472;as-dtaq-s;Data Queue server allows access to the AS/400 data queues used for passing data between applications</li>
+<li>9473;as-file-s;File Server is used for accessing any part of the AS/400</li>
+<li>9474;as-netprt-s; Printer Server used to access printers known to the AS/400</li>
+<li>9475;as-rmtcmd-s;Remote Command Server used to send commands from PC to an AS/400</li>
+<li>9476;as-signon-s;Sign-on server is used for every client Access connection to authenticate users and to change passwords</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 4.png" /> NetCat (old school technique)</li>
+<li style="list-style-type: none"><ul><li>nc -v -z -w target ListOfServices.txt | grep "open"</li>
+</ul>
+</li>
+<li><img src="image 5.png" /> Banners Grabbing</li>
+<li style="list-style-type: none"><ul><li>Telnet</li>
+<li style="list-style-type: none"><ul><li>Using TN5250</li>
+<li style="list-style-type: none"><ul><li><span style="font-size: 16pt">Tools</span></li>
+<li style="list-style-type: none"><ul><li><a href="http://tn5250.sourceforce.net/">tn5250.sourceforce.net</a> <a href="http://tn5250.sourceforce.net/"><img src="image 6.png" /></a></li>
+<li><a href="http://www.mochasoft.dk/">Mochasoft (trial)</a> <a href="http://www.mochasoft.dk/"><img src="image 7.png" /></a></li>
+<li><a href="http://www.sdisw.com/">SDI (Trial)</a> <a href="http://www.sdisw.com/"><img src="image 8.png" /></a></li>
+<li><a href="http://packages.debian.org/stable/tn5250">Debian package</a> <a href="http://packages.debian.org/stable/tn5250"><img src="image 9.png" /></a></li>
+<li><a href="http://www-03.ibm.com/servers/eserver/iseries/access/linux">IBM Client Access iSeries (install for Debian)</a> <a href="http://www-03.ibm.com/servers/eserver/iseries/access/linux"><img src="image 10.png" /></a></li>
+<li style="list-style-type: none"><ul><li><span style="font-size: 16pt"><a href="http://www.coagul.org/article.php3?id_article=560">Good How-To (in French).</a> <a href="http://www.coagul.org/article.php3?id_article=560"><img src="image 11.png" /></a></span></li>
+<li><a href="http://www.security-database.com/">Security-Database transcription in english</a> <a href="http://www.security-database.com/"><img src="image 12.png" /></a></li>
+<li style="list-style-type: none"><ul><li><img src="image 13.png" /> Download the Package from location</li>
+<li><img src="image 14.png" /> Convert RPM to DEB package</li>
+<li style="list-style-type: none"><ul><li><img src="image 15.png" /> Aptitude install alien</li>
+<li><img src="image 16.png" /> alien iSeriesAccess-XX.rpm</li>
+</ul>
+</li>
+<li><img src="image 17.png" /> Installing Deb Package</li>
+<li style="list-style-type: none"><ul><li>dpkg -i iSeriesAccess-xxx.deb</li>
+</ul>
+</li>
+<li><img src="image 18.png" /> Running binary file</li>
+<li style="list-style-type: none"><ul><li>/opt/ibm/iSeriesAccess/bin/ibm5250</li>
+<li style="list-style-type: none"><ul><li><img src="image 19.png" /> Sometimes this error occurs : error while loading libXm.so.3</li>
+<li style="list-style-type: none"><ul><li><img src="image 20.png" /> <img src="image 21.png" /> This means OpenMotif is missing</li>
+<li style="list-style-type: none"><ul><li><img src="image 22.png" /> Add deb http://ftp2.fr.debian.org/ sid main non-free to /etc/apt/sources.list</li>
+<li><img src="image 23.png" /> aptitude update</li>
+<li><img src="image 24.png" /> aptitude install libmotif3</li>
+<li><img src="image 25.png" /> Remove added line from /etc/apt/sources.list and launch aptitute update</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 26.png" /> After installing OpenMotif, this error sometimes occurs : error while loading libcwbcore.so</li>
+<li style="list-style-type: none"><ul><li><img src="image 27.png" /> <img src="image 28.png" /> This means Lib Path to iseriesaccess could not be reached</li>
+<li style="list-style-type: none"><ul><li><img src="image 29.png" /> You should add iseriesaccess (/opt/ibm/iSeriesAccess/lib) to /etc/ld.so.conf</li>
+<li><img src="image 30.png" /> run the command : ldconfig</li>
+<li><img src="image 31.png" /> <span style="font-size: 14pt">Old School hack : LD_LIBRARY_PATH=/opt/ibm/iSeriesAccess/lib/:${LD_LIBRARY_PATH} /opt/ibm/iSeriesAccess/bin/ibm5250</span></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 32.png" /> <a href="http://www-03.ibm.com/servers/eserver/iseries/access/linux/guide">Something else</a> <a href="http://www-03.ibm.com/servers/eserver/iseries/access/linux/guide"><img src="image 33.png" /></a></li>
+</ul>
+</li>
+<li>Search for binary using dpkg -L iseriesaccess</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>FTP</li>
+<li style="list-style-type: none"><ul><li>echo quit | nc -v target 21</li>
+</ul>
+</li>
+<li>HTTP Banner</li>
+<li style="list-style-type: none"><ul><li>echo GET / | nc -v target 80</li>
+<li>Browser HTTP administrative (if available)</li>
+<li style="list-style-type: none"><ul><li>http://target:2001</li>
+<li>http://target:2010</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>POP3</li>
+<li style="list-style-type: none"><ul><li>echo quit | nc target 110</li>
+<li>Basic POP3 retriever</li>
+<li style="list-style-type: none"><ul><li><a href="http://pages.interlog.com/~tcharron/getmail.zip">GetMail</a> <a href="http://pages.interlog.com/~tcharron/getmail.zip"><img src="image 34.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SNMP</li>
+<li style="list-style-type: none"><ul><li>Snmpwalk</li>
+<li><a href="http://www.gfi.com/">GFI Languard</a> <a href="http://www.gfi.com/"><img src="image 35.png" /></a></li>
+</ul>
+</li>
+<li>SMTP</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.greyhats.org/?smtpscan.html">SMTPScan</a> <a href="http://www.greyhats.org/?smtpscan.html"><img src="image 36.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Users Enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.vulnerabilityassessment.co.uk/as400_users.txt">Default AS/400 users accounts</a> <a href="http://www.vulnerabilityassessment.co.uk/as400_users.txt"><img src="image 37.png" /></a></li>
+<li>Error messages</li>
+<li style="list-style-type: none"><ul><li>Telnet Login errors</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>CPF1107: Password not correct for user profile XXXX</li>
+<li></li>
+<li></li>
+<li>CPF1120: User XXXX does not exist</li>
+<li></li>
+<li></li>
+<li>CPF1116 : Next not valid sign-on attempt variers off device?</li>
+<li></li>
+<li></li>
+<li>CPF1392 : Next not valid sign-on attempt disables user profile XXXX</li>
+<li></li>
+<li></li>
+<li>CPF1394: User profile XXXX cannot sign on?</li>
+<li></li>
+<li></li>
+<li>CPF1118:No password associated with the user XXXX</li>
+<li></li>
+<li></li>
+<li>CPF1109: Not authorized to subsystem</li>
+<li></li>
+<li></li>
+<li>CPF1110: Not authorized to work station?</li>
+<li></li>
+</ul>
+</li>
+<li>POP3 authentication Errors</li>
+<li style="list-style-type: none"><ul><li>CPF2204: User profile XXXX not found</li>
+<li>CPF22E2: Password not correct for User profile XXXX</li>
+<li>CPF22E3: User profile XXXX is disabled</li>
+<li>CPF22E4: Password for User profile XXXX has expired</li>
+<li>CPF22E5: No Password associated with User profile XXXX</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Qsys symbolic link (if ftp is enabled)</li>
+<li style="list-style-type: none"><ul><li>ftp target | quote stat | quote site namefmt 1</li>
+<li>cd /</li>
+<li>quote site listfmt 1</li>
+<li>mkdir temp</li>
+<li>quote rcmd ADDLNK OBJ('/qsys.lib') NEWLNK('/temp/qsys')</li>
+<li>quote rcmd QSH CMD('ln -fs /qsys.lib /temp/qsys')</li>
+<li>dir /temp/qsys/*.usrprf</li>
+<li style="list-style-type: none"><ul><li>Here you should list some profils</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>LDAP</li>
+<li style="list-style-type: none"><ul><li><img src="image 38.png" /> Need os400-sys value from ibm-slapdSuffix</li>
+<li style="list-style-type: none"><ul><li><img src="image 39.png" /> Think to grab it using FTP from (QIBM/UserData/OS400/DirSrv/</li>
+<li style="list-style-type: none"><ul><li>slapd.conf</li>
+<li style="list-style-type: none"><ul><li><img src="image 40.png" /> </li>
+<li>dn: cn=System, cn=System Backends, cn=IBM Directory, cn=Schemas, cn=Configuration</li>
+<li>cn: System</li>
+<li>slapdPlugin: database /QSYS.LIB/QGLDPSYS.SRVPGM sysprj_backend_init</li>
+<li>slapdReadOnly: FALSE</li>
+<li>slapdSuffix: os400-sys=<b>HERE IS THE VALUE YOU ARE LOOKING FOR</b></li>
+<li>objectclass: top</li>
+<li>objectclass: ibm-slapdConfigEntry</li>
+<li>objectclass: ibm-slapdOs400SystemBackend</li>
+<li></li>
+</ul>
+</li>
+<li>ibmslapd.conf</li>
+</ul>
+</li>
+<li><img src="image 41.png" /> Resolve IP address.</li>
+<li><img src="image 42.png" /> Telnet Value screen.</li>
+<li style="list-style-type: none"><ul><li><img src="image 43.png" /> </li>
+<li>Server : AS400_ANDOLINI</li>
+<li>COMPANY : DONCORLEONE.COM</li>
+<li></li>
+<li>Value should be : AS400_ANDOLINI.DONCORLEONE.COM</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 44.png" /> <img src="image 45.png" /> Tool to browse LDAP</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.ldapbrowser.com/download.htm">LdapBrowser</a> <a href="http://www.ldapbrowser.com/download.htm"><img src="image 46.png" /></a></li>
+<li><a href="http://www.jxxi.com/webstart/app/ldap-browser-editor.jsp">LDAP Utility</a> <a href="http://www.jxxi.com/webstart/app/ldap-browser-editor.jsp"><img src="image 47.png" /></a></li>
+<li><a href="http://luma.sourceforge.net/">Luma Ldap brower and more</a> <a href="http://luma.sourceforge.net/"><img src="image 48.png" /></a></li>
+<li>LdapSearch (unix utility)</li>
+<li style="list-style-type: none"><ul><li><img src="image 49.png" /> Enumeration</li>
+<li style="list-style-type: none"><ul><li><img src="image 50.png" /> </li>
+<li>ldapsearch -h AS400SERVER \ -b "cn=accounts,os400-sys=<b>AS400-Name</b>" \ -D "os400-profile=$LOGIN$,cn=accounts,os400-sys=<b>AS400-Nam</b>e" \ -w $PASSWRD -L -s sub "os400-profile=*" &gt; MyUSERS.log</li>
+<li></li>
+<li><i>AS400-Name : is the value you grabbed before</i></li>
+<li></li>
+<li><img src="image 51.png" /> </li>
+<li>ldapsearch -h target \ -b "cn=accounts,os400-sys=AS400-Name" \ -D "os400-profile=$LOGIN$,cn=accounts,os400-sys=AS400-Name" \ -w $PASSWRD -L -s sub "os400-profile=<b>USER_YOU_WANT</b>" &gt; COMPLETEINFO_ONUSER.log</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Exploitation</li>
+<li style="list-style-type: none"><ul><li>CVE References</li>
+<li style="list-style-type: none"><ul><li><a href="http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=AS400">http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=AS400</a> <a href="http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=AS400"><img src="image 52.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1244">CVE-2005-1244 - Severity : High - CVSS : 7.0</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1244"><img src="image 53.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1243">CVE-2005-1243 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1243"><img src="image 54.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1242">CVE-2005-1242 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1242"><img src="image 55.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1241">CVE-2005-1241 - Severity : High - CVSS : 7.0</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1241"><img src="image 56.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1240">CVE-2005-1240 - Severity : High - CVSS : 7.0</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1240"><img src="image 57.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1239">CVE-2005-1239 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1239"><img src="image 58.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1238">CVE-2005-1238 - Severity : High - CVSS : 9.0</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1238"><img src="image 59.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1182">CVE-2005-1182 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1182"><img src="image 60.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1133">CVE-2005-1133 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1133"><img src="image 61.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-1025">CVE-2005-1025 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-1025"><img src="image 62.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-0868">CVE-2005-0868 - Severity : High - CVSS : 7.0</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-0868"><img src="image 63.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2005-0899">CVE-2005-0899 - Severity : Low - CVSS : 2.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2005-0899"><img src="image 64.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2002-1822">CVE-2002-1822 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2002-1822"><img src="image 65.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2002-1731">CVE-2002-1731 - Severity : Low - CVSS : 2.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2002-1731"><img src="image 66.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-2000-1038">CVE-2000-1038 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-2000-1038"><img src="image 67.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-1999-1279">CVE-1999-1279 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-1999-1279"><img src="image 68.png" /></a></li>
+<li><a href="http://www.security-database.com/detail.php?cve=CVE-1999-1012">CVE-1999-1012 - Severity : Low - CVSS : 3.3</a> <a href="http://www.security-database.com/detail.php?cve=CVE-1999-1012"><img src="image 69.png" /></a></li>
+</ul>
+</li>
+<li><span style="font-size: 16pt">Access with Work Station Gateway</span></li>
+<li style="list-style-type: none"><ul><li>http://target:5061/WSG</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/as400_users.txt">Default AS/400 accounts.</a> <a href="http://www.vulnerabilityassessment.co.uk/as400_users.txt"><img src="image 70.png" /></a></li>
+</ul>
+</li>
+<li>Network attacks (next release)</li>
+<li style="list-style-type: none"><ul><li>DB2</li>
+<li>QSHELL</li>
+<li>Hijacking Terminals</li>
+<li>Trojan attacks</li>
+<li>Hacking from AS/400</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

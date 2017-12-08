@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>bfae105d-2daf-44fb-a2b1-a0fc75723052</string>
+  <key>title</key><string>Penetration</string>
+  <key>nodeid</key><string>4efda595-f2d7-4c72-a45c-e676348177e0</string>
+  <key>modified_time</key><integer>1508956641</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1508956641</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>11</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

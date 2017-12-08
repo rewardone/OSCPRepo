@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>6469be47-281e-4e53-9abc-92b684505afd</string>
+  <key>title</key><string>Tree</string>
+  <key>nodeid</key><string>5ef6c522-b365-44d1-b9cf-de11d133084c</string>
+  <key>modified_time</key><integer>1509375658</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509375029</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>d0644932-0503-4cba-bc77-124a799501a6</string>
+  <key>title</key><string>Citrix Specific</string>
+  <key>nodeid</key><string>8d2099ba-ffb2-4fbb-aa37-59c9a4e9f262</string>
+  <key>modified_time</key><integer>1509375366</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1509375366</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>9</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

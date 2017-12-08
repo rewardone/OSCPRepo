@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>2795e842-2f15-457a-aa59-1423d4b10099</string>
+  <key>title</key><string>1521: Oracle</string>
+  <key>nodeid</key><string>c9285283-0e73-4e2e-ab26-fd607d41b3a9</string>
+  <key>modified_time</key><integer>1509374544</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509374515</integer>
+  <key>order</key><integer>20</integer>
+</dict>
+</node>
