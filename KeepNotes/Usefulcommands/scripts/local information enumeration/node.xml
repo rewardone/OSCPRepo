@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Local Information Enumeration</string>
   <key>nodeid</key><string>797d948f-eda2-4d3e-a552-727343366d2c</string>
   <key>modified_time</key><integer>1512495538</integer>
