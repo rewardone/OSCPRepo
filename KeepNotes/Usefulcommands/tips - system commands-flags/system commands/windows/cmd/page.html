@@ -9,7 +9,7 @@ C:\Windows\system32&gt; dir /s *pass* == *cred* == *vnc* == *.config*<br/>
 <br/>
 # Search certain file types for a keyword, this can generate a lot of output.<br/>
 C:\Windows\system32&gt; findstr /si password *.xml *.ini *.txt<br/>
-<br/>
+findstr /si password *.txt | *.xml | *.ini<br/>
 <br/>
 <br/>
 # Similarly the two commands below can be used to grep the registry for keywords, in this case "password".<br/>

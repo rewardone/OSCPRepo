@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Exchange server</title>
+</head><body>Newer Outlook version (2002-2013) uses the 'Credential Store' to store the 'Exchange Server' passwords. It provides more secure mechanism for storing and retrieving the password than the older 'Protected Storage' format. This mechanism is mainly used by Windows to securely store network login passwords.<br/>
+<br/>
+Here are the locations of credential files used by 'Credential Store' to store the encrypted passwords on various platforms.<br/>
+<br/>
+For Windows XP<br/>
+On Windows XP, the encrypted user credentials are stored in the hidden file called 'Credentials' inside both APPDATA and LOCALAPPDATA locations mentioned below.<br/>
+&nbsp; &nbsp;[APPDATA Location]<br/>
+&nbsp; &nbsp;C:\Documents and Settings\&lt;username&gt;\Application Data\Microsoft\Credentials\&lt;user sid&gt;\<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp;[LOCALAPPDATA Location]<br/>
+&nbsp; &nbsp;C:\Documents and Settings\&lt;username&gt;\Local Settings\Application Data\Microsoft<br/>
+&nbsp; &nbsp;\Credentials\&lt;user sid&gt;\ <br/>
+<br/>
+For Vista/Windows 7/Windows 8<br/>
+Vista onwards, the user credentials are stored in the multiple files with random name (generated using GUID) inside both APPDATA and LOCALAPPDATA locations mentioned below. (There will be separate credential file for each of the network accounts)<br/>
+&nbsp; &nbsp;[APPDATA Location]<br/>
+&nbsp; &nbsp;C:\Users\&lt;username&gt;\AppData\Roaming\Microsoft\Credentials\<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp;[LOCALAPPDATA Location]<br/>
+&nbsp; &nbsp;C:\Users\&lt;username&gt;\AppData\Local\Microsoft\Credentials\<br/>
+<br/>
+For further details on decrypting the exchange server password protected by 'Credential Store' refer to the 'Recovering Domain Network Password Section' of '<a href="http://securityxploded.com/networkpasswordsecrets.php#Recover_Domain_Network_Passwords">Exposing Secrets of Network Passwords</a>'</body></html>

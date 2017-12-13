@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Older</title>
+</head><body>Older versions of Outlook (Outlook Express, 98, 2000 etc) stores the Email configuration information along with encrypted password at following registry location,<br/>
+<br/>
+[For Outlook installed in Internet Mail Only Mode Configuration]<br/>
+HKEY_CURRENT_USER\Software\Microsoft\Office\Outlook\OMI Account Manager\Accounts<br/>
+<br/>
+[For Outlook in normal mode]<br/>
+HKCU\Software\Microsoft\Internet Account Manager\Accounts<br/>
+<br/>
+Here Outlook stores all the email configuration details such as Email Address, User name, Server etc along with encrypted password. Unlike new Outlook version, older ones stored password for all type of accounts including 'Exchange Server' in the 'Windows Protected Storage'.<br/>
+However the storage format in the registry is similar to new Outlook versions with the slight change in the registry value names. Here is the table which summarizes various registry value names for different type of email account configurations used by older Outlook versions.<br/>
+<br/>
+Since older versions use 'Protected Storage' method, the byteEncType is always set to 1. Also the encPassData value actually points to 'password item name' in the Protected storage. While enumerating protected storage passwords, this item name can be used to match with corresponding Outlook account password.</body></html>

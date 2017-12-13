@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Some payloads</string>
+  <key>nodeid</key><string>ffbd02a1-9349-4f34-be55-269d4fcbd609</string>
+  <key>modified_time</key><integer>1513189648</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1513189598</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

