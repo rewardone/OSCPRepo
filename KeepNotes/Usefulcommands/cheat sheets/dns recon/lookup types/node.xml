@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Lookup Types</string>
+  <key>nodeid</key><string>baf1b662-9ee7-4edc-b19f-69adb078de17</string>
+  <key>modified_time</key><integer>1513270023</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1513270003</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

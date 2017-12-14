@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Standard Lookups</title>
+</head><body>Standard Lookup<br/>
+<br/>
+Dig<br/>
+$ dig &lt;domain&gt;<br/>
+<br/>
+DNSRecon<br/>
+$ dnsrecon -t std -d &lt;domain&gt;<br/>
+<br/>
+Only return IP address<br/>
+$ dig &lt;domain&gt; +short<br/>
+<br/>
+Use specific NS<br/>
+$ dig @&lt;name server&gt; &lt;domain&gt;<br/>
+<br/>
+Reverse DNS lookup<br/>
+$ dig -x &lt;ip&gt; +short<br/>
+<br/>
+Reverse IP lookup for range<br/>
+$ dnsrecon -t rvs -i 192.168.1.1,192.168.1.254<br/>
+<br/>
+Query specific type<br/>
+$ dig -t &lt;type&gt; &lt;domain&gt; &lt;other options&gt;</body></html>

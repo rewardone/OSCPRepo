@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Confidential Information &amp; Users</title>
+</head><body>Who are you? Who is logged in? Who has been logged in? Who else is there? Who can do what?<br/>
+id<br/>
+who<br/>
+w<br/>
+last<br/>
+cat /etc/passwd | cut -d: -f1 &nbsp; &nbsp;# List of users<br/>
+grep -v -E "^#" /etc/passwd | awk -F: '$3 == 0 { print $1}' &nbsp; # List of super users<br/>
+awk -F: '($3 == "0") {print}' /etc/passwd &nbsp; # List of super users<br/>
+cat /etc/sudoers<br/>
+sudo -l<br/>
+<br/>
+What sensitive files can be found? &nbsp;<br/>
+cat /etc/passwd<br/>
+cat /etc/group<br/>
+cat /etc/shadow<br/>
+ls -alh /var/mail/<br/>
+<br/>
+Anything "interesting" in the home directorie(s)? <i>If it's possible to access</i>&nbsp; <br/>
+ls -ahlR /root/<br/>
+ls -ahlR /home/<br/>
+<br/>
+Are there any passwords in; scripts, databases, configuration files or log files? <i>Default paths and locations for passwords</i>&nbsp; <br/>
+cat /var/apache2/config.inc<br/>
+cat /var/lib/mysql/mysql/user.MYD<br/>
+cat /root/anaconda-ks.cfg<br/>
+<br/>
+What has the user being doing? <i>Is there any password in plain text? What have they been edting?</i>&nbsp; <br/>
+cat ~/.bash_history<br/>
+cat ~/.nano_history<br/>
+cat ~/.atftp_history<br/>
+cat ~/.mysql_history<br/>
+cat ~/.php_history<br/>
+<br/>
+What user information can be found? &nbsp;<br/>
+cat ~/.bashrc<br/>
+cat ~/.profile<br/>
+cat /var/mail/root<br/>
+cat /var/spool/mail/root<br/>
+<br/>
+Can private-key information be found? &nbsp;<br/>
+cat ~/.ssh/authorized_keys<br/>
+cat ~/.ssh/identity.pub<br/>
+cat ~/.ssh/identity<br/>
+cat ~/.ssh/id_rsa.pub<br/>
+cat ~/.ssh/id_rsa<br/>
+cat ~/.ssh/id_dsa.pub<br/>
+cat ~/.ssh/id_dsa<br/>
+cat /etc/ssh/ssh_config<br/>
+cat /etc/ssh/sshd_config<br/>
+cat /etc/ssh/ssh_host_dsa_key.pub<br/>
+cat /etc/ssh/ssh_host_dsa_key<br/>
+cat /etc/ssh/ssh_host_rsa_key.pub<br/>
+cat /etc/ssh/ssh_host_rsa_key<br/>
+cat /etc/ssh/ssh_host_key.pub<br/>
+cat /etc/ssh/ssh_host_key<br/>
+<br/>
+</body></html>

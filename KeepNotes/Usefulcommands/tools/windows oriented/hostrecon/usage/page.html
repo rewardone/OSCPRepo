@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Usage</title>
+</head><body>Usage<br/>
+HostRecon can be downloaded here: https://github.com/dafthack/HostRecon<br/>
+<br/>
+Start a PowerShell session on a system<br/>
+C:&gt;powershell.exe -exec bypass<br/>
+<br/>
+Import the script<br/>
+PS C:&gt;Import-Module HostRecon.ps1<br/>
+<br/>
+Run HostRecon<br/>
+PS C:&gt;Invoke-HostRecon<br/>
+<br/>
+To perform an egress filter check on the top 100 ports run the following command:<br/>
+PS C:&gt; Invoke-HostRecon -Portscan -TopPorts 100<br/>
+<br/>
+If you have any other ideas that you would like added into HostRecon please shoot me an email, contact me on Twitter (@dafthack), or open an issue on Github. Please keep in mind I am avoiding the use of any system tools (‘ipconfig’, ‘net’, ‘netstat’, ‘arp’, etc…) and also avoiding any PowerShell 3.0 and up cmdlets.</body></html>

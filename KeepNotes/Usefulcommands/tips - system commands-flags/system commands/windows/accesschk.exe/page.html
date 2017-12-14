@@ -17,4 +17,7 @@ accesschk.exe -uwqs Users c:\*.*<br/>
 accesschk.exe -uwqs "Authenticated Users" c:\*.*<br/>
 <br/>
 Next I turned my attention to the Registry by running this command:<br/>
-accesschk –swk “power users” hklm</body></html>
+accesschk –swk “power users” hklm<br/>
+<br/>
+# Find weak service permissions<br/>
+accesschk.exe -uwcqv *</body></html>
