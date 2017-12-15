@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>MSFVenom</string>
   <key>nodeid</key><string>ca07e0fc-9d7c-4590-b2c4-a278e6f2f70c</string>
   <key>modified_time</key><integer>1513367211</integer>

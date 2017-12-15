@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>Obfuscation</string>
   <key>nodeid</key><string>f7a9dee3-f29d-4c2b-9934-3f9dfdca1319</string>
   <key>modified_time</key><integer>1513187995</integer>

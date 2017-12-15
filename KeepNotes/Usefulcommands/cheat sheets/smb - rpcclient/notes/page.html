@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Notes</title>
+</head><body>source: <a href="https://pen-testing.sans.org/blog/2013/07/24/plundering-windows-account-info-via-authenticated-smb-sessions">https://pen-testing.sans.org/blog/2013/07/24/plundering-windows-account-info-via-authenticated-smb-sessions</a>&nbsp;<br/>
+<br/>
+Some pen testers I've met think that because NULL sessions are increasingly extinct, stuff like rpcclient isn't useful. But, hey? as long as you have just one user name and its associated password (local or domain) for the target environment, you can make AUTHENTICATED SMB sessions (non-NULL). Even if your user and password are NOT in the admin group or domain admin group, you can still get a HUGE amount of information via an authenticated, non-admin SMB session to a target machine in the environment, plundering all kinds of stuff, including user names, group memberships, Security Identifiers (SIDs), and even last logon events. I'd like to show you how, as well as how a defender can squelch incoming SMB sessions in real-time on a Windows box.<br/>
+<br/>
+Once you have a user name and password and open SMB access of a target Windows client or server over TCP port 445, you can use rpcclient to open an authenticated SMB session to a target machine by running the following command on your Linux system (rpcclient is built into many Linux distros by default):<br/>
+<br/>
+$ rpcclient —U &lt;username&gt; &lt;WinIPaddr&gt;<br/>
+<br/>
+If you had used a NULL Session, you would have entered a username of "". But, instead, use a real user name (which doesn't have to be in the admin group). When prompted for the password, enter it, and you'll see the funky rpcclient prompt (I say it is funky, because of it's $&gt; notation):<br/>
+<br/>
+rpcclient $&gt;<br/>
+<br/>
+(I have seen, on rare occasions, rpcclient refuse to connect unless it has the name of the target Windows machine inside of /etc/hosts. If it doesn't work, simply append into /etc/hosts a line that has the IP address of the target Windows machine and the hostname of that machine.)</body></html>

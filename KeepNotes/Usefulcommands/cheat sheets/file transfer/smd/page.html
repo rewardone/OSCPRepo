@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SMD</title>
+</head><body>This is actually my favorite method to transfer a file to a Windows host. SMB is built in to Windows and doesn't require any special commands as Windows understands UNC paths. You can simply use the standard copy and move commands and SMB handles the file transferring automatically for you. What's even better is Windows will actually let you execute files via UNC paths, meaning you can download and execute a payload in one command!<br/>
+<br/>
+<br/>
+Samba on linux is a pain, but no longer! Enter smbserver.py, part of the <a href="https://github.com/CoreSecurity/impacket">Impacket</a>&nbsp;project.<br/>
+To launch a simple SMB server on port 445, just specify a share name and the path you want to share:<br/>
+# python smbserver.py ROPNOP /root/shells<br/>
+<br/>
+The python script takes care of all the configurations for you, binds to 445, and accepts any authentication. It will even print out the hashed challenge responses for any system that connects to it.<br/>
+<br/>
+In one line we've got an SMB share up and running. You can confirm it with smbclient from Linux or Windows: <br/>
+smbclient -L &lt;IP&gt; --no-pass<br/>
+net view \\&lt;IP&gt;<br/>
+<br/>
+Since Windows handles UNC paths, you can just treat the ROPNOP share as if it's just a local folder from Windows. Basic Windows file commands like dir, copy, move, etc all just work.<br/>
+If you look at the output from smbserver.py, you can see that every time we access the share it outputs the NetNTLMv2 hash from the current Windows user. You can feed these into John or Hashcat and crack them if you want (assuming you can't just elevate to System and get them from Mimikatz)<br/>
+<br/>
+<b>Executing files from SMB</b>. Because of the way Windows treats UNC paths, it's possible to just execute our binary directly from the SMB share without even needing to copy it over first. Just run the executable as if it were already local and the payload will fire</body></html>
