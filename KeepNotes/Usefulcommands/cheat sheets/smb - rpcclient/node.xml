@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><true/>
   <key>title</key><string>SMB / rpcclient</string>
   <key>nodeid</key><string>1e15b5a2-3925-488c-ab0d-e79a38abfdb5</string>
   <key>modified_time</key><integer>1513369591</integer>
@@ -9,6 +10,8 @@
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1513369230</integer>
-  <key>order</key><integer>12</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>10</integer>
+  <key>info_sort</key><string>order</string>
 </dict>
 </node>
