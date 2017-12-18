@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Route</title>
+</head><body>Metasploit route command can be used to establish a route to other networks that can be<br/>
+used to launch Metasploit exploits<br/>
+<br/>
+usage: route [add|remove] &lt;network_to_attack&gt; &lt;subnet&gt; &lt;session_to_pivot_through&gt;<br/>
+<br/>
+msf exploit(handler) &gt; route add 192.168.128.0 255.255.255.0 1<br/>
+[*] Route added<br/>
+msf auxiliary(tcp) &gt; route print<br/>
+Active Routing Table<br/>
+====================<br/>
+&nbsp;Subnet Netmask Gateway<br/>
+&nbsp;------ ------- -------<br/>
+&nbsp;192.168.128.0 255.255.255.0 Session 1<br/>
+<br/>
+There are limitations to using Meterpreter session. Only modules within<br/>
+Metasploit can directly use the session. Furthermore, the sessions only transmit TCP<br/>
+packets. <br/>
+<br/>
+Note: Only use MSF route here. If you're in Meterpreter session, using 'route' will mess up the hosts routing table!<br/>
+<br/>
+Note: The routing we provide with the run autoroute command gives us the freedom to work in the Metasploit Framework. But when we try to reach the target with a Kali tools, we need tools like port forwarding or proxychains.</body></html>

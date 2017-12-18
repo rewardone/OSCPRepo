@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSH Local Port Forwarding</title>
+</head><body>It establishes a SSH connection between the SSH client and the SSH server.<br/>
+SSH listens on a local port established when the connection was set up. Any connection<br/>
+made to this port is forwarded through the secure SSH tunnel and sent on to a predefined<br/>
+remote host and port.<br/>
+<br/>
+SSH local port forwarding is set up with the following command on the attacker’s<br/>
+system:<br/>
+<br/>
+# ssh -L 80:192.168.128.128:80 user@192.168.112.132<br/>
+<br/>
+The syntax of the command is<br/>
+ssh –L port:destination_host:destination_port username@pivot_host<br/>
+<br/>
+where port is the local port that listens<br/>
+destination_host is the target host IP or hostname,<br/>
+destination_port is the port listening on the target host, <br/>
+username is the user name on the pivot host,<br/>
+pivot_host is the IP address or hostname of the server being used as the pivot point<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Using SSH local port forwarding assumes that SSH server is running on the<br/>
+compromised host that will be used for pivoting. If it is not installed or running, then<br/>
+activating it depends upon the conditions established in Rules of Engagement for the<br/>
+penetration test.</body></html>

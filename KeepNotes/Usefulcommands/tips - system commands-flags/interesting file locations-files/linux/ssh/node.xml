@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>SSH</string>
   <key>nodeid</key><string>a2001ff6-26f7-46df-9753-9535352eadd6</string>
   <key>modified_time</key><integer>1512670587</integer>

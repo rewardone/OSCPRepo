@@ -9,4 +9,13 @@ reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
 reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated<br/>
 <br/>
 reg query HKLM /f password /t REG_SZ /s&#09;&#09;search 'local machine' hive for 'password'<br/>
-reg query HKCU /f password /t REG_SZ /s&#09;&#09;search 'current user' hive for 'password'</body></html>
+reg query HKCU /f password /t REG_SZ /s&#09;&#09;search 'current user' hive for 'password'<br/>
+<br/>
+reg save HKLM\Security security.hive (Save security hive to a file)<br/>
+reg save HKLM\System system.hive (Save system hive to a file)<br/>
+reg save HKLM\SAM sam.hive (Save sam to a file)=<br/>
+reg add [\\TargetIPaddr\] [RegDomain][ \Key ]<br/>
+reg export [RegDomain]\[Key] [FileName]<br/>
+reg import [FileName ]<br/>
+reg query [\\TargetIPaddr\] [RegDomain]\[ Key ] /v [Valuename!] (you can to add /s for recurse<br/>
+all values )</body></html>

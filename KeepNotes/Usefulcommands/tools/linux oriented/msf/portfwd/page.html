@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Portfwd</title>
+</head><body>The portfwd command from within the Meterpreter shell is most commonly used as a pivoting technique, allowing direct access to machines otherwise inaccessible from the attacking system. Running this command on a compromised host with access to both the attacker and destination network (or system), we can essentially forward TCP connections through this machine, effectively making it a pivot point. Much like the port forwarding technique used with an ssh connection, portfwd will relay TCP connections to and from the connected machines.<br/>
+<br/>
+Why:<br/>
+Direct access to certain services running on discovered systems on the hidden network may not be available (web servers, etc.). This is because there is no double sided routing. We know how to reach the target system and make a request, but our requests will fail because the target does not know how to reach us.<br/>
+<br/>
+Add<br/>
+From the Meterpreter shell, the command is used in the following manner:<br/>
+&nbsp;meterpreter &gt; portfwd add –l 3389 –p 3389 –r &nbsp;[target host]<br/>
+add will add the port forwarding to the list and will essentially create a tunnel for us. Please note, this tunnel will also exist outside the Metasploit console, making it available to any terminal session.<br/>
+-l 3389 is the local port that will be listening and forwarded to our target. This can be any port on your machine, as long as it’s not already being used.<br/>
+-p 3389 is the destination port on our targeting host.<br/>
+-r [target host] is the our targeted system’s IP or hostname.<br/>
+<br/>
+Delete<br/>
+Entries are deleted very much like the previous command. Once again from an active Meterpreter session, we would type the following:<br/>
+&nbsp;meterpreter &gt; portfwd delete –l 3389 –p 3389 –r [target host]<br/>
+<br/>
+LIST:<br/>
+This argument needs no options and provides us with a list of currently listening and forwarded ports.<br/>
+&nbsp;meterpreter &gt; portfwd list<br/>
+<br/>
+FLUSH:<br/>
+This argument will allow us to remove all the local port forward at once.<br/>
+&nbsp;meterpreter &gt; portfwd flush</body></html>

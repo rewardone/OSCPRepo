@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reverse TCP vs Bind TCP</title>
+</head><body>The important point here is that bind_tcp is selected as the payload type. Since the double-sided routing is not defined, the target system will not be able to directly reach us. For this reason, it is necessary to select the Bind TCP payload type so that the target should wait for a connection on its own port. After the successful exploit operation, the connection to the port where the target system is listening will be performed.<br/>
+<br/>
+How Reverse TCP and Bind TCP connections work can be examined through the following visuals.<br/>
+<br/>
+<img src="image.png" /></body></html>

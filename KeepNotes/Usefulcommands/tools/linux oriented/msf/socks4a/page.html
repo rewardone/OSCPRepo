@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Socks4a</title>
+</head><body>-------------------------<br/>
+Note: For Metasploit’s auxiliary/server/socks4a module to work across multiple<br/>
+interfaces, the compromised host must have IP port forwarding enabled. IP port<br/>
+forwarding is not enabled by default on Ubuntu servers. <br/>
+The IP port forwarding setting can be checked with the command:<br/>
+<br/>
+#sysctl -a | grep ip_forward<br/>
+net.ipv4.ip_forward = 0<br/>
+<br/>
+IP port forwarding can be enabled temporarily, if permitted by the Rules of Engagement,<br/>
+using:<br/>
+<br/>
+# echo 1 &gt; /proc/sys/net/ipv4/ip_forward<br/>
+<br/>
+The setting is verified by:<br/>
+<br/>
+# sysctl -a | grep ip_forward<br/>
+net.ipv4.ip_forward = 1<br/>
+<br/>
+Enabling port forwarding generally will not be permitted by the Rules of Engagement. Portfwd can be used to send requests, though you won't be able to receive responses.<br/>
+-------------------------<br/>
+<br/>
+Now that we have added a route to the target network we will take advantage of the socks4a auxiliary from within the framework. This auxiliary module provides a proxy server which uses the Metasploit framework routing which we have created to relay connections.snip<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+We quickly configure proxychains to match the port that we chose for our proxy server.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+Since everything is setup we should be able to run external tools through our Metasploit created tunnel and directly attack our target network.<br/>
+<br/>
+<img src="image 4.png" /><br/>
+<br/>
+</body></html>
