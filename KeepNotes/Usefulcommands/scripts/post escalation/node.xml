@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>Post Escalation</string>
   <key>nodeid</key><string>b8069858-21b5-445b-8168-e80b00ba86d5</string>
   <key>modified_time</key><integer>1512501501</integer>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Mounting a share</string>
+  <key>nodeid</key><string>5cd5e5e0-f452-4d59-999f-0482cbfccbe3</string>
+  <key>modified_time</key><integer>1514988128</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1514988086</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

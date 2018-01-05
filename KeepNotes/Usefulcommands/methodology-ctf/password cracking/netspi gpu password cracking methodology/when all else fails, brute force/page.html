@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>When all else fails, brute force</title>
+</head><body>Take a look at the company password policy. Seven characters is the minimum? That will take us about forty minutes to go through. Eight characters? A little over two and a half days. What does that mean for our cracking? It means we can easily go after any remaining seven character passwords (where applicable). For those with eight character minimums (or higher), it doesn’t hurt for us to run a brute-force overnight on the hashes. Anything we get out of the brute-force can always be pulled back in to the wordlist for the rule-based attacks.<br/>
+<br/>
+Given that a fair amount of our cracking happens during a well-defined project timeframe, we’ve found that it’s best for us to limit the cracking efforts to about twenty-four hours. This prevents us from wasting too much time on a single hash and it frees up our cracking rig for our other projects. If we really need to crack a hash, we’ll extend this time limit out, but a day is usually enough to catch most of the hashes we’re trying to crack.<br/>
+<br/>
+With the overall efforts that we put in here (~24 hours), we ended up cracking 757 of the 1,000 hashes (75.7%).<br/>
+<br/>
+As luck would have it, I wrote up all of the stats for this blog and immediately proceeded to crack two new sets of NTLM hashes. One was close to 800 hashes (90% cracked) and another had over 5000 hashes (84% cracked). So your results will vary based on the hashes you’re trying to crack.<br/>
+<br/>
+*All times are based on our current setup (Four 7950 cards running OclHashcat 1.01)<br/>
+<br/>
+One final item to note. This is not the definitive password cracking methodology. This will probably change for us in the next year, month, week… People are always changing up how they create passwords and that will continue to influence the way we attack their hashes. I’ll try to remember to come back to this next year and update with any changes. Did we miss any key cracking strategies? Let me know in the comments.</body></html>

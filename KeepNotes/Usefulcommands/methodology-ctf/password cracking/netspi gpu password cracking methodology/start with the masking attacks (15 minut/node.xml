@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Start with the masking attacks (15 minutes*)</string>
+  <key>nodeid</key><string>fe518adb-bd06-4861-bdd3-d61b280a985e</string>
+  <key>modified_time</key><integer>1515081660</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515081643</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

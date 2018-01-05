@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Methodology Open Source Security Testing</string>
   <key>nodeid</key><string>a436ba8d-9974-4239-a78e-e8cb2262053f</string>
   <key>modified_time</key><integer>1513267751</integer>

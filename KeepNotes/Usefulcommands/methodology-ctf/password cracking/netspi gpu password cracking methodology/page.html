@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NetSPI Password Cracking Methodology</title>
+</head><body>In an attempt to speed up our password cracking process, we have run a number of tests to better match our guesses with the passwords that are being used by our clients. <b>This is by no means a definitive cracking methodology</b>, as it will probably change next month, but here’s a look at what worked for us on a recent cracking test.<br/>
+<br/>
+For a little background, these hashes were pulled from a domain controller in the last six months. The DC still had some hashes stored in the older LanManager (LM) format in addition to NTLM. The password cracking process is also helped by using any cleartext passwords, recovered during the penetration test, as a dictionary.<br/>
+<br/>
+For this sample, there were:<br/>
+<br/>
+1000 total hashes (159 LM/NTLM, 841 NTLM-Only)<br/>
+828 unique hashes<br/>
+172 accounts with duplicate* passwords (*shared with one or more accounts)<br/>
+Since LM hashes are weaker, we cracked those first. Initial attacks cracked all of the LM/NTLM hashes, giving us a nice head start (130/828 unique hashes or 15.7% cracked) and a good list to feed back into our other attacks.</body></html>

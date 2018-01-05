@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>HostRecon</string>
   <key>nodeid</key><string>366f998b-cce7-4db3-9744-2f3ed245ec88</string>
   <key>modified_time</key><integer>1513269451</integer>

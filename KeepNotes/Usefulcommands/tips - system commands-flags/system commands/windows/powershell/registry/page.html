@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Registry</title>
+</head><body>Viewing Keys<br/>
+You can use the Test-Path cmdlet to check for the key, but not for specific values within a key. <br/>
+Test-Path 'HKLM:\SOFTWARE\TestSoftware'<br/>
+<br/>
+<br/>
+Viewing Values<br/>
+Get-ItemPropertyValue HKLM:\SYSTEM\CurrentControlSet\Control CurrentUser<br/>
+<br/>
+<br/>
+Modifying the value of a registry property value:<br/>
+<br/>
+Use the Push-Location cmdlet to save the current working location.<br/>
+Use the Set-Location cmdlet to change to the appropriate registry drive.<br/>
+Use the Set-ItemProperty cmdlet to assign a new value to the registry property.<br/>
+Use the Pop-Location cmdlet to return to the original working location.</body></html>
