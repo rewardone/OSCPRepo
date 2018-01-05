@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Target List</title>
+</head><body><b>Works from: Windows 7 (7600)</b><br/>
+----------------------------------------------<br/>
+--Fixed in: Windows 8.1 (9600)--<br/>
+\system32\sysprep\sysprep.exe<br/>
+&nbsp;cryptbase.dll<br/>
+&nbsp;Actionqueue.dll<br/>
+\system32\iscsicli.exe<br/>
+&nbsp;Attacker prepared shellcode<br/>
+Attacker defined application<br/>
+&nbsp;Attacker defined components<br/>
+<br/>
+--Fixed in: Windows 10 TP (&gt; 9600)--<br/>
+\system32\cliconfg.exe<br/>
+&nbsp;-<br/>
+HKLM registry keys<br/>
+&nbsp;-<br/>
+<br/>
+-- Fixed in: Windows 10 TH1 (10147)--<br/>
+\ehome\mcx2prov.exe, \system32\migwiz\migwiz.exe<br/>
+&nbsp;WdsCore.dll, CryptBase.dll, CryptSP.dll<br/>
+\system32\cliconfg.exe<br/>
+&nbsp;ntwdblib.dll<br/>
+IFEO registry keys, \system32\cliconfg.exe<br/>
+&nbsp;Attacker defined Application Verifier Dll<br/>
+<br/>
+--Fixed in: Windows 10 TH2 (10548)--<br/>
+\system32\{New}or{Existing}\{autoelevated}.exe, e.g. winsat.exe<br/>
+&nbsp;Attacker defined dll, e.g. PowProf.dll, DevObj.dll<br/>
+\system32\oobe\setupsqm.exe<br/>
+&nbsp;WdsCore.dll<br/>
+\system\credwiz.exe, \system32\wbem\oobe.exe<br/>
+&nbsp;netutils.dll<br/>
+<br/>
+--Fixed in: Windows 10 RS1 (14316)--<br/>
+\system32\mmc.exe EventVwr.msc<br/>
+&nbsp;elsext.dll<br/>
+\system32\cliconfg.exe<br/>
+&nbsp;ntwdblib.dll<br/>
+\system32\GWX\GWXUXWorker.exe, \system32\inetsrv\inetmgr.exe<br/>
+&nbsp;SLC.dll<br/>
+\system32\taskhost.exe, \system32\tzsync.exe (any ms exe without manifest)<br/>
+&nbsp;Attacker defined dll<br/>
+\system32\inetsrv\inetmgr.exe<br/>
+&nbsp;MsCoree.dll<br/>
+<br/>
+-- <div style="text-align: left">Fixed in: Windows 10 RS2 (15031)</div>--<br/>
+\system32\CompMgmtLauncher.exe<br/>
+&nbsp;Attacker defined application<div style="text-align: left"><br/>
+</div><div style="text-align: left">\system32\EventVwr.exe, \system32\CompMgmtLauncher.exe<br/>
+</div><div style="text-align: left">&nbsp;Attacker defined application</div><br/>
+<br/>
+-- Fixed in: Windows 10 RS3 (16232)--<br/>
+\system32\mmc.exe, Rsop.msc<br/>
+&nbsp;WbemComn.dll<br/>
+\system32\sysprep\sysprep.exe<br/>
+&nbsp;comctl32.dll<br/>
+Attacker defined application<br/>
+&nbsp;Attacker defined components<br/>
+Multiple auto-elevated processes<br/>
+&nbsp;Various per target<br/>
+<br/>
+--Fixed in: UNIFIXED--<br/>
+<br/>
+\system32\consent.exe<br/>
+&nbsp;comctl32.dll<br/>
+system32\pkgmgr.exe<br/>
+&nbsp;DismCore.dll<br/>
+\syswow64\{any elevated exe, e.g wusa.exe}<br/>
+&nbsp;wow64log.dll<br/>
+\Program Files\Windows Media Player\osk.exe, \system32\EventVwr.exe, \system32\mmc.exe<br/>
+&nbsp;duser.dll, osksupport.dll<br/>
+Autoelevated applications AlwaysNotify compatible, see note<br/>
+&nbsp;Attacker defined applications<br/>
+wusa.exe<br/>
+&nbsp;dcomcnfg.exe, mmc.exe, ole32.dll, MsCoree.dll<br/>
+\system32\dccw.exe<br/>
+&nbsp;GdiPlus.dll<br/>
+\system32\mmc.exe<br/>
+&nbsp;Attacker defined components<br/>
+\system32\mmc.exe<br/>
+&nbsp;Attacker defined components<br/>
+\system32\mmc.exe, \System32\recdisc.exe<br/>
+&nbsp;Attacker defined components<br/>
+Attacker defined<br/>
+&nbsp;Attacker defined<br/>
+Attacker defined<br/>
+&nbsp;Attacker defined<br/>
+Attacker defined<br/>
+&nbsp;Attacker defined<br/>
+<br/>
+<br/>
+<br/>
+<b>Works from: Windows 8.1 (9600)</b><br/>
+----------------------------------------------<br/>
+--Fixed in: Windows 10 TP (&gt; 9600)--<br/>
+\system32\sysprep\sysprep.exe<br/>
+&nbsp;ShCore.dll<br/>
+<br/>
+--Fixed in: Windows 10 RS1 (14371)--<br/>
+\system32\sysprep\sysprep.exe<br/>
+&nbsp;unbcl.dll<br/>
+<br/>
+--Fixed in: unfixed--<br/>
+\system32\svchost.exe via \system32\schtasks.exe &nbsp;AlwaysNotify compatible<br/>
+&nbsp;Attacker defined application<br/>
+&nbsp;<br/>
+<br/>
+<br/>
+<b>Works from: Windows 10 TH1 (10240)</b><br/>
+----------------------------------------------<br/>
+--Fixed in: Windows 10 TH2 (10565)--<br/>
+\system32\sysprep\sysprep.exe<br/>
+&nbsp;dbgcore.dll<br/>
+<br/>
+--Fixed in: Windows 10 RS2 (15031)--<br/>
+%temp%\GUID\dismhost.exe&#09;AlwaysNotify compatible<br/>
+&nbsp;LogProvider.dll<br/>
+&nbsp;<br/>
+--Fixed in: Windows 10 RS3 (16215)--<br/>
+\system32\sdctl.exe<br/>
+&nbsp;Attacker defined application<br/>
+<br/>
+--Fixed in: Windows 10 RS4 (17025)--<br/>
+\system32\sdctl.exe<br/>
+&nbsp;Attacker defined application<br/>
+&nbsp;<br/>
+--Fixed in: unfixed--<br/>
+\system32\fodhelper.exe<br/>
+&nbsp;Attacker defined application</body></html>

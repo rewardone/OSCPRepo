@@ -2,10 +2,11 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Interesting Projects on Github</string>
   <key>nodeid</key><string>da795675-4196-4e87-bae5-7032e9c9e26d</string>
   <key>modified_time</key><integer>1515082744</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1515082744</integer>

@@ -1,0 +1,377 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Cent OS</title>
+</head><body><a href="From http://veneetbhardwaj.blogspot.sg">From http://veneetbhardwaj.blogspot.sg</a>&nbsp;<br/>
+<br/>
+1 Configure sysctl &#09;&#09;&#09;/etc/sysctl.conf<br/>
+2 Disable IPv6&#09;&#09;&#09;&#09;/etc/sysconfig/network<br/>
+3 Disable Core Dumps&#09;&#09;/etc/security/limits.conf<br/>
+4 Restrict access local only&#09;/etc/security/access.conf<br/>
+5 Remove other tty&#09;&#09;&#09;/etc/securetty, /etc/systemd/logind.conf<br/>
+6 Umast settings&#09;&#09;&#09;/etc/profile, /etc/csh.cshrc, /etc/bashrc<br/>
+7 Auditing&#09;&#09;&#09;&#09;&#09;/etc/rsyslog.conf, /etc/rules.d/audit.rules<br/>
+8 Secure SU&#09;&#09;&#09;&#09;/etc/pam.d/su, /etc/sudoers<br/>
+9 iptables config&#09;&#09;&#09;/etc/sysconfig/iptables<br/>
+10 fstab&#09;&#09;&#09;&#09;&#09;/etc/fstab<br/>
+11 services that can be removed<br/>
+<br/>
+During install the following system directories should be placed on their own partitions (or logical volumes). <br/>
+&nbsp;/boot, / , /home, /tmp, /usr/local, /var, /var/log, /opt, swap<br/>
+<br/>
+<br/>
+1 configure sysctl<br/>
+<br/>
+Edit /etc/sysctl.conf<br/>
+<br/>
+<br/>
+#Disable Core Dumps <br/>
+fs.suid_dumpable = 0 <br/>
+<br/>
+# SYSTEM SECURITY<br/>
+<br/>
+# Auto-reboot linux 30 seconds after a kernel panic <br/>
+kernel.panic = 30 <br/>
+kernel.panic_on_oops = 30 <br/>
+<br/>
+# Controls the System Request debugging functionality of the kernel <br/>
+kernel.sysrq = 0 <br/>
+<br/>
+# Controls whether core dumps will append the PID to the core filename. <br/>
+# Useful for debugging multi-threaded applications. <br/>
+kernel.core_uses_pid = 1<br/>
+<br/>
+#Enable ExecShield protection <br/>
+#kernel.exec-shield = 1 <br/>
+kernel.randomize_va_space = 1 <br/>
+<br/>
+# Controls the maximum size of a message, in bytes <br/>
+kernel.msgmnb = 65536 <br/>
+<br/>
+# Controls the default maxmimum size of a mesage queue <br/>
+kernel.msgmax = 65536 <br/>
+<br/>
+# NETWORK SECURITY<br/>
+# Disable IPV6 <br/>
+net.ipv6.conf.all.disable_ipv6 = 1 <br/>
+net.ipv6.conf.default.disable_ipv6 = 1 <br/>
+net.ipv6.conf.lo.disable_ipv6 = 1 <br/>
+<br/>
+#Prevent SYN attack<br/>
+net.ipv4.tcp_syncookies = 1 <br/>
+net.ipv4.tcp_syn_retries = 5 <br/>
+net.ipv4.tcp_synack_retries = 2 <br/>
+net.ipv4.tcp_max_syn_backlog = 4096 <br/>
+<br/>
+# Disables packet forwarding <br/>
+net.ipv4.ip_forward = 0 <br/>
+net.ipv4.conf.all.forwarding = 0 <br/>
+net.ipv4.conf.default.forwarding = 0 <br/>
+net.ipv6.conf.all.forwarding = 0 <br/>
+net.ipv6.conf.default.forwarding = 0 <br/>
+<br/>
+# Disables IP source routing <br/>
+net.ipv4.conf.all.send_redirects = 0 <br/>
+net.ipv4.conf.default.send_redirects = 0 <br/>
+net.ipv4.conf.all.accept_source_route = 0 <br/>
+net.ipv4.conf.default.accept_source_route = 0 <br/>
+net.ipv4.conf.all.secure_redirects = 0 <br/>
+net.ipv4.conf.default.secure_redirects = 0 <br/>
+net.ipv6.conf.all.accept_source_route = 0 <br/>
+net.ipv6.conf.default.accept_source_route = 0 <br/>
+<br/>
+# Enable IP spoofing protection<br/>
+net.ipv4.conf.all.rp_filter = 1 <br/>
+net.ipv4.conf.default.rp_filter = 1 <br/>
+<br/>
+# Disable ICMP redirect<br/>
+net.ipv4.conf.all.accept_redirects = 0 <br/>
+net.ipv4.conf.default.accept_redirects = 0 <br/>
+net.ipv6.conf.all.accept_redirects = 0 <br/>
+net.ipv6.conf.default.accept_redirects = 0 <br/>
+<br/>
+# Enable Log<br/>
+net.ipv4.conf.all.log_martians = 1<br/>
+net.ipv4.conf.default.log_martians = 1 <br/>
+<br/>
+# Turn on the tcp_timestamps <br/>
+net.ipv4.tcp_timestamps = 1 <br/>
+<br/>
+# Don't ignore directed pings <br/>
+net.ipv4.icmp_echo_ignore_all = 0 <br/>
+<br/>
+# Enable ignoring broadcasts request <br/>
+net.ipv4.icmp_echo_ignore_broadcasts = 1 <br/>
+<br/>
+# Enable bad error message Protection <br/>
+net.ipv4.icmp_ignore_bogus_error_responses = 1 <br/>
+<br/>
+# Enable a fix for RFC1337 - time-wait assassination hazards in TCP <br/>
+net.ipv4.tcp_rfc1337 = 1 <br/>
+<br/>
+<br/>
+# SYSTEM MEMORY use with caution on low memory systems<br/>
+<br/>
+# Increase size of file handles and inode cache <br/>
+fs.file-max = 209708 <br/>
+<br/>
+# Do less swapping <br/>
+vm.swappiness = 10 <br/>
+vm.dirty_ratio = 60 <br/>
+vm.dirty_background_ratio = 2 <br/>
+<br/>
+# specifies the minimum virtual address that a process is allowed to mmap <br/>
+vm.mmap_min_addr = 4096 <br/>
+<br/>
+# No overcommitment of available memory<br/>
+vm.overcommit_ratio = 0 <br/>
+vm.overcommit_memory = 0 <br/>
+<br/>
+# Set maximum amount of memory allocated to shm to 256MB <br/>
+kernel.shmmax = 268435456 <br/>
+kernel.shmall = 268435456 <br/>
+<br/>
+# number of incoming connections <br/>
+net.core.somaxconn = 0 <br/>
+<br/>
+# Increase the tcp-time-wait buckets pool size to prevent simple DOS attacks <br/>
+net.ipv4.tcp_max_tw_buckets = 1440000 <br/>
+net.ipv4.tcp_tw_recycle = 1 <br/>
+net.ipv4.tcp_tw_reuse = 1 <br/>
+<br/>
+Close the file, open terminal and run sysctl -p to confirm if the<br/>
+entries work<br/>
+&nbsp;<br/>
+2 Disable IPV6<br/>
+<br/>
+Open /etc/sysconfig/network and add the following to disable IPV6<br/>
+(sysctl entries are listed above)<br/>
+NETWORKING_IPV6=no <br/>
+IPV6INIT=no<br/>
+&nbsp;<br/>
+3 Disable Core Dumps <br/>
+<br/>
+open /etc/security/limits.conf uncomment/edit the line<br/>
+<br/>
+* &nbsp; &nbsp; &nbsp; &nbsp;hard &nbsp; &nbsp; &nbsp; &nbsp;core &nbsp; &nbsp; &nbsp; &nbsp;0<br/>
+&nbsp;<br/>
+4 Restrict access local only. <br/>
+edit /etc/security/access.conf<br/>
+# User "root" should be denied to get access from all other sources. <br/>
+- : root : ALL <br/>
+- : $username : ALL<br/>
+&nbsp;<br/>
+edit/uncomment the last line<br/>
+# All other users should be denied to get access from all sources. <br/>
+- : ALL : ALL<br/>
+<br/>
+edit /etc/host.deny<br/>
+Add ALL:ALL to the end of the file.<br/>
+&nbsp;<br/>
+edit /etc/host.conf<br/>
+nospoof on <br/>
+multi off<br/>
+<br/>
+remove the ssh-server &nbsp;<br/>
+(you will still have ssh terminal)<br/>
+yum erase opensshd-server<br/>
+&nbsp;<br/>
+5 Remove all other tty <br/>
+(use with care – in case of a crash console access will be disabled)<br/>
+<br/>
+edit /etc/securetty and remove all entries. <br/>
+edit /etc/systemd/logind.conf<br/>
+uncomment these lines (put in the number of tty that you require to start at boot)<br/>
+NAutoVTs=0 <br/>
+ReserveVT=0<br/>
+&nbsp;<br/>
+6 Umask settings<br/>
+<br/>
+edit /etc/profile, /etc/csh.cshrc, /etc/bashrc<br/>
+and change all the umask to 077<br/>
+&nbsp;<br/>
+7 Auditing<br/>
+edit /etc/rsyslog.conf<br/>
+Add after #Rules.<br/>
+<br/>
+auth.*,user.* &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/var/log/messages<br/>
+kern.* &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /var/log/kern.log<br/>
+daemon.* &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /var/log/daemon.log<br/>
+syslog.* &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/var/log/syslog<br/>
+<br/>
+edit /etc/rules.d/audit.rules <br/>
+lines will start with a hyphen <br/>
+<br/>
+<br/>
+#Records Events that Modify Date and Time Information<br/>
+-a always,exit -F arch=b64 -S adjtimex -S settimeofday -S stime -k time-change<br/>
+-a always,exit -F arch=b64 -S clock_settime -k time-change<br/>
+-w /etc/localtime -p wa -k time-change<br/>
+<br/>
+#Record Events that Modify User/Group Information<br/>
+-w /etc/group -p wa -k identity<br/>
+-w /etc/passwd -p wa -k identity<br/>
+-w /etc/gshadow -p wa -k identity<br/>
+-w /etc/shadow -p wa -k identity<br/>
+-w /etc/security/opasswd -p wa -k identity<br/>
+<br/>
+#Record Events that Modify the System’s Network Environment<br/>
+-a exit,always -F arch=b64 -S sethostname -S setdomainname -k system-locale<br/>
+-w /etc/issue -p wa -k system-locale<br/>
+-w /etc/issue.net -p wa -k system-locale<br/>
+-w /etc/hosts -p wa -k system-locale<br/>
+-w /etc/sysconfig/network -p wa -k system-locale<br/>
+<br/>
+#Record Events that Modify the System’s Mandatory Access Controls<br/>
+-w /etc/selinux/ -p wa -k MAC-policy<br/>
+<br/>
+#Record Attempts to Alter Logon and Logout Events<br/>
+-w /var/log/faillog -p wa -k logins<br/>
+-w /var/log/lastlog -p wa -k logins<br/>
+#Record Attempts to Alter Process and Session Initiation Information<br/>
+-w /var/run/utmp -p wa -k session<br/>
+-w /var/log/btmp -p wa -k session<br/>
+-w /var/log/wtmp -p wa -k session<br/>
+<br/>
+#Ensure auditd Collects Discretionary Access Control Permission Modification Events<br/>
+-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid&gt;=500 -F auid!=4294967295 -k perm_mod<br/>
+-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid&gt;=500 -F auid!=4294967295 -k perm_mod<br/>
+-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid&gt;=500 -F auid!=4294967295 -k perm_mod<br/>
+<br/>
+#Ensure auditd Collects Unauthorized Access Attempts to Files (unsuccessful)<br/>
+-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid&gt;=500 -F auid!=4294967295 -k access<br/>
+-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid&gt;=500 -F auid!=4294967295 -k access<br/>
+<br/>
+#Ensure auditd Collects Information on the Use of Privileged Commands<br/>
+<br/>
+#Ensure auditd Collects Information on Exporting to Media (successful)<br/>
+-a always,exit -F arch=b64 -S mount -F auid&gt;=500 -F auid!=4294967295 -k export<br/>
+<br/>
+#Ensure auditd Collects Files Deletion Events by User (successful and unsuccessful)<br/>
+-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid&gt;=500 -F auid!=4294967295 -k delete<br/>
+<br/>
+#Ensure auditd Collects System Administrator Actions<br/>
+-w /etc/sudoers -p wa -k actions<br/>
+<br/>
+#Ensure auditd Collects Information on Kernel Module Loading and Unloading<br/>
+-w /sbin/insmod -p x -k modules<br/>
+-w /sbin/rmmod -p x -k modules<br/>
+-w /sbin/modprobe -p x -k modules<br/>
+-a always,exit -F arch=b64 -S init_module -S delete_module -k modules<br/>
+<br/>
+<br/>
+#Make the auditd Configuration Immutable<br/>
+-e 2<br/>
+<br/>
+<br/>
+open terminal and run aureport<br/>
+<br/>
+<br/>
+8 Securing SU<br/>
+<br/>
+edit /etc/pam.d/su<br/>
+uncomment the line<br/>
+auth required pam_wheel.so use_uid<br/>
+<br/>
+restrict access to other services <br/>
+open the file and add in the second line below #%PAM-X.0<br/>
+auth requisite pam_deny.so<br/>
+&nbsp;<br/>
+edit /etc/sudoers<br/>
+edit the line after <br/>
+## The COMMANDS section may have other options added to it. <br/>
+## <br/>
+## Allow root to run any commands anywhere <br/>
+root &nbsp; &nbsp;ALL=(ALL) &nbsp; &nbsp;ALL<br/>
+to<br/>
+root &nbsp; &nbsp;$hostname=(ALL) &nbsp; ALL<br/>
+<br/>
+<br/>
+grant specific users sudo access<br/>
+$user $hostname=(ALL) $specific access<br/>
+<br/>
+Comment the line<br/>
+%wheel ALL=(ALL) ALL<br/>
+&nbsp;<br/>
+9 iptables config.<br/>
+<br/>
+disable firewalld and enable iptables<br/>
+<br/>
+systemctl disable firewalld.service<br/>
+systemctl enable iptables.service<br/>
+systemctl enable ip6tables.service<br/>
+&nbsp;<br/>
+edit /etc/sysconfig/iptables<br/>
+(Allow browser, and updates : http, https, UDP)<br/>
+&nbsp;<br/>
+*filter<br/>
+:INPUT DROP [0:0]<br/>
+:FORWARD DROP [0:0]<br/>
+:OUTPUT DROP [0:0]<br/>
+-A INPUT -j LOG<br/>
+-A INPUT -p igmp -j DROP<br/>
+-A INPUT -p ah -j DROP<br/>
+-A INPUT -p esp -j DROP<br/>
+-A INPUT -p sctp -j DROP<br/>
+-A INPUT -p icmp -j DROP<br/>
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT<br/>
+-A INPUT -m recent --rcheck --seconds 864000 --name portscan --rsource -j DROP<br/>
+-A INPUT -m state --state INVALID -j DROP<br/>
+-A INPUT -p tcp -m tcp ! --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -j DROP<br/>
+-A INPUT -f -j DROP<br/>
+-A INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,PSH,ACK,URG -j DROP<br/>
+-A INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP<br/>
+-A INPUT -j DROP<br/>
+-A FORWARD -j LOG<br/>
+-A FORWARD -p igmp -j DROP<br/>
+-A FORWARD -p ah -j DROP<br/>
+-A FORWARD -p esp -j DROP<br/>
+-A FORWARD -p sctp -j DROP<br/>
+-A FORWARD -p icmp -j DROP<br/>
+-A FORWARD -p udp -j DROP<br/>
+-A FORWARD -m recent --rcheck --seconds 864000 --name portscan --rsource -j DROP<br/>
+-A FORWARD -m state --state INVALID -j DROP<br/>
+-A FORWARD -j DROP<br/>
+-A OUTPUT -j LOG <br/>
+&nbsp;-A OUTPUT -p igmp -j DROP<br/>
+-A OUTPUT -p ah -j DROP<br/>
+-A OUTPUT -p esp -j DROP<br/>
+-A OUTPUT -p sctp -j DROP<br/>
+-A OUTPUT -p icmp -j DROP<br/>
+-A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT<br/>
+-A OUTPUT -p tcp -m tcp --dport 80 -m state --state NEW -j ACCEPT<br/>
+-A OUTPUT -p tcp -m tcp --dport 443 -m state --state NEW -j ACCEPT<br/>
+-A OUTPUT -p tcp -m tcp --dport 53 -m state --state NEW -j ACCEPT<br/>
+-A OUTPUT -p udp -m udp --dport 53 -m state --state NEW -j ACCEPT<br/>
+-A OUTPUT -m state --state INVALID -j DROP<br/>
+-A OUTPUT -j DROP <br/>
+COMMIT<br/>
+<br/>
+<br/>
+<br/>
+(if IPV6 has been disabled)<br/>
+*filter<br/>
+:INPUT DROP [0:0]<br/>
+:FORWARD DROP [0:0]<br/>
+:OUTPUT DROP [0:0]<br/>
+-A INPUT -j DROP<br/>
+-A FORWARD -j DROP<br/>
+-A OUTPUT -j DROP<br/>
+COMMIT<br/>
+&nbsp;<br/>
+10 Secure fstab<br/>
+<br/>
+edit /etc/fstab <br/>
+add after defaults separated by a comma, nosuid,noexec,nodev against /tmp,/var/log, /usr/local, /boot<br/>
+add after defaults separated by a comma, nosuid,nodev against /home, /var, /opt (if you plan on installing third party software) <br/>
+&nbsp;<br/>
+11 Services that can be removed<br/>
+<br/>
+systemctl disable bluetooth.service (if you do not use bluetooth)<br/>
+systemctl disable lvm2-monitor.service (if you do not use LVM)<br/>
+systemctl disable nfs-lock.service (if you do not use sharing)<br/>
+systemctl disable avahi-daemon.service<br/>
+systemctl disable ModemManager.service (if you do not use dongle/modem etc..)<br/>
+<br/>
+reboot the system.</body></html>

