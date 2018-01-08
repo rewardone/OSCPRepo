@@ -18,6 +18,11 @@
 ## You are free to modify and/or distribute this script as you wish.  I only ask that you maintain original
 ## author attribution and not attempt to sell it or incorporate it into any commercial offering (as if it's 
 ## worth anything anyway :)
+##-------------------------------------------------------------------------------------------------------------
+## [TODO]
+## Something faster than DIRB (gobuster maybe?)
+## Deeper integration with OneTwoPunch/unicornscan
+##      ie: don't do the same thing multiple times and don't necessarily wait for nmap to finish
 ###############################################################################################################
 
 import subprocess
@@ -25,6 +30,8 @@ import multiprocessing
 from multiprocessing import Process, Queue
 import os
 import time 
+import errno
+
 
 def multProc(targetin, scanip, port):
     jobs = []
@@ -32,7 +39,6 @@ def multProc(targetin, scanip, port):
     jobs.append(p)
     p.start()
     return
-
 
 def dnsEnum(ip_address, port):
     print "INFO: Detected DNS on " + ip_address + ":" + port
@@ -44,9 +50,10 @@ def dnsEnum(ip_address, port):
 def httpEnum(ip_address, port):
     print "INFO: Detected http on " + ip_address + ":" + port
     print "INFO: Performing nmap web script scan for " + ip_address + ":" + port    
-    HTTPSCAN = "nmap -sV -Pn -vv -p %s --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-email-harvest,http-methods,http-method-tamper,http-passwd,http-robots.txt -oN /root/scripts/recon_enum/results/exam/%s_http.nmap %s" % (port, ip_address, ip_address)
+    userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
+    HTTPSCAN = "nmap -sV -Pn -vv -p %s --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oN /root/scripts/recon_enum/results/exam/http/%s_http.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCAN, shell=True)
-    DIRBUST = "./dirbust.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
+    DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
     NIKTOSCAN = "nikto -host %s -p %s > %s._nikto" % (ip_address, port, ip_address)
     return
@@ -54,9 +61,10 @@ def httpEnum(ip_address, port):
 def httpsEnum(ip_address, port):
     print "INFO: Detected https on " + ip_address + ":" + port
     print "INFO: Performing nmap web script scan for " + ip_address + ":" + port    
-    HTTPSCANS = "nmap -sV -Pn -vv -p %s --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-email-harvest,http-methods,http-method-tamper,http-passwd,http-robots.txt -oX /root/scripts/recon_enum/results/exam/%s_https.nmap %s" % (port, ip_address, ip_address)
+    userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
+    HTTPSCANS = "nmap -sV -Pn -vv -p %s --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oX /root/scripts/recon_enum/results/exam/http/%s_https.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCANS, shell=True)
-    DIRBUST = "./dirbust.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
+    DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
     NIKTOSCAN = "nikto -host %s -p %s > %s._nikto" % (ip_address, port, ip_address)
     return
@@ -64,7 +72,7 @@ def httpsEnum(ip_address, port):
 def mssqlEnum(ip_address, port):
     print "INFO: Detected MS-SQL on " + ip_address + ":" + port
     print "INFO: Performing nmap mssql script scan for " + ip_address + ":" + port    
-    MSSQLSCAN = "nmap -vv -sV -Pn -p %s --script=ms-sql-info,ms-sql-config,ms-sql-dump-hashes --script-args=mssql.instance-port=1433,smsql.username-sa,mssql.password-sa -oX results/exam/nmap/%s_mssql.xml %s" % (port, ip_address, ip_address)
+    MSSQLSCAN = "nmap -vv -sV -Pn -p %s --script=ms-sql-info,ms-sql-config,ms-sql-dump-hashes --script-args=mssql.instance-port=1433,smsql.username-sa,mssql.password-sa -oX /root/scripts/recon_enum/results/exam/sql/%s_mssql.xml %s" % (port, ip_address, ip_address)
     results = subprocess.check_output(MSSQLSCAN, shell=True)
 
 def sshEnum(ip_address, port):
@@ -98,18 +106,25 @@ def smbEnum(ip_address, port):
 
 def ftpEnum(ip_address, port):
     print "INFO: Detected ftp on " + ip_address + ":" + port
-    SCRIPT = "./ftprecon.py %s %s" % (ip_address, port)       
+    SCRIPT = "ftp/./ftprecon.py %s %s" % (ip_address, port)       
     subprocess.call(SCRIPT, shell=True)
     return
+    
+def oneTwoPunch():
+   ONETWOPUNCHSCAN = "./onetwopunch.sh"
+   subprocess.call(ONETWOPUNCHSCAN, shell=True)
 
 def nmapScan(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running general TCP/UDP nmap scans for " + ip_address
    serv_dict = {}
-   TCPSCAN = "nmap -vv -Pn -A -sC -sS -T 4 -p- -oN '/root/scripts/recon_enum/results/exam/%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
-   UDPSCAN = "nmap -vv -Pn -A -sC -sU -T 4 --top-ports 200 -oN '/root/scripts/recon_enum/results/exam/%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
+   TCPSCAN = "nmap -vv -Pn -A -sC -sS -T 4 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
+   UDPSCAN = "nmap -vv -Pn -A -sC -sU -T 4 --top-ports 200 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
+   #Scan will rarely finish, uncomment with caution
+   #UDPSCANALL = "nmap -vv -Pn -sU -T 5 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%sUall.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sUall_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
    results = subprocess.check_output(TCPSCAN, shell=True)
    udpresults = subprocess.check_output(UDPSCAN, shell=True)
+   #udpallresults = subprocess.check_output(UDPSCANALL, shell=True)
    lines = results.split("\n")
    for line in lines:
       ports = []
@@ -169,6 +184,39 @@ def nmapScan(ip_address):
       
    print "INFO: TCP/UDP Nmap scans completed for " + ip_address 
    return
+   
+#makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+#Compatible with Python >2.5, but there is a more advanced function for python 3.5
+def mkdir_p(path):
+   try:
+      os.makedirs(path)
+   except OSError as exc: #Python >2.5
+      if exc.errno == errno.EEXIST and os.path.isdir(path):
+         pass
+      else:
+         raise
+
+#Create the directories that are currently hardcoded in the script
+def createDirectories():
+   scriptsToRun = "nmap","ftp","ssh","http","sql","smb","smtp"
+   for path in scriptsToRun:
+      mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
+
+#Symlink needed directories into /usr/share/wordlists
+#This functionality for a distro like Kali
+#Wordlists folder used for ftp and ssh recon scripts
+def mksymlink():
+   dirsToLink = "/root/lists","/root/lists/SecLists-master"
+   dst = "/usr/share/wordlists"
+   for path in dirsToLink:
+      tmp = path.split("/")
+      try:
+         os.symlink(path, dst + "/" + tmp[-1])
+      except OSError as exc:
+         if exc.errno == errno.EEXIST:
+            pass
+         else:
+            raise
 
 # grab the discover scan results and start scanning up hosts
 print "############################################################"
@@ -176,13 +224,22 @@ print "####                      RECON SCAN                    ####"
 print "####            A multi-process service scanner         ####"
 print "####        http, ftp, dns, ssh, snmp, smtp, ms-sql     ####"
 print "############################################################"
- 
+print "#############Don't forget to start your TCPDUMP#############"
+print "############################################################"
+
+
+#The script creates the directories that the results will be placed in
+#User needs to place the targets in the results/exam/targets.txt file
 if __name__=='__main__':
    f = open('results/exam/targets.txt', 'r') # CHANGE THIS!! grab the alive hosts from the discovery scan for enum
-					     # Also check Nmap user-agent string, should be set to Firefox
+					     # Also check Nmap user-agent string, should be set to Firefox or other
+   createDirectories()
+   mksymlink()
+#   oneTwoPunch()
    for scanip in f:
        jobs = []
        p = multiprocessing.Process(target=nmapScan, args=(scanip,))
        jobs.append(p)
        p.start()
+   oneTwoPunch()
    f.close() 

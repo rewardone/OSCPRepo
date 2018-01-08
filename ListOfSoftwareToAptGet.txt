@@ -1,0 +1,31 @@
+#Attempt to list changes that are needed for the tools to work as I need them to. 
+#From a base Kali installation, here are my notes.
+
+
+Not installed by default:
+
+Shutter
+ftp (unless another client exists)
+nmap: http-email-harvet.nse
+Impacket: git clone https://github.com/CoreSecurity/impacket.git
+
+Preferences to change:
+Gedit:
+	Show line numbers
+Nautilus:
+	Show option to create symbolic links
+
+Files to create:
+
+Aliases to create (if desired):
+alias ls='ls -alh'
+
+Files to change (if desired):
+reconscan.py: File location for targets
+reconscan.py: File location for nmap result outputs
+SSHrecon.py: File location for user/password lists
+FTPrecon.py: File location for user/password lists
+
+
+TODO:
+launch new window with tcpdump
