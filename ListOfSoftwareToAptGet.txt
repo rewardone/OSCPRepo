@@ -29,3 +29,4 @@ FTPrecon.py: File location for user/password lists
 
 TODO:
 launch new window with tcpdump
+John, separate cracking configurations (optimized per algorithm)
