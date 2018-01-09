@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Knock: Subdomain Scan</title>
+</head><body><a href="https://github.com/guelfoweb/knock">https://github.com/guelfoweb/knock</a>&nbsp;<br/>
+<br/>
+Knock Subdomain Scan v.4.1.1<br/>
+Knockpy is a python tool designed to enumerate subdomains on a target domain through a wordlist. It is designed to scan for DNS zone transfer and to try to bypass the wildcard DNS record automatically if it is enabled. Now knockpy supports queries to VirusTotal subdomains, you can setting the API_KEY within the config.json file.<br/>
+<br/>
+Very simply<br/>
+<br/>
+$ knockpy domain.com<br/>
+https://user-images.githubusercontent.com/41558/29026398-dcd76fba-7b7b-11e7-9aa8-344637522c76.png<br/>
+Export full report in JSON<br/>
+<br/>
+If you want to save full log like this one just type:<br/>
+<br/>
+$ knockpy domain.com --json<br/>
+Install<br/>
+Prerequisites<br/>
+<br/>
+Python 2.7.6<br/>
+Dependencies<br/>
+<br/>
+Dnspython<br/>
+$ sudo apt-get install python-dnspython<br/>
+Installing<br/>
+<br/>
+$ git clone https://github.com/guelfoweb/knock.git<br/>
+<br/>
+$ cd knock<br/>
+<br/>
+$ nano knockpy/config.json &lt;- set your virustotal API_KEY<br/>
+<br/>
+$ sudo python setup.py install<br/>
+Note that it's recommended to use Google DNS: 8.8.8.8 and 8.8.4.4<br/>
+<br/>
+Knockpy arguments<br/>
+$ knockpy -h<br/>
+usage: knockpy [-h] [-v] [-w WORDLIST] [-r] [-c] [-j] domain<br/>
+<br/>
+___________________________________________<br/>
+<br/>
+knock subdomain scan<br/>
+knockpy v.4.1<br/>
+Author: Gianni 'guelfoweb' Amato<br/>
+Github: https://github.com/guelfoweb/knock<br/>
+___________________________________________<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; domain &nbsp; &nbsp; &nbsp; &nbsp; target to scan, like domain.com<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -v, --version &nbsp; show program's version number and exit<br/>
+&nbsp; -w WORDLIST &nbsp; &nbsp; specific path to wordlist file<br/>
+&nbsp; -r, --resolve &nbsp; resolve ip or domain name<br/>
+&nbsp; -c, --csv &nbsp; &nbsp; &nbsp; save output in csv<br/>
+&nbsp; -f, --csvfields add fields name to the first row of csv output file<br/>
+&nbsp; -j, --json &nbsp; &nbsp; &nbsp;export full report in JSON<br/>
+<br/>
+example:<br/>
+&nbsp; knockpy domain.com<br/>
+&nbsp; knockpy domain.com -w wordlist.txt<br/>
+&nbsp; knockpy -r domain.com or IP<br/>
+&nbsp; knockpy -c domain.com<br/>
+&nbsp; knockpy -j domain.com<br/>
+For virustotal subdomains support you can setting your API_KEY in the config.json file.<br/>
+<br/>
+Example<br/>
+Subdomain scan with internal wordlist<br/>
+<br/>
+$ knockpy domain.com<br/>
+Subdomain scan with external wordlist<br/>
+<br/>
+$ knockpy domain.com -w wordlist.txt<br/>
+Resolve domain name and get response headers<br/>
+<br/>
+$ knockpy -r domain.com [or IP]<br/>
++ checking for virustotal subdomains: YES<br/>
+[<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "partnerissuetracker.corp.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "issuetracker.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "r5---sn-ogueln7k.c.pack.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "cse.google.com",<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .......too long.......<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "612.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "765.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "973.talkgadget.google.com"<br/>
+]<br/>
++ checking for wildcard: NO<br/>
++ checking for zonetransfer: NO<br/>
++ resolving target: YES<br/>
+{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "zonetransfer": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "enabled": false,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "list": []<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; },<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "target": "google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "hostname": "google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "virustotal": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "partnerissuetracker.corp.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "issuetracker.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "r5---sn-ogueln7k.c.pack.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "cse.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "mt0.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "earth.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "clients1.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "pki.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "www.sites.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "appengine.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "fcmatch.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "dl.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "translate.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "feedproxy.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "hangouts.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "news.google.com",<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .......too long.......<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "100.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "services.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "301.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "857.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "600.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "992.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "93.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "storage.cloud.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "863.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "maps.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "661.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "325.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "sites.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "feedburner.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "support.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "code.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "562.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "190.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "58.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "612.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "765.talkgadget.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "973.talkgadget.google.com"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ],<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "alias": [],<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "wildcard": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "detected": {},<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "test_target": "eqskochdzapjbt.google.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "enabled": false,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "http_response": {}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; },<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "ipaddress": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "216.58.205.142"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ],<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "response_time": "0.0351989269257",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "http_response": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "status": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "reason": "Found",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "code": 302<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "http_headers": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "content-length": "256",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "location": "http://www.google.it/?gfe_rd=cr&amp;ei=60WIWdmnDILCXoKbgfgK",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "cache-control": "private",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "date": "Mon, 07 Aug 2017 10:50:19 GMT",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "referrer-policy": "no-referrer",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "content-type": "text/html; charset=UTF-8"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+}<br/>
+Save scan output in CSV<br/>
+<br/>
+$ knockpy -c domain.com<br/>
+Export full report in JSON<br/>
+<br/>
+$ knockpy -j domain.com<br/>
+Talk about<br/>
+Ethical Hacking and Penetration Testing Guide Book by Rafay Baloch.<br/>
+<br/>
+Knockpy comes pre-installed on the following security distributions for penetration test:<br/>
+<br/>
+BackBox Linux<br/>
+PentestBox for Windows<br/>
+Buscador Investigative Operating System<br/>
+Other<br/>
+This tool is currently maintained by Gianni 'guelfoweb' Amato, who can be contacted at guelfoweb@gmail.com or twitter @guelfoweb. Suggestions and criticism are welcome.<br/>
+<br/>
+Sponsored by Security Side</body></html>

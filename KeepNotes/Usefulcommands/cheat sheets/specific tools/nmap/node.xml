@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>duplicate_of</key><string>2a4e8e84-8dca-4dda-ad74-3b6b5322520f</string>
+  <key>nodeid</key><string>53232da7-58cb-403f-8aaf-b6397b880d89</string>
+  <key>modified_time</key><integer>1512484193</integer>
+  <key>expanded2</key><true/>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1509551111</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>NMAP</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>2</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

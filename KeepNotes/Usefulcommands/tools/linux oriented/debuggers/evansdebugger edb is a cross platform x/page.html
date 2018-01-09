@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>EvansDebugger: EDB is a cross platform x86/x86-64 debugger</title>
+</head><body><a href="https://github.com/eteran/edb-debugger">https://github.com/eteran/edb-debugger</a>&nbsp;<br/>
+<br/>
+edb is a cross platform x86/x86-64 debugger. It was inspired by Ollydbg, but aims to function on x86 and x86-64 as well as multiple OS's. Linux is the only officially supported platform at the moment, but FreeBSD, OpenBSD, OSX and Windows ports are underway with varying degrees of functionality.<br/>
+<br/>
+Screenshot<br/>
+<br/>
+edb is available under the GPL 2 license, see the COPYING for details.<br/>
+<br/>
+NOTE: This README now only covers the most essential documentation, for more complete documentation see the wiki<br/>
+<br/>
+Cloning<br/>
+When cloning the repo, please use git's --recursive flag to ensure that the sub-modules will be properly cloned and updated to the correct versions. Here is an example:<br/>
+<br/>
+git clone --recursive https://github.com/eteran/edb-debugger.git<br/>
+<br/>
+Compiling<br/>
+Compiling edb is generally quite simple. edb currently depends on the following packages:<br/>
+<br/>
+Dependency&#09;Version Required<br/>
+Qt&#09;&gt;= 4.6<br/>
+Boost (Headers Only)&#09;&gt;= 1.35<br/>
+Capstone&#09;&gt;= 3.0<br/>
+Graphviz&#09;&gt;= 2.38.0 (Optional)<br/>
+Many distributions already have packages that satisify these. The wiki contains examples for some popular distributions:<br/>
+<br/>
+https://github.com/eteran/edb-debugger/wiki/Compiling-(Fedora)<br/>
+https://github.com/eteran/edb-debugger/wiki/Compiling-(Ubuntu)<br/>
+https://github.com/eteran/edb-debugger/wiki/Compiling-(Debian)<br/>
+Once you have the necessary dependencies installed, compilation is done with cmake:<br/>
+<br/>
+CMake<br/>
+If you plan to just run edb out of the build directory, it's as simple as this:<br/>
+<br/>
+$ mkdir build<br/>
+$ cd build<br/>
+$ cmake ..<br/>
+$ make<br/>
+$ ./edb<br/>
+If you would like to properly install edb on the system for all users, it's only a little different:<br/>
+<br/>
+$ mkdir build<br/>
+$ cd build<br/>
+$ cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ ..<br/>
+$ make<br/>
+$ make install<br/>
+$ edb<br/>
+Installing<br/>
+Basic installation is simple, you may run<br/>
+<br/>
+$ make install<br/>
+In which case the plugins will be installed in /usr/local/lib/edb and the binaries will be installed in /usr/local/bin/.</body></html>

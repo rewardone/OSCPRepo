@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Home</title>
+</head><body><a href="http://foofus.net/jmk/medusa/medusa-smbnt.html">http://foofus.net/jmk/medusa/medusa-smbnt.html</a>&nbsp;<br/>
+<br/>
+Medusa Parallel Network Login Auditor :: SMBNT<br/>
+JoMo-Kun / jmk "AT" foofus "DOT" net<br/>
+The SMBNT module tests accounts against the Microsoft netbios-ssn (TCP/139) and microsoft-ds (TCP/445) services. Besides testing normal passwords, this module allows Medusa to directly test NTLM hashes against a Windows host. This may be useful for an auditor who has aquired a sam._ or pwdump file and would like to quickly determine which are valid entries.<br/>
+<br/>
+Several "-m 'METHOD:VALUE'" options can be used with this module. The following are valid methods: AUTH, GROUP, GROUP_OTHER, PASS and NETBIOS. The following values are useful for these methods: <br/>
+<br/>
+Method&#09;Value&#09;Description<br/>
+AUTH&#09;LM&#09;Force LMv1 authentication. Since LM hashes don't store character case information, this could potentially be used to improve our ability to identify more complex passwords. For example, if the user has a password of "paSsWoRD", the only way to determine that via NTLM is to submit a value of "paSsWoRD". With LM we can simply send "password". It may also be possible to modify Samba to only do LM, so that whole mixed-case password thing can be ignored.<br/>
+<br/>
+Unfortunately, LM authentication is not without its problems. If a password attempt is reported as failed, it could mean one of at least three different things:<br/>
+<br/>
+* The password is indeed wrong.<br/>
+* No LM hash is stored for that account.<br/>
+* The GPO Network Security: LAN Manager authentication level is set as one of the following:<br/>
+- Send NTLMv2 response only\refuse LM (Level 4)<br/>
+- Send NTLMv2 response only\refuse LM &amp; NTLM (Level 5)<br/>
+<br/>
+In both of the two later cases, the password may be correct, but we won't know it. I've found no remote and anonymous way of determining the LAN Manager authentication level. My assumption was that it'd be revealed during the protocol negotiation, but that doesn't seem to be the case.<br/>
+NTLM*&#09;The module will send only a NTLMv1 response. This method is the most tested option and the current default. It should work in the majority of cases, with the notable exception of when the GPO Network Security: LAN Manager authentication level is set to "Send NTLMv2 response only\refuse LM &amp; NTLM (Level 5)".<br/>
+LMv2&#09;This option leverages the LMv2 response algorithm. The LMv2 response is used to provide pass-through authentication compatibility with older servers. The response is based on the NTLM password hash and is exactly 24 bytes. It appears that this method works against the majority of Microsoft Windows operating systems (e.g. NT 4, 2000, 2003, XP, Vista and 2008). It will likely become the default method in future releases.<br/>
+NTLMv2&#09;This option enforces the use of the NTLMv2 response algorithm. Support for this algorithm was added with Microsoft Windows with NT 4.0 SP4. It should be noted that the method doesn't currently work with Microsoft Vista. While NTLMv2 authentication with Samba and Windows 2003 functions as expected, Vista systems respond with the oh-so-helpful "INVALID_PARAMETER" error code. LMv2 authentication is recommended in cases where LM and NTLM are refused.<br/>
+GROUP&#09;LOCAL*&#09;Check local account.<br/>
+DOMAIN&#09;Check credentials against this hosts primary domain controller via this host.<br/>
+BOTH&#09;Check both. This leaves the workgroup field set blank and then attempts to check the credentials against the host. If the account does not exist locally on the host being tested, that host then queries its domain controller.<br/>
+GROUP_OTHER&#09;[user specified]&#09;Configure arbitrary domain for host to authenticate against.<br/>
+PASS&#09;PASSWORD*&#09;Use a normal password.<br/>
+HASH&#09;Use a LM or NTLM hash rather than a password.<br/>
+MACHINE&#09;Use the Machine's NetBIOS name as the password.<br/>
+NETBIOS&#09;&#09;Force NetBIOS Mode (Disable Native Win2000 Mode)<br/>
+&nbsp; (*) Default value<br/>
+<br/>
+The following examples demonstrate several uses of the SMBNT module:<br/>
+<br/>
+The default behavior is to test NATIVE Win2000 mode via TCP/445. If this connection fails, NETBIOS mode is checked on TCP/139. The following shows how to force the module into NETBIOS module.<br/>
+<br/>
+% medusa -h 192.168.0.20 -u administrator -e ns -M smbnt -m NETBIOS -n 139 <br/>
+Medusa v1.0-rc1 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks<br/>
+<br/>
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: &nbsp;(1/2)<br/>
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: administrator (1/1) Password: administrator (2/2)<br/>
+The following example shows how to force to module to set a domain value other than either "localhost" or the system's default domain. This can be useful when testing trust relationships between domains.<br/>
+<br/>
+% medusa -h 192.168.0.20 -u foo -p bar -M smbnt -m GROUP_OTHER:FOODOM<br/>
+Medusa v1.0-rc1 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks <br/>
+<br/>
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/1) User: foo (1/1) Password: bar (1/1)<br/>
+This example demonstrates one way that PwDump output could be used with Medusa. Each user and their respective NTLM hash within the pwdump.txt file will be tested against the hosts listed in hosts.txt.<br/>
+<br/>
+% medusa -H hosts.txt -C pwdump.txt -M smbnt -m PASS:HASH<br/>
+<br/>
+Medusa v1.0-rc1 [http://www.foofus.net] (C) JoMo-Kun / Foofus Networks<br/>
+<br/>
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/10) User: Administrator (1/3) Password: 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: (1/1)<br/>
+ACCOUNT FOUND: [smbnt] Host: 192.168.0.20 User: Administrator Password: 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: [SUCCESS]<br/>
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/10) User: bar (2/3) Password: 49D58563113416EBAAD3B435B51404EE:AA3AFE73B6E0C2D87B3A428BF696AE71::: (1/1)<br/>
+ACCOUNT CHECK: [smbnt] Host: 192.168.0.20 (1/10) User: foo (3/3) Password: 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: (1/1)<br/>
+ACCOUNT FOUND: [smbnt] Host: 192.168.0.20 User: foo Password: 92D887C8010492C2944E2DF489A880E4:7A2EDE4F51BC5A03984C6BA2C239CF63::: [SUCCESS]<br/>
+&lt; snip &gt;<br/>
+It should be noted that once a valid hash is located, it is often not necessary to "crack" the password in order to use it. Using a modified SAMBA client, the hash can just be "passed" directly. See this page for a SAMBA patch and several examples.<br/>
+Be careful of mass domain account lockout with this module. For example, assume you are checking several accounts against many domain workstations. If you are using either the "GROUP:DOMAIN" or the "GROUP:BOTH" option and these accounts do not exist locally on the workstations, each workstation will in turn check their respective domain controller. This could cause a bunch of lockouts. Of course, it'd look like the workstations, not you, were doing it. ;)<br/>
+<br/>
+FYI, this code is unable to test accounts on default XP hosts which are not part of a domain and do not have normal file sharing enabled. Default XP does not allow shares and returns STATUS_LOGON_FAILED for both valid and invalid credentials. XP with simple sharing enabled returns SUCCESS for both valid and invalid credentials. If anyone knows a way to test in these configurations...<br/>
+<br/>
+The following is a basic speed test performed against several virtual machines. The test utilized a 5000 entry dictionary with the correct value at line 4998. The cell value reflects the observed average number of password attempts per second. <br/>
+<br/>
+TARGET OS/AUTH LEVEL&#09;2000&#09;XP&#09;2003&#09;Vista&#09;2008<br/>
+LM&#09;345.1 t/s&#09;796.1 t/s&#09;125.6 t/s&#09;655 t/s*&#09;379.3 t/s*<br/>
+NTLM&#09;357.1 t/s&#09;821.0 t/s&#09;140.6 t/s&#09;546.2 t/s&#09;373.2 t/s<br/>
+LMv2&#09;338.2 t/s&#09;801.1 t/s&#09;164.5 t/s&#09;637.3 t/s&#09;371.9 t/s<br/>
+NTLMv2&#09;364.1 t/s&#09;812.2 t/s&#09;165.4 t/s&#09;-&#09;-<br/>
+<br/>
+* Did not find password in LM mode, since no LM hash is stored in default install of Vista/2008.<br/>
+- Authentication failed with "INVALID_PARAMETER" response.<br/>
+<br/>
+A potential timing-based attack was also observed during testing with 2008. It takes roughly 13 seconds to check 5000 passwords against a valid account. It takes only about 6 seconds to test the same number against a non-existant account. </body></html>

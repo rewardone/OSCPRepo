@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Other</title>
+</head><body>• <br/>
+• Dialup/VPN Passwords (2000/XP/Vista/2003): Dialup/VPN passwords are stored as LSA secrets under HKEY_LOCAL_MACHINE\Security\Policy\Secrets. This key contains multiple sub-keys, and the sub-keys which store the dialup passwords contains one of the following strings: RasDefaultCredentials and RasDialParams.<br/>
+• This key is not accessible from RegEdit and other tools by default, but you can use one of the following methods to access this key:<br/>
+• <br/>
+• Use at command to run RegEdit.exe as SYSTEM user: (doesn't work under Vista)<br/>
+• For Example: <br/>
+• at 16:14 /interactive regedit.exe<br/>
+• Change the permission of entire Security key. If you do that, it's recommeneded to return the permissions back to the original after you finish.<br/>
+<br/>
+• <br/>
+• Google Talk: All account settings, including the encrypted passwords, are stored in the Registry under HKEY_CURRENT_USER\Software\Google\Google Talk\Accounts\[Account Name]<br/>
+• <br/>
+• <br/>
+• Google Desktop: Email passwords are stored in the Registry under HKEY_CURRENT_USER\Software\Google\Google Desktop\Mailboxes\[Account Name]<br/>
+• <br/>
+• ICQ Lite 4.x/5.x/2003: The passwords are stored in the Registry, under HKEY_CURRENT_USER\Software\Mirabilis\ICQ\NewOwners\[ICQ Number] (MainLocation value)<br/>
+• <br/>
+• <br/>
+• ICQ 6.x: The password hash is stored in [Windows Profile]\Application Data\ICQ\[User Name]\Owner.mdb (Access Database) (The password hash cannot be recovered back to the original password)<br/>
+• <br/>
+• <br/>
+• Digsby: The main password of Digsby is stored in [Windows Profile]\Application Data\Digsby\digsby.dat All other passwords are stored in Digsby servers.<br/>
+• <br/>
+• <br/>
+• PaltalkScene: The passwords are stored in the Registry, under HKEY_CURRENT_USER\Software\Paltalk\[Account Name].</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Staekka: Extending Metasploit, TTY shell and more</string>
+  <key>nodeid</key><string>bc574351-c721-4ead-a9d6-2e2f75de0760</string>
+  <key>modified_time</key><integer>1515507914</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515507876</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

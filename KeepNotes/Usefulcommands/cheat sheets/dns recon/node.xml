@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>DNS Recon</string>
   <key>nodeid</key><string>344cbe63-d880-4c8b-a307-fd4ed5fb00f9</string>
   <key>modified_time</key><integer>1513270101</integer>

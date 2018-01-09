@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>80a2dfd7-43af-4916-be0e-2b9ec293d642</string>
+  <key>nodeid</key><string>42fec479-60e0-4e67-af60-f4b827f0c7fa</string>
+  <key>modified_time</key><integer>1512416214</integer>
+  <key>expanded2</key><true/>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1512416204</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>Shell Code Sites</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>10</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

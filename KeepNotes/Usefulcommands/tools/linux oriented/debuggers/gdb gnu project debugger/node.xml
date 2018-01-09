@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>GDB: GNU Project Debugger</string>
+  <key>nodeid</key><string>d50aa167-1dd0-4b9c-b5ca-d7252a5da677</string>
+  <key>modified_time</key><integer>1515510602</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515510564</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

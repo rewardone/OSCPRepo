@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>AmazonBucketFinder: Check if bucket names exist in Amazon's S3 system</title>
+</head><body><a href="https://digi.ninja/projects/bucket_finder.php">https://digi.ninja/projects/bucket_finder.php</a>&nbsp;- Amazon S3 bucket brute finder<br/>
+<br/>
+Bucket Finder<br/>
+<br/>
+This project goes alongside my blog post <a href="https://digi.ninja/blog/whats_in_amazons_buckets.php">Whats In Amazon's Buckets</a>, read through that for more information on what is going on behind the scenes.<br/>
+<br/>
+This is a fairly simple tool to run, all it requires is a wordlist and it will go off and check each word to see if that bucket name exists in the Amazon's S3 system. Any that it finds it will check to see if the bucket is public, private or a redirect.<br/>
+<br/>
+Public buckets are checked for directory indexing being enabled, if it is then all files listed will be checked using HEAD to see if they are public or private. Redirects are followed and the final destination checked. All this is reported on so you can later go through and analyse what has been found.<br/>
+<br/>
+Installation<br/>
+I don't think it needs anything more than the built in modules so you shouldn't need to install any gems. Just grab the file, make it executable and run it.<br/>
+<br/>
+I've tested it in Ruby 1.8.7 and 1.9.1 so there should be no problems with versions.<br/>
+<br/>
+Usage<br/>
+Basic usage is simple, just start it with a wordlist:<br/>
+<br/>
+./bucket_finder.rb my_words<br/>
+and it will go off and do your bidding.<br/>
+<br/>
+You can specify which region you want to run the initial check against by using the --region parameter:<br/>
+<br/>
+./bucket_finder.rb --region ie my_words<br/>
+The script will follow all redirects anyway so even if left at default, US Standard, everything will be found that can be found but if most of the buckets you are finding are in a different region then you'll be doing a lot of redirects so doubling your network traffic.<br/>
+<br/>
+You can also specify the --download option to download all public files found. Be careful with this as there are a lot of large files out there. I'd personally do the general search then only use this option with a select subset of bucket names:<br/>
+<br/>
+./bucket_finder.rb --download --region ie my_words<br/>
+The files are downloaded into a folder with the bucket name and then the appropriate structure from the bucket.<br/>
+<br/>
+As some people are having trouble piping the output to files or other apps I've added a logging option to send all output to a file. To use this just use the --log-file parameter:<br/>
+<br/>
+./bucket_finder.rb --log-file bucket.out my_words<br/>
+<br/>
+Download<br/>
+<a href="https://digi.ninja/files/bucket_finder_1.0.tar.bz2">Download Bucket Finder 1.0</a><br/>
+<a href="https://digi.ninja/files/bucket_finder_1.1.tar.bz2">Download Bucket Finder 1.1</a><br/>
+</body></html>

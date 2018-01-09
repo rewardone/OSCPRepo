@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Subbrute: DNS meta-query spider enumerates DNS records and subdomains</title>
+</head><body><a href="https://github.com/TheRook/subbrute">https://github.com/TheRook/subbrute</a>&nbsp;<br/>
+<br/>
+subdomain-bruteforcer (SubBrute)<br/>
+SubBrute is a community driven project with the goal of creating the fastest, and most accurate subdomain enumeration tool. Some of the magic behind SubBrute is that it uses open resolvers as a kind of proxy to circumvent DNS rate-limiting (https://www.us-cert.gov/ncas/alerts/TA13-088A). This design also provides a layer of anonymity, as SubBrute does not send traffic directly to the target's name servers.<br/>
+<br/>
+Whats new in v2.1?<br/>
+Better stablity. Better support for testing cloudflare domains.<br/>
+<br/>
+Thank you for the bug posts!<br/>
+<br/>
+Whats new in v1.2.1?<br/>
+The big news in this version is that SubBrute is now a recursive DNS-spider, and also a library, more on this later. SubBrute should be easy to use, so the interface should be intuitive (like nmap!), if you would like the interface to change, let us know. In this version we are opening up SubBrute's fast DNS resolution pipeline for any DNS record type. Additionally, SubBrute now has a feature to detect subdomains were their resolution is intentionally blocked, which sometimes happens when a subdomain is intended for for use on an internal network.<br/>
+<br/>
+SubBrute is now a DNS spider that recursively crawls enumerated DNS records. This feature boosted *.google.com from 123 to 162 subdomains. (Always enabled)<br/>
+--type enumerate an arbitrary record type (AAAA, CNAME, SOA, TXT, MX...)<br/>
+-s can now read subdomains from result files.<br/>
+New useage - The subdomains enumerated from previous scans can now be used as input to enumerate other DNS records. The following commands demonstrate this new functionality:<br/>
+&#09;./subbrute.py google.com -o google.names<br/>
+&#09;&#09;...162 subdomains found...<br/>
+<br/>
+&#09;./subbrute.py -s google.names google.com --type TXT<br/>
+&#09;&#09;google.com,"v=spf1 include:_spf.google.com ip4:216.73.93.70/31 ip4:216.73.93.72/31 ~all"<br/>
+&#09;&#09;adwords.google.com,"v=spf1 redirect=google.com"<br/>
+&#09;&#09;...<br/>
+<br/>
+&#09;./subbrute.py -s google.names google.com --type CNAME<br/>
+&#09;&#09;blog.google.com,www.blogger.com,blogger.l.google.com<br/>
+&#09;&#09;groups.google.com,groups.l.google.com<br/>
+&#09;&#09;...<br/>
+SubBrute is now a subdomain enumeration library with a python interface: subbrute.run() Do you want to use SubBrute in your python projects? Consider the following:<br/>
+&#09;import subbrute<br/>
+<br/>
+&#09;for d in subbrute.run("google.com"):<br/>
+&#09;&#09;print d <br/>
+Feedback welcome.<br/>
+<br/>
+Whats new in v1.1?<br/>
+This version merges pull requests from the community; changes from JordanMilne, KxCode and rc0r is in this release. In SubBrute 1.1 we fixed bugs, improved accuracy, and efficiency. As requested, this project is now GPLv3.<br/>
+<br/>
+Accuracy and better wildcard detection:<br/>
+<br/>
+A new filter that can pickup geolocation aware wildcards.<br/>
+Filter misbehaving nameservers<br/>
+Faster:<br/>
+<br/>
+More than 2,000 high quality nameservers were added to resolvers.txt, these servers will resolve multiple queries in under 1 sec.<br/>
+Nameservers are verified when they are needed. A seperate thread is responsible creating a feed of nameservers, and corresponding wildcard blacklist.<br/>
+New output:<br/>
+<br/>
+-a will list all addresses associated with a subdomain.<br/>
+-v debug output, to help developers/hackers debug subbrute.<br/>
+-o output results to file.<br/>
+More Information<br/>
+names.txt contains 101,010 subdomains. subs_small.txt was stolen from fierce2 which contains 1896 subdomains. If you find more subdomains to add, open a bug report or pull request and I'll be happy to add them.<br/>
+<br/>
+No install required for Windows, just cd into the 'windows' folder:<br/>
+<br/>
+subbrute.exe google.com<br/>
+Easy to install: You just need http://www.dnspython.org/ and python2.7 or python3. This tool should work under any operating system: bsd, osx, windows, linux...<br/>
+<br/>
+(On a side note giving a makefile root always bothers me, it would be a great way to install a backdoor...)<br/>
+<br/>
+Under Ubuntu/Debian all you need is:<br/>
+<br/>
+sudo apt-get install python-dnspython<br/>
+On other operating systems you may have to install dnspython manually:<br/>
+<br/>
+http://www.dnspython.org/<br/>
+<br/>
+Easy to use:<br/>
+<br/>
+./subbrute.py google.com<br/>
+Tests multiple domains:<br/>
+<br/>
+./subbrute.py google.com gmail.com blogger.com<br/>
+or a newline delimited list of domains:<br/>
+<br/>
+./subbrute.py -t list.txt<br/>
+Also keep in mind that subdomains can have subdomains (example: _xmpp-server._tcp.gmail.com):<br/>
+<br/>
+./subbrute.py gmail.com &gt; gmail.out<br/>
+<br/>
+./subbrute.py -t gmail.out<br/>
+<br/>
+Cheers!</body></html>
