@@ -3,6 +3,8 @@
 ###############################################################################################################
 ## [Title]: reconscan.py -- a recon/enumeration script
 ## [Author]: Mike Czumak (T_v3rn1x) -- @SecuritySift
+## [Edits]: Reward1
+## [Credit]: superkojiman -- OneTwoPunch
 ##-------------------------------------------------------------------------------------------------------------
 ## [Details]: 
 ## This script is intended to be executed remotely against a list of IPs to enumerate discovered services such 
@@ -21,8 +23,11 @@
 ##-------------------------------------------------------------------------------------------------------------
 ## [TODO]
 ## Something faster than DIRB (gobuster maybe?)
-## Deeper integration with OneTwoPunch/unicornscan
-##      ie: don't do the same thing multiple times and don't necessarily wait for nmap to finish
+## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
+## 
+## [THOUGHTS]
+## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
+## open ports discovered. Probably better with one scan? 
 ###############################################################################################################
 
 import subprocess
@@ -105,14 +110,13 @@ def smbEnum(ip_address, port):
     return
 
 def ftpEnum(ip_address, port):
+    #EDIT FTPRECON WITH USERNAME/PASSWORD LISTS
     print "INFO: Detected ftp on " + ip_address + ":" + port
+    #FTPRECON in subdirectory in case ftp and ssh are present, hydra will have
+    #separate hydra.restore files
     SCRIPT = "ftp/./ftprecon.py %s %s" % (ip_address, port)       
     subprocess.call(SCRIPT, shell=True)
     return
-    
-def oneTwoPunch():
-   ONETWOPUNCHSCAN = "./onetwopunch.sh"
-   subprocess.call(ONETWOPUNCHSCAN, shell=True)
 
 def nmapScan(ip_address):
    ip_address = ip_address.strip()
@@ -184,6 +188,93 @@ def nmapScan(ip_address):
       
    print "INFO: TCP/UDP Nmap scans completed for " + ip_address 
    return
+
+#Be sure to change the interface if needed
+#-mT/-mU TCP/UDP respectively, %s:a is IP:a or IP:all ports
+def unicornScan(ip_address):
+   ip_address = ip_address.strip()
+   print "INFO: Running general TCP/UDP unicorn scans for " + ip_address
+   TCPSCAN = "unicornscan -i eth0 -mT %s:a -l /root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt" % (ip_address, ip_address)
+   UDPSCAN = "unicornscan -i eth0 -mU %s:a -l /root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt" % (ip_address, ip_address)
+   subprocess.check_output(TCPSCAN, shell=True)
+   subprocess.check_output(UDPSCAN, shell=True)
+   tcpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
+   udpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
+   tcpPorts = subprocess.check_output(tcpPorts, shell=True).split("\n")
+   udpPorts = subprocess.check_output(udpPorts, shell=True).split("\n")
+   print "INFO: TCP ports %s" % tcpPorts
+   print "INFO: UDP ports %s" % udpPorts
+   #pass to nmap for versioning
+   for port in tcpPorts: #the last element in the list is blank
+      if port != "":
+         print("TCP: " + port)
+         uniNmapTCP = "nmap -vv -Pn -A -sC -sS -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%s_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
+         lines = subprocess.check_output(uniNmapTCP, shell=True).split("\n")
+         for line in lines:
+            line = line.strip()
+            #I don't think this is necessary because we are only feeding nmap open ports
+            #as discovered by unicornscan
+            if ("tcp" in line) and ("open" in line) and not ("Discovered" in line): 
+               while "  " in line:
+                  line = line.replace("  ", " ");
+               linesplit= line.split(" ")
+               service = linesplit[2] # grab the service name
+               port = line.split(" ")[0] # grab the port/proto
+               port = port.split("/")[0]
+               if ("http" in service):
+                  multProc(httpEnum, ip_address, port)
+               elif ("ssh/http" in service) or ("https" in service):
+                  multProc(httpsEnum, ip_address, port)
+               elif ("ssh" in service):
+                  multProc(sshEnum, ip_address, port)
+               elif ("smtp" in service):
+                  multProc(smtpEnum, ip_address, port)
+               elif ("snmp" in service):
+                  multProc(snmpEnum, ip_address, port)
+               elif ("domain" in service):
+                  multProc(dnsEnum, ip_address, port)
+               elif ("ftp" in service):
+                  multProc(ftpEnum, ip_address, port)
+               elif ("microsoft-ds" in service):
+                  multProc(smbEnum, ip_address, port)
+               elif ("ms-sql" in service):
+                  multProc(httpEnum, ip_address, port)            
+            
+   for port in udpPorts: #the last element in the list is blank
+      if port != "":
+         print("UDP: " + port)
+         uniNmapUDP = "nmap -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
+         lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
+         for line in lines:
+            line = line.strip()
+            #I don't think this is necessary because we are only feeding nmap open ports
+            #as discovered by unicornscan
+            if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
+               while "  " in line:
+                  line = line.replace("  ", " ");
+               linesplit= line.split(" ")
+               service = linesplit[2] # grab the service name
+               port = line.split(" ")[0] # grab the port/proto
+               port = port.split("/")[0]
+               if ("http" in service):
+                  multProc(httpEnum, ip_address, port)
+               elif ("ssh/http" in service) or ("https" in service):
+                  multProc(httpsEnum, ip_address, port)
+               elif ("ssh" in service):
+                  multProc(sshEnum, ip_address, port)
+               elif ("smtp" in service):
+                  multProc(smtpEnum, ip_address, port)
+               elif ("snmp" in service):
+                  multProc(snmpEnum, ip_address, port)
+               elif ("domain" in service):
+                  multProc(dnsEnum, ip_address, port)
+               elif ("ftp" in service):
+                  multProc(ftpEnum, ip_address, port)
+               elif ("microsoft-ds" in service):
+                  multProc(smbEnum, ip_address, port)
+               elif ("ms-sql" in service):
+                  multProc(httpEnum, ip_address, port)
+
    
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5
@@ -198,7 +289,7 @@ def mkdir_p(path):
 
 #Create the directories that are currently hardcoded in the script
 def createDirectories():
-   scriptsToRun = "nmap","ftp","ssh","http","sql","smb","smtp"
+   scriptsToRun = "nmap","ftp","ssh","http","sql","smb","smtp","unicorn"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
 
@@ -235,11 +326,11 @@ if __name__=='__main__':
 					     # Also check Nmap user-agent string, should be set to Firefox or other
    createDirectories()
    mksymlink()
-#   oneTwoPunch()
    for scanip in f:
        jobs = []
-       p = multiprocessing.Process(target=nmapScan, args=(scanip,))
+       #Uncomment to maintain original nmap functionality. Comment out unicorn scan line.
+#       p = multiprocessing.Process(target=nmapScan, args=(scanip,))
+       p = multiprocessing.Process(target=unicornScan, args=(scanip,)) #comma needed to only pass single arg
        jobs.append(p)
        p.start()
-   oneTwoPunch()
    f.close() 
