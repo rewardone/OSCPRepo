@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WafW00f: Identify and fingerprint WAF products</title>
+</head><body><a href="https://github.com/EnableSecurity/wafw00f">https://github.com/EnableSecurity/wafw00f</a>&nbsp;<br/>
+<br/>
+<br/>
+WAFW00F<br/>
+WAFW00F identifies and fingerprints Web Application Firewall (WAF) products.<br/>
+<br/>
+How does it work?<br/>
+To do its magic, WAFW00F does the following:<br/>
+<br/>
+Sends a normal HTTP request and analyses the response; this identifies a number of WAF solutions<br/>
+If that is not successful, it sends a number of (potentially malicious) HTTP requests and uses simple logic to deduce which WAF it is<br/>
+If that is also not successful, it analyses the responses previously returned and uses another simple algorithm to guess if a WAF or security solution is actively responding to our attacks<br/>
+For further details, check out the source code on the main site, github.com/sandrogauci/wafw00f.<br/>
+<br/>
+What does it detect?<br/>
+It detects a number of WAFs. To view which WAFs it is able to detect run WAFW00F with the -l option. At the time of writing the output is as follows:<br/>
+<br/>
+$ wafw00f -l<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ^ &nbsp; &nbsp; ^<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _ &nbsp; __ &nbsp;_ &nbsp; ____ _ &nbsp; __ &nbsp;_ &nbsp; &nbsp;_ &nbsp; ____<br/>
+&nbsp; &nbsp; ///7/ /.' \ / __////7/ /,' \ ,' \ / __/<br/>
+&nbsp; &nbsp; | V V // o // _/ | V V // 0 // 0 // _/<br/>
+&nbsp; &nbsp; |_n_,'/_n_//_/ &nbsp; |_n_,' \_,' \_,'/_/<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...'<br/>
+<br/>
+&nbsp; &nbsp; WAFW00F - Web Application Firewall Detection Tool<br/>
+<br/>
+&nbsp; &nbsp; By Sandro Gauci &amp;&amp; Wendel G. Henrique<br/>
+<br/>
+Can test for these WAFs:<br/>
+<br/>
+Anquanbao<br/>
+Juniper WebApp Secure<br/>
+IBM Web Application Security<br/>
+Cisco ACE XML Gateway<br/>
+Better WP Security<br/>
+F5 BIG-IP APM<br/>
+360WangZhanBao<br/>
+ModSecurity (OWASP CRS)<br/>
+PowerCDN<br/>
+Safedog<br/>
+F5 FirePass<br/>
+DenyALL WAF<br/>
+Trustwave ModSecurity<br/>
+CloudFlare<br/>
+Imperva SecureSphere<br/>
+Incapsula WAF<br/>
+Citrix NetScaler<br/>
+F5 BIG-IP LTM<br/>
+Art of Defence HyperGuard<br/>
+Aqtronix WebKnight<br/>
+Teros WAF<br/>
+eEye Digital Security SecureIIS<br/>
+BinarySec<br/>
+IBM DataPower<br/>
+Microsoft ISA Server<br/>
+NetContinuum<br/>
+NSFocus<br/>
+ChinaCache-CDN<br/>
+West263CDN<br/>
+InfoGuard Airlock<br/>
+AdNovum nevisProxy<br/>
+Barracuda Application Firewall<br/>
+F5 BIG-IP ASM<br/>
+Profense<br/>
+Mission Control Application Shield<br/>
+Microsoft URLScan<br/>
+Applicure dotDefender<br/>
+USP Secure Entry Server<br/>
+F5 Trafficshield<br/>
+How do I use it?<br/>
+First, install the tools as described here.<br/>
+<br/>
+For help please make use of the --help option. The basic usage is to pass it a URL as an argument. Example:<br/>
+<br/>
+$ wafw00f https://www.ibm.com/<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;^ &nbsp; &nbsp; ^<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _ &nbsp; __ &nbsp;_ &nbsp; ____ _ &nbsp; __ &nbsp;_ &nbsp; &nbsp;_ &nbsp; ____<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;///7/ /.' \ / __////7/ /,' \ ,' \ / __/<br/>
+&nbsp; &nbsp; &nbsp; | V V // o // _/ | V V // 0 // 0 // _/<br/>
+&nbsp; &nbsp; &nbsp; |_n_,'/_n_//_/ &nbsp; |_n_,' \_,' \_,'/_/<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;...'<br/>
+<br/>
+&nbsp; &nbsp; WAFW00F - Web Application Firewall Detection Tool<br/>
+<br/>
+&nbsp; &nbsp; By Sandro Gauci &amp;&amp; Wendel G. Henrique<br/>
+<br/>
+Checking https://www.ibm.com/<br/>
+The site https://www.ibm.com/ is behind a Citrix NetScaler<br/>
+Number of requests: 6<br/>
+How do I install it?<br/>
+The following should do the trick:<br/>
+<br/>
+python setup.py install<br/>
+or<br/>
+<br/>
+pip install wafw00f<br/>
+Need a freelance pentester?<br/>
+More information about the services that I offer at Enable Security<br/>
+<br/>
+How do I write my own new checks?<br/>
+Follow the instructions on the wiki<br/>
+<br/>
+Questions?<br/>
+Contact me</body></html>

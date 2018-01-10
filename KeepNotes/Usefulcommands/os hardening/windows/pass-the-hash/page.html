@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pass-the-Hash</title>
+</head><body>Sensitive Systems Isolation &nbsp;<br/>
+<br/>
+First:, a system should never be used, to enter, process, or store data (i.e.<br/>
+domain admin hashes) if the data is more sensitive than the system itself<br/>
+(Johansson, 2009). So domain administrators' accounts should not login<br/>
+directly to any system other than domain controllers (Metzler, 2008). In<br/>
+case there is a need to use a domain admin account to access other systems<br/>
+within the network, a temporary account can be created and then deleted<br/>
+upon the completion of its use. An exception to this rule would be for a<br/>
+few trusted and designated systems used for domain administrator logons<br/>
+only. These systems should only have management tools installed on<br/>
+them, and they should have no access to the internet (Metzler, 2008).<br/>
+<br/>
+Second: A system that is less sensitive should never be used to administer<br/>
+a sensitive system (Johansson, 2009).<br/>
+<br/>
+<br/>
+Enforce Least User Access (LUA)<br/>
+<br/>
+Giving users administrative rights on their systems can increase the risk of<br/>
+malicious software significantly. A user navigating the web with administrator privileges,<br/>
+visiting a compromised web site or clicking a link in an email message can<br/>
+unintentionally and unknowingly run malicious code that can lead attackers to have<br/>
+complete control over the user's system or the entire network (Microsoft, 2006).<br/>
+<br/>
+A study showed that 92 percent of critical Microsoft<br/>
+software vulnerabilities can be mitigated by the elimination of admin rights that are<br/>
+usually given to users who don't even need them (Beyondtrust, 2009). <br/>
+<br/>
+<br/>
+Avoid LM and NTLM challenge-response<br/>
+<br/>
+LM and NTLM challenge-response are considered weak by today's standards, and<br/>
+should be avoided. A better approach would be the use of NTLMv2 or Kerberos.<br/>
+<br/>
+The best setting should be "Send NTLMv2 responses only/refuse LM and<br/>
+NTLM". This will force the client to only send NTLMv2 response, while the DC will<br/>
+accept NTLMv2 and ignore both LM and NTLM (Minsai, 2008).<br/>
+<br/>
+<br/>
+Limit Cached Credentials<br/>
+<br/>
+With cached credentials, users' hashes are cached indefinitely. The default<br/>
+number of logins cached on all Windows versions except Windows 2008 is 10, on<br/>
+Windows 2008 the number increased to 25 (Microsoft, 2009)<br/>
+<br/>
+Some organizations use the same password for all their admin accounts on all<br/>
+their systems. This practice can cause very serious damages in case one of the systems<br/>
+gets compromised, as it may lead to the compromise of all the organization's systems. If<br/>
+a domain administrators logs on into a system even once, her hash will be cached on that<br/>
+system. If this system then gets compromised, the attackers will gain domain admin<br/>
+within seconds. To avoid this scenario and avoid the potential damages it may cause, the<br/>
+cached credentials should be set to 0 for desktops and servers and 1 for laptop<br/>
+<br/>
+Disable "Debug Programs" User Right<br/>
+<br/>
+Debug program is a "user right" that provides the user with the ability to attach a<br/>
+debugger to any process, even those he does not own, or to the kernel. This gives the user<br/>
+access to sensitive and critical operating system components (Microsoft, 2009).<br/>
+This right can be exploited by attackers through tools that allow them to extract<br/>
+passwords hashes, or inject rootkit code, among other things. This right is assigned by<br/>
+default only to administrators (Microsoft, 2009).<br/>
+The "Debug Programs" user right is rarely required on a production system, so<br/>
+revoking it should not have effect on the system<br/>
+<br/>
+<br/>
+Use token based authentication<br/>
+<br/>
+Using token-based authentication as a solution is not feasible for all organizations,<br/>
+due to the money needed to implement such a solution, and the complexity of<br/>
+implementation. <br/>
+<br/>
+<br/>
+Smart Card and Kerberos<br/>
+<br/>
+Kerberos and smart cards can provide an excellent solution to prevent reply<br/>
+attacks or attacks that depend on capturing sensitive information (e.g. logon credentials)<br/>
+off the wire. <br/>
+<br/>
+Smart card information is stored in a similar way to passwords. If smart cards are<br/>
+required for login, the DC will create a random password for that card, hash it, and store<br/>
+it in the user object (Johansson, 2009).<br/>
+<br/>
+When the user logs in with a smart card, the Key Distribution Center (KDC),<br/>
+which is used in Kerberos authentication, will provide the client with the user's hash<br/>
+during the login process. This information will be sent encrypted using the public key of<br/>
+the client. On the client side, the Kerberos Security Support Provider (SSP) will decrypt<br/>
+the hash, and then will cache it in the same way as if the user had entered his credentials<br/>
+at the login prompt. These credentials would then be used by the computer to login<br/>
+silently to computers, whenever they are unreachable using Kerberos (Johansson, 2009).<br/>
+<br/>
+This means that even when using smart cards, the hashes on the client are still<br/>
+exposed to any malicious software that runs with administrator rights. So using smart cards does not provide more protection to the password-based credentials than the one<br/>
+provided by password-based login.<br/>
+At TechED 2007, security researcher Marcus Murray from Truesec claimed that<br/>
+smart cards can be attacked using hash injection in the same way passwords are attacked.<br/>
+<br/>
+<br/>
+HIDS and NIDS Monitoring<br/>
+<br/>
+Hosts should be monitored on a daily basis for newly created accounts and local<br/>
+administrator group memberships. The results should be compared against an approved<br/>
+list. Any account found that is not listed in the approved list should be removed and an<br/>
+alert should be sent<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

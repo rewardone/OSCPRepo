@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WS-Attacker: Modular framework for web testing</title>
+</head><body>https://github.com/RUB-NDS/WS-Attacker <br/>
+<br/>
+WS-Attacker<br/>
+release licence travis<br/>
+<br/>
+WS-Attacker is a modular framework for web services penetration testing. It is developed by the Chair of Network and Data Security, Ruhr University Bochum (http://nds.rub.de/ ) and the Hackmanit GmbH (http://hackmanit.de/ ).<br/>
+<br/>
+The basic idea behind WS-Attacker is to provide a functionality to load WSDL files and send SOAP messages to the Web Service endpoints (which is executed using the underlying SoapUI framework). This functionality can be extended using various plugins and libraries to build specific Web Services attacks. You can find more information on the WS-Attacker architecture and its extensibility in our paper: Penetration Testing Tool for Web Services Security (https://www.nds.rub.de/research/publications/ws-attacker-paper/)<br/>
+<br/>
+In the current version, WS-Attacker supports the following attacks:<br/>
+<br/>
+SOAPAction spoofing: see http://www.ws-attacks.org/index.php/SOAPAction_Spoofing<br/>
+WS-Addressing spoofing: see http://www.ws-attacks.org/index.php/WS-Addressing_spoofing<br/>
+XML Signature Wrapping: see http://nds.rub.de/media/nds/arbeiten/2012/07/24/ws-attacker-ma.pdf<br/>
+XML-based DoS attacks: see https://www.nds.rub.de/research/publications/ICWS_DoS<br/>
+New Adaptive and Intelligent Denial-of-Service Attacks (AdIDoS)<br/>
+XML Encryption attacks: see this blogpost (http://web-in-security.blogspot.de/2015/05/how-to-attack-xml-encryption-in-ibm.html) for a general overview on the attacks and on further references to the scientific papers<br/>
+Obtaining Runnable File<br/>
+The first option to obtain a WS-Attacker jar file is from the sourceforge website: http://sourceforge.net/projects/ws-attacker/files/<br/>
+<br/>
+The second option is to build it directly from the Github sources. For this purpose, you need:<br/>
+<br/>
+Java 7 or higher<br/>
+maven<br/>
+git<br/>
+You procede as follows. You first need to clone WS-Attacker sources (you can of course also download a ZIP file):<br/>
+<br/>
+$ git clone https://github.com/RUB-NDS/WS-Attacker.git <br/>
+Then you go to the WS-Attacker directory and use maven to build and package the files:<br/>
+<br/>
+$ cd WS-Attacker<br/>
+$ mvn clean package -DskipTests<br/>
+Afterwards, you are able to go to the runnable directory and execute WS-Attacker:<br/>
+<br/>
+$ cd runnable<br/>
+$ java -jar WS-Attacker-1.9-SNAPSHOT.jar<br/>
+WS-Attacker Usage<br/>
+You can find the latest documentation on XML Signature Wrapping and DoS attacks here: http://sourceforge.net/projects/ws-attacker/files/WS-Attacker%201.3/Documentation-v1.3.pdf/download<br/>
+<br/>
+The documentation on XML Encryption attacks is currently under development, but you can find a lot of information on the XML Encryption plugin and on starting XML Encryption attacks here: http://web-in-security.blogspot.de/2015/05/how-to-attack-xml-encryption-in-ibm.html<br/>
+<br/>
+If you want to practice the attacks and you do not have any Web Service, we encourage you to use the Apache Rampart framework. This framework provides several Web Services examples and is vulnerable to the most of the provided attacks, including XML Signature Wrapping and the attacks on XML Encryption.<br/>
+<br/>
+See this blog post on how to use WS-Attacker to attack Apache Rampart Web Services with XML Signatures: http://web-in-security.blogspot.de/2015/04/introduction-to-ws-attacker-xml.html Similar concepts apply to the attacks with XML Encryption.<br/>
+<br/>
+Happy Web Service hacking</body></html>

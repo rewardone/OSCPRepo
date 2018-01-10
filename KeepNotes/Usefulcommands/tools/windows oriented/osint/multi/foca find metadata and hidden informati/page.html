@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FOCA: Find metadata and hidden information in documents</title>
+</head><body><a href="https://www.elevenpaths.com/labstools/foca/index.html">https://www.elevenpaths.com/labstools/foca/index.html</a>&nbsp;<br/>
+<a href="https://github.com/ElevenPaths/FOCA">https://github.com/ElevenPaths/FOCA</a>&nbsp;<br/>
+<br/>
+FOCA (Fingerprinting Organizations with Collected Archives) is a tool used mainly to find metadata and hidden information in the documents its scans. These documents may be on web pages, and can be downloaded and analyzed with FOCA.<br/>
+<br/>
+It is capable of analyzing a wide variety of documents, with the most common being Microsoft Office, Open Office, or PDF files, although it also analyzes Adobe InDesign or SVG files, for instance.<br/>
+<br/>
+These documents are searched for using three possible search engines: Google, Bing, and DuckDuckGo. The sum of the results from the three engines amounts to a lot of documents. It is also possible to add local files to extract the EXIF information from graphic files, and a complete analysis of the information discovered through the URL is conducted even before downloading the file.<br/>
+<br/>
+With all data extracted from all files, FOCA matches information in an attempt to identify which documents have been created by the same team and what servers and clients may be infered from them.<br/>
+<br/>
+<br/>
+FOCA includes a server discovery module, whose purpose is to automate the servers search process using recursively interconnected routines. The techniques used to this end are:<br/>
+<br/>
+Web Search<br/>
+Searches for hosts and domain names through URLs associated to the main domain. Each link is analyzed to extract from it new host and domain names.<br/>
+<br/>
+DNS Search<br/>
+Each domain is checked to ascertain which are the host names configured in NS, MX, and SPF servers to discover new host and domain names.<br/>
+<br/>
+IP resolution<br/>
+Each host name is resolved by comparison to the DNS to obtain the IP address associated to this server name. To perform this task as accurately as possible, the analysis is carried out against a DNS that is internal to the organization.<br/>
+<br/>
+PTR Scanning<br/>
+To find more servers in the same segment of a determined address, IP FOCA executes a PTR logs scan.<br/>
+<br/>
+Bing IP<br/>
+For each IP address discovered, a search process is launched for new domain names associated to that IP address.<br/>
+<br/>
+Common names<br/>
+This module is designed to carry out dictionary attacks against the DNS. It uses a text file containing a list of common host names such as ftp, pc01, pc02, intranet, extranet, internal, test, etc.<br/>
+<br/>
+DNS Prediction<br/>
+Used for those environments where a machine name has been discovered that is reason to suspect that a pattern is used in the naming system.<br/>
+<br/>
+Robtex<br/>
+The Robtex service is one of many services available on the Internet to analyze IP addresses and domain names. FOCA uses it in its attempt to discover new domains by searching the information available in Robtext on the latter.<br/>
+<br/>
+<br/>
+FOCA began as a metadata analysis tool to draw a network based on said metadata. Today, it has become a reference in the computer security sector due to the many options it includes. Thanks to the aforementioned FOCA options, it is possible to undertake multiple attacks and analysis techniques such as:<br/>
+<br/>
+Metadata extraction.<br/>
+Network analysis.<br/>
+DNS Snooping.<br/>
+Search for common files.<br/>
+Juicy files.<br/>
+Proxies search.<br/>
+Technologies identification.<br/>
+Fingerprinting.<br/>
+Leaks.<br/>
+Backups search.<br/>
+Error forcing.<br/>
+Open directories search.<br/>
+In addition, FOCA has a series of plugins to increase the functionality or number of attacks that can be carried out to elements obtained during the analysis that may be downloaded from the FOCA Market.<br/>
+</body></html>

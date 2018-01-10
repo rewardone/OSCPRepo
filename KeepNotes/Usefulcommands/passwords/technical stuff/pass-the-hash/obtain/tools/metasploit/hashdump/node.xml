@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Hashdump</string>
+  <key>nodeid</key><string>5c9556c7-1e21-4fcd-9995-65e18ef7bc2f</string>
+  <key>modified_time</key><integer>1515596434</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515596412</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

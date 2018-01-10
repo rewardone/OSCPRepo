@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Home</title>
+</head><body><a href="https://github.com/hashcat/hashcat">https://github.com/hashcat/hashcat</a>&nbsp;<br/>
+<br/>
+hashcat<br/>
+hashcat is the world's fastest and most advanced password recovery utility, supporting five unique modes of attack for over 200 highly-optimized hashing algorithms. hashcat currently supports CPUs, GPUs, and other hardware accelerators on Linux, Windows, and macOS, and has facilities to help enable distributed password cracking.<br/>
+<br/>
+License<br/>
+hashcat is licensed under the MIT license. Refer to docs/license.txt for more information.<br/>
+<br/>
+Installation<br/>
+Download the latest release and unpack it in the desired location. Please remember to use 7z x when unpacking the archive from the command line to ensure full file paths remain intact.<br/>
+<br/>
+Usage/Help<br/>
+Please refer to the Hashcat Wiki and the output of --help for usage information and general help. A list of frequently asked questions may also be found here. The Hashcat Forums also contain a plethora of information.<br/>
+<br/>
+Building<br/>
+Refer to BUILD.md for instructions on how to build hashcat from source.<br/>
+<br/>
+Tests:<br/>
+<br/>
+Travis&#09;Appveyor&#09;Coverity<br/>
+Hashcat Travis Build status&#09;Hashcat Appveyor Build status&#09;Coverity Scan Build Status<br/>
+Contributing<br/>
+Contributions are welcome and encouraged, provided your code is of sufficient quality. Before submitting a pull request, please ensure your code adheres to the following requirements:<br/>
+<br/>
+Licensed under MIT license, or dedicated to public domain (BSD, GPL, etc. code is incompatible)<br/>
+Adheres to gnu99 standard<br/>
+Compiles cleanly with no warnings when compiled with -W -Wall -std=gnu99<br/>
+Uses Allman-style code blocks &amp; indentation<br/>
+Uses 2-spaces as indentation or a tab if it's required (for example: Makefiles)<br/>
+Uses lower-case function and variable names<br/>
+Avoids the use of ! and uses positive conditionals wherever possible (e.g., if (foo == 0) instead of if (!foo), and if (foo) instead of if (foo != 0))<br/>
+Use code like array[index + 0] if you also need to do array[index + 1], to keep it aligned<br/>
+You can use GNU Indent to help assist you with the style requirements:<br/>
+<br/>
+indent -st -bad -bap -sc -bl -bli0 -ncdw -nce -cli0 -cbi0 -pcs -cs -npsl -bs -nbc -bls -blf -lp -i2 -ts2 -nut -l1024 -nbbo -fca -lc1024 -fc1<br/>
+Your pull request should fully describe the functionality you are adding/removing or the problem you are solving. Regardless of whether your patch modifies one line or one thousand lines, you must describe what has prompted and/or motivated the change.<br/>
+<br/>
+Solve only one problem in each pull request. If you're fixing a bug and adding a new feature, you need to make two separate pull requests. If you're fixing three bugs, you need to make three separate pull requests. If you're adding four new features, you need to make four separate pull requests. So on, and so forth.<br/>
+<br/>
+If your patch fixes a bug, please be sure there is an issue open for the bug before submitting a pull request. If your patch aims to improve performance or optimizes an algorithm, be sure to quantify your optimizations and document the trade-offs, and back up your claims with benchmarks and metrics.<br/>
+<br/>
+In order to maintain the quality and integrity of the hashcat source tree, all pull requests must be reviewed and signed off by at least two board members before being merged. The project lead has the ultimate authority in deciding whether to accept or reject a pull request. Do not be discouraged if your pull request is rejected!<br/>
+<br/>
+Happy Cracking!</body></html>

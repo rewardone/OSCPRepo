@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>WS-Attacker: Modular testing framework for web services</string>
+  <key>nodeid</key><string>9d9a7d4f-3389-47e5-9f0b-cb229a6da87b</string>
+  <key>modified_time</key><integer>1515605120</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515605086</integer>
+  <key>order</key><integer>10</integer>
+</dict>
+</node>

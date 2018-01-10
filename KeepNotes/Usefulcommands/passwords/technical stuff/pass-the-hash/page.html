@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pass-the-Hash</title>
+</head><body>Password hashes are equivalent to clear-text passwords (Johansson, 2009).<br/>
+<br/>
+Pass-the-hash attacks are usually directed against Windows systems, however<br/>
+they can be found in other systems, for example vulnerable web applications (SANS,<br/>
+2008).<br/>
+<br/>
+In Windows, pass-the-hash attack depends on the Single Sign-On (SSO)<br/>
+functionality in authentication protocols like NTLM and Kerberos (Scambray &amp;<br/>
+McClure, 2008). With SSO, users can enter their passwords once to be able to use<br/>
+resources they have been given rights to, without prompting them for their passwords<br/>
+again. This requires the system to have the users' credentials cached within the system<br/>
+(see 2.1.3). By replacing this credential with a password hash (or a ticket) further<br/>
+authentication will be done using this hash instead of the original credential (Scambray &amp;<br/>
+McClure, 2008). <br/>
+<br/>
+Password hashes are loaded into the Local Security Authority Subsystem (Lsass).<br/>
+Lsass runs as the executable %SystemRoot%\System32\Lsass.exe, which is responsible<br/>
+for user authentication, among other things (Russinovich, Solomon, &amp; Ionescu, 2009). </body></html>

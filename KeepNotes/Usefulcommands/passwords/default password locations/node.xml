@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>Default Password Locations</string>
   <key>nodeid</key><string>7f195a3c-739b-4a22-8460-7469a883a8f0</string>
   <key>modified_time</key><integer>1515530582</integer>

@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Intro</title>
+</head><body>The last of the four protocols is an industry standard that Microsoft has made a<br/>
+few adjustments for its use in Windows. Needless to say, this is an entirely different<br/>
+protocol that shares very few similarities with the proprietary creations from Microsoft.<br/>
+With the release of Windows 2000, Kerberos (version 5) became the default<br/>
+authentication package [Microsoft 2003]. Some of its strengths include its resistance to<br/>
+replay attacks, the enforcement of mutual authentication, and the prevention of password<br/>
+transmission across the network [Melber 2004]. Kerberos is used in conjunction with<br/>
+resources located within a Windows AD domain [Johansson 2005] and it uses renewable<br/>
+session tickets which replace the pass-through authentication used by NTLM [Microsoft<br/>
+2003]. In the NTLM world, application servers had to communicate with a domain<br/>
+controller to authenticate each client; with Kerberos, a server can authenticate a client by<br/>
+reviewing the credentials presented by the client [Microsoft 2003].<br/>
+<br/>
+Kerberos is a set of services only used in a domain environment when a NetBIOS name or DNS name is used to connect. If a user connects to a resource via IP, then Kerberos will not be used (Johansson, 2009). LM, NTLM, or NTLMv2 will be used instead to authenticate the user &nbsp;<br/>
+<br/>
+Unlike NTLM authentication, Kerberos provides authentication for both the user and the server. The client and server agree on the encryption algorithm, the shared secret key, and the recognition data - the authenticator, which can include the sender's name, domain, time, IP, and the MD5 checksum of the authenticator. When the client and server decrypt the recognition data, the data let them prove to one another that they know the shared 128-bit secret. Windows versions prior to Server 2008 use the RC4 encryption algorithm, Windows Server 2008 uses AES which is much more secure than RC4 (Minsai, 2008). &nbsp;</body></html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Intro</title>
+</head><body>The introduction of Windows NT 3.1 provided a new directory service and thus a<br/>
+new authentication protocol called NTLM [Melber 2004]. There were very few changes<br/>
+under the hood between LM and NTLM, but there was one significant change. NTLM,<br/>
+also referred to as NTLMv1 in some circles, incorporated a challenge response<br/>
+mechanism which effectively prevented the transmission of the hash over the network<br/>
+[CIAC 2008].<br/>
+<br/>
+Both LM and NTLM are very similar, but differ mainly in the hash used to compute the response. LM and NTLM are used for authentication in workgroups. They are also used in a domain environment if either the client, or the server is not a domain member, or if a resource within the domain is accessed by its IP address instead of its NetBIOS or DNS name. <br/>
+&nbsp;<br/>
+<br/>
+The LM hash is only used in conjunction with the LM authentication protocol, while the NT hash serves duty in the NTLM, NTLMv2, and Kerberos authentication protocols [Microsoft 2007].When a user performs an interactive login, the Local Security Authority Subsystem Service (LSASS) process is called upon to store the hashes in memory [Johansson 2005].<br/>
+</body></html>

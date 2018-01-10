@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>WafW00f: Identify and fingerprint WAF products</string>
+  <key>nodeid</key><string>56abacfb-0b20-4e39-aa12-8b4628b874ff</string>
+  <key>modified_time</key><integer>1515603317</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515603278</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

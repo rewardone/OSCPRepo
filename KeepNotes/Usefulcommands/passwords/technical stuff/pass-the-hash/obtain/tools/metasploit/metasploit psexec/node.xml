@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Metasploit psexec</string>
+  <key>nodeid</key><string>8862e6f7-3519-4d45-b0cf-4f901f26fcff</string>
+  <key>modified_time</key><integer>1515596119</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515596057</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
