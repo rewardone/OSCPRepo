@@ -17,7 +17,7 @@ print "INFO: Starting dirb scan for " + url
 for folder in folders:
     for filename in os.listdir(folder):
 
-	outfile = " -o " + "results/exam/dirb/" + name + "_dirb_" + filename
+	outfile = " -o " + "/root/scripts/recon_enum/results/exam/dirb/" + name + "_dirb_" + filename
 	DIRBSCAN = "dirb %s %s/%s %s -S -r" % (url, folder, filename, outfile)
         try:
 	    results = subprocess.check_output(DIRBSCAN, shell=True)
