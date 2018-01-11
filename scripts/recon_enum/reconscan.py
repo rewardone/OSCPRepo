@@ -23,8 +23,8 @@
 ##-------------------------------------------------------------------------------------------------------------
 ## [TODO]
 ## Something faster than DIRB (gobuster maybe?)
+##      combine results into single text for parsing would be nice. Grep CODE:200 and -v certain sizes
 ## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
-## After unicorn/nmap, run a full nmap TCP and a large nmap UDP just to make sure nothing is missed
 ## 
 ## [THOUGHTS]
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
@@ -118,6 +118,37 @@ def ftpEnum(ip_address, port):
     SCRIPT = "ftp/./ftprecon.py %s %s" % (ip_address, port)       
     subprocess.call(SCRIPT, shell=True)
     return
+    
+def fullMap(ip_address):
+ip_address = ip_address.strip()
+   print "INFO: Running full TCP/UDP nmap scans for %s" % (ip_address)
+   print "INFO: Full UDP takes a LONG time"
+   TCPSCAN = "nmap -n -vv -Pn -sS -T 4 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
+   UDPSCAN = "nmap -n -vv -Pn -sU -T 4 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
+   tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
+   for line in tcplines:
+      line = line.strip()
+      if ("tcp" in line) and ("open" in line) and not ("Discovered" in line): 
+         while "  " in line:
+            line = line.replace("  ", " ");
+         linesplit= line.split(" ")
+         service = linesplit[2] # grab the service name
+         port = line.split(" ")[0] # grab the port/proto
+         port = port.split("/")[0]
+         print ("INFO: Full Nmap found TCP: %s on %s") % (service, port)   
+   udplines = subprocess.check_output(UDPSCAN, shell=True).split("\n")
+   for line in udplines:
+      line = line.strip()
+      if ("udp" in line) and ("open" in line) and not ("Discovered" in line): 
+         while "  " in line:
+            line = line.replace("  ", " ");
+         linesplit= line.split(" ")
+         service = linesplit[2] # grab the service name
+         port = line.split(" ")[0] # grab the port/proto
+         port = port.split("/")[0]
+         print ("INFO: Full Nmap found UDP: %s on %s") % (service, port)
+   print "INFO: TCP/UDP Nmap scans completed for %s" % (ip_address) 
+   return
 
 def nmapScan(ip_address):
    ip_address = ip_address.strip()
@@ -203,18 +234,16 @@ def unicornScan(ip_address):
    udpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
    tcpPorts = subprocess.check_output(tcpPorts, shell=True).split("\n")
    udpPorts = subprocess.check_output(udpPorts, shell=True).split("\n")
-   print "INFO: TCP ports %s" % tcpPorts
-   print "INFO: UDP ports %s" % udpPorts
+   print "INFO: Unicorn TCP ports %s" % tcpPorts
+   print "INFO: Unicorn UDP ports %s" % udpPorts
    #pass to nmap for versioning
    for port in tcpPorts: #the last element in the list is blank
       if port != "":
-         print("TCP: " + port)
          uniNmapTCP = "nmap -n -vv -Pn -A -sC -sS -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%s_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
          lines = subprocess.check_output(uniNmapTCP, shell=True).split("\n")
+         print "INFO: nmap versioning for TCP %s:%s completed" % (ip_address, port)
          for line in lines:
             line = line.strip()
-            #I don't think this is necessary because we are only feeding nmap open ports
-            #as discovered by unicornscan
             if ("tcp" in line) and ("open" in line) and not ("Discovered" in line): 
                while "  " in line:
                   line = line.replace("  ", " ");
@@ -243,13 +272,11 @@ def unicornScan(ip_address):
             
    for port in udpPorts: #the last element in the list is blank
       if port != "":
-         print("UDP: " + port)
          uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
          lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
+         print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
          for line in lines:
             line = line.strip()
-            #I don't think this is necessary because we are only feeding nmap open ports
-            #as discovered by unicornscan
             if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
                while "  " in line:
                   line = line.replace("  ", " ");
@@ -275,7 +302,12 @@ def unicornScan(ip_address):
                   multProc(smbEnum, ip_address, port)
                elif ("ms-sql" in service):
                   multProc(httpEnum, ip_address, port)
-
+   print "INFO: General TCP/UDP unicorn and nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
+   jobs = []
+   q = multiprocessing.Process(target=fullMap, args=(scanip,)) #comma needed
+   jobs.append(q)
+   q.start()
+   return
    
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5
