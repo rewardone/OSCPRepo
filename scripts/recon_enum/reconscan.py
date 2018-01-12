@@ -120,7 +120,7 @@ def ftpEnum(ip_address, port):
     return
     
 def fullMap(ip_address):
-ip_address = ip_address.strip()
+   ip_address = ip_address.strip()
    print "INFO: Running full TCP/UDP nmap scans for %s" % (ip_address)
    print "INFO: Full UDP takes a LONG time"
    TCPSCAN = "nmap -n -vv -Pn -sS -T 4 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
