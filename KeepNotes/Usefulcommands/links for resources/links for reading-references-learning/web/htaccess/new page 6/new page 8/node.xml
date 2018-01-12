@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>More fun with Redirect &amp; RedirectMatch
+</string>
+  <key>nodeid</key><string>c3ae73ab-da70-4a76-b688-c53474242723</string>
+  <key>modified_time</key><integer>1515772319</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770256</integer>
+  <key>order</key><integer>7</integer>
+</dict>
+</node>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Deny/allow domain access for IP range
+</string>
+  <key>nodeid</key><string>266cab81-5a63-48e8-bcdb-7c15670e1e44</string>
+  <key>modified_time</key><integer>1515771867</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770229</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

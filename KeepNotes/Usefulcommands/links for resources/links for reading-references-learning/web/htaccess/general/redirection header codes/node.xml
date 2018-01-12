@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Redirection header codes</string>
+  <key>nodeid</key><string>ea51dffe-3490-4f2b-9bd0-f425610e584b</string>
+  <key>modified_time</key><integer>1515770372</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770137</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

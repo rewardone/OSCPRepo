@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Redirect string variations to a specific address
+</title>
+</head><body>For example, if we wanted to redirect any requests containing the character string, perish, to our main page at perishablepress.com, we would replace some-string with perish in the following code block:<br/>
+<br/>
+# redirect all variations of a specific string<br/>
+RewriteRule ^some-string http://www.domain.com/index.php/blog/target [R]<br/>
+Here are two other methods for accomplishing string-related mapping tasks:<br/>
+<br/>
+# map variations to same directory on same server<br/>
+AliasMatch ^/director(y|ies) /www/docs/target<br/>
+# map variations to same directory on different server<br/>
+RedirectMatch ^/[dD]irector(y|ies) http://domain.com<br/>
+Refer to the section on Regex Character Definitions for explanations of the regular expressions used in these examples.</body></html>

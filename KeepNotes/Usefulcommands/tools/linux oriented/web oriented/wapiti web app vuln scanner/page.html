@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Wapiti: Web App Vuln Scanner</title>
+</head><body><a href="http://wapiti.sourceforge.net/">http://wapiti.sourceforge.net/</a>&nbsp;<br/>
+<br/>
+<br/>
+Wapiti allows you to audit the security of your websites or web applications.<br/>
+<br/>
+It performs "black-box" scans (it does not study the source code) of the web application by crawling the webpages of the deployed webapp, looking for scripts and forms where it can inject data.<br/>
+<br/>
+Once it gets the list of URLs, forms and their inputs, Wapiti acts like a fuzzer, injecting payloads to see if a script is vulnerable.<br/>
+<br/>
+What's new in Wapiti 3.0.0 ? Take a look at this wiki page.<br/>
+Wapiti can detect the following vulnerabilities :<br/>
+<br/>
+File disclosure (Local and remote include/require, fopen, readfile...)<br/>
+Database Injection (PHP/JSP/ASP SQL Injections and XPath Injections)<br/>
+XSS (Cross Site Scripting) injection (reflected and permanent)<br/>
+Command Execution detection (eval(), system(), passtru()...)<br/>
+CRLF Injection (HTTP Response Splitting, session fixation...)<br/>
+XXE (XML External Entity) injection<br/>
+Use of know potentially dangerous files (thanks to the Nikto database)<br/>
+Weak .htaccess configurations that can be bypassed<br/>
+Presence of backup files giving sensitive information (source code disclosure)<br/>
+Shellshock (aka Bash bug)<br/>
+A buster module also allows to brute force directories and files names on the target webserver.<br/>
+<br/>
+Wapiti supports both GET and POST HTTP methods for attacks.<br/>
+It also supports multipart forms and can inject payloads in filenames (upload).<br/>
+Warnings are raised when an anomaly is found (for example 500 errors and timeouts)<br/>
+Wapiti is able to make the difference beetween permanent and reflected XSS vulnerabilities.<br/>
+General features :<br/>
+<br/>
+Generates vulnerability reports in various formats (HTML, XML, JSON, TXT...)<br/>
+Can suspend and resume a scan or an attack (session mechanism using sqlite3 databases)<br/>
+Can give you colors in the terminal to highlight vulnerabilities<br/>
+Different levels of verbosity<br/>
+Fast and easy way to activate/deactivate attack modules<br/>
+Adding a payload can be as easy as adding a line to a text file<br/>
+Browsing features<br/>
+<br/>
+Support HTTP, HTTPS and SOCKS5 proxies<br/>
+Authentication via several methods : Basic, Digest, Kerberos or NTLM<br/>
+Ability to restrain the scope of the scan (domain, folder, page, url)<br/>
+Automatic removal of one are more parameters in URLs<br/>
+Multiple safeguards against scan endless-loops (ifor example, limit of values for a parameter)<br/>
+Possibility to set the first URLs to explore (even if not in scope)<br/>
+Can exclude some URLs of the scan and attacks (eg: logout URL)<br/>
+Import of cookies (get them with the wapiti-getcookie tool)<br/>
+Can activate / deactivate SSL certificates verification<br/>
+Extract URLs from Flash SWF files<br/>
+Try to extract URLs from javascript (very basic JS interpreter)<br/>
+HTML5 aware (understand recent HTML tags)<br/>
+Several options to control the crawler behavior and limits.<br/>
+Skipping some parameter names during attack.<br/>
+Setting a maximum time for the scan process.<br/>
+Adding some custom HTTP headers or setting a custom User-Agent.<br/>
+Wapiti is a command-line application.<br/>
+Here is an exemple of output against a vulnerable web application.<br/>
+You may find some useful informations in the README and the INSTALL files.<br/>
+Have any questions ? You may find answers in the FAQ.<br/>
+<br/>
+Download<br/>
+&gt;&gt; Download Wapiti here &lt;&lt;<br/>
+<br/>
+<br/>
+Usage<br/>
+<br/>
+&nbsp;██╗ &nbsp; &nbsp;██╗ █████╗ ██████╗ ██╗████████╗██╗██████╗ <br/>
+&nbsp;██║ &nbsp; &nbsp;██║██╔══██╗██╔══██╗██║╚══██╔══╝██║╚════██╗<br/>
+&nbsp;██║ █╗ ██║███████║██████╔╝██║ &nbsp; ██║ &nbsp; ██║ █████╔╝<br/>
+&nbsp;██║███╗██║██╔══██║██╔═══╝ ██║ &nbsp; ██║ &nbsp; ██║ ╚═══██╗<br/>
+&nbsp;╚███╔███╔╝██║ &nbsp;██║██║ &nbsp; &nbsp; ██║ &nbsp; ██║ &nbsp; ██║██████╔╝<br/>
+&nbsp; ╚══╝╚══╝ ╚═╝ &nbsp;╚═╝╚═╝ &nbsp; &nbsp; ╚═╝ &nbsp; ╚═╝ &nbsp; ╚═╝╚═════╝ &nbsp;<br/>
+Wapiti-3.0.0 (wapiti.sourceforge.net)<br/>
+usage: wapiti [-h] [-u URL] [--scope {page,folder,domain,url}]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-m MODULES_LIST] [--list-modules] [-l LEVEL] [-p PROXY_URL]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-a CREDENTIALS] [--auth-type {basic,digest,kerberos,ntlm}]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-c COOKIE_FILE] [--skip-crawl] [--resume-crawl]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [--flush-attacks] [--flush-session] [-s URL] [-x URL]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-r PARAMETER] [--skip PARAMETER] [-d DEPTH]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [--max-links-per-page MAX] [--max-files-per-dir MAX]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [--max-scan-time MINUTES] [--max-parameters MAX] [-S FORCE]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-t SECONDS] [-H HEADER] [-A AGENT] [--verify-ssl {0,1}]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [--color] [-v LEVEL] [-f FORMAT] [-o OUPUT_PATH]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [--no-bugreport] [--version]<br/>
+wapiti: error: one of the arguments -u/--url --list-modules is required<br/>
+Shortest way (with default options) to launch a Wapiti scan :<br/>
+wapiti -u http://target/<br/>
+Every option is detailed in the wapiti(1) manpage.<br/>
+<br/>
+Wapiti also comes with an utility to fetch cookies from websites called wapiti-getcookie. The corresponding manpage is here.<br/>
+<br/>
+<br/>
+Licensing<br/>
+Wapiti is released under the GNU General Public License version 2 (the GPL).</body></html>

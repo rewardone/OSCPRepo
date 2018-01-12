@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Enable file caching
+</title>
+</head><body>Caleb over at askapache.com explains how to dramatically improve your site’s transfer speed by enabling file caching. Using time in seconds (see conversion chart) to indicate the duration for which cached content should endure, we may generalize the .htaccess rules as such (edit file types and time value to suit your needs):<br/>
+<br/>
+# cache images and flash content for one month<br/>
+&lt;FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf)$"&gt;<br/>
+&#09;Header set Cache-Control "max-age=2592000"<br/>
+&lt;/FilesMatch&gt;<br/>
+<br/>
+# cache text, css, and javascript files for one week<br/>
+&lt;FilesMatch ".(js|css|pdf|txt)$"&gt;<br/>
+&#09;Header set Cache-Control "max-age=604800"<br/>
+&lt;/FilesMatch&gt;<br/>
+<br/>
+# cache html and htm files for one day<br/>
+&lt;FilesMatch ".(html|htm)$"&gt;<br/>
+&#09;Header set Cache-Control "max-age=43200"<br/>
+&lt;/FilesMatch&gt;<br/>
+<br/>
+# implement minimal caching during site development<br/>
+&lt;FilesMatch "\.(flv|gif|jpg|jpeg|png|ico|js|css|pdf|swf|html|htm|txt)$"&gt;<br/>
+&#09;Header set Cache-Control "max-age=5"<br/>
+&lt;/FilesMatch&gt;<br/>
+# explicitly disable caching for scripts and other dynamic files<br/>
+&lt;FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$"&gt;<br/>
+&#09;Header unset Cache-Control<br/>
+&lt;/FilesMatch&gt;<br/>
+<br/>
+# alternate method for file caching<br/>
+ExpiresActive On<br/>
+ExpiresDefault A604800<br/>
+ExpiresByType image/x-icon A2419200<br/>
+ExpiresByType application/x-javascript A2419200<br/>
+ExpiresByType text/css A2419200<br/>
+ExpiresByType text/html A300<br/>
+<br/>
+# disable caching for scripts and other dynamic files<br/>
+&lt;FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$"&gt;<br/>
+&#09;ExpiresActive Off<br/>
+&lt;/FilesMatch&gt;<br/>
+For more information, check out Additional file-types for mod_expires.<br/>
+<br/>
+Time Conversion Chart<br/>
+Convert common time intervals into seconds:<br/>
+<br/>
+300 &nbsp; &nbsp; &nbsp;= 5 minutes<br/>
+2700 &nbsp; &nbsp; = 45 minutes<br/>
+3600 &nbsp; &nbsp; = 1 hour<br/>
+54000 &nbsp; &nbsp;= 15 hours<br/>
+86400 &nbsp; &nbsp;= 1 day<br/>
+518400 &nbsp; = 6 days<br/>
+604800 &nbsp; = 1 week<br/>
+1814400 &nbsp;= 3 weeks<br/>
+2419200 &nbsp;= 1 month<br/>
+26611200 = 11 months<br/>
+29030400 = 1 year</body></html>

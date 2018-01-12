@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Rename the .htaccess file</title>
+</head><body>Not every system enjoys the extension-only format of .htaccess files. Fortunately, you can rename them to whatever you wish, granted the name is valid on your system. Note: This directive must be placed in the server-wide configuration file or it will not work:<br/>
+<br/>
+# rename .htaccess files<br/>
+AccessFileName ht.access<br/>
+<br/>
+Note: If you rename your .htaccess files, remember to update any associated configuration settings. For example, if you are protecting your .htaccess file via FilesMatch, remember to inform it of the renamed files:<br/>
+<br/>
+# protect renamed .htaccess files<br/>
+&lt;FilesMatch "^ht\."&gt;<br/>
+&#09;Order deny,allow<br/>
+&#09;Deny from all<br/>
+&lt;/FilesMatch&gt;<br/>
+<br/>
+Check out the Security section for more information about protecting files.</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Disable script execution
+</string>
+  <key>nodeid</key><string>21c5917b-f687-49b7-a8bc-7b9d9deaf5c4</string>
+  <key>modified_time</key><integer>1515772024</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770235</integer>
+  <key>order</key><integer>21</integer>
+</dict>
+</node>

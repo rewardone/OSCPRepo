@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>PowerShell-Suite</string>
+  <key>nodeid</key><string>bc320e3c-8edb-4809-ade6-6e4962037ceb</string>
+  <key>modified_time</key><integer>1515772525</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1515772525</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Prevent unauthorized directory browsing
+</title>
+</head><body>Prevent unauthorized directory browsing by instructing the server to serve a 403 “Forbidden” response for any request to view a directory. For example, if your site is missing its default index page, everything within the root of your site will be accessible to all visitors. To prevent this, include the following .htaccess rule:<br/>
+<br/>
+# disable directory browsing<br/>
+Options All -Indexes<br/>
+Conversely, to enable directory browsing, use the following directive:<br/>
+<br/>
+# enable directory browsing<br/>
+Options All +Indexes<br/>
+Likewise, this rule will prevent the server from listing directory contents:<br/>
+<br/>
+# prevent folder listing<br/>
+IndexIgnore *<br/>
+And, finally, the IndexIgnore directive may be used to prevent the display of select file types:<br/>
+<br/>
+# prevent display of select file types<br/>
+IndexIgnore *.wmv *.mp4 *.avi *.etc<br/>
+<br/>
+For more information, check out What is Options All? and Better Default Directory Views with HTAccess.</body></html>

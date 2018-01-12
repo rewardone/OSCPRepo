@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Disable AllowOverride
+</title>
+</head><body>Limit the extent to which .htaccess files decrease performance by enabling AllowOverride only in required directories. For example, if AllowOverride is enabled throughout the entire site, the server must dig through every directory, searching for .htaccess files that may not even exist. To prevent this, we disable the AllowOverride in the site’s root .htaccess file and then enable AllowOverride only in required directories via the server config file (refer to this section for more information). Note: if you do not have access to your site’s server config file and also need AllowOverride privileges, do not use this directive:<br/>
+<br/>
+# increase performance by disabling AllowOverride<br/>
+AllowOverride None</body></html>

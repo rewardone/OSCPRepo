@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Stop hotlinking, serve alternate content
+</string>
+  <key>nodeid</key><string>9b1fc0c5-023b-4766-9112-71e28ee35a2a</string>
+  <key>modified_time</key><integer>1515771902</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770230</integer>
+  <key>order</key><integer>11</integer>
+</dict>
+</node>

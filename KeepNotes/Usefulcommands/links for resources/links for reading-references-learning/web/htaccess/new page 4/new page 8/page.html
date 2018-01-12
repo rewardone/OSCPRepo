@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Secure directories by IP or domain
+</title>
+</head><body>In the following example, all IP addresses are allowed access except for 12.345.67.890 and example.com:<br/>
+<br/>
+# allow all except those indicated here<br/>
+&lt;Limit GET POST PUT&gt;<br/>
+&#09;Order allow,deny<br/>
+&#09;Allow from all<br/>
+&#09;Deny from 12.345.67.890<br/>
+&#09;Deny from example\.com<br/>
+&lt;/Limit&gt;<br/>
+<br/>
+In the following example, all IP addresses are denied access except for 12.345.67.890 and example.com:<br/>
+<br/>
+# deny all except those indicated here<br/>
+&lt;Limit GET POST PUT&gt;<br/>
+&#09;Order deny,allow<br/>
+&#09;Deny from all<br/>
+&#09;Allow from 12.345.67.890<br/>
+&#09;Allow from example\.com<br/>
+&lt;/Limit&gt;<br/>
+<br/>
+This is how to block unwanted visitors based on the referring domain. You can also save bandwidth by blocking specific file types — such as .jpg, .zip, .mp3, .mpg — from specific referring domains. Simply replace scumbag and wormhole with the offending domains of your choice:<br/>
+<br/>
+# block visitors referred from indicated domains<br/>
+&lt;IfModule mod_rewrite.c&gt;<br/>
+&#09;RewriteEngine on<br/>
+&#09;RewriteCond %{HTTP_REFERER} scumbag\.com [NC,OR]<br/>
+&#09;RewriteCond %{HTTP_REFERER} wormhole\.com [NC,OR]<br/>
+&#09;RewriteRule .* - [F]<br/>
+&lt;/ifModule&gt;<br/>
+<br/>
+For more information, check out How to Block Bad Bots and Eight Ways to Redirect with Apache’s mod_rewrite.</body></html>

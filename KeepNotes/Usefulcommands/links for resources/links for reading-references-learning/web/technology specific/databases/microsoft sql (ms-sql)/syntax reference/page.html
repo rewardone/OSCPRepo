@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Syntax Reference</title>
+</head><body>SQL Server Global Variables for Enumeration<br/>
+&nbsp;SELECT @@&lt;variable name&gt;<br/>
+&nbsp;GO<br/>
+&nbsp; @@version – SQL Server Service Pack and Version<br/>
+&nbsp; &nbsp;Note: must convert to Hex to reveal version<br/>
+&nbsp; @@servicename – name of running service<br/>
+&nbsp; @@servername – name of server<br/>
+&nbsp; @@spid – current process server ID<br/>
+&nbsp;A comprehensive list of version numbers<br/>
+&nbsp; http://vyaskn.tripod.com/sqlsps.htm<br/>
+<br/>
+<br/>
+SQL Server Stored Procedures for Enumerating<br/>
+sp_configure<br/>
+&nbsp;Returns internal database settings<br/>
+sp_helpextendedproc<br/>
+&nbsp;Returns list of all extended stored procedures<br/>
+sp_spacedused<br/>
+&nbsp;Returns database names, size, and unallocated space<br/>
+sp_who, sp_who2<br/>
+&nbsp;Displays usernames and the hosts their connected from, etc…<br/>
+sp_columns &lt;table&gt;<br/>
+&nbsp;Returns the column names of table<br/>
+<br/>
+SQL Server Extended Stored Procedures<br/>
+Xp_cmdshell<br/>
+&nbsp;Executes a native operating system common on the host system<br/>
+&nbsp;Xp_cmdshell &lt;command&gt;<br/>
+Xp_enumgroups<br/>
+&nbsp;Displays groups for a specificed Windows NT Domain<br/>
+&nbsp;Xp_enumgroups &lt;domain name&gt;<br/>
+<br/>
+</body></html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MS-SQL</title>
+</head><body>SQL Server Security Countermeasures<br/>
+&nbsp;Patch, Patch, Patch!!!<br/>
+&nbsp;Set strong passwords for all accounts, especially “sa”<br/>
+&nbsp;Configure firewall to block access to ports 1433, 2433, &amp; 1434<br/>
+&nbsp;Remove unnecessary log files that may contain “sa” password<br/>
+&nbsp;Install net-lib support drivers on the server “and” client side<br/>
+&nbsp;Encrypt communications via SSL<br/>
+<br/>
+Encrypt SQL Server Communications (Enable SSL – 2000 and higher)<br/>
+&nbsp;Install MCS on a server somewhere (myserver)<br/>
+&nbsp;Log onto SQL box as administrator<br/>
+&nbsp;Navigate http://myserver/certsrv<br/>
+&nbsp;Click “Request a certificate”<br/>
+&nbsp;Click “Advanced Request”<br/>
+&nbsp;Click “Submit a certificate request to this CA using a form”<br/>
+&nbsp;Fill in all fields (use DNS name for name and spell out state name) (see next page)<br/>
+&nbsp;Click ‘Use local machine Store’ and submit<br/>
+&nbsp;Click ‘Install this certificate’<br/>
+&nbsp;Load Server Network Utility and select “Force Protocol Encryption”<br/>
+<br/>
+Encrypt SQL Server Communications (Enable SSL)<br/>
+&nbsp;If the client does not trust the CA then the client will not be able to connect<br/>
+&nbsp;Have the client navigate to http://myserver/certsrv and click ‘Retrieve the CA certificate or certificate revocation list’<br/>
+&nbsp;Click ‘Download CA certificate’<br/>
+&nbsp;Open the certificate, click ‘Install Certificate’ and install it in the ‘Trusted Root Certificate Store’ (Do not trust the certificate wizard to automatically place it in the right place – manually place the certificate)</body></html>

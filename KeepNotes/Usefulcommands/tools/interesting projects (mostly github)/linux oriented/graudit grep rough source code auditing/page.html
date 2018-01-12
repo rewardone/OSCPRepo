@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Graudit: Grep rough source code auditing</title>
+</head><body><a href="https://github.com/wireghoul/graudit/">https://github.com/wireghoul/graudit/</a>&nbsp;<br/>
+<br/>
+GRAUDIT<br/>
+<br/>
+Graudit is a simple script and signature sets that allows you to find potential <br/>
+security flaws in source code using the GNU utility grep. It's comparable to <br/>
+other static analysis applications like RATS, SWAAT and flaw-finder while <br/>
+keeping the technical requirements to a minimum and being very flexible.<br/>
+<br/>
+USAGE<br/>
+Graudit supports several options and tries to follow good shell practices. For<br/>
+a list of the options you can run graudit -h or see below. The simplest way to <br/>
+use graudit is;<br/>
+graudit &lt;options&gt; /path/to/scan<br/>
+<br/>
+The following options are available:<br/>
+&nbsp; -A scan ALL files<br/>
+&nbsp; -B don't print banner<br/>
+&nbsp; -c &lt;num&gt; number of lines of context to display, default is 2<br/>
+&nbsp; -d &lt;db&gt; database to use<br/>
+&nbsp; -h prints a short help text<br/>
+&nbsp; -i case in-sensitive search<br/>
+&nbsp; -l lists databases available<br/>
+&nbsp; -L vim friendly lines<br/>
+&nbsp; -v prints version number<br/>
+&nbsp; -x exclude these files (comma seperated list:-x *.js,*.sql)<br/>
+&nbsp; -z supress colors<br/>
+&nbsp; -Z high contrast colors<br/>
+<br/>
+<br/>
+DATABASES<br/>
+Graudit uses extended regular expressions (POSIX) as it's signatures and comes <br/>
+with several databases ready for use. You can extend the existing databases or <br/>
+make your own if you require additional signatures.<br/>
+<br/>
+* All is a combined database of all the databases listed below<br/>
+<br/>
+* Asp offers basic auditing support for the Active Server Pages languages<br/>
+<br/>
+* C offers support for the C programming language<br/>
+<br/>
+* Default is aimed at finding low hanging fruit. It cointains generic rules that <br/>
+&nbsp; should match common vulnerabilites in several languages. However, in order to <br/>
+&nbsp; find additional vulnerabilities for a specific language you should use the <br/>
+&nbsp; language specific databases.<br/>
+<br/>
+* Dotnet offers basic dot net support<br/>
+<br/>
+* Jsp basic JSP support.<br/>
+<br/>
+* Other looks for source comments that could indicate problems<br/>
+<br/>
+* Perl basic support for perl<br/>
+<br/>
+* PHP tracks user input and function calls<br/>
+<br/>
+* Python basic python support<br/>
+<br/>
+CONTRIBUTING<br/>
+If you would like to contribute to graudit, please fork the repository at github<br/>
+(git@github.com:wireghoul/graudit.git) and use that. If you wish to get in contact <br/>
+with me, shoot me a line on github or twitter (@wireghoul).<br/>
+<br/>
+CREDITS<br/>
+Wireghoul - http://www.justanotherhacker.com</body></html>

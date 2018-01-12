@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Automatically CHMOD various file types
+</title>
+</head><body>This method is great for ensuring the CHMOD settings for various file types. Employ the following rules in the root .htaccess file to affect all specified file types, or place in a specific directory to affect only those files (edit file types according to your needs):<br/>
+<br/>
+# ensure CHMOD settings for specified file types<br/>
+# remember to never set CHMOD 777 unless you know what you are doing<br/>
+# files requiring write access should use CHMOD 766 rather than 777<br/>
+# keep specific file types private by setting their CHMOD to 400<br/>
+chmod .htpasswd files 640<br/>
+chmod .htaccess files 644<br/>
+chmod php files 600</body></html>

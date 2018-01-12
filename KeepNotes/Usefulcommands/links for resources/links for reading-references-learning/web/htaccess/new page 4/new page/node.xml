@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Prevent access to .htaccess
+</string>
+  <key>nodeid</key><string>58070593-7306-4bc7-bdf5-3d3594df6212</string>
+  <key>modified_time</key><integer>1515771776</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770224</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

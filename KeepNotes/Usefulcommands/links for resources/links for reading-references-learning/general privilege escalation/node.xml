@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>duplicate_of</key><string>05dee4d6-4619-46de-8325-d38ff7934ba9</string>
+  <key>title</key><string>General Privilege Escalation</string>
+  <key>nodeid</key><string>541f740b-af8a-44b1-9a38-0ed56d9a8134</string>
+  <key>modified_time</key><integer>1512502986</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1512416035</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>8</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

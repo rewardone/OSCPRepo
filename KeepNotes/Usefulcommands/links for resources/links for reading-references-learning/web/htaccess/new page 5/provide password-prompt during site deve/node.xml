@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Provide password-prompt during site development
+</string>
+  <key>nodeid</key><string>80dc1571-a0b0-4c2b-90bf-f6c26be04ea4</string>
+  <key>modified_time</key><integer>1515772214</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770246</integer>
+  <key>order</key><integer>7</integer>
+</dict>
+</node>

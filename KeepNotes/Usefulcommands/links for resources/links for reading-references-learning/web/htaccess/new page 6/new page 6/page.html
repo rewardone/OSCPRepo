@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Send visitors to a subdomain
+</title>
+</head><body>This rule will ensure that all visitors are viewing pages via the subdomain of your choice. Edit the subdomain, domain, and tld to match your subdomain, domain, and top-level domain respectively:<br/>
+<br/>
+# send visitors to a subdomain<br/>
+RewriteCond %{HTTP_HOST} !^$<br/>
+RewriteCond %{HTTP_HOST} !^subdomain\.domain\.com$ [NC]<br/>
+RewriteRule ^/(.*)$ http://subdomain.domain.tld/$1 [L,R=301]</body></html>

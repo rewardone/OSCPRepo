@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Require SSL (secure sockets layer)
+</title>
+</head><body>Here is an excellent method for requiring SSL:<br/>
+<br/>
+# require SSL<br/>
+SSLOptions +StrictRequire<br/>
+SSLRequireSSL<br/>
+SSLRequire %{HTTP_HOST} eq "domain.tld"<br/>
+ErrorDocument 403 https://domain.tld<br/>
+<br/>
+# require SSL without mod_ssl<br/>
+RewriteCond %{HTTPS} !=on [NC]<br/>
+RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]<br/>
+<br/>
+For more techniques involving SSL/HTTPS, check out Redirect HTTP to HTTPS.</body></html>

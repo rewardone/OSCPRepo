@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Prevent unauthorized directory browsing
+</string>
+  <key>nodeid</key><string>0a527116-f769-4ea5-842e-77e0f4730bac</string>
+  <key>modified_time</key><integer>1515771805</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770226</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

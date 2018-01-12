@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Limit access to the LAN
+</title>
+</head><body># limit access to local area network<br/>
+&lt;Limit GET POST PUT&gt;<br/>
+&#09;Order deny,allow<br/>
+&#09;Deny from all<br/>
+&#09;Allow from 192.168.0.0/33<br/>
+&lt;/Limit&gt;</body></html>

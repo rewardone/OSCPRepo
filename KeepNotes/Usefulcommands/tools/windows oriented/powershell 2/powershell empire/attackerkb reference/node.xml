@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Attackerkb Reference</string>
+  <key>nodeid</key><string>cef1c70f-9ee7-4ca3-9f07-c9b54c97e6dc</string>
+  <key>modified_time</key><integer>1515774478</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515774072</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Prevent access to .htaccess
+</title>
+</head><body>Add the following code block to your .htaccess file to add an extra layer of security. Any attempts to access the .htaccess file will result in a 403 “Forbidden” response. Learn more.<br/>
+<br/>
+# secure .htaccess file<br/>
+&lt;Files .htaccess&gt;<br/>
+&#09;Order allow,deny<br/>
+&#09;Deny from all<br/>
+&lt;/Files&gt;<br/>
+<br/>
+Of course, your first layer of defense to protect .htaccess (and other sensitive) files involves setting the file permissions via CHMOD to be as restrictive as possible.</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Redirect string variations to a specific address
+</string>
+  <key>nodeid</key><string>f3e18ebe-fb24-499c-8a5a-17a3483cdbcc</string>
+  <key>modified_time</key><integer>1515772253</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770254</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

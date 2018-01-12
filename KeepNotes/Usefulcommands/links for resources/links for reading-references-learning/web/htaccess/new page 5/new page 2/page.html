@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Deploy custom error pages
+</title>
+</head><body>Replicate the following patterns to serve your own set of custom error pages. Simply replace the /errors/###.html with the correct path and file name. Also change the ### preceding the path to summon pages for other errors. Note: your custom error pages must be larger than 512 bytes or they will be completely ignored by Internet Explorer:<br/>
+<br/>
+# serve custom error pages<br/>
+ErrorDocument 400 /errors/400.html<br/>
+ErrorDocument 401 /errors/401.html<br/>
+ErrorDocument 403 /errors/403.html<br/>
+ErrorDocument 404 /errors/404.html<br/>
+ErrorDocument 500 /errors/500.html<br/>
+For more details, check out Custom HTTP Errors via htaccess.</body></html>

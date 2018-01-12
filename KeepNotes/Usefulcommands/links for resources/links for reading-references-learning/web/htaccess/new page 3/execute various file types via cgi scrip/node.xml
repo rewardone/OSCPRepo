@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Execute various file types via CGI script
+</string>
+  <key>nodeid</key><string>a608cdc1-3453-4700-a511-ca2023b5d905</string>
+  <key>modified_time</key><integer>1515771738</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770216</integer>
+  <key>order</key><integer>12</integer>
+</dict>
+</node>

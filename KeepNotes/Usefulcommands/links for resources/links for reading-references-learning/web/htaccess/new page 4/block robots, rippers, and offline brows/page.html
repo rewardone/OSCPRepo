@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Block robots, rippers, and offline browsers
+</title>
+</head><body>Eliminate some of the unwanted scum from your userspace by injecting this handy block of code. After such, any listed agents will be denied access and receive an error message instead. Please be advised that there are much more comprehensive blacklists available this example has been truncated for performance purposes. Note: DO NOT include the [OR] on the very last RewriteCond or your server will throw an error.<br/>
+<br/>
+# deny access to evil robots site rippers offline browsers and other nasty scum<br/>
+RewriteBase /<br/>
+RewriteCond %{HTTP_USER_AGENT} ^Anarchie [OR]<br/>
+RewriteCond %{HTTP_USER_AGENT} ^ASPSeek [OR]<br/>
+RewriteCond %{HTTP_USER_AGENT} ^attach [OR]<br/>
+RewriteCond %{HTTP_USER_AGENT} ^autoemailspider [OR]<br/>
+RewriteCond %{HTTP_USER_AGENT} ^Xaldon\ WebSpider [OR]<br/>
+RewriteCond %{HTTP_USER_AGENT} ^Xenu [OR]<br/>
+RewriteCond %{HTTP_USER_AGENT} ^Zeus.*Webster [OR]<br/>
+RewriteCond %{HTTP_USER_AGENT} ^Zeus<br/>
+RewriteRule ^.* - [F,L]<br/>
+<br/>
+Or, instead of delivering a friendly error message (i.e., the last line), send these bad boys to the hellish website of your choice by replacing the RewriteRule in the last line with one of the following two examples:<br/>
+<br/>
+# send em to a hellish website of your choice<br/>
+RewriteRule ^.*$ http://www.hellish-website.com [R,L]<br/>
+<br/>
+Or, to send em to a virtual blackhole of fake email addresses:<br/>
+<br/>
+# send em to a virtual blackhole of fake email addresses<br/>
+RewriteRule ^.*$ http://english-61925045732.spampoison.com [R,L]<br/>
+<br/>
+You may also add specific referrers to your blacklist by using HTTP_REFERER. Here, we use the infamously scummy domain, iaea.org as our blocked example, and we use yourdomain as your domain (the domain to which you are blocking iaea.org):<br/>
+<br/>
+RewriteCond %{HTTP_REFERER} ^http://www.iaea.org$<br/>
+RewriteRule !^http://[^/.]\.yourdomain\.com.* - [F,L]<br/>
+<br/>
+For more information about blocking malicious requests, check out How to Block Bad Bots and the Perishable Press 6G Firewall</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Password-protect directories
+</string>
+  <key>nodeid</key><string>1bd48112-8b69-485d-8d95-4e2499bdebf3</string>
+  <key>modified_time</key><integer>1515771971</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770232</integer>
+  <key>order</key><integer>15</integer>
+</dict>
+</node>

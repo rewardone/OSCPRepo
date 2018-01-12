@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Disable the server signature
+</string>
+  <key>nodeid</key><string>e2697cb0-9147-4562-897c-1b352683dba5</string>
+  <key>modified_time</key><integer>1515771636</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515770211</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

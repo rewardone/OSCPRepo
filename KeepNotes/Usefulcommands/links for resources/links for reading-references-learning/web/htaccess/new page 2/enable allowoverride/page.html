@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Enable AllowOverride</title>
+</head><body>For directives that require AllowOverride in order to function, such as FollowSymLinks (see previous section), the following directive must be added to the server configuration file. For performance considerations, it is important to only enable AllowOverride in the specific directory or directories in which it is required. In the following code chunk, we are enabling the AllowOverride privileges only in the specified directory:<br/>
+<br/>
+/www/replace/this/with/actual/directory<br/>
+<br/>
+So to enable AllowOverride for this directory:<br/>
+<br/>
+# enable allowoverride privileges<br/>
+&lt;Directory /www/replace/this/with/actual/directory&gt;<br/>
+&#09;AllowOverride Options<br/>
+&lt;/Directory&gt;<br/>
+<br/>
+Refer to this section for more information about AllowOverride and performance enhancement.</body></html>

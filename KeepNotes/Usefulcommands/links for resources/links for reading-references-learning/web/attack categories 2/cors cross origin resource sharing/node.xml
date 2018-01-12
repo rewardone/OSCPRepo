@@ -6,6 +6,7 @@
   <key>title</key><string>CORS: Cross Origin Resource Sharing</string>
   <key>nodeid</key><string>6c7c388a-0b1c-4722-8b0d-3f28ad43065e</string>
   <key>modified_time</key><integer>1512417243</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1512417151</integer>

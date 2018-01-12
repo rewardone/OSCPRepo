@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Even more scum-blocking tricks
+</title>
+</head><body>Here is a step-by-step series of code blocks that should equip you with enough knowledge to block any/all necessary entities. Read through the set of code blocks, observe the patterns, and then copy, combine and customize to suit your specific scum-blocking needs:<br/>
+<br/>
+# set variables for user agents and referers and ip addresses<br/>
+SetEnvIfNoCase User-Agent ".*(user-agent-you-want-to-block|php/perl).*" BlockedAgent<br/>
+SetEnvIfNoCase Referer ".*(block-this-referrer|and-this-referrer|and-this-referrer).*" BlockedReferer<br/>
+SetEnvIfNoCase REMOTE_ADDR ".*(666.666.66.0|22.22.22.222|999.999.99.999).*" BlockedAddress<br/>
+<br/>
+# set variable for any class B network coming from a given netblock<br/>
+SetEnvIfNoCase REMOTE_ADDR "66.154.*" BlockedAddress<br/>
+<br/>
+# set variable for two class B networks 198.25.0.0 and 198.26.0.0<br/>
+SetEnvIfNoCase REMOTE_ADDR "198.2(5|6)\..*" BlockedAddress<br/>
+<br/>
+# deny any matches from above and send a 403 denied<br/>
+&lt;Limit GET POST PUT&gt;<br/>
+&#09;Order deny,allow<br/>
+&#09;Deny from env=BlockedAgent<br/>
+&#09;Deny from env=BlockedReferer<br/>
+&#09;Deny from env=BlockedAddress<br/>
+&#09;Allow from all<br/>
+&lt;/Limit&gt;<br/>
+<br/>
+For more information, check out How to Block Bad Bots.</body></html>

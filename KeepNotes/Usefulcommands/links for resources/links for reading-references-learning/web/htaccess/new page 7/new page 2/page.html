@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WordPress permalinks
+</title>
+</head><body>In my article, The .htaccess rules for all WordPress Permalinks, I reveal the precise .htaccess directives used by the WordPress blogging platform for permalink functionality. Here, for the sake of completeness, we repeat the directives only. For more details please refer to the original article. There are two possibilities for this technique: WordPress installed in the site root directory, or WordPress installed in its own directory (subdirectory).<br/>
+<br/>
+WordPress installed in site root<br/>
+If WordPress is installed in the site’s root directory, WordPress creates and uses the following .htaccess directives:<br/>
+<br/>
+# BEGIN WordPress<br/>
+&lt;IfModule mod_rewrite.c&gt;<br/>
+&#09;RewriteEngine On<br/>
+&#09;RewriteBase /<br/>
+&#09;RewriteRule ^index\.php$ - [L]<br/>
+&#09;RewriteCond %{REQUEST_FILENAME} !-f<br/>
+&#09;RewriteCond %{REQUEST_FILENAME} !-d<br/>
+&#09;RewriteRule . /index.php [L]<br/>
+&lt;/IfModule&gt;<br/>
+# END WordPress<br/>
+No changes are required, strictly plug-&amp;-play.<br/>
+<br/>
+WordPress installed in its own directory<br/>
+If WordPress is installed in some subdirectory /foo/, WordPress creates and uses the following .htaccess directives:<br/>
+<br/>
+# BEGIN WordPress<br/>
+&lt;IfModule mod_rewrite.c&gt;<br/>
+&#09;RewriteEngine On<br/>
+&#09;RewriteBase /wordpress/<br/>
+&#09;RewriteRule ^index\.php$ - [L]<br/>
+&#09;RewriteCond %{REQUEST_FILENAME} !-f<br/>
+&#09;RewriteCond %{REQUEST_FILENAME} !-d<br/>
+&#09;RewriteRule . /wordpress/index.php [L]<br/>
+&lt;/IfModule&gt;<br/>
+# END WordPress<br/>
+Again, no changes are required, strictly plug-&amp;-play. For more information about either of these permalink techniques, refer to the original article, The .htaccess rules for all WordPress Permalinks.<br/>
+<br/>
+More .htaccess techniques for WordPress<br/>
+For more WordPress techniques, check out these resources:<br/>
+<br/>
+WordPress .htaccess file<br/>
+Stop WordPress from modifying .htaccess<br/>
+WordPress Block Proxy Visits<br/>
+Perishable Press articles about WordPress and .htaccess<br/>
+Also check out my book, .htaccess made easy — it includes an entire chapter of awesome .htaccess WordPress techniques.</body></html>
