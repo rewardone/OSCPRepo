@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Credential Store</title>
+</head><body>Windows provides 'Credential Store' framework to store the network based passwords in a secure encrypted format. This provides convenient and reliable mechanism to store the passwords for network logins so that user don't have to enter the password every time while accessing the network resources. <br/>
+<br/>
+<div style="text-align: justify"><span style="font-family: Helvetica Neue">Windows also allows applications to seamlessly manage this 'Credential Store' using Credential Management API functions [</span></div><a href="http://securityxploded.com/networkpasswordsecrets.php#References">Reference 2</a><div style="text-align: justify"><span style="font-family: Helvetica Neue">] such as CredEnumerate, CredRead, CredWrite, CredProtect, CredUnprotect, CredDelete etc.</span></div>&nbsp; <br/>
+<br/>
+<b>For Windows XP</b><br/>
+On Windows XP, the encrypted user credentials are stored in the hidden file called 'Credentials' inside both APPDATA and LOCALAPPDATA locations mentioned below.<br/>
+APPDATA Location - C:\Documents and Settings\&lt;username&gt;\Application Data\Microsoft\Credentials\&lt;user sid&gt;\<br/>
+<br/>
+LOCALAPPDATA Location - C:\Documents and Settings\&lt;username&gt;\Local Settings\Application Data\Microsoft\Credentials\&lt;user sid&gt;\ &nbsp;<br/>
+<br/>
+<br/>
+<b>For Vista &amp; Windows 7</b><br/>
+Vista onwards, the user credentials are stored in the multiple files with random name (generated using GUID) inside both APPDATA and LOCALAPPDATA locations mentioned below. (There will be separate credential file for each of the network accounts)<br/>
+APPDATA Location - C:\Users\&lt;username&gt;\AppData\Roaming\Microsoft\Credentials\<br/>
+<br/>
+LOCALAPPDATA Location - C:\Users\&lt;username&gt;\AppData\Local\Microsoft\Credentials\ &nbsp;<br/>
+<br/>
+<br/>
+These credential files are hidden and not visible even if you have enabled 'show hidden files/folders' in the folder settings. To view these files, use the command prompt and navigate to the above locations and then issue the 'dir /a' command. <br/>
+<br/>
+Each of these credential file begins with standard signature at the beginning of the file which can used for its verification. Here are the first 16 bytes representing the identity of such credential file.<br/>
+0x01, 0x00, 0x00, 0x00, 0xD0, 0x8C, 0x9D, 0xDF, 0x01, 0x15, 0xD1, 0x11, 0x8C, 0x7A, 0x00, 0xC0</body></html>

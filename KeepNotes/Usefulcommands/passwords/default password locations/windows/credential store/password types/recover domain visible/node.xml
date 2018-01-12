@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Recover 'Domain Visible'</string>
+  <key>nodeid</key><string>0ad8304b-8c2a-4aac-b388-3293c34ba3c9</string>
+  <key>modified_time</key><integer>1515779622</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515779597</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

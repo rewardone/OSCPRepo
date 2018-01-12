@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Controls</title>
+</head><body><b>Access ControlsWhitelist IPs</b><br/>
+ncat -l -p 8080 --allow 192.168.1.1<br/>
+<br/>
+<b>Whitelist from file</b><br/>
+Hosts should be separated by new lines<br/>
+<br/>
+<b>Blacklist IPs</b><br/>
+ncat -l -p 8080 --deny 192.168.1.1,10.10.0.1<br/>
+<br/>
+<b>Blacklist IPs from file</b><br/>
+Hosts should be separated by new lines<br/>
+<br/>
+ncat -l -p 8080 --denyfile hosts<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

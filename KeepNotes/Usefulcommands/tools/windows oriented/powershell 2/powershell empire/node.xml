@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>PowerShell Empire</string>
   <key>nodeid</key><string>7904a443-3423-4cd4-8556-c33b623b9c46</string>
   <key>modified_time</key><integer>1515773964</integer>

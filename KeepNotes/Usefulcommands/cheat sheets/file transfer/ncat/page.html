@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ncat</title>
+</head><body><b>Simple Web Server</b><br/>
+echo '&lt;html&gt;&lt;body&gt;This is ncat webserver&lt;/body&gt;&lt;/html&gt;' &gt; stuff.html<br/>
+ncat -l -p 8080 -c "printf 'HTTP/1.1 200 OK\r\n\r\n'; cat stuff.html" <br/>
+<br/>
+Once the ncat command is running navigate to web browser and point it to localhost.<br/>
+<br/>
+Accept multiple requests<br/>
+<br/>
+ncat --keep-open -l -p 8080 -c "printf 'HTTP/1.1 200 OK\r\n\r\n'; cat ~/stuff.html"<br/>
+<br/>
+<b>A Better HTTP Server</b><br/>
+There’s a neat Lua script that takes advantage of ncat’s ability to interact with the language. The script can be found <a href="https://github.com/nmap/nmap/blob/master/ncat/scripts/httpd.lua">here</a>. Try saving it to /tmp/httpd.lua<br/>
+<br/>
+Navigate to a directory with .html files in it, and run the following command.<br/>
+<br/>
+ncat -l -p 8080 --lua-exec /tmp/httpd.lua --keep-open<br/>
+<br/>
+<b>Transfer:</b><br/>
+nc -l -p 1234 &gt; file.ext<br/>
+nc &lt;ip&gt; 1234 &lt; file.ext<br/>
+<br/>
+</body></html>

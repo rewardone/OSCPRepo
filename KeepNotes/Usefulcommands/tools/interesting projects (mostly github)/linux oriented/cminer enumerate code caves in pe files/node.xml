@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>CMiner: Enumerate code caves in PE files</string>
+  <key>nodeid</key><string>70492d00-eb07-4c57-948e-f61ad434ba49</string>
+  <key>modified_time</key><integer>1515781963</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515781891</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

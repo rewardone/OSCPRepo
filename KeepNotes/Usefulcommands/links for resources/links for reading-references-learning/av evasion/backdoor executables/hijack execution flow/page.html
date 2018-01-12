@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Hijack Execution Flow</title>
+</head><body><b>Hijacking Execution Flow</b><br/>
+In this step, the goal is redirecting the execution flow to the backdoor code by modifying a instruction from target executable. There is one important detail about selecting the instruction that will be modified. All binary instructions has a size in manner of bytes, in order to jump to the backdoor code address, a long jump will be used which is 5 or 6 bytes. So when patching the binary, the instruction that will be patched needs to be the same size with a long jump instruction, otherwise the previous or next instruction will be corrupted.<br/>
+<br/>
+Selecting the right space for redirecting the execution is very important for bypassing the dynamic and sandbox analysis mechanisms of AV products. If redirection occurs directly it will probably be detected at the dynamic analysis phase of AV scanners.<br/>
+<br/>
+<b>Hiding Under User Interaction:</b><br/>
+<br/>
+The first things that comes in mind for bypassing sandbox/dynamic analysis phase is delaying the execution of the shellcode or designing sandbox aware shellcodes and trigger mechanisms. But when backdooring, most of the time there is not so much space for adding these kind of extra code inside PE file. Also designing anti detection mechanisms in assembly level languages requires a lot of time and knowledge.<br/>
+<br/>
+This method takes advantage of functions that requires user interactions in order to perform operations, redirecting the execution inside such functions will serve as a trigger mechanism for activating the backdoor code only if when a real user operating the program. If this method can be implemented correctly, it will have %100 success rate and it will not increase the backdoor code size.<br/>
+<br/>
+The “Open” button on putty executable UI launches a function that checks the validity of the given IP address, If the IP address field value is not empty and valid, it launches a connection function that tries to connect the given IP address.<br/>
+<br/>
+If client successfully creates a SSH session a new windows pops up and asks for credentials,<br/>
+<br/>
+This will be the point that redirection will occur, since no AV product is not advanced enough for replicating this kind of complex usage, the implanted backdoor will not be detected whit automated sandbox and dynamic analysis mechanisms.<br/>
+<br/>
+With using basic reverse engineering methods like following strings and string references it will not be hard to find the address of the connection function. After client establishes a connection with the given IP, there is a string “login as: “ printed to the appeared window. This string will help us find the address of the connection function, IDA Pro does a very good job in terms of following the string references.<br/>
+<br/>
+For finding the “login as:” string open Views-&gt;Open Subviews-&gt;Strings on IDA<br/>
+<br/>
+After finding the string double click on it for going to location, inside data sections IDA finds all the cross references that have made for the strings, with pressing “Ctrl+X” it shows all cross references,<br/>
+<br/>
+This reference made inside the function that prints the “login as: ” string,<br/>
+<br/>
+This will be the instruction that is going to be patched, before making any changes take note of the instruction. After the execution of the backdoor code it will be used again.<br/>
+<br/>
+With changing the PUSH 467C7C instruction to JMP 0x47A478 redirection phase of backdooring process is completed. It is important to take note of the next instruction address. It will be used as returning address after the execution of the backdoor code. Next step will be injecting the backdoor code.</body></html>

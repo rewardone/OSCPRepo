@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>.htaccess</string>
   <key>nodeid</key><string>a1d5e14b-77c0-4a27-bc03-928b9b612a68</string>
   <key>modified_time</key><integer>1515767406</integer>

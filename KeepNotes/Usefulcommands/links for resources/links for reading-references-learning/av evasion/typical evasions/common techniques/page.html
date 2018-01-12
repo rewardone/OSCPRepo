@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Common Techniques</title>
+</head><body>Common Techniques<br/>
+When it comes to reducing a malware’s detection score first things that comes in mind are crypters, packers and code obfuscation. These tools and techniques are still able to bypass good amount of AV product but because of the advancements in cyber security field most of the tools and methods in the wild is outdated and can’t produce FUD malware. For understanding the inner workings of these techniques and tools i will give brief descriptions;<br/>
+<br/>
+Obfuscation:<br/>
+<br/>
+Code obfuscation can be defined as mixing the source code of the binary without disrupting the real function, it makes static analyzing harder and also changes the hash signatures of the binary. Obfuscation can simply be implemented with adding few lines of garbage code or programmatically changing the execution order of the instructions. This method can bypass good amount of AV product but it depends on how much you obfuscate.<br/>
+<br/>
+Packers:<br/>
+<br/>
+Executable packer is any means of compressing an executable file and combining the compressed data with decompression code into a single executable. When this compressed executable is executed, the decompression code recreates the original code from the compressed code before executing it. In most cases this happens transparently so the compressed executable can be used in exactly the same way as the original. When a AV scanner scans a packed malware it needs to determine the compression algorithm and decompress it. &nbsp;Because of files that packed with packers are harder to analyze malware authors have a keen interest on packers.<br/>
+<br/>
+Crypters:<br/>
+<br/>
+Crypters are programs that encrypts the given binary for making it hard to analyze or reverse engineer. A crypter exists of two parts, a builder and a stub, builder simply just encrypts the given binary and places inside the stub, stub is the most important piece of the crypter, when we execute the generated binary first stub runs and decrypts the original binary to memory and then executes the binary on memory via “RunPE” method(in most cases).<br/>
+<br/>
+Problems with Crypters &amp; Packers<br/>
+<br/>
+Today’s AV companies has already realized the danger, now instead of just searching for malware signatures and harmful behavior they also search for signs of crypters and packers. Compared to detecting malware, detecting crypters and packers is relatively easy because of they all have to do certain suspicious things like decrypting the encrypted PE file and executing it on the memory.<br/>
+<br/>
+Perfect Approach<br/>
+<br/>
+The concept of encrypting the malicious code is clever but the decryption function should be obfuscated properly and when it comes to executing the decrypted code in memory we have to do it without relocating the absolute addresses, also there has to be a detection mechanism checking for weather the malware is analyzing dynamically in a sand box or not, if detection mechanism detects that malware is being analyzed by the AV then the decryption function shouldn’t be executed. Instead of encrypting the entire PE file encrypting shellcodes or only the .text section of the binary is much more suitable, it keeps the entropy and size low and makes no changes to image headers and sections.</body></html>

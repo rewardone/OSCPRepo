@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Perl</string>
   <key>nodeid</key><string>523b44bf-14f0-465f-bebf-03d670c0a6a0</string>
   <key>modified_time</key><integer>1505250251</integer>

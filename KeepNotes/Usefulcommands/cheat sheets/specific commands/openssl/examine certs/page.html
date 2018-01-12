@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Examine Certs</title>
+</head><body><b>Examine a CSR</b><br/>
+openssl req -text -noout -verify -in oldreq.csr<br/>
+<br/>
+<b>Examine a Private Key</b><br/>
+openssl rsa -in priv.key -check<br/>
+<br/>
+<b>Examine a Certificate</b><br/>
+openssl x509 -in cert.crt -text -noout<br/>
+<br/>
+<b>Examine PKCS files</b><br/>
+openssl pkcs12 -info -in key.pfx<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

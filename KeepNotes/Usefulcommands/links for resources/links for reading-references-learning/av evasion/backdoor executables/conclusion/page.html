@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Conclusion</title>
+</head><body>Conclusion &amp; Preventive Measures<br/>
+At the end, when all methods are applied properly, resulting backdoor is fully undetectable. For serving the concept of security in both ways this paper will also point out the counter measures against these backdooring techniques, these measures can be helpful for sysadmins, malware annalists and anti virus/malware product developers.<br/>
+<br/>
+1) Section Privilege Controls<br/>
+<br/>
+When talking about backdoored files, the section privileges are very important for detecting anomalies, current compilers are never going to set full permissions to a section unless programmer wants it to, especially data section like “.data” or “.rdata” shouldn’t have execute privileges, also code sections like .text shouldn’t have write privileges, these anomalies should be considered as suspicious behavior.<br/>
+<br/>
+2) Uncommon Section recognition<br/>
+<br/>
+If programmers doesn’t makes any configurations compilers usually creates 5-6 generic types of sections, all security products should posses a mechanism for recognizing uncommon and &nbsp;suspicious sections, this mechanism can look for the entropy and data alignment inside sections, if a section contains high entropy and unusually ordered data, it should be considered suspicious.<br/>
+<br/>
+3) Signature Checks<br/>
+<br/>
+This countermeasure is very classic but yet it is the most effective, when downloading a new program or &nbsp;any piece of executable file, checking the sha1 signature is the safest way for evading backdoored files in your system.<br/>
+<br/>
+4) Checking File Checksum<br/>
+<br/>
+When there is a difference between the checksum value inside &nbsp;image header and the actual checksum of the file, this indicates that the file has been modified, security products and sysadmins should check the authenticity of the file with calculating the actual checksum and comparing it with the image header.</body></html>

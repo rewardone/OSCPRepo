@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Generate Certs</title>
+</head><body><b>Generate RSA Private Key + CSR</b><br/>
+openssl req -out newkey.csr -new -newkey rsa:[bits] -nodes -keyout priv.key<br/>
+<br/>
+<b>Generate Self Signed Certificate + Priv Key</b><br/>
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:[bits] -keyout priv.key -out cert.crt<br/>
+<br/>
+<b>Generate CSR for existing Cert</b><br/>
+openssl x509 -x509toreq -in cert.crt -out newreq.csr -signkey priv.key<br/>
+<br/>
+<b>Generate CSR for Existing Key</b><br/>
+openssl req -out oldkey.csr -key priv.key -new<br/>
+<br/>
+<b>Create a CA</b><br/>
+openssl req -new -x509 -extensions v3_ca -keyout ca.key -out ca.crt -days [days valid]<br/>
+<br/>
+<b>Generate Diffie-Hellman Keys</b><br/>
+openssl dhparam -out dhparam.pem [bits]<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Inject Backdoor Code</title>
+</head><body>While injecting backdoor code the first think that needs to be done is saving the registers before the execution of the backdoor. Every value inside all registers is extremely important for the execution of the program. With placing PUSHAD and PUSHFD instructions at the beginning of the code cave all the registers and register flags are stored inside stack. These values will popped back after the execution of the backdoor code so the program can continue execution without any problem.<br/>
+<br/>
+As mentioned earlier, the backdoor code that will be used is meterpreter reverse TCP shellcode from metasploit project. But there needs to be few changes inside shellcode. Normally reverse TCP shellcode tries to connect to the handler given number of times and if the connection fails it closes the process by calling a ExitProcess API call.<br/>
+<br/>
+The problem here is, if the connection to handler fails the execution of the putty client will stop, with changing few lines of the shellcodes assembly now every time connection fails shellcode will retry to connect to the handler, also size of the shellcode is decreased.<br/>
+<br/>
+After making the necessary changes inside assembly code compile it with nasm -f bin stager_reverse_tcp_nx.asm command. Now the reverse TCP shellcode is ready to use, but it will not be placed directly. The goal is executing the shellcode on a new thread. In order to create a new thread instance, there needs to be another shellcode that makes a CreateThread API call that is pointing to reverse TCP shellcode. There is also a shellcode for creating threads inside metasploit project written by Stephen Fever,<br/>
+<br/>
+After placing the shellcode bytes inside createthread.asm file in hex format like above, it is ready to be assembled with nasm -f bin createthread.asm command. At this point the shellcode is ready to be inserted to the cave but before inserting the shellcode it should be encoded in order to bypass the static/signature analysis mechanisms of AV products. Because of all encoders inside metasploit project are known by majority of AV products, using custom encoders is highly suggested. This paper will not cover the making of such custom shellcode encoders because it will be yet another article’s subject but using multiple metasploit encoders may also work. After each encoding process uploading the encoded shellcode to virus total in raw format and checking the detection score is suggested. Try every combination until it gets undetected or wait for the next article<br/>
+<br/>
+After properly encoding the shellcode, it is time for inserting it to the code cave. Select the instruction just under the PUSHFD and press Ctrl+E on immunity debugger, shellcode will be pasted here in hex format.<br/>
+<br/>
+With xxd -ps createthread command, print the encoded createthread shellcode in hex format or open the shellcode with a hex editor and copy the hex values. While pasting the hex values to debugger be careful about the byte limit, these patching operations are made with immunity debugger and immunity debugger has a byte limit when pasting to edit code window. It will not paste all of the shellcode, remember the last 2 byte of the pasted shellcode inside edit code window, after pressing the OK button continue pasting the bytes where they end, when all shellcode is pasted to code cave the insertion of the backdoor code is complete.</body></html>

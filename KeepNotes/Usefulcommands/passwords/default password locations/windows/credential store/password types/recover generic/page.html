@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Recover 'Generic'</title>
+</head><body>Recovering 'Generic Network' PasswordsGeneric network passwords are user specific and can be decrypted only in the security context of corresponding user. As mentioned earlier Windows Credential Management [<a href="http://securityxploded.com/networkpasswordsecrets.php#References">Reference 2</a>] functions can be used to manage these passwords. <br/>
+<br/>
+Here is the sample code which demonstrates listing all the generic passwords and then decrypting them using <a href="http://msdn.microsoft.com/en-us/library/aa380882(VS.85).aspx">CryptUnprotectData</a> function.<br/>
+<br/>
+void EnumerateGenericNetworkPassword()<br/>
+{<br/>
+DATA_BLOB DataIn;<br/>
+DATA_BLOB DataOut;<br/>
+DATA_BLOB OptionalEntropy;<br/>
+tmpSalt[37];<br/>
+char *strSalt={"abe2869f-9b47-4cd9-a358-c22904dba7f7"};<br/>
+<br/>
+char strURL[1024];<br/>
+char strCredentials[1024];<br/>
+char strUsername[1024];<br/>
+char strPassword[1024];<br/>
+<br/>
+//Create the entropy/salt required for decryption...<br/>
+for(int i=0; i&lt; 37; i++)<br/>
+  tmpSalt[i] = (short int)(strSalt[i] * 4);<br/>
+<br/>
+OptionalEntropy.pbData = (BYTE *)&amp;tmpSalt;<br/>
+OptionalEntropy.cbData = 74;<br/>
+<br/>
+DWORD Count;<br/>
+PCREDENTIAL *Credential;<br/>
+<br/>
+//Now enumerate all http stored credentials....<br/>
+if(CredEnumerate(NULL,0,&amp;Count,&amp;Credential))<br/>
+{<br/>
+  for(int i=0;i&lt;Count;i++)<br/>
+  {<br/>
+<br/>
+    if( Credential[i]-&gt;Type == CRED_TYPE_GENERIC)<br/>
+    {<br/>
+       DataIn.pbData = (BYTE *)Credential[i]-&gt;CredentialBlob;<br/>
+       DataIn.cbData = Credential[i]-&gt;CredentialBlobSize;<br/>
+<br/>
+       if(CryptUnprotectData(&amp;DataIn, NULL, <br/>
+                             &amp;OptionalEntropy, NULL,<br/>
+                             NULL,0,&amp;DataOut))<br/>
+       {<br/>
+         //Extract username &amp; password from credentails (username:password)<br/>
+         sprintf_s(strCredentials, 1024, "%S", DataOut.pbData);<br/>
+<br/>
+         char *ptr = strchr(strCredentials, ':');<br/>
+         *ptr = '\0';<br/>
+         strcpy_s(strUsername, 1024, strCredentials);<br/>
+         ptr++;<br/>
+         strcpy_s(strPassword, 1024, ptr);<br/>
+<br/>
+         printf("Generic Network Password account details,<br/>
+                Username=%s, Password=%s", strUsername, strPassword);<br/>
+<br/>
+       }<br/>
+<br/>
+     }<br/>
+<br/>
+  } // End of FOR loop<br/>
+<br/>
+  CredFree(Credential);<br/>
+}<br/>
+<br/>
+} //End of function<br/>
+<br/>
+ The above code uses the <a href="http://msdn.microsoft.com/en-us/library/aa380882(VS.85).aspx">CredEnumerate</a> function to go through all the stored network password accounts for current user. Next it checks if the account type is CRED_TYPE_GENERIC. If generic type of account is found then it decrypts the user credential data using the CryptUnprotectData function which is part of Windows Crypto API package.[<a href="http://securityxploded.com/networkpasswordsecrets.php#References">reference 3</a>] Upon successful decryption it contains both username and password in the clear text separated by semicolon.  &nbsp;</body></html>

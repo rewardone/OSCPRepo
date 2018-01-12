@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>SCP / FIle Copy</string>
+  <key>nodeid</key><string>8948f8ca-75cc-46f0-ad4e-ad080f3f0849</string>
+  <key>modified_time</key><integer>1515786356</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515786325</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

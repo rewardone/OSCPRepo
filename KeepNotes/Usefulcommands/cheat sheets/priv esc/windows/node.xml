@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Windows</string>
   <key>nodeid</key><string>6b98f096-bdcd-4c3d-b74e-cd4c97696bc7</string>
   <key>modified_time</key><integer>1515601377</integer>
