@@ -8,6 +8,7 @@ Shutter
 ftp (unless another client exists)
 nmap: http-email-harvet.nse
 Impacket: git clone https://github.com/CoreSecurity/impacket.git
+exiftool
 
 Preferences to change:
 Gedit:

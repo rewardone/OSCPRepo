@@ -19,7 +19,7 @@ for folder in folders:
 
 	outfile = " -o " + "/root/scripts/recon_enum/results/exam/dirb/" + name + "_dirb_" + filename
 	DIRBSCAN = "dirb %s %s/%s %s -S -r" % (url, folder, filename, outfile)
-        print "Now trying dirb list: %s" % (filename)
+        #print "Now trying dirb list: %s" % (filename)
         try:
 	    results = subprocess.check_output(DIRBSCAN, shell=True)
 	    resultarr = results.split("\n")

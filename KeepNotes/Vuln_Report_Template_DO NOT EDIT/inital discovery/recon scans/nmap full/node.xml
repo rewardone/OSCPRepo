@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Nmap Full</string>
   <key>nodeid</key><string>9846e9fa-9dde-4afe-88a7-5a869c935766</string>
   <key>modified_time</key><integer>1515372303</integer>
