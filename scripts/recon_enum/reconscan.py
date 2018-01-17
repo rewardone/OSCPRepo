@@ -24,6 +24,8 @@
 ## [TODO]
 ## Something faster than DIRB (gobuster maybe?)
 ##      combine results into single text for parsing would be nice. Grep CODE:200 and -v certain sizes
+## Nikto / web scanner launch
+## WhatWeb/BlindElephant launch
 ## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
 ## 
 ## [THOUGHTS]
@@ -123,8 +125,8 @@ def fullMap(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running full TCP/UDP nmap scans for %s" % (ip_address)
    print "INFO: Full UDP takes a LONG time"
-   TCPSCAN = "nmap -n -vv -Pn -sS -T 4 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
-   UDPSCAN = "nmap -n -vv -Pn -sU -T 4 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
+   TCPSCAN = "nmap -n -vv -Pn -sS -T 4 -p- --max-retries 1 --min-rate 300 -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
+   UDPSCAN = "nmap -n -vv -Pn -sU -T 4 -p- --max-retries 1 --min-rate 300 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
    tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
    for line in tcplines:
       line = line.strip()
@@ -222,12 +224,12 @@ def nmapScan(ip_address):
    return
 
 #Be sure to change the interface if needed
-#-mT/-mU TCP/UDP respectively, %s:a is IP:a or IP:all ports
+#-mT/-mU TCP/UDP respectively, full range of ports. -L timeout 3 seconds (7 default), 300 packets per second (default)
 def unicornScan(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running general TCP/UDP unicorn scans for " + ip_address
-   TCPSCAN = "unicornscan -i eth0 -mT %s:a -l /root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt" % (ip_address, ip_address)
-   UDPSCAN = "unicornscan -i eth0 -mU %s:a -l /root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt" % (ip_address, ip_address)
+   TCPSCAN = "unicornscan -i eth0 -mT -p1-65535 %s -l /root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt -L 3 -r 300" % (ip_address, ip_address)
+   UDPSCAN = "unicornscan -i eth0 -mU -p1-65535 %s -l /root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt -L 3 -r 300" % (ip_address, ip_address)
    subprocess.check_output(TCPSCAN, shell=True)
    subprocess.check_output(UDPSCAN, shell=True)
    tcpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
@@ -273,35 +275,35 @@ def unicornScan(ip_address):
    for port in udpPorts: #the last element in the list is blank
       if port != "":
          uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
-         lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
+#         lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
          print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
-         for line in lines:
-            line = line.strip()
-            if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
-               while "  " in line:
-                  line = line.replace("  ", " ");
-               linesplit= line.split(" ")
-               service = linesplit[2] # grab the service name
-               port = line.split(" ")[0] # grab the port/proto
-               port = port.split("/")[0]
-               if ("http" in service):
-                  multProc(httpEnum, ip_address, port)
-               elif ("ssh/http" in service) or ("https" in service):
-                  multProc(httpsEnum, ip_address, port)
-               elif ("ssh" in service):
-                  multProc(sshEnum, ip_address, port)
-               elif ("smtp" in service):
-                  multProc(smtpEnum, ip_address, port)
-               elif ("snmp" in service):
-                  multProc(snmpEnum, ip_address, port)
-               elif ("domain" in service):
-                  multProc(dnsEnum, ip_address, port)
-               elif ("ftp" in service):
-                  multProc(ftpEnum, ip_address, port)
-               elif ("microsoft-ds" in service):
-                  multProc(smbEnum, ip_address, port)
-               elif ("ms-sql" in service):
-                  multProc(httpEnum, ip_address, port)
+#         for line in lines:
+#            line = line.strip()
+#            if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
+#               while "  " in line:
+#                  line = line.replace("  ", " ");
+#               linesplit= line.split(" ")
+#               service = linesplit[2] # grab the service name
+#               port = line.split(" ")[0] # grab the port/proto
+#               port = port.split("/")[0]
+#               if ("http" in service):
+#                  multProc(httpEnum, ip_address, port)
+#               elif ("ssh/http" in service) or ("https" in service):
+#                  multProc(httpsEnum, ip_address, port)
+#               elif ("ssh" in service):
+#                  multProc(sshEnum, ip_address, port)
+#               elif ("smtp" in service):
+#                  multProc(smtpEnum, ip_address, port)
+#               elif ("snmp" in service):
+#                  multProc(snmpEnum, ip_address, port)
+#               elif ("domain" in service):
+#                  multProc(dnsEnum, ip_address, port)
+#               elif ("ftp" in service):
+#                  multProc(ftpEnum, ip_address, port)
+#               elif ("microsoft-ds" in service):
+#                  multProc(smbEnum, ip_address, port)
+#               elif ("ms-sql" in service):
+#                  multProc(httpEnum, ip_address, port)
    print "INFO: General TCP/UDP unicorn and nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
    jobs = []
    q = multiprocessing.Process(target=fullMap, args=(scanip,)) #comma needed

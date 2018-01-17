@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>PHP-reverse-shells</string>
   <key>nodeid</key><string>bae49df3-591c-4a3d-b696-d2d51c85c1a8</string>
   <key>modified_time</key><integer>1512585600</integer>
