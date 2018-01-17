@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mega Primer What is XSS</title>
+</head><body>X(cross) Site Scripting is the injection of arbitrary HTML, CSS, or JavaScript into a page via an HTTP request, a server side database, or client side scripting. The injected code can then perform several actions which appear to originate from the vulnerable server or execute scripted actions on the vulnerable site using the victim's authentication. They are unique in that, rather than attacking a server directly, <b>they use a vulnerable server as a vector to attack a client</b><br/>
+<br/>
+There are several vectors for cross site scripting attack deployment. They are typically categorized into three types. The types are each referred to by several names as there is no standardized naming scheme for cross site scripting implementations.<br/>
+<br/>
+Type 0: DOM Based<br/>
+<br/>
+Type 1: Non-Persistent or Reflected<br/>
+<br/>
+Reflected XSS refers to a type of cross site scripting that originates from the victims browser. These types of attacks are not stored on the vulnerable site and usually originate as a link or form submission provided by various social engineering techniques leading the victim to clicking the offending link or form submission.<br/>
+<br/>
+Typically this uses GET requests which is the most commonly seen method. GET request XSS attacks can be seen by the victim as the XSS payload is sent within the URL. POST requests can be used as well and are much harder to detect by the victim since the data used to initiate the XSS attack is sent separate from the URL and is embedded in source if the page it resides on.<br/>
+<br/>
+In these types of XSS attacks, the user must be persuaded into follwing the attacker's URL that contains the XSS attack or in the case of POST request XSS, the victim must be coaxed into submitting the hidden XSS form data that is included in the source of the page it resides on.<br/>
+<br/>
+Type 2: Persistent or Stored<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b>The Impact</b><br/>
+The impact of malicious code insertion is often difficult to quantify and will change as new functionality or interactions are incorporated into both web servers and client browsers. Already, users may unintentionally execute scripts written by an attacker when they follow untrusted links in web pages, mail or instant messages, or any other application capable of displaying HTML content (e.g. Microsoft Help). For this reason, a series of examples best illustrate the diversity and impact of potential threats.<br/>
+<br/>
+Consider the following examples:<br/>
+<br/>
+An attacker often has access to the document retrieved since the malicious scripts are executed in a context that appears to have originated from the trusted site. With the appropriate insertions, a script could be used to read fields in a form provided by the trusted server and send this data back to the attacker.<br/>
+An attacker may be able to embed script code that has additional interactions with the legitimate web server without alerting the victim. For example, the attacker could develop an exploit that posted data to a different page on the legitimate web server.<br/>
+An attacker may be able to poison the sites persistent cookies, thus modifying the cookie content and causing malicious code to be executed each time the user visits the trusted site. The malicious code is stored as a field variable within the cookie, and executed each time the site dynamically generates page content without the correct processing.<br/>
+An attacker may be able to cause a “hidden window” to start on the client machine and us this to key-log all browser interaction of the victim. Should the victim later visit sites requiring authentication, the attacker could harvest this information.<br/>
+CSS type attacks can occur over SSL-encrypted connections. The victim, accessing a trusted host over HTTPS, may still execute an attackers code unintentionally. If the attacker references document components on a remote host, the victims client browser may generate a warning message about the insecure connection. However, the attacker can circumvent this warning by simply referencing content on a SSL-capable web server.<br/>
+An attacker may construct the malicious code to reference internal resources. Thus, an attacker may gain unauthorised access to an Intranet web server. Only one page on one web server in a domain is required to compromise the entire domain.<br/>
+An attacker may be able to bypass policies that prevent the victim browser from executing scripts. For example, Internet Explorer security “zones” may prevent the execution of scripts from untrusted Internet hosts. An attacker may embed their code within the content of a trusted internal host.<br/>
+An attacker may use a social engineering aspect to the attack. Consider an application that requires clients to complete a form to set up their account. An attacker may be able to insert malicious code into their application data. A quick phone call to the corporate help-desk asking for advice on their account may cause the execution of the malicious code on the help-desk system.<br/>
+Even if the victims’ web browser does not support scripting, an attacker may still be able to alter the content of the page – affecting its appearance, behaviour or normal operation.</body></html>
