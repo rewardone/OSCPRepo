@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Processes / Services</string>
   <key>nodeid</key><string>a1ae0538-88f0-4914-978d-d6249c548415</string>
   <key>modified_time</key><integer>1512753347</integer>

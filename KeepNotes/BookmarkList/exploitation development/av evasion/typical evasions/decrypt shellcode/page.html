@@ -1,0 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Decrypt Shellcode</title>
+</head><body>Decrypt Shellcode:<br/>
+<br/>
+Obfuscating the decryption mechanism is vital, most of AV heuristic engines are able to detect decryption loops inside PE files, after the huge increase on ransomware cases even some heuristic engines are build mainly just for finding encryption/decryption routines, after they detect a decryption routine, some scanners waits until ECX register to be “0” most of the time that indicates the end of loop, after they reach the end of the decryption loop they will re analyze the decrypted content of the file.</body></html>

@@ -14,13 +14,16 @@
     </dict>
   </array>
   <key>expanded</key><true/>
-  <key>title</key><string>BookmarkList</string>
   <key>nodeid</key><string>a98e8d44-f4ec-43dd-ad96-a168c5740b03</string>
   <key>modified_time</key><integer>1516294413</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1516294413</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>BookmarkList</string>
   <key>column_widths</key><dict>
     <key>created_time</key><integer>150</integer>
     <key>modified_time</key><integer>395</integer>
-    <key>title</key><integer>150</integer>
+    <key>title</key><integer>241</integer>
   </dict>
   <key>attr_defs</key><array>
     <dict>
@@ -115,9 +118,6 @@
     </dict>
   </array>
   <key>version</key><integer>6</integer>
-  <key>content_type</key><string>application/x-notebook-dir</string>
-  <key>created_time</key><integer>1516294413</integer>
-  <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>0</integer>
   <key>info_sort</key><string>order</string>
 </dict>

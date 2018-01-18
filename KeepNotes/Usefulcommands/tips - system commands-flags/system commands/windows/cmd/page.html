@@ -14,4 +14,7 @@ findstr /si password *.txt | *.xml | *.ini<br/>
 <br/>
 # Similarly the two commands below can be used to grep the registry for keywords, in this case "password".<br/>
 C:\Windows\system32&gt; reg query HKLM /f password /t REG_SZ /s<br/>
-C:\Windows\system32&gt; reg query HKCU /f password /t REG_SZ /s</body></html>
+C:\Windows\system32&gt; reg query HKCU /f password /t REG_SZ /s<br/>
+<br/>
+<br/>
+cmd.exe /k $cmd &#09;&#09;/k flag launches $cmd in a new process, useful to get out of sc error</body></html>

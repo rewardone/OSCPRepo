@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Restore Execution Flow</title>
+</head><body>After the creation of the backdoor code thread, the program needs to turn back to its ordinary execution, this means EIP should jump back to the function that redirected the execution to the cave. <br/>
+But before jumping back to that function all the saved register should be retrieved.<br/>
+<br/>
+With placing POPFD and POPAD instruction at the end of the shellcode, all saved register are poped backed from stack in the same order. After retrieving the registers there is one more think to do before jumping back. It is executing the hijacked instruction, the PUSH 467C7C instruction was replaced with JMP 0x47A478 in order to redirect the execution of the program to the code cave. Now with placing the PUSH 467C7C instruction at the end, hijacked instruction is retrieved also. It is time for returning back to the function that redirected the execution to the cave with inserting JMP 0x41CB73<br/>
+<br/>
+At the end select all patched and inserted instruction, press right-click and Copy to executable. This operation should be done to every instruction that have been modified. When all instructions are copied and saved to file, close the debugger and test out the executable, if executable is running smoothly the backdoor is ready to use.<br/>
+<br/>
+Finally, fixing the final file checksum [with PE Editor or other] is suggested for preserving authenticity of the file and not to look suspicious, also this may have a effect on decreasing the detection score.</body></html>

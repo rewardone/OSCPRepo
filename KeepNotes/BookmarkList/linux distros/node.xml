@@ -3,15 +3,15 @@
 <version>6</version>
 <dict>
   <key>expanded</key><false/>
-  <key>title</key><string>Linux Distros</string>
   <key>nodeid</key><string>ae7bf188-8f65-49b8-9a00-1bf222c37f02</string>
   <key>modified_time</key><integer>1516294771</integer>
   <key>expanded2</key><true/>
-  <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1516294771</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>8</integer>
+  <key>title</key><string>Linux Distros</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>9</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

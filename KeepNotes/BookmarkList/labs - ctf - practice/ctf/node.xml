@@ -2,9 +2,10 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>CTF</string>
   <key>nodeid</key><string>955ebcd6-0a8f-40d2-a262-dd537d489388</string>
-  <key>modified_time</key><integer>1516298123</integer>
+  <key>modified_time</key><integer>1516302875</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516296122</integer>
