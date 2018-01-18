@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Wireless</string>
+  <key>nodeid</key><string>cddfd9d5-5ae5-48c1-939d-0bd6f21a71e5</string>
+  <key>modified_time</key><integer>1516296109</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1516296100</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

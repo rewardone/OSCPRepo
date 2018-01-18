@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Man in the Middle</string>
+  <key>nodeid</key><string>a5c0ec33-c84f-46ef-97ad-e079d74b1051</string>
+  <key>modified_time</key><integer>1516301583</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1516301555</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
