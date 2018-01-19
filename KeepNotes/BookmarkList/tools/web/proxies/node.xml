@@ -3,15 +3,15 @@
 <version>6</version>
 <dict>
   <key>expanded</key><false/>
-  <key>title</key><string>Proxies</string>
   <key>nodeid</key><string>3992f8f6-41a5-4c1e-b9d8-c238be0efe23</string>
   <key>modified_time</key><integer>1516295199</integer>
   <key>expanded2</key><false/>
-  <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516295146</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>2</integer>
+  <key>title</key><string>Proxies</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>3</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

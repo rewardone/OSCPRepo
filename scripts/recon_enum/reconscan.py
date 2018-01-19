@@ -24,10 +24,13 @@
 ## [TODO]
 ## Something faster than DIRB (gobuster maybe?)
 ##      combine results into single text for parsing would be nice. Grep CODE:200 and -v certain sizes
+##      using dirbustEVERYTHING, optimize lists for use (ie uniq accross lists)
 ## Nikto / web scanner launch
 ## WhatWeb/BlindElephant launch
 ## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
-## 
+## Fix SNMPrecon onesixtyone
+## Expand DNSRecon
+##
 ## [THOUGHTS]
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
 ## open ports discovered. Probably better with one scan? 
@@ -275,35 +278,19 @@ def unicornScan(ip_address):
    for port in udpPorts: #the last element in the list is blank
       if port != "":
          uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
-#         lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
+         lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
          print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
-#         for line in lines:
-#            line = line.strip()
-#            if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
-#               while "  " in line:
-#                  line = line.replace("  ", " ");
-#               linesplit= line.split(" ")
-#               service = linesplit[2] # grab the service name
-#               port = line.split(" ")[0] # grab the port/proto
-#               port = port.split("/")[0]
-#               if ("http" in service):
-#                  multProc(httpEnum, ip_address, port)
-#               elif ("ssh/http" in service) or ("https" in service):
-#                  multProc(httpsEnum, ip_address, port)
-#               elif ("ssh" in service):
-#                  multProc(sshEnum, ip_address, port)
-#               elif ("smtp" in service):
-#                  multProc(smtpEnum, ip_address, port)
-#               elif ("snmp" in service):
-#                  multProc(snmpEnum, ip_address, port)
-#               elif ("domain" in service):
-#                  multProc(dnsEnum, ip_address, port)
-#               elif ("ftp" in service):
-#                  multProc(ftpEnum, ip_address, port)
-#               elif ("microsoft-ds" in service):
-#                  multProc(smbEnum, ip_address, port)
-#               elif ("ms-sql" in service):
-#                  multProc(httpEnum, ip_address, port)
+         for line in lines:
+            line = line.strip()
+            if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
+               while "  " in line:
+                  line = line.replace("  ", " ");
+               linesplit= line.split(" ")
+               service = linesplit[2] # grab the service name
+               port = line.split(" ")[0] # grab the port/proto
+               port = port.split("/")[0]
+               elif ("domain" in service):
+                  multProc(dnsEnum, ip_address, port)
    print "INFO: General TCP/UDP unicorn and nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
    jobs = []
    q = multiprocessing.Process(target=fullMap, args=(scanip,)) #comma needed
@@ -324,7 +311,7 @@ def mkdir_p(path):
 
 #Create the directories that are currently hardcoded in the script
 def createDirectories():
-   scriptsToRun = "nmap","ftp","ssh","http","sql","smb","smtp","unicorn","dirb"
+   scriptsToRun = "nmap","ftp","ssh","http","sql","smb","smtp","unicorn","dirb","snmp"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
 

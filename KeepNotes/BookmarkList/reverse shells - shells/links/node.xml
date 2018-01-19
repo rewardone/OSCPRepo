@@ -2,14 +2,12 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
-  <key>title</key><string>Metasploit</string>
-  <key>nodeid</key><string>5823d26a-9b28-4aba-83c9-7718941b4ac3</string>
-  <key>modified_time</key><integer>1516295748</integer>
-  <key>expanded2</key><false/>
+  <key>title</key><string>Links</string>
+  <key>nodeid</key><string>256ba742-e66a-47f0-b562-033b91ca5278</string>
+  <key>modified_time</key><integer>1516391404</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
-  <key>created_time</key><integer>1516295271</integer>
+  <key>created_time</key><integer>1516391388</integer>
   <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>0</integer>
   <key>info_sort</key><string>order</string>
