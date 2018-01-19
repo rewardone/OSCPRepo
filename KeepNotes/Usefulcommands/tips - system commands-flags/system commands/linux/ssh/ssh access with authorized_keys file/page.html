@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>SSH Access</title>
+<title>SSH Access with AUTHORIZED_KEYS file</title>
 </head><body>COPY THE KEY TO A SERVER<br/>
 <br/>
 Once an SSH key has been created, the <span style="font-size: 10pt">ssh-copy-id</span>&nbsp;command can be used to install it as an authorized key on the server. Once the key has been authorized for SSH, it grants access to the server without a password.<br/>
 This logs into the server host, and copies keys to the server, and configures them to grant access by adding them to the authorized_keys file. The copying may ask for a password or other authentication for the server.<br/>
-Only the public key is copied to the server. The private key should never be copied to another machine.<br/>
+<b>Only the public key is copied to the server.</b>&nbsp;The private key should never be copied to another machine.<br/>
 <br/>
 Use a command like the following to copy SSH key:<br/>
 <br/>
-ssh-copy-id -i ~/.ssh/mykey user@host<br/>
+ssh-copy-id -i ~/.ssh/mykey.pub user@host<br/>
 or<br/>
 cat ~/.ssh/id_rsa.pub | ssh user@123.45.56.78 "mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys"<br/>
 <br/>

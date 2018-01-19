@@ -5,4 +5,6 @@
 <title>Nasm</title>
 </head><body>Compile shellcode?<br/>
 <br/>
-nasm -f bin &lt;shellcode.asm&gt;</body></html>
+nasm -f bin &lt;shellcode.asm&gt;<br/>
+nasm -f bin -o payload.bin payload.asm<br/>
+nasm -f elf payload.asm; ld -o payload payload.o; objdump -d payload</body></html>

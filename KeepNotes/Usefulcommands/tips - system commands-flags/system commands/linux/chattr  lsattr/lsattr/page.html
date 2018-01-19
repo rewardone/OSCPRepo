@@ -10,4 +10,7 @@ The form of the lsattr command (gnu 1.41.3):<br/>
 -R recursively lists attributes of directories and their contents<br/>
 -V displays the program version<br/>
 -a lists all files in directories, including dotfiles<br/>
--d lists directories like other files, rather than listing their contents</body></html>
+-d lists directories like other files, rather than listing their contents<br/>
+<br/>
+# find all immutable files, there should not be any<br/>
+find . | xargs -I file lsattr -a file 2&gt;/dev/null | grep ‘^….i’</body></html>

