@@ -53,11 +53,42 @@ def dnsEnum(ip_address, port):
        subprocess.call(SCRIPT, shell=True)
     return
 
+#NSE Documentation
+#http-comments-displayer: Extract and output HTML and JavaScript comments from responses
+#http-config-backup: checks for backups and swap files of common CMS and web config files
+#http-default-accounts: test for access with default creds used by a variety of web applications and devices
+#http-git: check for .git and retrieve as much repo information as possible
+#http-grep: spider and attempt to match pages/urls against a given string. Search for email/ip by default. Configure more!
+#http-ls: shows content of an "index" page
+#http-method-tamper: attempt verb tamper to access password protected pages
+#http-methods: find what options are supported by a server by sending OPTIONS request
+#http-mobileversion-checker: check to see if a mobile UA will redirect to a mobile specific website
+#http-passwd: check if vuln to dir traversal 
+#http-robots.txt: checks for disallowed entries in robots.txt
+##http-useragent-tester: test for various tool UA headers to see if they are allowed or not (also see robots.txt)
+#http-userdir-enum: attempt to enum valid usernames on servers running mod_userdir module or similar enabled
+#http-vhosts: search for web virtual hostnames by sending HEAD requests
+
+#not run
+#http-apache-negotiation: check for mod_negotiation. If GET index, does site return index or index.html,etc
+#http-apache-server-status: check for mod_status and get information
+#http-backup-finder: attempt to identify backup copies of discovered files (.bak, ~ files, 'copy of index.html', etc)
+##http-enum: Enumerates directories used by popular web applications and servers
+#http-fileupload-exploiter: tries 3 methods to exploit upload forms
+#http-internal-ip-disclosure: send HTTP/1.0 request without host header to see if website will disclose IP
+#http-ntlm-info: sends HTTP NTLM auth request with null domain and user, obtain NetBIOS, DNS, and OS build if available
+#http-rfi-spider: crawls for RFI vulns. tests every form field and every param in URL
+#http-security-headers: checks headers for security related headers
+#http-shellshock: check for shellshock vulnerability
+#http-sitemap-generator: spider site and display dir structure with number and types of files in each folder
+#http-sql-injection: spider server looking for URLs containing queries vuln to SQLi. Extracts forms and tries to identify fields that are vuln
+#http-unsafe-output-escaping: fuzz parameters and checks to see if they are reflected
+
 def httpEnum(ip_address, port):
     print "INFO: Detected http on " + ip_address + ":" + port
     print "INFO: Performing nmap web script scan for " + ip_address + ":" + port    
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
-    HTTPSCAN = "nmap -sV -Pn -vv -p %s --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oN /root/scripts/recon_enum/results/exam/http/%s_http.nmap %s" % (port, userAgent, ip_address, ip_address)
+    HTTPSCAN = "nmap -sV -Pn -vv -p %s --script=http-useragent-tester,http-mobileversion-checker,http-ls,http-grep,http-git,http-comments-displayer,http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oN /root/scripts/recon_enum/results/exam/http/%s_http.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCAN, shell=True)
     #can opt to invoke dirbustEVERYTHING with <url> <output filename> <tool-to-use> ie dirb or gobuster (default)
     DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
@@ -72,7 +103,7 @@ def httpsEnum(ip_address, port):
     print "INFO: Detected https on " + ip_address + ":" + port
     print "INFO: Performing nmap web script scan for " + ip_address + ":" + port    
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
-    HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oX /root/scripts/recon_enum/results/exam/http/%s_https.nmap %s" % (port, userAgent, ip_address, ip_address)
+    HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-useragent-tester,http-mobileversion-checker,http-ls,http-grep,http-git,http-comments-displayer,http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oX /root/scripts/recon_enum/results/exam/http/%s_https.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCANS, shell=True)
     #can opt to invoke dirbustEVERYTHING with <url> <output filename> <tool-to-use> ie dirb or gobuster (default)
     DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script

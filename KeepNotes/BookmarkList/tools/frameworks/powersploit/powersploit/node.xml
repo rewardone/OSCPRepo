@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>PowerSploit</string>
+  <key>nodeid</key><string>7fdb58cc-9965-4d0e-90e4-d8b61e9a0907</string>
+  <key>modified_time</key><integer>1516637332</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1516637326</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
