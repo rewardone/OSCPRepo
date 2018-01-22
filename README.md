@@ -9,7 +9,13 @@ Nearly everything important is in the KeepNote notebook 'Usefulcommands'. It sta
 
 Recon_Scan.py
 
-A popular script, it's goal is to run unicornscan, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). This functionality could probably be imported into Sparta (a cool gui tool). It's also probably worse than Vanquish. For now, it get's the job done with a single ./reconscan.py. 
+A popular script, it's goal is to run unicornscan, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). This functionality could probably be imported into Sparta (a cool gui tool). It's also probably worse than Vanquish. For now, it get's the job done with a single ./reconscan.py. It is designed to run multithreaded against multiple targets simultaneously if network bandwidth allows. 
+
+Reconscan now uses gobuster as its directory brute forcing tool. Please ensure it is in your path. Dirb is still available, but you have to pass the option to dirbEVERYTHING.py or use dirb.py.
+
+Reconscan.py has the ability to run unicornscan, tens of nmap scripts, gobuster/dirb, nikto, whatweb, hydra, and so much more. Written in python, it is easy to change, configure (if wanted), and even run modules separately against a target. Unicornscan will finish and write its output first to allow you to manually look at a target/around its web interface while the rest of the scan is finishing. 
+
+Place 'scripts' and 'lists' in the /root/ directory and it should handle the rest.
 
 BookmarkList.nbk
 
