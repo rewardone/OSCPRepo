@@ -22,11 +22,6 @@
 ## worth anything anyway :)
 ##-------------------------------------------------------------------------------------------------------------
 ## [TODO]
-## Something faster than DIRB (gobuster maybe?)
-##      combine results into single text for parsing would be nice. Grep CODE:200 and -v certain sizes
-##      using dirbustEVERYTHING, optimize lists for use (ie uniq accross lists)
-## Nikto / web scanner launch
-## WhatWeb/BlindElephant launch
 ## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
 ## Fix SNMPrecon onesixtyone
 ## Expand DNSRecon
@@ -64,9 +59,13 @@ def httpEnum(ip_address, port):
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
     HTTPSCAN = "nmap -sV -Pn -vv -p %s --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oN /root/scripts/recon_enum/results/exam/http/%s_http.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCAN, shell=True)
+    #can opt to invoke dirbustEVERYTHING with <url> <output filename> <tool-to-use> ie dirb or gobuster (default)
     DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
-    NIKTOSCAN = "nikto -host %s -p %s > %s._nikto" % (ip_address, port, ip_address)
+    NIKTOSCAN = "nikto -host http://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_nikto" % (ip_address, port, ip_address)
+    subprocess.call(NIKTOSCAN, shell=True)
+    WHATWEBFINGER = "whatweb http://%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_whatweb.xml" % (ip_address, ip_address)
+    subprocess.call(WHATWEBFINGER, shell=True)
     return
 
 def httpsEnum(ip_address, port):
@@ -75,9 +74,13 @@ def httpsEnum(ip_address, port):
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
     HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oX /root/scripts/recon_enum/results/exam/http/%s_https.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCANS, shell=True)
+    #can opt to invoke dirbustEVERYTHING with <url> <output filename> <tool-to-use> ie dirb or gobuster (default)
     DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
-    NIKTOSCAN = "nikto -host %s -p %s > %s._nikto" % (ip_address, port, ip_address)
+    NIKTOSCAN = "nikto -host https://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_S_nikto" % (ip_address, port, ip_address)
+    subprocess.call(NIKTOSCAN, shell=True)
+    WHATWEBFINGER = "whatweb https://%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_S_whatweb.xml" % (ip_address, ip_address)
+    subprocess.call(WHATWEBFINGER, shell=True)
     return
 
 def mssqlEnum(ip_address, port):
@@ -311,7 +314,7 @@ def mkdir_p(path):
 
 #Create the directories that are currently hardcoded in the script
 def createDirectories():
-   scriptsToRun = "nmap","ftp","ssh","http","sql","smb","smtp","unicorn","dirb","snmp"
+   scriptsToRun = "nmap","ftp","ssh","http","sql","smb","smtp","unicorn","dirb","snmp","whatweb","nikto"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
 
@@ -339,6 +342,8 @@ print "####        http, ftp, dns, ssh, snmp, smtp, ms-sql     ####"
 print "############################################################"
 print "#############Don't forget to start your TCPDUMP#############"
 print "############################################################"
+print "## DIRB has currently been replaced with gobuster, please ##"
+print "## make sure it is installed!                             ##"
 
 
 #The script creates the directories that the results will be placed in

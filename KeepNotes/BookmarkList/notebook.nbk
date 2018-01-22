@@ -71,7 +71,7 @@
         </dict>
         <key>viewers</key><dict>
             <key>ids</key><dict>
-                <key>11401a44-d63a-41df-b128-37acfd0b85b0</key><dict>
+                <key>2635f29b-785f-46bd-9179-71c295332a08</key><dict>
                     <key>selected_treeview_nodes</key><array>
                     </array>
                     <key>selected_listview_nodes</key><array>
@@ -80,12 +80,12 @@
                 <key>6d44d2a2-aa44-4b18-a706-e950039c391c</key><dict>
                     <key>tabs</key><array>
                         <dict>
-                            <key>viewerid</key><string>11401a44-d63a-41df-b128-37acfd0b85b0</string>
+                            <key>viewerid</key><string>2635f29b-785f-46bd-9179-71c295332a08</string>
                             <key>viewer_type</key><string>three_pane_viewer</string>
                             <key>name</key><string></string>
                         </dict>
                     </array>
-                    <key>current_viewer</key><string>11401a44-d63a-41df-b128-37acfd0b85b0</string>
+                    <key>current_viewer</key><string>2635f29b-785f-46bd-9179-71c295332a08</string>
                 </dict>
             </dict>
         </dict>

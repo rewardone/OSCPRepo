@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Linux Oriented</string>
   <key>nodeid</key><string>88ee0b8b-80af-4475-82cd-ecd495ff74e2</string>
   <key>modified_time</key><integer>1513269432</integer>

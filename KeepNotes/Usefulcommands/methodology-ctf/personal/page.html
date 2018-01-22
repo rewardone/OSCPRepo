@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Personal</title>
+</head><body>TODO: Fill in with Windows tools as well<br/>
+TODO: Fill in with OS X tools as well (some at https://objective-see.com/products.html)<br/>
+<br/>
+RECON<br/>
+&#09;HOST DISCOVERY / IP RANGE<br/>
+&#09;&#09;Recon frameworks (make sure to set up api keys)<br/>
+&#09;&#09;&#09;recon-ng<br/>
+&#09;&#09;&#09;osint-spy<br/>
+&#09;&#09;&#09;datasploit<br/>
+&#09;&#09;&#09;theHarvester<br/>
+&#09;&#09;Networks<br/>
+&#09;&#09;&#09;nmap host discovery<br/>
+&#09;&#09;&#09;netdiscover<br/>
+&#09;&#09;Web<br/>
+&#09;&#09;&#09;whois<br/>
+&#09;&#09;&#09;dns / dig<br/>
+&#09;&#09;&#09;google fu<br/>
+&#09;TARGET IDENTIFIED: SPECIFIC HOST RECON<br/>
+&#09;&#09;Networks<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Automated initial recon</li>
+<li style="list-style-type: none">&nbsp; RECONCSAN.py</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09; &nbsp;nmap port scan, UDP/TCP, etc (5/10 min per host)<br/>
+&#09;&#09;&#09; &nbsp;nmap script options<br/>
+&#09;&#09;&#09; &nbsp;SPECIFIC SERVICE RECON<br/>
+&#09;&#09;&#09; &#09; FTP (with hydra: 10-20 min per host)<br/>
+&#09;&#09;&#09;&#09; SSH (with hydra: 10-20 min per host)<br/>
+&#09;&#09;&#09;&#09; TELNET<br/>
+&#09;&#09;&#09;&#09; WEB (with gobuster/more: 30-60 min per host)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Tested: </li>
+<li style="list-style-type: none">&nbsp;&#09; Burp / Zap for manual/fine grain testing</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Gobuster/Dirb are dir brute tools of choice</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Gobuster fast</li>
+<li style="list-style-type: none">&nbsp;Dirb can recurse if desired</li>
+<li style="list-style-type: none">&nbsp;dirbuster/wfuzz/dirsearch/etc are slower..</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;Nikto: super fast web vuln scan</li>
+<li style="list-style-type: none">WhatWeb: super fast generic server fingerprint</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;Not tested:</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09;&#09;&#09;DotDotPwn<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; FiMap</li>
+<li style="list-style-type: none">&nbsp; LFIFreak</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09;&#09;&#09;OWASP-Xenotix-XSS-Exploit-Framework<br/>
+&#09;&#09;&#09;&#09;&#09;OWASP-owtf (offensive web testing framework)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; XSSer</li>
+</ul>
+</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;Must run separate:</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;WEB:</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;wapiti: more full featured web vuln scan and exploiter. page specific? takes a long time to run (60m+)</li>
+<li style="list-style-type: none">&nbsp;w3af: huge. requires extensive config or loading profile. SQLmap and other auto exploit, so prob not allowed on OSCP.</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;BlindElephant: requires URL AND appname for specific fingerprint</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp;&#09;&#09;&#09;&#09; &nbsp; &nbsp; &nbsp; SQLMap (not allowed on OSCP)<br/>
+<br/>
+Define process for Limited Shell, ie:<br/>
+&#09;Determine rough limits<br/>
+&#09;&#09;Attempt basic limited shell escape (rbash/etc)<br/>
+&#09;Basic privexec and enumeration<br/>
+&#09;&#09;lynis<br/>
+&#09;&#09;open-scap?<br/>
+&#09;Loot files (define process for what to go after)<br/>
+&#09;&#09;Identify commands that can be used<br/>
+&#09;&#09;Identify applications installed<br/>
+&#09;&#09;Enumerate kernel<br/>
+&#09;&#09;Enumerate groups<br/>
+&#09;&#09;Loot (common):<br/>
+&#09;&#09;&#09;/var/www - website files<br/>
+&#09;&#09;&#09;/home/user/.ssh - ssh keys<br/>
+&#09;&#09;&#09;/etc/ssh - ssh config<br/>
+&#09;&#09;Enumerate all other config files<br/>
+&#09;&#09;&#09;'find' commands<br/>
+&#09;&#09;Enumerate directories with rwx access <br/>
+&#09;&#09;Enumerate files with +s bit<br/>
+&#09;Privexec <br/>
+Define process for Root shell<br/>
+&#09;Set up persistence<br/>
+&#09;&#09;SSH:<br/>
+&#09;&#09;&#09;Add Kali public to /home/user/.ssh/authorized_keys<br/>
+&#09;&#09;&#09;Crack usernames/passwords<br/>
+&#09;&#09;&#09;Add new user with root privileges<br/>
+&#09;&#09;Establish C2:<br/>
+&#09;&#09;&#09;FruityC2 (with agent)<br/>
+&#09;Data exfiltration<br/>
+&#09;&#09;DET (Data Exfiltration Toolkit)<br/>
+&#09;Enumerate network connections<br/>
+&#09;&#09;During enumeration:<br/>
+&#09;&#09;More creds<br/>
+&#09;&#09;Loot files (define process for what to go after)<br/>
+&#09;<br/>
+&#09;<br/>
+&#09;<br/>
+&#09;<br/>
+END REPORTING<br/>
+&#09;Tools that can help automate reporting?<br/>
+&#09;&#09;Dradis-CE<br/>
+&#09;&#09;<br/>
+&#09;&#09;<br/>
+&#09;&#09;<br/>
+Random useful/useless tools<br/>
+Unhide - http://www.unhide-forensics.info/</body></html>

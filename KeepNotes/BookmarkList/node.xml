@@ -22,7 +22,7 @@
   <key>title</key><string>BookmarkList</string>
   <key>column_widths</key><dict>
     <key>created_time</key><integer>150</integer>
-    <key>modified_time</key><integer>395</integer>
+    <key>modified_time</key><integer>823</integer>
     <key>title</key><integer>241</integer>
   </dict>
   <key>attr_defs</key><array>

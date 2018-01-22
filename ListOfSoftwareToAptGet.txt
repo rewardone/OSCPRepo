@@ -10,6 +10,7 @@ Impacket: git clone https://github.com/CoreSecurity/impacket.git
 exiftool
 Alacarte (MainMenu): Used to edit menu items easily
 Firefox (up-to-date): For use with updated extensions like FoxyProxy
+gobuster: required default for reconscan
 
 Favorites to add:
 Shutter (autostart)
@@ -17,7 +18,7 @@ KeepNote
 Zap
 
 Preferences to change:
-Gedit: Show line numbers
+Gedit: Show line numbers, show end brackets
 Nautilus: Show option to create symbolic links
 
 Files to create:
@@ -31,6 +32,7 @@ reconscan.py: File location for targets
 reconscan.py: File location for nmap result outputs
 SSHrecon.py: File location for user/password lists
 FTPrecon.py: File location for user/password lists
+/etc/nikto.conf: user agent plus other tool specific changes
 
 TODO:
 launch new window with tcpdump

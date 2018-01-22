@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Methodology/CTF</string>
   <key>nodeid</key><string>5c931f81-ab32-4dc6-81d0-9d46ca2378ec</string>
   <key>modified_time</key><integer>1505245169</integer>
