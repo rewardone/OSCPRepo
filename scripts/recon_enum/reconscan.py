@@ -22,9 +22,14 @@
 ## worth anything anyway :)
 ##-------------------------------------------------------------------------------------------------------------
 ## [TODO]
+## Common ports/protos to automate:
+##	3389 - RDP
+##		hydra password spray
+## Running each script individually does not ensure their output directory paths exist...QoL feature...
 ## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
 ## Fix SNMPrecon onesixtyone
 ## Expand DNSRecon
+## 'setup.py' that copies/moves the 'script' and 'lists' directories to where they need to be. can download gobuster, etc.
 ##
 ## [THOUGHTS]
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
@@ -38,7 +43,6 @@ import os
 import time 
 import errno
 
-
 def multProc(targetin, scanip, port):
     jobs = []
     p = multiprocessing.Process(target=targetin, args=(scanip,port))
@@ -47,11 +51,26 @@ def multProc(targetin, scanip, port):
     return
 
 def dnsEnum(ip_address, port):
-    print "INFO: Detected DNS on " + ip_address + ":" + port
+    print "INFO: Detected DNS on %s:%s" % (ip_address, port)
     if port.strip() == "53":
        SCRIPT = "./dnsrecon.py %s" % (ip_address)# execute the python script         
        subprocess.call(SCRIPT, shell=True)
     return
+	
+def ftpEnum(ip_address, port):
+    #EDIT WITH USERNAME/PASSWORD LISTS
+    print "INFO: Detected ftp on %s:%s" % (ip_address, port)
+    #FTPRECON in subdirectory in case ssh/telnet/mysql are present, hydra will have
+    #separate hydra.restore files
+    SCRIPT = "ftp/./ftprecon.py %s %s" % (ip_address, port)       
+    subprocess.call(SCRIPT, shell=True)
+    return
+
+def fingerEnum(ip_address, port):
+   print "INFO: Detected Finger on %s:%s" % (ip_address, port)
+   FINGERSCAN = "nmap -n -sV -Pn -vv -p %s --script=finger -oX /root/scripts/recon_enum/results/exam/finger/%s_finger.xml %s" % (port, ip_address, ip_address)
+   subprocess.call(FINGERSCAN, shell=True)
+   return
 
 #NSE Documentation
 #http-comments-displayer: Extract and output HTML and JavaScript comments from responses
@@ -85,8 +104,8 @@ def dnsEnum(ip_address, port):
 #http-unsafe-output-escaping: fuzz parameters and checks to see if they are reflected
 
 def httpEnum(ip_address, port):
-    print "INFO: Detected http on " + ip_address + ":" + port
-    print "INFO: Performing nmap web script scan for " + ip_address + ":" + port    
+    print "INFO: Detected http on %s:%s" % (ip_address, port)
+    print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
     HTTPSCAN = "nmap -sV -Pn -vv -p %s --script=http-useragent-tester,http-mobileversion-checker,http-ls,http-grep,http-git,http-comments-displayer,http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oN /root/scripts/recon_enum/results/exam/http/%s_http.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCAN, shell=True)
@@ -100,8 +119,8 @@ def httpEnum(ip_address, port):
     return
 
 def httpsEnum(ip_address, port):
-    print "INFO: Detected https on " + ip_address + ":" + port
-    print "INFO: Performing nmap web script scan for " + ip_address + ":" + port    
+    print "INFO: Detected https on %s:%s" % (ip_address, port)
+    print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)  
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
     HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-useragent-tester,http-mobileversion-checker,http-ls,http-grep,http-git,http-comments-displayer,http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oX /root/scripts/recon_enum/results/exam/http/%s_https.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCANS, shell=True)
@@ -115,26 +134,54 @@ def httpsEnum(ip_address, port):
     return
 
 def mssqlEnum(ip_address, port):
-    print "INFO: Detected MS-SQL on " + ip_address + ":" + port
-    print "INFO: Performing nmap mssql script scan for " + ip_address + ":" + port    
-    MSSQLSCAN = "nmap -n -sV -Pn -vv -p %s --script=ms-sql-info,ms-sql-config,ms-sql-dump-hashes --script-args=mssql.instance-port=1433,smsql.username-sa,mssql.password-sa -oX /root/scripts/recon_enum/results/exam/sql/%s_mssql.xml %s" % (port, ip_address, ip_address)
-    results = subprocess.check_output(MSSQLSCAN, shell=True)
+    #EDIT WITH USERNAME/PASSWORD LISTS
+	#MYSQLRECON in subdirectory in case multiple Hydra.restore files. default, nmap performs brute.
+    print "INFO: Detected MS-SQL on %s:%s" % (ip_address, port)
+    SCRIPT = "mssql/./mssqlrecon.py %s %s" % (ip_address, port)
+    results = subprocess.check_output(SCRIPT, shell=True)
+    return
+
+def mysqlEnum(ip_address, port):
+    #EDIT WITH USERNAME/PASSWORD LISTS
+	#MYSQLRECON in subdirectory in case ftp/ssh/telnet are present, hydra will have
+    #separate hydra.restore files. default, nmap performs the brute, but just in case
+    print "INFO: Detected MySQL on %s:%s" % (ip_address, port)
+    SCRIPT = "mysql/./mysqlrecon.py %s %s" % (ip_address, port)
+    subprocess.call(SCRIPT, shell=True)
+    return
+
+#nfs-ls: attempts to get useful information about files from NFS exports.
+#nfs-showmount: shows NFS exports like the 'showmount -e' command
+#nfs-statfs: retrieves disk space statistics
+def nfsEnum(ip_address, port):
+    print "INFO: Detected NFS on %s:%s" % (ip_address, port)
+    NFSSCAN = "nmap -n -sV -Pn -vv -p %s --script=nfs-ls,nfs-showmount,nfs-statfs -oX /root/scripts/recon_enum/results/exam/nfs/%s_nfs.xml %s" % (port, ip_address, ip_address)
+    subprocess.call(NFSSCAN, shell=True)
+    return
+
+def rdpEnum(ip_address, port):
+    #EDIT WITH USERNAME/PASSWORD LISTS
+	#RDPRECON in subdir in case multiple hydra.restore files
+    print "INFO: Detected RDP on %s:%s" % (ip_address, port)
+    SCRIPT = "rdp/./rdprecon.py %s %s" % (ip_address, port)
+    subprocess.call(SCRIPT, shell=True)
+    return
 
 def sshEnum(ip_address, port):
-    #EDIT SSHRECON WITH USERNAME/PASSWORD LISTS
-    print "INFO: Detected SSH on " + ip_address + ":" + port
+    #EDIT WITH USERNAME/PASSWORD LISTS
+    print "INFO: Detected SSH on %s:%s" % (ip_address, port)
     SCRIPT = "./sshrecon.py %s %s" % (ip_address, port)
     subprocess.call(SCRIPT, shell=True)
     return
 
 def snmpEnum(ip_address, port):
-    print "INFO: Detected snmp on " + ip_address + ":" + port
+    print "INFO: Detected snmp on %s:%s" % (ip_address, port)
     SCRIPT = "./snmprecon.py %s" % (ip_address)         
     subprocess.call(SCRIPT, shell=True)
     return
 
 def smtpEnum(ip_address, port):
-    print "INFO: Detected smtp on " + ip_address + ":" + port
+    print "INFO: Detected smtp on %s:%s" % (ip_address, port)
     if port.strip() == "25":
        SCRIPT = "./smtprecon.py %s" % (ip_address)       
        subprocess.call(SCRIPT, shell=True)
@@ -143,20 +190,26 @@ def smtpEnum(ip_address, port):
     return
 
 def smbEnum(ip_address, port):
-    print "INFO: Detected SMB on " + ip_address + ":" + port
+    print "INFO: Detected SMB on %s:%s" % (ip_address, port)
     if port.strip() == "445":
        SCRIPT = "./smbrecon.py %s 2>/dev/null" % (ip_address)
        subprocess.call(SCRIPT, shell=True)
     return
 
-def ftpEnum(ip_address, port):
-    #EDIT FTPRECON WITH USERNAME/PASSWORD LISTS
-    print "INFO: Detected ftp on " + ip_address + ":" + port
-    #FTPRECON in subdirectory in case ftp and ssh are present, hydra will have
+def telnetEnum(ip_address, port):
+    #EDIT WITH USERNAME/PASSWORD LISTS
+    #TELNETRECON in subdirectory in case ftp/ssh/mysql are present, hydra will have
     #separate hydra.restore files
-    SCRIPT = "ftp/./ftprecon.py %s %s" % (ip_address, port)       
+    print "INFO: Detected Telnet on %s:%s" % (ip_address, port)
+    SCRIPT = "telnet/./telnetrecon.py %s %s" % (ip_address, port)
     subprocess.call(SCRIPT, shell=True)
     return
+
+def tftpEnum(ip_address, port):
+   print "INFO: Detected TFTP on %s:%s" % (ip_address, port)
+   TFTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=tftp-enum -oX /root/scripts/recon_enum/results/exam/tftp/%s_tftp.xml %s" % (port, ip_address, ip_address)
+   subprocess.call(TFTPSCAN, shell=True)
+   return
     
 def fullMap(ip_address):
    ip_address = ip_address.strip()
@@ -292,6 +345,22 @@ def unicornScan(ip_address):
                port = port.split("/")[0]
                if ("http" in service):
                   multProc(httpEnum, ip_address, port)
+               elif ("domain" in service):
+                  multProc(dnsEnum, ip_address, port)
+               elif ("finger" in service):
+			      multProc(fingerEnum, ip_address, port)
+               elif ("ftp" in service):
+                  multProc(ftpEnum, ip_address, port)
+               elif ("microsoft-ds" in service):
+                  multProc(smbEnum, ip_address, port)
+               elif ("ms-sql" in service):
+                  multProc(mssqlEnum, ip_address, port)				  				  
+               elif ("my-sql" in service):
+			      multProc(mysqlEnum, ip_address, port)
+               elif ("nfs" in service):
+			      multProc(nfsEnum, ip_address, port)
+               elif ("rdp" in service):
+			      multProc(rdpEnum, ip_address, port)
                elif ("ssh/http" in service) or ("https" in service):
                   multProc(httpsEnum, ip_address, port)
                elif ("ssh" in service):
@@ -300,15 +369,11 @@ def unicornScan(ip_address):
                   multProc(smtpEnum, ip_address, port)
                elif ("snmp" in service):
                   multProc(snmpEnum, ip_address, port)
-               elif ("domain" in service):
-                  multProc(dnsEnum, ip_address, port)
-               elif ("ftp" in service):
-                  multProc(ftpEnum, ip_address, port)
-               elif ("microsoft-ds" in service):
-                  multProc(smbEnum, ip_address, port)
-               elif ("ms-sql" in service):
-                  multProc(httpEnum, ip_address, port)            
-            
+               elif ("telnet" in service):
+			      multProc(telnetEnum, ip_address, port)
+               elif ("tftp" in service):
+			      multProc(tftpEnum, ip_address, port)
+               
    for port in udpPorts: #the last element in the list is blank
       if port != "":
          uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
@@ -345,7 +410,7 @@ def mkdir_p(path):
 
 #Create the directories that are currently hardcoded in the script
 def createDirectories():
-   scriptsToRun = "nmap","ftp","ssh","http","sql","smb","smtp","unicorn","dirb","snmp","whatweb","nikto"
+   scriptsToRun = "dirb","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
 
@@ -369,12 +434,15 @@ def mksymlink():
 print "############################################################"
 print "####                      RECON SCAN                    ####"
 print "####            A multi-process service scanner         ####"
-print "####        http, ftp, dns, ssh, snmp, smtp, ms-sql     ####"
+print "####        finger, http, mssql, mysql, nfs, nmap,      ####"
+print "####        rdp, smb, smtp, snmp, ssh, telnet, tftp     ####"
 print "############################################################"
-print "#############Don't forget to start your TCPDUMP#############"
+print "############ Don't forget to start your TCPDUMP ############"
 print "############################################################"
-print "## DIRB has currently been replaced with gobuster, please ##"
-print "## make sure it is installed!                             ##"
+print "## This tool relies on many others. Please ensure you   ####"
+print "## have the following in your PATH:                     ####"
+print "## nmap, unicornscan, hydra, gobuster, whatweb, nikto   ####"
+print "############################################################"
 
 
 #The script creates the directories that the results will be placed in

@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>cryptsetup</title>
+</head><body>sudo cryptsetup luksFormat &lt;/dev/sda1&gt;&#09;&#09;&#09;&#09;encrypt a partition <br/>
+cryptsetup open &lt;/dev/sda1&gt; backup&#09;&#09;&#09;&#09;&#09;mount encrypted partition part 1<br/>
+mount &lt;/dev/mapper/backup&gt; &lt;/media/username/back&gt;&#09;mount encrypted partition part 2<br/>
+<br/>
+sudo cryptsetup luksDump &lt;/dev/sda3&gt;&#09;&#09;&#09;&#09;view passphrase slots<br/>
+sudo cryptsetup luksAddKey &lt;/dev/sda3&gt;&#09;&#09;&#09;&#09;add a key<br/>
+sudo cryptsetup luksRemoveKey &lt;/dev/sda3&gt;&#09;&#09;&#09;remove key</body></html>

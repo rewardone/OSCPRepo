@@ -15,4 +15,6 @@ sudo usermod -aG sudo &lt;USERNAME&gt;<br/>
 Adding a user and putting them in sudoers (run as root or escalate?)<br/>
 $useradd -u 12345 -g root -s /bin/bash -p <br/>
 $(echo epat | openssl  passwd -1 -stdin) tape echo "tape ALL=(ALL:ALL) NOPASSWD:ALL" &gt;&gt; /etc/sudoers<br/>
+<br/>
+echo "username ALL=(ALL) ALL" &gt;&gt; /etc/sudoers<br/>
 </body></html>

@@ -12,9 +12,9 @@ ip_address = sys.argv[1]
 #NSE Documentation
 #Running
 #snmp-brute: Attempt to find community string by brute force guessing. default wordlist: nselib/data/snmpcommunities.lst. provide own with snmp-brute.communitiesdb arg
-#snmp-hh3c-logins: Attempts to enum Huawei / HP/H3c Locally defined users through the hh3c-user.mib OID.
+#snmp-hh3c-logins: Attempts to enum Huawei / HP/H3c Locally defined users through the hh3c-user.mib OID. --script-args creds.snmp=:<community>
 #snmp-info: extract basic information from SNMPv3 GET request
-#snmp-ios-config: attempt to download CISCO router IOS config files using SNMP RW (v1) and display or save them
+#snmp-ios-config: attempt to download CISCO router IOS config files using SNMP RW (v1) and display or save them --script-args creds.snmp=:<community>
 #snmp-netstat: attempt to query for netstat like output. Can be used to identify and add new targets to scan by using newtargets script arg.
 #snmp-processes: attempt to enumerate running processes through SNMP
 #snmp-sysdescr: attempt to extract system information from SNMP v1 service

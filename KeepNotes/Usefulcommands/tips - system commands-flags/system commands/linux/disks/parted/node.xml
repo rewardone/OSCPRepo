@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>parted</string>
+  <key>nodeid</key><string>8b3e86c1-f1e0-4c53-9bea-09cc408b21c7</string>
+  <key>modified_time</key><integer>1516735659</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1516735502</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

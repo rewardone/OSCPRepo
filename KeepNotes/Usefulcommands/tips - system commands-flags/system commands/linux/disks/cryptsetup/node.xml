@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>cryptsetup</string>
+  <key>nodeid</key><string>83d4b7fe-11d0-45dc-91f6-c45a91e31b87</string>
+  <key>modified_time</key><integer>1516735923</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1516735760</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

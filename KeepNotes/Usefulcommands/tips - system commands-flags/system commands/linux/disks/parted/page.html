@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>parted</title>
+</head><body>manage partitions/disks<br/>
+<br/>
+sudo parted &lt;/dev/sda&gt; &lt;mklabel&gt; &lt;gpt&gt;&#09;&#09;&#09;&#09;&#09;format a disk labeled "mklabel"<br/>
+sudo parted --align optimal &lt;/dev/sda&gt; &lt;mkpart&gt; primary &lt;ext4&gt; &#09;create a partition named "mkpart"<br/>
+sudo parted &lt;/dev/sda&gt; rm 1&#09;&#09;&#09;&#09;&#09;&#09;&#09;remove a partition<br/>
+</body></html>
