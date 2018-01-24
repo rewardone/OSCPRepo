@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Network Scanners and Scripts</string>
   <key>nodeid</key><string>fc3cce0d-447b-45c4-b882-336ec3d3ecfe</string>
   <key>modified_time</key><integer>1516390991</integer>

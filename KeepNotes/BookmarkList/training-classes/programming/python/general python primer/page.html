@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Python Primer</title>
+</head><body><b>Array/list</b><br/>
+my_list = [1,"string",3,4,5]<br/>
+for item in my_list:<br/>
+&nbsp; &nbsp; print item<br/>
+<br/>
+# Append/push to list<br/>
+my_list.append("addMe")<br/>
+<br/>
+<b>Modules</b><br/>
+Always good to modular your code.<br/>
+<i>module1</i>.py:<br/>
+<br/>
+def addNumbers(numberOne, numberTwo):<br/>
+&nbsp; &nbsp; return numberOne + numberTwo<br/>
+<br/>
+<i>script</i>.py:<br/>
+import module1<br/>
+<br/>
+total = module1.addNumbers(1,2)<br/>
+print total<br/>
+<br/>
+<b>Read and write file operations</b><br/>
+file_open = open("readme.txt", "r")<br/>
+for line in file_open:<br/>
+&nbsp; &nbsp; print line.strip("\n")<br/>
+&nbsp; &nbsp; if line.strip("\n") == "rad 4":<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; print "last line"<br/>
+<br/>
+<b>Proxy integration</b><br/>
+import os<br/>
+os.environ['HTTPS_PROXY'] = '&lt;proxyurl&gt;:&lt;port&gt;' <br/>
+# http://127.0.0.1:8080 if it is burp</body></html>

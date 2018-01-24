@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Socat</title>
+</head><body><b>Server receiving file</b>:<br/>
+server$ socat -u TCP-LISTEN:9876,reuseaddr OPEN:out.txt,creat &amp;&amp; cat out.txt<br/>
+client$ socat -u FILE:test.txt TCP:127.0.0.1:9876<br/>
+<br/>
+<b>Server sending file:</b><br/>
+server$ socat -u FILE:test.dat TCP-LISTEN:9876,reuseaddr<br/>
+client$ socat -u TCP:127.0.0.1:9876 OPEN:out.dat,creat</body></html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>3306: MySQL</title>
+</head><body>Always test the following:<br/>
+Username: root<br/>
+Password: root<br/>
+<br/>
+mysql --host=192.168.1.101 -u root -p<br/>
+mysql -h &lt;Hostname&gt; -u root<br/>
+mysql -h &lt;Hostname&gt; -u root@localhost<br/>
+mysql -h &lt;Hostname&gt; -u ""@localhost<br/>
+<br/>
+telnet 192.168.0.101 3306<br/>
+<br/>
+You will most likely see this a lot:<br/>
+ERROR 1130 (HY000): Host '192.168.0.101' is not allowed to connect to this MySQL server<br/>
+This occurs because mysql is configured so that the root user is only allowed to log in from 127.0.0.1. This is a reasonable security measure put up to protect the database.<br/>
+<br/>
+Configuration files<br/>
+cat /etc/my.cnf<br/>
+http://www.cyberciti.biz/tips/how-do-i-enable-remote-access-to-mysql-database-server.html<br/>
+<br/>
+Uploading a shell<br/>
+You can also use mysql to upload a shell<br/>
+<br/>
+Escalating privileges<br/>
+If mysql is started as root you might have a chance to use it as a way to escalate your privileges.<br/>
+<br/>
+MYSQL UDF INJECTION:<br/>
+https://infamoussyn.com/2014/07/11/gaining-a-root-shell-using-mysql-user-defined-functions-and-setuid-binaries/<br/>
+<br/>
+Finding passwords to mysql<br/>
+You might gain access to a shell by uploading a reverse-shell. And then you need to escalate your privilege. One way to do that is to look into the databse and see what users and passwords that are available. Maybe someone is resuing a password?<br/>
+So the first step is to find the login-credencials for the database. Those are usually found in some configuration-file oon the web-server. For example, in joomla they are found in:<br/>
+/var/www/html/configuration.php</body></html>

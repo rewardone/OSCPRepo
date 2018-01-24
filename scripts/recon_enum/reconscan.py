@@ -23,11 +23,11 @@
 ##-------------------------------------------------------------------------------------------------------------
 ## [TODO]
 ## Common ports/protos to automate:
-##	3389 - RDP
-##		hydra password spray
+##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
 ## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
 ## Fix SNMPrecon onesixtyone
+## SMBrecon: nbtscan or enum4linux...
 ## Expand DNSRecon
 ## 'setup.py' that copies/moves the 'script' and 'lists' directories to where they need to be. can download gobuster, etc.
 ##

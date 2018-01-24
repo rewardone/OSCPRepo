@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Powershell General Primer</title>
+</head><body>Need help?<br/>
+Get-Help<br/>
+<br/>
+With get-member you can list all the properties and methods of the object that the command returns.<br/>
+Get-Command | Get-Member<br/>
+Get-Process | Get-Member<br/>
+<br/>
+<b>Variables</b><br/>
+$testVar = "blabla"<br/>
+<br/>
+<b>Wget / Download a file</b><br/>
+Invoke-WebRequest &lt;uri&gt;<br/>
+wget &lt;uri&gt;<br/>
+<br/>
+<b>Grep: Select string can be used like grep</b><br/>
+get-command | select-string blabla<br/>
+<br/>
+<b>General commands that can be used on objects</b><br/>
+get-content fil.txt | measure-object words<br/>
+<br/>
+<b>get-childitem</b>&nbsp;display items in directory<br/>
+gci&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;alias<br/>
+gci -Force&#09;&#09;&#09;&#09;&#09;&#09;&#09;list hidden files too<br/>
+gci -rec&#09;&#09;&#09;&#09;&#09;&#09;&#09;list files recursively<br/>
+(gci).count&#09;&#09;&#09;&#09;&#09;&#09;count files<br/>
+gci -exclude AppData | gci -rec -force&#09;&#09;list everything, but exclude something<br/>
+<br/>
+<b>get-content</b>&nbsp;work with content of files<br/>
+gc&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;alias<br/>
+cat&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;alias<br/>
+(get-content .\file.txt).count&#09;&#09;&#09;&#09;count lines of file<br/>
+(get-content .\file.txt)[10]&#09;&#09;&#09;&#09;specific line of file<br/>
+<br/>
+<b>Services</b><br/>
+list services<br/>
+get-service<br/>
+<br/>
+<b>Network related</b><br/>
+Get-ADDomain<br/>
+Get-AdDomainController<br/>
+Get-AdComputer<br/>
+To see a list of all properties do this<br/>
+get-adcomputer ComputerName -prop *<br/>
+<br/>
+Get AD Users<br/>
+Get-ADUser -f {Name -eq 'Karl, Martinez'} -properties *<br/>
+<br/>
+Get all AD Groups<br/>
+Get-ADGroup -filter *<br/>
+<br/>
+Resolve DNS<br/>
+Resolve-DNSname 10.10.10.10<br/>
+<br/>
+Script Execution Policy<br/>
+Get-ExecutionPolicy &nbsp;<br/>
+Set-ExecutionPolicy unrestricted<br/>
+<br/>
+<b>Drives</b><br/>
+Get-PsDrive -psprovider filesystem</body></html>

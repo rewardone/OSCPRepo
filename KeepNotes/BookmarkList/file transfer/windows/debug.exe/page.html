@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Debug.exe</title>
+</head><body>This is a crazy technique that works on windows 32 bit machines. Basically the idea is to use the debug.exe program. It is used to inspect binaries, like a debugger. But it can also rebuild them from hex. So the idea is that we take a binaries, like netcat. And then disassemble it into hex, paste it into a file on the compromised machine, and then assemble it with debug.exe.<br/>
+<br/>
+Debug.exe can only assemble 64 kb. So we need to use files smaller than that. We can use upx to compress it even more. So let's do that:<br/>
+upx -9 nc.exe<br/>
+Now it only weights 29 kb. Perfect. So now let's disassemble it:<br/>
+wine exe2bat.exe nc.exe nc.txt<br/>
+Now we just copy-past the text into our windows-shell. And it will automatically create a file called nc.exe</body></html>

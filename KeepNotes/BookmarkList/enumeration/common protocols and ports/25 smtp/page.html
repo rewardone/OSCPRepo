@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>25: SMTP</title>
+</head><body>SMTP is a server to server service. The user receives or sends emails using IMAP or POP3. Those messages are then routed to the SMTP-server which communicates the email to another server. The SMTP-server has a database with all emails that can receive or send emails. We can use SMTP to query that database for possible email-addresses. Notice that we cannot retrieve any emails from SMTP. We can only send emails.<br/>
+<br/>
+Here are the possible commands<br/>
+HELO - <br/>
+EHLO - Extended SMTP.<br/>
+STARTTLS - SMTP communicted over unencrypted protocol. By starting TLS-session we encrypt the traffic.<br/>
+RCPT - Address of the recipient.<br/>
+DATA - Starts the transfer of the message contents.<br/>
+RSET - Used to abort the current email transaction.<br/>
+MAIL - Specifies the email address of the sender.<br/>
+QUIT - Closes the connection.<br/>
+HELP - Asks for the help screen.<br/>
+AUTH - Used to authenticate the client to the server.<br/>
+VRFY - Asks the server to verify is the email user's mailbox exists.<br/>
+<br/>
+<br/>
+Manually VRFY Users<br/>
+We can use this service to find out which usernames are in the database. This can be done in the following way.<br/>
+nc 192.168.1.103 25 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+<br/>
+220 metasploitable.localdomain ESMTP Postfix (Ubuntu)<br/>
+VRFY root<br/>
+252 2.0.0 root<br/>
+VRFY roooooot<br/>
+550 5.1.1 &lt;roooooot&gt;: Recipient address rejected: User unknown in local recipient table<br/>
+<br/>
+Here we have managed to identify the user root. But roooooot was rejected.<br/>
+VRFY, EXPN and RCPT can be used to identify users.<br/>
+Telnet is a bit more friendly some times. So always use that too<br/>
+telnet 10.11.1.229 25<br/>
+<br/>
+Auto Enumeration<br/>
+Check for commands<br/>
+nmap -script smtp-commands.nse 192.168.1.101<br/>
+<br/>
+smtp-user-enum<br/>
+The command will look like this. -M for mode. -U for userlist. -t for target<br/>
+smtp-user-enum -M VRFY -U /root/sectools/SecLists/Usernames/Names/names.txt -t 192.168.1.103<br/>
+<br/>
+I can also be done using metasploit+<br/>
+msf &gt; use auxiliary/scanner/smtp/smtp_enum <br/>
+<br/>
+<br/>
+Here are the documentations for SMTP <br/>
+https://cr.yp.to/smtp/vrfy.html+<br/>
+http://null-byte.wonderhowto.com/how-to/hack-like-pro-extract-email-addresses-from-smtp-server-0160814/<br/>
+http://www.dummies.com/how-to/content/smtp-hacks-and-how-to-guard-against-them.html<br/>
+http://pentestmonkey.net/tools/user-enumeration/smtp-user-enum<br/>
+https://pentestlab.wordpress.com/2012/11/20/smtp-user-enumeration/<br/>
+</body></html>

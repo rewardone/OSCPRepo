@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>21: FTP</title>
+</head><body>Connect to the ftp-server to enumerate software and version<br/>
+<br/>
+ftp 192.168.1.101<br/>
+nc 192.168.1.101 21<br/>
+<br/>
+Many ftp-servers allow anonymous users. These might be misconfigured and give too much access, and it might also be necessary for certain exploits to work. So always try to log in with anonymous:anonymous.<br/>
+<br/>
+Remember the binary and ascii mode!<br/>
+If you upload a binary file you have to put the ftp-server in binary mode, otherwise the file will become corrupted and you will not be able to use it! The same for text-files. Use ascii mode for them! You just write binary and ascii to switch mode.</body></html>

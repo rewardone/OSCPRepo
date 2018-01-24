@@ -35,6 +35,7 @@ f.write(results)
 f.close
 
 #Below code subject to removal, replaced with nmap --script=smtp-enum-users above
+#smtp-user-enum by pentestmonkey is already included by default on Kali as well
 # print "INFO: Trying SMTP Enum on " + sys.argv[1]
 # names = open('/usr/share/wfuzz/wordlist/fuzzdb/wordlists-user-passwd/names/namelist.txt', 'r')
 # for name in names:

@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Local file inclusion means unauthorized access to files on the system. This vulnerability lets the attacker gain access to sensitive files on the server, and it might also lead to gaining a shell.<br/>
+<br/>
+How does it work?<br/>
+The vulnerability stems from unsanitized user-input. LFI is particularly common in php-sites.<br/>
+Here is an example of php-code vulnerable to LFI. As you can see we just pass in the url-parameter into the require-function without any sanitization. So the user can just add the path to any file.<br/>
+$file = $_GET['page'];<br/>
+require($file);<br/>
+<br/>
+In this example the user could just enter this string and retrieve the /etc/passwd file.<br/>
+http://example.com/page=../../../../../../etc/passwd<br/>
+<br/>
+&nbsp;It’s important not to overlook the proc file system when one of these vulnerabilities are found during a penetration test.<br/>
+<br/>
+<br/>
+Things to try for successful exploitation<br/>
+Append <br/>
+%00&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;null byte<br/>
+?&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;? marks a parameter in PHP<br/>
+<br/>
+<br/>
+PHP filters<br/>
+php://filter/convert.base64-encode/resource=index&#09;attempt to get the resources as base64</body></html>

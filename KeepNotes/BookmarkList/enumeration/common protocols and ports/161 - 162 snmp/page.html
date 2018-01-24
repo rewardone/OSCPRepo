@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>161 - 162: SNMP</title>
+</head><body>Simple Network Management Protocol+<br/>
+<br/>
+SNMP protocols 1,2 and 2c does not encrypt its traffic. So it can be intercepted to steal credentials.<br/>
+SNMP is used to manage devices on a network. It has some funny terminology. For example, instead of using the word password the word community is used instead. But it is kind of the same thing. A common community-string/password is public.<br/>
+You can have read-only access to the snmp.Often just with the community string public.<br/>
+<br/>
+Common community strings<br/>
+public<br/>
+private<br/>
+community<br/>
+<br/>
+Here is a longer list of common community strings: https://github.com/danielmiessler/SecLists/blob/master/Miscellaneous/wordlist-common-snmp-community-strings.txt<br/>
+<br/>
+<b>MIB - Management information base</b><br/>
+SNMP stores all the data in the Management Information Base. The MIB is a database that is organized as a tree. Different branches contains different information. So one branch can be username information, and another can be processes running. The "leaf" or the endpoint is the actual data. If you have read-access to the database you can read through each endpoint in the tree. This can be used with snmpwalk. It walks through the whole database tree and outputs the content.<br/>
+<br/>
+snmpwalk<br/>
+snmpwalk -c public -v1 192.168.1.101 #community string and which version<br/>
+This command will output a lot of information. Way to much, and most of it will not be relevant to us and much we won't understand really. So it is better to request the info that you are interested in. Here are the locations of the stuff that we are interested in:<br/>
+1.3.6.1.2.1.25.1.6.0 System Processes<br/>
+1.3.6.1.2.1.25.4.2.1.2 Running Programs<br/>
+1.3.6.1.2.1.25.4.2.1.4 Processes Path<br/>
+1.3.6.1.2.1.25.2.3.1.4 Storage Units<br/>
+1.3.6.1.2.1.25.6.3.1.2 Software Name<br/>
+1.3.6.1.4.1.77.1.2.25 User Accounts<br/>
+1.3.6.1.2.1.6.13.1.3 TCP Local Ports<br/>
+<br/>
+snmp-check<br/>
+This is a bit easier to use and with a lot prettier output.<br/>
+snmp-check -t 192.168.1.101 -c public<br/>
+<br/>
+Onesixtyone<br/>
+With onesixtyone you can test for open ports but also brute force community strings. I have had more success using onesixtyone than using nmap. So better use both.<br/>
+<br/>
+Metasploit<br/>
+There are a few snmp modules in metasploit that you can use. snmp_enum can show you usernames, services, and other stuff.<br/>
+https://www.offensive-security.com/metasploit-unleashed/snmp-scan/</body></html>

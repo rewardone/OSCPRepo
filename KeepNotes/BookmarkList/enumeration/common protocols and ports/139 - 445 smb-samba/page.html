@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>139 / 445: SMB/Samba</title>
+</head><body>Samba is a service that enables the user to share files with other machines. It has interoperatibility, which means that it can share stuff between linux and windows systems. A windows user will just see an icon for a folder that contains some files. Even though the folder and files really exists on a linux-server.<br/>
+<br/>
+Connecting<br/>
+For linux-users you can log in to the smb-share using smbclient, like this:<br/>
+smbclient -L 192.168.1.102<br/>
+smbclient //192.168.1.106/tmp<br/>
+smbclient \\\\192.168.1.105\\ipc$ -U john <br/>
+smbclient //192.168.1.105/ipc$ -U john<br/>
+<br/>
+If you don't provide any password, just click enter, the server might show you the different shares and version of the server. This can be useful information for looking for exploits. There are tons of exploits for smb.<br/>
+So smb, for a linux-user, is pretty much like and ftp or a nfs<br/>
+<br/>
+Connecting with PSExec<br/>
+If you have credentials you can use psexec you easily log in. You can either use the standalone binary or the metasploit module.<br/>
+use exploit/windows/smb/psexec<br/>
+<br/>
+Connecting with WMI<br/>
+TODO<br/>
+<br/>
+nbtscan<br/>
+nbtscan -r 192.168.1.1/24<br/>
+It can be a bit buggy sometimes so run it several times to make sure it found all users.<br/>
+<br/>
+Enum4linux<br/>
+Enum4linux can be used to enumerate windows and linux machines with smb-shares.<br/>
+The do all option:<br/>
+enum4linux -a 192.168.1.120<br/>
+For info about it here: https://labs.portcullis.co.uk/tools/enum4linux/<br/>
+<br/>
+rpcclient<br/>
+You can also use rpcclient to enumerate the share.<br/>
+Connect with a null-session. That is, without a user. This only works for older windows servers.<br/>
+<br/>
+rpcclient -U "" 192.168.1.101<br/>
+<br/>
+Once connected you could enter commands like<br/>
+srvinfo<br/>
+enumdomusers<br/>
+getdompwinfo<br/>
+querydominfo<br/>
+netshareenum<br/>
+netshareenumall</body></html>

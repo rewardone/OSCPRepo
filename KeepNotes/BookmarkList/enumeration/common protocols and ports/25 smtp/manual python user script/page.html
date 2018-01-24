@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Manual Python user script</title>
+</head><body>For reference only.<br/>
+<br/>
+names = open('/usr/share/wfuzz/wordlist/fuzzdb/wordlists-user-passwd/names/namelist.txt', 'r')<br/>
+for name in names:<br/>
+&nbsp; &nbsp; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br/>
+&nbsp; &nbsp; connect=s.connect((ip_address,25))<br/>
+&nbsp; &nbsp; banner=s.recv(1024)<br/>
+&nbsp; &nbsp; s.send('HELO test@test.org \r\n')<br/>
+&nbsp; &nbsp; result= s.recv(1024)<br/>
+&nbsp; &nbsp; s.send('VRFY ' + name.strip() + '\r\n')<br/>
+&nbsp; &nbsp; result=s.recv(1024)<br/>
+&nbsp; &nbsp; if ("not implemented" in result) or ("disallowed" in result):<br/>
+&#09; &nbsp; &nbsp;sys.exit("INFO: VRFY Command not implemented on " + sys.argv[1]) <br/>
+&nbsp; &nbsp; if (("250" in result) or ("252" in result) and ("Cannot VRFY" not in result)):<br/>
+&#09; &nbsp; &nbsp;print "[*] SMTP VRFY Account found on " + ip_address + ": " + name.strip()&#09;<br/>
+&nbsp; &nbsp; s.close()</body></html>

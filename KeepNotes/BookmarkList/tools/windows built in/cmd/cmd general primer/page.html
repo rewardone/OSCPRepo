@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CMD General Primer</title>
+</head><body>The equivalent to the Linux command ; to allow additional command execution is &amp;<br/>
+dir &amp; whoami &nbsp;<br/>
+<br/>
+<b>File stuff</b><br/>
+del&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;delete a file<br/>
+md folderName&#09;&#09;&#09;&#09;&#09;&#09;create folder/dir<br/>
+dir /A&#09;&#09;&#09;&#09;&#09;&#09;&#09;show hidden files<br/>
+type file.txt&#09;&#09;&#09;&#09;&#09;&#09;print out/type out content (cat)<br/>
+findstr file.txt&#09;&#09;&#09;&#09;&#09;&#09;grep/find files<br/>
+<br/>
+<b>Network</b><br/>
+netstat -an&#09;&#09;&#09;&#09;&#09;&#09;show network information<br/>
+ipconfig&#09;&#09;&#09;&#09;&#09;&#09;&#09;show network adapter information<br/>
+ping &lt;IP&gt;&#09;&#09;&#09;&#09;&#09;&#09;&#09;ping<br/>
+tracert&#09;&#09;&#09;&#09;&#09;&#09;&#09;traceroute<br/>
+<br/>
+<b>Processes</b><br/>
+tasklist&#09;&#09;&#09;&#09;&#09;&#09;&#09;list processes<br/>
+taskkill /PID &lt;PID&gt; /F&#09;&#09;&#09;&#09;kill a process<br/>
+<br/>
+<b>Users</b><br/>
+net users&#09;&#09;&#09;&#09;&#09;&#09;&#09;show users<br/>
+net user &lt;username&gt; &lt;password&gt; /add&#09;add a new user with password<br/>
+net localgroup &lt;group&gt; &lt;username&gt; /add&#09;add a user to a localgroup<br/>
+net localgroup /domain&#09;&#09;&#09;&#09;check if you are part of a domain<br/>
+net users /domain&#09;&#09;&#09;&#09;&#09;list all domain users<br/>
+<br/>
+<b>Mounting / Mapping</b><br/>
+wmic logicaldisk get deviceid, volumename, description&#09;<br/>
+wmic logicaldisk get name<br/>
+wmic logicaldisk get caption<br/>
+fsutil fsinfo drives&#09;&#09;&#09;&#09;&#09;can be slow<br/>
+list volume<br/>
+net use&#09;&#09;&#09;&#09;&#09;&#09;&#09;map only network drives (equiv is smbclient)<br/>
+net use \\IP\IPC$ "" /u:""&#09;&#09;&#09;&#09;null-session with share<br/>
+net use * \\IP\SHARE&#09;&#09;&#09;&#09;map drive to first available drive letter<br/>
+net use &lt;drive&gt;: /del&#09;&#09;&#09;&#09;&#09;delete/disconnect from mapped share<br/>
+<br/>
+<b>Other</b><br/>
+shutdown /s /t 0&#09;&#09;&#09;&#09;&#09;shutdown now<br/>
+shutdown /r /t 0&#09;&#09;&#09;&#09;&#09;&#09;restart now<br/>
+cipher /w:C:\&#09;&#09;&#09;&#09;&#09;&#09;clear data/shred volume<br/>
+set&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;show environment variables<br/>
+help dir&#09;&#09;&#09;&#09;&#09;&#09;&#09;help is equiv of 'man' pages<br/>
+</body></html>

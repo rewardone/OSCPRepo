@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>knock</title>
+</head><body><a href="https://github.com/guelfoweb/knock">Knock</a>&nbsp;- Python tool brute subdomains through wordlist. DNS zone transfer and bypass wildcard<br/>
+Example<br/>
+Subdomain scan with internal wordlist<br/>
+$ knockpy domain.com<br/>
+<br/>
+Subdomain scan with external wordlist<br/>
+$ knockpy domain.com -w wordlist.txt<br/>
+<br/>
+Resolve domain name and get response headers<br/>
+$ knockpy -r domain.com [or IP]<br/>
+<br/>
+<b>Knock Subdomain Scan v.4.1.1</b><br/>
+Knockpy is a python tool designed to enumerate subdomains on a target domain through a wordlist. It is designed to scan for DNS zone transfer and to try to bypass the wildcard DNS record automatically if it is enabled. Now knockpy supports queries to VirusTotal subdomains, you can setting the API_KEY within the config.json file.<br/>
+<br/>
+<b>Knockpy arguments</b><br/>
+$ knockpy -h<br/>
+usage: knockpy [-h] [-v] [-w WORDLIST] [-r] [-c] [-j] domain<br/>
+<br/>
+___________________________________________<br/>
+<br/>
+knock subdomain scan<br/>
+knockpy v.4.1<br/>
+Author: Gianni 'guelfoweb' Amato<br/>
+Github: https://github.com/guelfoweb/knock<br/>
+___________________________________________<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; domain &nbsp; &nbsp; &nbsp; &nbsp; target to scan, like domain.com<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -v, --version &nbsp; show program's version number and exit<br/>
+&nbsp; -w WORDLIST &nbsp; &nbsp; specific path to wordlist file<br/>
+&nbsp; -r, --resolve &nbsp; resolve ip or domain name<br/>
+&nbsp; -c, --csv &nbsp; &nbsp; &nbsp; save output in csv<br/>
+&nbsp; -f, --csvfields add fields name to the first row of csv output file<br/>
+&nbsp; -j, --json &nbsp; &nbsp; &nbsp;export full report in JSON<br/>
+<br/>
+example:<br/>
+&nbsp; knockpy domain.com<br/>
+&nbsp; knockpy domain.com -w wordlist.txt<br/>
+&nbsp; knockpy -r domain.com or IP<br/>
+&nbsp; knockpy -c domain.com<br/>
+&nbsp; knockpy -j domain.com<br/>
+<br/>
+For virustotal subdomains support you can setting your API_KEY in the config.json file.</body></html>
