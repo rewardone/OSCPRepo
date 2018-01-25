@@ -3,5 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Python</title>
-</head><body><a href="http://securityweekly.com/2011/10/23/python-one-line-shell-code/">http://securityweekly.com/2011/10/23/python-one-line-shell-code/</a><br/>
-&nbsp;</body></html>
+</head><body>python -c 'import pty;pty.spawn("/bin/sh")'<br/>
+<br/>
+python: exit_code = os.system('/bin/sh') output = os.popen('/bin/sh').read()<br/>
+<br/>
+Methods:<br/>
+exec()</body></html>

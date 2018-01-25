@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Mitigate LFI</string>
+  <key>nodeid</key><string>b1301428-71ba-4fb1-a508-93756b6e586c</string>
+  <key>modified_time</key><integer>1516891769</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1516891728</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

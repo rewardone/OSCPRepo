@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSH w/o TTY</title>
+</head><body>Problem 1<br/>
+However, if you don’t have a TTY (like when you’re using a reverse shell), authentication fails immediately with an error:<br/>
+$ ssh localhost<br/>
+Pseudo-terminal will not be allocated because stdin is not a terminal.<br/>
+Host key verification failed.<br/>
+<br/>
+Workaround<br/>
+Before attempting an SSH connection for the first time you need to grab the host keys for host you want to connect to and store them in the known_hosts file of the current user:<br/>
+<br/>
+ssh-keyscan -t rsa1,rsa,dsa localhost &gt;&gt; ~/.ssh/known_hosts<br/>
+<br/>
+<br/>
+Problem 2:<br/>
+If you don’t have a TTY (you typically don’t when using a reverse shell) you won’t be asked for a password, authentication will just fail:<br/>
+sh-3.2$ ssh localhost<br/>
+Pseudo-terminal will not be allocated because stdin is not a terminal.<br/>
+Permission denied (publickey,keyboard-interactive).<br/>
+<br/>
+Workaround<br/>
+You can use an external program to provide the password you want to use. Check out:<br/>
+<br/>
+http://www.splode.com/~friedman/software/scripts/src/ssh-pass<br/>
+man ssh (search for “SSH_ASKPASS”)<br/>
+$ cat /tmp/returnpassword.sh<br/>
+#!/bin/sh<br/>
+echo 'some password' &lt;/dev/null<br/>
+$ export DISPLAY=:0<br/>
+$ export SSH_ASKPASS=/tmp/returnpassword.sh<br/>
+$ ssh user@host<br/>
+id<br/>
+uid=1000(user) gid=1000(user)<br/>
+bash -i<br/>
+user@host $</body></html>

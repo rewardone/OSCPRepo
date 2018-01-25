@@ -6,6 +6,7 @@
   <key>title</key><string>Scanners</string>
   <key>nodeid</key><string>f028dcdf-c37f-4050-8bca-36bfd1b39039</string>
   <key>modified_time</key><integer>1516818951</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516295126</integer>

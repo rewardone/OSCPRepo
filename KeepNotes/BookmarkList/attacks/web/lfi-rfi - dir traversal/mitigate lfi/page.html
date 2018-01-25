@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigate LFI</title>
+</head><body>How to protect from LFIs?<br/>
+Well, first, activate magic quotes, it’s not the “perfect solution”, but it’ll help. <br/>
+Then you should also activate open_basedir to only read into your web folder and /tmp.<br/>
+You should also do a function that parse the “/” , “.” and “%00” char.<br/>
+But well, the best option is the non dynamic include:<br/>
+<br/>
+if ($_GET[‘page’] == “news”) {include(“news.php”);} else {include (“accueil.php”);}</body></html>

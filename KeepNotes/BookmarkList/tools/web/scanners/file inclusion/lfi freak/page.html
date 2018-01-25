@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LFi Freak</title>
+</head><body><a href="https://github.com/OsandaMalith/LFiFreak/">https://github.com/OsandaMalith/LFiFreak/</a>&nbsp;- last update 2015<br/>
+<a href="https://osandamalith.com/2015/03/29/lfi-freak/">https://osandamalith.com/2015/03/29/lfi-freak/</a>&nbsp;<br/>
+<br/>
+There are lot of LFI exploitation tools available but I’ve written this tool mainly focusing on the usage of “php://input”, “php://filter” and “data://” methods. This tool is written in Python 2.7 and I have included binaries for both <a href="http://www.mediafire.com/download/l07660857cqo9ur/LFI.exe">Windows</a>&nbsp;and <a href="http://www.mediafire.com/download/1m3a188637v3avo/lfi">Linux</a>&nbsp;systems. If you are running from the source or want to modify this, you need the <a href="http://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a>&nbsp;library. <br/>
+<br/>
+I have also included bind and reverse shells for both Windows and Linux systems. The only issue is you have to provide a direct link of the Netcat executable. I could have used PowerShell, but then this won’t work with legacy systems. To make this functionality function on modern and legacy systems I have used VBS to download the file and then execute in stealth mode.<br/>
+For Linux systems I have used Python for bind and reverse shells.<br/>
+<br/>
+Apart from that you can also read file using PHP Filter method. </body></html>

@@ -20,13 +20,14 @@ else:
    tool = str(sys.argv[3])
 
 if (tool == "dirb"):
+    user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
     folders = ["/root/lists/Web/AllWebLists/separate", "/usr/share/dirb/wordlists/vulns"]
     found = []
     print "INFO: Starting dirb scan for %s" % (url)
     for folder in folders:
         for filename in os.listdir(folder):
             outfile = " -o " + "/root/scripts/recon_enum/results/exam/dirb/" + name + "_dirb_" + filename
-            DIRBSCAN = "dirb %s %s/%s %s -S -r" % (url, folder, filename, outfile)
+            DIRBSCAN = "dirb %s %s/%s %s -a -S -r" % (url, folder, filename, outfile, user_agent)
             #print "Now trying dirb list: %s" % (filename)
             try:
                 results = subprocess.check_output(DIRBSCAN, shell=True)

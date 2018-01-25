@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><true/>
+  <key>duplicate_of</key><string>b97a7145-4fe9-4aa9-bba5-340c02f5eb44</string>
+  <key>title</key><string>Shells</string>
+  <key>nodeid</key><string>84afa2c0-4b13-49e3-830f-8de2e7d1332b</string>
+  <key>modified_time</key><integer>1479230291</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1479230291</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>9</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

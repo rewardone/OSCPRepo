@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>89668407-1af6-4241-a4ef-4335dfa86385</string>
+  <key>title</key><string>Example SSH Client</string>
+  <key>nodeid</key><string>2417353d-63c9-431b-86ae-d6b1a59c7533</string>
+  <key>modified_time</key><integer>1515080690</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515080565</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>2</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

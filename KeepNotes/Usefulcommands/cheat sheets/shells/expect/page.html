@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Expect</title>
+</head><body>f you’re lucky enough to have the Expect language installed just a few lines of code will get you a good enough TTY to run useful tools such as “ssh”, “su” and “login”.<br/>
+<br/>
+$ cat sh.exp<br/>
+#!/usr/bin/expect<br/>
+# Spawn a shell, then allow the user to interact with it.<br/>
+# The new shell will have a good enough TTY to run tools like ssh, su and login<br/>
+spawn sh<br/>
+interact</body></html>

