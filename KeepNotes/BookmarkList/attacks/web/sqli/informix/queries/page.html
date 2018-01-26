@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Queries</title>
+</head><body>Some can only be run by admin, marked by * or -priv<br/>
+<br/>
+Version &#09;&#09;&#09;&#09;SELECT DBINFO(‘version’, ‘full’) FROM systables WHERE tabid = 1;<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT DBINFO(‘version’, ‘server-type’) FROM systables WHERE tabid = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT DBINFO(‘version’, ‘major’), DBINFO(‘version’, ‘minor’), DBINFO(‘version’, ‘level’) FROM systables WHERE tabid = 1;</li>
+<li style="list-style-type: none">&nbsp; &nbsp;SELECT DBINFO(‘version’, ‘os’) FROM systables WHERE tabid = 1; — T=Windows, U=32 bit app on 32-bit Unix, H=32-bit app running on 64-bit Unix, F=64-bit app running on 64-bit unix</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Comments &#09;&#09;&#09;select 1 FROM systables WHERE tabid = 1; — comment<br/>
+Current User &#09;&#09;&#09;SELECT USER FROM systables WHERE tabid = 1;<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;select CURRENT_ROLE FROM systables WHERE tabid = 1;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+List Users &#09; &#09;&#09;select username, usertype, password from sysusers;<br/>
+List Password Hashes &#09;TODO<br/>
+List Privileges &#09;&#09;select tabname, grantor, grantee, tabauth FROM systabauth join systables on systables.tabid = systabauth.tabid; — which &#09;&#09;&#09;&#09;&#09;tables are accessible by which users<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;select procname, owner, grantor, grantee from sysprocauth join sysprocedures on sysprocauth.procid = sysprocedures.procid; — which procedures are accessible by which users</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+List DBA Accounts &#09;&#09;TODO<br/>
+Current Database &#09;&#09;SELECT DBSERVERNAME FROM systables where tabid = 1; — server name<br/>
+List Databases &#09;&#09;select name, owner from sysdatabases;<br/>
+List Columns &#09;&#09;&#09;select tabname, colname, owner, coltype FROM syscolumns join systables on syscolumns.tabid = systables.tabid;<br/>
+List Tables &#09;&#09;&#09;select tabname, owner FROM systables;<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;select tabname, viewtext FROM sysviews &nbsp;join systables on systables.tabid = sysviews.tabid;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+List Stored Procedures &#09;select procname, owner FROM sysprocedures;<br/>
+Find Tables From <br/>
+Column Name &#09;&#09;select tabname, colname, owner, coltype FROM syscolumns join systables on syscolumns.tabid = systables.tabid where &#09;&#09;&#09;&#09;&#09;&#09;colname like ‘%pass%’;<br/>
+Select Nth Row &#09;&#09;select first 1 tabid from (select first 10 tabid from systables order by tabid) as sq order by tabid desc; — selects the 10th row<br/>
+Select Nth Char &#09;&#09;SELECT SUBSTRING(‘ABCD’ FROM 3 FOR 1) FROM systables where tabid = 1; — returns ‘C’<br/>
+Bitwise AND &#09;&#09;&#09;select bitand(6, 1) from systables where tabid = 1; — returns 0<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;select bitand(6, 2) from systables where tabid = 1; — returns 2</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+ASCII Value -&gt; Char &#09;TODO<br/>
+Char -&gt; ASCII Value &#09;select ascii(‘A’) from systables where tabid = 1;<br/>
+Casting &#09;&#09;&#09;&#09;select cast(’123′ as integer) from systables where tabid = 1;<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;select cast(1 as char) from systables where tabid = 1;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+String Concatenation &#09;SELECT ‘A’ || ‘B’ FROM systables where tabid = 1; — returns ‘AB’<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT concat(‘A’, ‘B’) FROM systables where tabid = 1; — returns ‘AB’</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+String Length &#09;&#09;&#09;SELECT tabname, length(tabname), char_length(tabname), octet_length(tabname) from systables;<br/>
+If Statement &#09;&#09;&#09;TODO<br/>
+Case Statement &#09;&#09;select tabid, case when tabid&gt;10 then “High” else ‘Low’ end from systables;<br/>
+Avoiding Quotes &#09;&#09;TODO<br/>
+Time Delay &#09;&#09;&#09;TODO<br/>
+Make DNS Requests &#09;TODO<br/>
+Command Execution &#09;TODO<br/>
+Local File Access &#09;&#09;TODO<br/>
+Hostname, IP Address &#09;SELECT DBINFO(‘dbhostname’) FROM systables WHERE tabid = 1; — hostname<br/>
+Location of DB files &#09;TODO<br/>
+Default/System <br/>
+Databases &#09;&#09;&#09;These are the system databases:<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;sysmaster</li>
+<li style="list-style-type: none">&nbsp; &nbsp;sysadmin*</li>
+<li style="list-style-type: none">&nbsp; &nbsp;sysuser*</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+sysutils*</body></html>

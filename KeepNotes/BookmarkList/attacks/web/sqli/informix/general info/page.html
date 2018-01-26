@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Info</title>
+</head><body>You can download Informix Dynamic Server Express Edition 11.5 Trial for Linux and Windows.<br/>
+<br/>
+Database ClientThere’s a database client SDK available, but I couldn’t get the demo client working.<br/>
+I used SQuirreL SQL Client Version 2.6.8 after installing the Informix JDBC drivers (“emerge dev-java/jdbc-informix” on Gentoo).Logging in from command line<br/>
+<br/>
+If you get local admin rights on a Windows box and have a GUI logon:<br/>
+<br/>
+&nbsp; &nbsp; Click: Start | All Programs | IBM Informix Dynamic Server 11.50 | someservername. &nbsp;This will give you a command prompt with various Environment variables set properly.<br/>
+&nbsp; &nbsp; Run dbaccess.exe from your command prompt. &nbsp;This will bring up a text-based GUI that allows you to browse databases.<br/>
+<br/>
+The following were set on my test system. &nbsp;This may help if you get command line access, but can’t get a GUI – you’ll need to change “testservername”:<br/>
+<br/>
+set INFORMIXDIR=C:PROGRA~1IBMIBMINF~111.50<br/>
+set INFORMIXSERVER=testservername<br/>
+set ONCONFIG=ONCONFIG.testservername<br/>
+set PATH=C:PROGRA~1IBMIBMINF~111.50bin;C:WINDOWSsystem32;C:WINDOWS;C:WINDOWSSystem32Wbem;C:PROGRA~1ibmgsk7bin;C:PROGRA~1ibmgsk7lib;C:Program FilesIBMInformixClien-SDKbin;C:Program Filesibmgsk7bin;C:Program Filesibmgsk7lib<br/>
+set CLASSPATH=C:PROGRA~1IBMIBMINF~111.50extendkrakatoakrakatoa.jar;C:PROGRA~1IBMIBMINF~111.50xtendkrakatoajdbc.jar;<br/>
+set DBTEMP=C:PROGRA~1IBMIBMINF~111.50infxtmp<br/>
+set CLIENT_LOCALE=EN_US.CP1252<br/>
+set DB_LOCALE=EN_US.8859-1<br/>
+set SERVER_LOCALE=EN_US.CP1252<br/>
+set DBLANG=EN_US.CP1252<br/>
+mode con codepage select=1252<br/>
+<br/>
+Identifying on the network<br/>
+<br/>
+My default installation listened on two TCP ports: 9088 and 9099. &nbsp;When I created a new “server name”, this listened on 1526/TCP by default.</body></html>
