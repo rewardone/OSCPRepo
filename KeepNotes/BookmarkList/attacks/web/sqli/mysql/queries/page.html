@@ -7,6 +7,8 @@
 <br/>
 Version &#09;&#09;&#09;&#09;SELECT @@version<br/>
 Comments &#09;&#09;&#09;SELECT 1; #comment<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT /*comment*/1;</li>
+<li style="list-style-type: none">/*! MYSQL Special SQL */ (M) </li>
+<li style="list-style-type: none">This is a special comment syntax for MySQL. It's perfect for detecting MySQL version. If you put a code into this comments it's going to execute in MySQL only. Also you can use this to execute some code only if the server is higher than supplied version. </li>
 </ul>
 </li>
 </ul>
@@ -175,4 +177,19 @@ Databases &#09;&#09;&#09;information_schema (&gt;= mysql 5.0)<ul><li style="list
 </ul>
 </li>
 </ul>
+Potentially Useful <br/>
+MySQL Functions&#09;&#09;MD5() <ul><li style="list-style-type: none"></li>
+</ul>
+<ul>&nbsp;&#09;&#09;&#09;&#09;</ul>
+MD5 Hashing<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;SHA1() SHA1 Hashing<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;PASSWORD()<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;ENCODE()<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;COMPRESS() Compress data, can be great in large binary reading in Blind SQL Injections.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;ROW_COUNT()<ul><li style="list-style-type: none"></li>
+</ul>
+<ul>&nbsp;&#09;&#09;&#09;&#09;</ul>
+SCHEMA()<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;VERSION() Same as @@version<br/>
+<br/>
 </body></html>

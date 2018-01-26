@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>Wireless</string>
   <key>nodeid</key><string>5fb4b707-008c-42f2-ae46-43ecd16d34b1</string>
   <key>modified_time</key><integer>1516296093</integer>

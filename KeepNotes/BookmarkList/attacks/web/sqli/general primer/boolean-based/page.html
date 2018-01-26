@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Boolean-Based</title>
+</head><body>Boolean Based<br/>
+When an SQL query fails, sometimes some parts of the web page disappear or change, or the entire website can fail to load. These indications allow attackers to determine whether the input parameter is vulnerable and whether it allows extraction of data.<br/>
+<br/>
+Attackers can test for this by inserting a condition into an SQL query:<br/>
+<br/>
+https://example.com/index.php?id=1+AND+1=1<br/>
+<br/>
+If the page loads as usual, it might indicate that it is vulnerable to an SQL Injection.<br/>
+Here is an example of how to extract data in this way:<br/>
+<br/>
+https://example.com/index.php?id=1+AND+IF(version()+LIKE+'5%',true,false)<br/>
+<br/>
+With this request, the page should load as usual if the database version is 5.X. But, it will behave differently (display an empty page, for example) if the version is different, indicating whether it it is vulnerable to an SQL injection.<br/>
+<br/>
+</body></html>

