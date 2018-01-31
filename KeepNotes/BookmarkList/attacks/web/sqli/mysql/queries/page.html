@@ -30,7 +30,7 @@ Current User &#09;&#09;&#09;SELECT user();<ul><li style="list-style-type: none">
 </ul>
 List Users* &#09;&#09;&#09;SELECT user FROM mysql.user; — priv<br/>
 List Password Hashes* &#09;SELECT host, user, password FROM mysql.user; — priv<br/>
-List Privileges* &#09;&#09;SELECT grantee, privilege_type, is_grantable FROM information_schema.user_privileges; — list user privs<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT host, user, Select_priv, Insert_priv, Update_priv, Delete_priv, Create_priv, Drop_priv, Reload_priv, Shutdown_priv, Process_priv, File_priv, Grant_priv, References_priv, Index_priv, Alter_priv, Show_db_priv, Super_priv, Create_tmp_table_priv, Lock_tables_priv, Execute_priv, Repl_slave_priv, Repl_client_priv FROM mysql.user; — priv, list user privs</li>
+List Privileges* &#09;&#09;&#09;SELECT grantee, privilege_type, is_grantable FROM information_schema.user_privileges; — list user privs<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT host, user, Select_priv, Insert_priv, Update_priv, Delete_priv, Create_priv, Drop_priv, Reload_priv, Shutdown_priv, Process_priv, File_priv, Grant_priv, References_priv, Index_priv, Alter_priv, Show_db_priv, Super_priv, Create_tmp_table_priv, Lock_tables_priv, Execute_priv, Repl_slave_priv, Repl_client_priv FROM mysql.user; — priv, list user privs</li>
 <li style="list-style-type: none">&nbsp; &nbsp;SELECT grantee, table_schema, privilege_type FROM information_schema.schema_privileges; — list privs on databases (schemas)SELECT table_schema, table_name, column_name, privilege_type FROM information_schema.column_privileges; — list privs on columns</li>
 </ul>
 </li>
@@ -52,7 +52,7 @@ List DBA Accounts &#09;&#09;SELECT grantee, privilege_type, is_grantable FROM in
 </li>
 </ul>
 Current Database &#09;&#09;SELECT database()<br/>
-List Databases &#09;&#09;SELECT schema_name FROM information_schema.schemata; — for MySQL &gt;= v5.0<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT distinct(db) FROM mysql.db — priv</li>
+List Databases &#09;&#09;&#09;SELECT schema_name FROM information_schema.schemata; — for MySQL &gt;= v5.0<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT distinct(db) FROM mysql.db — priv</li>
 </ul>
 </li>
 </ul>
@@ -83,7 +83,7 @@ List Tables &#09;&#09;&#09;SELECT table_schema,table_name FROM information_schem
 </li>
 </ul>
 Find Tables From <br/>
-Column Name &#09;&#09;SELECT table_schema, table_name FROM information_schema.columns WHERE column_name = ‘username’; — find table <ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;which have a column called ‘username’</li>
+Column Name &#09;&#09;&#09;SELECT table_schema, table_name FROM information_schema.columns WHERE column_name = ‘username’; — find table <ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;which have a column called ‘username’</li>
 </ul>
 </li>
 </ul>
@@ -114,8 +114,8 @@ Bitwise AND &#09;&#09;&#09;SELECT 6 &amp; 2; # returns 2<ul><li style="list-styl
 </ul>
 </li>
 </ul>
-ASCII Value -&gt; Char &#09;SELECT char(65); # returns A<br/>
-Char -&gt; ASCII Value &#09;SELECT ascii(‘A’); # returns 65<br/>
+ASCII Value -&gt; Char &#09;&#09;SELECT char(65); # returns A<br/>
+Char -&gt; ASCII Value &#09;&#09;SELECT ascii(‘A’); # returns 65<br/>
 Casting &#09;&#09;&#09;&#09;SELECT cast(’1′ AS unsigned integer);<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT cast(’123′ AS char);</li>
 </ul>
 </li>
@@ -162,10 +162,10 @@ Local File Access &#09;…’ UNION ALL SELECT LOAD_FILE(‘/etc/passwd’) — 
 </li>
 </ul>
 Hostname, IP Address &#09;SELECT @@hostname;<br/>
-Create Users* &#09;&#09;CREATE USER test1 IDENTIFIED BY ‘pass1′; — priv<br/>
-Delete Users *&#09;&#09;DROP USER test1; — priv<br/>
+Create Users* &#09;&#09;&#09;CREATE USER test1 IDENTIFIED BY ‘pass1′; — priv<br/>
+Delete Users *&#09;&#09;&#09;DROP USER test1; — priv<br/>
 Make User DBA* &#09;&#09;GRANT ALL PRIVILEGES ON *.* TO test1@’%'; — priv<br/>
-Location of DB files &#09;SELECT @@datadir;<br/>
+Location of DB files &#09;&#09;SELECT @@datadir;<br/>
 Default/System <br/>
 Databases &#09;&#09;&#09;information_schema (&gt;= mysql 5.0)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;mysql</li>
 </ul>
@@ -178,18 +178,13 @@ Databases &#09;&#09;&#09;information_schema (&gt;= mysql 5.0)<ul><li style="list
 </li>
 </ul>
 Potentially Useful <br/>
-MySQL Functions&#09;&#09;MD5() <ul><li style="list-style-type: none"></li>
-</ul>
-<ul>&nbsp;&#09;&#09;&#09;&#09;</ul>
-MD5 Hashing<br/>
+MySQL Functions&#09;&#09;MD5() MD5 Hashing<br/>
 &nbsp;&#09;&#09;&#09;&#09;&#09;SHA1() SHA1 Hashing<br/>
 &nbsp;&#09;&#09;&#09;&#09;&#09;PASSWORD()<br/>
 &nbsp;&#09;&#09;&#09;&#09;&#09;ENCODE()<br/>
 &nbsp;&#09;&#09;&#09;&#09;&#09;COMPRESS() Compress data, can be great in large binary reading in Blind SQL Injections.<br/>
-&nbsp;&#09;&#09;&#09;&#09;&#09;ROW_COUNT()<ul><li style="list-style-type: none"></li>
+&nbsp;&#09;&#09;&#09;&#09;&#09;ROW_COUNT()<ul><li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;SCHEMA()</li>
 </ul>
-<ul>&nbsp;&#09;&#09;&#09;&#09;</ul>
-SCHEMA()<br/>
 &nbsp;&#09;&#09;&#09;&#09;&#09;VERSION() Same as @@version<br/>
 <br/>
 </body></html>

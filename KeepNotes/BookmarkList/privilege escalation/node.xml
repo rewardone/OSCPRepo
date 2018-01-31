@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Privilege Escalation</string>
   <key>nodeid</key><string>5aafb67e-288d-46f2-bca2-9f7f0978c143</string>
   <key>modified_time</key><integer>1516298337</integer>

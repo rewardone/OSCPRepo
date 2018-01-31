@@ -10,7 +10,7 @@ You will get the same response if MySQL version is higher than 3.23.02<br/>
 SELECT /*!32302 1/0, */ 1 FROM tablename <br/>
 Will throw a division by 0 error if MySQL version is higher than3.23.02<br/>
 <br/>
-Alternative to wait/sleep, benchmark()<br/>
+<b>Alternative to wait/sleep, benchmark()</b><br/>
 BENCHMARK(howmanytimes, do this)<br/>
 IF EXISTS (SELECT * FROM users WHERE username = 'root') BENCHMARK(1000000000,MD5(1))<br/>
 Check Table exist in MySQL <br/>
