@@ -20,6 +20,7 @@ Penetration Testing
 [PenTest:Web]
 [PenTest:Brute]
 [PenTest:Scan]
+[PenTest:Info]
 [Cheatsheets]
 [Lists]
 [Post]
