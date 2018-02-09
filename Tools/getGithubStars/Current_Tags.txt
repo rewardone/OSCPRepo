@@ -5,10 +5,8 @@ OS
 [Windows]
 [Docker]
 
-
 Programming
 [Framework]
-
 
 Exploit Dev
 [Debug]
@@ -32,7 +30,14 @@ Education
 [Bookmarks]
 [Video]
 
-
 Personal
 [Personal]
 [Alt]
+
+Ranking system
+[1] - Best, probably should use
+[2]
+[3] - Average, could come in handy
+[4]
+[5] - Meh or too niche, but worth watching
+[?] - Unranked
