@@ -11,6 +11,7 @@ exiftool
 Alacarte (MainMenu): Used to edit menu items easily
 Firefox (up-to-date): For use with updated extensions like FoxyProxy
 gobuster: required default for reconscan
+nmap-vulners.nse (github: https://github.com/vulnersCom/nmap-vulners)
 
 Favorites to add:
 Shutter (autostart)

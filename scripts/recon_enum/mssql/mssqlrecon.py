@@ -27,7 +27,7 @@ port = sys.argv[2].strip()
 #ms-sql-xp-cmdshell: runs a command. requires admin. args 'username''password''cmd'
 
 print "INFO: Performing nmap MSSQL script scan for %s:%s" % (ip_address, port)
-MSSQLSCAN = "nmap -n -sV -Pn -vv -p %s --script=ms-sql-empty-password,ms-sql-brute,ms-sql-dac,ms-sql-dump-hashes,ms-sql-info,ms-sql-ntlm-info --script-args "userdb='/root/lists/userlist_mysqlbrute.txt',passdb='/root/lists/quick_password_spray.txt'" -oN '/root/scripts/recon_enum/results/exam/mssql/%s_mssql.nmap' %s" % (port, ip_address, ip_address)
+MSSQLSCAN = "nmap -n -sV -Pn -vv -p %s --script=ms-sql-empty-password,ms-sql-brute,ms-sql-dac,ms-sql-dump-hashes,ms-sql-info,ms-sql-ntlm-info,vulners --script-args "userdb='/root/lists/userlist_mysqlbrute.txt',passdb='/root/lists/quick_password_spray.txt'" -oN '/root/scripts/recon_enum/results/exam/mssql/%s_mssql.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(MSSQLSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/mssql/%s_mssqlrecon.txt" % (ip_address)
 f = open(outfile, "w")

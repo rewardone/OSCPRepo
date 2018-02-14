@@ -19,7 +19,7 @@ port = sys.argv[2].strip()
 
 
 print "INFO: Performing nmap Telnet script scan for " + ip_address + ":" + port
-TELNETSCAN = "nmap -n -sV -Pn -vv -p %s --script=telnet-encryption,telnet-ntlm-info -oN '/root/scripts/recon_enum/results/exam/telnet/%s_telnet.nmap' %s" % (port, ip_address, ip_address)
+TELNETSCAN = "nmap -n -sV -Pn -vv -p %s --script=telnet-encryption,telnet-ntlm-info,vulners -oN '/root/scripts/recon_enum/results/exam/telnet/%s_telnet.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(TELNETSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/telnet/" + ip_address + "_telnetrecon.txt"
 f = open(outfile, "w")

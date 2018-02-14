@@ -22,7 +22,7 @@ port = sys.argv[2].strip()
 #ssh-run: runs a remote command on the ssh server and returns the command output
 
 print "INFO: Performing nmap SSH script scan for " + ip_address + ":" + port
-SSHSCAN = "nmap -n -sV -Pn -vv -p %s --script=ssh-auth-methods,sshv1,ssh2-enum-algos -oN '/root/scripts/recon_enum/results/exam/ssh/%s_ssh.nmap' %s" % (port, ip_address, ip_address)
+SSHSCAN = "nmap -n -sV -Pn -vv -p %s --script=ssh-auth-methods,sshv1,ssh2-enum-algos,vulners -oN '/root/scripts/recon_enum/results/exam/ssh/%s_ssh.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(SSHSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/ssh/" + ip_address + "_sshrecon.txt"
 f = open(outfile, "w")

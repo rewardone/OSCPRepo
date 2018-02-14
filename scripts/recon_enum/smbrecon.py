@@ -48,7 +48,7 @@ port = sys.argv[2].strip()
 #smb2-time: attempt to obtain the current system date and start date of a SMB2 server
 
 print "INFO: Performing nmap SMB script scan for " + ip_address + ":" + port
-SMBSCAN = "nmap -n -sV -Pn -vv -p %s --script=smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-services,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-os-discovery,smb-protocols,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms17-010,smb-double-pulsar-backdoor,smb2-vuln-uptime,smb-ls,smb-security-mode,smb-vuln-ms10-061,smb2-security-mode -oN '/root/scripts/recon_enum/results/exam/smb/%s_smb.nmap' %s" % (port, ip_address, ip_address)
+SMBSCAN = "nmap -n -sV -Pn -vv -p %s --script=smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-services,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-os-discovery,smb-protocols,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms17-010,smb-double-pulsar-backdoor,smb2-vuln-uptime,smb-ls,smb-security-mode,smb-vuln-ms10-061,smb2-security-mode,vulners -oN '/root/scripts/recon_enum/results/exam/smb/%s_smb.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(SMBSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/smb/" + ip_address + "_smbrecon.txt"
 f = open(outfile, "w")

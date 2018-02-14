@@ -27,7 +27,7 @@ ip_address = sys.argv[1]
 #snmp-interfaces: attempts to enum nework interfaces through SNMP. snmp-interfaces.host arg is required  
 
 print "INFO: Performing nmap SNMP script scan for " + ip_address + ":161,162"
-SNMPSCAN = "nmap -n -vv -sV -sU -Pn -p 161,162 --script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users -oN '/root/scripts/recon_enum/results/exam/snmp/%s_snmp.nmap' %s" % (ip_address)
+SNMPSCAN = "nmap -n -vv -sV -sU -Pn -p 161,162 --script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners -oN '/root/scripts/recon_enum/results/exam/snmp/%s_snmp.nmap' %s" % (ip_address)
 results = subprocess.check_output(SNMPSCAN, shell=True)
 resultsfile = "/root/scripts/recon_enum/results/exam/snmp/" + ip_address + "_snmprecon.txt"
 f = open(resultsfile, "w")

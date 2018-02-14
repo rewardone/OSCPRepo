@@ -34,6 +34,9 @@
 ## [THOUGHTS]
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
 ## open ports discovered. Probably better with one scan? 
+##
+## [NOTES]
+## vulners.nse requires -sV flag
 ###############################################################################################################
 
 import subprocess
@@ -68,7 +71,7 @@ def ftpEnum(ip_address, port):
 
 def fingerEnum(ip_address, port):
    print "INFO: Detected Finger on %s:%s" % (ip_address, port)
-   FINGERSCAN = "nmap -n -sV -Pn -vv -p %s --script=finger -oX /root/scripts/recon_enum/results/exam/finger/%s_finger.xml %s" % (port, ip_address, ip_address)
+   FINGERSCAN = "nmap -n -sV -Pn -vv -p %s --script=finger,vulners -oX /root/scripts/recon_enum/results/exam/finger/%s_finger.xml %s" % (port, ip_address, ip_address)
    subprocess.call(FINGERSCAN, shell=True)
    return
 
@@ -107,7 +110,7 @@ def httpEnum(ip_address, port):
     print "INFO: Detected http on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
-    HTTPSCAN = "nmap -sV -Pn -vv -p %s --script=http-useragent-tester,http-mobileversion-checker,http-ls,http-grep,http-git,http-comments-displayer,http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oN /root/scripts/recon_enum/results/exam/http/%s_http.nmap %s" % (port, userAgent, ip_address, ip_address)
+    HTTPSCAN = "nmap -sV -Pn -vv -p %s --script=http-useragent-tester,http-mobileversion-checker,http-ls,http-grep,http-git,http-comments-displayer,http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt,vulners --script-args http.useragent=%s -oN /root/scripts/recon_enum/results/exam/http/%s_http.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCAN, shell=True)
     #can opt to invoke dirbustEVERYTHING with <url> <output filename> <tool-to-use> ie dirb or gobuster (default)
     DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
@@ -122,7 +125,7 @@ def httpsEnum(ip_address, port):
     print "INFO: Detected https on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)  
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
-    HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-useragent-tester,http-mobileversion-checker,http-ls,http-grep,http-git,http-comments-displayer,http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt --script-args http.useragent=%s -oX /root/scripts/recon_enum/results/exam/http/%s_https.nmap %s" % (port, userAgent, ip_address, ip_address)
+    HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-useragent-tester,http-mobileversion-checker,http-ls,http-grep,http-git,http-comments-displayer,http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt,vulners --script-args http.useragent=%s -oX /root/scripts/recon_enum/results/exam/http/%s_https.nmap %s" % (port, userAgent, ip_address, ip_address)
     results = subprocess.check_output(HTTPSCANS, shell=True)
     #can opt to invoke dirbustEVERYTHING with <url> <output filename> <tool-to-use> ie dirb or gobuster (default)
     DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
@@ -155,7 +158,7 @@ def mysqlEnum(ip_address, port):
 #nfs-statfs: retrieves disk space statistics
 def nfsEnum(ip_address, port):
     print "INFO: Detected NFS on %s:%s" % (ip_address, port)
-    NFSSCAN = "nmap -n -sV -Pn -vv -p %s --script=nfs-ls,nfs-showmount,nfs-statfs -oX /root/scripts/recon_enum/results/exam/nfs/%s_nfs.xml %s" % (port, ip_address, ip_address)
+    NFSSCAN = "nmap -n -sV -Pn -vv -p %s --script=nfs-ls,nfs-showmount,nfs-statfs,vulners -oX /root/scripts/recon_enum/results/exam/nfs/%s_nfs.xml %s" % (port, ip_address, ip_address)
     subprocess.call(NFSSCAN, shell=True)
     return
 
@@ -207,7 +210,7 @@ def telnetEnum(ip_address, port):
 
 def tftpEnum(ip_address, port):
    print "INFO: Detected TFTP on %s:%s" % (ip_address, port)
-   TFTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=tftp-enum -oX /root/scripts/recon_enum/results/exam/tftp/%s_tftp.xml %s" % (port, ip_address, ip_address)
+   TFTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=tftp-enum,vulners -oX /root/scripts/recon_enum/results/exam/tftp/%s_tftp.xml %s" % (port, ip_address, ip_address)
    subprocess.call(TFTPSCAN, shell=True)
    return
     

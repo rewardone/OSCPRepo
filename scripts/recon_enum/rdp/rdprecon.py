@@ -16,7 +16,7 @@ port = sys.argv[2].strip()
 #rdp-vuln-ms12-020: checks for CVE-2012-0002 by checking for CVE-2012-0152 (DoS). Checks without crashing, but could still potentially crash.
 
 print "INFO: Performing nmap RDP script scan for " + ip_address + ":" + port
-RDPSCAN = "nmap -n -sV -Pn -vv -p %s --script=rdp-enum-encryption,rdp-vuln-ms12-020 -oN '/root/scripts/recon_enum/results/exam/rdp/%s_rdp.nmap' %s" % (port, ip_address, ip_address)
+RDPSCAN = "nmap -n -sV -Pn -vv -p %s --script=rdp-enum-encryption,rdp-vuln-ms12-020,vulners -oN '/root/scripts/recon_enum/results/exam/rdp/%s_rdp.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(RDPSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/rdp/%s_rdprecon.txt" % (ip_address)
 f = open(outfile, "w")
