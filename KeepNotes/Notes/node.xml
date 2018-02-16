@@ -22,7 +22,7 @@
   <key>title</key><string>Notes</string>
   <key>column_widths</key><dict>
     <key>created_time</key><integer>150</integer>
-    <key>modified_time</key><integer>1217</integer>
+    <key>modified_time</key><integer>1280</integer>
     <key>title</key><integer>230</integer>
   </dict>
   <key>attr_defs</key><array>

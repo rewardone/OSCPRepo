@@ -2,7 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>ST in/out/err</title>
+<title>STD in/out/err</title>
 </head><body>stdin &nbsp; descriptor is 0<br/>
 stdout descriptor is 1<br/>
-stderr descriptor is 2</body></html>
+stderr descriptor is 2<br/>
+<br/>
+&amp;&gt;&#09;&#09;redirects both stdout and stderr <br/>
+2&gt;&amp;1&#09;redirects stderr to whatever stdout is *pointing to <br/>
+&nbsp;&#09;&#09;cat blah &gt; txt.txt 2&gt;&amp;1 &#09;puts etderr in the txt file</body></html>
