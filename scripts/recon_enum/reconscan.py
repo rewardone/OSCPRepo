@@ -391,7 +391,7 @@ def unicornScan(ip_address):
                service = linesplit[2] # grab the service name
                port = line.split(" ")[0] # grab the port/proto
                port = port.split("/")[0]
-               elif ("domain" in service):
+               if ("domain" in service):
                   multProc(dnsEnum, ip_address, port)
    print "INFO: General TCP/UDP unicorn and nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
    jobs = []
