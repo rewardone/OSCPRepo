@@ -14,7 +14,6 @@ port = sys.argv[2].strip()
 #smb-enum-domains: attempt to enum domains on a system with policies. generally requires creds. 
 #smb-enum-groups: obtain a list of grous from remote system as well as a list of groups users. Works similar to 'enum.exe /g'
 #smb-enum-processes: pull list of processes from remote server over SMB. Done by query remote registry service. disabled by default on Vista. Requires Admin on others.
-#smb-enum-services: retries list of services running. Requires Admin
 #smb-enum-sessions: enumerate users logged in locally or through share. reading remote registry (Vista disabled by default). Requires higher than 'anonymous'
 #smb-enum-shares: attempt to list shares using srvsvc.NetShareEnumAll MSRPC and NetShareGetInfo. NetShareGetInfo requires Admin
 #mb-enum-users: attempt to enum users on remote system through MSRPC over 445 or 139. SAMR enum and LSA brute.
@@ -31,6 +30,7 @@ port = sys.argv[2].strip()
 #smb-vuln-ms10-061: check if vuln to ms10-061 Printer Spooler impersonation. used in Stuxnet. Checks for vuln in safe way without crashing. Needs access to at least one shared printer.
 
 #Not running
+#smb-enum-services: retries list of services running. Requires Admin. No longer default available.
 #smb-brute: Attempt to guess login over SMB
 #smb-flood: exhausts a remote SMB server's connection limit by opening as many as possible. 
 #smb-mbenum: queries information managed by the Windows Master Browser
@@ -48,9 +48,9 @@ port = sys.argv[2].strip()
 #smb2-time: attempt to obtain the current system date and start date of a SMB2 server
 
 print "INFO: Performing nmap SMB script scan for " + ip_address + ":" + port
-SMBSCAN = "nmap -n -sV -Pn -vv -p %s --script=smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-services,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-os-discovery,smb-protocols,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms17-010,smb-double-pulsar-backdoor,smb2-vuln-uptime,smb-ls,smb-security-mode,smb-vuln-ms10-061,smb2-security-mode,vulners -oN '/root/scripts/recon_enum/results/exam/smb/%s_smb.nmap' %s" % (port, ip_address, ip_address)
+SMBSCAN = "nmap -n -sV -Pn -vv -p %s --script=smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-os-discovery,smb-protocols,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms17-010,smb-double-pulsar-backdoor,smb2-vuln-uptime,smb-ls,smb-security-mode,smb-vuln-ms10-061,smb2-security-mode,vulners -oN '/root/scripts/recon_enum/results/exam/smb/%s_%s_smb.nmap' %s" % (port, ip_address, ip_address, port)
 results = subprocess.check_output(SMBSCAN, shell=True)
-outfile = "/root/scripts/recon_enum/results/exam/smb/" + ip_address + "_smbrecon.txt"
+outfile = "/root/scripts/recon_enum/results/exam/smb/" + ip_address + "_" + port + "_smbrecon.txt"
 f = open(outfile, "w")
 f.write(results)
 f.close

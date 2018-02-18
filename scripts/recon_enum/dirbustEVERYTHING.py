@@ -66,7 +66,7 @@ if (tool == "gobuster"):
     #-v	Verbose output (errors)
     #-w string: Path to the wordlist
     #-x string: File extension(s) to search for (dir mode only)
-    GOBUSTERSCAN = "gobuster -a %s -e -q -u %s -w /root/lists/Web/personal_with_vulns.txt > /root/scripts/recon_enum/results/exam/dirb/gobuster%s" % (user_agent, url, name)
+    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -w /root/lists/Web/personal_with_vulns.txt > /root/scripts/recon_enum/results/exam/dirb/gobuster%s" % (user_agent, url, name)
     results = subprocess.check_output(GOBUSTERSCAN, shell=True)
             
 print "INFO: Directory brute of %s completed" % (url)

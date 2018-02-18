@@ -115,8 +115,10 @@ def httpEnum(ip_address, port):
     #can opt to invoke dirbustEVERYTHING with <url> <output filename> <tool-to-use> ie dirb or gobuster (default)
     DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
-    NIKTOSCAN = "nikto -host http://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_nikto" % (ip_address, port, ip_address)
+    print "INFO: nikto scan started on port 80"
+    NIKTOSCAN = "nikto -host http://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_nikto.xml" % (ip_address, port, ip_address)
     subprocess.call(NIKTOSCAN, shell=True)
+    print "INFO: whatweb started on port 80"
     WHATWEBFINGER = "whatweb http://%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_whatweb.xml" % (ip_address, ip_address)
     subprocess.call(WHATWEBFINGER, shell=True)
     return
@@ -130,8 +132,10 @@ def httpsEnum(ip_address, port):
     #can opt to invoke dirbustEVERYTHING with <url> <output filename> <tool-to-use> ie dirb or gobuster (default)
     DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
-    NIKTOSCAN = "nikto -host https://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_S_nikto" % (ip_address, port, ip_address)
+    print "INFO: nikto scan started on port 443"
+    NIKTOSCAN = "nikto -host https://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_S_nikto.xml" % (ip_address, port, ip_address)
     subprocess.call(NIKTOSCAN, shell=True)
+    print "INFO: whatweb started on port 443"
     WHATWEBFINGER = "whatweb https://%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_S_whatweb.xml" % (ip_address, ip_address)
     subprocess.call(WHATWEBFINGER, shell=True)
     return
@@ -194,8 +198,11 @@ def smtpEnum(ip_address, port):
 
 def smbEnum(ip_address, port):
     print "INFO: Detected SMB on %s:%s" % (ip_address, port)
+    if port.strip() == "139":
+       SCRIPT = "./smbrecon.py %s %s" % (ip_address, port)
+       subprocess.call(SCRIPT, shell=True)
     if port.strip() == "445":
-       SCRIPT = "./smbrecon.py %s 2>/dev/null" % (ip_address)
+       SCRIPT = "./smbrecon.py %s %s" % (ip_address, port)
        subprocess.call(SCRIPT, shell=True)
     return
 
@@ -328,8 +335,8 @@ def unicornScan(ip_address):
    tcpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
    udpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
    tcpPorts = subprocess.check_output(tcpPorts, shell=True).split("\n")
-   udpPorts = subprocess.check_output(udpPorts, shell=True).split("\n")
    print "INFO: Unicorn TCP ports %s" % tcpPorts
+   udpPorts = subprocess.check_output(udpPorts, shell=True).split("\n")
    print "INFO: Unicorn UDP ports %s" % udpPorts
    #pass to nmap for versioning
    for port in tcpPorts: #the last element in the list is blank
@@ -354,17 +361,19 @@ def unicornScan(ip_address):
 			      multProc(fingerEnum, ip_address, port)
                elif ("ftp" in service):
                   multProc(ftpEnum, ip_address, port)
+               elif ("netbios-ssn" in service):
+                  multProc(smbEnum, ip_address,port)
                elif ("microsoft-ds" in service):
                   multProc(smbEnum, ip_address, port)
-               elif ("ms-sql" in service):
+               elif ("ms-sql" in service or "mssql" in service):
                   multProc(mssqlEnum, ip_address, port)				  				  
-               elif ("my-sql" in service):
+               elif ("my-sql" in service or "mysql" in service):
 			      multProc(mysqlEnum, ip_address, port)
                elif ("nfs" in service):
 			      multProc(nfsEnum, ip_address, port)
                elif ("rdp" in service):
 			      multProc(rdpEnum, ip_address, port)
-               elif ("ssh/http" in service) or ("https" in service):
+               elif ("ssh/http" in service or "https" in service):
                   multProc(httpsEnum, ip_address, port)
                elif ("ssh" in service):
                   multProc(sshEnum, ip_address, port)
