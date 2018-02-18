@@ -116,10 +116,10 @@ def httpEnum(ip_address, port):
     DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
     print "INFO: nikto scan started on port 80"
-    NIKTOSCAN = "nikto -host http://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_nikto.xml" % (ip_address, port, ip_address)
+    NIKTOSCAN = "nikto -host http://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_nikto" % (ip_address, port, ip_address, ip_address)
     subprocess.call(NIKTOSCAN, shell=True)
     print "INFO: whatweb started on port 80"
-    WHATWEBFINGER = "whatweb http://%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_whatweb.xml" % (ip_address, ip_address)
+    WHATWEBFINGER = "whatweb http://%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_whatweb.xml > /root/scripts/recon_enum/results/exam/whatweb/%s_whatweb" % (ip_address, ip_address, ip_address)
     subprocess.call(WHATWEBFINGER, shell=True)
     return
 
@@ -133,10 +133,10 @@ def httpsEnum(ip_address, port):
     DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
     print "INFO: nikto scan started on port 443"
-    NIKTOSCAN = "nikto -host https://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_S_nikto.xml" % (ip_address, port, ip_address)
+    NIKTOSCAN = "nikto -host https://%s -p %s -nolookup -output /root/scripts/recon_enum/results/exam/nikto/%s_S_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_nikto" % (ip_address, port, ip_address, ip_address)
     subprocess.call(NIKTOSCAN, shell=True)
     print "INFO: whatweb started on port 443"
-    WHATWEBFINGER = "whatweb https://%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_S_whatweb.xml" % (ip_address, ip_address)
+    WHATWEBFINGER = "whatweb https://%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_S_whatweb.xml > /root/scripts/recon_enum/results/exam/whatweb/%s_S_whatweb" % (ip_address, ip_address, ip_address)
     subprocess.call(WHATWEBFINGER, shell=True)
     return
 

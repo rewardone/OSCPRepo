@@ -25,7 +25,7 @@ port = sys.argv[2].strip()
 #mysql-query: runs a query and returns the table args 'query''username''password'
 
 print "INFO: Performing nmap MySQL script scan for %s:%s" % (ip_address, port)
-MySQLSCAN = "nmap -n -sV -Pn -vv -p %s --script=mysql-empty-password,mysql-vuln-cve2012-2122,mysql-brute,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners --script-args "userdb='/root/lists/userlist_mysqlbrute.txt',passdb='/root/lists/quick_password_spray.txt'" -oN '/root/scripts/recon_enum/results/exam/mysql/%s_mysql.nmap' %s" % (port, ip_address, ip_address)
+MySQLSCAN = "nmap -n -sV -Pn -vv -p %s --script mysql-empty-password,mysql-vuln-cve2012-2122,mysql-brute,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners --script-args userdb='/root/lists/userlist_sqlbrute.txt',passdb='/root/lists/quick_password_spray.txt' -oN '/root/scripts/recon_enum/results/exam/mysql/%s_mysql.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(MySQLSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/mysql/%s_mysqlrecon.txt" % (ip_address)
 f = open(outfile, "w")
