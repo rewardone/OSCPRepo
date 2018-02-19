@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tl;dr</title>
+</head><body>sudo apt update<br/>
+sudo apt dist-upgrade<br/>
+sudo apt-get install libnuma-dev<br/>
+wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | sudo apt-key add -<br/>
+sudo sh -c 'echo deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main &gt; /etc/apt/sources.list.d/rocm.list'<br/>
+sudo apt-get update<br/>
+sudo apt-get install compute-firmware rocm-dkms<br/>
+sudo usermod -a -G video root<br/>
+sudos systemctl reboot</body></html>

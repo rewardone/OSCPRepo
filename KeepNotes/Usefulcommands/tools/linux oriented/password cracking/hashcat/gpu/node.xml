@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>GPU</string>
+  <key>nodeid</key><string>ca4b73d3-3ab6-45ea-a6bb-ae7b88f5dc9c</string>
+  <key>modified_time</key><integer>1519010167</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1519010161</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Injection</string>
   <key>nodeid</key><string>c4aa9b54-e2b5-4209-93d5-b65ebaca692a</string>
   <key>modified_time</key><integer>1515601484</integer>
