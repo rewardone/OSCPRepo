@@ -36,6 +36,11 @@ snmp-check -t 192.168.1.101 -c public<br/>
 <br/>
 Onesixtyone<br/>
 With onesixtyone you can test for open ports but also brute force community strings. I have had more success using onesixtyone than using nmap. So better use both.<br/>
+&nbsp;echo public &gt; community <br/>
+&nbsp;echo private &gt;&gt; community <br/>
+&nbsp;echo manager &gt;&gt; community <br/>
+&nbsp;for ip in $(seq 200 254); do echo 192.168.11.${ip}; done &gt; ips <br/>
+&nbsp;onesixtyone -c community -i ips<br/>
 <br/>
 Metasploit<br/>
 There are a few snmp modules in metasploit that you can use. snmp_enum can show you usernames, services, and other stuff.<br/>

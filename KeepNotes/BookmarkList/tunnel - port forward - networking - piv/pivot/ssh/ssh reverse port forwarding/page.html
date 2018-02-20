@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSH Reverse Port Forwarding</title>
+</head><body>Reverse SSH Portforwarding:<br/>
+Note that if you use OpenSSH sshd server, the server’s GatewayPorts option needs to be enabled (set to yes or clientspecified - GatewayPorts yes) for this to work (check file /etc/ssh/sshd_config on the server). Otherwise (default value for this option is no), the server will always force port bound on the loopback interface only.<br/>
+<br/>
+connect from local(attacker) to target:<br/>
+&nbsp; &nbsp; ssh -R &lt;targetip&gt;:&lt;targetport&gt;:&lt;localhost&gt;:&lt;localport&gt;<br/>
+<br/>
+on target:<br/>
+&nbsp; &nbsp; telnet &lt;targetip&gt; &lt;targetport&gt;<br/>
+&nbsp; &nbsp; -&gt; forwards to attacker machine on port </body></html>

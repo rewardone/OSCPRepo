@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>81b746e1-e70d-4855-ae1b-2fc369c32e10</string>
+  <key>title</key><string>Subnets IPv4</string>
+  <key>nodeid</key><string>7d223fa7-e976-471f-aba0-b96c5090949b</string>
+  <key>modified_time</key><integer>1515520934</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515520889</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>2</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

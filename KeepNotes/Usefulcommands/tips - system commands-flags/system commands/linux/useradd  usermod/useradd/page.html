@@ -8,4 +8,16 @@ adduseris a perl-script that facilitate the proces <br/>
 useradd is the native linux binary.<br/>
 <br/>
 $ sudo useradd -ou 0 -g 0 john <br/>
-$ sudo passwd john</body></html>
+$ sudo passwd john<br/>
+<br/>
+<br/>
+adduser --no-create-home --shell /bin/bash toor<br/>
+sed -i 's/toor:x:1001:1001/toor:x:0:0/' /etc/passwd<br/>
+<br/>
+or<br/>
+<br/>
+echo "toor:x:0:0::/tmp:/bin/sh" &gt;&gt; /etc/passwd<br/>
+echo "toor:23MdZN/rsVdLg:16673:0:99999:7:::" &gt;&gt; /etc/shadow<br/>
+<br/>
+Create Hashes for /etc/shadow:<br/>
+openssl passwd -salt 234 &lt;password&gt;</body></html>

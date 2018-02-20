@@ -10,8 +10,18 @@ if len(sys.argv) < 3:
     print "Warning: this version still uses old logic for dirb. gobuster uses new word list"
     sys.exit(0)
 
+#url is http(s)://IP_ADDRESS
 url = str(sys.argv[1])
+
+#name being passed from reconscan is an IP_ADDRESS
 name = str(sys.argv[2])
+
+if ("http" in url):
+    ip_address = url.strip("http://")
+elif ("https" in url):
+    ip_address = url.strip("https://")
+
+port = url.split(":")[2]
 
 #default to gobuster
 if (len(sys.argv) <= 3):
@@ -19,7 +29,33 @@ if (len(sys.argv) <= 3):
 else: 
    tool = str(sys.argv[3])
 
-if (tool == "dirb"):
+def genlist(url, name):
+    # -c: count for each word found
+    # -d: depth to spider Default 2
+    # -k: keep downloaded files
+    # -a: consider metadata. files downloaded to /tmp
+    # --meta_file: filename for metadata output
+    # --feta-temp-dir: dir to use when downloading/parsing
+    # -m: min word length
+    # -n: don't output the wordlist
+    # -o: default, spider only visit site specified. with -o, cewl will visit external sites
+    # -u: user agent, default is 'Ruby'
+    # -w: file, write output rather than STDOUT
+    # --auth_type: digest or basic
+    # --auth_user: username
+    # --auth_pass: password
+    # --proxy_host: proxy
+    # --proxy_port: port
+    # --proxy_username: username
+    # --proxy_password: password
+    # -v: verbose
+    print "INFO: generating custom wordlist"
+    user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
+    #TODO: Feed in URLS from a brute scan
+    CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w /root/scripts/recon_enum/results/exam/dirb/%s" % (user_agent, url, name)
+    results = subprocess.check_output(CEWLSCAN, shell=True)
+
+def dirb(url):
     user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
     folders = ["/root/lists/Web/AllWebLists/separate", "/usr/share/dirb/wordlists/vulns"]
     found = []
@@ -47,10 +83,12 @@ if (tool == "dirb"):
     except:
         print "INFO: No items found during dirb scan of " + url
 
-
-if (tool == "gobuster"):
+def gobuster(url, wordlist, name):
     print "INFO: Starting gobuster scan for %s" % (url)
     user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
+    if (name == ""):
+        print "NAME ERROR"
+        name = "TEMP_NO_NAME_PASSED"
     #gobuster documentation (not all options, just common ones)
     #-a string: Set the User-Agent string (dir mode only)
     #-e	Expanded mode, print full URLs
@@ -66,7 +104,22 @@ if (tool == "gobuster"):
     #-v	Verbose output (errors)
     #-w string: Path to the wordlist
     #-x string: File extension(s) to search for (dir mode only)
-    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -w /root/lists/Web/personal_with_vulns.txt > /root/scripts/recon_enum/results/exam/dirb/gobuster%s" % (user_agent, url, name)
+    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -w %s > /root/scripts/recon_enum/results/exam/dirb/gobuster%s" % (user_agent, url, wordlist, name)
     results = subprocess.check_output(GOBUSTERSCAN, shell=True)
+
+if (tool == "dirb"):
+    dirb(url)
+
+if (tool == "gobuster"):
+    default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
+    cewl_scanname = "%s_%s_cewl" % (name, port)
+    cewl_filename = "/root/scripts/recon_enum/results/exam/dirb/%s" % (cewl_scanname)
+    default_scanname = "_%s_%s_default" % (name, port)
+    cewl_busted_scanname = "_%s_%s_cewld" % (name, port)
+    gobuster(url, default_wordlist, default_scanname)
+    genlist(url, cewl_scanname)
+    gobuster(url, cewl_filename, cewl_busted_scanname)
+    COMUNI = "awk \'!a[$0]++\' /root/scripts/recon_enum/results/exam/dirb/gobuster* > /root/scripts/recon_enum/results/exam/dirb/gobuster_%s_%s_combined" % (name, port)
+    comuniresults = subprocess.check_output(COMUNI, shell=True)
             
 print "INFO: Directory brute of %s completed" % (url)

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Control Socket</title>
+</head><body>?<br/>
+<br/>
+Control SSH socket:<br/>
+Edit client configuration:<br/>
+&nbsp; &nbsp; echo "ControlPath /tmp/%r@%h:%p" &gt;&gt; /etc/ssh/ssh_config<br/>
+&nbsp; &nbsp; echo "ControlMaster auto" &gt;&gt; /etc/ssh/ssh_config<br/>
+&nbsp; &nbsp; echo "ControlPersist yes" &gt;&gt; /etc/ssh/ssh_config<br/>
+<br/>
+Now connect to an existing socket:<br/>
+&nbsp; &nbsp; ssh -S /tmp/user@host:port %h<br/>
+<br/>
+</body></html>

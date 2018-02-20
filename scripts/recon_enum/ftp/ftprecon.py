@@ -7,6 +7,9 @@ if len(sys.argv) != 3:
     print "Usage: ftprecon.py <ip address> <port>"
     sys.exit(0)
 
+ip_address = sys.argv[1].strip()
+port = sys.argv[2].strip()
+
 #NSE Script documentation
 #RUNNING
 #ftp-anon: checks if FTP server allows anonymous logins, if so, get a dir listing
@@ -16,14 +19,12 @@ if len(sys.argv) != 3:
 #ftp-vsftpd-backdoor: check for vsFTPd 2.3.4 backdoor CVE-2011-2523, send a :) and potential to execute a command
 #ftp-vuln-cve-2010-4221: check for stack-based buffer overflow in ProFTPD server between 1.3.2rc3 and 1.3.3b. May crash the ftp service. Default tries to run nmap. Check exploit-db. 
 #tftp-enum: brute's a default list of file names to determine if they are available on the server. have to manually tftp {IP} get {filename} if discovered.
- #TFTP is UDP protocol make sure it's handled correctly
+#TFTP is UDP protocol make sure it's handled correctly
 
 #NOT RUNNING
 #ftp-brute: perform brute force against FTP
 #ftp-libopie: check for CVE-2010-1938, WARNING will crash if vulnerable, better to manually check...
 
-ip_address = sys.argv[1].strip()
-port = sys.argv[2].strip()
 print "INFO: Performing nmap FTP script scan for " + ip_address + ":" + port
 FTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=ftp-anon,ftp-bounce,ftp-syst,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum,vulners -oN '/root/scripts/recon_enum/results/exam/ftp/%s_ftp.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(FTPSCAN, shell=True)
@@ -37,9 +38,12 @@ f.close
 #Brute scan if desired.
 
 print "INFO: Performing hydra ftp scan against " + ip_address 
-HYDRA = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/ftp/%s_ftphydra.txt -u %s -s %s ftp" % (ip_address, ip_address, port)
-results = subprocess.check_output(HYDRA, shell=True)
-resultarr = results.split("\n")
-for result in resultarr:
-    if "login:" in result:
-	print "[*] Valid ftp credentials found: " + result 
+HYDRAFTP = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/ftp/%s_ftphydra.txt -u %s -s %s ftp" % (ip_address, ip_address, port)
+try:
+    results = subprocess.check_output(HYDRAFTP, shell=True)
+    resultarr = results.split("\n")
+    for result in resultarr:
+        if "login:" in result:
+	        print "[*] Valid ftp credentials found: " + result
+except:
+    print "INFO: No valid ftp credentials found"

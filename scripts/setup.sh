@@ -30,3 +30,14 @@ cp -r /root/Documents/OSCPRepo/lists /root/lists
 echo "Make sure metasploit is ready to go"
 service postgresql start
 msfdb reinit
+
+
+
+
+
+
+
+
+
+echo "Optional packages you might utilize in the future"
+echo "apt-get install automake"

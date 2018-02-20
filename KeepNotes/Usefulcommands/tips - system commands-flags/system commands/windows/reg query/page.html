@@ -18,4 +18,20 @@ reg add [\\TargetIPaddr\] [RegDomain][ \Key ]<br/>
 reg export [RegDomain]\[Key] [FileName]<br/>
 reg import [FileName ]<br/>
 reg query [\\TargetIPaddr\] [RegDomain]\[ Key ] /v [Valuename!] (you can to add /s for recurse<br/>
-all values )</body></html>
+all values )<br/>
+<br/>
+<br/>
+Allow RDP<br/>
+&nbsp; &nbsp; reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f<br/>
+<br/>
+Disable UAC<br/>
+&nbsp; &nbsp; reg enumkey -k HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\policies\\system<br/>
+&nbsp; &nbsp; reg setval -v EnableLUA -d 0 -t REG_DWORD -k HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\policies\\system<br/>
+<br/>
+Refresh policies<br/>
+&nbsp; &nbsp; gpupdate /force<br/>
+<br/>
+Disable the Firewall<br/>
+&nbsp; &nbsp; reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f<br/>
+<br/>
+</body></html>

