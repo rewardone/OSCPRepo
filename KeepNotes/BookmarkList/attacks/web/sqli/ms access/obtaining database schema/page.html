@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Obtaining Database Schema</title>
+</head><body>Various system tables exist by default in MS Access that can be potentially used to obtain table names and columns. Unfortunately, in the default configuration of recent MS Access database releases, these tables are not accessible. Nevertheless, it is always worth trying:<br/>
+&nbsp;MSysObjects<br/>
+&nbsp;MSysACEs<br/>
+&nbsp;MSysAccessXML<br/>
+<br/>
+For example, if a union SQL injection vulnerability exists, you can use the following query:<br/>
+' UNION SELECT Name FROM MSysObjects WHERE Type = 1%00<br/>
+<br/>
+Alternatively, it is always possible to bruteforce the database schema by using a standard wordlist (e.g. FuzzDb).<br/>
+In some cases, developers or system administrators do not realize that including the actual .mdb file within the application webroot can allow to download the entire database. Database filenames can be inferred with the following query:<br/>
+http://www.example.com/page.app?id=1'+UNION+SELECT+1+FROM+name.table%00<br/>
+<br/>
+where name is the .mdb filename and table is a valid database table. In case of password protected databases, multiple software utilities can be used to crack the password. Please refer to the references.</body></html>

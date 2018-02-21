@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Blind Testing</string>
+  <key>nodeid</key><string>d9bbc23b-3d06-4af9-b0d2-08d496e33065</string>
+  <key>modified_time</key><integer>1519231219</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1519229606</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

