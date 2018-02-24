@@ -4,11 +4,15 @@ import sys
 import os
 import subprocess
 
-if len(sys.argv) < 3:
-    print "Usage: dirbust.py <target url> <scan name> <tool-to-use (optional)>"
+def help():
+    print "Usage: dirbust.py <target url:port> <scan name> <tool-to-use (optional)>"
     print "tool-to-use: available options are dirb and gobuster. gobuster is the default"
     print "Warning: this version still uses old logic for dirb. gobuster uses new word list"
+    print "Warning: gobuster is not set to follow redirects!"
     sys.exit(0)
+
+if len(sys.argv) < 3:
+    help()
 
 #url is http(s)://IP_ADDRESS
 url = str(sys.argv[1])
@@ -26,8 +30,10 @@ port = url.split(":")[2]
 #default to gobuster
 if (len(sys.argv) <= 3):
    tool = "gobuster"
-else: 
-   tool = str(sys.argv[3])
+else:
+   if (sys.argv[3] == "dirb" or sys.argv[3] == "gobuster"):
+      tool = str(sys.argv[3]) 
+   help()
 
 def genlist(url, name):
     # -c: count for each word found
@@ -104,8 +110,19 @@ def gobuster(url, wordlist, name):
     #-v	Verbose output (errors)
     #-w string: Path to the wordlist
     #-x string: File extension(s) to search for (dir mode only)
-    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -w %s > /root/scripts/recon_enum/results/exam/dirb/gobuster%s" % (user_agent, url, wordlist, name)
+    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > /root/scripts/recon_enum/results/exam/dirb/gobuster%s" % (user_agent, url, wordlist, name)
     results = subprocess.check_output(GOBUSTERSCAN, shell=True)
+
+def sortBySize(nameAndPathOfResults):
+    f = open(nameAndPathOfResults, 'r')
+    sizear = set()
+    for line in f:
+        tmpsize = line.split('[Size: ')[1]
+        tmpsize = tmpsize[:-2] #-2 for ]\n, -1 leaves the ]
+        sizear.add(tmpsize)
+    for size in sizear:
+        GREPV = "grep -v %s %s > /root/scripts/recon_enum/results/exam/dirb/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, name, port, size)
+        GREPVRESULTS = subprocess.call(GREPV, shell=True)
 
 if (tool == "dirb"):
     dirb(url)

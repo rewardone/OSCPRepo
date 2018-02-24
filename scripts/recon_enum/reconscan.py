@@ -27,15 +27,17 @@
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
 ## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
 ## Fix SNMPrecon onesixtyone
+## Fix DIRB scan in dirbustEVERYTHING
 ## SMBrecon: nbtscan (e4l now implemented)
 ## Expand DNSRecon
-## gobuster should do more than just dirs. 
 ## Expand: run cewl through every discovered dir in first run, comb, uniq, then back to gobuster
+## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
 ##
 ## [THOUGHTS]
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
 ## open ports discovered. Probably better with one scan? 
 ## Not so great when new ports are discovered, maybe break reconscan out into more separate files?
+## Edit web wordlist so lines never start with /? (only small percentage of them do)
 ##
 ## [NOTES]
 ## vulners.nse requires -sV flag

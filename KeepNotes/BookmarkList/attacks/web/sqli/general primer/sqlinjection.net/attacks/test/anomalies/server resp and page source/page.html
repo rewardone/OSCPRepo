@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Server Resp and Page Source</title>
+</head><body><b>nalysing Server Response and Page Source</b><br/>
+<br/>
+Subtle impacts of SQL injection attacks on response<br/>
+<br/>
+It is not always easy to tell if an inbound SQL injection test is positive or negative. Sometimes, a slight difference in the server response can indicate the attacker is on the right way. By carefully analysing the source code of the web page, it is possible to find a few hints that will allow the attacker to exploit some vulnerability much faster than if he was using blind SQL injection.<br/>
+<br/>
+<b>Source Code</b><br/>
+<br/>
+In most cases a quick look at the rendered web page will be enough to know if the test was successful or not. When this is not sufficient, an in-depth source code analysis of the page could reveal a wealth of information. A good example is the information present in comments. During development, debug information may have been shown in the page. If this data was later hidden using HTML comments, it is possible that this information is still present in the page’s source. It is important to keep in mind that any mistake made by the developers can be used to the attacker’s advantage.<br/>
+<br/>
+The HTML structure must also be considered; any missing or added HTML tag may indicate that something unexpected happened. Needless to say that a change in the HTML structure will most likely be visible on the page, however some subtle differences may be difficult to spot. Especially with today’s modern browser trying to automatically fix invalid HTML syntax.<br/>
+<br/>
+<b>Server Response</b><br/>
+<br/>
+In some cases, a manual review of the HTML returned will not be enough. The complete response must be scrutinised and some characters could be difficult to spot in the page's source code. For example, a single line return or a space character will have almost no impact and they could remain undetected. It is a good practice to automate source code comparison with tools like wget and diff (both available in Linux) in order to avoid errors and simplify this verification.<br/>
+<br/>
+It is important to realize that if the attacker successfully generated an unexpected behavior in the application, the code trace will differ from a classic execution. Any character added or removed in the response during this execution could indicate the test was successful.<br/>
+<br/>
+<b>HTTP Status Code</b><br/>
+<br/>
+By analysing server response, the attacker will also be able to identify if a redirection was done by the application. Given the injected SQL segment generated an error, some developers will redirect the user to a default page or simply force the page to reload. This is transparent to the user and it will not be visible in the source code. The tester should use a web proxy in this situation to analyse the exact server response. Some browser plugins also provide this functionality.</body></html>

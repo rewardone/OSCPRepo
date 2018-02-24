@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Determining Query Structure</title>
+</head><body><b>Determining Query Structure</b><br/>
+<br/>
+Understanding how to craft a malicious SQL segment<br/>
+<br/>
+One of the main tasks of a penetration tester is to figure out what is the original query structure. This precious piece of information will allow him to take control over the main query with a specially crafted SQL segment. This section presents different ways to overcome difficulties one could meet in real cases of SQL injection testing.<br/>
+<br/>
+<b>Desired Information</b><br/>
+<br/>
+As a tester, you need to know if the application filters any character from the input. Ideally, you would also know what the main query looks like. This includes tables used, column names and data types. Generating application errors may help you to recover this information. Otherwise you need to detect SQL injection by analysing the application response to different testing strings. When a tester has a good idea of the query structure, he will habitually be able to inject a SQL segment without generating an invalid SQL syntax.<br/>
+<br/>
+<b>Special Cases</b><br/>
+<br/>
+Below are listed some cues to help you achieve a successful SQL injection the most common "complex scenarios".<br/>
+<br/>
+<b>Complex WHERE Clause</b><br/>
+<br/>
+Most of the time, user inputs are integrated in WHERE clause. To simplify theory, the majority of the examples presented on this website featured pretty simple queries. In reality it is often quite different. Detecting vulnerabilities can become quite a challenge when the vulnerable parameter is integrated in a WHERE clause containing a massive number of conditions. Here is an example where a correctly crafted parameter has no impact on the main query. We suppose that admin is a valid but inactive user who do not want to be contacted by email.<br/>
+<br/>
+Input submitted (the attacker does not know the query's structure but he knows that “admin” is a user).<br/>
+admin' OR 'a'='a<br/>
+<br/>
+Query generated (Note: admin user is not active and does not want to be contacted by email).<br/>
+SELECT email FROM members WHERE allow_contact=1 AND username='admin' OR 'a'='a' AND is_active=1<br/>
+<br/>
+The query above returns no result. Neither would any injection of a single AND/OR condition. However, by injecting a parameter containing a double OR condition, the attacker could get the email list of all members.<br/>
+<br/>
+Input submitted with improved condition.<br/>
+admin' OR 'a'='a' OR 'a'='a<br/>
+<br/>
+Query generated (Note: admin user is not active and does not want to be contacted by email).<br/>
+SELECT email FROM members WHERE allow_contact=1 AND username='admin' OR 'a'='a' OR 'a'='a' AND is_active=1<br/>
+<br/>
+For this case and for many others, using line commenting can be a time-saving technique. Otherwise, make sure you use multiple conditions in your tests.<br/>
+<br/>
+<b>SQL Injection in Subqueries</b><br/>
+<br/>
+Vulnerable parameters integrated in subqueries can also become quite hard to test and attack. Altering the subquery with a crafted parameter does not even garantee that the main query will be impacted. For this reason, in most cases the attacker will need to end the subquery and take over the main query to achieve a successful SQL injection attack. Below is an example demonstrating this technique.<br/>
+<br/>
+Classic query example - Display posts in a category (parameter is not sanitized).<br/>
+SELECT title FROM posts WHERE topic in (SELECT id FROM topics WHERE category=1)<br/>
+<br/>
+Crafted parameter to escape the subquery.<br/>
+1) UNION SELECT password FROM members WHERE (1=1<br/>
+<br/>
+Resulting query.<br/>
+SELECT title FROM posts WHERE topic in (SELECT id FROM topics WHERE category=1) UNION SELECT password FROM members WHERE (1=1)<br/>
+<br/>
+The subquery is escaped and the attacker added a UNION statement to the original query. Members' passwords are now returned in the page.<br/>
+<br/>
+<b>UPDATE, DELETE, INSERT, etc.</b><br/>
+<br/>
+Make sure you test all modules of the application; including those used to modify data. More attention is often paid to functionality than security. Sanitizing parameters is something that could get out of the developer’s mind, especially if he has to create an important SQL statement. However, be extremely careful when testing parameters subject to be integrated in a data definition functions. You don’t want to lose all your data because an always true condition was mistakenly inserted into a vulnerable DELETE statement!<br/>
+<br/>
+<b>Uncommon Input Integration</b><br/>
+<br/>
+The user input does not always end as a value for a column. In some cases it might be used to specify a column name or a table name. This is not a common technique but it should not be neglected in your tests!<br/>
+<br/>
+<b>Some Cases are Dead Ends</b><br/>
+<br/>
+There are some cases where an existing SQL injection vulnerability cannot be exploited. A classic situation is when the user input is partially validated before being integrated in a subquery. Even if the validation by itself is insufficient, the integration into a sub-query makes it impossible (or nearly impossible) for the attacker to exploit it. This should not discourage you to test all parameters thoroughly, but keep in mind that some cases are dead ends.</body></html>

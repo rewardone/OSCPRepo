@@ -2,13 +2,12 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
-  <key>title</key><string>Queries</string>
-  <key>nodeid</key><string>49302862-a397-4141-bc36-a0cb97208ce3</string>
-  <key>modified_time</key><integer>1519243358</integer>
+  <key>title</key><string>Comments to Simplify</string>
+  <key>nodeid</key><string>c47230bb-29f9-4d46-ae79-6dc5deb3380d</string>
+  <key>modified_time</key><integer>1519505144</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
-  <key>created_time</key><integer>1516932135</integer>
+  <key>created_time</key><integer>1519505144</integer>
   <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>1</integer>
   <key>info_sort</key><string>order</string>
