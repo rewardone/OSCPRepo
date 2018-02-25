@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Estimate Table Size</title>
+</head><body>Estimating MySQL Table Size using SQL Injection<br/>
+<br/>
+Estimate MySQL Table Size<br/>
+<br/>
+In some cases, the attacker might want to have a rough idea about the number of records in a table. This is not a crucial piece of information, however it could be helpful to know how much time will be required to extract all the data contained in a table (especially when extraction techniques are slow or limited).<br/>
+<br/>
+<b>How It Works</b><br/>
+<br/>
+When a SELECT query is executed by the database engine, all records returned by the statement are evaluated to validate they satisfy the WHERE clause. Since the WHERE clause is verified for each and every row, it is possible to estimate how many records are in the table by injecting a small time delay in the WHERE clause. This technique is only possible with MySQL since this DBMS provides a time delay function that can be integrated in any SQL query.<br/>
+<br/>
+<b>Estimate Table Size SQL Injection</b><br/>
+<br/>
+Given there are 5000 rows in a table, a pause of 10 milliseconds in the WHERE clause will result in a 50 seconds delay before the server response is sent. If the table had only 300 records, then only 3 seconds would be added to the query execution time. Of course, if the attacker has absolutely no idea what the number of records is, he will need to start with a short delay and slowly increase it until a noticeable total delay is generated. Let’s now see an example which uses MySQL's SLEEP() function.<br/>
+<br/>
+<b>Example</b><br/>
+<br/>
+We suppose that the attacker does not know table names and he has no idea about how many rows are in each table. Here is how he should proceed.<br/>
+<br/>
+First query (short delay).<br/>
+SELECT * FROM products WHERE id=1 AND 1=2 OR sleep(0.001)<br/>
+<br/>
+Result.<br/>
+Response is returned in no time (clearly under 1 second).<br/>
+<br/>
+The first test indicated one thing. Either there is much less than a thousand records or this field is not vulnerable to SQL injection. Here is the second test.<br/>
+<br/>
+Second query (much longer delay – 100X increase).<br/>
+SELECT * FROM products WHERE id=1 AND 1=2 OR sleep(0.1)<br/>
+<br/>
+Result.<br/>
+The response takes a few seconds. It is hard to tell precisely but there seem to be between 20 and 50 records.<br/>
+<br/>
+By increasing delay a little bit we should have a more precise estimate.<br/>
+<br/>
+Third query (fine tuning the delay – 400% increase).<br/>
+SELECT * FROM products WHERE id=1 AND 1=2 OR sleep(0.5)<br/>
+<br/>
+Result.<br/>
+This query takes just over 19 seconds to execute.<br/>
+<br/>
+From this test the attacker can conclude that there are about 38 records in this table. This result is perfectly accurate since the products table of the test environment used has exactly 38 rows. Note that the more rows there are in the table, the harder it is to make a perfect estimate.<br/>
+<br/>
+<b>WHERE Clause Conditions</b><br/>
+<br/>
+As you may have noticed, each injection in the example contains an always false condition. This structure was adopted to make sure the sleep function is always executed. In fact, if the database engine does not need to evaluate all conditions of the WHERE clause it may end up skipping the time delay. This becomes even more important when the original condition in the WHERE clause relies on a parameter that is not unique. An example will better explain this. Suppose that the products table contains a foreign key to the supplier and 50% of the products come from the same supplier.<br/>
+<br/>
+Incorrect table size estimation (supplier #1 supplies 50% of the products).<br/>
+<br/>
+SELECT * FROM products WHERE supplier=1 OR sleep(0.5)<br/>
+<br/>
+Result.<br/>
+This query takes 9.5 seconds to execute.<br/>
+<br/>
+To optimize the execution, the database engine does not even execute the sleep function when the first part of the condition is true. The attacker will end up thinking there are 19 records while there are twice more. The bottom line is: make sure the sleep function is executed for each line.<br/>
+<br/>
+<b>SELECT From Multiple Tables</b><br/>
+<br/>
+As a final note: beware SELECT instructions where data comes from multiple tables. The technique presented in this article will not work in such situation. Obviously, it is hard to tell if the SELECT takes its data from only one table when you have no idea about the query but you can still make some assumptions from the results returned in the page.</body></html>

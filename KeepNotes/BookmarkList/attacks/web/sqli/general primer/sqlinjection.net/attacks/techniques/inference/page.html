@@ -1,2 +1,65 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><body></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Inference</title>
+</head><body>SQL Injection Inference Attacks<br/>
+<br/>
+Inference technique is the pillar of blind SQL injection and it is used in many advanced attacks. It allows testing for vulnerabilities and even extract information when no data is returned to the end user. Moreover, mastering its fundamentals will greatly help you understanding advanced attack vectors such as time-based SQL injection and data extraction through binary operations.<br/>
+<br/>
+<b>What Is an Inference Attack?</b><br/>
+<br/>
+Basically, an inference attack is an SQL injection containing a conditional construct. It uses specific instructions (time delay, errors, etc.) to trigger noticeable database behavior depending which branch of the condition was executed. This will allow the attacker to deduct (infer) if the tested expression was true or false even if no data is returned to the end user. This is better explained with an example.<br/>
+<br/>
+<b>Example</b><br/>
+<br/>
+The example below shows an error-based SQL injection (a derivate of inference attack). When the stacked condition is executed by the database engine, it verifies if the current user is the system administrator (sa). If the condition is true, the statement forces the database to throw an error by executing a division by zero. Otherwize, a valid instruction is executed.<br/>
+<br/>
+Malicious parameter (inference attack on SQL Server).<br/>
+1; IF SYSTEM_USER='sa' SELECT 1/0 ELSE SELECT 5<br/>
+<br/>
+Query generated (two possible outcomes for the injected IF).<br/>
+SELECT name, email FROM members WHERE id=1; IF SYSTEM_USER='sa' SELECT 1/0 ELSE SELECT 5<br/>
+<br/>
+As you can guess, the attacker will be able to conclude the database is run by the system administrator user if he sees a database error. Notice that the last part of the condition could be removed since the branch created by the ELSE instruction is not necessary.<br/>
+<br/>
+<b>Conditional Structures</b><br/>
+<br/>
+As mentionned earlier, inference attacks rely on conditional structures. Even though the syntax is similar from a DBMS to another, there are subtle differences. The reference table below shows how to integrate conditional construct for each database management system.<br/>
+<br/>
+DBMS&#09;Condition syntax&#09;&#09;&#09;&#09;&#09;&#09;&#09;Notes<br/>
+MySQL&#09;IF(condition, when_true, when_false)&#09;&#09;&#09;Valid in any SQL statement. In stored procedures the syntax is<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;identic to Oracle's. More info <a href="http://dev.mysql.com/doc/refman/5.0/en/control-flow-functions.html">here</a>.<ul><li style="list-style-type: none"><ul><li style="list-style-type: none">CASE expression WHEN value THEN instruction </li>
+<li style="list-style-type: none">[WHEN value THEN instruction] [ELSE instruction] </li>
+<li style="list-style-type: none">END CASE&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Only valid in stored procedures. This is the minimal syntax, a more</li>
+<li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;complete one can be found <a href="http://dev.mysql.com/doc/refman/5.0/en/case.html">here</a>.</li>
+</ul>
+</li>
+</ul>
+<br/>
+SQL Server&#09;IF condition when_true [ELSE when_false]&#09;Can only be used in stored procedures or in an independent<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;stacked query. More info <a href="http://msdn.microsoft.com/en-us/library/ms182717(v=sql.90).aspx">here</a>.<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">CASE expression WHEN value THEN instruction </li>
+<li style="list-style-type: none">[WHEN value THEN instruction] [ELSE instruction] END</li>
+</ul>
+</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Can only be used in stored procedures. You can also find a more</li>
+<li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;complete syntax <a href="http://msdn.microsoft.com/en-us/library/ms181765.aspx">here</a>.</li>
+</ul>
+<br/>
+Oracle &#09;IF condition THEN when_true [ELSE when_false] <br/>
+&nbsp;&#09;&#09;END IF&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Can only be used in PL/SQL. More information can be found <a href="http://www.techonthenet.com/oracle/loops/if_then.php">here</a>.<br/>
+&nbsp;&#09;&#09;CASE [expression] WHEN value THEN instruction <br/>
+&nbsp;&#09;&#09;[WHEN value THEN instruction] [ELSE result] END &#09;Can only be used in PL/SQL. More information and complete<br/>
+&nbsp; &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;syntax <a href="http://www.techonthenet.com/oracle/functions/case.php">here</a>.<br/>
+<br/>
+A clear distinction must be made about how those instructions can be integrated in queries. Oracle will require a <a href="http://www.sqlinjection.net/advanced/pl-sql/">vulnerability in a PL/SQL block </a>since there is no other way to get the conditional structure executed. Other DBMS support the i<a href="http://www.sqlinjection.net/advanced/stored-procedure/">njection of conditions in stored procedures too</a>, but they also give the attacker more flexibility. For example, <a href="http://www.sqlinjection.net/stacked-queries/">injecting a new query</a>&nbsp;in SQL Server will allow executing the condition. MySQL makes it even easier by providing an IF() function which can be integrated in any query (or WHERE clause).<br/>
+<br/>
+<b>Data Extraction</b><br/>
+<br/>
+By combining inference attacks with bit operations, it is possible to extract almost any information from the database one bit at the time. This principle relies on the fact that inference attacks allows the attacker to find the status of one bit of data. When using some specific functions, it is possible identify precisely which bit we want to test. In other words, any bit of any string or number contained in the database can be tested. This technique is explained in details in the section about data extraction through binary operations.<br/>
+<br/>
+<b>More Information</b><br/>
+<br/>
+If you want more examples and more information about inference SQL injection, take a look at the section about blind attacks.</body></html>

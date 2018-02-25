@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Attacks</title>
+</head><body><b>Stored Procedure Attacks</b><br/>
+<br/>
+It is often believed that stored procedures are not vulnerable to SQL injection attacks, but the reality is totally different. In fact, stored procedures and <a href="http://www.sqlinjection.net/advanced/pl-sql/">PL/SQL</a>&nbsp;can be vulnerable to SQLIA. This article covers the different situations where stored procedures can be exploited. If you are looking to secure you code against this security flaw, consider reading the article about writing secure stored procedures.<br/>
+<br/>
+<b>Vulnerable Code</b><br/>
+<br/>
+Many database management systems support user defined stored procedures. Even though the syntax may slightly vary from a DBMS to another, the principle stays the same. When a stored procedure integrates user supplied input into a dynamically built query, we encounter exactly the same SQL injection vulnerability we presented in the <a href="http://www.sqlinjection.net/tutorial/">tutorial</a>. There is basically two ways to create a vulnerable stored procedure. Microsoft SQL Server syntax is used in examples, but you could adapt it could be converted to almost any DBMS syntax with minimal changes. Let’s take a look at the code behind those security flaws.<br/>
+<br/>
+<b>Vulnerable EXEC statement</b><br/>
+<br/>
+The most common mistake with stored procedures is to misuse the EXEC statement. If the user input was not sanitized before integrating it in the query, a SQL injection is created.<br/>
+<br/>
+Vulnerable stored procedure using EXEC statement.<br/>
+CREATE PROCEDURE getDescription<br/>
+&nbsp; &nbsp;@vname VARCHAR(50)<br/>
+AS<br/>
+&nbsp; &nbsp;EXEC('SELECT description FROM products WHERE name = '''+@vname+ '''')<br/>
+RETURN<br/>
+<br/>
+As you can guess, the previous example will execute any correctly crafted user input as if it was part of the query.<br/>
+<br/>
+<b>Vulnerable Dynamic Cursors</b><br/>
+<br/>
+Dynamic cursors are not as frequently used as EXEC statements in stored procedures. However, that does not make them less vulnerable. In fact, it might represent a little advantage for the attacker since security flaws in dynamic cursors are less likely to be identified in a code review (article available soon). Let’s take a look at an insecure use of dynamic cursors.<br/>
+<br/>
+Vulnerable stored procedure using dynamic cursor.<br/>
+CREATE PROCEDURE printDescriptions<br/>
+&nbsp; &nbsp;@vname &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VARCHAR(100)<br/>
+AS<br/>
+&nbsp; &nbsp;DECLARE @vdesc VARCHAR(1000)<br/>
+&nbsp; &nbsp;DECLARE @vsql VARCHAR(4000)<br/>
+&nbsp; &nbsp;SET @vsql = 'SELECT description FROM products WHERE name='''+@vname+''''<br/>
+&nbsp; &nbsp;DECLARE cur CURSOR FOR EXEC @vsql<br/>
+<br/>
+&nbsp; &nbsp;OPEN cur<br/>
+&nbsp; &nbsp;FETCH NEXT FROM cur INTO @vdesc<br/>
+<br/>
+&nbsp; &nbsp;WHILE @@FETCH_STATUS = 0<br/>
+&nbsp; &nbsp;BEGIN<br/>
+&nbsp; &nbsp; &nbsp; PRINT @vdesc<br/>
+&nbsp; &nbsp; &nbsp; FETCH NEXT FROM cur INTO @vdesc<br/>
+&nbsp; &nbsp;END<br/>
+<br/>
+&nbsp; &nbsp;CLOSE cur<br/>
+&nbsp; &nbsp;DEALLOCATE cur<br/>
+RETURN<br/>
+<br/>
+Here again, the user input is integrated directly in the query. Let’s now see how the stored procedure could be manipulated by the attacker.<br/>
+<br/>
+<b>Attacking Stored Procedures<br/>
+</b><br/>
+In both cases the attack is quite straight forward. There is nothing fancy to do in order to attack stored procedures and everything goes like a classic SQLIA. Below is an example that could be applied to successfully attack vulnerable procedures presented earlier in this article.<br/>
+<br/>
+Malicious user input.<br/>
+z' AND 'a'='b' UNION SELECT password FROM members WHERE username='admin<br/>
+<br/>
+Query generated in both cases.<br/>
+SELECT description FROM products WHERE name ='z' AND 'a'='b' UNION SELECT password FROM members WHERE username='admin'<br/>
+<br/>
+When the stored procedure is executed, it returns the password of the administrator.<br/>
+<br/>
+<b>Limitations</b><br/>
+<br/>
+There is no specific limitation when attacking stored procedures, although you need to keep in mind that the injected code will be limited to the stored procedure permissions (available soon). For example, the attack will be voided if you attempt to inject an INSERT statement in a stored procedure which has only read acces. In addition, DBMS/API specific limitations (available soon) are still taking effect.<br/>
+<br/>
+<b>Advanced Attacks</b><br/>
+<br/>
+Many advanced attacks such as privilege escalation (available soon), SQL injection buffer overflow (available soon) and advanced information gathering (available soon) rely on stored procedures. Those are not covered here since they habitually only apply to a specific (unpatched) version of database management system. For more information about those advanced techniques (available soon), refer to mentioned articles.</body></html>

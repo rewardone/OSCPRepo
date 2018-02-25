@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mysql_error() Function</title>
+</head><body>if the mysql error messages have been enabled (using mysql_error() function), then it is possible to retrieve the data from the back-end database using the ExtractValue() function:<br/>
+——————————————<br/>
+&gt;SELECT 1 AND ExtractValue(1, CONCAT(0x5c, (SELECT @@VERSION)))<br/>
+<br/>
+produces:<br/>
+<br/>
+Error Code : 1105<br/>
+XPATH syntax error: ‘5.1.44-community’<br/>
+<br/>
+———————-<br/>
+This should not be confused with the php errors. While the php errors are usually enabled its not “very” common to see developers printing the mysql errors using mysql_error() function. However, its still good to know and could sometimes come handy.</body></html>

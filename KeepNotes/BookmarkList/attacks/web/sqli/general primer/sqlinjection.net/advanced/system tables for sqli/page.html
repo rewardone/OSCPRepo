@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>System Tables for SQLi</title>
+</head><body>You will find below a complete list of system tables for the most popular database management systems. This list also contain specific information related to SQL injection. This reference is subject to modifications in a near future. It will include a short description of each columns and more specific details about how those can be used for SQL injection attacks.<br/>
+<br/>
+<b>MySQL</b><br/>
+<br/>
+The reference to information schema was remove from table names below to ease reading. However, note that all those table names must be preceded by "INFORMATION_SCHEMA." (example: SELECT * FROM INFORMATION_SCHEMA.COLUMNS).<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Useful Information<br/>
+<br/>
+All users can access these tables, however they will only be able to see the rows in the tables that correspond to objects for which the user has the proper access privileges.<br/>
+<br/>
+<b>SQL Server</b><br/>
+<br/>
+Below are listed all SQL Server system tables.<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+&nbsp;You should use information_schema instead of system tables in order to access this information.<br/>
+<br/>
+<b>Oracle</b><br/>
+<br/>
+Below are listed all Oracle system tables.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<img src="image 4.png" /><br/>
+<br/>
+Take note that information_schema is not supported by Oracle.<br/>
+</body></html>

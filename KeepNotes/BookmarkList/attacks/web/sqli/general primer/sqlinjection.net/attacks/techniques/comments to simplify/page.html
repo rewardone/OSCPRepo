@@ -1,2 +1,51 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><body></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Comments to Simplify</title>
+</head><body>Using Comments to Simplify SQL Injection<br/>
+<br/>
+Terminating the query properly is one of the main difficulties an attacker may encounter while testing. Frequently, the problem comes from what follows the integrated user parameter. This SQL segment is part of the query and the malicious input must be crafted to handle it without generating syntax errors. This article explains how comments can be used to eliminate trailing characters and simplify the attack.<br/>
+<br/>
+Comment Syntax<br/>
+<br/>
+Before jumping in the main subject, let’s enumerate the different ways to comment SQL code for MySQL, SQL Server (MSSQL) and Oracle.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+It should also be mentioned that MySQL supports alternative forms of comments. They are prettty similar to c-style comments and do not represent any additional value for an attacker who wants to terminate a query.<br/>
+<br/>
+<b>Terminating Query</b><br/>
+<br/>
+Using line commenting to terminate a query is best illustrated by an example. The vulnerable script and the attack is shown below.<br/>
+<br/>
+The script - Building a query without sanitizing data.<br/>
+$sql = "SELECT first_name, last_name, email FROM members WHERE username='".$value."' AND showpublic=1"<br/>
+<br/>
+Attacker input using line commenting.<br/>
+admin' -- <br/>
+<br/>
+Query generated.<br/>
+SELECT first_name, last_name, email FROM members WHERE username='admin' -- ' AND showpublic=1<br/>
+<br/>
+By using line commenting, the attacker eliminates the last condition and does not even have to handle the trailing quote. The same result could have been achieved without line commenting, but the crafted parameter would have been slightly more complex. The real gain from this technique is realized when the query is complex. For example, if a restrictive HAVING clause is present or if an INTERSECT operator was used after the vulnerable parameter. This is also true for many cases where user input is integrated in a subquery.<br/>
+<br/>
+<b>Inline Comments</b><br/>
+<br/>
+The last situation where comments can be used to simplify an SQL injection attack is when multiple vulnerable inputs are integrated in the same query. Given the attacker has a good idea of how the input is integrated, he could use C-style comments to eliminate a part of the query. Below is an example.<br/>
+<br/>
+Script eliminates all dashes and number signs in the input, then it integrates it in query.<br/>
+$sql = "INSERT INTO members (username, isadmin, password) VALUES ('".$username."', 0, '".$password."')"<br/>
+<br/>
+Attacker's input (username 1st line, password 2nd line).<br/>
+attacker', 1, /*<br/>
+*/'pwd<br/>
+<br/>
+Query generated (forces administrator rights).<br/>
+INSERT INTO members (username, isadmin, password) VALUES ('attacker', 1, /*', 0, '*/'pwd')<br/>
+<br/>
+As mentionned earlier, this technique is rarely used in real situations. However, it might be useful to overcome difficulties met when:<br/>
+&nbsp; &nbsp; Other forms of comment are impossible to use (for example if the double-dash is filtered by the application).<br/>
+&nbsp; &nbsp; It is not possible to use <a href="http://www.sqlinjection.net/stacked-queries/">stacked queries</a>.<br/>
+&nbsp; &nbsp; It is not possible to make a <a href="http://www.sqlinjection.net/union/">UNION attack</a>.<br/>
+</body></html>

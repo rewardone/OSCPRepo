@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Simulation Environment</title>
+</head><body>Much butter other integrated/online/VM downloads available than this one.<br/>
+<br/>
+Simulation Environment<br/>
+<br/>
+In order to master principles explained on this website, it is essential to apply them in a real world situation. Because trying SQL injection attacks on a system you do not own is illegal and might get you in a lot of trouble, we provide a free test environment for you to practice SQL injection. Deploying this simulation environment on your computer will not put your system at risk and it does not require particular skills.<br/>
+<br/>
+<a href="http://www.sqlinjection.net/downloads/sqlinjection_simulation.zip">Download Now</a>!v1.00 (Download size : 54 Kb)<br/>
+<br/>
+<b>Description</b><br/>
+<br/>
+The test environment is a SQL injection test site which contains several SQLI vulnerabilities. In order to use it, you will need to install a local webserver (EasyPHP).<br/>
+<br/>
+<b>Why this setup?</b><br/>
+<br/>
+The main reason we chose to use this particular configuration for a test environment is that it is really simple to setup. In fact, installing a database management system on your computer might be a lot of work but with EasyPHP, you will have a basic web server and a database running in minutes.<br/>
+<br/>
+The web environment is also a plus. Since most of the SQL injections attacks are made against websites and web applications, it represents the classical environment for SQL injection testing. In addition, PHP source files have the advantage to be viewable and editable with a simple text editor. It means you will be able to see what the vulnerable script does, understand how the SQL injection takes place and modify the script in order to secure it if you are familiar with PHP programming. Finally, this setup is entirely free to use!<br/>
+<br/>
+Test environment setup instructions<br/>
+<br/>
+&nbsp; &nbsp; 1. First, you will need to download EasyPHP and our vulnerable PHP scripts.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Download EasyPHP<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Download the testing environment<br/>
+&nbsp; &nbsp; 2. Install EasyPHP (default install options), start it and extract the simulation environment into the webserver root.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; The webserver root should be similar to C:\Program Files (x86)\EasyPHP-5.3.6.0\www\ or C:\Program Files\EasyPHP-5.3.6.0\www\ .<br/>
+<br/>
+<b>Using the test environment</b><br/>
+<br/>
+SQL Injection Simulation<br/>
+<br/>
+Simulation environment screenshot (click to enlarge)<br/>
+<br/>
+Right now you should be ready to access your webserver from your Internet browser. Open your favorite browser and type in the address bar: http://localhost:8888/. You should see a webpage asking you to run the script setup.<br/>
+<br/>
+If you see the webpage, everything is working fine up to now. You can now click the "setup script" link to create the simulation database. If you configured your environment as suggested, the script should execute successfully since the database user and password should match the script settings. Otherwise, edit the "config.inc" in the "includes" directory so it can connect to the database. Once the script has created tables, everything is ready for SQL injection attacks simulation!<br/>
+<br/>
+Before beginning SQL injection simulations, you must be aware of PHP/MySQL capabilities. As you may already know, some API/DBMS support multiple SQL statements in a single query and some does not. PHP/MySQL does not support query stacking. It is just one of many examples that could be cited about this database management system. For further details about MySQL refer to related articles on the website.<br/>
+<br/>
+<b>Solutions</b><br/>
+<br/>
+We will soon provide complete solution for every simulation of the test environment. Meanwhile, you can use the "Query executed" section to get hints about how the script works.</body></html>

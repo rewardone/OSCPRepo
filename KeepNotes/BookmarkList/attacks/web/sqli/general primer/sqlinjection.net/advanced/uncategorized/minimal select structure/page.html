@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Minimal SELECT Structure</title>
+</head><body>Minimal SELECT Structure<br/>
+<br/>
+It is pretty hard to create a valid query when almost no information about the database or the query is known. This can also make testing pretty difficult. Fortunately, some database management systems support minimal query structures and it is possible to create a valid SELECT statements with minimal information.<br/>
+<br/>
+No Column Name<br/>
+<br/>
+Many SQL injection techniques, such as UNION attacks, require the attacker to determine the structure of the query. As explained in the articles presenting these techniques, it is possible to use system tables in combination with their columns’ name to generate a valid query. However, creating a minimal SELECT query would be much handier and it could speed things up. Below is an example of a query built with literal values.<br/>
+<br/>
+SELECT statement with literal values.<br/>
+SELECT 'a', 'b' FROM table_name<br/>
+<br/>
+By using this approach, the attacker will quickly identify the number of selected columns and their data type. This syntax is valid on all DBMS.<br/>
+<br/>
+Removing FROM Clause<br/>
+<br/>
+In the same line of thoughts, the syntax of a SELECT statement will still be considered valid by some DBMS if the FROM clause is removed (as long as literal values are specified instead of column names). Below is a simple example where one row containing 4 values would be returned.<br/>
+<br/>
+Valid SELECT statement without FROM.<br/>
+SELECT 1,2,3,4<br/>
+<br/>
+Here again, this is especially useful when the tester has to determine the structure of the SELECT statement to create a valid UNION attack. Here is a comparison of a classic UNION attack attempt versus one using a minimal SELECT.<br/>
+<br/>
+Classic UNION test (testing with all strings first).<br/>
+SELECT id, name FROM users UNION SELECT col, colB FROM systab<br/>
+<br/>
+UNION test with minimal SELECT structure<br/>
+SELECT id, name FROM users UNION SELECT 'a', 'b'<br/>
+<br/>
+As I know, this syntax is only supported by MySQL and SQL Server.<br/>
+<br/>
+<b>Conclusion on Minimal SELECT</b><br/>
+<br/>
+In order to efficiently test for SQL injection vulnerabilities efficiently you need to put all chances on your side. Knowing the minimal structure of a SELECT statement will definitively simplify your problems in some cases. To maximize your efficiency, you could also use this technique in combination with implicit numeric value conversion.</body></html>

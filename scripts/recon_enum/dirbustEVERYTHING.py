@@ -128,7 +128,7 @@ if (tool == "dirb"):
     dirb(url)
 
 if (tool == "gobuster"):
-    default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
+    default_wordlist = "/root/lists/personal_with_vulns.txt"
     cewl_scanname = "%s_%s_cewl" % (name, port)
     cewl_filename = "/root/scripts/recon_enum/results/exam/dirb/%s" % (cewl_scanname)
     default_scanname = "_%s_%s_default" % (name, port)

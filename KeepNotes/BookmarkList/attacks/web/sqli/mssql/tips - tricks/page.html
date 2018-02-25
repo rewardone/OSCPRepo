@@ -38,4 +38,20 @@ Also same syntax should works with proper string data but we don’t need it for
 <br/>
 <b>Covering Your Tracks</b><br/>
 SQL Server -sp_password log bypass<br/>
-SQL Server don't log queries that includes sp_password for security reasons(!). So if you add --sp_password to your queries it will not be in SQL Server logs (of course still will be in web server logs, try to use POST if it's possible)</body></html>
+SQL Server don't log queries that includes sp_password for security reasons(!). So if you add --sp_password to your queries it will not be in SQL Server logs (of course still will be in web server logs, try to use POST if it's possible)<br/>
+<br/>
+<b>HAVING and GROUP BY</b><br/>
+GROUP BY" is a microsoft sql server command used to group output of particular sql query.<br/>
+"HAVING" is a command used to specify a search condition for a group or an aggregate. this command is always used with "GROUP BY" otherwise the error will return.<br/>
+<br/>
+Attempt to insert HAVING into query...should return an error with DB table name and column.<br/>
+Now insert GROUP BY &lt;known_table&gt;.&lt;known_column&gt; HAVING <br/>
+and you should be able to get an error listing another columns. Iterate through until all columns are known<br/>
+<br/>
+<b>Too much error information</b><br/>
+Using conver(), MSSQL could give away additional information. Consider:<br/>
+1 and 1=convert(int,db_name())--<br/>
+and MSSQL could give you back db_name in error message (failed conversion from string to int)<br/>
+Try with user_name() or other functions<br/>
+<br/>
+large section on error-based SQLi using convert(int,(SELECT...))-- <a href="https://www.exploit-db.com/papers/12975/">here</a></body></html>

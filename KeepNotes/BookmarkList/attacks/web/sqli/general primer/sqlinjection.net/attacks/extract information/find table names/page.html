@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Find Table Names</title>
+</head><body>Find Table Names for SQL Injection<br/>
+<br/>
+Before building a query to extract sensitive information, the attacker must know what data he wants to extract and where it is stored in the database. This article explains how to show table names. To simplify learning, we suppose that some SQL injection vulnerability has been identified and the attacker knows how to exploit it using UNION-based attack. This is by far the simplest case, but the information could also be extracted using blind SQL injection techniques.<br/>
+<br/>
+<b>Permissions</b><br/>
+<br/>
+First and foremost, you need to know that you will only be able to view tables that your database user has access to. In other words, you will only be able to list tables that your session user either owns or on which the user has been granted some permission. All other tables will seem to be inexistent.<br/>
+<br/>
+<b>Find Table Names in MySQL</b><br/>
+<br/>
+In MySQL, the table information_schema.tables contains all the metadata related to table objects. Below is listed the most useful information of this table.<br/>
+<br/>
+&nbsp; &nbsp; table_name: The name of the table.<br/>
+&nbsp; &nbsp; table_schema: The schema in which the table was created.<br/>
+<br/>
+Here is an example showing how to extract this information from a UNION attack.<br/>
+<br/>
+User input.<br/>
+1 AND 1=2 UNION SELECT table_schema, table_name, 1 FROM information_schema.tables<br/>
+<br/>
+Query generated.<br/>
+SELECT name, description, price FROM products WHERE category=1 AND 1=2 UNION SELECT table_schema, table_name, 1 FROM information_schema.table<br/>
+<br/>
+If you want to limit the list of tables returned to the current schema, you can add a WHERE clause to filter this column in combination with DATABASE() and SCHEMA() functions.<br/>
+<br/>
+<b>Find Table Names in SQL Server</b><br/>
+<br/>
+SQL Server also supports INFORMATION_SCHEMA and you should extract information concerning tables using information_schema.tables. Notice hoever that this data originates from sys.tables (systables for SQL Server 2000) but information_schema provides an abstraction layer and should be your first choice. The most interesting columns of this view are exactly the same that were identified for MySQL.<br/>
+<br/>
+&nbsp; &nbsp; table_name: The name of the table.<br/>
+&nbsp; &nbsp; table_schema: The schema in which the table was created.<br/>
+<br/>
+As you can guess, the example presented for MySQL will also work in SQL Server, but here it is again.<br/>
+<br/>
+User input.<br/>
+1 AND 1=2 UNION SELECT table_schema, table_name, 1 FROM information_schema.tables<br/>
+<br/>
+Query generated.<br/>
+SELECT name, description, price FROM products WHERE category=1 AND 1=2 UNION SELECT table_schema, table_name, 1 FROM information_schema.table<br/>
+<br/>
+<b>Find Table Names in Oracle</b><br/>
+<br/>
+For Oracle things are a little bit different since this DBMS does not support information_schema. Table objects are listed in the system table all_tables. Here are the most interesting columns to look for in this data dictionaryview.<br/>
+<br/>
+&nbsp; &nbsp; table_name: The name of the table.<br/>
+&nbsp; &nbsp; owner: The owner of the table.<br/>
+<br/>
+Here again, the example presented earlier adapted to Oracle.<br/>
+<br/>
+User input.<br/>
+1 AND 1=2 UNION SELECT owner, table_name, 1 FROM all_tables<br/>
+<br/>
+Query generated.<br/>
+SELECT name, description, price FROM products WHERE category=1 AND 1=2 UNION SELECT owner, table_name, 1 FROM all_tables<br/>
+<br/>
+Here is some more information about data dictionary views that may be useful.<br/>
+<br/>
+&nbsp; &nbsp; all_tables : Returns all tables the current user has access to.<br/>
+&nbsp; &nbsp; dba_tables : Returns the list of all system tables (given you have access are granted the SELECT_CATALOG_ROLE &nbsp;role or if you have the SELECT ANY DICTIONARY privilege).<br/>
+&nbsp; &nbsp; user_tables : Returns only the tables that the current user owns.<br/>
+<br/>
+Take note however that those dictionary views are slightly different from each other.<br/>
+More Information About Tables<br/>
+<br/>
+Once table names are found, you can g<a href="http://www.sqlinjection.net/column-names/">ather information about the columns</a>&nbsp;in this table.</body></html>

@@ -32,6 +32,7 @@
 ## Expand DNSRecon
 ## Expand: run cewl through every discovered dir in first run, comb, uniq, then back to gobuster
 ## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
+## Expand: dirbustEVERYTHING to take screenshots of webpages (botshot.py or other).
 ##
 ## [THOUGHTS]
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple

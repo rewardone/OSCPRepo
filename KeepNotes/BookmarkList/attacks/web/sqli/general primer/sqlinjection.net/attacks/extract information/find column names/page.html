@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Find Column Names</title>
+</head><body>Find Column Names for SQL Injection<br/>
+<br/>
+Once the attacker knows table names he needs to find out what the column names are in order to extract information. This article explains how this information can be found using meta data. Examples shown use a UNION attack to simplify things, however the same information could be retrieved with blind SQL injection and inference techniques. In most cases the attacker will filter data returned in order to show the columns of only one table. This is not done in this article to ensure that the queries presented are as simple as possible.<br/>
+<br/>
+<b>Find Column Names in MySQL</b><br/>
+<br/>
+In MySQL, the table information_schema.columns provides information about columns in tables. Below are listed the most useful columns to extract.<br/>
+<br/>
+&nbsp; &nbsp; column_name: The name of the column.<br/>
+&nbsp; &nbsp; table_name: The name of the table.<br/>
+&nbsp; &nbsp; data_type: Specifies the data type (MySQL data type).<br/>
+&nbsp; &nbsp; column_default: Default value inserted in the column.<br/>
+&nbsp; &nbsp; is_nullable: Indicates whether the column can contain null or not.<br/>
+<br/>
+Here is an example presenting how the information about columns could be extracted using a UNION attack.<br/>
+<br/>
+User input.<br/>
+1 AND 1=2 UNION SELECT table_name, column_name, 1 FROM information_schema.columns<br/>
+<br/>
+Query generated.<br/>
+SELECT name, description, price FROM products WHERE category=1 AND 1=2 UNION SELECT table_name, column_name, 1 FROM information_schema.columns<br/>
+<br/>
+<b>Find Table Names in SQL Server</b><br/>
+<br/>
+SQL Server also supports INFORMATION_SCHEMA and it is the the best way to access information related to columns (information_schema.columns). For you information, it could also be done with sys.columns (or syscolumns for SQL Server 2000), but information_schema standardises this data and it should preferably be used. Below are listed the most interesting columns, as you can see those are pretty similar to MySQL’s.<br/>
+<br/>
+&nbsp; &nbsp; column_name: The name of the colunmn.<br/>
+&nbsp; &nbsp; table_name: The name of the table in which the column can be found.<br/>
+&nbsp; &nbsp; data_type: Indicates data type of the column (SQL Server data type).<br/>
+&nbsp; &nbsp; column_default: Default value inserted in the column.<br/>
+&nbsp; &nbsp; is_nullable: Indicates if the value can be null.<br/>
+<br/>
+Here is what a basic extraction of column names in SQL Server could look like.<br/>
+<br/>
+User input.<br/>
+1 AND 1=2 UNION SELECT table_name, column_name, 1 FROM information_schema.columns<br/>
+<br/>
+Query generated.<br/>
+SELECT name, description, price FROM products WHERE category=1 AND 1=2 UNION SELECT table_name, column_name, 1 FROM information_schema.columns<br/>
+<br/>
+<b>Find Column Names in Oracle</b><br/>
+<br/>
+Oracle does not support information_schema, however the same information can be retrieved in the data dictionary. The system table all_tab_columns contains what we are searching for. The most interesting columns of this table are listed below. As you can see the information is pretty similar to the previous DBMS.<br/>
+<br/>
+&nbsp; &nbsp; column_name: The name of the column.<br/>
+&nbsp; &nbsp; table_name: The name of the table in which the column can be found.<br/>
+&nbsp; &nbsp; data_type: Indicates data type of the column (Oracle data type).<br/>
+&nbsp; &nbsp; data_default: Default value.<br/>
+&nbsp; &nbsp; nullable: Y if the column can contain null values, N if it can't.<br/>
+<br/>
+Here is the same example, adapted to Oracle DBMS.<br/>
+<br/>
+User input.<br/>
+1 AND 1=2 UNION SELECT table_name, column_name, 1 FROM all_tab_columns<br/>
+<br/>
+Query generated.<br/>
+SELECT name, description, price FROM products WHERE category=1 AND 1=2 UNION SELECT table_name, column_name, 1 FROM all_tab_columns<br/>
+<br/>
+For your information, there are alternative tables that will allow you to gather information about columns in Oracle.<br/>
+<br/>
+&nbsp; &nbsp; all_col_tables: Returns columns from all tables the current user has access to.<br/>
+&nbsp; &nbsp; dba_col_tables: Returns columns from system tables (given you have access granted the SELECT_CATALOG_ROLE &nbsp;role or the SELECT ANY DICTIONARY privilege).<br/>
+&nbsp; &nbsp; user_col_tables: Returns columns from the tables that the current user owns only.<br/>
+</body></html>

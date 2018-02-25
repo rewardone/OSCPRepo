@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Secure PL/SQL</title>
+</head><body>Secure PL/SQL<br/>
+<br/>
+As explained in the article about SQL injection attacks against PL/SQL, it is possible to create procedures vulnerable to SQLIA. This article details how you can secure PL/SQL code against SQL injections by making only a few programming changes.<br/>
+<br/>
+<b>Bind Variables</b><br/>
+<br/>
+Bind parameters are by far the best way to protect your PL/SQL code against SQL injection vulnerabilities. In short, binding the variables of a procedure will provide great performance gain in addition to be totally secure. It is the equivalent of parameterized stored procedures. Here is an example of secure PL/SQL code which uses bind arguments:<br/>
+<br/>
+Bind variables with EXECUTE IMMEDIATE.<br/>
+CREATE OR REPLACE PROCEDURE testBind(vname IN VARCHAR2) AS<br/>
+BEGIN<br/>
+&nbsp; &nbsp;EXECUTE IMMEDIATE 'UPDATE products set price = price-1 where name = :1' USING vname;<br/>
+COMMIT;<br/>
+END;<br/>
+<br/>
+The same logic is applied when using bind variables with dynamic cursors. Below is a secured version of an example presented in the article about PL/SQL attacks:<br/>
+<br/>
+Bind variables with dynamic cusor.<br/>
+CREATE OR REPLACE PROCEDURE putlineDesc ( vname IN VARCHAR2 ) AS<br/>
+&nbsp; &nbsp;TYPE rcursor IS REF CURSOR;<br/>
+&nbsp; &nbsp;cur rcursor;<br/>
+&nbsp; &nbsp;vdesc VARCHAR2(1000);<br/>
+&nbsp; &nbsp;vsql VARCHAR2(4000);<br/>
+BEGIN<br/>
+&nbsp; &nbsp;vsql := 'SELECT CUST_LAST_NAME FROM DEMO_CUSTOMERS WHERE CUST_FIRST_NAME=:1';<br/>
+&nbsp; &nbsp;OPEN cur FOR vsql USING vname;<br/>
+&nbsp; &nbsp;LOOP<br/>
+&nbsp; &nbsp; &nbsp; FETCH cur INTO vdesc;<br/>
+&nbsp; &nbsp; &nbsp; EXIT WHEN cur%NOTFOUND;<br/>
+&nbsp; &nbsp; &nbsp; dbms_output.put_line(vdesc);<br/>
+&nbsp; &nbsp;END LOOP;<br/>
+&nbsp; &nbsp;CLOSE cur;<br/>
+END;<br/>
+<br/>
+In the two last examples,we explicitly indicate that we want to use bind variables.<br/>
+<br/>
+<b>Automated Bind Variables</b><br/>
+<br/>
+To simplify developers' job but also to improve performance, PL/SQL takes care of using bind variables everywhere it can even if it is not explicitly indicated. Therefore, every reference to a PL/SQL variable is in fact a bind variable. Below is an example of such case.<br/>
+<br/>
+PL/SQL is protected because variable reference is equivalent to bind variable.<br/>
+CREATE OR REPLACE PROCEDURE plusTenPrice(vname IN VARCHAR2) AS<br/>
+BEGIN<br/>
+&nbsp; &nbsp;UPDATE products<br/>
+&nbsp; &nbsp; &nbsp; SET price = price + 10<br/>
+&nbsp; &nbsp; &nbsp; WHERE name = vname;<br/>
+&nbsp; &nbsp;COMMIT;<br/>
+END;<br/>
+<br/>
+It is a great security enhancement but it does not change the fact that programmers will still have to be really careful when building dynamic queries within PL/SQL code.<br/>
+<br/>
+<b>Sanitize Input</b><br/>
+<br/>
+The other way to secure the code would be to sanitize all input like covered in the article about input sanitization. Because all PL/SQL parameters are defined with a fixed data type, only text (VARCHAR) parameters can be vulnerable. Consequently, they are the only parameters that must be validated. The sanitazation can be done in the API code or within the PL/SQL code, but principle is the same.<br/>
+<br/>
+<b>Escaping Quotes</b><br/>
+<br/>
+The first step to secure string parameters is to escape single quotes. It can be done by doubling them as shown below.<br/>
+<br/>
+Escaping single quotes in PL/SQL.<br/>
+vsecure &nbsp;:= replace(param, '''', '''''');<br/>
+<br/>
+An equivalent and less confusing version of the last replace.<br/>
+vsecure := replace(param, CHR(39), CHR(39)||CHR(39));<br/>
+<br/>
+Most cases will then be secured. However you might need to replace wildcards.<br/>
+<br/>
+<b>Wildcards</b><br/>
+<br/>
+Oracle only uses two wildcards; characters “%” and “_”. When user input gets integrated with the LIKE operator, it is strongly recommended to escape those characters. It can be done by adding a chosen character before those wildcards and by adding an ESCAPE clause at the end of the query. The ESCAPE clause specifies the escape character used in the query (it can be any character). A common example would be as follows:<br/>
+<br/>
+Escaping wildcards in PL/SQL (given a quote escaped variable "param").<br/>
+vsecure := replace(param, '\', '\\');<br/>
+vsecure := replace(vsecure, '_', '\_');<br/>
+vsecure := replace(vsecure, '%', '\%');<br/>
+vsql := 'SELECT description FROM product WHERE name LIKE ''' || vsecure || ''' ESCAPE ''\''';<br/>
+<br/>
+In this case, the escape character is the backslash (\).<br/>
+DBMS_ASSERT<br/>
+<br/>
+Since 10g version, Oracle provide the DBMS_ASSERT package. It contains functions that can be used to validate user input. Even if the data source is considered as trusted, it is recommended to always use these functions when building dynamic queries. Here's a quick overview of this package's functions:<br/>
+<br/>
+&nbsp; &nbsp; NOOP - Returns string without validation (should never be used to secure against SQL injections).<br/>
+&nbsp; &nbsp; ENQUOTE_LITERAL - Enquotes a string literal and makes sure no individual single quote are found.<br/>
+&nbsp; &nbsp; ENQUOTE_NAME - Encloses a name in double quotes.<br/>
+&nbsp; &nbsp; QUALIFIED_SQL_NAME - Verifies that the input string is a qualified SQL name.<br/>
+&nbsp; &nbsp; SCHEMA_NAME - Verifies that the input string is an existing schema name.<br/>
+&nbsp; &nbsp; SIMPLE_SQL_NAME - Verifies that the input string is a simple SQL name.<br/>
+&nbsp; &nbsp; SQL_OBJECT_NAME - Verifies that the input parameter string is a qualified SQL identifier of an existing SQL object.<br/>
+<br/>
+Examples below present a successful and a failed validation. In reality, validation should be done on variables or parameters but a literal string is used for demonstration purpose. Both examples are similar, but the first one is SQL injection safe. It could represent the value of a correctly sanitized malicious parameter.<br/>
+<br/>
+Validating correct input.<br/>
+SELECT description FROM products WHERE name=DBMS_ASSERT.ENQUOTE_LITERAL('abc'''' OR 1=1--');<br/>
+<br/>
+Value returned.<br/>
+ORA-06502: PL/SQL: numeric or value error<br/>
+<br/>
+Now the failed validation (SQL Injection attempt).<br/>
+<br/>
+Validating incorrect input (Contains an individual single quote).<br/>
+SELECT description FROM products WHERE name=DBMS_ASSERT.ENQUOTE_LITERAL('abc'' OR 1=1--');<br/>
+<br/>
+Error returned.<br/>
+ORA-06502: PL/SQL: numeric or value error<br/>
+<br/>
+As you can see, in the second example an error is thrown and the PL/SQL script would stop where the ENQUOTE_LITERAL function was called.<br/>
+Reference<br/>
+<br/>
+If you want more information about creating secure PL/SQL code, you might be interested by this <a href="http://www.sqlinjection.net/link/secure-pl-sql/">Oracle's white paper</a>. It is one of the best reference about the topic.</body></html>

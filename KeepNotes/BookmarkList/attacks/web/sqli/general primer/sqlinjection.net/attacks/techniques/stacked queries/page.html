@@ -1,2 +1,59 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><body></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Stacked Queries</title>
+</head><body>Stacked Queries<br/>
+<br/>
+Stacked queries provide a lot of control to the attacker. By terminating the original query and adding a new one, it will be possible to modify data and call stored procedures. This technique is massively used in SQL injection attacks and understanding its principle is essential to a sound understanding of this security issue.<br/>
+<br/>
+<b>Principle</b><br/>
+<br/>
+In SQL, a semicolon indicates that the end of a statement has been reached and what follows is a new one. This allows executing multiple statements in the same call to the database server. Contrary to UNION attacks which are limited to SELECT statements, stacked queries can be used to execute any SQL statement or procedure. A classic attack using this technique could look like the following.<br/>
+<br/>
+Malicious user input.<br/>
+1; DELETE FROM products<br/>
+<br/>
+Generated query with multiple statements. The parameter productid was not sanitized.<br/>
+SELECT * FROM products WHERE productid=1; DELETE FROM products<br/>
+<br/>
+When the query is executed, a product is returned by the first statement and all products are deleted by the second.<br/>
+<br/>
+<b>Stacked Queries Limitations</b><br/>
+<br/>
+It is important to mention that query stacking does not work in every situation. Most of the time, this kind of attack is impossible because the API and/or database engine do not support this functionality. Insufficient rights could also explain why the attacker is unable to modify data or call some procedures.<br/>
+<br/>
+Below is a list of query stacking support by the principal API and DBMS.<br/>
+<br/>
+Stacked query support.<br/>
+MySQL/PHP - Not supported (supported by MySQL for other API).<br/>
+SQL Server/Any API - Supported.<br/>
+Oracle/Any API - Not supported.<br/>
+<br/>
+Even though we mentioned earlier that stacked queries can add any SQL statement, this injection technique is frequently limited when it comes to adding SELECTs. Both statements will be executed but software code is usually designed to handle the results returned by only one query. Consequently, the injected SELECT query will often generate an error or its results will simply be ignored. For this reason it is recommended to use UNION attacks when trying to extract data.<br/>
+<br/>
+One last thing needs to be mentionned: to inject a valid SQL segment, the attacker will need to know some basic information such as table names, column names, etc. For more information refer to the section dedicated to information gathering.<br/>
+<br/>
+<b>Altering Data</b><br/>
+<br/>
+The example presented at the beginning of the article demonstrates how query stacking can be used to delete information from the database. Instead of destroying data, attackers usually try to steal it or grant themselves high privileges on the system. A frequent approach is to change the administrator’s password. The example below illustrates a classic data modification using SQL injection.<br/>
+<br/>
+User input.<br/>
+1; UPDATE members SET password='pwd' WHERE username='admin'<br/>
+<br/>
+Generated query.<br/>
+SELECT * FROM products WHERE categoryid=1; UPDATE members SET password='pwd' WHERE username='admin'<br/>
+<br/>
+<b>Calling Stored Procedures</b><br/>
+<br/>
+Calling a procedure can bring SQL injections attacks to a whole new level. Nowadays, many database management systems come with built in packages of functions and procedures to simplify development and provide new functionalities. Therefore, it becomes possible to communicate with network, control the operating system and do even more from a simple SQL statement.<br/>
+<br/>
+As there is no convention between DBMS regarding to packages and procedures name, the attacker will have to identify which database system is used before trying to call a built-in procedure. From there, the principle is the same as examples presented earlier except that the injected query is a stored procedure call. Let see how it can be done with the use of xp_shellcmd; a SQL Server’s specific command which allows executing operating system calls.<br/>
+<br/>
+User input.<br/>
+1; exec master..xp_cmdshell 'DEL important_file.txt'<br/>
+<br/>
+Generated query.<br/>
+SELECT * FROM products WHERE categoryid=1; exec master..xp_cmdshell 'DEL important_file.txt'<br/>
+<br/>
+The query above will return a product list and delete "important_file.txt". A much more complex attack could have been launched to take control over the operating system, but this is outside the scope of this article. The injected statement is not limited to built-in packages; a user-defined procedure could also be called. This approach is not frequent but it could be useful in some specific cases.</body></html>

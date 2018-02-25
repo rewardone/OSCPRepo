@@ -1,0 +1,5 @@
+The four .txt lists in the lists/ dir are for use with recon_scan. If you move them, you have to update the script as well.
+ personal_with_vulns.txt (dirbustEVERYTHING)
+ quick_password_spray.txt (multiple service scripts that use hydra)
+ userlist.txt (multiple scripts that use hydra)
+ userlist_sqlbrute.txt (multiple db scripts that use hydra/nmap)

@@ -1,8 +1,9 @@
 #!/bin/sh
 #This script will do basic setup to make sure everything is in place
 #This should would on default Kali installation
+#TODO every once in a while, check for updates to SecLists and fuzzdb
 
-echo "Install new software: Shutter"
+echo "Install new software: Shutter, exiftool, gobuster, git"
 apt-get update
 apt-get install -y shutter exiftool gobuster git
 

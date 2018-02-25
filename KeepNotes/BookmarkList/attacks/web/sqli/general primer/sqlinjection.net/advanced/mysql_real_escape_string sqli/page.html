@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mysql_real_escape_string SQLi</title>
+</head><body>mysql_real_escape_string SQL injection<br/>
+<br/>
+Understanding how to safely use mysql_real_escape_string function<br/>
+<br/>
+PHP provides mysql_real_escape_string() <b>to escape special characters in a string before sending a query to MySQL.</b>&nbsp;This function was adopted by many to escape single quotes in strings and by the same occasion prevent SQL injection attacks. However, it can create serious security flaws when it is not used correctly.<br/>
+<br/>
+Escaped Characters<br/>
+<br/>
+What exactly does mysql_real_escape_string function do? <b>It prepends a backslash to every special character in the first parameter</b>. Special characters considered are listed below.<br/>
+<br/>
+Characters escaped by mysql_real_escape_string<br/>
+&nbsp;0x00 (NULL)<br/>
+&nbsp;Newline (\n)<br/>
+&nbsp;Carriage return (\r)<br/>
+&nbsp;Double quotes (")<br/>
+&nbsp;Backslash (\)<br/>
+&nbsp;0x1A (Ctrl+Z)<br/>
+<br/>
+<b>Correct Usage</b><br/>
+<br/>
+Here is a classic and secure way to use this function as input sanitizer for string parameters.<br/>
+User input (attack attempt).<br/>
+a' OR 'a'='a<br/>
+<br/>
+Sanitizing input.<br/>
+$param = mysql_real_escape_string($_GET['n']);<br/>
+<br/>
+Query generated.<br/>
+SELECT id FROM products WHERE name='a\' OR \'a\'=\'a'<br/>
+<br/>
+Since the last example is secured against SQL injections, the query generated will return no result (except if a product is really named as the green segment). What is important to remember here is that you must always enclose the sanitized parameter between quotes when using mysql_real_escape_string() otherwize a SQL injection vulnerability will be created.<br/>
+<br/>
+<b>How Not To Use</b><br/>
+<br/>
+Programmers should be really careful when using mysql_real_escape_string function to sanitize numeric parameters since they are habitually integrated in the query without quotes. The function discussed in this article does not verify data types; it simply escapes some special characters. Here is a code sample that shows how SQL injection could be achieved when mysql_real_escape_string is not correctly implemented.<br/>
+<br/>
+Malicious user input - A numeric value is expected by the script.<br/>
+9999 OR 1=1<br/>
+<br/>
+Sanitizing input.<br/>
+$productid = mysql_real_escape_string($_GET[id]);<br/>
+<br/>
+Query generated.<br/>
+SELECT name FROM products WHERE id=9999 OR 1=1<br/>
+<br/>
+When the query is executed, all products' name are returned because the crafted parameter submitted by the attacker is considered as a part of the SQL segment.<br/>
+<br/>
+<b>Numeric Parameters and mysql_real_escape_string</b><br/>
+<br/>
+As stated earlier in the article, the parameter sanitized by mysql_real_escape_string must be enclosed between quotes in order to avoid SQL injection (no matter the data type). MySQL Server (and other popular DBMS) supports single quotes around numeric values. Here is what the last example would look like after the security fix:<br/>
+<br/>
+Malicious user input - A numeric value is expected by the script.<br/>
+9999 OR 1=1<br/>
+<br/>
+Sanitizing input.<br/>
+$productid = mysql_real_escape_string($_GET['id']);<br/>
+<br/>
+Query generated - Attack voided.<br/>
+SELECT name FROM products WHERE id='9999 OR 1=1'<br/>
+<br/>
+The last query will return no name.<br/>
+<br/>
+<b>LIKE Operator Wildcards</b><br/>
+<br/>
+There is one last thing to consider when using mysql_real_escape_string to sanitize data; the function does not escape SQL wildcards for LIKE operator. It might seem trivial but in fact it can have a considerable impact on the query's behavior. Since those characters are not escaped, they are considered as classic wildcards by the LIKE operator:<br/>
+MySQL LIKE Wildcards (MySQL has only 2 wildcards)<br/>
+<br/>
+% &nbsp; Matches an arbitrary number of characters (including zero character).<br/>
+_ &nbsp; Matches any single character.<br/>
+<br/>
+To prevent a wildcard match you must escape the corresponding character with a backslash. Here is how it can be done:<br/>
+User input.<br/>
+john's ca_<br/>
+<br/>
+Sanitize data (also escape all MySQL wildcards).<br/>
+$val = mysql_real_escape_string($_GET['p']);<br/>
+$val = str_replace("%", "\%", $val);<br/>
+$val = str_replace("_", "\_", $val);<br/>
+<br/>
+Generated query (search all products where the description contains exact match of user input).<br/>
+SELECT * FROM products WHERE description LIKE '%john\'s ca\_%'<br/>
+<br/>
+Even if most of the time you should escape wildcards characters, there are some cases where you may want the user to use them. Just keep in mind that in those situations, the user could build input strings difficult to match and it might have some performance impact on LIKE operator (available soon). This is not a critical issue, however if an attacker tries to slow down the application or make a DDOS it might be easier with a control over wildcards characters.<br/>
+<br/>
+<b>Alternative Solutions</b><br/>
+<br/>
+Using mysql_real_escape_string is without a doubt a simple way to secure an application against SQL injections, however it is far from the perfect world. Every time this function is used to sanitize data, it calls MySQL's library function. It is not a big deal but if you make a large number of calls to mysql_real_escape_string it will slow down your database server. Moreover if you mistakenly call the function twice on the same data you will end up with incorrect information in your database.<br/>
+<br/>
+For those reasons, it is suggested to adopt alternative solutions such as parameterized statements or stored procedures as explained in the article about preventing SQL injections in PHP (article available soon).</body></html>

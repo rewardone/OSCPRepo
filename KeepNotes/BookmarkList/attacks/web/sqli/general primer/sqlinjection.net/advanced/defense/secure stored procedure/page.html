@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Secure Stored Procedure</title>
+</head><body>Secure Stored Procedure<br/>
+<br/>
+As explained in the article about SQL injection attacks against stored procedures, it is possible to create procedures vulnerable to SQLIA. This article details how you can secure your code against SQL injections. As recommended in previous defense articles, you should use always use parameterized statements. It also apply to your stored procedure code, however input sanitizing is still a valid alternative.<br/>
+<br/>
+<b>Parameterized Statements</b><br/>
+<br/>
+Using prepared statements in stored procedures is by far the best way to protect them against SQL injection. This technique makes your code bullet proof against this security issue and it creates a query plan which can drastically improve performance. Let’s take a look at the secure stored procedure code.<br/>
+<br/>
+<b>Microsoft SQL Server</b><br/>
+<br/>
+Microsoft SQL Server provides a built-in procedure named sp_executesql which can take parameterized variables. For security and performance reasons you should always use sp_executesql instead of EXEC/EXECUTE when working with Transact-SQL.<br/>
+<br/>
+Secure Microsoft SQL Server stored procedures.<br/>
+CREATE PROC secure (@v_sp_param VARCHAR(1000))<br/>
+AS<br/>
+&nbsp; &nbsp;DECLARE @vsql NVARCHAR(4000)<br/>
+&nbsp; &nbsp;DECLARE @vparamdefinition NVARCHAR(500)<br/>
+&nbsp; &nbsp;SET @vsql = N'SELECT description FROM products WHERE name = @val'<br/>
+&nbsp; &nbsp;SET @vparamdefinition = N'@val VARCHAR(1000)'<br/>
+&nbsp; &nbsp;EXECUTE sp_executesql @vsql, @vparamdefinition, @val = @v_sp_param<br/>
+GO<br/>
+<br/>
+Be careful not to misuse sp_executesql however. If you simply supply it a concatenated string with no parameter definition you will not fix your security problem.<br/>
+<br/>
+<b>MySQL</b><br/>
+<br/>
+Let’s now take a look at the equivalent with MySQL's syntax.<br/>
+<br/>
+Writing secure MySQL stored procedure.<br/>
+CREATE PROCEDURE secure (IN param VARCHAR(1000))<br/>
+BEGIN<br/>
+&nbsp; &nbsp;PREPARE stmt FROM 'SELECT description FROM products where name=?';<br/>
+&nbsp; &nbsp;SET @name = param;<br/>
+&nbsp; &nbsp;EXECUTE stmt USING @name;<br/>
+&nbsp; &nbsp;DEALLOCATE PREPARE stmt;<br/>
+END<br/>
+<br/>
+Here again, this procedure is immunized against SQL injection.<br/>
+<br/>
+<b>Avoid String Concatenation</b><br/>
+<br/>
+Another efficient way to prevent SQL injection is to avoid executing queries stored in strings. Queries integrated as batch commands into a stored procedure are treated like implicit prepared statements. The following example uses Microsoft SQL Server syntax but it could easily be adapted to any DBMS.<br/>
+<br/>
+Safely using user supply parameter in stored procedures.<br/>
+CREATE PROCEDURE nostring (@vname varchar(1000))<br/>
+AS<br/>
+&nbsp; &nbsp;DELETE FROM products WHERE name = @vname<br/>
+GO<br/>
+<br/>
+In the last stored procedure, no SQL injection is possible and when it gets executed only products that exactly match the parameter will be deleted.<br/>
+<br/>
+<b>Input Sanitizing</b><br/>
+<br/>
+The last way would be to secure against SQL injection is to sanitize parameters. Since stored procedures define parameters’ data type it is no longer possible to inject SQL statements in numeric input as described in the tutorial. Only string parameters (VARCHAR, NVARCHAR) will have to be validated. This validation can be done in the API code or within the stored procedure, but the principle remains the same. It is important to keep in mind that input sanitizing is a last resort solution and using parameterized statements is by far a better choice. For more information about this technique, consider reading the article about input sanitizing (available soon).<br/>
+<br/>
+<b>Reference</b><br/>
+<br/>
+If you want more information about creating secure stored procedure, you might be interested by t<a href="http://www.sqlinjection.net/link/dynamic-sql-security-sql-server/">his complete article</a>&nbsp;created by Erland Sommarskog, a SQL Server MVP.</body></html>

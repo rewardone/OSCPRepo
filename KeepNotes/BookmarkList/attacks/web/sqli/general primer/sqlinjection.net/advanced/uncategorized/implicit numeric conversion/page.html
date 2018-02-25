@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Implicit Numeric Conversion</title>
+</head><body>Implicit Numeric Conversion in SQL<br/>
+<br/>
+Some database management systems support SQL syntax where numeric values are enclosed between quotes. As I know, only MySQL and SQL Server support this particular syntax. Let’s start with a quick example. It is important to mention here that the column id contains only numeric values (INTEGER data type).<br/>
+<br/>
+Implicit numeric conversion in SELECT (MySQL and SQL Server).<br/>
+SELECT username FROM members WHERE id='1'<br/>
+<br/>
+This would return the username of the member who has id 1.<br/>
+<br/>
+<b>Impact of Implicit Conversion for SQL Injection</b><br/>
+<br/>
+The previous case demonstrates that classic numeric injection testing would not be enough to detect the vulnerability when such syntax is used. Because the numeric parameter stands between quotes, the tester would have to test it as if it was a text parameter, otherwise the vulnerability would not be found. Below are presented a bad and a good testing for this situation.<br/>
+<br/>
+Insufficient test for numeric parameter.<br/>
+SELECT username FROM members WHERE id='1 AND 1=2'<br/>
+<br/>
+Correct test.<br/>
+SELECT username FROM members WHERE id='1' AND '1'='2'<br/>
+<br/>
+In the first test, the implicit conversion returns 1. What follows the first number is not numeric and it is simply removed when the convertion is done. After doing a similar test, an inexperienced tester might think that no injection is possible since the AND condition is not considered. However, the right test reveals that it is totally the opposite.<br/>
+<br/>
+<b>Combining With Minimal SELECT Structure</b><br/>
+<br/>
+A problem often met in when doing SQL injection with UNION is to determine the data type of all columns of the original query in order to inject a valid segment. Fortunately, this laborious task can sometimes be simplified with a quick and simple implicit conversion in combination with minimal query structure. Below is an example where we assume that the number of column in the first query is known.<br/>
+<br/>
+The attacker wants to generate a valid query.<br/>
+SELECT id, name FROM members WHERE id=1 AND 1=2 UNION SELECT '1', '2'<br/>
+<br/>
+In the previous case, the injected SELECT statement will be valid in every case as long as the first query only selects 2 columns (on MySQL and SQL Server). If the column expects a text, the number will be considered as a string, otherwize it will be considered as a numeric value. As you can guess, building a valid query becomes much easier this way.</body></html>

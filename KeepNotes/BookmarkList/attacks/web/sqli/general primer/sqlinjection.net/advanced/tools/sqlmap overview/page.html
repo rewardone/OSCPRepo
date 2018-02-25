@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQLmap Overview</title>
+</head><body>Sqlmap Overview<br/>
+<br/>
+A quick presentation of sqlmap, a popular SQL injection tool<br/>
+<br/>
+Sqlmap is an open source SQL injection tool that automates the process of testing and exploiting SQL injection vulnerabilities. The tool being developed in Python, you can use it on any operating system as long as you have a Python interpreter.<br/>
+<br/>
+<b>Supported DBMS</b><br/>
+<br/>
+Sqlmap supports a wide range of DBMS. At the time of this writing it fully supports the following databases: MySQL, Oracle, PostgreSQL, Microsoft SQL Server, Microsoft Access, IBM DB2, SQLite, Firebird, Sybase and SAP MaxDB.<br/>
+Sqlmap Features<br/>
+<br/>
+From detection to exploit, sqlmap has rich features for penetration testers.<br/>
+<br/>
+<b>Supported techniques</b><br/>
+<br/>
+Sqlmap supports different attack vectors. The most known functionalities are classic SQL injection techniques such as UNION query and stacked queries attacks. But sqlmap is also capable of retrieving data using a different channel and supports out-of-band attacks. Finally, this SQL injection tool can also achieve error-based, boolean-based blind and time-based blind SQL injections.<br/>
+<br/>
+<b>Enumeration</b><br/>
+<br/>
+One key functionality of sqlmap is its capacity to enumerate automatically database information. Precious data such as users, roles, privileges, databases, tables, columns and even password hashes can be retrieved from a simple command. It also combines the automatic recognition of password hash format. It is even possible for the tester to automatically launch a dictionary based attack to crack them.<br/>
+<br/>
+<b>Attacks</b><br/>
+<br/>
+Pretty handy functionalities are offered by sqlmap. To name a few, you can :<br/>
+<br/>
+&nbsp; &nbsp; Execute arbitrary commands and retrieve their outpout (MySQL, PostgreSQL and SQL Server).<br/>
+&nbsp; &nbsp; Establish a TCP connection between the testers’ machine and the database server.<br/>
+&nbsp; &nbsp; Download or upload any file from the database server (MySQL, PostgreSQL and SQL Server).<br/>
+&nbsp; &nbsp; Escalate privilege by launching Metasploit’s Meterpreter getsystem command.<br/>
+<br/>
+To get the extended list of features refer to sqlmap features page.<br/>
+<br/>
+<b>Limitation</b><br/>
+<br/>
+Like every sql injection scanner, sqlmap will be somehow limited in terms of finding vulnerabilities. On the other, side its enumeration functionalities are really powerful. In addition, attack features will allows the attacker to exploit most systems with a sql injection flaw.<br/>
+<br/>
+<b>Getting Started</b><br/>
+<br/>
+After downloading sqlmap, take a quick look at our sqlmap tutorial to get started!</body></html>
