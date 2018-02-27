@@ -128,7 +128,7 @@ if (tool == "dirb"):
     dirb(url)
 
 if (tool == "gobuster"):
-    default_wordlist = "/root/lists/personal_with_vulns.txt"
+    default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
     cewl_scanname = "%s_%s_cewl" % (name, port)
     cewl_filename = "/root/scripts/recon_enum/results/exam/dirb/%s" % (cewl_scanname)
     default_scanname = "_%s_%s_default" % (name, port)
@@ -136,7 +136,9 @@ if (tool == "gobuster"):
     gobuster(url, default_wordlist, default_scanname)
     genlist(url, cewl_scanname)
     gobuster(url, cewl_filename, cewl_busted_scanname)
-    COMUNI = "awk \'!a[$0]++\' /root/scripts/recon_enum/results/exam/dirb/gobuster* > /root/scripts/recon_enum/results/exam/dirb/gobuster_%s_%s_combined" % (name, port)
+    combined_scanname = "/root/scripts/recon_enum/results/exam/dirb/gobuster_%s_%s_combined" % (name, port)
+    COMUNI = "awk \'!a[$0]++\' /root/scripts/recon_enum/results/exam/dirb/gobuster* > %s" % (combined_scanname)
     comuniresults = subprocess.check_output(COMUNI, shell=True)
+    sortBySize(combined_scanname)
             
 print "INFO: Directory brute of %s completed" % (url)

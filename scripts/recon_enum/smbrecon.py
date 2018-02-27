@@ -58,5 +58,6 @@ f.close
 NBTSCAN = "samrdump.py %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_samrdump" % (ip_address, ip_address, port)
 nbtresults = subprocess.check_output(NBTSCAN, shell=True)
 
-ENUM4LINUXSCAN = "enum4linux %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address, ip_address, port)
+#-va : run verbosely and try all commands
+ENUM4LINUXSCAN = "enum4linux -va %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address, ip_address, port)
 enum4linuxresults = subprocess.check_output(ENUM4LINUXSCAN, shell=True)
