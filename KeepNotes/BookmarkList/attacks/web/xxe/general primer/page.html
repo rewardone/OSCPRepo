@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>XML External Entity Attack<br/>
+What it is:<br/>
+Attack on a weakly configured XML parser containing a reference to an external entity. One of the most common ways of finding an XXE is to abuse a file upload function. Note that exploiting an XXE isn’t limited to injecting content into an XML file. There are many other extensions that use XML formatting such as docx, pptx, gpx, pdf and xml itself.<br/>
+<br/>
+Potential impacts:<br/>
+Disclosure of confidential information<br/>
+DOS on parsing system<br/>
+Unauthorized acces to system/data<br/>
+<br/>
+<br/>
+So if an application receives XML to the server the attacker might be able to exploit an XXE. It could be sent as a GET, but it is more likely that it is send in a POST. It can also be done through ftp:// or http(s)://<br/>
+<br/>
+An attack might look like this:<br/>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br/>
+&nbsp;&lt;!DOCTYPE foo [ &nbsp;<br/>
+&nbsp; &lt;!ELEMENT foo ANY &gt;<br/>
+&nbsp; &lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt;]&gt;&lt;foo&gt;&amp;xxe;&lt;/foo&gt;<br/>
+<br/>
+The elemet can be whatever, it doesn't matter. The xxe is the "variable" where the content of /dev/random get stored. And by dereferencing it in the foo-tag the content gets outputted.This way an attacker might be able to read files from the local system, like boot.ini or passwd. SYSTEM means that what is to be included can be found locally on the filesystem.<br/>
+In php-applications where the expect module is loaded it is possible to get RCE. It is not a very common vulnerability, but still good to know.<br/>
+<br/>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br/>
+&lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt;<br/>
+&lt;!ENTITY xxe SYSTEM "expect://id" &gt;]&gt;<br/>
+&lt;creds&gt;<br/>
+&nbsp; &nbsp; &lt;user&gt;&amp;xxe;&lt;/user&gt;<br/>
+&nbsp; &nbsp; &lt;pass&gt;mypass&lt;/pass&gt;<br/>
+&lt;/creds&gt;<br/>
+<br/>
+Even if the data is not reflected backto the website it is still possible to exfiltrate files and data from the server. The technique is similar to how you exfiltrate the cookie in a Cross-Site Scripting attack, you send it in the url.</body></html>
