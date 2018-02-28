@@ -49,7 +49,7 @@ Now insert GROUP BY &lt;known_table&gt;.&lt;known_column&gt; HAVING <br/>
 and you should be able to get an error listing another columns. Iterate through until all columns are known<br/>
 <br/>
 <b>Too much error information</b><br/>
-Using conver(), MSSQL could give away additional information. Consider:<br/>
+Using convert(), MSSQL could give away additional information. Consider:<br/>
 1 and 1=convert(int,db_name())--<br/>
 and MSSQL could give you back db_name in error message (failed conversion from string to int)<br/>
 Try with user_name() or other functions<br/>
