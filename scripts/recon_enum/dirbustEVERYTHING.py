@@ -117,9 +117,10 @@ def sortBySize(nameAndPathOfResults):
     f = open(nameAndPathOfResults, 'r')
     sizear = set()
     for line in f:
-        tmpsize = line.split('[Size: ')[1]
-        tmpsize = tmpsize[:-2] #-2 for ]\n, -1 leaves the ]
-        sizear.add(tmpsize)
+        if "Size:" in line:
+            tmpsize = line.split('[Size: ')[1]
+            tmpsize = tmpsize[:-2] #-2 for ]\n, -1 leaves the ]
+            sizear.add(tmpsize)
     for size in sizear:
         GREPV = "grep -v %s %s > /root/scripts/recon_enum/results/exam/dirb/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, name, port, size)
         GREPVRESULTS = subprocess.call(GREPV, shell=True)
