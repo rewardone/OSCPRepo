@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Compile to exe with py2exe</string>
+  <key>nodeid</key><string>4fd9188a-755c-41cd-b57a-a791f3eab9a6</string>
+  <key>modified_time</key><integer>1515081206</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515081100</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

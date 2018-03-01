@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigation</title>
+</head><body>Many XML parsing libraries, including the one that comes with the Java Development Kit, allow external entities by default. Removing the vulnerability is as simple as configuring the parser to not allow external entities to be defined.<br/>
+<br/>
+The most robust method to protect against XXE is to configure the applications XML parser to not allow DOCTYPE declarations. This is done by setting the parsers “disallow-doctype-decl” parameter to true.<br/>
+<br/>
+Figure 15 will allow DOCTYPE declarations but not external general entities to be placed into the document content. Remember that the SYSTEM keyword, as shown in Figure 3, defines an entity to be external. If such a reference is made to an external general entity the parser will not substitute the URI content into the XML document. For example, with the external-generalentities parameter set to false in the sample application, the orientation parameter would remain blank even though it contains a reference to the contents of the converter.conf file.<ul><li style="list-style-type: none">Fig15</li>
+<li style="list-style-type: none">parser.setFeature("http://xml.org/sax/features/external-general-entities", false)</li>
+<li style="list-style-type: none"></li>
+</ul>
+</body></html>

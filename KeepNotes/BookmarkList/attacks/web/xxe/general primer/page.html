@@ -3,14 +3,35 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>General Primer</title>
-</head><body>XML External Entity Attack<br/>
-What it is:<br/>
+</head><body><b>XML External Entity Attack<br/>
+</b><b>What it is:</b><br/>
 Attack on a weakly configured XML parser containing a reference to an external entity. One of the most common ways of finding an XXE is to abuse a file upload function. Note that exploiting an XXE isn’t limited to injecting content into an XML file. There are many other extensions that use XML formatting such as docx, pptx, gpx, pdf and xml itself.<br/>
 <br/>
-Potential impacts:<br/>
+<b>Potential impacts:</b><br/>
 Disclosure of confidential information<br/>
 DOS on parsing system<br/>
 Unauthorized acces to system/data<br/>
+Potential pivot access to internal systems<br/>
+<br/>
+<b>Why it happens:</b><br/>
+Extensible Markup Language (XML) is a feature rich and widely used information exchange format and standard. The standard allows for defining the structure of the XML using a Document Type Declaration, or DTD. The DTD provides a mechanism for defining entities whose values can be substituted into the XML document contents. This is helpful when the entity value is used multiple times.<br/>
+<br/>
+The XML in Figure 1 contains a DTD with an entity called “orientation” defined. The value of the “orientation” entity is set to “some orientation.” Following the DTD are the XML elements which contain a “url” tag and an “orientation” tag. The value of the “orientation” element is “&amp;orientation;” which is the name of the entity with an ampersand (&amp;) symbol before and a semi-colon (;) after. This instructs the XML parser to replace “&amp;orientation;” with the entity value defined in the DTD, namely “some orientation.”<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+The XML parser will deliver the XML shown in Figure 2 after parsing of the general parsed internal entity. Notice that the DTD has been removed and that the orientation element has a value of “some orientation” as was defined in the DTD.<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+In addition to internal entities, there are external entities. External entities reference something outside of the parser itself in order to determine the value of the entity. One type of external entity is declared by using the “SYSTEM” keyword and passing a URI from which to fetch the value.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+In the end, ENTITY creation and execution occur due to XML parsing libraries and the lack of filtering and validation on XML data. <br/>
+<br/>
+<br/>
 <br/>
 <br/>
 So if an application receives XML to the server the attacker might be able to exploit an XXE. It could be sent as a GET, but it is more likely that it is send in a POST. It can also be done through ftp:// or http(s)://<br/>
