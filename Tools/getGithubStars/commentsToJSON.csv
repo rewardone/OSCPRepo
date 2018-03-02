@@ -45,7 +45,7 @@ knock,Subdomain scan; enum through a wordlist; scan zone transfer; attempt bypas
 LFiFreak,'Auto exploiter' for LFI. Methods include PHP input; PHP filter; and Data URI,[Linux][PenTest:Web][4]
 LinEnum,Linux local enum (relatively new/updated),[Linux][Post]
 linux-exploit-suggester,Local search for packages; kernel version; etc to find a potential exploit vector,[Linux][Post][2]
-lscript;Lazy script to make life easier; install tools; select & run; custom keyboard shortcuts; numbered switch interface,[Linux][Framework],
+lscript,Lazy script to make life easier; install tools; select & run; custom keyboard shortcuts; numbered switch interface,[Linux][Framework]
 masscan,Insanely fast internet asynchronous port scanner,[PenTest:Scan][2]
 massdns,Bulk DNS resolver probably comparable to zdns,[PenTest:Info][Linux][3]
 meltdown,Demo of the Metldown vulnerability,[Personal]
@@ -55,7 +55,7 @@ mpc,Bundled in Kali already! msfpc.sh MSFVenom payload creator. Make payload cre
 my-awesome,Links; resources; tools; should be in BookmarkList.nbk,[Lists][Learning][4]
 ncrack,Brute force tool for network services. Sometimes faster than hydra. May target more services than Hydra,[PenTest:Brute]
 nishang,PowerShell framework for pen testing; tons of useful scripts and payloads for all phases; TODO compare with Empire,[Windows][Framework][2]
-nmap,THE network mapper. Tons of functionality; scripts; etc;[PenTest:Scan],
+nmap,THE network mapper. Tons of functionality; scripts; etc;,[PenTest:Scan]
 nmap-vulners,NSE script based on Vulners.com API; give CVE based on version numbers so -sV is required,[Linux][PenTest:Scan][2]
 offensiveinterview,Interview questions for security interviews,[Personal]
 onetwopunch,Combine unicornscan and nmap; this was baked into recon_scan.py because I liked the idea so much,[PenTest:Scan][Linux][3]
@@ -87,7 +87,7 @@ UACME,Defeat Windows User Account Control for privilege escalation by using Auto
 Vanquish,Framework for enumeration. Leverage multiple tools in an 'attack plan' to automate scanning and potential attack vectors,[PenTest:Scan]
 Veil,Veil framework for encoding payloads; bypass antivirus,[Linux][Exploitdev][Bypass]
 vulnreport,Open-source management and automation platform by Salesforce.,[Linux][4]
-vulscan,Enhances the nmap vulnerability scanner with VulDB;[PenTest:Scan],
+vulscan,Enhances the nmap vulnerability scanner with VulDB;,[PenTest:Scan]
 w3af,Web attack and audit framework. Metasploit-like menu; customize plugins; scan; exploit,[Framework][PenTest:Web][PenTest:Scan][PenTest:Brute]
 WAFNinja,Enumerate WAF enumerate and bypass tool to determine filters and attempt to bypass,[Linux][Windows][PenTest:Web][3]
 wafw00f,Identify and fingerprint WAF; useful to know specifically what you're up against,[Linux][Windows][PenTest:Web][3]
@@ -112,3 +112,55 @@ XssPy,Web app XSS scanner in python; requires mechanize; short scanning; compreh
 shuriken,Based off of xsspy for xss detection; adds screenshot capabilities; requires splinter; phantomjs; selenium; fuzzywuzzy; levenshtein.,[Linux][Windows][PenTest:Brute][PenTest:Web][3][Alt]
 odat,Oracle Database Attacking Tool,[Linux][PenTest:Brute][3]
 msdat,MSSQL Database Attacking Tool,[Linux][PenTest:Brute][3]
+honeytrap,Extensible opensource system for running; monitoring; and managing honeypots.,[Linux][Personal][5]
+prompts,Javascript lightweight and user-friendly interactive prompts,[Linux][Personal][5]
+PrivEsc,Collection of Windows Linux and MySQL privexc scripts and exploits,[Linux][Windows][PenTest:Priv][5]
+awesome-pentest,Collection of awesome pentest resources; tools; shiny things; should be in Bookmarklist.nbk,[Learning][Bookmarks][4]
+getsploit,The 'searchsploit' of the vulners exploit search api. Ability to download database locally.,[Linux][Exploits][2]
+api,The vulners API if desired to code anything to it. Getsploit and .nse probably all I need.,[Linux][5]
+setup-ipsec-vpn,Scripts for eas VPN server setup,[Linux][Personal][5]
+cloudmapper,Javascript attempt to create network map of AWS information using the AWS CLI,[Linux][PenTest:Info][4]
+AWSBucketDump,Python script looking for interesting files in AWS S3 buckets,[Linux][Windows][PenTest:Info][4]
+mitmproxy,Intercepting HTTP proxy for pentesters and developers.,[Linux][3]
+headless-chrome-crawler,Cawler powered by Headless Chrome;,[Linux][5]
+pysheeet,Cool Python cheet sheet; available as PDF or web server;,[Linux][Cheatsheets][4]
+requests-html,HTTP Requests library for Python making handling HTTP requests simple.,[Linux][3]
+bettercap,Network attack and monitoring framework,[Linux][PenTest:Info][3]
+frida,Javascript and library injection into apps for testing. Reverse engineering/advanced analytics/tinkering.,[Linux][Exploitdev][4]
+password_cracking_rules,A ruleset for hashcat that was created to function more efficiently overall than other common password cracking rulesets,[Linux][PenTest:Brute][4]
+Brida,A bridge between BURP and Frida,[Linux][PenTest:Web][4]
+RE-for-beginners,Reverse Engineering for beginners free book,[Learning][Exploitdev][5]
+metasploit-framework,The fancy and magical metasploit framework official repo,[Linux][Exploits][Framework][2]
+hashcat,The magical hashcat password cracking tool,[Linux][PenTest:Brute][3]
+MS17-010,NSA exploits for Windows in python form,[Windows][Exploits][3]
+mimikatz,The fantastical and magical mimikatz for password dumping from Windows machines,[Windows][Exploits][2]
+pupy,Cross platform remote administration and post-exploitation tool written in python.,[Linux][Windows][Framework][4]
+sg1,"An interesting 'swiss army knife' for data encryption, exfil, and covert communication. Like a fancy and specific nc or socat.",[Linux][5]
+PowerShell,Windows PowerShell…For every system,[Linux][Windows][1]
+FOCA,Find metadata and more from Documents through Google; Bing; and DuckDuckGo,[Windows][PenTest:Info][4]
+exploits,Raptors repo of exploits including MySQL UDF and more,[Linux][Exploits][3]
+tactical-exploitation,Brute force scripts that can accomplish various pentesting tasts; botshot;verbal;seitan;letmein; and more could be useful,[Linux][PenTest:Brute][3]
+pics,,
+JohnTheRipper,,
+Invoke-Obfuscation,,
+EvilOSX,,
+Probable-Wordlists,,
+bytecode-viewer,,
+You-Dont-Know-JS,,
+gitleaks,,
+radamsa,,
+darkc0de-old-stuff,,
+aslur,,
+PcapXray,,
+ntopng,,
+elf-strings,,
+vim-anywhere,,
+bruteforce-salted-openssl,,
+VSCodeNotebook,,
+GhostText,,
+awesome,,
+sshLooter,,
+acme.sh,,
+bounty-monitor,,
+3snake,,
+lscript,,

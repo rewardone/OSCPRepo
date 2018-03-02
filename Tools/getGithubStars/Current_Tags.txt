@@ -19,6 +19,7 @@ Penetration Testing
 [PenTest:Brute]
 [PenTest:Scan]
 [PenTest:Info]
+[PenTest:Priv]
 [Cheatsheets]
 [Lists]
 [Post]

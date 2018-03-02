@@ -224,4 +224,5 @@ function mainMenu {
 
 }
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 mainMenu
