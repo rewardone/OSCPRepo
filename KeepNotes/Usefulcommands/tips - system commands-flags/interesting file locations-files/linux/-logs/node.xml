@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>/logs</string>
   <key>nodeid</key><string>acd2f5ce-c152-44b7-95ca-50416e5f99ee</string>
   <key>modified_time</key><integer>1512675552</integer>

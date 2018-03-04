@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>GnuPG</string>
   <key>nodeid</key><string>83040761-7187-4b66-917c-15c082db3411</string>
   <key>modified_time</key><integer>1512670646</integer>

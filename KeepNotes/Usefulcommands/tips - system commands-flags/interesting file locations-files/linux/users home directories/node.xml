@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Users' home directories</string>
   <key>nodeid</key><string>c576eaff-826c-4897-b3d2-d6a4c0e2ccc7</string>
   <key>modified_time</key><integer>1512671292</integer>

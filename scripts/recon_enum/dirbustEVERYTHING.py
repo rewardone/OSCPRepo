@@ -3,6 +3,7 @@
 import sys
 import os
 import subprocess
+from reconscan import mkdir_p
 
 def help():
     print "Usage: dirbust.py <target url:port> <scan name> <tool-to-use (optional)>"
@@ -20,12 +21,20 @@ url = str(sys.argv[1])
 #name being passed from reconscan is an IP_ADDRESS
 name = str(sys.argv[2])
 
+#User agent for tools
+user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
+
+#Default wordlist for tools to use
+default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
+
 if ("http" in url):
     ip_address = url.strip("http://")
 elif ("https" in url):
     ip_address = url.strip("https://")
 
 port = url.split(":")[2]
+path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+mkdir_p(path)
 
 #default to gobuster
 if (len(sys.argv) <= 3):
@@ -56,13 +65,11 @@ def genlist(url, name):
     # --proxy_password: password
     # -v: verbose
     print "INFO: generating custom wordlist"
-    user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
     #TODO: Feed in URLS from a brute scan
-    CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w /root/scripts/recon_enum/results/exam/dirb/%s" % (user_agent, url, name)
+    CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w /root/scripts/recon_enum/results/exam/dirb/%s/%s" % (user_agent, url, port, name)
     results = subprocess.check_output(CEWLSCAN, shell=True)
 
 def dirb(url):
-    user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
     folders = ["/root/lists/Web/AllWebLists/separate", "/usr/share/dirb/wordlists/vulns"]
     found = []
     print "INFO: Starting dirb scan for %s" % (url)
@@ -91,7 +98,6 @@ def dirb(url):
 
 def gobuster(url, wordlist, name):
     print "INFO: Starting gobuster scan for %s" % (url)
-    user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
     if (name == ""):
         print "NAME ERROR"
         name = "TEMP_NO_NAME_PASSED"
@@ -110,7 +116,7 @@ def gobuster(url, wordlist, name):
     #-v	Verbose output (errors)
     #-w string: Path to the wordlist
     #-x string: File extension(s) to search for (dir mode only)
-    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > /root/scripts/recon_enum/results/exam/dirb/gobuster%s" % (user_agent, url, wordlist, name)
+    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > /root/scripts/recon_enum/results/exam/dirb/%s/gobuster%s" % (user_agent, url, wordlist, port, name)
     results = subprocess.check_output(GOBUSTERSCAN, shell=True)
 
 def sortBySize(nameAndPathOfResults):
@@ -122,23 +128,23 @@ def sortBySize(nameAndPathOfResults):
             tmpsize = tmpsize[:-2] #-2 for ]\n, -1 leaves the ]
             sizear.add(tmpsize)
     for size in sizear:
-        GREPV = "grep -v %s %s > /root/scripts/recon_enum/results/exam/dirb/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, name, port, size)
+        GREPV = "grep -v %s %s > /root/scripts/recon_enum/results/exam/dirb/%s/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, port, name, port, size)
         GREPVRESULTS = subprocess.call(GREPV, shell=True)
+    f.close()
 
 if (tool == "dirb"):
     dirb(url)
 
 if (tool == "gobuster"):
-    default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
     cewl_scanname = "%s_%s_cewl" % (name, port)
-    cewl_filename = "/root/scripts/recon_enum/results/exam/dirb/%s" % (cewl_scanname)
+    cewl_filename = "/root/scripts/recon_enum/results/exam/dirb/%s/%s" % (port, cewl_scanname) 
     default_scanname = "_%s_%s_default" % (name, port)
     cewl_busted_scanname = "_%s_%s_cewld" % (name, port)
     gobuster(url, default_wordlist, default_scanname)
     genlist(url, cewl_scanname)
     gobuster(url, cewl_filename, cewl_busted_scanname)
-    combined_scanname = "/root/scripts/recon_enum/results/exam/dirb/gobuster_%s_%s_combined" % (name, port)
-    COMUNI = "awk \'!a[$0]++\' /root/scripts/recon_enum/results/exam/dirb/gobuster* > %s" % (combined_scanname)
+    combined_scanname = "/root/scripts/recon_enum/results/exam/dirb/%s/gobuster_%s_%s_combined" % (port, name, port)
+    COMUNI = "awk \'!a[$0]++\' /root/scripts/recon_enum/results/exam/dirb/%s/gobuster* > %s" % (port, combined_scanname)
     comuniresults = subprocess.check_output(COMUNI, shell=True)
     sortBySize(combined_scanname)
             

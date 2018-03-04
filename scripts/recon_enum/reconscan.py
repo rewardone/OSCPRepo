@@ -30,15 +30,19 @@
 ## Fix DIRB scan in dirbustEVERYTHING
 ## SMBrecon: nbtscan (e4l now implemented)
 ## Expand DNSRecon
-## Expand: run cewl through every discovered dir in first run, comb, uniq, then back to gobuster
-## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
-## Expand: dirbustEVERYTHING to take screenshots of webpages (botshot.py or other).
+## Expand HTTP: Utilize DotDotPwn from gobuster scan
+##            : Manual DotDotPwn script for WEB
+## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
 ##
 ## [THOUGHTS]
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
 ## open ports discovered. Probably better with one scan? 
 ## Not so great when new ports are discovered, maybe break reconscan out into more separate files?
 ## Edit web wordlist so lines never start with /? (only small percentage of them do)
+## Expand: run cewl through every discovered dir in first run, comb, uniq, then back to gobuster
+##       : Probably not an issue when cewl can actually crawl
+## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
+##       : But benefit of having less 301 / false negatives
 ##
 ## [NOTES]
 ## vulners.nse requires -sV flag
@@ -427,7 +431,7 @@ def mkdir_p(path):
 
 #Create the directories that are currently hardcoded in the script
 def createDirectories():
-   scriptsToRun = "dirb","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
+   scriptsToRun = "dirb","dirb/80","dirb/443","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
 

