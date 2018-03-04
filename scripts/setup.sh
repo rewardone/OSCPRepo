@@ -41,6 +41,7 @@ msfdb reinit
 echo "Edit dotdotpwn so you don't have to press 'ENTER' to start it"
 sed -e "s/<STDIN>;/#<STDIN>;/" /usr/share/dotdotpwn/dotdotpwn.pl > /usr/share/dotdotpwn/dotdotpwn_TMP && mv /usr/share/dotdotpwn/dotdotpwn_TMP /usr/share/dotdotpwn/dotdotpwn.pl
 chmod +x /usr/share/dotdotpwn/dotdotpwn.pl
+mkdir /usr/share/dotdotpwn/Reports
 
 
 echo "Optional packages you might utilize in the future"
