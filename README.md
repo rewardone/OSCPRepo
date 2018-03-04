@@ -11,7 +11,7 @@ Recon_Scan.py
 
 A popular script, it's goal is to run unicornscan, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). This functionality could probably be imported into Sparta (a cool gui tool). It's also probably worse than Vanquish. For now, it get's the job done with a single ./reconscan.py. It is designed to run multithreaded against multiple targets simultaneously if network bandwidth allows. 
 
-Reconscan.py has the ability to run unicornscan, tens of nmap scripts, gobuster/dirb, nikto, whatweb, hydra, and so much more. Written in python, it is easy to change, configure (if wanted), and even run modules separately against a target. Unicornscan will finish and write its output first to allow you to manually look at a target/around its web interface while the rest of the scan is finishing. 
+Reconscan.py has the ability to run unicornscan, tens of nmap scripts, gobuster/dirb, nikto, whatweb, hydra, and so much more. Written in python (2.7), it is easy to change, configure (if wanted), and even run modules separately against a target. Unicornscan will finish and write its output first to allow you to manually look at a target/around its web interface while the rest of the scan is finishing. 
 
 There is now a setup.sh script in /scripts folder that will clone some required repositories, move folders into place, and should make reconscan ready to go.
 
@@ -21,12 +21,14 @@ Going through list after list of compiled resource, github pages, etc, and I wan
 
 # Other Stuff
 
-Folders mostly speak for themselves. Lists contains a bunch of wordlists. Some methodologies and cheat sheets are downloaded. Some tools and scripts are kept local until they become integrated. ListOfSoftwareToAptGet.txt contains some information on setup that a user might want to consider when this repo is cloned from a default Kali installation.
+Folders mostly speak for themselves. Lists contains a bunch of wordlists. Some methodologies and cheat sheets are downloaded. Some tools and scripts are kept local until they become integrated. ListOfSoftwareToAptGet.txt contains some information on setup that a user might want to consider when this repo is cloned from a default Kali installation, though this functionality is essentially replaced with setup.sh in the scripts folder.
 
 GetGitHubStars
 
 A quick powershell script that can grab a user's starred repositories and output them to a csv. I wanted to combine them with my own personal comments for a list of all my stars for easier sorting, tagging, etc. Edit commentsToJSON and they will be added to output.csv. Additionally, the script can go and get trending repositories. TODO: add function to star repos in the script; add function to 'blacklist' popular repositories that you no longer want to see. 
 
 # Latest Changes
+
+4 Mar 18: dirTrav.py as a wrapper for dotdotpwn. It requires a file with a list of URLs to attempt. If it finds anything, it will grab the files listed in the default list (lists/Personal/Misc\ Lists/DirTrav/linux_all.txt). Windows support has not been tested. This script requires a manual invocation. I did not want it to launch automatically from the gobuster results (since there is always a lot of junk and would just increase dirTrav time). Special note, setup.sh alters dotdotpwn so that pressing 'Enter' is not required to start the scan. 
 
 20 Feb 18: At the least, httpenum, httpsenum, and dirbustEVERYTHING should be able to handle port changes (ie scan and output different ports manually). httpenum and httpsenum might be pulled out and made their own modules. dirbustEVERYTHING now scans for .php and .html extensions and runs cewl to generate a new list for additional enumeration. 
