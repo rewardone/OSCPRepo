@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Through GPO</string>
+  <key>nodeid</key><string>29fc3020-7a66-4710-b71d-28465c4ca9a8</string>
+  <key>modified_time</key><integer>1520270589</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1520270279</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>
