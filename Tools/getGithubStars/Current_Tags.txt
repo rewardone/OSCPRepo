@@ -13,6 +13,7 @@ Exploit Dev
 [Exploitdev]
 [Exploits]
 [Bypass]
+[Fuzz]
 
 Penetration Testing
 [PenTest:Web]
@@ -20,11 +21,14 @@ Penetration Testing
 [PenTest:Scan]
 [PenTest:Info]
 [PenTest:Priv]
+[PenTest:Post]
+[PenTest:Report]
 [Cheatsheets]
 [Lists]
 [Post]
 [WiFi]
 [Audit]
+[TheHunt]
 
 Education
 [Learning]
