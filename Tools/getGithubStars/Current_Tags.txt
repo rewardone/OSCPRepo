@@ -23,6 +23,7 @@ Penetration Testing
 [PenTest:Priv]
 [PenTest:Post]
 [PenTest:Report]
+[PenTest:Network]
 [Cheatsheets]
 [Lists]
 [Post]
