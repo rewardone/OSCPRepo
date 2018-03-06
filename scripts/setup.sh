@@ -11,7 +11,7 @@ apt-get install -y shutter exiftool gobuster git
 echo "Cloning Impacket"
 git clone https://github.com/CoreSecurity/impacket.git /root/Documents/Impacket
 
-echo "Cloning Vulners"
+echo "Cloning Vulners.nse script"
 git clone https://github.com/vulnersCom/nmap-vulners.git /root/Documents/Vulners
 
 echo "Cloning OSCPRepo"
@@ -34,7 +34,11 @@ echo "Setup OSCPRepo"
 cp -r /root/Documents/OSCPRepo/scripts /root/scripts
 cp -r /root/Documents/OSCPRepo/lists /root/lists
 
-echo "Make sure metasploit is ready to go"
+echo "Downloading additional lists: SecLists fuzzdb"
+git clone https://github.com/danielmiessler/SecLists /lists/SecLists
+git clone https://github.com/fuzzdb-project/fuzzdb /lists/fuzzdb
+
+echo "Make sure Metasploit is ready to go"
 service postgresql start
 msfdb reinit
 
