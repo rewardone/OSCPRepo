@@ -10,4 +10,10 @@
 <br/>
 <b>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy</b><br/>
 &nbsp;&#09;Default: does not exist<br/>
-&nbsp;&#09;If exists and set to 1: remote connections from <b>all</b>&nbsp;local members of Administrators group are granted full high-integrity tokens. Meaning non-RID 500 account connections can pass-the-hash.</body></html>
+&nbsp;&#09;If exists and set to 1: remote connections from <b>all</b>&nbsp;local members of Administrators group are granted full high-integrity tokens. Meaning non-RID 500 account connections can pass-the-hash.<br/>
+<br/>
+Security Settings<br/>
+<b>Security Settings &gt; Local Policies &gt; Security Options: Network security LAN Manager authentication level</b>&nbsp;<br/>
+&nbsp;&#09;Default: Windows 2000 and windows XP: send LM &amp; NTLM responses<br/>
+&nbsp;&#09;Windows Server 2003: Send NTLM response only<br/>
+&nbsp;&#09;Windows Vista, Windows Server 2008, Windows 7, and Windows Server 2008 R2: Send NTLMv2 response only</body></html>

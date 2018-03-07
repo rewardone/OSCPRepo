@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PSExec</title>
+</head><body>PSExec is built into numerous places. Sysinternals, Metasploit, and Python!<br/>
+<br/>
+IMPACKET<br/>
+psexec.py<br/>
+Pass it credentials and a command and it'll do what psexec does<br/>
+Or incorporate it into your own scripts with only 3 lines of code!<br/>
+&nbsp;import psexec<br/>
+&nbsp;psobject=psexec.PSEXEC("cmd.exe","C:\\windows\\system32\\","445/SMB",username="demoadmin",password="demopass")<br/>
+&nbsp;psobject.run("&lt;target_ip&gt;")<br/>
+<br/>
+Imagine looping through hosts, or any number of things<br/>
+Have a hash? it can do that too<br/>
+&nbsp;psobject=psexec.PSEXEC("cmd.exe","C:\\windows\\system32\\","445/SMB",username="demoadmin",hashes="&lt;HASH_HERE&gt;")</body></html>

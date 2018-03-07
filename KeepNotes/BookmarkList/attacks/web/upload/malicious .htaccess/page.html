@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Malicious .htaccess</title>
+</head><body>A htaccess file is the configuration file in Apache server. Using one of its setting we can change the file type behavior. Now lets choose a file extention which is not blacklisted, one of my favorite in such cases is .shell extension. So here is a htaccess configration which you have to cope in a .htaccess file and then upload in the folder and then upload your php shell with a name shell.shell and boom!! it will execute.<br/>
+<br/>
+Warning, replacing this file may have consequences. Make sure it's backed up and client is ok with it.<br/>
+--------- <br/>
+AddType application/x-httpd-php .php .php3 .php4 .htm .html .txt <br/>
+AddType application/x-httpd-php .shell<br/>
+etc<br/>
+<br/>
+<br/>
+<br/>
+The Process of an Actual Attack <br/>
+=============================== <br/>
+1. A malicious user uploads a following '.htaccess' file. <br/>
+<br/>
+.htaccess <br/>
+--------- <br/>
+AddType application/x-httpd-php .php .php3 .php4 .htm .html .txt <br/>
+<br/>
+2. A malicious user uploads a following .txt file. <br/>
+test.txt <br/>
+-------- <br/>
+&lt;? phpinfo(); ?&gt;<br/>
+<br/>
+3. The PHP script is executed, because the .txt file is modified to executethe PHP script. <br/>
+</body></html>

@@ -3,9 +3,9 @@
 <version>6</version>
 <dict>
   <key>duplicate_of</key><string>356feaa0-541a-43be-8441-2e4d9bea5236</string>
-  <key>title</key><string>Evasion techniques</string>
+  <key>title</key><string>Evasion / Obfuscation techniques</string>
   <key>nodeid</key><string>3ed620e3-6a47-4657-883d-93c82234154a</string>
-  <key>modified_time</key><integer>1485706134</integer>
+  <key>modified_time</key><integer>1520452367</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1485706105</integer>

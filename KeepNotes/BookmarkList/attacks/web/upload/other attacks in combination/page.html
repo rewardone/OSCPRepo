@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Other attacks in combination</title>
+</head><body>Is the filename reflected back to the user? <br/>
+XSS potential<br/>
+<br/>
+Is the filepath being traversed by a script processing the uploaded file? <br/>
+Directory traversal potential<br/>
+<br/>
+<b>Other Interesting Test Cases</b><ul><li>Uploading a file when another file with the same name already exists. This may show interesting error messages that can lead to information disclosure. Logical flaws might be found if the application renames the new file to keep it on the server.</li>
+<li>Uploading a file when another folder with the same name already exists. This may show interesting error messages that can lead to information disclosure.</li>
+<li>Uploading a file with a long name. This may show interesting error messages that can lead to information disclosure.</li>
+<li>Uploading a file multiple times at the same time. This may show interesting error messages that can lead to information disclosure.</li>
+<li>Uploading valid and invalid files in different formats such as compressed or XML files to detect any possible processing on the server side.</li>
+<li>Uploading a file with ".", "..", or "..." as its name. For instance, in Apache in Windows, if the application saves the uploaded files in "/www/uploads/" directory, the "." filename will create a file called "uploads" in the "/www/" directory.</li>
+<li>Uploading files that may not be deleted easily such as "...:.jpg" in NTFS that makes the "..." file (this file can be deleted using command line). This may show interesting error messages that can lead to information disclosure.</li>
+<li>Uploading a file in Windows with invalid characters such as |&lt;&gt;*?" in its name. This may show interesting error messages that can lead to information disclosure.</li>
+<li>Uploading a file in Windows using reserved (forbidden) names such as CON, PRN, AUX, NUL, COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9, LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, and LPT9. This may show interesting error messages that can lead to information disclosure. Uploading a file with a reserved name may lead to denial of service if the application keeps the name and tries to save it with another extension (detecting it wrongly as an existing file).</li>
+<li>Cross-site content hijacking issues can be exploited by uploading a file with allowed name and extension but with Flash, PDF, or Silverlight contents.</li>
+<li>Uploading a "crossdomain.xml" or "clientaccesspolicy.xml" file can make a website vulnerable to cross-site content hijacking. These files should be uploaded to the root of the website to work. However, the "crossdomain.xml" file can be in a subdirectory as long as it is allowed in the root "crossdomain.xml" file.</li>
+</ul>
+&nbsp;<br/>
+<b>Important Notes in Testing File Uploaders</b><br/>
+Do not try to replace the existing files during testing unless it is safe to proceed. For instance, replacing configuration files such as "web.config" or ".htaccess" file can lead to a denial of service attack for the whole website.<br/>
+<br/>
+<b>Related Attacks</b><br/>
+Path Traversal<br/>
+Path Manipulation<br/>
+Relative Path Traversal<br/>
+Windows_::DATA_alternate_data_stream</body></html>

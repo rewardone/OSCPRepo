@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Malicious .htaccess</string>
+  <key>nodeid</key><string>328c6ad1-0f9e-4987-9d76-ccf0161f6e68</string>
+  <key>modified_time</key><integer>1520450117</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1520446905</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

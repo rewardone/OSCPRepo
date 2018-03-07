@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SMB Relay</title>
+</head><body>https://pen-testing.sans.org/blog/2013/04/25/smb-relay-demystified-and-ntlmv2-pwnage-with-python <br/>
+<br/>
+General Primer<br/>
+<br/>
+With SMB Relay attacks, the attacker selects the target server he wants to authenticate to and then the attacker waits for someone on the network to authenticate to &lt;attacker&gt; machine. This is where rogue host detection, vulnerability scanners, and administrator scripts that automatically authenticate to hosts become a penetration tester's best friends. When the automated process connects to the attacker, &lt;attacker&gt; passes the authentication attempt off to his target (another system on the network, perhaps a server). The target generates a challenge and sends it back to the attacker. The attacker sends the challenge back to the originating scanning system. The scanning system encrypts the hash with the correct password hash and sends it to the attacker. The attacker passes the correctly encrypted response back to his target and successfully authenticates. <br/>
+<br/>
+Metasploit has a module for this: exploit/windows/smb/smb_relay<br/>
+As of this post (in 2013), SMB Relay only support NTLMv1. (need to check again)<br/>
+Mitigation is to refuse LM and NTLM responses on the network (via GPO most likely)<br/>
+Security Settings &gt; Local Policies &gt; Security Options: Network security LAN Manager authentication level<br/>
+<br/>
+Other Metasploit modules have support for NTLMv2, like http_ntlmrelay<br/>
+<br/>
+IMPACKET<br/>
+smbrelayx.py supports NTLMv2<br/>
+smbrelayx needs an executable to run on the target, so compile up your favorite with msfvenom or other and then launch smbrealyx<br/>
+python smbrelayx.py -h &lt;target&gt; -e &lt;exe_to_run&gt;<br/>
+<br/>
+<br/>
+</body></html>
