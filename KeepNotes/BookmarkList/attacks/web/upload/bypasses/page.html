@@ -51,6 +51,7 @@ Truncation possible? <br/>
 <li>Using NTFS alternate data stream (ADS) in Windows. In this case, a colon character ":" will be inserted after a forbidden extension and before a permitted one. As a result, an empty file with the forbidden extension will be created on the server (e.g. "file.asax:.jpg"). This file might be edited later using other techniques such as using its short filename. The "::$data" pattern can also be used to create non-empty files. Therefore, adding a dot character after this pattern might also be useful to bypass further restrictions (.e.g. "file.asp::$data.")</li>
 <li>Flaws in the protection mechanism when it replaces dangerous extensions. For instance, "file.p.phphp" might be changed to "file.php" after going through this functionality.</li>
 <li>Flaws in the uploaded file usage for instance when a PHP application uses the "include" function to show the uploaded images.</li>
+<li>somethingwithareaaaaaaaaaaaaaaaaallly.jsp.loooooooong..name......and...periods....jpg. The extra periods and long file name could throw off the blacklist code.</li>
 <li>Combination of the above techniques.</li>
 </ul>
 <br/>

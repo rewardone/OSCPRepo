@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><true/>
   <key>duplicate_of</key><string>34941a09-c634-43fa-bb6f-ae0075bf4dcc</string>
   <key>title</key><string>Java</string>
   <key>nodeid</key><string>d3ac1ec0-8586-4e94-9012-4476cf28631b</string>
@@ -10,7 +11,7 @@
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1479230529</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>4</integer>
+  <key>order</key><integer>6</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

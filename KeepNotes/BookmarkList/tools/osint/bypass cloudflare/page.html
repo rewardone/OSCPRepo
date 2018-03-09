@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypass Cloudflare</title>
+</head><body>Netcraft maintains history hosting records for other websites<br/>
+<a href="https://github.com/RhinoSecurityLabs/Security-Research/tree/master/tools/cfire">cfire</a>&nbsp;| runs multiple methods to attempt cloudflare bypass<br/>
+<br/>
+<br/>
+<br/>
+If you are a user of Cloudflare, you will find problems getting into the cpanel or the ftp of the website. In this condition, to access cpanel or ftp we have to go in real_ip_address:2082. This means cpanel or ftp services are accessible only from the main IP address. Thus a simple solution to this is finding the IP for ftp.domain-name.tld or cpanel.domain-name.tld.<br/>
+<br/>
+So just do the ping ftp.domain-name.tld or ping cpanel.domain-name.tld and you will be having the real IP of it.<br/>
+<br/>
+Subdomains to try:<br/>
+<br/>
+ping ftp.domain.com<br/>
+ping webmail.domain.com<br/>
+ping blog.domain.com<br/>
+ping forum.domain.com<br/>
+ping driect-connect.domain.com<br/>
+ping vb.domain.com<br/>
+ping cpanel.domain.com<br/>
+ping forums.domain.com<br/>
+ping home.domain.com<br/>
+ping shop.domain.com<br/>
+ping blogs.domain.com<br/>
+ping direct-connect.domain.com<br/>
+ping direct.domain.com<br/>
+ping ftp.domain.com<br/>
+ping cpanel.domain.com<br/>
+ping mail.domain.com<br/>
+<br/>
+Use send an email to fake_email_address@targetdomain.com. Sometimes you get an error with the IP of rht target domain mail server (saying it failed to deliver your message). <br/>
+Alternatively, sign up for services that targetdomain offers. Confirmation email, check headers, look for IP of mail server and you'll have a target. Note, mail server may or may not contain other services/web site/etc. </body></html>

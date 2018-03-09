@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Code Exec Functions</title>
+</head><body>What kind of bugs could let us execute a shell? <br/>
+JSP's include() <br/>
+&nbsp;Example:<br/>
+&lt;jsp:include page="{HttpServletRequest().getParameter("pg")}" /&gt; <br/>
+<br/>
+In the web shell section, we went Runtime.exec object. As you can imagine if you can control anything part of the string passed to exec() you can take control of the application or even the web server. The java servlet class responsible for accepting and returning user input in HTTP is the HttpServletRequest class, and its counterpart responsible for responding is HttpServletResponse. The same rules apply to attacking Runtime.exec() as other languages such as perl, asp and php. Just remember what variables you can control client side. Watch all usage of reqest.getParameter(), request.QueryString, request.getRequestURI and follow through. For a complete listing of supported methods by the HttpServletRequest class, check out <a href="http://www.163jsp.com/help/javaee50api/javax/servlet/http/HttpServletRequest.html">http://www.163jsp.com/help/javaee50api/javax/servlet/http/HttpServletRequest.html</a>.</body></html>

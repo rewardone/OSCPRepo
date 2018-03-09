@@ -15,11 +15,17 @@ Local / Remote command execution bugs:<br/>
 eval()&#09;&#09;&#09;&#09;A function that evaluates a given string as PHP code.<br/>
 assert() &#09;&#09;&#09;&#09;A function that evaluates a given string as PHP code.<br/>
 preg_replace()<br/>
+preg_match() /e&#09;&#09;&#09;with /e flag, will evaluate much like eval()<br/>
 fwrite()<br/>
 passthru()&#09;&#09;&#09;&#09;Also sends binary data, but requires a bit more work<br/>
 file_get_contents()<br/>
 shell_exec() &#09;&#09;&#09;Returns every line<br/>
 system()<br/>
+<br/>
+Encoding/Obfuscating<br/>
+base64()&#09;&#09;&#09;&#09;Encodes data with MIME base64 encoding<br/>
+gzdeflate()&#09;&#09;&#09;&#09;Compresses a string using DEFLATE data format. gzinflate() decompresses it<br/>
+str_rot13()&#09;&#09;&#09;&#09;Shifts every letter of a given string 13 places in the alphabet<br/>
 <br/>
 SQL Injection bugs:<br/>
 mysql_query()<br/>
@@ -32,7 +38,5 @@ file()<br/>
 popen()<br/>
 exec()&#09;&#09;&#09;&#09;Returns only the last line<br/>
 <br/>
-Encoding/Obfuscating<br/>
-base64()&#09;&#09;&#09;&#09;Encodes data with MIME base64 encoding<br/>
-gzdeflate()&#09;&#09;&#09;&#09;Compresses a string using DEFLATE data format. gzinflate() decompresses it<br/>
-str_rot13()&#09;&#09;&#09;&#09;Shifts every letter of a given string 13 places in the alphabet</body></html>
+Other random/userful<br/>
+file_put_contents() and readdir() &nbsp;</body></html>

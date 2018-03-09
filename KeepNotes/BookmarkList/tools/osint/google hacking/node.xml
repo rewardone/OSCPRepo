@@ -6,6 +6,7 @@
   <key>title</key><string>Google Hacking</string>
   <key>nodeid</key><string>1810e0d7-1bf7-47a2-b28a-5c8e06110642</string>
   <key>modified_time</key><integer>1516813620</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516295060</integer>

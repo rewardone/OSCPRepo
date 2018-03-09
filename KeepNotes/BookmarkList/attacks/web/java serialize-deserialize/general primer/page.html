@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Deserialization vulnerabilities <a href="https://heine.familiedeelstra.com/security/unserialize">are</a>&nbsp;<a href="http://www.pwntester.com/blog/2013/12/16/cve-2011-2894-deserialization-spring-rce/">far</a>&nbsp;<a href="https://foxglovesecurity.com/2015/11/06/what-do-weblogic-websphere-jboss-jenkins-opennms-and-your-application-have-in-common-this-vulnerability/">from</a>&nbsp;<a href="https://www.insomniasec.com/downloads/publications/Practical%20PHP%20Object%20Injection.pdf">new</a>, but exploiting them is more involved than other common vulnerability classes. I’ll be focusing on Java, however the same concepts apply to other languages. I’ll also be focusing on command execution exploits in order to keep things simple.<br/>
+<br/>
+<b>(De)serialization</b><br/>
+Briefly, serialization is the process of converting runtime variables and program objects into a form that can be stored or transmitted. Deserialization is the reverse process that converts the serialized form back into in-memory variables and program objects. The serialized form could be a text-based format such as JSON or XML, or a binary format. Many higher level languages such as C#, Java, and PHP have built-in support for data serialization which is trivial to use and saves the developer from having to implement these routines themselves.<br/>
+<br/>
+<b>What’s the Problem?</b><br/>
+The use of (de)serialization isn’t a problem itself. Problems arise when a user (attacker) can control the data being deserialized, for example if data can be delivered to the deserialization routine over a network connection. If an attacker has control of data being deserialized, then they have some influence over in-memory variables and program objects. Subsequently, if an attacker can influence in-memory variables and program objects, then they can influence the flow of code that uses those variables and objects.<br/>
+<br/>
+<b>Property-Oriented Programming</b><br/>
+When we control object properties and use them to influence the flow of code execution in this way we are doing what’s known as ‘property-oriented programming’. A POP gadget is a code snippet that we can influence to our advantage by manipulating the properties of some object. Often multiple gadgets will need chaining in order to create a complete exploit. We can think of this as high-level ROP (<a href="https://www.blackhat.com/presentations/bh-usa-08/Shacham/BH_US_08_Shacham_Return_Oriented_Programming.pdf">return-oriented programming</a>&nbsp;– a technique used in memory corruption exploits) except that instead of a ROP gadget pushing a value onto the stack, a POP gadget might allow us to write some data to a file.<br/>
+<br/>
+An important point here is that a deserialization exploit does not involve sending classes or code to the server to execute. We’re simply sending the properties of classes that the server is already aware of in order to manipulate existing code that deals with those properties. A successful exploit hence relies on knowledge of the code that can be manipulated through deserialization. This is where a lot of the difficulty in exploiting deserialization vulnerabilities stems from.<br/>
+<br/>
+<b>Interesting Gadgets</b><br/>
+POP gadgets can exist anywhere in a program, the only requirements are that the code can be manipulated using the properties of deserialized objects, and that an attacker can control the data being deserialized. Some gadgets are of greater interest, however, because their execution is more predictable. In Java, a serializable class can define a method named ‘readObject‘ which can be used to perform special handling during deserialization (for example supporting backwards compatibility). This method can also be used to respond to the event of an object of that class being deserialized. An example use of this method might be for a database manager object to automatically establish a connection to the database when it is deserialized into memory. Most Java serialization exploits take advantage of the code within these readObject methods because the code is guaranteed to be executed during deserialization.<br/>
+<br/>
+<br/>
+</body></html>

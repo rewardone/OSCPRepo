@@ -9,7 +9,7 @@ Remote file inclusion uses pretty much the same vector as local file inclusion.<
 A remote file inclusion vulnerability lets the attacker execute a script on the target-machine even though it is not even hosted on that machine.<br/>
 RFI's are less common than LFI. Because in order to get them to work the developer must have edited the php.ini configuration file.<br/>
 <br/>
-Dir traversal differs from LFI/RFI in the aspect that LFI can execute code, while a Directory Traversal Attack cannot. Testing is the same. <br/>
+Local File Includes should not be confused with weak fopen calls in which you can read any file in the file system. You can tell the difference bwteen the two when reading files. A weak fopen call will let you read the source code to server side documents, while include() tries to execute them. &nbsp;<br/>
 <br/>
 How does it work?<br/>
 The vulnerability stems from unsanitized user-input. LFI is particularly common in php-sites.<br/>
@@ -44,29 +44,23 @@ index.php?page=./forum/config<br/>
 Then show the source of the page to have the code.<br/>
 <br/>
 Just a quick note, here is a list of vulnerable PHP functions that you should look out for in your web apps:<br/>
-Local / Remote file inclusion bugs:<br/>
+Local / Remote file inclusion bugs: see <a href="nbk:///b3869c62-805d-4d59-8425-8f1253d774f4">Reverse Shells &gt; PHP &gt; Code Exec Functions</a>&nbsp;<br/>
 <br/>
-include()<br/>
-include_once()<br/>
-require()<br/>
-require_once()<br/>
+<b>A Look Back at RFI</b><br/>
+RFI's (Remote File Includes) are a dying breed of vulnerabilities. Changes to PHP in version 5 make them nearly obsolete unless PHP is configured to allow them. The Fopen URL line determines whether or not they work. Typically for file inclusion vulnerabilities to exist, we need to control the variable that include() or require() is utilizing.<br/>
 <br/>
-Local / Remote command execution bugs:<br/>
-eval()<br/>
-preg_replace()<br/>
-fwrite()<br/>
-passthru()<br/>
-file_get_contents()<br/>
-shell_exec()<br/>
-system()<br/>
+Some basic parameters to attempt to test (blind):<br/>
+file=<br/>
+folder=<br/>
+lang=<br/>
+path=<br/>
+style=<br/>
+template=<br/>
+PHP_PATH=<br/>
+doc=<br/>
+document=<br/>
+document_root=<br/>
+pg=<br/>
+pdf=<br/>
 <br/>
-SQL Injection bugs:<br/>
-mysql_query()<br/>
-<br/>
-File / File system bugs:<br/>
-fopen()<br/>
-readfile()<br/>
-glob()<br/>
-file()<br/>
-popen()<br/>
-exec()</body></html>
+</body></html>

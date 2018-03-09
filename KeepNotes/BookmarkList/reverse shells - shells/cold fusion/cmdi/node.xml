@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>CMDi</string>
+  <key>nodeid</key><string>e6da5093-3486-4264-a6dd-bf334e2bd72d</string>
+  <key>modified_time</key><integer>1520612897</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1520612660</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
