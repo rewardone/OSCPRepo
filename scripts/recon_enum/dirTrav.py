@@ -61,7 +61,7 @@ def dotPwn(URL):
                 vuln.append(line)  
         if (writeOutputFile):    
             try:
-                outfile = "/root/scripts/recon_enum/results/exam/dirb/%s" % resultsOut
+                outfile = "/root/scripts/recon_enum/results/exam/dotdotpwn/%s" % resultsOut
                 print "INFO: Traversals found! See %s" % outfile
                 outFileWriter = open(outfile, "w")
                 outFileWriter.write(ex.output)
@@ -81,7 +81,7 @@ def dotPwn(URL):
                 vuln.append(line)        
         if (writeOutputFile):    
             try:
-                outfile = "/root/scripts/recon_enum/results/exam/dirb/E%s" % resultsOut
+                outfile = "/root/scripts/recon_enum/results/exam/dotdotpwn/E%s" % resultsOut
                 print "INFO: Traversals found using extensions! See %s" % outfile
                 outFileWriter = open(outfile, "w")
                 outFileWriter.write(fx.output)
@@ -139,6 +139,31 @@ def grabFileFromURL(url):
             return r.text, r.status_code
     except:
         raise
+
+
+def sortRetrievedFiles():
+    downloadDir = "/root/scripts/recon_enum/results/exam/dotdotpwn/"
+    os.chdir(downloadDir)
+    files = os.listdir(downloadDir)
+    sizes = []
+    moveTheseFiles = []
+    for item in files:
+        if os.path.isfile(item):
+            sizes.append(os.path.getsize(item))
+    for size in sizes:
+        if sizes.count(size) > 3:
+            moveTheseFiles.append(size)
+    for sizeOfitems in moveTheseFiles:
+        try:
+            os.makedirs(str(sizeOfitems))
+        except:
+            print "Warning: Dir already exists"
+        for items in files:
+            if os.path.getsize(items) == sizeOfitems:
+                newpath = "./%s/%s" % (str(sizeOfitems),items)
+                os.rename(items,newpath)
+                files.remove(items)
+        
 
 ##1, grab port
 ##2, output file cannot have "/" in filename
