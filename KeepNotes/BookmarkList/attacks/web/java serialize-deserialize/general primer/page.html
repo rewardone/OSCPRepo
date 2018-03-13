@@ -20,4 +20,14 @@ An important point here is that a deserialization exploit does not involve sendi
 POP gadgets can exist anywhere in a program, the only requirements are that the code can be manipulated using the properties of deserialized objects, and that an attacker can control the data being deserialized. Some gadgets are of greater interest, however, because their execution is more predictable. In Java, a serializable class can define a method named ‘readObject‘ which can be used to perform special handling during deserialization (for example supporting backwards compatibility). This method can also be used to respond to the event of an object of that class being deserialized. An example use of this method might be for a database manager object to automatically establish a connection to the database when it is deserialized into memory. Most Java serialization exploits take advantage of the code within these readObject methods because the code is guaranteed to be executed during deserialization.<br/>
 <br/>
 <br/>
+<br/>
+<br/>
+Apache Commons Collections 3 (up to 3.2.1)<br/>
+Apache Commons Collections 4 (up to 4.4.0)<br/>
+Spring (up to 4.2.2)<br/>
+Groovy (up to 2.4.3)<br/>
+<br/>
+The real problem is that Java default deserialization methods deserialize every supplied serialized object, without doing any check on it. To make this issue so serious it is enough to add that the deserialization process can execute Java code defined in the class of the serialized object. The reason why the four libraries shown before are considered vulnerable (but they aren’t) is that they define some objects that can invoke custom Java methods in the deserialization process.<br/>
+<br/>
+Therefore, to exploit this issue it is sufficient an entry point that processes serialized objects and one of library loaded in the Java environment that allow execute custom code in the deserialization process. But the real problem, as said before, are not the libraries, but the deserialization methods of Java, that deserialize (and eventually execute Java code) every object supplied without doing any check on it<br/>
 </body></html>
