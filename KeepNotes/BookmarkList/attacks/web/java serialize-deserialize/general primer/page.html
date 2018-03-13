@@ -30,4 +30,21 @@ Groovy (up to 2.4.3)<br/>
 The real problem is that Java default deserialization methods deserialize every supplied serialized object, without doing any check on it. To make this issue so serious it is enough to add that the deserialization process can execute Java code defined in the class of the serialized object. The reason why the four libraries shown before are considered vulnerable (but they aren’t) is that they define some objects that can invoke custom Java methods in the deserialization process.<br/>
 <br/>
 Therefore, to exploit this issue it is sufficient an entry point that processes serialized objects and one of library loaded in the Java environment that allow execute custom code in the deserialization process. But the real problem, as said before, are not the libraries, but the deserialization methods of Java, that deserialize (and eventually execute Java code) every object supplied without doing any check on it<br/>
+<br/>
+<br/>
+<br/>
+Java LOVES sending serialized objects all over the place. For example:<br/>
+<br/>
+In HTTP requests – Parameters, ViewState, Cookies, you name it.<br/>
+RMI – The extensively used Java RMI protocol is 100% based on serialization<br/>
+RMI over HTTP – Many Java thick client web apps use this – again 100% serialized objects<br/>
+JMX – Again, relies on serialized objects being shot over the wire<br/>
+Custom Protocols – Sending an receiving raw Java objects is the norm – which we’ll see in some of the exploits to come<br/>
+Okay, so what you ask? Well what if we knew of an object that implemented a “readObject” method that did something dangerous? <br/>
+<br/>
+Suppose such a vulnerable object existed, but wasn’t part of “core” Java, but instead just part of a library. Think about the requirements for exploitation:<br/>
+<br/>
+That library would need to be on the Java “classpath”<br/>
+The application would need to deserialize untrusted user input<br/>
+We’ve already determined that requirement 2 is very often satisfied. Requirement 1 could be satisfied if we could find such a vulnerability in a commonly used library…<br/>
 </body></html>

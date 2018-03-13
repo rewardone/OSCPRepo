@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Outside 80 and 443</title>
+</head><body>In my experience, the most common usage of serialized objects is not through HTTP, but other protocols running on different ports that you aren’t expected to talk to. To list the ports that your application is listening on try this:<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+If you see port 1099, that’s Java RMI. RMI by definition just uses serialized objects for all communication. This is trivially vulnerable, as seen in our <a href="https://foxglovesecurity.com/2015/11/06/what-do-weblogic-websphere-jboss-jenkins-opennms-and-your-application-have-in-common-this-vulnerability/#opennms">OpenNMS exploit</a>.<br/>
+<br/>
+How do you actually stimulate traffic to these ports? Well they must be open for a reason. Open up Wireshark, see if anything that looks like a serialized object is going into them. Try running some of the scripts or command-line tools that come with the application or application server. For example Jenkins, WebLogic, and WebSphere all have commandline tools that use serialized objects as we’ll see later.<br/>
+<br/>
+If the traffic is encrypted, you’re going to need to find a way to read it. Maybe setup a proxy that can handle SSL man in the middle like Burp and relay the traffic through that. An example of this can be seen in the WebSphere exploit.</body></html>
