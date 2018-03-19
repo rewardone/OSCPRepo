@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypass</title>
+</head><body>By adding “+”, usually parsed as white spaces by applications, in strategic places of vector/payload, both security solutions fail because of stripping of a single character. No WAF can see this as a XSS attack because “&lt;” is not immediately followed by a alphabetic character and Auditor can’t see this as similar enough to what is reflected in source, the way this solution uses to catch XSS attempts.<br/>
+&lt;+svg/o+nload=al+ert+(1)&gt;<br/>
+<br/>
+Use of `` to for <a href="https://en.wikipedia.org/wiki/ECMAScript">ES6</a>&nbsp;way to enclose javascript strings<br/>
+&lt;svg+onload=`&lt;script`-alert(1)&gt;<br/>
+<br/>
+Use of ":" using string as a <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Statements/label">label</a><br/>
+&lt;svg+onload=&lt;script:alert(1)&gt;<br/>
+<br/>
+</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Places to Look for Reflected XSS</string>
+  <key>nodeid</key><string>5e50a0df-b025-4bd3-a239-29488bef15c5</string>
+  <key>modified_time</key><integer>1521481445</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1521480002</integer>
+  <key>order</key><integer>25</integer>
+</dict>
+</node>

