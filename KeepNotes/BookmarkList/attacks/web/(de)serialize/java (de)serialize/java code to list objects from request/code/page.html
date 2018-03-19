@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>New Page</title>
+</head><body>import java.util.Base64;<br/>
+import java.io.InputStream;<br/>
+import java.io.ByteArrayInputStream;<br/>
+import java.io.ObjectInputStream;<br/>
+import java.io.OptionalDataException;<br/>
+import java.io.StreamCorruptedException;<br/>
+import java.util.Arrays;<br/>
+&nbsp;<br/>
+public class DecodeObject{<br/>
+&nbsp; &nbsp; public static void main(String args[]) throws Exception{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; int skip=0;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; int remainder = 0;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; String b64 = args[0];<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; byte[] bytes = Base64.getDecoder().decode(b64);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ByteArrayInputStream bis = new ByteArrayInputStream(bytes);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; int origSize = bis.available();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Data Length: "+origSize);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Object o = null;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; while(o == null){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bis.reset();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bis.skip(skip);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ObjectInputStream ois = new ObjectInputStream(bis);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o = ois.readObject();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Object found...");<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(o.getClass().getName());<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Bytes skipped: "+skip);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Bytes left: "+bis.available());<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; skip = origSize - bis.available();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; catch (StreamCorruptedException ode){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; skip = skip+1;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bis.skip(1);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; catch (OptionalDataException ode){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bis.skip(1);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; skip = skip+1;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; catch (ClassNotFoundException cnf)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Object found..."+cnf.getMessage());<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Bytes skipped: "+skip);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Bytes left: "+bis.available());<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; skip = origSize - bis.available();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }<br/>
+}</body></html>

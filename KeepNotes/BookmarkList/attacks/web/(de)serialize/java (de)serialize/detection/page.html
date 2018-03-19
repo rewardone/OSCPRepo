@@ -39,4 +39,36 @@ Now, let’s demonstrate how to use our plugin for exploitation. First, we need 
 <br/>
 Then, as we saw for manual testing, it is possible to insert the request manually or to send it from other Burp Suite tabs using the contextual menu that opens with the right button of the mouse. The user can then select the insertion point (currently only one at a time is supported) like in the Burp Suite Intruder, insert the ysoserial command (refer to the ysoserial manual for syntax) and click the correct “Attack” button, based on the desired encoding. The configuration of the “Exploiting” tool is explained in the following picture:<br/>
 <br/>
-The interface provided by the plugin makes the exploitation process faster and more comfortable.</body></html>
+The interface provided by the plugin makes the exploitation process faster and more comfortable.<br/>
+<br/>
+<br/>
+<br/>
+<b>Manual Detection</b><br/>
+If you have access to the apps source, you can check for vulnerable libraries that are bundled. Two checks for the common-collections libaries are: "*commons*collection*" and "InvokerTransformer".<br/>
+For example in WebSphere:<br/>
+<br/>
+root@us-l-breens:/opt/IBM# find . -iname "*commons*collection*"<br/>
+./WebSphere/AppServer/optionalLibraries/Apache/Struts/1.1/commons-collections.jar<br/>
+./WebSphere/AppServer/optionalLibraries/Apache/Struts/1.2.4/commons-collections.jar<br/>
+./WebSphere/AppServer/plugins/com.ibm.ws.prereq.commons-collections.jar<br/>
+./WebSphere/AppServer/systemApps/LongRunningScheduler.ear/JobManagementWeb.war/WEB-INF/lib/commons-collections.jar<br/>
+./WebSphere/AppServer/systemApps/isclite.ear/commons-collections.jar<br/>
+./WebSphere/AppServer/deploytool/itp/plugins/com.ibm.websphere.v85_2.0.0.v20120621_2102/wasJars/com.ibm.ws.prereq.commons-collections.jar<br/>
+<br/>
+In JBOSS<br/>
+root@us-l-breens:/opt/jboss-6.1.0.Final# grep -R InvokerTransformer .<br/>
+Binary file ./server/standard/deployers/jsf.deployer/MyFaces-2.0/jsf-libs/commons-collections-3.2.jar matches<br/>
+Binary file ./server/all/deployers/jsf.deployer/MyFaces-2.0/jsf-libs/commons-collections-3.2.jar matches<br/>
+Binary file ./server/default/deployers/jsf.deployer/MyFaces-2.0/jsf-libs/commons-collections-3.2.jar matches<br/>
+Binary file ./common/deploy/admin-console.war/WEB-INF/lib/commons-collections-3.2.jar matches<br/>
+Binary file ./common/lib/commons-collections.jar matches<br/>
+Binary file ./client/commons-collections.jar matches<br/>
+<br/>
+<br/>
+Incertect traffinc. Looking for certain strings being passed:<br/>
+<b>hex 0xAC ED</b>&nbsp;<b>00 05</b>&nbsp;or the <b>base64</b>&nbsp;<b>rO0</b>&nbsp;. . . <br/>
+These are the serialized objects.<br/>
+<br/>
+Sometimes an HTTP header needs to be included in requests. <br/>
+Content-Type: application/x-java-serialized-object<br/>
+</body></html>

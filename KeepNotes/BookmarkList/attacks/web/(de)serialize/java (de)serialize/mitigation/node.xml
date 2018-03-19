@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Mitigation</string>
+  <key>nodeid</key><string>eec5d1f0-d570-460a-82b1-9e6d1fe4a1fd</string>
+  <key>modified_time</key><integer>1521470650</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1521466281</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

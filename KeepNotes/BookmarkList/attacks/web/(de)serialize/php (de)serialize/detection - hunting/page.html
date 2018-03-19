@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Detection / Hunting</title>
+</head><body>Packagist (packagist.org) is a repository of PHP packages<ul><li style="list-style-type: none">By default, Composer downloads packages from Packagist</li>
+</ul>
+<br/>
+Finding vulnerable libraries:<ul><li style="list-style-type: none">Harness RIPS and/or grep to check for object injection (unserialize)</li>
+</ul>
+Finding useful POP chains:<ul><li style="list-style-type: none">RIPS can check for gadgets, but doesn’t go beyond finding magic methods</li>
+<li style="list-style-type: none">Python + grep + manual analysis works for me</li>
+<li style="list-style-type: none">Want to build fully automated POP gadget finder/builder</li>
+</ul>
+<b>Basic Idea</b><ul><li style="list-style-type: none">1. Grep for __wakeup() and __destruct() across popular packages</li>
+</ul>
+<ul>2. Starting with the most popular libraries, for each class with a potentially useful gadget,</ul>
+&nbsp;grep for other useful methods<ul><li style="list-style-type: none">3. Manually verify and build the POP chain</li>
+</ul>
+<ul>4. Deploy application with a vulnerable method and POP gadget class autoloaded, test</ul>
+&nbsp;exploit<br/>
+<br/>
+Vulnerable libraries discovered<br/>
+Turns out authentication libraries are easy wins…<br/>
+cartalyst/sentry<ul><li style="list-style-type: none">“PHP 5.3+ Fully-featured Authentication &amp; Authorization System”</li>
+</ul>
+cartalyst/sentinel<ul><li style="list-style-type: none">“PHP 5.4+ Fully-featured Authentication &amp; Authorization System”</li>
+<li style="list-style-type: none"></li>
+</ul>
+Sample of libraries with useful POP Gadgets<br/>
+Arbitrary Write<ul><li style="list-style-type: none">monolog/monolog (&lt;1.11.0)</li>
+<li style="list-style-type: none">guzzlehttp/guzzle</li>
+<li style="list-style-type: none">guzzle/guzzle</li>
+</ul>
+Arbitrary Delete<ul><li style="list-style-type: none">swiftmailer/swiftmailer</li>
+</ul>
+Potential Denial of Service (proc_terminate())<ul><li style="list-style-type: none">symfony/process</li>
+</ul>
+A lot more __destruct() to choose from than __wakeup()<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

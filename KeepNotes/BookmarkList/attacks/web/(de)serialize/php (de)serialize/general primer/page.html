@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Less common, but still important<br/>
+<br/>
+<b>Magic Methods</b><br/>
+Magic Methods - Part I<br/>
+PHP classes have a specific subset of “magic methods”:<br/>
+__construct(), __destruct()<br/>
+__call(), __callStatic()<br/>
+__get(), __set()<br/>
+__isset(), __unset()<br/>
+__sleep(), __wakeup()<br/>
+__toString()<br/>
+__invoke()<br/>
+__set_state()<br/>
+__clone()<br/>
+__debugInfo()<br/>
+<br/>
+__wakeup() and __destrut() are the most talked about<br/>
+<br/>
+__wakeup()<br/>
+"unserialize() checks for the presence of a function with the magic<br/>
+name __wakeup(). If present, this function can reconstruct any<br/>
+resources that the object may have.“<br/>
+<br/>
+_destruct()<br/>
+"The destructor method will be called as soon as there are no other<br/>
+references to a particular object, or in any order during the shutdown<br/>
+sequence.“<br/>
+<br/>
+<b>Chain Methods Together</b><br/>
+Just like ROP, start with initial gadgets, which can then call other gadgets<ul>&nbsp;</ul>
+In PHP Object Injection, the initial gadgets are magic methods such as __wakeup() or __destruct()<br/>
+Useful POP chain methods:<ul><li style="list-style-type: none">Command Execution</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">exec()</li>
+<li style="list-style-type: none">passthru()</li>
+<li style="list-style-type: none">popen()</li>
+<li style="list-style-type: none">system()</li>
+</ul>
+</li>
+<li style="list-style-type: none">File Access</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">file_put_contents()</li>
+<li style="list-style-type: none">file_get_contents()</li>
+<li style="list-style-type: none">unlink()</li>
+</ul>
+</li>
+</ul>
+<br/>
+<b>Autoloading and Composer</b><br/>
+Traditional PHP requires the application to import all classes in each file &nbsp;<br/>
+Composer autoloads all classes for libraries used with an application (that support autoloading) for ease of use with development<ul>The same ease of use with development means all</ul>
+&nbsp;classes available via Composer are available to use during unserialize() exploitation<br/>
+Composer libraries are stored under the “vendor” directory and accomplished using php line: "require __DIR__ . '/vendor/autoload.php';<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Is JSON any better than a serialized object?<br/>
+Replacing Java/.NET serialize requires OOP support<br/>
+<br/>
+JSON libraries need to reconstruct objects by either: <ul><li style="list-style-type: none">Calling default constructor and using reflection to set field values </li>
+<li style="list-style-type: none">Calling default constructor and calling setters to set field values </li>
+<li style="list-style-type: none">Calling “special” constructors, type converters or callbacks </li>
+<li style="list-style-type: none">Calling common methods such as: </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">hashcode(), toString(), equals(), finalize(), … </li>
+</ul>
+</li>
+<li style="list-style-type: none">Combinations of the previous ones</li>
+</ul>
+</body></html>

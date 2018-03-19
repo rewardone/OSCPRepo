@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>T3 Protocol</string>
+  <key>nodeid</key><string>046c67fe-29a9-42f4-b4fb-be706265b8c5</string>
+  <key>modified_time</key><integer>1521466038</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1521465966</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

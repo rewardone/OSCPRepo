@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>JSON (De)Serialize</title>
+</head><body>From https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-Json-Attacks.pdf<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<b>FastJSON</b><br/>
+Always includes Type discriminators <br/>
+There is no Type check controls other than a post-deserialization cast <ul><li style="list-style-type: none">Var obj = (ExpectedType) JSON.ToObject(untrusted); &nbsp;</li>
+</ul>
+Invokes <ul><li style="list-style-type: none">Setter </li>
+</ul>
+Should never be used with untrusted data <ul><li style="list-style-type: none"></li>
+</ul>
+Example: <ul><li style="list-style-type: none">KalikoCMS </li>
+<li style="list-style-type: none">CVE-2017-10712 </li>
+<li style="list-style-type: none"></li>
+</ul>
+<b>JavaScriptSerializer</b><br/>
+System.Web.Script.Serialization.JavaScriptSerializer <br/>
+By default, it will not include type discriminator information <ul><li style="list-style-type: none">Type Resolver can be used to include this information. </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">JavaScriptSerializer sr = new JavaScriptSerializer(new SimpleTypeResolver()); </li>
+<li style="list-style-type: none">string reqdInfo = apiService.authenticateRequest(); </li>
+<li style="list-style-type: none">reqdDetails det = (reqdDetails)(sr.Deserialize(reqdInfo)); &nbsp;</li>
+</ul>
+</li>
+</ul>
+Weak Type control: post-deserialization cast operation <br/>
+During deserialization, it will call: <ul><li style="list-style-type: none">Setters </li>
+</ul>
+It can be used securely as long as a type resolver is not used or the type resolver is configured to whitelist valid types. <br/>
+<br/>
+<b>System.Runtime.Serialization.Json.DataContractJsonSerializer </b><br/>
+Performs a strict type graph inspection and whitelist creation. <br/>
+However, we found that if the attacker can control the expected type used to configure the deserializer, they will be able to gain code execution. Eg: <ul><li style="list-style-type: none">var typename = cookie["typename"]; </li>
+<li style="list-style-type: none">… </li>
+<li style="list-style-type: none">var serializer = new DataContractJsonSerializer(Type.GetType(typename)); </li>
+<li style="list-style-type: none">var obj = serializer.ReadObject(ms); &nbsp;</li>
+</ul>
+Invokes: <ul><li style="list-style-type: none">Setters </li>
+<li style="list-style-type: none">Serialization Constructors </li>
+</ul>
+Can be used securely as long as the expected type cannot be controlled by users. <br/>
+<br/>
+<b>Json.Net</b>&nbsp;<br/>
+It does not include Type discriminators unless TypeNameHandling setting other than None is used <br/>
+Performs an inspection of Expected Type’s Object Graph <ul><li style="list-style-type: none">public class Message { </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">[JsonProperty(TypeNameHandling = TypeNameHandling.All)] </li>
+<li style="list-style-type: none">public object Body { get; set; } &nbsp;</li>
+</ul>
+</li>
+<li style="list-style-type: none">}</li>
+</ul>
+Invokes: <ul><li style="list-style-type: none">Setters </li>
+<li style="list-style-type: none">Serialization callbacks</li>
+<li style="list-style-type: none">Type Converters </li>
+</ul>
+Use SerializationBinder to whitelist Types if TypeNameHandling is required<br/>
+<br/>
+</body></html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body><b>Gadgets in .NET</b><br/>
+System.Configuration.Install.AssemblyInstaller <ul><li style="list-style-type: none">set_Path </li>
+<li style="list-style-type: none">Execute payload on local assembly load </li>
+</ul>
+System.Activities.Presentation.WorkflowDesigner <ul><li style="list-style-type: none">set_PropertyInspectorFontAndColorData </li>
+<li style="list-style-type: none">Arbitrary XAML load</li>
+<li style="list-style-type: none">Requires Single Threaded Apartment (STA) thread </li>
+</ul>
+System.Windows.ResourceDictionary <ul><li style="list-style-type: none">set_Source </li>
+<li style="list-style-type: none">Arbitrary XAML load </li>
+<li style="list-style-type: none">Required to be able to work with setters of types derived from IDictionary </li>
+</ul>
+System.Windows.Data.ObjectDataProvider <ul><li style="list-style-type: none">set_(MethodName | ObjectInstance | ObjectType) </li>
+<li style="list-style-type: none">Arbitrary Method Invocation &nbsp;</li>
+</ul>
+<br/>
+<br/>
+</body></html>
