@@ -11,4 +11,23 @@ Keylogger The attacker can execute a keylogging-script that steals everything th
 <br/>
 Phishing The attacker can insert a fake login. Image that you visit a site, and from that site you are able to login using your facebook or google-account. The attacker could spoof that so that when you enter your credentials, they are then sent to the attacker.<br/>
 <br/>
-Browser exploits The script can redirect to a another page that issues an attack against the browser, possibly leading to total takeover of the machine.</body></html>
+Browser exploits The script can redirect to a another page that issues an attack against the browser, possibly leading to total takeover of the machine.<br/>
+<br/>
+An attacker often has access to the document retrieved since the malicious scripts are executed in a context that appears to have originated from the trusted site. With the appropriate insertions, a script could be used to read fields in a form provided by the trusted server and send this data back to the attacker.<br/>
+<br/>
+An attacker may be able to embed script code that has additional interactions with the legitimate web server without alerting the victim. For example, the attacker could develop an exploit that posted data to a different page on the legitimate web server.<br/>
+<br/>
+An attacker may be able to poison the sites persistent cookies, thus modifying the cookie content and causing malicious code to be executed each time the user visits the trusted site. The malicious code is stored as a field variable within the cookie, and executed each time the site dynamically generates page content without the correct processing.<br/>
+<br/>
+An attacker may be able to cause a “hidden window” to start on the client machine and us this to key-log all browser interaction of the victim. Should the victim later visit sites requiring authentication, the attacker could harvest this information.<br/>
+<br/>
+CSS type attacks can occur over SSL-encrypted connections. The victim, accessing a trusted host over HTTPS, may still execute an attackers code unintentionally. If the attacker references document components on a remote host, the victims client browser may generate a warning message about the insecure connection. However, the attacker can circumvent this warning by simply referencing content on a SSL-capable web server.<br/>
+<br/>
+An attacker may construct the malicious code to reference internal resources. Thus, an attacker may gain unauthorised access to an Intranet web server. Only one page on one web server in a domain is required to compromise the entire domain.<br/>
+<br/>
+An attacker may be able to bypass policies that prevent the victim browser from executing scripts. For example, Internet Explorer security “zones” may prevent the execution of scripts from untrusted Internet hosts. An attacker may embed their code within the content of a trusted internal host.<br/>
+<br/>
+An attacker may use a social engineering aspect to the attack. Consider an application that requires clients to complete a form to set up their account. An attacker may be able to insert malicious code into their application data. A quick phone call to the corporate help-desk asking for advice on their account may cause the execution of the malicious code on the help-desk system.<br/>
+<br/>
+Even if the victims’ web browser does not support scripting, an attacker may still be able to alter the content of the page – affecting its appearance, behaviour or normal operation.<br/>
+</body></html>

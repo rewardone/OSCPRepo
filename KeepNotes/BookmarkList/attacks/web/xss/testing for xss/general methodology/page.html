@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Methodology</title>
+</head><body><span style="font-size: 10pt"><ul><li><span style="font-family: Arial">For each visible input field (these may be located in an HTML form, or represented in the URL as “variable=“), try the most obvious scripting formats: </span></li>
+<span style="font-family: Courier New"><li style="list-style-type: none">&lt;script&gt;alert('CSS Vulnerable')&lt;/script&gt; </li>
+<li style="list-style-type: none">&lt;img csstest=javascript:alert('CSS Vulnerable')&gt; </li>
+</span><li style="list-style-type: none"><span style="font-family: Courier New">&amp;{alert('CSS Vulnerable')};</span><span style="font-family: Arial"> </span></li>
+<li><span style="font-family: Arial">In any case, should an alert message popup with the text “CSS Vulnerable”, the application component is vulnerable - specifically the input field just checked.</span></li>
+<li><span style="font-family: Arial">If, either of the above scripting checks cause the HTML page to display incorrectly, the application component may still be vulnerable.</span></li>
+<li><span style="font-family: Arial">For each visible variable, submit/substitute the following string: </span></li>
+<li style="list-style-type: none"><span style="font-family: Courier New"><b>'';!--"&lt;CSS_Check&gt;=&amp;{()}</b> </span><span style="font-family: Arial">(Note that the string begins with two single-quotes) </span></li>
+<li style="list-style-type: none"><span style="font-family: Arial">On the resultant page, search for the string “&lt;CSS_Check&gt;“. If you discover “&lt;CS_Check&gt;“, it is quite probable that the application component is vulnerable. However, if the word CSS_Check is no longer enclosed in something similar to %ltCSS_Check%gt, then it may not be vulnerable. If input is displayed literally at ANY point in the document, it can be used to divert the flow of execution to an attacker-supplied payload.</span></li>
+<li><span style="font-family: Arial">Having located the word CSS_Check, verify what (if any) other characters have be altered or filtered from the original string “</span><b><span style="font-family: Courier New">'';!--"&lt;CSS_Check&gt;= &amp;{()}</span></b><span style="font-family: Arial">”. Depending upon the filtered characters, the application component may still be vulnerable.</span></li>
+<li><span style="font-family: Arial">Looking closely at the returned HTML code, identify the specific string an attacker would need to break out of the current HTML tag or code sequence. If these characters exist, unfiltered, in responses to the test string of part 3 (above) – then there is a high probability that the application component is vulnerable.</span></li>
+<li><span style="font-family: Arial">Moving on from the obvious fields, repeat the process for all the hidden fields not normally editable at the client end. The best method of doing this is through the use of a free local host proxy server such as Achilles by DigiZen Security group and WebProxy by @stake. The proxy servers allow the editing of HTTP requests as they leave the client application, before being finally sent to the server application.</span></li>
+<li><span style="font-family: Arial">In many cases, data will be submitted via the HTTP GET request. Throughout the investigation, take note of potentially vulnerable application components that require the HTTP POST command to submit data.</span></li>
+</ul>
+<br/>
+<span style="font-family: Arial">It is a simple process of turning a POST into a GET submission. If the application component fails to respond to the GET the same way as it did for the POST submission, it is probably not vulnerable to a URL based inline scripting attack.</span><br/>
+</span></body></html>

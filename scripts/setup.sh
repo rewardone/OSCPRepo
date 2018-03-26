@@ -35,8 +35,8 @@ cp -r /root/Documents/OSCPRepo/scripts /root/scripts
 cp -r /root/Documents/OSCPRepo/lists /root/lists
 
 echo "Downloading additional lists: SecLists fuzzdb naughtystrings"
-git clone https://github.com/danielmiessler/SecLists /lists/secLists
-git clone https://github.com/fuzzdb-project/fuzzdb /lists/fuzzdb
+git clone https://github.com/danielmiessler/SecLists.git /lists/secLists
+git clone https://github.com/fuzzdb-project/fuzzdb.git /lists/fuzzdb
 git clone https://github.com/minimaxir/big-list-of-naughty-strings.git /lists/naughty
 git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git /lists/payloadsAllTheThings
 git clone https://github.com/berzerk0/Probable-Wordlists.git /lists/probableWordlists

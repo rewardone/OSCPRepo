@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Cookie catcher scripts</string>
+  <key>nodeid</key><string>e4a10ea4-3207-4d02-ad56-4a77d239afbd</string>
+  <key>modified_time</key><integer>1522082960</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522076227</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

