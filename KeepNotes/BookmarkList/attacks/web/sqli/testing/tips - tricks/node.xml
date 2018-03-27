@@ -6,6 +6,7 @@
   <key>title</key><string>Tips / Tricks</string>
   <key>nodeid</key><string>88f822c9-6b14-4b05-a38c-571ace8c3c79</string>
   <key>modified_time</key><integer>1519315383</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516980886</integer>

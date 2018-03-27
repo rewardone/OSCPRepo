@@ -169,4 +169,19 @@ Special care should be taken when using Output filtering. If the application out
 </b><b>X-XSS-Protection</b><br/>
 How should you protect your users?<br/>
 Leave filters enabled now that issue has been fixed.<br/>
-• X-XSS-Protection: 1; mode=block</body></html>
+X-XSS-Protection: 1; mode=block<br/>
+<br/>
+<b>Cookie isolatedScript=true and Header Isolated-Script: true</b><br/>
+http://sirdarckcat.blogspot.com/2017/01/fighting-xss-with-isolated-scripts.html<br/>
+Promising research making 'secure' content available only to the user and not to third-party scripts<br/>
+<br/>
+<br/>
+<b>For Internet Explorer,</b>&nbsp;use IE-8, and <b>enable the XSS Filter</b>&nbsp;<br/>
+<b>If you can use Firefox, use Firefox+NoScript</b><br/>
+If you need an IDS for web-threats {xss/sqli/etc}:<br/>
+don't use mod_security &nbsp;until filters are better<br/>
+<b>use PHP-IDS</b><br/>
+<b>For sanitizing HTML, use HTMLPurifier/Antisamy, or use templating systems</b>!<br/>
+If you have build/maintain an IDS/WAF, set up a demo site where the filters can be tested and bypasses submitted, please...<br/>
+Don't trust your IDS, it can and will be bypassed!<br/>
+</body></html>

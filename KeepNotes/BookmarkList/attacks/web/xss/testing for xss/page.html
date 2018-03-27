@@ -3,7 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Testing for XSS</title>
-</head><body><b>General: </b><br/>
+</head><body><b>General: <br/>
+</b>Note that eventually you have to be context aware of what element user input is being injected into and how to craft around it. Attacks built for parameters for example will not work inside of html attributes. <b><br/>
+</b><b><br/>
+</b><br/>
 Step 1: Blast <br/>
 To find XSS flaws we need to know where to look for it and how we can detect it. Where to look for it is as simple as complicated: all we need is to probe every input the application has.<br/>
 <br/>
