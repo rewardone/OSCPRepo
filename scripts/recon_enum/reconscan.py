@@ -9,6 +9,15 @@
 ## [Details]: 
 ## This script is intended to be executed remotely against a list of IPs to enumerate discovered services such 
 ## as smb, smtp, snmp, ftp and other. 
+##
+## This script really likes when you put a targets.txt file containing targets (one per line) at 
+## /root/scripts/recon_enum/results/exam/targets.txt 
+##-------------------------------------------------------------------------------------------------------------
+## [Run]:
+## Execute setup.sh in the scripts folder
+## /root/scripts/recon_enum/./reconscan.py
+## or 
+## python /root/scripts/recon_enum/reconscan.py
 ##-------------------------------------------------------------------------------------------------------------
 ## [Warning]:
 ## This script comes as-is with no promise of functionality or accuracy.  I strictly wrote it for personal use
@@ -24,18 +33,17 @@
 ## [TODO]
 ##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
-## Delete files/folders before scanning to ensure a fresh start? Implement a backup feature like onetwopunch
 ## Fix SNMPrecon onesixtyone
 ## Fix DIRB scan in dirbustEVERYTHING
-## SMBrecon: nbtscan (e4l now implemented)
 ## Expand DNSRecon
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
 ## Expand dirTrav:
-##     Extend web: Data extraction from files
-##     Extend script: Better filtration of files would be nice. A lot of false positives are downloaded even though file retrieval was not successful.
-##         Potential way forward: grab most common filesize and put it in a separate dir, at the least it separates it from the juicy stuff
-##     Extend script: xfil output directory would be nice to user-specify
+##	   BUG: parseURL port assumption is incorrect, generalize parser for different ports
+##     Extend web: Data extraction from files, option for data extraction only when given a vulnerable URL
 ##     INFO: File retrieve only uses first vulnerable URL...try more? ability to specify?
+## Expand http:
+##		Whateb on every status 200 page, parse, and present feedback
+## Option to run reconscan with an IP range to pass to aliverecon 
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...
@@ -56,6 +64,7 @@ from multiprocessing import Process, Queue
 import os
 import time 
 import errno
+import shutil
 
 def multProc(targetin, scanip, port):
     jobs = []
@@ -213,6 +222,9 @@ def smbEnum(ip_address, port):
        SCRIPT = "./smbrecon.py %s %s" % (ip_address, port)
        subprocess.call(SCRIPT, shell=True)
     if port.strip() == "445":
+       SCRIPT = "./smbrecon.py %s %s" % (ip_address, port)
+       subprocess.call(SCRIPT, shell=True)
+    if port.strip() == "137":
        SCRIPT = "./smbrecon.py %s %s" % (ip_address, port)
        subprocess.call(SCRIPT, shell=True)
     return
@@ -432,10 +444,28 @@ def mkdir_p(path):
          raise
 
 #Create the directories that are currently hardcoded in the script
+#dotdotpwn directory for reports created automatically by dotdotpwn just in case user wants them
 def createDirectories():
    scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
+   mkdir_p("/usr/share/dotdotpwn/Reports")
+
+def backupExisting():
+   print "INFO: Previous folders found, zipping backup"
+   #tmp move targets.txt, zip files, backup, remove dirs, restore targets.txt
+   moved = False
+   if os.path.isfile("/root/scripts/recon_enum/results/exam/targets.txt"):
+      os.rename("/root/scripts/recon_enum/results/exam/targets.txt", "/root/scripts/recon_enum/results/targets.txt")
+      moved = True
+   backupName = "backup_%s.tar.gz" % (time.strftime("%H:%M"))
+   BACKUP = "tar czf /root/Downloads/%s /root/scripts/recon_enum/results/exam/*" % (backupName)
+   backupResults = subprocess.check_output(BACKUP, shell=True)
+   #ugly, but rm everything in exam and recreate empty dir to put targets.txt back
+   shutil.rmtree("/root/scripts/recon_enum/results/exam")
+   mkdir_p("/root/scripts/recon_enum/results/exam")
+   if moved == True:
+      os.rename("/root/scripts/recon_enum/results/targets.txt", "/root/scripts/recon_enum/results/exam/targets.txt")
 
 #Symlink needed directories into /usr/share/wordlists
 #This functionality for a distro like Kali
@@ -454,27 +484,41 @@ def mksymlink():
             raise
 
 # grab the discover scan results and start scanning up hosts
-print "############################################################"
-print "####                      RECON SCAN                    ####"
-print "####            A multi-process service scanner         ####"
-print "####        finger, http, mssql, mysql, nfs, nmap,      ####"
-print "####        rdp, smb, smtp, snmp, ssh, telnet, tftp     ####"
-print "############################################################"
-print "############ Don't forget to start your TCPDUMP ############"
-print "############################################################"
-print "## This tool relies on many others. Please ensure you   ####"
-print "## have the following in your PATH:                     ####"
-print "## nmap, unicornscan, hydra, gobuster, whatweb, nikto   ####"
-print "############################################################"
+print "##############################################################"
+print "####                      RECON SCAN                      ####"
+print "####            A multi-process service scanner           ####"
+print "####        finger, http, mssql, mysql, nfs, nmap,        ####"
+print "####        rdp, smb, smtp, snmp, ssh, telnet, tftp       ####"
+print "##############################################################"
+print "############# Don't forget to start your TCPDUMP #############"
+print "##############################################################"
+print "##### This tool relies on many others. Please ensure you #####"
+print "##### run setup.sh first and have all tools in your PATH #####"
+print "##############################################################"
 
 
 #The script creates the directories that the results will be placed in
 #User needs to place the targets in the results/exam/targets.txt file
 if __name__=='__main__':
-   f = open('results/exam/targets.txt', 'r') # CHANGE THIS!! grab the alive hosts from the discovery scan for enum
-					     # Also check Nmap user-agent string, should be set to Firefox or other
-   createDirectories()
+   backupExisting()
    mksymlink()
+   createDirectories()
+
+   # CHANGE THIS!! grab the alive hosts from the discovery scan for enum
+   # Also check Nmap user-agent string, should be set to Firefox or other
+   if os.path.isfile('/root/scripts/recon_enum/results/exam/targets.txt'):
+       if os.path.getsize('/root/scripts/recon_enum/results/exam/targets.txt') > 2: #0 is empty, 2 is file with \n
+           try:
+               f = open('/root/scripts/recon_enum/results/exam/targets.txt', 'r')
+           except:
+               raise
+       else:
+           print "ERROR: Is targets.txt blank?! Please ensure targets.txt is populated. Run aliverecon.py or something"
+           sys.exit(0)
+   else:
+        print "ERROR: No targets.txt detected! Please ensure targets.txt is populated. Run aliverecon.py or something"
+        sys.exit(0)
+
    for scanip in f:
        jobs = []
 #      Uncomment to maintain original nmap functionality. Comment out unicorn scan line.

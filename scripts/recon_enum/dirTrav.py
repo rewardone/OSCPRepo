@@ -2,6 +2,7 @@
 
 #ONLY WEB HAS BEEN IMPLEMENTED
 #If /usr/share/dotdotpwn/Reports exists, dotdotpwn will automatically put raw results in there for you
+#Reconscan.py creates the Reports directory for you
 
 import sys
 import os
@@ -273,8 +274,12 @@ if __name__=='__main__':
     inputFileName = "%s" % args.file
     if (args.os == "windows"):
         if ("linux_all.txt" in args.xfil_files):
-            print "Error: Will not retrieve linux files from Windows. Set os to linux or pass a file with windows files to -x"
-            raise       
+            print "Error: Will not retrieve linux files from Windows. Set os to Linux or pass a file with Windows files to -x"
+            raise
+	if (args.os == "linux"):
+		if ("windows_all.txt" in args.xfil_files):
+			print "Error: Will not retrieve windows files from Linux. Set os to Windows or pass a file with Linux files to -x"
+			raise
     
     if (args.scan):
         try:

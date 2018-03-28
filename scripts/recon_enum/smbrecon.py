@@ -47,7 +47,7 @@ port = sys.argv[2].strip()
 #smb2-capabilities: attempt to list supported cabilities in a SMBv2 server for each enabled dialect.
 #smb2-time: attempt to obtain the current system date and start date of a SMB2 server
 
-print "INFO: Performing nmap SMB script scan for " + ip_address + ":" + port
+print "INFO: Performing nmap SMB script scan for %s:%s" % (ip_address, port)
 SMBSCAN = "nmap -n -sV -Pn -vv -p %s --script=smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-os-discovery,smb-protocols,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms17-010,smb-double-pulsar-backdoor,smb2-vuln-uptime,smb-ls,smb-security-mode,smb-vuln-ms10-061,smb2-security-mode,vulners -oN '/root/scripts/recon_enum/results/exam/smb/%s_%s_smb.nmap' %s" % (port, ip_address, port, ip_address)
 results = subprocess.check_output(SMBSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/smb/" + ip_address + "_" + port + "_smbrecon.txt"
@@ -55,9 +55,30 @@ f = open(outfile, "w")
 f.write(results)
 f.close
 
+print "INFO: Performing samrdump scan for %s:%s" % (ip_address, port)
 NBTSCAN = "samrdump.py %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_samrdump" % (ip_address, ip_address, port)
 nbtresults = subprocess.check_output(NBTSCAN, shell=True)
 
 #-va : run verbosely and try all commands
+print "INFO: Performing enum4linux scan for %s:%s" % (ip_address, port)
 ENUM4LINUXSCAN = "enum4linux -va %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address, ip_address, port)
 enum4linuxresults = subprocess.check_output(ENUM4LINUXSCAN, shell=True)
+
+# usage: nbtscan-unixwiz [options] target [targets...]
+# Targets are lists of IP addresses, DNS names, or address
+# ranges. Ranges can be in /nbits notation ("192.168.12.0/24")
+# or with a range in the last octet ("192.168.12.64-97")
+# -V        show Version information
+# -f        show Full NBT resource record responses (recommended)
+# -H        generate HTTP headers
+# -v        turn on more Verbose debugging
+# -n        No looking up inverse names of IP addresses responding
+# -p <n>    bind to UDP Port <n> (default=0)
+# -m        include MAC address in response (implied by '-f')
+# -T <n>    Timeout the no-responses in <n> seconds (default=2 secs)
+# -w <n>    Wait <n> msecs after each write (default=10 ms)
+# -t <n>    Try each address <n> tries (default=1)
+# -P        generate results in perl hashref format
+print "INFO: Performing nbtscan-unixwiz scan for %s:%s" % (ip_address, port)
+NBTSCAN_UNIXWIZ = "nbtscan-unixwiz -f %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_nbtscan-unixwiz" % (ip_address, ip_address, port)
+unixwizresults = subprocess.check_output(NBTSCAN_UNIXWIZ, shell=True)

@@ -3,7 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Python</title>
-</head><body>python -c 'import pty;pty.spawn("/bin/sh")'<br/>
+</head><body>python -c 'import pty;pty.spawn("/bin/bash");'<br/>
+CTRL-Z<br/>
+stty raw -echo<br/>
+fg<br/>
+ENTER<br/>
+<br/>
 <br/>
 python: exit_code = os.system('/bin/sh') output = os.popen('/bin/sh').read()<br/>
 <br/>
