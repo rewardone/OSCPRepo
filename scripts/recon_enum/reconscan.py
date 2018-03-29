@@ -33,7 +33,9 @@
 ## [TODO]
 ##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
-## Fix SNMPrecon onesixtyone
+## Fix SNMPrecon:
+##     Bug: snmp-check version, -t for 1.8, but 1.9 does not need -t
+##     Extend: Additional snmpwalk strings?
 ## Fix DIRB scan in dirbustEVERYTHING
 ## Expand DNSRecon
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
@@ -491,6 +493,7 @@ print "####        finger, http, mssql, mysql, nfs, nmap,        ####"
 print "####        rdp, smb, smtp, snmp, ssh, telnet, tftp       ####"
 print "##############################################################"
 print "############# Don't forget to start your TCPDUMP #############"
+print "############ Don't forget to start your RESPONDER ############"
 print "##############################################################"
 print "##### This tool relies on many others. Please ensure you #####"
 print "##### run setup.sh first and have all tools in your PATH #####"
