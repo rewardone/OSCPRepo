@@ -9,8 +9,6 @@ if len(sys.argv) != 2:
 snmpdetect = 0
 ip_address = sys.argv[1]
 
-#TODO: PUT IN VERSION CHECK FOR SNMPCHECK!
-
 # -c <communityfile> file with community names to try
 # -i <inputfile> file with target hosts
 # -o <outputfile> output log
@@ -96,11 +94,15 @@ def nmap():
 # -h --help        : show help menu;\n\n"
 def snmp_check(communities):
     print "INFO: Performing nmap SNMP script scan for %s:161 and found communit(y|ies)" % (ip_address)
-    if version == "v1.8":
+    #version check is in place just in case. 1.8 requires -t for target while 1.9 does not.
+    #1.9 should be installed for default installations
+    versionInfo = "snmp-check -h"
+    version = subprocess.check_output(versionInfo, shell=True)
+    if "v1.8" in version:
         for community in communities:
             SNMPCHECK = "snmp-check -c %s -t %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
             results = subprocess.check_output(SNMPSCAN, shell=True)
-    if version == "v1.9":
+    if "v1.9" in version:
         for community in communities:
             SNMPCHECK = "snmp-check -c %s %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
             results = subprocess.check_output(SNMPSCAN, shell=True)

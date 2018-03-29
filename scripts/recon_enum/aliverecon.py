@@ -6,7 +6,7 @@ import os
 
 if len(sys.argv) != 2:
     print "Usage: alive_targets <ip address/range>"
-	print "Range for last octect like 192.168.1.1-255"
+    print "Range for last octect like 192.168.1.1-255"
     sys.exit(0)
 
 target_hosts = sys.argv[1]

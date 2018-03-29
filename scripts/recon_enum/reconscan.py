@@ -34,13 +34,11 @@
 ##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
 ## Fix SNMPrecon:
-##     Bug: snmp-check version, -t for 1.8, but 1.9 does not need -t
 ##     Extend: Additional snmpwalk strings?
 ## Fix DIRB scan in dirbustEVERYTHING
 ## Expand DNSRecon
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
 ## Expand dirTrav:
-##	   BUG: parseURL port assumption is incorrect, generalize parser for different ports
 ##     Extend web: Data extraction from files, option for data extraction only when given a vulnerable URL
 ##     INFO: File retrieve only uses first vulnerable URL...try more? ability to specify?
 ## Expand http:
