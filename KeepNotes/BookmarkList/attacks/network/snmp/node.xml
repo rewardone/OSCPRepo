@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>SNMP</string>
+  <key>nodeid</key><string>82f7a42d-b843-42e0-a75a-1290e21c029a</string>
+  <key>modified_time</key><integer>1522424303</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522424283</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

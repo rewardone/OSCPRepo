@@ -10,4 +10,7 @@ find / -group root -perm -2000 -print&#09;&#09;&#09;&#09;&#09;&#09;Find all SGID
 find / -perm -4000 -o -perm -2000 -print&#09;&#09;&#09;&#09;&#09;Find all SUID and SGID files owned by anyone:<br/>
 find / -nouser -print&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all files that are not owned by any user:<br/>
 find / -nogroup -print&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all files that are not owned by any group:<br/>
-find / -type l -ls&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all symlinks and what they point to:</body></html>
+find / -type l -ls&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all symlinks and what they point to:<br/>
+find / -perm -o=w&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find things that are world writable<br/>
+find / -nouser&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files that are not owned by anyone<br/>
+find . | xargs -I file lsattr -a file 2&gt;/dev/null | grep ‘^….i’&#09;&#09;Find immutable files...shouldn't be any...suspicious</body></html>

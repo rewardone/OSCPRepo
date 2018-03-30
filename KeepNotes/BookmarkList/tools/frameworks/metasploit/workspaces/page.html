@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Workspaces</title>
+</head><body>#Start the postgresql<br/>
+service postgresql start<br/>
+<br/>
+#Enter the metasploit console<br/>
+msfconsole<br/>
+<br/>
+#Create individual workspaces for lab / exam<br/>
+msf&gt; workspace -a lab_network (public/IT/ dev)<br/>
+msf&gt; workspace -a exam_network<br/>
+<br/>
+#Switch to a particular workspace. All the scans will be saved in this context<br/>
+msf&gt; workspace lab_network<br/>
+<br/>
+#Remove workspace<br/>
+msf&gt; workspace -d lab_network #Scan the ports of a target and save the outputs into the db msf&gt; db_nmap -sVV -p- -A -T4 &lt;IP&gt;<br/>
+<br/>
+#Retrieve the list of available machines from the db<br/>
+msf&gt; hosts<br/>
+<br/>
+#View the open ports/services of a particular machine<br/>
+msf&gt; services -u &lt;TARGET-IP&gt;</body></html>

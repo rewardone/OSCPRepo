@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Converting MSF modules to standalone</string>
+  <key>nodeid</key><string>e961ee33-ec35-416b-ac0a-aa2119187ba8</string>
+  <key>modified_time</key><integer>1522425574</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522425483</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>
