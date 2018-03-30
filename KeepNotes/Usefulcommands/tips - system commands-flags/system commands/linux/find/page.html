@@ -5,4 +5,9 @@
 <title>find</title>
 </head><body>find /path/dir -type f -executable&#09;&#09;&#09;&#09;&#09;&#09;&#09;find all directories user has execute permissions<br/>
 find /path/dir -perm u+x&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;using the perm option (should work with +s)<br/>
-</body></html>
+find / -user root -perm -4000 -print&#09;&#09;&#09;&#09;&#09;&#09;Find all SUID root files:<br/>
+find / -group root -perm -2000 -print&#09;&#09;&#09;&#09;&#09;&#09;Find all SGID root files:<br/>
+find / -perm -4000 -o -perm -2000 -print&#09;&#09;&#09;&#09;&#09;Find all SUID and SGID files owned by anyone:<br/>
+find / -nouser -print&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all files that are not owned by any user:<br/>
+find / -nogroup -print&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all files that are not owned by any group:<br/>
+find / -type l -ls&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all symlinks and what they point to:</body></html>

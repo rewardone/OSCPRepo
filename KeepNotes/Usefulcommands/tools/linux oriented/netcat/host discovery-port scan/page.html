@@ -4,7 +4,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Host discovery/port scan</title>
 </head><body>Host scan:<br/>
+From 21 - 29, nc check .21-.29 on port 443<br/>
 for i in {21..29}; do nc -v -n -z -w 1 192.168.0.$i 443; done <br/>
 <br/>
+alternative, check on 21-25<br/>
+for i in {10..12}; do nc -vv -n -w 1 -z 192.168.1.$i 21-25; done<br/>
+<br/>
 Port scan:<br/>
+connect to ports 21-443 on host 192.168.0.1<br/>
 nc -v -n -z -w 1 192.168.0.1 21-443</body></html>

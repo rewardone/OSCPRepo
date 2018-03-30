@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>fuser</title>
+</head><body>The <a href="https://en.wikipedia.org/wiki/Unix">Unix</a>&nbsp;command <b>fuser</b>&nbsp;is used to show which <a href="https://en.wikipedia.org/wiki/Process_(computing)">processes</a>&nbsp;are using a specified <a href="https://en.wikipedia.org/wiki/File_(computing)">file</a>, <a href="https://en.wikipedia.org/wiki/File_system">file system</a>, or <a href="https://en.wikipedia.org/wiki/Unix_domain_socket">unix socket</a>. For example, to check process IDs and users accessing a USB drive:<br/>
+<br/>
+fuser shows process opening the file you specified<br/>
+fuser -uv &lt;filename&gt; <br/>
+<br/>
+To show processes accessing a particular path, use -m<br/>
+fuser -uvm /home3<br/>
+<br/>
+fuser is more useful in identifying process id opening a <b>particular file</b>.<br/>
+<br/>
+The command can also be used to check what processes are using a network port:<br/>
+fuser -v -n tcp 80<br/>
+<br/>
+In the default display mode, each file name is followed by a letter denoting the type of access:<br/>
+&nbsp;c  current directory. <br/>
+&nbsp;e  executable being run. <br/>
+&nbsp;f  open file. <br/>
+&nbsp;F  open file for writing. <br/>
+&nbsp;r  root directory. <br/>
+&nbsp;m  mmap'ed file or shared library <br/>
+<br/>
+OPTIONS<br/>
+&nbsp;-k  kills all process accessing a file. For example, fuser -k /path/to/your/filename kills all processes accessing this directory without confirmation. Use -i for confirmation <br/>
+&nbsp;-i  interactive mode. Prompt before killing process <br/>
+<b>&nbsp;-v  verbose.</b>&nbsp;<br/>
+&nbsp;-u  append username <br/>
+&nbsp;-a  display all files <br/>
+&nbsp;-m  name specifies a file on a mounted file system or a block device that is mounted. All processes accessing files on that file system are listed. If a directory file is specified, it is automatically changed to name/. to use any file system that might be mounted on that directory. &nbsp;<br/>
+<br/>
+Also, note that -k sends a SIGKILL to all process. Use the -signal to send a different signal. For a list of signals supported by the fuser run 'fuser -l'<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

