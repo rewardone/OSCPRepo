@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Pass the Hash</string>
   <key>nodeid</key><string>3273cfad-8fd8-49b0-ba5e-e4fd5f45ba48</string>
   <key>modified_time</key><integer>1520269708</integer>

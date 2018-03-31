@@ -16,4 +16,17 @@ Security Settings<br/>
 <b>Security Settings &gt; Local Policies &gt; Security Options: Network security LAN Manager authentication level</b>&nbsp;<br/>
 &nbsp;&#09;Default: Windows 2000 and windows XP: send LM &amp; NTLM responses<br/>
 &nbsp;&#09;Windows Server 2003: Send NTLM response only<br/>
-&nbsp;&#09;Windows Vista, Windows Server 2008, Windows 7, and Windows Server 2008 R2: Send NTLMv2 response only</body></html>
+&nbsp;&#09;Windows Vista, Windows Server 2008, Windows 7, and Windows Server 2008 R2: Send NTLMv2 response only<br/>
+<br/>
+Password Settings<br/>
+<b>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest “UseLogonCredential”(DWORD)</b><ul><li style="list-style-type: none">in order to prevent the “clear-text” password from being placed in LSASS, the following registry key needs to be set to “0” (Digest Disabled)</li>
+<li style="list-style-type: none">&nbsp;&#09;Attacker can set to 1 in order to enable Digest password support with forces "clear-text"</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">This value does not exist on 8.1/2012R2 and newer, so it would have to be created</li>
+</ul>
+</li>
+<li style="list-style-type: none"></li>
+</ul>
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa<ul><li style="list-style-type: none">Set the value of the registry key to: “RunAsPPL”=dword:00000001.</li>
+<li style="list-style-type: none">&nbsp;This key will enable LSA protection. It preents non-protected processes from interacting with LSASS </li>
+</ul>
+</body></html>

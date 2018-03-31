@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Golden Ticket</string>
+  <key>nodeid</key><string>265dde8a-92f2-43e9-90bb-021b89b0be04</string>
+  <key>modified_time</key><integer>1522530099</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522530083</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

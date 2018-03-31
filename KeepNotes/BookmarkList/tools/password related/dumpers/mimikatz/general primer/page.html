@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Mimikatz is one of the best tools to gather credential data from Windows systems. In fact I consider Mimikatz to be the “Swiss army knife” (or multi-tool) of Windows credentials – that one tool that can do everything.<br/>
+<br/>
+There are two optional components that provide additional features, <i>mimidrv</i>&nbsp;(driver to interact with the Windows kernal) and <i>mimilib</i>&nbsp;(AppLocker bypass, Auth package/SSP, password filter, and sekurlsa for WinDBG). Mimikatz requires administrator or SYSTEM and often debug rights in order to perform certain actions and interact with the LSASS process (depending on the action requested). The Mimikatz.exe contains, or at least should contain, all capability noted there.<br/>
+<br/>
+Mimikatz capability can be leveraged by <a href="https://github.com/gentilkiwi/mimikatz">compiling and running your own version</a>, running the <a href="https://github.com/gentilkiwi/mimikatz/releases">Mimikatz executable</a>, leveraging the <a href="https://www.offensive-security.com/metasploit-unleashed/mimikatz/">MetaSploit script</a>, the <a href="https://github.com/PowerShellMafia/PowerSploit">official Invoke-Mimikatz PowerShell version</a>, or one of the dozen of Mimikatz PowerShell variants (I happen to be partial to <a href="https://raw.githubusercontent.com/PowerShellEmpire/Empire/master/data/module_source/credentials/Invoke-Mimikatz.ps1">PowerShell Empire</a>, because Empire is awesome!).<br/>
+<br/>
+Run remotely with PowerShell Remoting and DCSync<br/>
+<br/>
+Majority of functionality is available in PowerSploit/Empire. "Invoke-Mimikatz" can be downloaded and executed from memory without anything touching disk.<br/>
+<br/>
+Primary usage of mimikatz<br/>
+<ul><li>Use mimikatz to dump credentials out of LSASS:  <i>Invoke-Mimikatz -DumpCreds</i></li>
+<li>Use mimikatz to export all private certificates (even if they are marked non-exportable): <i>Invoke-Mimikatz –</i>DumpCerts</li>
+<li>Elevate privilege to have debug rights on remote computer: <i>Invoke-Mimikatz -Command “privilege::debug exit” -ComputerName “computer1”</i></li>
+</ul>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pulling ntds.dit Locally Using NTDSUTIL IFM Creation &amp; VSS Shadow Copy</title>
+</head><body><b>Pulling the ntds.dit locally on the DC using NTDSUTIL’s IFM Creation (VSS shadow copy)</b>&nbsp;<br/>
+NTDSUtil is the command utility for natively working with the AD DB (ntds.dit) &amp; enables IFM set creation for DCPromo. IFM is used with DCPromo to “Install From Media” so the server being promoted doesn’t need to copy domain data over the network from another DC.<br/>
+&nbsp;<br/>
+<i>ntdsutil “ac i ntds” “ifm” “create full c:\temp” q q</i><br/>
+&nbsp;<br/>
+The IFM set is a copy of the NTDS.dit file created in the screenshot below in c:\temp.<br/>
+When creating an IFM, a VSS snapshot is taken, mounted, and the ntds.dit file and associated data is copied out of it into the target folder.<br/>
+&nbsp;<br/>
+This file may be staged on a share for promoting new DCs or it may be found on a new server that has not been promoted yet. This server may not be properly secured and the IFM data, including the NTDS.dit file copied and the credential data extracted.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Can also be executed remotely with powershell</body></html>

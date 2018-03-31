@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DIT Snapshot Viewer</title>
+</head><body>https://github.com/yosqueoy/ditsnap <br/>
+<br/>
+DIT Snapshot Viewer <br/>
+DIT Snapshot Viewer is an inspection tool for Active Directory database, ntds.dit. This tool connects to ESE (Extensible Storage Engine) and reads tables/records including hidden objects by <a href="https://msdn.microsoft.com/en-us/library/gg269259%28v=exchg.10%29.aspx">low level C API</a>.<br/>
+&nbsp;<br/>
+The tool can extract ntds.dit file without stopping lsass.exe. When Active Directory Service is running, lsass.exe locks the file and does not allow to access to it. The snapshot wizard copies ntds.dit using VSS (Volume Shadow Copy Service) even if the file is exclusively locked. As copying ntds.dit may cause data inconsistency in ESE DB, the wizard automatically runs <b>esentutil /repair</b>&nbsp;command to fix the inconsistency.<br/>
+</body></html>

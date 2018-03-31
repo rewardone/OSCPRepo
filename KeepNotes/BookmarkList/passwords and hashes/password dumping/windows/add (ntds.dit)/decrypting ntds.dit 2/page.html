@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Decrypting NTDS.DIT</title>
+</head><body>In order to decrypt a hash stored in NTDS.DIT the following steps are necessary:<br/>
+&nbsp;<br/>
+1. decrypt the PEK (Password Encryption Key) with bootkey (RC4 – layer 1)<br/>
+2. hash decryption first round (with PEK and RC4 – layer 2)<br/>
+3. hash decryption second round (DES – layer 3)<br/>
+<br/>
+<br/>
+<b>Password Encryption Key</b><br/>
+The PEK or Password Encryption Key is used to encrypt data stored in NTDS.DIT. This key is the same across the whole domain, which means that it is the same on all the domain controllers. The PEK itself is also stored in the NTDS.DIT in an encrypted form. In order to decrypt it one will need the registry (the SYSTEM hive) from the same domain controller where NDTS.DIT file was obtained. This is because the PEK is encrypted with the BOOTKEY which is different on all domain controllers (and in fact on all computers in the domain).<br/>
+&nbsp;<br/>
+In order to decrypt the PEK one will have to obtain the ATTk590689 field from the NTDS.DIT. As it was mentioned all the objects stored in the database will have this field. In order to determine which one is needed one has to check whether the value is null or not.<br/>
+&nbsp;<br/>
+The length of the value is 76 bytes (it is stored as binary data). The structure of the value is the following:<br/>
+header 8 bytes key material for RC4 16 bytes encrypted PEK 52 bytes<br/>
+&nbsp;<br/>
+After decryption the value of the decrypted PEK can also be divided into 2 parts. One will have to skip the first 36 bytes (so the length of the actual PEK key is 16 bytes).<br/>
+&nbsp;<br/>
+Here is the python algorithm that can be used to decrypt the PEK key after one has obtained the bootkey (bootkey can be collected from the SYSTEM registry hive and the method is well documented – http://moyix.blogspot.com/2008/02/syskey-and-sam.html):<br/>
+<i>md5=MD5.new()<br/>
+md5.update(bootkey)<br/>
+for i in range(1000):<br/>
+md5.update(enc_pek[0:16])<br/>
+rc4_key=md5.digest();<br/>
+rc4 = ARC4.new(rc4_key)<br/>
+pek=rc4.encrypt(enc_pek[16:])<br/>
+</i><i>return pek[36:]</i><br/>
+&nbsp;<br/>
+As one can see there is an MD5 hashing part of the decryption with 1000 rounds. This is for making the bruteforce attack against the key more time consuming.<br/>
+<br/>
+<br/>
+<b>Password Hash Decryption</b><br/>
+Now that the PEK is decrypted the next task is decrypt the hashes stored in the ATTk589879 (encrypted LM hash) and ATTk589914 (encrypted NT hash) attributes of user objects.<br/>
+&nbsp;<br/>
+The first step is to remove the RC4 encryption layer. During this the PEK key and the first 16 bytes of the encrypted hash is used as key material for the RC4 cypher. Below is the structure of the 40 bytes long encrypted hash value stored in the NTDS.DIT database.<br/>
+header 8 bytes key material for RC4 16 bytes encrypted hash 16 bytes<br/>
+&nbsp;<br/>
+The algorithm to remove the RC4 encryption layer is the following:<br/>
+<i>md5 = MD5.new()</i><br/>
+<i>&nbsp;md5.update(pek)</i><br/>
+<i>&nbsp;md5.update(enc_hash[0:16])</i><br/>
+<i>&nbsp;rc4_key = md5.digest();</i><br/>
+<i>rc4 = ARC4.new(rc4_key)</i><br/>
+<i>&nbsp;denc_hash = rc4.encrypt(enc_hash[16:])</i><br/>
+&nbsp;<br/>
+The final step is to remove the DES encryption layer which is in fact very similar to the so called “standard” SYSKEY encryption used in case of password hashes stored in the registry (details of the algorithm can be found here – http://moyix.blogspot.com/2008/02/syskey-andsam.html).<br/>
+&nbsp;<br/>
+Below is the last part of the algorithm:<br/>
+<i>(des_k1,des_k2) = sid_to_key(rid)</i><br/>
+<i>&nbsp;d1 = DES.new(des_k1, DES.MODE_ECB)</i><br/>
+<i>&nbsp;d2 = DES.new(des_k2, DES.MODE_ECB)</i><br/>
+<i>&nbsp;hash = d1.decrypt(denc_hash[:8]) + d2.decrypt(denc_hash[8:])</i><br/>
+&nbsp;<br/>
+Notice, that it is essential to have the SID of the user in order to determine the RID and to compute the keys used for DES.<br/>
+<br/>
+<br/>
+</body></html>

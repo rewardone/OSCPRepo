@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Locally Using Invoke-Mimikatz (On The DC)</title>
+</head><body><a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-Mimikatz.ps1">Invoke-Mimikatz</a>&nbsp;is a component of <a href="https://github.com/PowerShellMafia/PowerSploit">PowerSploit </a>written by Joe Bialek (<a href="https://twitter.com/JosephBialek">@JosephBialek</a>) which incorporates all the functionality of Mimikatz in a Powershell function. It “leverages Mimikatz 2.0 and Invoke-ReflectivePEInjection to reflectively load Mimikatz completely in memory. This allows you to do things such as dump credentials without ever writing the Mimikatz binary to disk.” Note that the PowerSploit framework is now hosted in the <a href="https://github.com/PowerShellMafia/PowerSploit">“PowerShellMafia” GitHub repository</a>.<br/>
+&nbsp;<br/>
+What gives Invoke-Mimikatz its “magic” is the ability to reflectively load the Mimikatz DLL (embedded in the script) into memory. The Invoke-Mimikatz code can be downloaded from the Internet (or intranet server), and executed from memory without anything touching disk. Furthermore, if Invoke-Mimikatz is run with the appropriate rights and the target computer has PowerShell Remoting enabled, it can pull credentials from other systems, as well as execute the standard Mimikatz commands remotely, without files being dropped on the remote system.<br/>
+&nbsp;<br/>
+Invoke-Mimikatz is not updated when Mimikatz is, though it can be (manually). One can swap out the DLL encoded elements (32bit &amp; 64bit versions) with newer ones.<br/>
+&nbsp;<ul><li>&nbsp;Use mimikatz to dump credentials out of LSASS:  <i>Invoke-Mimikatz -DumpCreds</i></li>
+<li>Use mimikatz to export all private certificates (even if they are marked non-exportable): <i>Invoke-Mimikatz –</i>DumpCerts</li>
+<li>Elevate privilege to have debug rights on remote computer: <i>Invoke-Mimikatz -Command “privilege::debug exit” -ComputerName “computer1”</i></li>
+</ul>
+<br/>
+The Invoke-Mimikatz “Command” parameter enables Invoke-Mimikatz to run custom Mimikatz commands.<br/>
+<i><b>Defenders should expect that any functionality included in Mimikatz is available in Invoke-Mimikatz.</b></i><br/>
+&nbsp;<br/>
+Command:<br/>
+<i>Invoke-Mimikatz -Command ‘”privilege::debug” “LSADump::LSA /inject” exit’</i><br/>
+&nbsp;<br/>
+Dumps credential data in an Active Directory domain when run on a Domain Controller.<br/>
+Requires administrator access with debug or Local SYSTEM rights<br/>
+&nbsp;<br/>
+Note: The account with RID 502 is the KRBTGT account and the account with RID 500 is the default administrator for the domain.<br/>
+</body></html>

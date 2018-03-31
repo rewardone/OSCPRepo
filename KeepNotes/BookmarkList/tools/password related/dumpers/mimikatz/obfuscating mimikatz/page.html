@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Obfuscating Mimikatz</title>
+</head><body>Anyone with Visual Studio can compile their own version. I built my own version of Mimikatz called “kitikatz” by replacing all instances of “mimikatz” with “kitikatz” and the detection rate at VirusTotal was not good (4/54). Windows Defender on my Windows 10 system detected it.  I then replaced “Benjamin Delpy” and “gentilkiwi” with the same words, just replacing the e’s with 3’s and the i’s with 1’s. The detection rate was <a href="https://www.virustotal.com/en/file/84b6cd8ccaa60a89c1375bec5044e6240d8a2db3f19fecd763749fa9a530470b/analysis/1449967355/">still poor (4/54)</a>. Windows Defender on my Windows 10 system did not detect it. So, your mileage will vary regarding detection. While <a href="http://blog.virustotal.com/2012/08/av-comparative-analyses-marketing-and.html">VirusTotal is not the best method to determine AV detection</a>, it is a relatively simple method to get some basic numbers.<br/>
+<br/>
+Casey also has come up with many creative and sneaky ways to execute Mimikatz.<br/>
+&nbsp;<ul><li>&nbsp;Execute Mimikatz Inside of RegSvcs or RegAsm – .NET utilities Proof of Concept</li>
+<li><a href="http://subt0x10.blogspot.com/2015/09/simple-example-of-encoded-mimikatz-upx.html">Mimikatz packed &amp; hidden in an image file </a></li>
+<li>Downloads and Executes Mimikatz In Memory From GitHub (Note: Subtee has discontinued his GitHub repo, so these links no longer work and have been removed)</li>
+</ul>
+</body></html>

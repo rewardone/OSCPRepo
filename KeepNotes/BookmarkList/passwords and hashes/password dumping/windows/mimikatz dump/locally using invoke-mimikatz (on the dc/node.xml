@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Locally Using Invoke-Mimikatz (On The DC)</string>
+  <key>nodeid</key><string>67ae75a0-025e-437b-a5b0-18d86b43aa93</string>
+  <key>modified_time</key><integer>1522534862</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522534829</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

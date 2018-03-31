@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Dumpers</string>
   <key>nodeid</key><string>53358664-7bb9-4d4a-84dd-7a53386e6306</string>
   <key>modified_time</key><integer>1516733373</integer>

