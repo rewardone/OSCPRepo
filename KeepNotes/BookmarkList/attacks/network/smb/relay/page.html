@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>SMB Relay</title>
-</head><body>https://pen-testing.sans.org/blog/2013/04/25/smb-relay-demystified-and-ntlmv2-pwnage-with-python <br/>
+<title>Relay</title>
+</head><body><br/>
 <br/>
 General Primer<br/>
 <br/>
@@ -21,5 +21,7 @@ smbrelayx.py supports NTLMv2<br/>
 smbrelayx needs an executable to run on the target, so compile up your favorite with msfvenom or other and then launch smbrealyx<br/>
 python smbrelayx.py -h &lt;target&gt; -e &lt;exe_to_run&gt;<br/>
 <br/>
+Responder.py is basically 'the' tool to run in the background<br/>
+Responder an LLMNR, NBT-NS and MDNS poisoner. It will answer to <i>specific</i>&nbsp;NBT-NS (NetBIOS Name Service) queries based on their name suffix (see: <a href="http://support.microsoft.com/kb/163409">http://support.microsoft.com/kb/163409</a>). By default, the tool will only answer to File Server Service request, which is for SMB.<br/>
 <br/>
 </body></html>

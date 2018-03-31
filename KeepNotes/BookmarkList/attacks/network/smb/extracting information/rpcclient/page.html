@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>rpcclient</title>
+</head><body>Authenticate<br/>
+rpcclient -U "" &lt;WinIPaddr&gt;<br/>
+#or<br/>
+rpcclient —U &lt;username&gt; &lt;WinIPaddr&gt;<br/>
+<br/>
+srvinfo&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Windows version<br/>
+enumdomusers&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;usernames, RIDs in hex<br/>
+enumalsgroups domain<br/>
+enumalsgroups builtin<br/>
+lookupnames administrators<br/>
+lookupnames administrator<br/>
+queryuser 500<br/>
+<br/>
+lsaenumsid<br/>
+lookupsids<br/>
+<br/>
+queryaliasmem<br/>
+lookupsids<br/>
+</body></html>

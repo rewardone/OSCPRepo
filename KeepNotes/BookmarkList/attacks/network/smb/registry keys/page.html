@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Registry Keys</title>
+</head><body>NULL SMB session<br/>
+HKLM\System\CurrentControlSet\Control\Lsa\RestrictAnonymous, <br/>
+HKLM\System\CurrentControlSet\Control\Lsa\RestrictAnonymousSAM, and <br/>
+HKLM\System\CurrentControlSet\Control\Lsa\EveryoneIncludesAnonymous registry keys).<br/>
+<br/>
+Key: SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System<br/>
+Value: "FilterAdministratorToken"<br/>
+0x00000000 Only the built-in administrator account (RID 500) SHOULD be placed into Full Token mode.&lt;7&gt;<br/>
+0x00000001 Only the built-in administrator account (RID 500) is placed into Admin Approval Mode. Approval is required when performing administrative tasks.<br/>
+<br/>
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy <br/>
+(which doesn’t by default) is set to 1, then remote connections from all local members of Administrators are granted full high-integrity tokens during negotiation. This means that a non-RID 500 account connections aren’t filtered and can successfully pass-the-hash!</body></html>

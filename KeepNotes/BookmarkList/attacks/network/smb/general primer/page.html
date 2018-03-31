@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>The raw power SMB provides for manipulating Windows environments during a penetration test. Via SMB, you can remotely access file shares, the registry, services, domain authentication, and much more! One of the best tools for thoroughly plundering a Windows target via SMB is the Linux rpcclient command, part of the Samba suite. <br/>
+<br/>
+A NULL SMB session has a blank user name and a blank password. However, most modern Windows systems by default prohibit enumerating detailed user information across a NULL SMB session (controlled by the HKLM\System\CurrentControlSet\Control\Lsa\RestrictAnonymous, RestrictAnonymousSAM, and EveryoneIncludesAnonymous registry keys).<br/>
+<br/>
+As long as you have just one user name and its associated password (local or domain) for the target environment, you can make AUTHENTICATED SMB sessions (non-NULL). Even if your user and password are NOT in the admin group or domain admin group, you can still get a HUGE amount of information via an authenticated, non-admin SMB session to a target machine in the environment, plundering all kinds of stuff, including user names, group memberships, Security Identifiers (SIDs), and even last logon events. I'd like to show you how, as well as how a defender can squelch incoming SMB sessions in real-time on a Windows box.</body></html>
