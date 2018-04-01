@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body><b>Securing RODCs Against Attack</b><br/>
+&nbsp;<br/>
+There are several ways to protect Read-Only Domain Controllers against attacks, most of which involve better restricting RODC access.<br/>
+&nbsp;<ul><li>RODCs that cache passwords should be better protected than RODCs with the default configuration that don’t cache passwords. If the RODC is configured to cache any account password, consider protecting the RODC at a similar level to a standard DC.</li>
+<li>Don’t add “Authenticated Users” or “Domain Users” to have their passwords cached on RODCs. If this is truly required, these RODCs should be viewed and protected in a similar manner to writable Domain Controllers.</li>
+<li>Create and configure groups to contain user and computer accounts that would need to be cached on the RODC. This can be scripted to update a group with accounts from specific OUs on a regular basis. This limits the accounts that can be cached to only what’s required and can mitigate issues with admin accounts being cached on the RODC.</li>
+<li>Limit the groups and accounts that have admin rights on RODCs. Ensure regular user accounts aren’t RODC administrators. RODC admins need to be protected based on how the caching is configured – if there are no accounts allowed to be cached, then the RODC admin can be almost anyone. If the RODC is configured to cache almost any domain account, the RODC admin needs to be highly protected.</li>
+<li>Add all privileged groups and accounts to the “Denied RODC Password Replication Group” or another group that prevents account passwords from being cached on RODCs. Since only the default AD admin groups are prevented from being cached on RODCs by default, it’s critical to add any custom groups delegated high-level privileges to Active Directory and critical systems.</li>
+<li>Ensure the DSRM password changes regularly on all DCs. RODCs should either have a unique DSRM password for all of them, or a different one for each. If all the RODCs are configured similarly with the same configuration, it may make sense for them to share a DSRM password (I still prefer a different DSRM password per RODC). If the DSRM password is the same on DCs and RODCs, there’s a chance this password could be extracted from a RODC and used on a DC to gain admin rights on a DC.</li>
+<li>If the RODC is configured to cache passwords, change the RODC’s krbtgt_###### account’s password on a regular basis (2x every year). Microsoft’s krbtgt change script is not geared for the RODC krbtgt account (the risk of changing the RODC krbtgt password is very low). In Active Directory Users and Computers, right-click on the krbtgt_###### and change the password (set it to pretty much anything, Windows should automatically set the password to a random value).</li>
+</ul>
+</body></html>

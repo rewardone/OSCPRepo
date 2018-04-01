@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Golden Ticket Limitations</title>
+</head><body><b>Golden Ticket “Limitation” </b><br/>
+As incredible as Golden Tickets are, they have been “limited” to spoofing Admin rights to the current domain. The limitation exists when the KRBTGT account password hash is exposed in a child domain that is part of a multi-domain AD forest. The issue is that the parent (root) domain contains the forest-wide admin group, Enterprise Admins. Since Mimikatz adds group membership by the Relative IDentifiers (RIDs) to the ticket, the 519 (Enterprise Admin) RID is identified in the Kerberos ticket as being local to the domain it was created in (based on the KRBTGT account domain). If the domain Security IDentifier (SID) created by taking the domain SID and appending the RID doesn’t exist, then the holder of the Kerberos ticket doesn’t receive that level of access.<br/>
+&nbsp;<br/>
+In other words, in a mult-domain AD forest, if the domain the Golden Ticket was created in doesn’t contain the Enterprise Admins group, the Golden Ticket won’t provide admin rights to other domains in the forest.<br/>
+&nbsp;<br/>
+In a single domain Active Directory forest, this limitation doesn’t exist since the Enterprise Admins group is hosted in this domain (and this is where the Golden Tickets would be created).<br/>
+&nbsp;<br/>
+Graphic: Golden Ticket doesn’t work across trusts unless in EA domain.<br/>
+<br/>
+The standard Golden Ticket is limited to the child domain it was created in, so now we add SID History to the equation…<br/>
+</body></html>

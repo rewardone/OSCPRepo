@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Attacking RODCs</title>
+</head><body>What are the issues with RODCs as they are typically deployed?<br/>
+&nbsp; &nbsp;<ul><li style="list-style-type: none"><ul><li>RODCs cache more passwords than actually required, providing a potential escalation path – compromise the RODC to compromise additional accounts. In this scenario, the RODC acts as kind of a Junior DC since it contains a subset of domain account passwords.</li>
+<li>RODCs are typically administered by a “RODC admins” group which is not typically protected at a high level. Often the RODC admin group contains server administrators and potentially regular user accounts. The accounts in the RODC admin group(s) are often allowed to be cached on the RODC to enable administration if a DC cannot be contacted to authenticate them.</li>
+<li>If the organization has configured the Directory Services Restore Mode (DSRM) password to change (<a href="https://adsecurity.org/?p=1714">and they should</a>), they may not have configured a different process for RODCs, potentially setting the same DSRM password on RODCs and DCs.</li>
+</ul>
+</li>
+</ul>
+<br/>
+If RODCs are considered “untrusted”, Domain Admins should not logon to them since they may believe their credential is safe since RODCs don’t cache DA passwords by default. When Domain Admins logon to RODCs, their password won’t be “cached” in the RODC’s AD database (ntds.dit), though it will be in LSASS if the DA used a Remote Desktop session (RDP) to connect to the RODC (as well as a couple of <a href="https://docs.microsoft.com/en-us/windows-server/identity/securing-privileged-access/securing-privileged-access-reference-material">other scenarios</a>). Active Directory admins shouldn’t manage RODCs unless the RODCs are treated like DCs and protected at the same level (not in untrusted areas).<br/>
+</body></html>

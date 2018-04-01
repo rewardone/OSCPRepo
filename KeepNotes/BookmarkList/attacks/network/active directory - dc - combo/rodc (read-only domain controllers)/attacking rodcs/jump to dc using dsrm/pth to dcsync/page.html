@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PTH to DCSync</title>
+</head><body><b>DSRM PTH to DCSync!</b><br/>
+&nbsp;<br/>
+Since it is possible to pass-the-hash for the DSRM account, why not leverage this access to pull password data for any domain account using Mimikatz DCSync. We can target the specific Domain Controller and by using the DC’s short name, we force NTLM authentication.<br/>
+<br/>
+<i>Mimikatz “lsadump::dcsync /domain:lab.adsecurity.org /dc:adsdc03 /user:krbtgt</i><br/>
+<br/>
+If an attacker can gain knowledge of the DSRM account password on a Domain Controller running Windows Server 2008 R2 or 2012 R2 (with the DsrmAdminLogonBehavior regkey set to 2), the DSRM account can be used to authenticate across the network via pass-the-hash to the DC (forcing NTLM authentication). This enables an attacker to retain Domain Controller admin rights when all domain user and computer passwords are changed.<br/>
+<br/>
+The DSRM account now provides a useful attack method to pull domain credentials, despite the fact it’s a “local” administrator account.<br/>
+<br/>
+Many thanks to Benjamin Delpy (author of Mimikatz) for his help in figuring this out!</body></html>

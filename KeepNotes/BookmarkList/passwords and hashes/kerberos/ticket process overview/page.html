@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ticket Process Overview</title>
+</head><body><b>KERBEROS TICKET PROCESS OVERVIEW</b><br/>
+&nbsp;<br/>
+Ticket Granting Ticket (aka logon ticket)<br/>
+&nbsp;<br/>
+1. Joe User logs on with his Active Directory user name and password to a domain-joined computer (usually a workstation). The computer takes the user’s password and runs a one way function (OWF) creating a hash of the password (typically the NTLM hash). Hashing the password is like taking a steak and running it through a meat grinder. The ground beef that is the result can never be reassembled back into the same steak we started with.<br/>
+This is used to  handle all Kerberos requests for the user (as well as other authentication methods such as NTLM).<br/>
+&nbsp;<br/>
+2. Kerberos authentication is initiated by sending a timestamp (PREAUTH data) encrypted with the user’s password-based encryption key (password NTLM hash).<br/>
+&nbsp;<br/>
+3. The user account (JoeUser@adsecurity.org) requests a Kerberos service ticket (TGT) with PREAUTH data (Kerberos Authentication Service Request or AS-REQ).<br/>
+&nbsp;<br/>
+4. The Domain Controller’s Kerberos service (KDC) receives the authentication request, validates the data, and replies with a TGT (Kerberos AS-REP). The TGT has a Privileged Attribute Certificate (PAC) which contains all the security groups in which the user is a member. The TGT is encrypted and signed by the KDC service account (<a href="http://adsecurity.org/?p=483">KRBTGT</a>) and only the domain <a href="http://adsecurity.org/?p=483">KRBTGT</a>&nbsp;account can read the data in the TGT.<br/>
+&nbsp;<br/>
+At this point, the user has a valid TGT which contains the users group membership and is used to prove the user is who they claim to be in further conversations with a Domain Controller (KDC). The TGT is sent to the Domain Controller every time a resource ticket is requested.<br/>
+&nbsp;<br/>
+Ticket Granting Service ticket (aka resource access ticket)<br/>
+&nbsp;<br/>
+5. When the user wants to access an AD resource (a file share for example), the user’s TGT from step 4 is presented to a Domain Controller (KDC) as proof of identity with a request for a resource ticket to a specific resource (Service Principal Name). The DC determines if the TGT is valid by checking the TGT’s signature and if valid, generates a resource access ticket (TGS) signed/encrypted with the <a href="http://adsecurity.org/?p=483">KRBTGT</a>&nbsp;account and a part encrypted with the Kerberos service account’s session key which the destination service uses to validate the TGS.<br/>
+Note: The DC doesn’t validate the user has the appropriate access to the service, it only validates the TGT and builds a TGS based on the TGT information.<br/>
+&nbsp;<br/>
+6. The resource service ticket (TGS) is sent to the user by the Domain Controller and is used for authentication to the resource. At this point, all communication has been between the user’s computer and the Domain Controller (KDC).<br/>
+&nbsp;<br/>
+7. The user’s computer sends the user’s resource service ticket (TGS) to the service on the resource computer. If the destination service is a file share, the TGS is presented to the CIFS service for access.<br/>
+&nbsp;<br/>
+8. The destination service (CIFS in this example) validates the TGS by ensuring it can decrypt the TGS component encrypted with the service’s session key. The service may send the TGS to a DC (KDC) to validate the PAC to ensure the user’s group membership presented is accurate. The service reviews the user’s group membership to determine what level of access, if any, the user has to the resource.<br/>
+</body></html>

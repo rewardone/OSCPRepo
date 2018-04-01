@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Accounts With Cached Passwords On The RODC</title>
+</head><body>Accounts with Passwords Cached on the RODC <br/>
+All too often, we visit customers and see that RODCs are configured to enable storing passwords for a larger number of accounts than required – often by configuring “Authenticated Users” or “Domain Users” to store passwords on RODCs. This is not a good idea since, based on what we’ve seen, a large number of users in the environment will end up with their password being cached on the RODCs with this configuration.<br/>
+<br/>
+This configuration typically results in most domain accounts having stored passwords on RODC(s). While the password stored on the RODC may not be the current one, this is still a risk. Normally, the user/computer needs to authenticate to the RODC before the password is cached. There is another way though. An administrator can pre-populate account passwords on a RODC if those accounts are allowed to be cached.<br/>
+<br/>
+Let’s look at accounts with passwords on a RODC…<br/>
+<br/>
+The computer properties GUI in Active Directory Users &amp; Computers shows the list of accounts on the RODC<br/>
+<br/>
+Enumerating the ‘msds-RevealUsers’ attribute on the RODC computer object in Active Directory, we can view the list of accounts (users and computers) with passwords stored on the RODC. In the graphic below, there’s a string of data before the actual account distinguished name. The RODC seems to track each authentication and password separately.<br/>
+<br/>
+B:96:A000090002000000673C531003000000B2D8290BE48E5C40A6ACCBA445CBC36B7D3B0000000000007D3B000000000000:CN=Han Solo,OU=Accounts,DC=lab12,DC=adsecurity,DC=org<br/>
+<br/>
+B:96:7D00090001000000673C531003000000B2D8290BE48E5C40A6ACCBA445CBC36B7E3B0000000000007E3B000000000000:CN=Han Solo,OU=Accounts,DC=lab12,DC=adsecurity,DC=org<br/>
+<br/>
+B:96:5E00090002000000673C531003000000B2D8290BE48E5C40A6ACCBA445CBC36B7D3B0000000000007D3B000000000000:CN=Han Solo,OU=Accounts,DC=lab12,DC=adsecurity,DC=org<br/>
+<br/>
+B:96:5A00090002000000673C531003000000B2D8290BE48E5C40A6ACCBA445CBC36B7D3B0000000000007D3B000000000000:CN=Han Solo,OU=Accounts,DC=lab12,DC=adsecurity,DC=org<br/>
+<br/>
+B:96:3700090002000000673C531003000000B2D8290BE48E5C40A6ACCBA445CBC36B7D3B0000000000007D3B000000000000:CN=Han Solo,OU=Accounts,DC=lab12,DC=adsecurity,DC=org<br/>
+<br/>
+Using PowerShell, we can remove the initial string of characters shown before the account distinguished name so that only the account Distinguished Name is displayed (and remove duplicates)<br/>
+<br/>
+&lt;RODC&gt;.'msDS-RevealedUsers' | % {(_-split(':'))[3]} | sort | sort -Unique<br/>
+<br/>
+This list of accounts have their passwords stored on the RODC. This list includes users and computer accounts which means if we can gain admin access to the RODC, we can steal these credentials and use them. The computer password hash can be used to create Silver Tickets to gain full admin rights on the computer. If we have admin accounts in this list, we can leverage this access to jump to other systems.<br/>
+<br/>
+Let’s find out who has admin rights on the RODC by looking at the RODC’s ManagedBy attribute. Compromising one of these accounts provides an escalation path to gaining access that accounts with stored passwords have.<br/>
+<br/>
+Get-ADGroupMember &lt;RODC&gt;.ManagedBy<br/>
+<br/>
+There also may be service account credentials on the RODC, especially if they are delegated rights to Active Directory without using the default AD administration groups (which is a best practice). Any service accounts with privileged rights should be added to a group which is configured to prevent member account passwords from being cached on RODCs. If this isn’t done and the RODC(s) is allowed to cache all account passwords (Authenticated Users or Domain Users), then highly privileged accounts could have passwords cached on the RODC(s).<br/>
+&nbsp;<br/>
+In this scenario, we find there is a service account password stored on a RODC.<br/>
+<br/>
+The first result is “CN=AccountProvisioning,OU=AD Management,DC=lab12,DC=adsecurity,DC=org”, so let’s see what that is.<br/>
+<br/>
+Get-ADUser 'CN=AccountProvisioning,OU=AD Management,DC=lab12,DC=adsecurity,DC=org' -prop MemberOf<br/>
+<br/>
+This account is not a member of any group. So let’s check to see if it has any rights to AD objects using the PowerView function “Invoke-ACLScanner”.<br/>
+<a href="https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1">PowerView</a>&nbsp;is a PowerShell recon tool written by Will Schroeder (<a href="https://twitter.com/harmj0y">@Harmj0y</a>) and is part of <a href="https://github.com/PowerShellMafia/PowerSploit">PowerSploit</a>.<br/>
+<br/>
+Invoke-ACLScanner | where {$_IdentityReference -match 'svc-ActPrv'}<br/>
+<br/>
+The results of Invoke-ACLScanner shows us that the svc-ActPrv service account has full control (“GenericAll”) rights to the Accounts  &amp; Groups OUs in the domain. Control of this one account provides full control on accounts and groups in the domain.<br/>
+&nbsp;<br/>
+Let’s see what groups are in the Groups OU.<br/>
+<br/>
+Get-ADGroup -filter * -SearchBase 'OU-Groups,DC=lab12,DC=adsecurity,DC=org'<br/>
+<br/>
+We can check to see if the Server Admins group is added to any computer local group via GPO using PowerView’s “Get-NetGPOGroup”<br/>
+<br/>
+The Server Admins group is automatically added to the local Administrators group on all computers in the Servers OU by the Add Server Admins to Local Administrators GPO.<br/>
+<br/>
+So, by gaining access to the RODC, we now have full control of accounts and groups as well as admin rights to all servers in the Servers OU (through the ability to modify the Server Admins group membership).<br/>
+</body></html>

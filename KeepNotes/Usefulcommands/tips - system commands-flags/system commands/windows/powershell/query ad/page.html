@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Query AD</title>
+</head><body>get-aduser <br/>
+&nbsp;-filter&#09;&#09;&#09;like {name -like "krbtgt*"}<br/>
+&nbsp;-prop&#09;&#09;&#09;Property like Name,Created,PasswordLastSet,msDS-KeyVersionNumber,msDS-KrbTgtLinkBl<br/>
+<br/>
+<br/>
+get-adcomputer '&lt;compname&gt;'<br/>
+&nbsp;-prop &#09;&#09;&#09;Property like PrimaryGroup,PrimaryGroupID,TrustedToAuthForDelegation<br/>
+<br/>
+Get Information from a RODC<br/>
+Get-ADComputer $ROCName -Property * | Select Name,ManagedBy,’msDS-AuthenticatedToAccountlist’,’msDS-NeverRevealGroup’,’msDS-RevealedDSAs’,’msDS-RevealedUsers’,’msDS-RevealOnDemandGroup’v<br/>
+<br/>
+Get list of users with passwords cached on a RODC<br/>
+&lt;RODC&gt;.'msDS-RevealedUsers' | % {(_-split(':'))[3]} | sort | sort -Unique</body></html>

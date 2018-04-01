@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>RODC Golden Tickets</title>
+</head><body><b>What about RODC Golden Tickets?</b><br/>
+&nbsp;<br/>
+We can only forge useful Kerberos tickets against a RODC if the service tickets we will be requesting have the associated service account passwords cached (computer or user accounts). This means they aren’t “Golden Tickets” since we are limited to connecting to a single RODC (associated with the RODC’s krbtgt account) otherwise it won’t work.  These RODC Golden Tickets aren’t very useful and based on my initial testing don’t seem to work even when targeting the RODC given the differences betwen RODCs and DCs.<br/>
+&nbsp;<br/>
+The RODC Golden Ticket is created fine using the RODC KRBTGT, but in my initial testing may not work properly since it has to be passed to the RODC associated with the RODC KRBTGT used to create it. And then the target account service has to have its associated Kerberos service account password cached on the RODC.<br/>
+<img src="https://adsecurity.org/wp-content/uploads/2018/01/RODC-GoldenTicket-LukeSkywalker.png" width="2478" height="1180" /><br/>
+<br/>
+However, Silver Tickets are quite useful since we can forge a ticket saying we are a Domain Admin and then connect to the service using this Kerberos ticket (assuming the target service account’s password is on the RODC). <br/>
+<br/>
+<b>Silver Tickets</b><br/>
+&nbsp;<br/>
+In this scenario, we want to gain admin access to an Admin server, but don’t have direct access to it. We realize that a RODC has cached the password for this server, so we get onto the RODC and dump the AD database to get the admin server’s computer password hash. In this lab environment, the Admin computer is called “ADSEC12ADMIN1”.<br/>
+<br/>
+Using the computer password hash, we can generate Silver Tickets for the services required to access PowerShell remoting (<a href="https://adsecurity.org/?p=2011">HOST, HTTP, WSMAN, RPCSS</a>)'<br/>
+<br/>
+1: mimikatz.exe "kerberos::golden /admin:LukeSkywalker /id:1428 /domain:lab12.adsecurity.org /target:adsec12admin1.lab12.adsecurity.org /rc4:&lt;NTLM_Hash&gt; /service:http /sid:&lt;SID&gt; /ptt"<br/>
+<br/>
+2. mimikatz.exe "kerberos::golden /admin:LukeSkywalker /id:1428 /domain:lab12.adsecurity.org /target:adsec12admin1.lab12.adsecurity.org /rc4:&lt;NTLM_hash&gt; /service:host /sid:&lt;sid&gt; /ptt"<br/>
+<br/>
+3. mimikatz.exe "kerberos::golden /admin:LukeSkywalker /id:1428 /domain:lab12.adsecurity.org /target:adsec12admin1.lab12.adsecurity.org /rc4:&lt;NTLM_hash&gt; /service:wsman /sid:&lt;sid&gt; /ptt"<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+Once the Silver Tickets are generated and passed into memory, we can view these tickets in klist.<br/>
+<br/>
+Note that the Silver Tickets are impersonating LukeSkywalker, though poedameron-admin is logged on (and the Poe account doesn’t have rights to the Admin server). T<b>his works because the Admin computer’s password hash is cached on the RODC.</b><br/>
+<br/>
+Once all the Silver Tickets are generated and are in memory, we can connect to the Admin server using PowerShell remoting (or any other available service supporting Kerberos authentication).<br/>
+<br/>
+New-PSSession -name admin1 -ComputerName &lt;FQComputerName&gt; ; Enter-PSSession -Name admin1</body></html>

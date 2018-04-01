@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Mimikatz On RODC</string>
+  <key>nodeid</key><string>b15cb30d-fb8e-4bb4-b1c6-b49cff6f9859</string>
+  <key>modified_time</key><integer>1522612285</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522612241</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

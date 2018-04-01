@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body><b>Enter the Read-Only Domain Controller </b><br/>
+When Microsoft released Windows Server 2008, a new type of Domain Controller was added called the “Read-Only Domain Controller”. The <a href="https://adsecurity.org/?p=274">Read-Only Domain Controller (RODC)</a>&nbsp;performs similar services as a writable Domain Controller except they are “read-only”. But what does that really mean?<br/>
+<br/>
+By default, no AD account passwords are cached on a RODC (other than the RODC computer account &amp; RODC KRBTGT passwords) and no changes originate from a RODC’s AD database, SYSVOL, or DNS. Certain sensitive Active Directory attributes are included in the RODC Filtered Attribute Set (FAS) which includes confidential attributes such as the AD attributes storing Bitlocker keys and <a href="https://adsecurity.org/?s=LAPS">LAPS </a>passwords. This ensures these attributes are never replicated to RODCs.<br/>
+&nbsp;<br/>
+RODCs provide the following:<br/>
+&nbsp;<ul><li>&nbsp;<b>Read-only Active Directory Database</b> – Read-only copy of Active Directory provides a more secure option for distant locations such as a branch office. Changes attempted against the RODC are referred to the next upstream DC.</li>
+<li><b>Read-only DNS Server</b> – DNS on the RODC can be configured as a DNS Secondary of the Active Directory Integrated DNS zone file or of a Primary standard DNS zone.</li>
+<li><b>Credential Caching</b> – By default, no passwords are stored on a RODC (including computer passwords), though specific groups can be configured for password caching.  Physical attacks on Active Directory stored domain credentials on RODCs are not possible when password caching is disabled.</li>
+<li><b>Administrator Role Separation</b> – Administration of a RODC can be delegated to a domain user account without providing “keys to the kingdom” access or significantly decreasing the security posture of Active Directory.</li>
+<li><b>Reduced Exposure</b> – Filtering specific object attributes to ensure they don’t exist on RODCs.  For example, there may be attributes that were added after the instantiation of Active Directory such as specific attributes that are confidential (SSNs, clearance, etc).</li>
+<li><b>Unidirectional Replication</b> – The only replication that occurs on a RODC is inbound replication from a fully writable DC.  This reduces the amount of replication traffic that occurs in the environment as well as the number of connections and connection objects at the primary site.  This also protects the rest of the directory from memory corruption of the database due to hardware failure or improper shutdown.</li>
+<li><b>SYSVOL Modification Isolation</b> – If SYSVOL is modified on a RODC in the field, the change stays on the RODC and is not replicated out.  This includes added, deleted, and modified SYSVOL files.</li>
+</ul>
+<br/>
+RODC &amp; writable DC differences:<br/>
+&nbsp;<ul><li>&nbsp;<b>Active Directory Database</b> – DCs host the only writable copies of the Active Directory database and therefore can perform read and write operations against the directory database. RODCs host read-only copies of the AD database which do not include security principal secrets (passwords).  Since RODCs are unable to perform write operations on the RODC hosted AD database, some write operations are forwarded to full DCs and other times the RODC provides referrals to clients  in order for the client to locate a writable DC.</li>
+<li><b>Active Directory Replication</b> – Writable DCs replicate among themselves frequently and as needed to ensure directory consistency. RODCs never replicate to or from another RODC. RODCs also never send replication data to other DCs. RODCs can only receive replication from a 2008 writable DC.  This replication method is the same for replicating SYSVOL.</li>
+<li><b>Local AD database storage</b> – Writable DCs host a full copy of the Active Directory database including security principal credentials.  RODCS host a copy of the database except for attributes that are part of the RODC Filtered Attribute Set (FAS) and security principal credentials. Specific credentials can be identified and selected for password replication to the RODC.</li>
+<li><b>Administration </b>– Writable DC are administered by the domain Administrators and Domain Admins groups; however, membership in these groups also grants enhanced Active Directory rights. RODCs provide the capability to delegate a standard user account and/or user group full administrative rights to the RODC without providing elevated Active Directory permissions.</li>
+</ul>
+<br/>
+When placing a RODC at a site, there are several important considerations:<br/>
+&nbsp;<ul><li>&nbsp;Think twice about placing a RODC in the same site as a DC.  RODCs are meant to be used where there are security and/or other concerns (delegation, replication, etc).  If a writable DC is in the site, it makes more sense to place another DC there instead of a RODC.</li>
+<li>If a location requires a DC that hosts additional services (roles), the DC placed at the site should be a RODC.  DCs should not host services beyond core Active Directory services (like AD DS and DNS).</li>
+<li>There must be a 2008 (or newer) DC upstream from the RODC to enable proper replication. It is best to have two 2008 (or newer) DCs nearby to enable efficient replication.</li>
+<li>All of the users located at the site serviced by a RODC should be members of a site group which is added to the password policy for the RODC.  This will ensure the user passwords are cached for logon in the event the network connection to a nearby writable DC is down.</li>
+<li>All of the computers (workstations &amp; servers) located at the site serviced by a RODC should be members of a site group which is added to the password policy for the RODC.  This will ensure the computer passwords are cached ensuring proper computer operation in the event the network connection to a nearby writable DC is down.</li>
+<li>RODCs never communicate with other RODCs.  This means if there are multiple RODCs in the same site, they may have different accounts cached and possibly different password policies. This scenario is why it may not make sense to place two RODCs in a site.</li>
+</ul>
+<br/>
+Note: If items 3 &amp; 4 are not configured to enable password caching, a writable DC must be available to service authentication (Kerberos) requests; both the computer &amp; user passwords must be cached in order for a Kerberos ticket to be granted.<br/>
+<br/>
+<br/>
+<b>Conclusion</b><br/>
+&nbsp;<br/>
+In its default configuration, Read-Only Domain Controllers can provide Domain services to a location without potentially risking the entire domain. The RODC can be configured to cache user and computer passwords to enable local authentication of these users. Administration of the RODC is easily delegated to local staff for on-site RODC management without making them Active Directory admins.<br/>
+&nbsp;<br/>
+The ability of a RODC to act like a Domain  Controller is extremely useful and there are scenarios where it may make sense to allow any account password to be cached. In these cases, the RODC should be considered almost as sensitive as a regular DC.<br/>
+&nbsp;<br/>
+Furthermore, it’s important to follow the principle of least privilege with RODCs to mitigate potential risk.<br/>
+&nbsp;<br/>
+If RODCs are not deployed properly, it’s possible that the RODC can create a scenario where an attacker could escalate privileges through the RODC up to and including full control of Active Directory.<br/>
+This level of access could be acquired either through <br/>
+1) a highly privileged account cached on the RODC; <br/>
+2) a highly privileged account logged onto a RODC and is stolen from LSASS; or <br/>
+3) the DSRM account password is the same on RODCs and DCs.<br/>
+</body></html>

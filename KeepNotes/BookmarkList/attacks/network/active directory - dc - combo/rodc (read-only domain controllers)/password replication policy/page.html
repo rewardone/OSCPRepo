@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Password Replication Policy</title>
+</head><body><b>RODC Password Replication Policy<br/>
+</b><br/>
+The KRBTGT accounts are used to sign/encrypt Kerberos tickets. The RODC KRBTGT accounts only sign/encrypt Kerberos tickets for accounts the RODC has passwords cached and stored on it.  Any RODC generated Kerberos authentication ticket (TGT) provided to a DC by the client is discarded and regenerated.<br/>
+<br/>
+Since by default, no passwords are cached on a RODC, this shouldn’t be a big deal. However, the reality is there will need to be accounts cached on the RODC in order for them to be authenticated by the RODC (such as when the network connection to the DC is down). This is handled by adding users to a group and adding that group to the domain’s Allowed RODC Password Replication group or adding the group to the Password Replication Policy on the RODC (set to Allow).<br/>
+&nbsp;<br/>
+Note that an account password that is “cached” on a Read-Only Domain Controller is stored in the RODC’s local Active Directory database (ntds.dit) much like how a regular DC stores account passwords. The difference is this information is never replicated from a RODC.<br/>
+&nbsp;<br/>
+The graphic shows the default configuration for AD groups:<br/>
+&nbsp;<ul><li>Account Operators: Deny</li>
+<li>Administrators: Deny</li>
+<li>Allowed RODC Password Replication Policy: Allow</li>
+<li>Backup Operators: Deny</li>
+<li>Denied RODC Password Replication Policy: Deny</li>
+<li>Server Operators: Deny</li>
+</ul>
+<br/>
+Also added is the RODC Admins group used in this lab environment to administer the RODCs.<br/>
+&nbsp;<br/>
+There are a number of domain/forest groups that are explicitly denied from having their account passwords replicated to the RODC. This protects against accounts in these groups from having their password saved on the RODC.<br/>
+&nbsp;<ul><li>Cert Publishers</li>
+<li>Domain Admins</li>
+<li>Domain Controllers</li>
+<li>Enterprise Admins</li>
+<li>Group Policy Creator Owners</li>
+<li>krbtgt</li>
+<li>Read-only Domain Controllers (<i>the RODC’s computer account password is stored locally, just not any others</i>)</li>
+<li>Schema Admins</li>
+</ul>
+<br/>
+When a user attempts to authenticate to a RODC, the RODC checks to see if it has the the user’s password cached. If it doesn’t already have the password, the RODC forwards the authentication request to an upstream writable DC which replies with the authentication data. After this the RODC requests the user’s password from the writable DC. If allowed by the RODC’s Password Replication Policy, the writable DC replicates the user’s password to the RODC. If the user’s password is cached on the RODC, the RODC handles the authentication request.<br/>
+&nbsp;<br/>
+There are 5 key attributes on a RODC:<br/>
+&nbsp;<ul><li>&nbsp;<b>managedBy</b>: This attribute identifies the group that administers the RODC. Since RODCs are considered to be less trusted than Domain Controllers, they shouldn’t be managed by Active Directory admins (DAs, etc). Often there’s a RODC specific admin group configured in this attribute, sometimes each RODC has a unique admin group.</li>
+<li><b>msDS-Reveal-OnDemandGroup: </b>Contains the distinguished name (DN) of the Allowed List. Members of the Allowed List are permitted to replicate to the RODC.</li>
+<li><b>msDS-NeverRevealGroup:</b>&nbsp;Points to the distinguished names of security principals that are denied replication to the RODC.</li>
+<li><b>msDS-RevealedList: </b>List of security principals whose passwords have ever been replicated to the RODC.</li>
+<li><b>msDS-AuthenticatedToAccountList: </b>This attribute contains a list of security principals in the local domain that have authenticated to the RODC.</li>
+</ul>
+<br/>
+The RODC ManagedBy attribute can be set during RODC install: “Delegated Administrator Account”.<br/>
+&nbsp;<br/>
+Since RODC attributes contain some useful information and all Authenticated Users have read access to these attributes by default, we can query these attributes and use this information to craft an attack.<br/>
+Here’s some example PowerShell script code:<br/>
+&nbsp;<br/>
+<i>Get-ADComputer $ROCName -Property * | Select Name,ManagedBy,’msDS-AuthenticatedToAccountlist’,’msDS-NeverRevealGroup’,’msDS-RevealedDSAs’,’msDS-RevealedUsers’,’msDS-RevealOnDemandGroup’</i><br/>
+&nbsp;<br/>
+With this information, we can determine which RODCs have account passwords stored on them. The next step is identifying ways to gain access to the RODC with interesting account passwords stored on it.<br/>
+&nbsp;<br/>
+</body></html>

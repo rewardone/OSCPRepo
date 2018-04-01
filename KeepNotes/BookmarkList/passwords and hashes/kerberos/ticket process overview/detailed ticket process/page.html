@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Detailed Ticket Process</title>
+</head><body><b>THE DETAILED PROCESS</b><br/>
+&nbsp;<br/>
+Here’s my example scenario to explain what occurs when a user logs on and opens Outlook to view his Exchange email. The bold text is the simple overview version while the detail follows.<br/>
+&nbsp;<ul><li><b>A user logs onto the domain metcorp.org on the workstation MetcorpPC.</b></li>
+<li><b>The user requests authentication by sending a timestamp encrypted with the users password encryption key.</b></li>
+<li style="list-style-type: none"><ul><li>The workstation creates an encryption key derived from the user’s password (the user’s password is hashed using a one way function such as MD5 = <b>&nbsp;(A) </b>key) to encrypt a timestamp (date/time) as an authenticator (pre-authentication is required by AD in its default configuration, so the client must send an authenticator) . The authenticator is simply a method the client uses to prove to the KDC that the user is who he claims to be (since only the user &amp; the KDC knows his password) and protects against replay attacks. This information is sent to the KDC in an AS-REQ (Authentication Service Request) packet. This request includes the client supported encryption algorithms.Keys used:</li>
+<li><b>(A)</b>User’s password derived key</li>
+<li style="list-style-type: none"><img src="image.png" /></li>
+<li style="list-style-type: none">Packet Data:</li>
+<li><b>User account (user@metcorp.org) requests <a href="http://technet.microsoft.com/en-us/library/cc749438%28WS.10%29.aspx">Kerberos </a>service ticket (TGT) with PREAUTH data</b>KRB5: Kerberos AS-REQ</li>
+<li style="list-style-type: none">1 Forwardable: FORWARDABLE tickets are allowed/requested</li>
+<li style="list-style-type: none">1 Renewable: This ticket is RENEWABLE</li>
+<li style="list-style-type: none">1 Canonicalize: This is a request for a CANONICALIZED ticket</li>
+<li style="list-style-type: none">1 Renewable OK: We accept RENEWED ticketsClient Name (Principal): admin</li>
+<li style="list-style-type: none">Realm: METCORP.ORG</li>
+<li style="list-style-type: none">Service: krbtgt/metcorp.org</li>
+<li style="list-style-type: none">till: 2037-09-12 02:48:05 (UTC)</li>
+<li style="list-style-type: none">rtime: 2037-09-12 02:48:05 (UTC)</li>
+<li style="list-style-type: none">Nonce: 1976014234</li>
+<li style="list-style-type: none">Principal Name: user</li>
+<li style="list-style-type: none">HostAddress: METCORPORGDC02&lt;20&gt;</li>
+<li style="list-style-type: none">PAC_Request: True</li>
+<li style="list-style-type: none">Encryption Types: aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 rc4-hmac rc4-hmac-exp rc4-hmac-old-exp des-cbc-md5KRB5: Kerberos AS-REP</li>
+<li style="list-style-type: none">Client Name (Principal): user</li>
+<li style="list-style-type: none">Tkt-vno: 5</li>
+</ul>
+</li>
+<li><b>The Kerberos server (KDC) receives the authentication request, validates the data, and replies with a TGT.</b></li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">The KDC receives the AS-REQ, decrypts the authenticator (encrypted with key <b>(A)</b>), and validates the timestamp is within the time skew limits set by the domain (5 minutes by default). If the KDC is satisfied the request is a valid user request, the KDC responds with an AS-REP packet which includes the TGT. The TGT can only be decrypted by a KDC (using the <b>(B)</b>&nbsp;key) and is used to authenticate the user to the Kerberos server so it doesn’t have to look up the user’s password (long-term key) again. The KDC also includes a session key (<b>(C)</b>key) for use in future communication with the KC.Keys used:<b></b></li>
+<li style="list-style-type: none"><b>(B)</b>&nbsp;Kerberos account’s password derived key<b></b></li>
+<li style="list-style-type: none"><b>(C)</b>User’s Kerberos service (KDC) session key NOTE: The TGT is encrypted with the <a href="http://adsecurity.org/?p=483">KRBTGT account password </a>so only a valid Kerberos server can decrypt it. In an environment with RODCs, each RODC has its own krbtgt account with a unique password. This means that if a user presents a TGT received from a RODC to a writable DC, the DC dumps the TGT and generates a new one.</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;&#09;<img src="image 2.png" /></li>
+<li style="list-style-type: none"><ul><b><li style="list-style-type: none">Packet Data:</li>
+</b><li style="list-style-type: none"><b>The KDC replies with the TGT and session key</b></li>
+<li style="list-style-type: none">KRB5: Kerberos AS-REP</li>
+<li style="list-style-type: none">Client Name (Principal): User</li>
+<li style="list-style-type: none">Ticket (Tkt-vno): 5</li>
+<li style="list-style-type: none">Realm: METCORP.ORG</li>
+<li style="list-style-type: none">Server Name: krbtgt/metcorp.org</li>
+<li style="list-style-type: none">enc-part aes256-cts-hmac-sha1-96</li>
+<li style="list-style-type: none">[Encrypted Key]</li>
+<li style="list-style-type: none">enc-part rc4-hmac</li>
+<li style="list-style-type: none">[Encrypted Key]</li>
+</ul>
+</li>
+<li><b>The user opens Outlook which locates the user’s mailbox server and requests a TGS ticket for access.</b></li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">The workstation locates the Exchange mailbox server containing the user’s mailbox (MetcorpEXMB02.metcorp.org) and reads the ServicePrincipalName attribute on the computer account in AD (ExchangeMDB/MetcorpEXMB02.metcorp.org – there are a bunch, so I will just use this one for the example).</li>
+<li style="list-style-type: none">The client then sends a TGS-REQ to the KDC requesting a TGS for access to the Exchange service running on the MetcorpEXMB02 Exchange server. The TGS request includes the target server SPN, the user’s TGT (encrypted with the <b>(B)</b>&nbsp;key), and an authenticator (encrypted with the<b>&nbsp;(C)</b>key).Keys used:<b></b></li>
+<li style="list-style-type: none"><b>(B)</b>&nbsp;Kerberos account’s password derived key<b></b></li>
+<li style="list-style-type: none"><b>(C)</b>User’s Kerberos service (KDC) session key</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;&#09;<img src="image 3.png" /></li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none"><b>Packet Data:</b></li>
+<li style="list-style-type: none"><b>User account requests service ticket (TGS) for MetcorpEXMB02 Exchange service access</b></li>
+<li style="list-style-type: none">KRB5: Kerberos TGS-REQ</li>
+<li style="list-style-type: none">1 Forwardable: FORWARDABLE tickets are allowed/requested</li>
+<li style="list-style-type: none">1 Renewable: This ticket is RENEWABLE</li>
+<li style="list-style-type: none">1 Canonicalize: This is a request for a CANONICALIZED ticket</li>
+<li style="list-style-type: none">Realm: METCORP.ORG</li>
+<li style="list-style-type: none">Server Name: ExchangeMDB/MetcorpEXMB02.metcorp.org</li>
+<li style="list-style-type: none">till: 2037-09-12 02:48:05 (UTC)</li>
+<li style="list-style-type: none">Nonce: 1976014234</li>
+<li style="list-style-type: none">Encryption Types: aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 rc4-hmac rc4-hmac-exp rc4-hmac-old-exp des-cbc-md5KRB5: Kerberos AS-REP</li>
+</ul>
+</li>
+<li><b>The KDC validates the TGS request and replies with the TGS.</b></li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">The KDC replies with a TGS-REP packet to the client which includes 2 session tickets (TGS) (2?). One of the session tickets is encrypted with the user’s (KDC) session key (<b>(C)</b>&nbsp;key) and the second one is encrypted with the target server’s (KDC) session key (<b>(D)</b>&nbsp;key). The second TGS also includes the user’s group membership &amp; associated SIDs which provides the server information used to determine authorization and help the server determine: Is the user allowed to access the server’s resource?</li>
+<li style="list-style-type: none">Both session tickets include a new session key (<b>(E)</b>key) for exclusive use in communication between the Exchange server and the user.Keys used:<b></b></li>
+<li style="list-style-type: none"><b>(C)</b>&nbsp;User’s Kerberos service (KDC) session key<b></b></li>
+<li style="list-style-type: none"><b>(D)</b>&nbsp;Server’s Kerberos service (KDC) session key<b></b></li>
+<li style="list-style-type: none"><b>(E)</b>User-Exchange service session key</li>
+</ul>
+</li>
+</ul>
+&nbsp;&#09;<img src="image 4.png" /><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><b>Packet Data:</b></li>
+<li style="list-style-type: none"><b>The KDC replies with the service ticket (TGS) for MetcorpEXMB02 Exchange service access</b></li>
+<li style="list-style-type: none">KRB5: Kerberos TGS-REP</li>
+<li style="list-style-type: none">Client Name (Principal): User</li>
+<li style="list-style-type: none">Ticket (Tkt-vno): 5</li>
+<li style="list-style-type: none">Realm: METCORP.ORG</li>
+<li style="list-style-type: none">Server Name: krbtgt/metcorp.org</li>
+<li style="list-style-type: none">enc-part aes256-cts-hmac-sha1-96</li>
+<li style="list-style-type: none">[Encrypted Key]</li>
+<li style="list-style-type: none">enc-part rc4-hmac</li>
+<li style="list-style-type: none">[Encrypted Key]</li>
+</ul>
+</li>
+<li><b>The client authenticates to the Exchange server with the session ticket.</b></li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">The client sends the target server (MetcorpEXMB02.metcorp.org) an AP-REQ packet containing the TGS it received from the KDC encrypted with the server’s session key (<b>(D)</b>&nbsp;key) and an authenticator encrypted with the user-Exchange server session key (<b>(E)</b>&nbsp;key) . This lets the Exchange server know that the user was authenticated to the Kerberos domain (realm) and that the TGS is valid (assuming the Exchange server is able to decrypt it). The client also sends the server an authenticator (timestamp) encrypted with the session key (<b>(E)</b>key) it received from the KDC in Step 5. The Exchange server decrypts the TGS, extracts the user’s group information, extracts the session key, and uses the session key to decrypt the authenticator. This provides the server enough information to make an authorization decision. If the user is authorized to connect to the server, it sends a reply.Keys used:<b></b></li>
+<li style="list-style-type: none"><b>(C)</b>&nbsp;User’s Kerberos service (KDC) session key<b></b></li>
+<li style="list-style-type: none"><b>(D)</b>&nbsp;Server’s Kerberos service (KDC) session key<b></b></li>
+<li style="list-style-type: none"><b>(E)</b>&nbsp;User-Exchange service session key</li>
+</ul>
+</li>
+<li><b>The Exchange server replies that authorization to the service is granted.</b></li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">The Exchange server sends the client an AP-REP packet which includes its own authenticator encrypted with the user-Exchange service session key (<b>(E)</b>&nbsp;key)<b>. </b>This assumes the client requested mutual authentication which is the default configuration.Keys used:<b></b></li>
+<li style="list-style-type: none"><b>(E)</b>User-Exchange service session key</li>
+</ul>
+</li>
+</ul>
+<br/>
+<br/>
+<b>Note:</b><br/>
+This is a simplified explanation of Kerberos and doesn’t cover everything involved in this process.<br/>
+&nbsp;<br/>
+<b>Kerberos Key Storage Locatons</b><br/>
+Workstation Keys:<br/>
+&nbsp;<ul><li>User Key</li>
+<li>Ticket-Granting Ticket</li>
+<li>Ticket-Granting Service Session Key</li>
+<li>Service Ticket</li>
+<li>Session Key</li>
+</ul>
+<br/>
+Domain Controller:<br/>
+&nbsp;<ul><li>User Key</li>
+<li>Ticket-Granting Service Key</li>
+<li>Service Key</li>
+</ul>
+<br/>
+Server:<br/>
+&nbsp;<ul><li>Service Key</li>
+<li>Session Key</li>
+</ul>
+<br/>
+<b>TICKETING</b><br/>
+&nbsp;<br/>
+There are different “tickets” that are used to authenticate a client to a server’s resource. The client can be a user or a computer.<br/>
+&nbsp;<br/>
+The Ticket Granting Ticket (TGT) is the first ticket given to the requester (user or computer.<br/>
+&nbsp;<br/>
+The TGT is comprised of the following fields:<br/>
+&nbsp;<ul><li>Ticket Version Number</li>
+<li>Realm: The AD domain name in CAPITAL LETTERS</li>
+<li>Server Name: The KDC</li>
+<li>Flags: Kerberos Flag options</li>
+<li>Key</li>
+<li>Client Realm: The client’s AD domain name in CAPITAL LETTERS</li>
+<li>Client Name: The user name</li>
+<li>Transited: If the user is in a different domain than the resource, Kerberos tickets have transited.</li>
+<li>Authentication</li>
+<li>Time</li>
+<li>Start Time</li>
+<li>End Time</li>
+<li>Renew Till</li>
+<li>Client Address</li>
+<li>Authorization Data</li>
+</ul>
+<br/>
+Ticket Flags:<br/>
+&nbsp;<ul><li>FORWARDABLE</li>
+<li>FORWARDED</li>
+<li>PROXIABLE</li>
+<li>PROXY</li>
+<li>MAY-POSTDATE</li>
+<li>POSTDATED</li>
+<li>INVALID</li>
+<li>RENEWABLE</li>
+<li>INITIAL</li>
+<li>PRE-AUTHENT</li>
+<li>HW-AUTHENT</li>
+</ul>
+<br/>
+Supported Encryption Algorithms &amp; Key Lengths:<br/>
+&nbsp;<ul><li><a href="http://blogs.msdn.com/b/openspecification/archive/2011/05/31/windows-configurations-for-kerberos-supported-encryption-type.aspx">AES</a>                       128</li>
+<li>AES128-CTS-HMAC-SHA1-96 (0x08)</li>
+<li><a href="http://blogs.msdn.com/b/openspecification/archive/2011/05/31/windows-configurations-for-kerberos-supported-encryption-type.aspx">AES                       </a>256</li>
+<li>AES256-CTS-HMAC-SHA1-96 (0x10)</li>
+<li><a href="http://tools.ietf.org/html/rfc4757">RC4-HMAC</a>&nbsp;          128</li>
+<li>RC4-HMAC  (0x04)</li>
+<li><a href="http://support.microsoft.com/kb/296842">DES-CBC-CRC</a>&nbsp;      56</li>
+<li>DES-CBC-CRC  (0x01)</li>
+<li><a href="http://www.freesoft.org/CIE/RFC/1510/76.htm">DES-CBC-MD5</a>      56</li>
+<li>DES-CBC-MD5  (0x02)</li>
+</ul>
+<br/>
+<b>DEFAULT AD KERBEROS POLICY SETTINGS</b><ul><li><b>Enforce user logon restrictions: </b>Enabled</li>
+<li><b>Maximum lifetime for service ticket: </b>600 minutes (10 hours)</li>
+<li><b>Maximum lifetime for user ticket:</b>&nbsp;600 minutes (10 hours)</li>
+<li><b>Maximum lifetime for user ticket renewal :</b>&nbsp;7 days</li>
+<li><b>Maximum tolerance for computer clock synchronization: </b>5 minutes</li>
+</ul>
+</body></html>

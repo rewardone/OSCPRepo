@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Detailed Ticket Process</string>
+  <key>nodeid</key><string>b88738eb-e19a-433f-8a50-53b5596b399e</string>
+  <key>modified_time</key><integer>1522617578</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522617183</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

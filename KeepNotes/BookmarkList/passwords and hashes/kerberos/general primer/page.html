@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body><b>Kerberos Overview</b><br/>
+&nbsp;<br/>
+<a href="http://technet.microsoft.com/en-us/library/bb742516.aspx">Kerberos </a>is a protocol with roots in <a href="http://web.mit.edu/kerberos/">MIT</a>&nbsp;named after the three-headed dog, <a href="http://en.wikipedia.org/wiki/Cerberus">Cerberus</a>. Named because there are 3 parties: the client, the resource server, and a 3rd party (the Key Distribution Center, KDC).<br/>
+&nbsp;<br/>
+Kerberos can be a difficult authentication protocol to describe, so I will attempt to simplify it as best as possible.<br/>
+&nbsp;<br/>
+Kerberos authentication leverages long-term asymmetric keys (public key) and short-term symmetric keys (session keys).<br/>
+&nbsp;<br/>
+Asymmetric key cryptography uses two mathematically connected keys where one key is used to encrypt and the other is used to decrypt data. This is most commonly used in Public Key encryption (PKI) where one of the keys is kept secret by the user or service (Private Key) and the other key is available to anyone who wants it (Public Key). In this manner a user can sign (encrypt a hash with the private key) data to ensure it originated from that user without modification (the receiver decrypts the hash with the public key). Also a person can use the user’s public key to encrypt data so that only the user can decrypt it with the user’s private key.<br/>
+&nbsp;<br/>
+Symmetric key cryptography uses one key to encrypt and the same to decrypt the data. This is also referred to as a shared secret.<br/>
+&nbsp;<br/>
+Since asymmetric key cryptography is more processor intensive, it is typically only used to encrypt session keys which use symmetric keys (shared secret).<br/>
+&nbsp;<br/>
+Active Directory implements Kerberos version 5 in two components: the Authentication service and the Ticket-granting service.<br/>
+&nbsp;<br/>
+The Authentication Service (AS) is the first contact the client has with Kerberos and is used to lookup the user’s password and create the Ticket Granting Ticket (TGT). The AS also creates the session key the user will use for future communication with Kerberos.<br/>
+&nbsp;<br/>
+The Ticket Granting Ticket (TGT) is the Kerberos ticket for the Ticket Granting Service (runs on the KDC) and is encrypted using the KDC key (<a href="http://adsecurity.org/?p=483">KRBTGT domain Kerberos account</a>), meaning that only a KDC can decrypt and read the ticket. While the user’s ticket ,the TGT, is set to expire after 10 hours (AD default), it can be renewed as often as needed during the TGT renewable lifetime which is 7 days (AD default). Once the authenticating user has a TGT, it presents the TGT to the KDC to get a Service Ticket for the Ticket Granting Service (TGS) on the KDC. Most key Kerberos communication occurs over UDP port 88, though starting with Windows Vista &amp; Windows Server 2008 now default to using TCP for Kerberos ticket requests.<br/>
+&nbsp;<br/>
+<i>There is a myth in the Windows Kerberos world that if a workstation’s clock is skewed more than 5 minutes from that of the Domain Controller, Kerberos authentication wouldn’t work.</i><br/>
+Technically, all clocks in the Kerberos world must be kept closely in-sync to prevent replay attacks. By default, Microsoft Active Directory has a tolerance of 5 minutes. <b>Though in most cases, this doesn’t mater. When a client sends a Kerberos request to a DC, the DC will reply with a “KRB_ERROR – KRB_AP_ERR_SKEW (37)” and the Windows client will update its time for the Kerberos session with the DC and resend the request.</b>&nbsp;Provided the clock skew between the client and DC is not more than the ticket lifetime (10 hours by default), the second request will be successful.<br/>
+&nbsp;<br/>
+<a href="http://www.ietf.org/rfc/rfc4430.txt">Kerberized Internet Negotiation of Keys (KINK) RFC 4430</a>&nbsp;details how this works:<br/>
+&nbsp;<br/>
+If the server clock and the client clock are off by more than the policy-determined clock skew limit (usually 5 minutes), the server MUST return a KRB_AP_ERR_SKEW.  The optional client’s time in the KRB-ERROR SHOULD be filled out.  <b>If the server protects the error by adding the Cksum field and returning the correct client’s time, the client SHOULD compute the difference (in seconds) between the two clocks based upon the client and server time contained in the KRB-ERROR message.  The client SHOULD store this clock difference and use it to adjust its clock in subsequent messages. </b>&nbsp;If the error is not protected, the client MUST NOT use the difference to adjust subsequent messages, because doing so would allow an attacker to construct authenticators that can be used to mount replay attacks.<br/>
+&nbsp;<br/>
+<a href="http://support.microsoft.com/kb/956627/en-us">KB956627 also describes this behavior</a>.<br/>
+Confused yet?<br/>
+Keep reading, it gets easier…<br/>
+&nbsp;<br/>
+Every service that is Kerberos enabled has an entry point called a Service Principal Name (SPN) and each Kerberos user has a User Principal Name (UPN). For example, a user named Joe User in the METCORP.ORG Kerberos realm aka AD domain (the Kerberos realm is always all Caps) has a UPN of JoeUser@metcorp.org. If Joe User initiates a connection to the share path \\server1.metcorp.org\Shared then Joe’s workstation will lookup the computer server1.metcorp.org in Active Directory and read its SPN attribute (cifs/server1.metcorp.org). The computer SPN is used to identify the application server in the Kerberos TGS ticket request. Furthermore, when Joe opens Outlook, his workstation performs similar actions looking up the Exchange server’s SPN.<br/>
+<br/>
+Exchange 2010 has a number of registered SPNs; here are a few of them used as part of a client connection (using Outlook 2010):<br/>
+&nbsp;<ul><li>exchangeMDB</li>
+<li>exchangeRFR</li>
+<li>exchangeAB</li>
+<li>HTTP</li>
+</ul>
+<br/>
+<b>KERBEROS METAPHOR</b><br/>
+&nbsp;<br/>
+As mentioned earlier, Kerberos has 3 components, the client, the server, and the KDC (trusted 3rd party). The process is similar to when you travel to a foreign country.<br/>
+&nbsp;<ul><li>&nbsp;You visit the local passport office with a birth certificate</li>
+<li style="list-style-type: none"><ul><li>(get the Ticket Granting Ticket ticket from the KDC)</li>
+</ul>
+</li>
+<li>You request an entrance Visa for your passport in order to enter the country</li>
+<li style="list-style-type: none"><ul><li>(get the Ticket Granting Service ticket from the KDC – ok, so you would get the Visa from the country’s embassy, but you still need the passport and something authoritative the country’s immigration guard will accept).</li>
+</ul>
+</li>
+<li>You travel to the country with the passport and the country’s entrance Visa</li>
+<li style="list-style-type: none"><ul><li>(present authoritative documentation to gain access to the resource server).</li>
+</ul>
+</li>
+</ul>
+<br/>
+<br/>
+</body></html>

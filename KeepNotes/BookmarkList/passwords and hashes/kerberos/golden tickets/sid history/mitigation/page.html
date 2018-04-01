@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigation</title>
+</head><body>It has been noted that enabling SID Filtering between trusts in an Active Directory forest would mitigate this since SID History wouldn’t work. That may be true, though there’s a couple of potential issues with this approach: <br/>
+<br/>
+1) I have never seen this configured in a production environment, <br/>
+2) I’m not sure of Microsoft’s support posture on this, and <br/>
+3) enabling SID filtering on trusts within an AD forest <i>may</i>&nbsp;break applications that rely on universal group membership across domains (this could be a pretty big deal since universal groups are typically used frequently in multi-domain AD forests). <br/>
+<br/>
+These may seem like minor issues, but I have seen several large enterprise AD environments that break when non-standard approaches are taken since the developers didn’t take the config into account when testing.<br/>
+&nbsp;<br/>
+<a href="https://technet.microsoft.com/en-us/library/cc755321%28v=ws.10%29.aspx">More on Active Directory trust security. </a><br/>
+&nbsp;<br/>
+Note that the Active Directory domain is <i>not </i>the security boundary; the AD forest is. This means that if you need account isolation, you need AD forests, not domains in an AD forest.<br/>
+</body></html>

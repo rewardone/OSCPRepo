@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jump To DC Using DSRM</title>
+</head><body><b>Jumping Access from RODC to DC using DSRM</b><br/>
+&nbsp;<br/>
+Once we gain admin access to a RODC, either by compromising an RODC admin account, a GPO that applies to it, or a system that manages it, dumping the local Windows Security Accounts Manager (SAM) database is a good first step. Yes, Domain Controllers do have a local Administrator (500) account called the <a href="https://adsecurity.org/?p=1714">Directory Services Restore Mode (DSRM)</a>&nbsp;account. Using Mimikatz, we can get the DSRM account password for the RODC.<br/>
+<br/>
+There’s a good chance that the RODC’s DSRM password is the same as the one(s) set on writable Domain Controllers. Microsoft has a <a href="https://blogs.technet.microsoft.com/askds/2009/03/11/ds-restore-mode-password-maintenance/">good write-up on ensuring the DSRM password changes</a>. If the Group Policy applies to all systems in the Domain Controllers OU, it applies to writable DCs and RODCs. Most documentation on the web doesn’t provide the recommendation to exclude RODCs from this configuration.<br/>
+If we can gain console access to a DC (ILO, virtual console, etc), we can leverage this account to <a href="https://adsecurity.org/?p=1785">gain admin rights on the DC</a>. Or, depending on how the Domain Controllers are configured,  i<a href="https://adsecurity.org/?p=1785">t’s possible to pull AD credential password hashes</a>&nbsp;using <a href="https://adsecurity.org/?p=1729">Mimikatz DCSync</a>.<br/>
+&nbsp;<br/>
+Logging on to a DC with the DSRM account:<br/>
+&nbsp;<ul><li>Restart in Directory Services Restore Mode (<i>bcdedit /set safeboot dsrepair</i>)</li>
+<li>Access DSRM without rebooting (Windows Server 2008 and newer) </li>
+<li style="list-style-type: none"><ul><li>Set the registry key DsrmAdminLogonBehavior to 1</li>
+<li>Stop the Active Directory service</li>
+<li>Logon using DSRM credentials on the console.</li>
+</ul>
+</li>
+<li>Access DSRM without rebooting (Windows Server 2008 and newer) </li>
+<li style="list-style-type: none"><ul><li>Set the registry key DsrmAdminLogonBehavior to 2</li>
+<li>Logon using DSRM credentials on the console.</li>
+</ul>
+</li>
+</ul>
+<br/>
+Access DSRM without Rebooting:<br/>
+&nbsp;<br/>
+PowerShell New-ItemProperty “HKLM:\System\CurrentControlSet\Control\Lsa\” -Name “DsrmAdminLogonBehavior” -Value 2 -PropertyType DWORD<br/>
+&nbsp;<br/>
+The registry value is located at HKLM\System\CurrentControlSet\Control\Lsa\DSRMAdminLogonBehavior. Its possible values are:<br/>
+&nbsp;<ul><li>0 (default): You can only use the DSRM administrator account if the DC is started in DSRM.</li>
+<li>1: You can use the DSRM administrator account to log on if the local AD DS service is stopped.</li>
+<li>2: You can always use the DSRM administrator account (This setting isn’t recommended, because password policies don’t apply to the DSRM administrator account).</li>
+</ul>
+<br/>
+It is possible to use the DSRM Credentials over the network.<br/>
+&nbsp;<br/>
+When Windows 2000 and Active Directory were released, DSRM being limited to console logon was a good security method. Today, however, there are several methods to logon to a system “at the console”:<br/>
+&nbsp;<ul><li>Virtualization Client </li>
+<li style="list-style-type: none"><ul><li>VMWare Remote Console (TCP 903)</li>
+<li>Hyper-V VM Connection (TCP 5900)</li>
+</ul>
+</li>
+<li>Out of Band Management (Lights Out, etc)</li>
+<li>Network KVM</li>
+<li>Remote Desktop Client when connecting to the “Console” which is “mstsc /console” prior to Windows Server 2008 and “mstsc /admin” with Windows Server 2008 and newer. Tested on Windows Server 2008 R2. Windows Server 2012R2 seems to refuse DSRM logon via RDP console.</li>
+</ul>
+<br/>
+Once logged in as the local DC’s DSRM account (DC local admin), we can confirm we are on a DC and that this is the DC’s local administrator account. not a domain account.<br/>
+<br/>
+<br/>
+</body></html>

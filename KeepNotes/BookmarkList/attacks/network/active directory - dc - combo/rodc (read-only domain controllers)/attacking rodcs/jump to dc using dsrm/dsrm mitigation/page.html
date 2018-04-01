@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DSRM Mitigation</title>
+</head><body>DSRM Attack Mitigation<br/>
+&nbsp;<br/>
+The only true mitigation for this issue is to ensure the DSRM account passwords are unique for every Domain Controller and are changed regularly (at least as often as other account passwords). Also, ensure the DsrmAdminLogonBehavior regkey is *not* set to 2 – this registry key doesn’t exist by default. Setting this regkey to 1 forces the admin to stop the Directory Services service for DSRM logon to work.<br/>
+&nbsp;<br/>
+The Registry Key <i>HKLM\System\CurrentControlSet\Control\Lsa\DsrmAdminLogonBehavior</i> should not exist or be set to 1.<br/>
+</body></html>

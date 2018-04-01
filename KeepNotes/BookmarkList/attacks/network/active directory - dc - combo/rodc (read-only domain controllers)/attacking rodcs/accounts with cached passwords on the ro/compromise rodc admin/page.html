@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Compromise RODC Admin</title>
+</head><body><b>Compromise a RODC Admin to Compromise Accounts with Cached Passwords on the RODC</b><br/>
+One way to do this is to go after accounts with local admin rights on the RODC. Delegating admin rights to a RODC is easy: simply add a group to the Manager field on the RODC account. It’s just as simple to determine what group has RODC local admin rights by enumerating RODC computer accounts and the <i>ManagedBy</i>&nbsp;attribute.<br/>
+<img src="https://adsecurity.org/wp-content/uploads/2018/01/RODC-ADUC-ManagedBy.png" width="365" height="411" /><br/>
+&nbsp;<br/>
+Since Read-Only Domain Controllers are not supposed to be managed by Active Directory admin accounts (except in limited scenarios), finding a RODC admin account to compromise often isn’t difficult.<br/>
+&nbsp;<br/>
+First, determine what group manages the RODC by enumerating the RODC managedby attribute.<br/>
+&nbsp;<br/>
+<img src="https://adsecurity.org/wp-content/uploads/2017/12/RODC-Get-RODC-Attributes-boxed.png" width="908" height="304" /><br/>
+Then enumerate the RODC admin groups membership.<br/>
+&nbsp; <br/>
+Interestingly enough, we often find a mix of lower level accounts (user accounts) along with server admin accounts in RODC admin groups. This provides an interesting escalation path of its own since the best practice is to enable the RODC admin group account passwords are cached on the RODC.<br/>
+</body></html>
