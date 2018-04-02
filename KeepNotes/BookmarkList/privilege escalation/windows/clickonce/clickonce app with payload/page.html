@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ClickOnce App With Payload</title>
+</head><body>ClickOnce is just a convenient deployment method for the binary that you would like to execute. Visual Studio makes this task simple by including the ability to publish ClickOnce applications. Each ClickOnce Visual Studio project includes multiple files:<br/>
+<br/>
+ProjectName.application&#09;&#09;Contains the location of the manifest and application version information<br/>
+ProjectName.exe.config.deploy&#09;Contains application settings (i.e. connection strings, etc.)<br/>
+ProjectName.exe.deploy&#09;&#09;The (potentially malicious) executable that will be run by a user<br/>
+ProjectName.exe.manifest&#09;&#09;Manifest file containing application version, .NET versions supported, permission level requested, and signatures for the other files<ul>&nbsp;&#09;&#09;&#09;&#09;&#09;</ul>
+Contains the file name for the executable<br/>
+<br/>
+The easiest way to get ClickOnce to execute a payload of your choosing is to create a new console application using Visual Studio. This allows you to write your own code, not worry about a pop-up, and publish the resulting code (create the ClickOnce installer). Using some simple C# code, you can launch a process to execute an included obfuscated payload (ClickOnceInc.exe).<br/>
+<br/>
+using System;<br/>
+using System.Collections.Generic;<br/>
+using System.Linq;<br/>
+using System.Runtime.InteropServices;<br/>
+<br/>
+namespace Example_Application<br/>
+{<br/>
+<br/>
+&nbsp; &nbsp; static class Program<br/>
+&nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; static void Main()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; //Starting a new process executing the malicious exe<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.Diagnostics.Process p = new System.Diagnostics.Process();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p.StartInfo.UseShellExecute = false;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p.StartInfo.RedirectStandardOutput = false;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p.StartInfo.FileName = "ClickOnceInc.exe";<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p.Start();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }<br/>
+}<br/>
+<br/>
+Ensure that your application uses the correct version of .NET of the operating system you are targeting so the application runs properly. .NET supports backwards compatibility within each major version, allowing multiple operating systems to be targeted at once using one compiled project. For example, Windows Vista and Windows 7 can both be targeted with a .NET 3.0 binary since they both come by default with .NET 3.X installed. The same can be said for Windows 8 and Windows 10, where both can be targeted with a .NET 4.0 compiled project since they have .NET 4.5 and 4.6 installed by default respectively. Here, .NET 3.5 was chosen by navigating to the Application tab on the left, and selecting the Target Framework from the dropdown.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Include your malicious executable into the Visual Studio Solution by clicking and dragging the executable over the project (ConsoleApplication1).<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+Going into the properties of the console application, you can modify the ClickOnce settings within the Publish tab on the left. Make sure to change the Install Mode and Settings to “The application is available online only”. The Installation folder URL should be the URL the ClickOnce application will be downloaded from on the web server.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+Clicking on the Application Files… button, we get a popup showing the different files that will be created when the application is published. An important step here is to exclude the hash for the ClickOnceInc.exe. This will prevent the application from being signed and allows for the malicious executable to be changed without ClickOnce erroring out.<br/>
+<br/>
+<img src="image 4.png" /><br/>
+<br/>
+Clicking on the Publishing Wizard button, click next through the dialogs to publish the application.<br/>
+<br/>
+<img src="image 5.png" /><br/>
+<br/>
+This should build your application in the C:\testing directory. You should find the following files inside:<br/>
+<br/>
+Application Files directory<br/>
+Evil Survey.application<br/>
+Publish.htm<br/>
+Setup.exe<br/>
+<br/>
+All of these files should be copied over to your web server and placed in a folder off of the web root. In this example, I use /var/www/examplesite/template/.<br/>
+<br/>
+Since ClickOnce will take any Windows executable to run, there are many different options for payloads to use:<br/>
+<br/>
+Roll your own&#09;&#09;If you have your own exploit that can be run on a Windows box, this can be its time to shine.<br/>
+Metasploit&#09;&#09;&#09;Pro: Plenty of Meterpreter options (hint: use a reverse connection)<br/>
+&nbsp;&#09;&#09;&#09;&#09;Con: Likely to get nabbed by AntiVirus<br/>
+Veil&#09;&#09;&#09;&#09;Pro: Meterpreter payloads written in different languages<br/>
+&nbsp;&#09;&#09;&#09;&#09;Pro: Encrypted payload – i.e. less likely to get caught by AV<br/>
+&nbsp;&#09;&#09;&#09;&#09;Cons: Static “random” Meterpreter callback<br/>
+<br/>
+I decided to go with a Veil payload to avoid getting caught by AV at all costs, but this introduced a new problem; static random Meterpreter callbacks. Normally, when a Meterpreter executable is run, it generates a new random callback for the handler so it can be seen as a new and unique connection coming from a box. With Veil, the random callback has already been determined when Veil compiles the encrypted executable, so every time the Veil executable is run, it calls back with the same “random” callback. This is then ignored by the handler, as additional automated calls from the already compromised system, resulting in only one successful Meterpreter connection, no matter how many times the Veil payload is run on different computers.<br/>
+<br/>
+The solution? <a href="https://blog.netspi.com/all-you-need-is-one-a-clickonce-love-story/">Dynamically generating Veil payloads to be served to phished targets.</a></body></html>

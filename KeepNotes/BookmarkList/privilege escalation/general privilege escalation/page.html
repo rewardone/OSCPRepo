@@ -28,7 +28,7 @@ Windows<br/>
 <a href="https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/">https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/</a>&nbsp;<br/>
 <br/>
 <br/>
-<div style="text-align: left"><span style="font-family: Verdana"><span style="font-size: 13pt">Privilege Escalation:</span></span></div><br/>
+<span style="font-size: 13pt"><span style="font-family: Verdana"><div style="text-align: left">Privilege Escalation:</div></span></span><br/>
 <a href="https://www.youtube.com/watch?v=kMG8IsCohHA">https://www.youtube.com/watch?v=kMG8IsCohHA</a><br/>
 <a href="http://harmj0y.net/">http://harmj0y.net</a><br/>
 <a href="http://www.tarasco.org/">http://www.tarasco.org/</a>&nbsp; <br/>
@@ -36,9 +36,40 @@ Windows<br/>
 <a href="https://www.youtube.com/watch?v=PC_iMqiuIRQ">https://www.youtube.com/watch?v=PC_iMqiuIRQ</a><br/>
 <a href="https://www.youtube.com/watch?v=kMG8IsCohHA&feature=youtu.be">https://www.youtube.com/watch?v=kMG8IsCohHA&amp;feature=youtu.be</a><br/>
 <br/>
+"In place" Movement:<br/>
 <br/>
+1) Token Stealing<br/>
+&nbsp; &nbsp;Once you have admin access on a computer, you can use the tokens of the<br/>
+&nbsp; &nbsp;other users to access resources in the domain. Two tools for doing this are<br/>
+&nbsp; &nbsp;incognito [1] and the mimikatz token::* commands [2].<br/>
 <br/>
+2) MS14-068<br/>
+&nbsp; &nbsp;You can take advantage of a validation bug in Kerberos to generate Domain<br/>
+&nbsp; &nbsp;Admin tickets [3][4][5].<br/>
 <br/>
+3) Pass the Hash<br/>
+&nbsp; &nbsp;If you have a user's hash, but they're not logged in, you can use<br/>
+&nbsp; &nbsp;sekurlsa::pth [2] to get a ticket for the user.<br/>
+<br/>
+4) Process Injection<br/>
+&nbsp; &nbsp;Any RAT can inject itself into other processes. For example, the migrate<br/>
+&nbsp; &nbsp;command in meterpreter and pupy [6], or the psinject [7] command in<br/>
+&nbsp; &nbsp;powershell empire. You can inject into the process that has the token you<br/>
+&nbsp; &nbsp;want.<br/>
+<br/>
+5) runas<br/>
+&nbsp; &nbsp;This is sometimes very useful since it doesn't require admin privileges.<br/>
+&nbsp; &nbsp;The command is part of windows, but if you don't have a GUI you can use<br/>
+&nbsp; &nbsp;powershell [8].<br/>
+<br/>
+[1] https://www.indetectables.net/viewtopic.php?p=211165<br/>
+[2] https://adsecurity.org/?page_id=1821<br/>
+[3] https://github.com/bidord/pykek<br/>
+[4] https://adsecurity.org/?p=676<br/>
+[5] http://www.hackplayers.com/2014/12/CVE-2014-6324-como-validarse-con-cualquier-usuario-como-admin.html<br/>
+[6] https://github.com/n1nj4sec/pupy<br/>
+[7] http://www.powershellempire.com/?page_id=273<br/>
+[8] https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Invoke-Runas.ps1<br/>
 <br/>
 <br/>
 <br/>

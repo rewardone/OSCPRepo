@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CMD Exec</title>
+</head><body>As a feature, the interactive command interpreter and script mode support the EXEC command. &nbsp;As a privileged or an unprivileged user, commands and batch scripts can be invoked within Interactive Mode or via a script file.<br/>
+<br/>
+c:&gt; diskshadow&#09;&#09;&#09;&#09;&#09;&#09;&#09;#drops to CLI<br/>
+diskshadow&gt; exec calc.exe&#09;&#09;&#09;&#09;#launches calc.exe<br/>
+<br/>
+diskshadow.exe /s c:\myscript.txt&#09;&#09;&#09;#exec a script (myscript) with the /s flag<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#will exec lines one at a time<br/>
+<br/>
+Script format must have the cmd in quotes<br/>
+EXEC "cmd.exe" /c c:\evil.exe</body></html>

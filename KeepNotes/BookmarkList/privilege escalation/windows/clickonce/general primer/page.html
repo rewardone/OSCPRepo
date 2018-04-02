@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>ClickOnce is a deployment method that allows an application administrator to create Windows-based applications and deploy them to specific users. This method also allows for simple updating of published applications on a user’s machine, without the worry of typical Java applet restrictions. There are multiple advantages to using ClickOnce to deploy and update applications:<br/>
+<br/>
+Simple installation and updating<br/>
+Minimal user interaction<br/>
+Web browser deployment<br/>
+Network or network file share installation<br/>
+Easy to write a ClickOnce application<br/>
+<br/>
+Although there are many legitimate advantages to using ClickOnce deployments, it also provides a vector for malicious actors to compromise user’s machines with just one click.<br/>
+<br/>
+ClickOnce is just a wrapper that sits around an executable that you would like to run on a user’s machine. It uses a trust architecture to determine the amount of interaction that is needed from a user before executing the included binary. By default, ClickOnce packages that come from My Computer, Local Intranet, IE Trusted Sites, and the Internet allow a user to grant the application temporary admin privileges in order to install. This is a feature: “But the most important new feature when it comes to security is … the end user can elevate permissions without the help of an administrator” – MSDN. The only category disabled by default is IE Untrusted Sites. These settings are controlled by a registry key found at:<br/>
+<br/>
+\HKEY_LOCAL_MACHINE\SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\PromptingLevel<br/>
+<br/>
+Naturally, this technology fits right in with email phishing attacks, as by default, a user can grant an [insert malicious payload here] admin privileges to install/launch/exploit.<br/>
+<br/>
+Zone&#09;Applications<br/>
+MyComputer&#09;Enabled<br/>
+LocalIntranet&#09;Enabled<br/>
+TrustedSites&#09;Enabled<br/>
+Internet&#09;&#09;Enabled<br/>
+UntrustedSites&#09;Disabled</body></html>

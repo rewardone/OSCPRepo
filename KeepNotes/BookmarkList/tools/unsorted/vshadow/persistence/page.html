@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Persistence</title>
+</head><body>Auto-Start Persistence &amp; Evasion<br/>
+Since Vshadow is a signed binary and has command execution capability, we have a candidate for potentially evading AutoRuns (to a degree). &nbsp;As an example, let’s add persistence (via a Registry Run Key) for our ‘evil’ payload by entering the following command:<br/>
+<br/>
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v VSSBackup /t REG_EXPAND_SZ /d "C:\Program Files (x86)\Windows Kits\10\bin\10.0.16299.0\x64\vshadow.exe -nw -exec=c:\windows\system32\notepad.exe c:"<br/>
+<br/>
+In AutoRuns, we will not see our Logon Entry when filtering for “Microsoft Entries” as shown below:<br/>
+However, if we de-select “Microsoft Entries” and enable “Windows Entries”, we will see a record for our persistence mechanism:<br/>
+<br/>
+</body></html>

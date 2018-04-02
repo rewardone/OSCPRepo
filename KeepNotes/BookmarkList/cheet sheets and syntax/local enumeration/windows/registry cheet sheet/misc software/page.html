@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MISC Software</title>
+</head><body>ClickOnce<br/>
+<i>\HKEY_LOCAL_MACHINE\SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\PromptingLevel</i><br/>
+<b>Zone&#09;&#09;Applications</b><br/>
+MyComputer&#09;Enabled<br/>
+LocalIntranet&#09;Enabled<br/>
+TrustedSites&#09;Enabled<br/>
+Internet&#09;&#09;Enabled<br/>
+UntrustedSites&#09;Disabled<br/>
+It is recommended to change the Internet zone to either “Disabled” or to “AuthenticodeRequired”. This will require the ClickOnce application to be signed with a valid signature before it is allowed to run.<br/>
+<br/>
+Enabled&#09;The ClickOnce trust prompt is display so that end users can grant trust to ClickOnce applications.<br/>
+AuthenticodeRequired&#09;The ClickOnce trust prompt is only displayed if ClickOnce applications are signed with a certificate that identifies the publisher.<br/>
+Disabled&#09;The ClickOnce trust prompt is not displayed for any ClickOnce applications that are not signed with an explicitly trusted certificate.</body></html>

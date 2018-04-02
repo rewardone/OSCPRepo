@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CMD Exec</title>
+</head><body>Command Execution<br/>
+Executing commands with Vshadow is dependent upon a ‘successful’ interaction with a shadow copy operation (e.g. creating a snapshot, removing a snapshot, doing something with a snapshot, etc.). &nbsp;Vshadow.exe supports the -exec parameter, which can be used to execute a binary (.exe) or a script (.bat/.cmd). &nbsp;The<i>&nbsp;-exec parameter does not support command arguments</i>, so payload execution needs to be wrapped up within the context of these limitations.<br/>
+<br/>
+Before proceeding, let’s consider a few other requirements for command execution. &nbsp;<br/>
+<br/>
+Firstly, we need to have privileges on the machine (e.g. administrator) as working with volume snapshots (and invoking the Volume Shadow Service) is deemed a sensitive operation. &nbsp;<br/>
+Secondly, we need to get the Vshadow executable onto the target machine. &nbsp;If the Windows SDK is already installed, then all we have to do is locate the path to the binary on disk. &nbsp;Otherwise, we’ll have to transfer it over. &nbsp;<br/>
+Lastly, we need to ensure that our payload is wrapped up as discussed previously. &nbsp;For our command execution example, we will simply use notepad.exe as our payload.<br/>
+<br/>
+Invoking a payload with vshadow.exe is not exactly the stealthiest method, but we can operate the tool in such a way to minimize our footprint. &nbsp;The basic structure of our command is as follows:<br/>
+<br/>
+vshadow.exe -nw -exec=&lt;\path\to\exe&gt; &lt;system drive&gt;<br/>
+Specifying -nw allows us to create a shadow copy without invoking shadow copy writers. &nbsp;Effectively, this is a non-persistent shadow copy, which will not leave “physical” disk evidence (*Please note that this does not necessarily prevent the detection of shadow copy creation as we are still going through the simulated process). Now, let’s run the following command:<br/>
+<br/>
+vshadow.exe -nw -exec=c:\windows\system32\notepad.exe c:<br/>
+<br/>
+Successful execution of Vshadow in this context will create a ‘faux’ shadow copy set, then launch the payload (notepad.exe) as specified by the -exec parameter. &nbsp;A few interesting things are happening here that may be useful for defensive and forensics folks to know…<br/>
+<br/>
+Vshadow.exe will not finish executing until the child process is finished executing.<br/>
+The payload (notepad.exe) is a child process of vshadow.exe<br/>
+Successful execution of Vshadow will kick off the Volume Shadow Service (VSS) as indicated by System Event ID 7036 and invocation of the VSSVC.exe process.<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

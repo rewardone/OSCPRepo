@@ -6,7 +6,7 @@
   <key>title</key><string>Kerberos Service Accounts</string>
   <key>nodeid</key><string>9cb9c903-f020-4266-af0b-69cdfbca6f42</string>
   <key>modified_time</key><integer>1522611194</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522610766</integer>

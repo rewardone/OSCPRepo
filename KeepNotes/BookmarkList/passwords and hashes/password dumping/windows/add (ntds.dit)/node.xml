@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>ADD (ntds.dit)</string>
   <key>nodeid</key><string>a7e1c99e-4037-41e9-a187-3e052c453ece</string>
   <key>modified_time</key><integer>1522533821</integer>

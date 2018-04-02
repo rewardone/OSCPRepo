@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Password related</title>
+</head><body>Password Settings<br/>
+<b>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest “UseLogonCredential”(DWORD)</b><ul><li style="list-style-type: none">in order to prevent the “clear-text” password from being placed in LSASS, the following registry key needs to be set to “0” (Digest Disabled)</li>
+<li style="list-style-type: none">&nbsp;&#09;Attacker can set to 1 in order to enable Digest password support with forces "clear-text"</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">This value does not exist on 8.1/2012R2 and newer, so it would have to be created</li>
+</ul>
+</li>
+<li style="list-style-type: none"></li>
+</ul>
+<b>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa</b><ul><li style="list-style-type: none">Set the value of the registry key to: “RunAsPPL”=dword:00000001.</li>
+<li style="list-style-type: none">&nbsp;This key will enable LSA protection. It preents non-protected processes from interacting with LSASS </li>
+</ul>
+</body></html>

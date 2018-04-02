@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Grab ADD (ntds.dit)</string>
+  <key>nodeid</key><string>28b49c0a-147e-4b7f-997b-6e671abcd604</string>
+  <key>modified_time</key><integer>1522688093</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522687495</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Encoders &amp; Obfuscators</string>
   <key>nodeid</key><string>ee4cace1-4782-444c-89e4-b5e167ef17da</string>
   <key>modified_time</key><integer>1520449567</integer>

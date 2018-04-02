@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigation</title>
+</head><body>For DiskShadow, Blue Teams and Network Defenders should consider the following:<br/>
+<br/>
+Monitor the Volume Shadow Service (VSS) for random shadow creations/deletions and any activity that involves the AD database file (ntds.dit).<br/>
+Monitor for suspicious instances of System Event ID 7036 (“The Volume Shadow Copy service entered the running state”) and invocation of the VSSVC.exe process.<br/>
+Monitor process creation events for diskshadow.exe and spawned child processes.<br/>
+Monitor for process integrity. &nbsp;If diskshadow.exe runs at a medium integrity, that is likely a red flag.<br/>
+Monitor for instances of diskshadow.exe on client endpoints. &nbsp;Unless there is a business need, diskshadow.exe *should* not be present on client Windows operating systems.<br/>
+Monitor for new and interesting logical drive mappings.<br/>
+Inspect suspicious “AutoRuns” entries. &nbsp;Scrutinize signed binaries and inspect script files.<br/>
+Enforce Application Whitelisting. &nbsp;Strict policies may prevent DiskShadow pass-thru applications from executing.<br/>
+Fight the good fight, and train your users. &nbsp;If they see something (e.g. a weird pop up window), they should say something!</body></html>

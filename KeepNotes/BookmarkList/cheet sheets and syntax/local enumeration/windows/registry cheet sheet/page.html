@@ -3,30 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Registry Cheet Sheet</title>
-</head><body>Authentication related keys<br/>
-<b>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\FilterAdministratorToken</b><br/>
-&nbsp;&#09;Default: disabled<br/>
-&nbsp;&#09;If enabled: RID 500 account (even renamed) is enrolled in UAC protection (non-rdp remote access to another PC will be medium-integrity not high-integrity privs)<br/>
+</head><body><br/>
 <br/>
-<b>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy</b><br/>
-&nbsp;&#09;Default: does not exist<br/>
-&nbsp;&#09;If exists and set to 1: remote connections from <b>all</b>&nbsp;local members of Administrators group are granted full high-integrity tokens. Meaning non-RID 500 account connections can pass-the-hash.<br/>
 <br/>
-Security Settings<br/>
-<b>Security Settings &gt; Local Policies &gt; Security Options: Network security LAN Manager authentication level</b>&nbsp;<br/>
-&nbsp;&#09;Default: Windows 2000 and windows XP: send LM &amp; NTLM responses<br/>
-&nbsp;&#09;Windows Server 2003: Send NTLM response only<br/>
-&nbsp;&#09;Windows Vista, Windows Server 2008, Windows 7, and Windows Server 2008 R2: Send NTLMv2 response only<br/>
 <br/>
-Password Settings<br/>
-<b>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest “UseLogonCredential”(DWORD)</b><ul><li style="list-style-type: none">in order to prevent the “clear-text” password from being placed in LSASS, the following registry key needs to be set to “0” (Digest Disabled)</li>
-<li style="list-style-type: none">&nbsp;&#09;Attacker can set to 1 in order to enable Digest password support with forces "clear-text"</li>
-<li style="list-style-type: none"><ul><li style="list-style-type: none">This value does not exist on 8.1/2012R2 and newer, so it would have to be created</li>
-</ul>
-</li>
-<li style="list-style-type: none"></li>
-</ul>
-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa<ul><li style="list-style-type: none">Set the value of the registry key to: “RunAsPPL”=dword:00000001.</li>
-<li style="list-style-type: none">&nbsp;This key will enable LSA protection. It preents non-protected processes from interacting with LSASS </li>
-</ul>
 </body></html>

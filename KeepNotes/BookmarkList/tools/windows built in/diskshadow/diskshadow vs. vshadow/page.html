@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DiskShadow Vs. Vshadow</title>
+</head><body><b>DiskShadow vs. Vshadow</b><br/>
+DiskShadow.exe and VShadow.exe have very similar capabilities. &nbsp;However, there are a few differences between these applications that may justify which one is the better choice for the intended operational use case. &nbsp;Let’s explore some of these in greater detail:<br/>
+<br/>
+<b>Operating System Inclusion</b><br/>
+DiskShadow.exe is included with the Windows Server operating system since 2008. &nbsp;Vshadow.exe is included with the Windows SDK. &nbsp;Unless the target machine has the Windows SDK installed, Vshadow.exe must be uploaded to the target machine. &nbsp;In a “living off the land” scenario, DiskShadow.exe has the clear advantage.<br/>
+<br/>
+<b>Utility &amp; Usage</b><br/>
+Under the context of a normal user in our test case, we can use several DiskShadow features without privilege (UAC) implications. &nbsp;In my previous testing, Vshadow had privilege constraints (e.g. external command execution could only be invoked after running a VSS operation). &nbsp;Additionally, DiskShadow is flexible with command switch support as previously described. &nbsp;DiskShadow.exe has the advantage here.<br/>
+<br/>
+<b>Command Line Orientation</b><br/>
+Vshadow is “command line friendly” while DiskShadow requires use by interactive prompt or script file. &nbsp;Unless you have (remote) “TTY” access to a target machine, DiskShadow’s interactive prompt may not be suitable (e.g. for some backdoor shells). &nbsp;Additionally, there is an increased risk for detection when creating files or uploading files to a target machine. &nbsp;In the strict confines of this scenario, Vshadow has the advantage (although, creating a text file will likely have less impact than uploading a binary – refer to the previous section).<br/>
+<br/>
+<b>AutoRuns Persistence &amp; Evasion</b><br/>
+In the previous Vshadow blog post, you may recall that Vshadow is signed with the Microsoft signing certificate. &nbsp;This has AutoRuns implications such that it will appear within the Default View since Microsoft signed binaries are not hidden. &nbsp;Since DiskShadow is signed with the Windows certificate, it is hidden from the default view. &nbsp;In this scenario, DiskShadow has the advantage.<br/>
+<br/>
+<b>Active Directory Database Extraction</b><br/>
+If script mode is the only option for DiskShadow usage, extracting the AD database may require additional operations if assumed defaults are not valid (e.g. Shadow Volume disk name is not what we expected). &nbsp;Aside from crafting and running the script, a logical drive may have to be mapped on the target machine to copy out ntds.dit. &nbsp;This does add an additional level of noise to the shadow copy operation. &nbsp;Vshadow has the advantage here.<br/>
+<br/>
+<b>Conclusion</b><br/>
+All things considered, DiskShadow seems to be more compelling for operational use. &nbsp;However, that does not discount Vshadow (and other VSS methods for that matter) as a prospective tool used by threat agents. &nbsp;Vshadow has been used maliciously in the past for other reasons. &nbsp;For DiskShadow, Blue Teams and Network Defenders should consider the following:<br/>
+<br/>
+Monitor the Volume Shadow Service (VSS) for random shadow creations/deletions and any activity that involves the AD database file (ntds.dit).<br/>
+Monitor for suspicious instances of System Event ID 7036 (“The Volume Shadow Copy service entered the running state”) and invocation of the VSSVC.exe process.<br/>
+Monitor process creation events for diskshadow.exe and spawned child processes.<br/>
+Monitor for process integrity. &nbsp;If diskshadow.exe runs at a medium integrity, that is likely a red flag.<br/>
+Monitor for instances of diskshadow.exe on client endpoints. &nbsp;Unless there is a business need, diskshadow.exe *should* not be present on client Windows operating systems.<br/>
+Monitor for new and interesting logical drive mappings.<br/>
+Inspect suspicious “AutoRuns” entries. &nbsp;Scrutinize signed binaries and inspect script files.<br/>
+Enforce Application Whitelisting. &nbsp;Strict policies may prevent DiskShadow pass-thru applications from executing.<br/>
+Fight the good fight, and train your users. &nbsp;If they see something (e.g. a weird pop up window), they should say something!</body></html>

