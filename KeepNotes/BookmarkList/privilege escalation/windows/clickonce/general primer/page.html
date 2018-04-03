@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>General Primer</title>
-</head><body>ClickOnce is a deployment method that allows an application administrator to create Windows-based applications and deploy them to specific users. This method also allows for simple updating of published applications on a user’s machine, without the worry of typical Java applet restrictions. There are multiple advantages to using ClickOnce to deploy and update applications:<br/>
+</head><body>ClickOnce is a deployment method that allows an application administrator to create Windows-based applications and deploy them to specific users. Included as a component within the .NET Framework, ClickOnce allows a developer to create a web-enabled installer package for their (C#) Visual Studio project. &nbsp;Depending on the operating system version and browser security settings (e.g. SmartFilter), a ClickOnce application can be installed (as an unprivileged user) from a Microsoft Browser or launched from the command line with just a few clicks. This method also allows for simple updating of published applications on a user’s machine, without the worry of typical Java applet restrictions. There are multiple advantages to using ClickOnce to deploy and update applications:<br/>
 <br/>
 Simple installation and updating<br/>
 Minimal user interaction<br/>
@@ -24,4 +24,14 @@ MyComputer&#09;Enabled<br/>
 LocalIntranet&#09;Enabled<br/>
 TrustedSites&#09;Enabled<br/>
 Internet&#09;&#09;Enabled<br/>
-UntrustedSites&#09;Disabled</body></html>
+UntrustedSites&#09;Disabled<br/>
+<br/>
+<b>What are the requirements for operational use?</b><br/>
+To get started with ClickOnce, we need to do our homework and get a few things prepared:<br/>
+<ul><li>For social engineering campaigns, Microsoft web browsers (Edge/Internet Explorer) are required to invoke the ClickOnce installer. Additionally, target organizations must have the appropriate version of .NET Framework installed to launch the respective payload. &nbsp;(*Note: an alternate method may be used to invoke this through web deployment settings but with added steps.)</li>
+<li>How you prepare your payload (C# application) will determine your .NET Framework version requirements. Consider preparing payloads to use earlier versions of .NET.</li>
+<li>Visual Studio (C#) and respective application requirements.</li>
+<li>A nominal payload. For this example, we’ll launch notepad.exe using a C# snippet in our examples below.</li>
+<li>A web server/site (that matches the URL within the ClickOnce publisher) to host the package installer.</li>
+</ul>
+</body></html>

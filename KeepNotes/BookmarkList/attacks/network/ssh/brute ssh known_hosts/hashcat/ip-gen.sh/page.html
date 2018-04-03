@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ip-gen.sh</title>
+</head><body>#!/bin/bash<br/>
+for a in `seq 0 255`<br/>
+do<br/>
+&nbsp; for b in `seq 0 255`<br/>
+&nbsp; do<br/>
+&nbsp; echo "$a.$b." &gt;&gt; ips_left.txt<br/>
+&nbsp; echo "$a.$b" &gt;&gt; ips_right.txt<br/>
+&nbsp; done<br/>
+done</body></html>

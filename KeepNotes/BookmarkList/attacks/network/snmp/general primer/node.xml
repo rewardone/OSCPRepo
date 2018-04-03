@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>General Primer</string>
+  <key>nodeid</key><string>b972f7cb-0aaa-46c9-88d5-04b7e359029a</string>
+  <key>modified_time</key><integer>1522782059</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522781904</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

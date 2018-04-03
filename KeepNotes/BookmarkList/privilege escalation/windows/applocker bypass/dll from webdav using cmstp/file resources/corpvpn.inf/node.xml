@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>CorpVPN.inf</string>
+  <key>nodeid</key><string>b15e61ea-4fc8-4d28-80bb-83b1b36feb97</string>
+  <key>modified_time</key><integer>1522770073</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522770049</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

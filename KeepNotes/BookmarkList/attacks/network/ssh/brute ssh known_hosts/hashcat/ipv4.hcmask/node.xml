@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>ipv4.hcmask</string>
+  <key>nodeid</key><string>46257465-7795-4981-a07e-227114ea271c</string>
+  <key>modified_time</key><integer>1522781753</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522781686</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

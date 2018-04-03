@@ -5,6 +5,7 @@
   <key>title</key><string>ClickOnce App With Payload</string>
   <key>nodeid</key><string>cc1a54f1-f2ea-4a08-9403-7b8f8633475d</string>
   <key>modified_time</key><integer>1522682773</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522682471</integer>

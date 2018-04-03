@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Walkthrough</string>
+  <key>nodeid</key><string>939dcf33-553e-472e-95a1-e46814e5b12d</string>
+  <key>modified_time</key><integer>1522770803</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522770154</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

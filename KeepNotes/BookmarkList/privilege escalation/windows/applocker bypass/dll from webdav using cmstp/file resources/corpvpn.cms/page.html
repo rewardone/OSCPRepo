@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CorpVPN.cms</title>
+</head><body>[Profile Format]<br/>
+Version=5<br/>
+<br/>
+[ISP]<br/>
+PBFile=CorpVPN\CorpBook.pbk<br/>
+RegionFile=CorpVPN\CorpBook.pbr<br/>
+PBURL=http://msitpros.com/pbserver/pbserver.dll<br/>
+Mask&amp;SignOn=0x0001<br/>
+Match&amp;SignOn=0x0000<br/>
+Mask&amp;SignUp=0x0002<br/>
+Match&amp;SignUp=0x0002<br/>
+Mask&amp;Modem=0x0004<br/>
+Match&amp;Modem=0x0000<br/>
+Mask&amp;ISDN=0x0008<br/>
+Match&amp;ISDN=0x0000<br/>
+Mask&amp;Custom1=0x0010<br/>
+Match&amp;Custom1=0x0010<br/>
+Mask&amp;Custom2=0x0080<br/>
+Match&amp;Custom2=0x0080<br/>
+Mask&amp;MultiCast=0x0020<br/>
+Match&amp;MultiCast=0x0000<br/>
+Mask&amp;Surcharge=0x0040<br/>
+Match&amp;Surcharge=0x0040<br/>
+Mask&amp;MultiCastModem=0x0024<br/>
+Match&amp;MultiCastModem=0x0000<br/>
+Mask&amp;MultiCastISDN=0x0028<br/>
+Match&amp;MultiCastISDN=0x0000<br/>
+Mask&amp;NosurchargeSignon=0x0041<br/>
+Match&amp;NosurchargeSignon=0x0000<br/>
+Mask&amp;SurchargeSignon=0x0041<br/>
+Match&amp;SurchargeSignon=0x0040<br/>
+FilterA&amp;=NosurchargeSignon<br/>
+FilterB&amp;=SurchargeSignon<br/>
+<br/>
+[Service Types]<br/>
+Modem=Modem<br/>
+ISDN=ISDN<br/>
+Modem MultiCast=MultiCastModem<br/>
+ISDN MultiCast=MultiCastISDN<br/>
+<br/>
+[Connection Manager]<br/>
+RedialCount=3<br/>
+RedialDelay=5<br/>
+Version=0<br/>
+DownloadDelay=15<br/>
+ServiceName=CorpVPN<br/>
+ServiceMessage=<br/>
+PBMessage=<br/>
+DUN=CorpVPN<br/>
+UserNamePrefix=<br/>
+UserNameSuffix=<br/>
+PasswordHandling=0<br/>
+Logo=<br/>
+Icon=<br/>
+SmallIcon=<br/>
+TrayIcon=<br/>
+PBLogo=<br/>
+Dialup=1<br/>
+Direct=1<br/>
+ConnectionType=0<br/>
+Tunnel=0<br/>
+TunnelReferences=0<br/>
+HelpFile=<br/>
+SecureRoutingCompartment=0<br/>
+<br/>
+[Animated Logo]<br/>
+<br/>
+[Animation Actions]<br/>
+<br/>
+[Pre-Init Actions]<br/>
+<br/>
+[Pre-Connect Actions]<br/>
+<br/>
+[Pre-Dial Actions]<br/>
+<br/>
+[Pre-Tunnel Actions]<br/>
+<br/>
+[Connect Actions]<br/>
+0=cmdl32.exe %PROFILE%<br/>
+0&amp;Flags=16<br/>
+<br/>
+[Auto Applications]<br/>
+<br/>
+[Disconnect Actions]<br/>
+<br/>
+[On-Cancel Actions]<br/>
+<br/>
+[On-Error Actions]<br/>
+<br/>
+[Menu Options]<br/>
+<br/>
+[Server&amp;CorpVPN]<br/>
+SW_Compress=1<br/>
+Disable_LCP=0<br/>
+Negotiate_TCP/IP=1<br/>
+Negotiate_TCP/IPv6=1<br/>
+SecureLocalFiles=0<br/>
+EnforceCustomSecurity=0<br/>
+Custom_Security=1<br/>
+Require_PAP=0<br/>
+Require_SPAP=0<br/>
+Require_CHAP=1<br/>
+Require_MSCHAP=0<br/>
+Require_MSCHAP2=1<br/>
+Require_W95MSCHAP=0<br/>
+EncryptionType=3<br/>
+PW_Encrypt=1<br/>
+PW_EncryptMS=0<br/>
+DataEncrypt=0<br/>
+[TCP/IP&amp;CorpVPN]<br/>
+IP_Header_Compress=1<br/>
+Gateway_On_Remote=1<br/>
+IPv6_Gateway_On_Remote=1<br/>
+Specify_Server_Address=0<br/>
+IPv6_Specify_Server_Address=0</body></html>

