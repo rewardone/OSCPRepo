@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Kerberos on NIX</title>
+</head><body>&nbsp;Getting Kerberos up and going quickly on Kali (Debian base) is fairly straight forward. &nbsp;I'm going to recommend using Heimdal rather than MIT based on experiences. &nbsp;<br/>
+<br/>
+Simply "apt-get install heimdal-clients" and it should pull in a all the required dependencies. &nbsp;We aren't quite done yet, however.<br/>
+<br/>
+First, you need to point your name resolution to the domain controller. &nbsp;There's a lot of magic that gets figured out with Kerberos and DNS, so pointing the resolv.conf to the DC just makes life easier. &nbsp;Trust me.<br/>
+<br/>
+Secondly, you need a working '/etc/krb5.conf'. &nbsp;I managed to steal re-purpose one from a working Centrify config. &nbsp;It is worth noting that you need to get the case correct here. &nbsp;Kerberos realms are capitalized. &nbsp;It took me forever to re-learn this, so you've been warned. &nbsp;I recommend starting with a known good / working configuration and then modify to suit your needs. &nbsp; &nbsp;Here it is from my internal 'exploits.com' domain in the lab (Windows 2008R2 domain at 2008R2 functional level):<br/>
+<br/>
+&nbsp; &nbsp; [libdefaults]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;default_realm = EXPLOITS.COM<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;default_tgs_enctypes = aes256-cts aes128-cts arcfour-hmac-md5 des-cbc-md5 des-cbc-crc<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;default_tkt_enctypes = aes256-cts aes128-cts arcfour-hmac-md5 des-cbc-md5 des-cbc-crc<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;permitted_enctypes = aes256-cts aes128-cts arcfour-hmac-md5 des-cbc-md5 des-cbc-crc<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;dns_lookup_realm = true<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;dns_lookup_kdc = true<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;passwd_check_s_address = false<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;noaddresses = true<br/>
+<br/>
+&nbsp; &nbsp; udp_preference_limit = 1<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;ccache_type = 3<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;kdc_timesync = 0<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;kdc_timesync = 0<br/>
+<br/>
+&nbsp; &nbsp; [domain_realm]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;dc1.exploits.com = EXPLOITS.COM<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;.exploits.com = EXPLOITS.COM<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;exploits.com = EXPLOITS.COM<br/>
+<br/>
+&nbsp; &nbsp; [realms]<br/>
+<br/>
+&nbsp; &nbsp; EXPLOITS.COM = {<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;kdc = dc1.exploits.com:88<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;master_kdc = dc1.exploits.com:88<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;kpasswd = dc1.exploits.com:464<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;kpasswd_server = dc1.exploits.com:464<br/>
+<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+<br/>
+Logging into a Kerberos domain is fairly straight forward. &nbsp;Assuming that you have everything configured correctly, you issue the command 'kinit user1@EXPLOITS.COM'. &nbsp;It will prompt you for a password. &nbsp;Then if it is successful, it will simply return you to a command prompt. &nbsp;To see if you actually got a ticket, use the command 'klist'. <br/>
+<br/>
+&nbsp;The Kerberos tickets are stores in a file in /tmp called 'krb5cc_0' in a *NIX Kerberos format called CCACHE. &nbsp;The number at the end is the UID of the currently logged in user. &nbsp;If you are on a multi-user system you may see several files in /tmp with different UIDs. &nbsp;Keep in mind that Kerberos tickets are portable..... (and if you are root, easy to grab files with multiple tickets potentially in them) ;-)<br/>
+<br/>
+Once you have a TGT you can generally simply use the '-k' flag with any of the samba utilities to log into Windows assets using the Kerberos ticket rather than credentials. &nbsp;You don't even need to specify a username either, since that's all in the ticket. &nbsp;<br/>
+<br/>
+Use Heimdal. &nbsp;The 'ktutil' on MIT is interactive and is much more painful to use. &nbsp;Hence my recommendation to use Heimdal. &nbsp;Heimdal. &nbsp;Heimdal.</body></html>

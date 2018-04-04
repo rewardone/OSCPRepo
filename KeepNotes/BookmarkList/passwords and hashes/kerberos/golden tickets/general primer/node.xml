@@ -4,7 +4,8 @@
 <dict>
   <key>title</key><string>General Primer</string>
   <key>nodeid</key><string>4ebfef3b-af39-4cb0-9bf4-6a6d63f87a6c</string>
-  <key>modified_time</key><integer>1522615800</integer>
+  <key>modified_time</key><integer>1522802690</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522615672</integer>

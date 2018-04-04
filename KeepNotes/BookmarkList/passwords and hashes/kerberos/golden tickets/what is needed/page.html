@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>What Is Needed</title>
+</head><body><img src="image.png" /><br/>
+<br/>
+All you need is:<br/>
+&nbsp;&#09;KDC key (krbtgt), it can be RC4 (NTLM hash) or AES<br/>
+&nbsp;&#09;SID of the domain (whoami, psgetsid, etc)<br/>
+&nbsp;&#09;Domain name<br/>
+<br/>
+Mimikatz<br/>
+# lsadump::lsa /inject /name:krbtgt<br/>
+<img src="image 2.png" /></body></html>

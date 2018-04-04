@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Access Kerberos With NTLM Hash</string>
+  <key>nodeid</key><string>29163d9d-414d-4d96-8245-0ed2256543ae</string>
+  <key>modified_time</key><integer>1522808211</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522806637</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

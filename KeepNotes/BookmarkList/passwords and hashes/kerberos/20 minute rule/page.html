@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>20 Minute Rule</title>
+</head><body>Kerberos 5 has no method for the KDC/TGS (server) to validate that an account is still valid when presented with a TGT<br/>
+&nbsp;&#09;MS implemented a solution for this problem<br/>
+&nbsp;&#09;<b>IF</b>&nbsp;the <b>TGT</b>&nbsp;is older than <b>20 minutes</b>, the KDC will validate the account is still &nbsp;valid/enabled before issuing service tickets<br/>
+<br/>
+<br/>
+Anyways onto the topic at hand: PAC validation and the various excuses not to check it<br/>
+<br/>
+What is PAC Validation and Why Do I Care?  The PAC (Privilaged Attribute Certificate) is a structure contained in a Kerberos ticket that contains a list of privileges that the ticket is representing, along with some other stuff.  If we can forge the PAC we can do things to break the privilege model of Kerberos  in some very interesting ways<br/>
+<br/>
+"PAC validation" is pretty much what it sounds like, the service receiving the ticket double checks the information contained in the PAC as being valid before either issuing service tickets (in the event of a Ticket Granting Ticket / TGT) or running the command/request/whatever (in the event of a service ticket being used).<br/>
+<br/>
+The 20 Minute Rule  &nbsp;What we're calling "The 20 Minute Rule" is taken straight out of the Microsoft's MS-KILE specification, specifically section 5.1.3 which states: &nbsp;<br/>
+&nbsp; <i>"Kerberos V5 does not provide account revocation checking for TGS requests, which allows TGT renewals and service tickets to be issued as long as the TGT is valid even if the account has been revoked. KILE provides a check account policy (section 3.3.5.7.1) that limits the exposure to a shorter time. KILE KDCs in the account domain are required to check accounts when the TGT is older than 20 minutes. This limits the period that a client can get a ticket with a revoked account while limiting the performance cost for AD queries."</i>&nbsp; <br/>
+<br/>
+&nbsp;So to translate, in the event that the TGT is more than 20 minutes old, the PAC contents are validated to ensure that the account is still valid.  However to flip this around, this means that there's a 20 minute window where the contents ARE NOT validated.  This is one of the primary things we brought up in our Black Hat talk.  As long as you have the KRBTGT hash you can put whatever information you want into the PAC inside the TGT, and service tickets will be issued, as long as the age of the TGT is less that 20 minutes old.  This includes bogus account / SID information, such as a non-existent user being a member of the domain admins group.  Because the information isn't validated during this first 20 minute window, service tickets will be generated that are good for several hours by default.  Additionally, since we can create our own TGTs, the 20 minute rule is never really a problem since we can simply create a new TGT every 20 minutes to get around this limitation. &nbsp;<br/>
+<br/>
+<br/>
+Other PAC Validation Issues<br/>
+So obviously, this can lead to some problems, but are there any other examples lurking out there? &nbsp;I'm glad you asked!<br/>
+<br/>
+Recently @gentilkiwi and I have been investigating another issue related to a failure of PAC validation that Ben has dubbed a 'Silver Ticket'. &nbsp; Here's the section of relevant protocol specification from the holy Microsoft MS-APDS scripture Appendix A, Section 1.6.2:<br/>
+<br/>
+"<br/>
+&nbsp; &nbsp; Windows 2000 Server and Windows XP do not validate the PAC when the application server is running under the local system context or has SeTcbPrivilege, as specified in [MS-LSAD] section 3.1.1.2.1. Otherwise, Windows 2000 Server and Windows XP use Kerberos PAC validation.<br/>
+&nbsp; &nbsp; Windows Server 2003 does not validate the PAC when the application server is running under the local system context, the network service context, or has SeTcbPrivilege. Otherwise, Windows Server 2003 uses Kerberos PAC validation.<br/>
+&nbsp; &nbsp; Windows Server 2003 with SP1 does not validate the PAC when the application server is under the local system context, the network service context, the local service context, or has SeTcbPrivilege privilege. Otherwise, Windows Server 2003 with SP1 and future service packs use Kerberos PAC validation.<br/>
+&nbsp; &nbsp; Windows Vista, Windows Server 2008, Windows 7, Windows Server 2008 R2, Windows 8, Windows Server 2012, Windows 8.1, and Windows Server 2012 R2 do not validate the PAC by default for services. Windows still validates the PAC for processes that are not running as services. PAC validation can be enabled when the application server is not running in the context of local system, network service, or local service; or it does not have SeTcbPrivilege, as specified in [MS-LSAD] section 3.1.1.2.1.<br/>
+"<br/>
+<br/>
+So, in general older versions of Windows don't validate the PAC when the process is running as SYSTEM or has the "SeTcbPrivilege" (Act as part of the operating system) privilege set. &nbsp;Newer versions (Vista+) don't check the PAC for services. <br/>
+<br/>
+So, how is this useful? &nbsp;Well, pretty much anything that you could want to do to a computer remotely is a service, such as access a file share, schedule a task, execute code, etc...<br/>
+<br/>
+So, for Kerberos, services by default don't validate PAC settings... What could possibly go wrong here? &nbsp;But wait! There's more!<br/>
+</body></html>
