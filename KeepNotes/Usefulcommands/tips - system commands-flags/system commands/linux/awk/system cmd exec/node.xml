@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>System CMD Exec</string>
+  <key>nodeid</key><string>9316dc15-5908-4c84-b8e5-6f693ae2bb98</string>
+  <key>modified_time</key><integer>1522852888</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522852879</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

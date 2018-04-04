@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Privesc Check</title>
+</head><body>privesc-check-master (from lib/misc/kernel, stealthy checks?)<br/>
+These are checks in lib/checks....there are more in lib/misc...OS specific, enhancements?<br/>
+###############################################################################################################<br/>
+#<br/>
+# include files in bash or sh with . or source<br/>
+# . lib/misc/file<br/>
+# . lib/misc/permission<br/>
+# . lib/misc/stdio<br/>
+# . lib/misc/kernel<br/>
+#<br/>
+#<br/>
+# Check all world writeable files<br/>
+#<br/>
+#world_writable_main () {<br/>
+#&#09;file_show_non_symlink_perms "^........w. " | while read filename permissions userid groupid<br/>
+#&#09;do<br/>
+#&#09;&#09;case "${permissions}" in<br/>
+#&#09;&#09;&#09;????????w?)<br/>
+#&#09;&#09;&#09;&#09;if [ "`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1 ]<br/>
+#&#09;&#09;&#09;&#09;then<br/>
+#&#09;&#09;&#09;&#09;&#09;stdio_message_warn "world_writable" "${filename} is owned by user ${userid} (group ${groupid}) and is world-writable with sticky bit (${permissions})"<br/>
+#&#09;&#09;&#09;&#09;else<br/>
+#&#09;&#09;&#09;&#09;&#09;stdio_message_warn "world_writable" "${filename} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"<br/>
+#&#09;&#09;&#09;&#09;fi<br/>
+#&#09;&#09;&#09;&#09;;;<br/>
+#&#09;&#09;esac<br/>
+#&#09;done<br/>
+#}<br/>
+#<br/>
+# check SELinux 'enforce'&#09;&#09;&#09; <br/>
+# &#09;SELinux is a set of extra security restrictions on top of the normal Linux security tools. &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;<br/>
+# &#09;It gives the systems administrator a finer grain of control than what the kernel typically provides.&#09;<br/>
+# &#09;quick test with: 'selinuxenabled &amp;&amp; echo enabled || echo disabled'<br/>
+# &#09;quick test with: 'getenforce'<br/>
+# &#09;quick test with: 'sestatus'<br/>
+# &#09;show security contexts: 'sestatus -v' <br/>
+# &#09;show booleans: 'sestatus -b | grep on$'<br/>
+# &#09;temp disable: 'setenforce 0'<br/>
+#<br/>
+#system_selinux_main () {<br/>
+#&#09;if [ "`kernel_selinux_enforce`" -eq 0 ]<br/>
+#&#09;then<br/>
+#&#09;&#09;stdio_message_warn "system_selinux" "SELinux does not enforce system-wide"<br/>
+#&#09;else<br/>
+#&#09;&#09;stdio_message_debug "system_selinux" "SELinux enforces system-wide"<br/>
+#&#09;fi<br/>
+#}<br/>
+#<br/>
+# check NX bit / logging<br/>
+#&#09;'if kernel_nx or SunOS'<br/>
+#<br/>
+#system_nx_main () {<br/>
+#&#09;if [ "`kernel_nx`" -eq 0 ]<br/>
+#&#09;then<br/>
+#&#09;&#09;stdio_message_warn "system_nx" "The CPU does not support NX"<br/>
+#&#09;else<br/>
+#&#09;&#09;stdio_message_debug "system_nx" "The CPU supports NX"<br/>
+#&#09;fi<br/>
+#<br/>
+# check mmap (memory map) allows mapping to zero<br/>
+#<br/>
+#system_mmap_main () {<br/>
+#&#09;if [ "`kernel_mmap_zero_allowed`" -eq 1 ]<br/>
+#&#09;then<br/>
+#&#09;&#09;stdio_message_warn "system_mmap" "mmap allows map to 0"<br/>
+#&#09;else<br/>
+#&#09;&#09;stdio_message_debug "system_mmap" "mmap does not allow map to 0"<br/>
+#&#09;fi<br/>
+#}<br/>
+#<br/>
+# extensive file permissions checker. Looks for the following:<br/>
+#&#09;"`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1&#09;&#09;&#09;&#09;(${systemfilename}) ${filename} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"&#09;<br/>
+#&#09;"`group_is_in_group_name \"${groupid}\"`" -eq 1&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;(${systemfilename}) ${filename} is owned by user ${userid} (group ${groupid}: YOU) and is group-writable (${permissions})"<br/>
+#&#09; "`user_is_root \"${userid}\"`" -ne 1 -a "`user_show_user_name`" = "${userid}"&#09;&#09;(${systemfilename}) ${filename} is owned by user ${userid} (YOU) (group ${groupid}), non-root user (${permissions})"<br/>
+#<br/>
+# check sensitive files:<br/>
+#&#09;sensitive_config_files="<br/>
+#&#09;/etc/passwd<br/>
+#&#09;/etc/shadow<br/>
+#&#09;/etc/master.passwd<br/>
+#&#09;/etc/security/passwd<br/>
+#&#09;/etc/group<br/>
+#&#09;/etc/cron<br/>
+#&#09;/etc/fstab<br/>
+#&#09;/etc/init<br/>
+#&#09;/etc/rc<br/>
+#&#09;/etc/inetd<br/>
+#&#09;/etc/xinetd<br/>
+#&#09;/etc/bash.bashrc<br/>
+#&#09;/etc/profile<br/>
+#&#09;/etc/sudoers<br/>
+#&#09;/etc/hosts.equiv<br/>
+#&#09;/etc/shosts.equiv"<br/>
+#<br/>
+# check ASLR<br/>
+#system_aslr_main () {<br/>
+#&#09;if [ "`kernel_aslr`" -eq 0 ]<br/>
+#&#09;then<br/>
+#&#09;&#09;if [ "`kernel_aslr_pax`" -eq 0 ]<br/>
+#&#09;&#09;then<br/>
+#&#09;&#09;&#09;stdio_message_warn "system_aslr" "ASLR is not supported system-wide"<br/>
+#&#09;&#09;else<br/>
+#&#09;&#09;&#09;stdio_message_debug "system_aslr" "PAX ASLR is supported system-wide"<br/>
+#&#09;&#09;fi<br/>
+#&#09;elif [ "`kernel_aslr`" -eq 1 ]<br/>
+#&#09;then<br/>
+#&#09;&#09;stdio_message_log "system_aslr" "Conservative ASLR is supported system-wide (heap addresses are not randomized)"<br/>
+#&#09;else<br/>
+#&#09;&#09;stdio_message_debug "system_aslr" "ASLR is supported system-wide"<br/>
+#&#09;fi<br/>
+#}<br/>
+#<br/>
+# check /etc/sudoers and list permissions/groups<br/>
+# check for readable and or encrypted ssh keys <br/>
+# check for running ssh agents and try to identify the key in use<br/>
+# check lib/misc/shadow and if readable check for users with no password<br/>
+# find files with setuid bit set (runs as root)<br/>
+# find files with the setgid bit set (runs as group)<br/>
+# Check PostgreSQL trust relationships<br/>
+# Verify PostgreSQL trust relationships by connecting to localhost with common usernames and no password<br/>
+# Check permissions of PostgreSQL configuration file pg_hba.conf<br/>
+# List users with no password set or password in /etc/passwd (also checked in system_configuration)<br/>
+# Check if NIS is used for authentication<br/>
+# Check if LDAP is used for authentication<br/>
+# List potentially sensitive files (world readable etc)<br/>
+# List all jar files<br/>
+# Check for writable permission on home directories<br/>
+# Check for readable and executable permissions on home directories<br/>
+# List all .*_history files<br/>
+# List group-writable files<br/>
+# Check if the gpg-agent is running<br/>
+# Check for world-readable and world-writable permissions on devices files<br/>
+# Check for weak options on devices files<br/>
+# Check for read permissions on sensitive files<br/>
+# (priv) List group-writable and world-writable privileged files (their parent directories too) and processes<br/>
+# (priv) Check if privileged files call temporary files handling functions. Based on ideas found at http://people.redhat.com/sgrubb/security/<br/>
+# (priv) Check for stack canary (SSP) support<br/>
+# (priv) List group-writable and world-writable privileged files (their parent directories too) and processes that trust other filepaths (with RPATH variable)<br/>
+# (priv) Check if privileged files call random() or strand() functions<br/>
+# (priv) Check for PIE (ASLR-compliant executable) support Based on ideas found at http://people.redhat.com/sgrubb/security/<br/>
+# (priv) Check if privileged files set PATH variable Based on ideas found at http://people.redhat.com/sgrubb/security/<br/>
+# (priv) Check for NX (NoExecute) support (privileged vs unprivileged check above)<br/>
+# (priv) Check if textual privileged files (like bash scripts) use environment variables<br/>
+# (priv) Check for write permissions over privileged files and processes' linked libraries<br/>
+# (priv) Check if privileged files calling chroot() function call also chdir() function Based on ideas found at http://people.redhat.com/sgrubb/security/<br/>
+# (priv) Check if privileged files drop their privileges Based on ideas found at http://people.redhat.com/sgrubb/security/<br/>
+# (priv) Check if privileged files call banned (and potentially dangerous) functions Based on Microsoft's banned API list as parsed by ../../tools/generate_banned.sh **update script?**<br/>
+# (priv) Check if textual privileged files (like bash scripts) accept user-provided arguments<br/>
+#<br/>
+#<br/>
+#<br/>
+###############################################################################################################</body></html>

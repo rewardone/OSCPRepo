@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>screen</title>
+</head><body>Screen is a bit easier to set up for ethical-hijacking. All you need to do is modify the users' "screenrc" file, make it so they can't modify it and add the lines:<br/>
+<br/>
+multiuser on<br/>
+acladd root<br/>
+<br/>
+and, of course, set up their profiles to launch screen at login. With these conditions in place, all you need to do, as root, to watch a user session is to type the following at the command line:<br/>
+<br/>
+host # screen -x user<br/>
+<br/>
+If you're not sure who's on, or one user has multiple screens open:<br/>
+<br/>
+host # screen -x<br/>
+<br/>
+with no specific argument should let you know </body></html>

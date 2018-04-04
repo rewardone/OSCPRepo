@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Copy Files</string>
+  <key>nodeid</key><string>b12aeb91-5aae-4264-b0b8-417b1439e1d7</string>
+  <key>modified_time</key><integer>1522853349</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522852709</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Escape Mitigations</title>
+</head><body>1b. How to easily counter this attack (assuming your system is vulnerable)<br/>
+<br/>
+There's one huge step you can take to prevent this from happening forever (just in case your system ever has been vulnerable and you don't want to have to worry about it anymore). By default, your restricted shell should not let the user redefine the IFS variable. Here's the one thing you can do to make it impossible for this hack to work (although it will come at some cost, since no one will be able to preserve crashed vi files. And, we should note that part of this vulnerability is that this command used to be setuid root!):<br/>
+<br/>
+host # chmod a-x /usr/lib/expreserve<br/>
+<br/>
+Now, no one can execute that command by running [esc]:pre in vi or vim! (Note also that this file may be in a different directory depending on your distro, and may also be differently titled. For instance, the "elvis" program - a vi clone - uses the "elvprsv" command to do its preserves.)<br/>
+<br/>
+<br/>
+2b. The easiest fix, if it's available, is included in some versions of vi and in most versions of vim.<br/>
+<br/>
+If you invoke them as rvi or rvim, the shell escape is disabled by default :) In some instances, invoking vi as rvi will dump your user to the "ex" editor. That's bordering on cruelty ;)<br/>
+<br/>
+3b. Here's a very simple way to ensure this will never happen (at least, not the unoriginal way ;)<br/>
+<br/>
+First, set the restricted user's home directory up with an .exrc file. Normally, these are considered bad to have, but, in fact, it's generally better practice to have an existing .exrc file, that the user can't access, than none at all (since that leaves it for them to create if they can figure out a way).<br/>
+<br/>
+bash # touch /home/restricted/.exrc<br/>
+bash # chown root:root /home/restricted/.exrc<br/>
+bash # chmod 644 /home/restricted/.exrc<br/>
+bash # vi /home/restricted/.exrc<br/>
+set exrc<br/>
+set shell=/bin/false<br/>
+<br/>
+And you're all set. Now, whenever your user uses vi (or vim - the same method is used to implement the above), the .exrc file will get processed and the default "shell" will be set to /bin/false. So, when they type:<br/>
+<br/>
+[esc]:shell<br/>
+<br/>
+It will knock them right back to the editor. As an added bonus, this will prevent them from being able to use the [esc]:! one-line command functionality, since it will try to exec that command using /bin/false. This will fail if /bin/false exists (because it returns failure no matter what) and also if it doesn't (because the invocation of the non-existent shell will return failure also). If you want to play it safe, make sure your system has a /bin/false before you set this (to avoid any bizarre unanticipated OS behaviour). Another common "useless" shell is /sbin/nologin, but /bin/false should be on almost every flavor and distro of Linux and Unix out there.</body></html>

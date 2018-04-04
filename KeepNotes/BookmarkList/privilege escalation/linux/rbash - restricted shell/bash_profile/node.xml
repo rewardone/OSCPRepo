@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>.bash_profile</string>
+  <key>nodeid</key><string>fffd47a9-e241-4201-8f49-5f626a9512cb</string>
+  <key>modified_time</key><integer>1522853128</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522853111</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

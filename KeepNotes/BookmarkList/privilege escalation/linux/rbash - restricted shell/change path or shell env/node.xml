@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Change PATH or SHELL env</string>
+  <key>nodeid</key><string>1b52ccf0-d036-43e1-9eff-dbfd2684cf89</string>
+  <key>modified_time</key><integer>1522853806</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522852633</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

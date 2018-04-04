@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Extra Checks</title>
+</head><body>extra_checks<br/>
+###############################################################################################################<br/>
+#<br/>
+####NETWORK####<br/>
+# arp -a&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#ARP information<br/>
+# arp -e<br/>
+# /etc/resolv.conf | grep "nameserver"&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#DNS settings<br/>
+# lsof -i<br/>
+# lsof -i :80<br/>
+# grep 80 /etc/services<br/>
+# netstat -antup<br/>
+# netstat -antpx<br/>
+# netstat -tulpn<br/>
+# chkconfig --list<br/>
+# chkconfig --list | grep 3:on<br/>
+# route<br/>
+# /sbin/route -nee<br/>
+#<br/>
+####PRINTER####<br/>
+# lpstat -a<br/>
+#<br/>
+####FILES####<br/>
+####password####<br/>
+# /etc/master.passwd<br/>
+# /etc/security/passwd<br/>
+####config####<br/>
+# search for all *.conf files<br/>
+# other .conf files<br/>
+# &nbsp;/etc/syslog.conf<br/>
+# &nbsp;/etc/chttp.conf<br/>
+# &nbsp;/etc/lighttpd.conf<br/>
+# &nbsp;/etc/cups/cupsd.conf<br/>
+# &nbsp;/opt/lampp/etc/httpd.conf<br/>
+####system####<br/>
+# /etc/init<br/>
+# /etc/rc<br/>
+# /etc/inetd<br/>
+# /etc/xinetd<br/>
+# /etc/bash.bashrc<br/>
+# /etc/profile<br/>
+# /etc/hosts.equiv<br/>
+# /etc/shosts.equiv<br/>
+#<br/>
+####all####<br/>
+# world readable folders<br/>
+# world readable files<br/>
+# list all jar files<br/>
+#<br/>
+####var####<br/>
+# ls -alh /var/log<br/>
+# ls -alh /var/mail<br/>
+# ls -alh /var/spool<br/>
+# ls -alh /var/spool/lpd<br/>
+# ls -alh /var/lib/pgsql<br/>
+# ls -alh /var/lib/mysql<br/>
+# cat /var/lib/dhcp3/dhclient.lease<br/>
+#<br/>
+####www####<br/>
+# ls -alhR /var/www/<br/>
+# ls -alhR /srv/www/htdocs/<br/>
+# ls -alhR /usr/local/www/apache22/data/<br/>
+# ls -alhR /opt/lampp/htdocs/<br/>
+# ls -alhR /var/www/html/<br/>
+#<br/>
+####CRON####<br/>
+# ls -al /etc/cron* 2&gt;/dev/null&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#scheduled cron jobs<br/>
+# ls -aRl /etc/cron* 2&gt;/dev/null | awk '$1 ~ /w.$/' 2&gt;/dev/null&#09;&#09;&#09;#writable cron directories<br/>
+# ls -al /etc/anacrontab 2&gt;/dev/null; cat /etc/anacrontab 2&gt;/dev/null&#09;#anacrontab<br/>
+# crontab -l<br/>
+# ls -alh /var/spool/cron<br/>
+# ls -al /etc/ | grep cron<br/>
+# ls -al /etc/cron*<br/>
+# cat /etc/cron*<br/>
+# cat /etc/at.allow<br/>
+# cat /etc/at.deny<br/>
+# cat /etc/cron.allow<br/>
+# cat /etc/cron.deny<br/>
+# cat /etc/crontab<br/>
+# cat /etc/anacrontab<br/>
+# cat /var/spool/cron/crontabs/root<br/>
+#<br/>
+####APACHE####<br/>
+# apache --version<br/>
+# apache invokee<br/>
+# apache modules<br/>
+# /etc/apache2/apache2.conf<br/>
+# /etc/httpd/conf/httpd.conf<br/>
+#<br/>
+####POSTGRES####<br/>
+# postgres --version<br/>
+# postgres default login<br/>
+# trust relationships<br/>
+# verify trust relationships<br/>
+# check permissions of postgres config file<br/>
+#<br/>
+####MYSQL####<br/>
+# mysql --version&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#check version<br/>
+# mysql root:root&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#default login<br/>
+#<br/>
+#<br/>
+###############################################################################################################</body></html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Common Checks</title>
+</head><body>common_checks<br/>
+###############################################################################################################<br/>
+#<br/>
+####HOST####<br/>
+# hostname<br/>
+# <br/>
+####KERNEL####<br/>
+# uname -arms<br/>
+# /proc/version&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#kernel<br/>
+# /etc/*-release&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#operating system<br/>
+# /etc/issue &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#operating system<br/>
+#<br/>
+####NETWORK###<br/>
+# ifconfig -a&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#interfaces<br/>
+# route&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#routing information<br/>
+# netstat -antup | grep -v 'TIME_WAIT'&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#Netstat<br/>
+# cat /etc/network/interfaces<br/>
+# cat /etc/sysconfig/network<br/>
+# cat /etc/resolv.conf<br/>
+# cat /etc/networks<br/>
+# dnsdomainname<br/>
+#<br/>
+####IPTABLES####<br/>
+# iptables -L<br/>
+#<br/>
+####USER####<br/>
+# whoami&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#current user<br/>
+# id &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#current user id<br/>
+# check for super users in /etc/passwd&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#/etc/passwd<br/>
+# check for other users&#09;in /etc/passwd&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#/etc/passwd<br/>
+# /etc/group<br/>
+# w &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#who is logged on<br/>
+# last&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#pulls from /var/log/wtmp which deals with more than just user logins. Virtually any change to the system-wide state is recorded there<br/>
+# lastlog&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#pulls from /var/log/lastlog which is only concerned with previous logins<br/>
+# env&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#environment variables<br/>
+# echo $PATH&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#path<br/>
+#<br/>
+####USER STUFF####<br/>
+# user home directories: writable?<br/>
+# user home directories: Readable and executable?<br/>
+# user .*_history files<br/>
+# /etc/profile<br/>
+# /etc/bashrc<br/>
+# ~/.bash_profile<br/>
+# ~/.bashrc<br/>
+# ~/.bash_logout<br/>
+# ~/.bash_history<br/>
+# ~/.nano_history<br/>
+# ~/.aftp_history<br/>
+# ~/.mysql_history<br/>
+# ~/.php_history<br/>
+#<br/>
+####SSH####<br/>
+# check system for readable or encrypted ssh keys<br/>
+# check for ssh agents<br/>
+# check ssh config<br/>
+# check for 'authorized_hosts'<br/>
+# cat ~/.ssh/authorized_keys<br/>
+# cat ~/.ssh/identity.pub<br/>
+# cat ~/.ssh/identity<br/>
+# cat ~/.ssh/id_rsa.pub<br/>
+# cat ~/.ssh/id_rsa<br/>
+# cat ~/.ssh/id_dsa.pub<br/>
+# cat ~/.ssh/id_dsa<br/>
+# cat /etc/ssh/ssh_config<br/>
+# cat /etc/ssh/sshd_config<br/>
+# cat /etc/ssh/ssh_host_dsa_key.pub<br/>
+# cat /etc/ssh/ssh_host_dsa_key<br/>
+# cat /etc/ssh/ssh_host_rsa_key.pub<br/>
+# cat /etc/ssh/ssh_host_rsa_key<br/>
+# cat /etc/ssh/ssh_host_key.pub<br/>
+# cat /etc/ssh/ssh_host_key<br/>
+#<br/>
+####PROCESSES####<br/>
+# ps aux | awk '{print $1,$2,$9,$10,$11}'&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#current processes <br/>
+# ps -ef | /bin/grep root&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#processes running as root<br/>
+# top<br/>
+# cat /etc/services<br/>
+#<br/>
+####MOUNT####<br/>
+# /etc/fstab&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#mount information<br/>
+# mount | column -t<br/>
+# df -h<br/>
+#<br/>
+#######FILES#######<br/>
+#<br/>
+####Password Related####<br/>
+# hashes in /etc/passwd?<br/>
+# users with no password in /etc/passwd<br/>
+# read /etc/shadow? <br/>
+# read lib/misc/shadow?<br/>
+#<br/>
+####SUDO(ERS)####<br/>
+# sudo version<br/>
+# /etc/sudoers<br/>
+#<br/>
+####FILE/FOLDER PERMISSIONS: WORLD####<br/>
+# files with sticky bit (+sS)<br/>
+# find / -perm -1000 -type d 2&gt;/dev/null &nbsp; &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;# Sticky bit <br/>
+# find / -perm -g=s -o -perm -u=s -type f 2&gt;/dev/null &nbsp; &nbsp;&#09;&#09;&#09;&#09;# SGID or SUID<br/>
+# world writable folders<br/>
+# find / -writable -type d 2&gt;/dev/null &nbsp; &nbsp; &nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;# world-writeable folders<br/>
+# find / -perm -222 -type d 2&gt;/dev/null &nbsp; &nbsp; &#09;&#09;&#09;&#09;&#09;&#09;&#09;# world-writeable folders<br/>
+# find / -perm -o w -type d 2&gt;/dev/null &nbsp; &nbsp; &#09;&#09;&#09;&#09;&#09;&#09;&#09;# world-writeable folders<br/>
+# find / -perm -o x -type d 2&gt;/dev/null &nbsp; &nbsp; &#09;&#09;&#09;&#09;&#09;&#09;&#09;# world-executable folders<br/>
+# find / \( -perm -o w -perm -o x \) -type d 2&gt;/dev/null &nbsp; &#09;&#09;&#09;&#09;# world-writeable &amp; executable folders<br/>
+# world writable files<br/>
+# list potentially sensitive files<br/>
+# ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2&gt;/dev/null &nbsp; &nbsp; &#09;&#09;&#09;&#09;&#09;# Anyone - write<br/>
+# find /etc/ -readable -type f 2&gt;/dev/null &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;&#09;&#09;# Anyone - read<br/>
+# find /etc/ -readable -type f -maxdepth 1 2&gt;/dev/null &nbsp; &#09;&#09;&#09;&#09;# Anyone - read<br/>
+# find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print &nbsp; &#09;&#09;# world-writeable files<br/>
+#<br/>
+####FILE/FOLDER PERMISSIONS: OWN/GROUP<br/>
+# find / -perm -g=s -type f 2&gt;/dev/null &nbsp; &nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;# SGID (chmod 2000) - run as the group, not the user who started it.<br/>
+# find / -perm -u=s -type f 2&gt;/dev/null &nbsp; &nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;# SUID (chmod 4000) - run as the owner, not the user who started it<br/>
+# for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2&gt;/dev/null; done &nbsp; &nbsp;# Looks in 'common' places: /bin, /sbin, /usr/bin, /usr/sbin, /usr/local/bin, /usr/local/sbin and any other *bin, for SGID or SUID (Quicker search)<br/>
+# files owned by current user<br/>
+# list group-writable files<br/>
+# ls -aRl /etc/ | awk '$1 ~ /^..w/' 2&gt;/dev/null &nbsp; &nbsp; &nbsp;&#09;&#09;&#09;&#09;&#09;# Owner<br/>
+# ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2&gt;/dev/null &nbsp; &nbsp;&#09;&#09;&#09;&#09;&#09;# Group<br/>
+# find /dir -xdev \( -nouser -o -nogroup \) -print &nbsp; &#09;&#09;&#09;&#09;&#09;# Noowner files<br/>
+#<br/>
+####BINARIES####<br/>
+# check for dev tools (awk/perl/python/nc/etc)<br/>
+# list installed packages<br/>
+# ls -alh /usr/bin/<br/>
+# ls -alh /sbin/<br/>
+# dpkg -l<br/>
+# rpm -qa<br/>
+# ls -alh /var/cache/apt/archivesO<br/>
+# ls -alh /var/cache/yum/ <br/>
+#<br/>
+###############################################################################################################</body></html>

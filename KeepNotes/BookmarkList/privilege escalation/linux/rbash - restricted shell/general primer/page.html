@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>A Restricted Shell... What Is It?<br/>
+<br/>
+It limits a user's ability and only allows them to perform a subset of system commands. Typically, a combination of some or all of the following restrictions are imposed by a restricted shell:<br/>
+<br/>
+Using the 'cd' command to change directories.<br/>
+Setting or unsetting certain environment variables (i.e. SHELL, PATH, etc...).<br/>
+Specifying command names that contain slashes.<br/>
+Specifying a filename containing a slash as an argument to the '.' built-in command.<br/>
+Specifying a filename containing a slash as an argument to the '-p' option to the 'hash' built-in command.<br/>
+Importing function definitions from the shell environment at startup.<br/>
+Parsing the value of SHELLOPTS from the shell environment at startup.<br/>
+Redirecting output using the '&gt;', '&gt;|', ", '&gt;&amp;', '&amp;&gt;', and '&gt;&gt;' redirection operators.<br/>
+Using the 'exec' built-in to replace the shell with another command.<br/>
+Adding or deleting built-in commands with the '-f' and '-d' options to the enable built-in.<br/>
+Using the 'enable' built-in command to enable disabled shell built-ins.<br/>
+Specifying the '-p' option to the 'command' built-in.<br/>
+Turning off restricted mode with 'set +r' or 'set +o restricted'.<br/>
+<br/>
+Since business needs override security a good portion of the time, it's possible that some of the above restrictions are relaxed. So do not assume that these restrictions are set in stone. I suggest you QC the quality of the restricted shell.<br/>
+<br/>
+Types of restricted shells<br/>
+"Real" shell implementations, eg<br/>
+&nbsp;&#09;rbash<br/>
+&nbsp;&#09;rsh<br/>
+&nbsp;&#09;rksh<br/>
+Implementation of shells in &lt;scripting language&gt;, eg<br/>
+&nbsp;&#09;Python(lshell)<br/>
+<br/>
+<br/>
+A restricted shell behaves identically to bash with the exception that the following are disallowed or not performed:<br/>
+<ul><li>Changing directories with the cd builtin.</li>
+<li>Setting or unsetting the values of the SHELL, PATH, ENV, or BASH_ENV variables.</li>
+<li>Specifying command names containing slashes.</li>
+<li>Specifying a filename containing a slash as an argument to the . builtin command.</li>
+<li>Specifying a filename containing a slash as an argument to the -p option to the hash builtin command.</li>
+<li>Importing function definitions from the shell environment at startup.</li>
+<li>Parsing the value of SHELLOPTS from the shell environment at startup.</li>
+<li>Redirecting output using the ‘&gt;’, ‘&gt;|’, ‘&lt;&gt;’, ‘&gt;&amp;’, ‘&amp;&gt;’, and ‘&gt;&gt;’ redirection operators.</li>
+<li>Using the exec builtin to replace the shell with another command.</li>
+<li>Adding or deleting builtin commands with the -f and -d options to the enable builtin.</li>
+<li>Using the enable builtin command to enable disabled shell builtins.</li>
+<li>Specifying the -p option to the command builtin.</li>
+<li>Turning off restricted mode with ‘set +r’ or ‘set +o restricted’.</li>
+</ul>
+<br/>
+These restrictions are enforced after any startup files are read.<br/>
+</body></html>
