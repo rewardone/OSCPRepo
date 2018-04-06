@@ -3,53 +3,63 @@
 #This should would on default Kali installation
 #TODO every once in a while, check for updates to SecLists and fuzzdb
 
-echo "Downloading things..."
+echo "### Downloading things...### \n\n"
 echo "Install new software: Shutter, exiftool, gobuster, git"
 apt-get update
 apt-get install -y shutter exiftool gobuster git
 
-echo "Cloning Impacket"
-git clone https://github.com/CoreSecurity/impacket.git /root/Documents/Impacket
+echo "\nCloning Impacket \n"
+direc=/root/Documents/Impacket
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/CoreSecurity/impacket.git $direc; fi
 
-echo "Cloning Vulners.nse script"
-git clone https://github.com/vulnersCom/nmap-vulners.git /root/Documents/Vulners
+echo "\nCloning Vulners.nse script \n"
+direc=/root/Documents/Vulners
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/vulnersCom/nmap-vulners.git $direc; fi
 
-echo "Cloning OSCPRepo"
-git clone https://github.com/rewardone/OSCPRepo.git /root/Documents/OSCPRepo
+echo "\nCloning OSCPRepo \n"
+direc=/root/Documents/OSCPRepo
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/rewardone/OSCPRepo.git $direc; fi
 
-echo "Cloning Vulners exploit database/search tool"
-git clone https://github.com/vulnersCom/getsploit.git /root/Documents/Getsploit
+echo "\nCloning Vulners exploit database/search tool \n"
+direc=/root/Documents/Getsploit
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/vulnersCom/getsploit.git $direc; fi
 
-echo "Processing actions..."
+echo "\n ### Processing actions...### \n\n"
 echo "Setup install Impacket"
-chmod +x /root/Documents/Impacket/setup.py && /root/Documents/Impacket/./setup.py install
+chmod +x /root/Documents/Impacket/setup.py && cd /root/Documents/Impacket && ./setup.py install
 
-echo "Copy vulners to nmap scripts location"
+echo "\nCopy vulners to nmap scripts location \n"
 cp /root/Documents/Vulners/vulners.nse /usr/share/nmap/scripts/vulners.nse
 
-echo "Copy getsploit to /usr/local/sbin for PATH"
-cp /root/Documents/Getsploit/getsploit.py /usr/local/sbin
+echo "\nCopy getsploit to /usr/local/sbin for PATH \n"
+cp /root/Documents/Getsploit/getsploit/getsploit.py /usr/local/sbin
 
-echo "Setup OSCPRepo"
-cp -r /root/Documents/OSCPRepo/scripts /root/scripts
-cp -r /root/Documents/OSCPRepo/lists /root/lists
+echo "\nSetup OSCPRepo \n"
+cp -r /root/Documents/OSCPRepo/scripts /root/
+cp -r /root/Documents/OSCPRepo/lists /root/
 
-echo "Downloading additional lists: SecLists fuzzdb naughtystrings"
-git clone https://github.com/danielmiessler/SecLists.git /lists/secLists
-git clone https://github.com/fuzzdb-project/fuzzdb.git /lists/fuzzdb
-git clone https://github.com/minimaxir/big-list-of-naughty-strings.git /lists/naughty
-git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git /lists/payloadsAllTheThings
-git clone https://github.com/berzerk0/Probable-Wordlists.git /lists/probableWordlists
+echo "\nDownloading additional lists: SecLists fuzzdb naughtystrings \n"
+direc=/root/lists/secLists
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/danielmiessler/SecLists.git $direc; fi
+direc=/root/lists/fuzzdb
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/fuzzdb-project/fuzzdb.git $direc; fi
+direc=/root/lists/naughty
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/minimaxir/big-list-of-naughty-strings.git $direc; fi
+direc=/root/lists/payloadsAllTheThings
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git $direc; fi
+direc=/root/lists/probableWordlists
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/berzerk0/Probable-Wordlists.git $direc; fi
 
-echo "Make sure Metasploit is ready to go"
+echo "\nMake sure Metasploit is ready to go \n"
 service postgresql start
 msfdb reinit
 
-echo "Edit dotdotpwn so you don't have to press 'ENTER' to start it"
+echo "\nEdit dotdotpwn so you don't have to press 'ENTER' to start it \n"
 sed -e "s/<STDIN>;/#<STDIN>;/" /usr/share/dotdotpwn/dotdotpwn.pl > /usr/share/dotdotpwn/dotdotpwn_TMP && mv /usr/share/dotdotpwn/dotdotpwn_TMP /usr/share/dotdotpwn/dotdotpwn.pl
 chmod +x /usr/share/dotdotpwn/dotdotpwn.pl
-mkdir /usr/share/dotdotpwn/Reports
+direc=/usr/share/dotdotpwn/Reports
+if [ ! -d "$direc" ]; then mkdir /usr/share/dotdotpwn/Reports; fi
 
 
-echo "Optional packages you might utilize in the future"
+echo "\n ### Optional packages you might utilize in the future ### \n"
 echo "apt-get install automake"
