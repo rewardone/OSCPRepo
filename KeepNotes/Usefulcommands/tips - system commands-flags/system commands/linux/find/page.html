@@ -16,4 +16,7 @@ find / -nouser&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files 
 find . | xargs -I file lsattr -a file 2&gt;/dev/null | grep ‘^….i’&#09;&#09;Find immutable files...shouldn't be any...suspicious<br/>
 <br/>
 Inventory all different fily types that exist in a given directory tree and tally each type<br/>
-find . -print|xargs file|awk '{$1="";x[$0]++;}END{for(y in x)printf("%d\t%s\n",x[y],y);}'|sort -nr</body></html>
+find . -print|xargs file|awk '{$1="";x[$0]++;}END{for(y in x)printf("%d\t%s\n",x[y],y);}'|sort -nr<br/>
+<br/>
+for grouping order of operations, a space is required before and after parens<br/>
+&nbsp;\( \)</body></html>
