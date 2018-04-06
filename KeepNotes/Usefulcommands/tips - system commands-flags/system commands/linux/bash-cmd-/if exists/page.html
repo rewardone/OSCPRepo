@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>If Exists</title>
+</head><body>https://stackoverflow.com/questions/638975/how-do-i-tell-if-a-regular-file-does-not-exist-in-bash<br/>
+<br/>
+Bash File Testing<br/>
+<br/>
+-b filename - Block special file<br/>
+-c filename - Special character file<br/>
+-d directoryname - Check for directory Existence<br/>
+-e filename - Check for file existence, regardless of type (node, directory, socket, etc.)<br/>
+-f filename - Check for regular file existence not a directory<br/>
+-G filename - Check if file exists and is owned by effective group ID<br/>
+-G filename set-group-id - True if file exists and is set-group-id<br/>
+-k filename - Sticky bit<br/>
+-L filename - Symbolic link<br/>
+-O filename - True if file exists and is owned by the effective user id<br/>
+-r filename - Check if file is a readable<br/>
+-S filename - Check if file is socket<br/>
+-s filename - Check if file is nonzero size<br/>
+-u filename - Check if file set-user-id bit is set<br/>
+-w filename - Check if file is writable<br/>
+-x filename - Check if file is executable<br/>
+<br/>
+How to use:<br/>
+<br/>
+#!/bin/bash<br/>
+file=./file<br/>
+if [ -e "$file" ]; then<br/>
+&nbsp; &nbsp; echo "File exists"<br/>
+else <br/>
+&nbsp; &nbsp; echo "File does not exist"<br/>
+fi <br/>
+<br/>
+A test expression can be negated by using the ! operator<br/>
+<br/>
+#!/bin/bash<br/>
+file=./file<br/>
+if [ ! -e "$file" ]; then<br/>
+&nbsp; &nbsp; echo "File does not exist"<br/>
+else <br/>
+&nbsp; &nbsp; echo "File exists"<br/>
+fi <br/>
+<br/>
+</body></html>
