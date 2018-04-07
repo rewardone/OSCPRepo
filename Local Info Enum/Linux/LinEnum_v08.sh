@@ -199,22 +199,79 @@ if [ "$loggedonusrs" ]; then
 else 
   :
 fi
+}
 
-#current env variables
-envcmd=`env 2>/dev/null`
-if [ "$envcmd" ]; then
-  echo -e "\e[00;31mENV for current session:\e[00m\n$envcmd"
-  echo -e "\n"
-else
+environmental_info()
+{
+echo -e "\e[00;33m### ENVIRONMENTAL #######################################\e[00m" 
+
+#env information
+envinfo=`env 2>/dev/null | grep -v 'LS_COLORS' 2>/dev/null`
+if [ "$envinfo" ]; then
+  echo -e "\e[00;31m Environment information:\e[00m\n$envinfo" 
+  echo -e "\n" 
+else 
   :
 fi
 
-#specifically list PATH
-pathcmd=`echo $PATH 2>/dev/null`
-if [ "$pathcmd" ]; then
-  echo -e "\e[00;31mPATH for bins:\e[00m\n$pathcmd"
+#check if selinux is enabled
+sestatus=`sestatus 2>/dev/null`
+if [ "$sestatus" ]; then
+  echo -e "\e[00;31mSELinux seems present:\e[00m\n$sestatus"
   echo -e "\n"
-else
+fi
+
+#phackt
+
+#current path configuration
+pathinfo=`echo $PATH 2>/dev/null`
+if [ "$pathinfo" ]; then
+  echo -e "\e[00;31mPath information:\e[00m\n$pathinfo" 
+  echo -e "\n" 
+else 
+  :
+fi
+
+#lists available shells
+shellinfo=`cat /etc/shells 2>/dev/null`
+if [ "$shellinfo" ]; then
+  echo -e "\e[00;31mAvailable shells:\e[00m\n$shellinfo" 
+  echo -e "\n" 
+else 
+  :
+fi
+
+#current umask value with both octal and symbolic output
+umask=`umask -S 2>/dev/null & umask 2>/dev/null`
+if [ "$umask" ]; then
+  echo -e "\e[00;31mCurrent umask value:\e[00m\n$umask" 
+  echo -e "\n" 
+else 
+  :
+fi
+
+#umask value as in /etc/login.defs
+umaskdef=`grep -i "^UMASK" /etc/login.defs 2>/dev/null`
+if [ "$umaskdef" ]; then
+  echo -e "\e[00;31mumask value as specified in /etc/login.defs:\e[00m\n$umaskdef" 
+  echo -e "\n" 
+else 
+  :
+fi
+
+#password policy information as stored in /etc/login.defs
+logindefs=`grep "^PASS_MAX_DAYS\|^PASS_MIN_DAYS\|^PASS_WARN_AGE\|^ENCRYPT_METHOD" /etc/login.defs 2>/dev/null`
+if [ "$logindefs" ]; then
+  echo -e "\e[00;31mPassword and storage information:\e[00m\n$logindefs" 
+  echo -e "\n" 
+else 
+  :
+fi
+
+if [ "$export" ] && [ "$logindefs" ]; then
+  mkdir $format/etc-export/ 2>/dev/null
+  cp /etc/login.defs $format/etc-export/login.defs 2>/dev/null
+else 
   :
 fi
 }
@@ -289,6 +346,8 @@ fi
 
 #hashes in /etc/passwd, read shadow, copy shadow, read master.password, copy master.password
 #read sudoers, copy sudoers, sudo without password
+# read lib/misc/shadow?
+# users with no password in /etc/passwd
 quick_passwd_wins()
 {
 #checks to see if any hashes are stored in /etc/passwd (depreciated  *nix storage method)
@@ -510,7 +569,35 @@ else
   :
 fi
 }
- 
+
+#/etc/fstab, mount | column -t, df -h
+mount_information()
+{
+fstabcmd=`cat /etc/fstab 2>/dev/null`
+if [ "$fstabcmd" ]; then
+  echo -e "\e[00;31mFstab file showing mounts:\e[00m\n$fstabcmd"
+  echo -e "\n"
+else
+  :
+fi
+
+mountcmd=`mount 2>/dev/null | column -t`
+if [ "$mountcmd" ]; then
+  echo -e "\e[00;31mMount command output:\e[00m\n$mountcmd"
+  echo -e "\n"
+else
+  :
+fi
+
+dfcmd=`df -h 2>/dev/null`
+if [ "$dfcmd" ]; then
+  echo -e "\e[00;31mDF command output:\e[00m\n$dfcmd"
+  echo -e "\n"
+else
+  :
+fi
+}
+
 # files with sticky bit (+sS), files owned by current user
 # for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null; done    # Looks in 'common' places: /bin, /sbin, /usr/bin, /usr/sbin, /usr/local/bin, /usr/local/sbin and any other *bin, for SGID or SUID (Quicker search)
 # find / -perm -g=s -type f 2>/dev/null    								# SGID (chmod 2000) - exec as the group, not the user who started it.
@@ -684,21 +771,38 @@ fi
 #too much feedback at the moment
 executable_files_folders()
 {
-#worldwrite=`find / -perm -o x -type d 2>/dev/null | grep -v "denied"`
+#worldwrite=`find / \( -perm -o x -type d \) 2>/dev/null | grep -v "denied"`
 }
 
-# find / -writable -type d 2>/dev/null      							          # world-writeable folders
-# find / -perm -222 -type d 2>/dev/null     							          # world-writeable folders
-# find / -perm -o w -type d 2>/dev/null     							          # world-writeable folders
-# find / \( -perm -o w -perm -o x \) -type d 2>/dev/null   				    # world-writeable & executable folders
-# ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null     					      # Anyone - write
-# find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print   		# world-writeable files
-# ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null      					  # Owner
-# ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null    					# Group
+# find / -writable -type d 2>/dev/null      							    # world-writeable folders
+# find / -perm -222 -type d 2>/dev/null     							    # world-writeable folders
+# find / -perm -o w -type d 2>/dev/null     							    # world-writeable folders
+# find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print   		    # world-writeable files
+# ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null     					    # Anyone - write
+# ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null      					    # Owner
+# ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null    					    # Group
 #group writable files, 
-# find /dir -xdev \( -nouser -o -nogroup \) -print   					  # Noowner files
+# find /dir -xdev \( -nouser -o -nogroup \) -print   					    # Noowner files
 writeable_files_folders()
 {
+# world-writeable & executable folders
+writeandexec=`find / \( -perm -o=w -a -perm -o=x -a -type d \) 2>/dev/null`   				    
+if [ "$writeandexec" ]; then
+  echo -e "\e[00;31mWriteable and executable folders:\e[00m\n$writeandexec"
+  echo -e "\n:"
+else
+  :
+fi
+
+#Group writable files
+groupwrite=`find / \( -perm -g=w -a -type f \) -exec ls -lah {} \; 2>/dev/null`
+if [ "$groupwrite" ]; then
+  echo -e "\e[00;31mGroup writeable files:\e[00m\n$groupwrite"
+  echo -e "\n"
+else
+  :
+fi
+
 #looks for files we can write to that don't belong to us
 if [ "$thorough" = "1" ]; then
   grfilesall=`find / -writable -not -user \`whoami\` -type f -not -path "/proc/*" -exec ls -alh {} \; 2>/dev/null`
@@ -708,6 +812,15 @@ if [ "$thorough" = "1" ]; then
   else
     :
   fi
+fi
+
+#Odd files with no owner or group
+noownergroup=`find / \( -nouser -o -nogroup -type f \) -exec ls -lah {} \; 2>/dev/null`
+if [ "$noownergroup" ]; then
+  echo -e "\e[00;31mFiles that have no owner and no group. Suspicious:\e[00m\n$noownergroup"
+  echo -e "\n"
+else
+  :
 fi
 }
 
@@ -746,7 +859,15 @@ other_file_checks()
 
 }
 
-#enum some rbash escape bins
+#enum some rbash escape bins, sudo version
+# check for dev tools (awk/perl/python/nc/etc)
+# list installed packages
+# ls -alh /usr/bin/
+# ls -alh /sbin/
+# dpkg -l
+# rpm -qa
+# ls -alh /var/cache/apt/archivesO
+# ls -alh /var/cache/yum/ 
 binary_search()
 {
 #known 'good' breakout binaries
@@ -757,83 +878,34 @@ if [ "$sudopwnage" ]; then
 else 
   :
 fi
-}
 
-environmental_info()
-{
-echo -e "\e[00;33m### ENVIRONMENTAL #######################################\e[00m" 
-
-#env information
-envinfo=`env 2>/dev/null | grep -v 'LS_COLORS' 2>/dev/null`
-if [ "$envinfo" ]; then
-  echo -e "\e[00;31m Environment information:\e[00m\n$envinfo" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-#check if selinux is enabled
-sestatus=`sestatus 2>/dev/null`
-if [ "$sestatus" ]; then
-  echo -e "\e[00;31mSELinux seems present:\e[00m\n$sestatus"
+#sudo version check just in case
+sudoversion=`sudo --version 2>/dev/null`
+if [ "$sudoversion" ]; then
+  echo -e "\e[00;31mSudo version, check for vulns:\e[00m\n$sudoversion"
   echo -e "\n"
-fi
-
-#phackt
-
-#current path configuration
-pathinfo=`echo $PATH 2>/dev/null`
-if [ "$pathinfo" ]; then
-  echo -e "\e[00;31mPath information:\e[00m\n$pathinfo" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-#lists available shells
-shellinfo=`cat /etc/shells 2>/dev/null`
-if [ "$shellinfo" ]; then
-  echo -e "\e[00;31mAvailable shells:\e[00m\n$shellinfo" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-#current umask value with both octal and symbolic output
-umask=`umask -S 2>/dev/null & umask 2>/dev/null`
-if [ "$umask" ]; then
-  echo -e "\e[00;31mCurrent umask value:\e[00m\n$umask" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-#umask value as in /etc/login.defs
-umaskdef=`grep -i "^UMASK" /etc/login.defs 2>/dev/null`
-if [ "$umaskdef" ]; then
-  echo -e "\e[00;31mumask value as specified in /etc/login.defs:\e[00m\n$umaskdef" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-#password policy information as stored in /etc/login.defs
-logindefs=`grep "^PASS_MAX_DAYS\|^PASS_MIN_DAYS\|^PASS_WARN_AGE\|^ENCRYPT_METHOD" /etc/login.defs 2>/dev/null`
-if [ "$logindefs" ]; then
-  echo -e "\e[00;31mPassword and storage information:\e[00m\n$logindefs" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-if [ "$export" ] && [ "$logindefs" ]; then
-  mkdir $format/etc-export/ 2>/dev/null
-  cp /etc/login.defs $format/etc-export/login.defs 2>/dev/null
-else 
+else
   :
 fi
 }
 
+# ls -al /etc/cron* 2>/dev/null											#scheduled cron jobs
+# ls -aRl /etc/cron* 2>/dev/null | awk '$1 ~ /w.$/' 2>/dev/null			#writable cron directories
+# cat /etc/crontab
+# ls -alh /var/spool/cron
+# cat /etc/anacrontab
+# ls -al /etc/anacrontab 2>/dev/null; cat /etc/anacrontab 2>/dev/null	#anacrontab
+# ls -la /var/spool/anacron 2>/dev/null
+# crontab -l
+
+# ls -al /etc/ | grep cron
+# ls -al /etc/cron*
+# cat /etc/cron*
+#!!cat /etc/at.allow
+#!!cat /etc/at.deny
+#!!cat /etc/cron.allow
+#!!cat /etc/cron.deny
+#!!cat /var/spool/cron/crontabs/root
 job_info()
 {
 echo -e "\e[00;33m### JOBS/TASKS ##########################################\e[00m" 
@@ -898,6 +970,19 @@ else
   :
 fi
 }
+
+# arp -a/e #e is better formatted automatically							#ARP information
+# /etc/resolv.conf | grep "nameserver"									#DNS settings
+# route
+# netstat -antup -e/ee is verbosity
+# netstat -tulpn -e/ee is verbosity
+# /sbin/route -nee
+
+#!!lsof -i
+#!!lsof -i :80
+# grep 80 /etc/services
+#!!chkconfig --list              #not default utility, must be SU
+#!!chkconfig --list | grep 3:on  #not default utility, must be SU
 networking_info()
 {
 echo -e "\e[00;33m### NETWORKING  ##########################################\e[00m" 
@@ -911,7 +996,7 @@ else
   :
 fi
 
-arpinfo=`arp -a 2>/dev/null`
+arpinfo=`arp -e 2>/dev/null`
 if [ "$arpinfo" ]; then
   echo -e "\e[00;31mARP history:\e[00m\n$arpinfo" 
   echo -e "\n" 
@@ -929,7 +1014,7 @@ else
 fi
 
 #default route configuration
-defroute=`route 2>/dev/null | grep default`
+defroute=`route -n 2>/dev/null | grep default`
 if [ "$defroute" ]; then
   echo -e "\e[00;31mDefault route:\e[00m\n$defroute" 
   echo -e "\n" 
@@ -938,7 +1023,7 @@ else
 fi
 
 #listening TCP
-tcpservs=`netstat -antp 2>/dev/null`
+tcpservs=`netstat -antpl 2>/dev/null`
 if [ "$tcpservs" ]; then
   echo -e "\e[00;31mListening TCP:\e[00m\n$tcpservs" 
   echo -e "\n" 
@@ -947,7 +1032,7 @@ else
 fi
 
 #listening UDP
-udpservs=`netstat -anup 2>/dev/null`
+udpservs=`netstat -anupl 2>/dev/null`
 if [ "$udpservs" ]; then
   echo -e "\e[00;31mListening UDP:\e[00m\n$udpservs" 
   echo -e "\n" 
@@ -955,6 +1040,7 @@ else
   :
 fi
 }
+
 services_info()
 {
 echo -e "\e[00;33m### SERVICES #############################################\e[00m" 
