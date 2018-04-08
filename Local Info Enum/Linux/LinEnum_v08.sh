@@ -5,7 +5,7 @@ v="version 0.8"
 #LinEnum
 
 #TODO, change backticks to $()
-#TODO, grep -r if 'find' is not available
+#TODO, change easy "wins" that are found to color green
 
 #help function
 usage () 
@@ -281,6 +281,8 @@ fi
 # check for super users in /etc/passwd, check for other users	in /etc/passwd
 users_and_groups()
 {
+echo -e "\e[00;33m### User and Group Information ####################################\e[00m" 
+
 #list only user id's from /etc/passwd
 usersfrompasswd=`cut -d":" -f1 /etc/passwd 2>/dev/null`
 if [ "$usersfrompasswd" ]; then
@@ -319,9 +321,10 @@ fi
 
 #etc/groups
 groupcmd=`awk -F":" '{ print $1 " " $2 " " $3 " " $4 }' /etc/group | column -t 2>/dev/null`
-goupfileheaders=`echo -e "GroupName Password GroupIP GroupMembers" | column -t 2>/dev/null`
+groupfileheaders=`echo "GroupName Password GroupID GroupMembers" | column -t 2>/dev/null`
 if [ "$groupcmd" ]; then
-  echo -e "\e[00;31mGroups and GroupIDs via /etc/group\e[00m\n$groupfileheaders\n$groupcmd"
+  echo -e "\e[00;31mGroups and GroupIDs via /etc/group\e[00m\n"
+  echo -e "\e[00;31m$groupfileheaders\e[00m\n$groupcmd\n"
   echo -e "\n"
 else
   :
@@ -345,11 +348,12 @@ fi
 }
 
 #hashes in /etc/passwd, read shadow, copy shadow, read master.password, copy master.password
-#read sudoers, copy sudoers, sudo without password
-# read lib/misc/shadow?
+#read sudoers, copy sudoers, sudo without password, read lib/misc/shadow, /etc/security/passwd
 # users with no password in /etc/passwd
 quick_passwd_wins()
 {
+echo -e "\e[00;33m### Password Files (Quick Wins) ####################################\e[00m" 
+
 #checks to see if any hashes are stored in /etc/passwd (depreciated  *nix storage method)
 hashesinpasswd=`grep -v '^[^:]*:[x]' /etc/passwd 2>/dev/null`
 if [ "$hashesinpasswd" ]; then
@@ -391,6 +395,28 @@ else
   :
 fi
 
+#check for /etc/security/passwd
+readsecuritypass=`cat /etc/security/passwd 2>/dev/null`
+if [ "$readsecuritypass" ]; then
+  echo -e "\e[00;31mEtc/security/password file can be read:\e[00m$readsecuritypass"
+  echo -e "\n"
+else
+  :
+fi
+
+#check for lib/misc/shadow
+miscshadow=`cat /lib/misc/shadow 2>/dev/null`
+if [ "$miscshadow" ]; then
+  echo -e "\e[00;31mLib/misc/shadow file can be read:\e[00m$miscshadow"
+  echo -e "\n"
+else
+  :
+fi
+
+#manual check - lists out sensitive files, can we read/modify etc.
+echo -e "\e[00;31mCan we read/write sensitive files:\e[00m" ; ls -la /etc/passwd 2>/dev/null ; ls -la /etc/group 2>/dev/null ; ls -la /etc/profile 2>/dev/null; ls -la /etc/shadow 2>/dev/null ; ls -la /etc/master.passwd 2>/dev/null 
+echo -e "\n" 
+
 #pull out vital sudoers info
 sudoers=`grep -v -e '^$' /etc/sudoers 2>/dev/null |grep -v "#" 2>/dev/null`
 if [ "$sudoers" ]; then
@@ -424,6 +450,8 @@ fi
 # /etc/bashrc
 home_and_user_files()
 {
+echo -e "\e[00;33m### Home and User File Information ####################################\e[00m" 
+
 #checks to see if roots home directory is accessible
 rthmdir=`ls -ahl /root/ 2>/dev/null`
 if [ "$rthmdir" ]; then
@@ -487,10 +515,10 @@ else
   :
 fi
 
-#check for the /etc/bashrc file
-etcbashrccmd=`cat /etc/bashrc 2>/dev/null`
+#check for the /etc/bash.bashrc file
+etcbashrccmd=`cat /etc/bash.bashrc 2>/dev/null`
 if [ "$etcbashrccmd" ]; then
-  echo -e "\e[00;31mETC BashRC file may contain interesting information:\e[00m\n$etcbashrccmd"
+  echo -e "\e[00;31mETC bash.bashrc file may contain interesting information:\e[00m\n$etcbashrccmd"
   echo -e "\n"
 else
   :
@@ -510,8 +538,10 @@ fi
 # cat ~/.ssh/authorized_keys, cat ~/.ssh/identity, cat ~/.ssh/id_rsa, cat ~/.ssh/id_dsa
 # cat /etc/ssh/ssh_config, cat /etc/ssh/sshd_config, 
 #!!cat /etc/ssh/ssh_host_dsa_key, cat /etc/ssh/ssh_host_rsa_key, cat /etc/ssh/ssh_host_key
-enum_ssh()
+ssh_enum()
 {
+echo -e "\e[00;33m### SSH Information ####################################\e[00m" 
+
 #checks for if various ssh files are accessible - this can take some time so is only 'activated' with thorough scanning switch
 if [ "$thorough" = "1" ]; then
 sshfiles=`find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "identity*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" \) -exec ls -la {} 2>/dev/null \;`
@@ -535,7 +565,6 @@ if [ "$thorough" = "1" ]; then
   else
 	:
 fi
-
 
 #is root permitted to login via ssh
 sshrootlogin=`grep "PermitRootLogin " /etc/ssh/sshd_config 2>/dev/null | grep -v "#" | awk '{print  $2}'`
@@ -573,11 +602,63 @@ fi
 #/etc/fstab, mount | column -t, df -h
 mount_information()
 {
-fstabcmd=`cat /etc/fstab 2>/dev/null`
-if [ "$fstabcmd" ]; then
-  echo -e "\e[00;31mFstab file showing mounts:\e[00m\n$fstabcmd"
+echo -e "\e[00;33m### Mount Information ####################################\e[00m" 
+
+#list nfs shares/permisisons etc.
+nfsexports=`ls -la /etc/exports 2>/dev/null; cat /etc/exports 2>/dev/null`
+if [ "$nfsexports" ]; then
+  echo -e "\e[00;31mNFS config details: \e[00m\n$nfsexports" 
+  echo -e "\n" 
+  else 
+  :
+fi
+
+if [ "$export" ] && [ "$nfsexports" ]; then
+  mkdir $format/etc-export/ 2>/dev/null
+  cp /etc/exports $format/etc-export/exports 2>/dev/null
+else 
+  :
+fi
+
+if [ "$thorough" = "1" ]; then
+  #phackt
+  #displaying /etc/fstab
+  fstab=`cat /etc/fstab 2>/dev/null`
+  if [ "$fstab" ]; then
+    echo -e "\e[00;31mNFS displaying partitions and filesystems - you need to check if exotic filesystems\e[00m"
+    echo -e "$fstab"
+    echo -e "\n"
+  fi
+fi
+
+#looking for credentials in /etc/fstab
+fstab=`grep username /etc/fstab 2>/dev/null |awk '{sub(/.*\username=/,"");sub(/\,.*/,"")}1' 2>/dev/null| xargs -r echo username: 2>/dev/null; grep password /etc/fstab 2>/dev/null |awk '{sub(/.*\password=/,"");sub(/\,.*/,"")}1' 2>/dev/null| xargs -r echo password: 2>/dev/null; grep domain /etc/fstab 2>/dev/null |awk '{sub(/.*\domain=/,"");sub(/\,.*/,"")}1' 2>/dev/null| xargs -r echo domain: 2>/dev/null`
+if [ "$fstab" ]; then
+  echo -e "\e[00;33m***Looks like there are credentials in /etc/fstab!\e[00m\n$fstab"
   echo -e "\n"
-else
+  else 
+  :
+fi
+
+if [ "$export" ] && [ "$fstab" ]; then
+  mkdir $format/etc-exports/ 2>/dev/null
+  cp /etc/fstab $format/etc-exports/fstab done 2>/dev/null
+else 
+  :
+fi
+
+fstabcred=`grep cred /etc/fstab 2>/dev/null |awk '{sub(/.*\credentials=/,"");sub(/\,.*/,"")}1' 2>/dev/null | xargs -I{} sh -c 'ls -la {}; cat {}' 2>/dev/null`
+if [ "$fstabcred" ]; then
+    echo -e "\e[00;33m***/etc/fstab contains a credentials file!\e[00m\n$fstabcred" 
+    echo -e "\n" 
+    else
+    :
+fi
+
+if [ "$export" ] && [ "$fstabcred" ]; then
+  mkdir $format/etc-exports/ 2>/dev/null
+  cp /etc/fstab $format/etc-exports/fstab done 2>/dev/null
+else 
   :
 fi
 
@@ -606,11 +687,13 @@ fi
 # find -exec ls -lah {} is not what you want for dirs
 special_perm_files()
 {
-#Find SUID files, only on thorough
+echo -e "\e[00;33m### Special Permission Files ####################################\e[00m" 
+
+#Find all SUID files, only on thorough
 if [ "$thorough" = "1" ]; then
   suidcmd=`find / \( -perm -4000 -a -type f \) -exec ls -lah {} \; 2>/dev/null`
   if [ "$suidcmd" ]; then
-    echo -e "\e[00;31mSUID files. These exec as the file owner!:\e[00m\n$suidcmd"
+    echo -e "\e[00;31mAll SUID files. These exec as the file owner!:\e[00m\n$suidcmd"
     echo -e "\n"
   else
     :
@@ -630,11 +713,11 @@ else
 	:
 fi
 
-#Find SUID dirs, only on thorough
+#Find all SUID dirs, only on thorough
 if [ "$thorough" = "1" ]; then
   suidcmd2=`find / \( -perm -4000 -a -type d \) 2>/dev/null`
   if [ "$suidcmd2" ]; then
-    echo -e "\e[00;31mSUID drs. These exec as the file owner!:\e[00m\n$suidcmd2"
+    echo -e "\e[00;31mAll SUID drs. These exec as the file owner!:\e[00m\n$suidcmd2"
     echo -e "\n"
   else
     :
@@ -654,11 +737,37 @@ else
 	:
 fi
 
-#Find GUID files, only on thorough
+#lists world-writable suid files owned by root
+if [ "$thorough" = "1" ]; then
+wwsuidrt=`find / -uid 0 -perm -4007 -type f -exec ls -la {} 2>/dev/null \;`
+	if [ "$wwsuidrt" ]; then
+		echo -e "\e[00;31mWorld-writable SUID files, these exec as file owner: root, and you can write!:\e[00m\n$wwsuidrt" 
+		echo -e "\n" 
+	else 
+		:
+	fi
+  else
+	:
+fi
+
+#lists word-writable suid files
+if [ "$thorough" = "1" ]; then
+wwsuid=`find / -perm -4007 -type f -exec ls -la {} 2>/dev/null \;`
+	if [ "$wwsuid" ]; then
+		echo -e "\e[00;31mWorld-writable SUID files, these exec as file owner and you can write!:\e[00m\n$wwsuid" 
+		echo -e "\n" 
+	else 
+		:
+	fi
+  else
+	:
+fi
+
+#Find all GUID files, only on thorough
 if [ "$thorough" = "1" ]; then
   guidcmd=`find / \( -perm -2000 -a -type f \) -exec ls -lah {} \; 2>/dev/null`
   if [ "$guidcmd" ]; then
-    echo -e "\e[00;31mGUID files. These exec as the group!:\e[00m\n$guidcmd"
+    echo -e "\e[00;31mAll GUID files. These exec as the group!:\e[00m\n$guidcmd"
     echo -e "\n"
   else
     :
@@ -678,11 +787,11 @@ else
 	:
 fi
 
-#Find GUID dirs, only on thorough
+#Find all GUID dirs, only on thorough
 if [ "$thorough" = "1" ]; then
   guidcmd2=`find / \( -perm -2000 -a -type d \) 2>/dev/null`
   if [ "$guidcmd2" ]; then
-    echo -e "\e[00;31mGUID files. These exec as the group!:\e[00m\n$guidcmd2"
+    echo -e "\e[00;31mAll GUID files. These exec as the group!:\e[00m\n$guidcmd2"
     echo -e "\n"
   else
     :
@@ -702,8 +811,34 @@ else
 	:
 fi
 
+#lists world-writable guid files
+if [ "$thorough" = "1" ]; then
+wwguid=`find / -perm -2007 -type f -exec ls -la {} 2>/dev/null \;`
+	if [ "$wwguid" ]; then
+		echo -e "\e[00;31mWorld-writable GUID files, these exec as the group and you can write!:\e[00m\n$wwguid" 
+		echo -e "\n" 
+	else 
+		:
+	fi
+  else
+	:
+fi
+
+#lists world-writable guid files owned by root
+if [ "$thorough" = "1" ]; then
+wwguidrt=`find / -uid 0 -perm -2007 -type f -exec ls -la {} 2>/dev/null \;`
+	if [ "$wwguidrt" ]; then
+		echo -e "\e[00;31mWorld-writable GUID files, these exec as the group, owned by root, and you can write!:\e[00m\n$wwguidrt" 
+		echo -e "\n" 
+	else 
+		:
+	fi
+  else
+	:
+fi
+
 #Only find files in the bin dirs with perm 4000 or 2000
-suidguid=`for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
+suidguid=`for i in \`locate -r "bin$"\`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
 if [ "$suidguid" ]; then
   echo -e "\e[00;31mSUID and GUID files from bin directories. These exec as group or owner!:\e[00m\n$suidguid"
   echo -e "\n"
@@ -719,7 +854,7 @@ else
 fi
 
 #Only find files in the home dirs with perm 4000 or 2000
-suidguid2=`for i in `locate -r "home$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
+suidguid2=`for i in \`locate -r "home$"\`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
 if [ "$suidguid2" ]; then
   echo -e "\e[00;31mSUID and GUID files from home. These exec as group or owner!:\e[00m\n$suidguid2"
   echo -e "\n"
@@ -734,8 +869,13 @@ else
 	:
 fi
 
-#Only find files with perm 1000 (yourself)
-mystuff=`find / \( -perm -1000 -a -type f \) -exec ls -alh {} \; 2>/dev/null`
+#Only find files you are the owner of
+rootcheck=`id -u`
+if [ "$rootcheck" != "0"]; then
+  mystuff=`find / \( -user \`whoami\` -a -type f \) -exec ls -alh {} \; 2>/dev/null`
+else
+  :
+fi
 if [ "$mystuff" ]; then
   echo -e "\e[00;31mFiles that your user owns\e[00m\n$mystuff"
   echo -e "\n"
@@ -750,8 +890,9 @@ else
 	:
 fi
 
+#TODO Fix
 #Only find dirs with perm 1000 (yourself)
-mystuff2=`find / \( -perm -1000 -a -type d \) 2>/dev/null`
+mystuff2=`find / \( -user \`whoami\` -a -type d \) 2>/dev/null`
 if [ "$mystuff2" ]; then
   echo -e "\e[00;31mFiles that your user owns\e[00m\n$mystuff2"
   echo -e "\n"
@@ -771,7 +912,9 @@ fi
 #too much feedback at the moment
 executable_files_folders()
 {
-#worldwrite=`find / \( -perm -o x -type d \) 2>/dev/null | grep -v "denied"`
+#echo -e "\e[00;33m### INTERESTING FILES ####################################\e[00m" 
+
+worldwrite=`find / \( -perm -o x -type d \) 2>/dev/null | grep -v "denied"`
 }
 
 # find / -writable -type d 2>/dev/null      							    # world-writeable folders
@@ -785,6 +928,8 @@ executable_files_folders()
 # find /dir -xdev \( -nouser -o -nogroup \) -print   					    # Noowner files
 writeable_files_folders()
 {
+echo -e "\e[00;33m### Writable Files ####################################\e[00m" 
+
 # world-writeable & executable folders
 writeandexec=`find / \( -perm -o=w -a -perm -o=x -a -type d \) 2>/dev/null`   				    
 if [ "$writeandexec" ]; then
@@ -792,6 +937,30 @@ if [ "$writeandexec" ]; then
   echo -e "\n:"
 else
   :
+fi
+
+#list all world-writable files excluding /proc
+if [ "$thorough" = "1" ]; then
+wwfiles=`find / ! -path "*/proc/*" -perm -2 -type f -exec ls -la {} 2>/dev/null \;`
+	if [ "$wwfiles" ]; then
+		echo -e "\e[00;31mWorld-writable files (excluding /proc):\e[00m\n$wwfiles" 
+		echo -e "\n" 
+	else 
+		:
+	fi
+  else
+	:
+fi
+
+if [ "$thorough" = "1" ]; then
+	if [ "$export" ] && [ "$wwfiles" ]; then
+		mkdir $format/ww-files/ 2>/dev/null
+		for i in $wwfiles; do cp --parents $i $format/ww-files/; done 2>/dev/null
+	else 
+		:
+	fi
+  else
+	:
 fi
 
 #Group writable files
@@ -815,7 +984,7 @@ if [ "$thorough" = "1" ]; then
 fi
 
 #Odd files with no owner or group
-noownergroup=`find / \( -nouser -o -nogroup -type f \) -exec ls -lah {} \; 2>/dev/null`
+noownergroup=`find / \( -nouser -o -nogroup -type f -a -not -name "." -a -not -name ".." \) -exec ls -lah {} \; 2>/dev/null`
 if [ "$noownergroup" ]; then
   echo -e "\e[00;31mFiles that have no owner and no group. Suspicious:\e[00m\n$noownergroup"
   echo -e "\n"
@@ -829,6 +998,8 @@ fi
 # world readable files, 
 readable_files_folders()
 {
+echo -e "\e[00;33m### Readable Files ####################################\e[00m" 
+
 #looks for world-reabable files within /home - depending on number of /home dirs & files, this can take some time so is only 'activated' with thorough scanning switch
 if [ "$thorough" = "1" ]; then
 wrfileshm=`find /home/ -perm -4 -type f -exec ls -al {} \; 2>/dev/null`
@@ -851,41 +1022,6 @@ if [ "$thorough" = "1" ]; then
 	fi
   else
 	:
-fi
-}
-
-other_file_checks()
-{
-
-}
-
-#enum some rbash escape bins, sudo version
-# check for dev tools (awk/perl/python/nc/etc)
-# list installed packages
-# ls -alh /usr/bin/
-# ls -alh /sbin/
-# dpkg -l
-# rpm -qa
-# ls -alh /var/cache/apt/archivesO
-# ls -alh /var/cache/yum/ 
-binary_search()
-{
-#known 'good' breakout binaries
-sudopwnage=`echo '' | sudo -S -l 2>/dev/null | grep -w 'nmap\|perl\|'awk'\|'find'\|'bash'\|'sh'\|'man'\|'more'\|'less'\|'vi'\|'emacs'\|'vim'\|'nc'\|'netcat'\|python\|ruby\|lua\|irb' | xargs -r ls -la 2>/dev/null`
-if [ "$sudopwnage" ]; then
-  echo -e "\e[00;33m***Possible Sudo PWNAGE!\e[00m\n$sudopwnage" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-#sudo version check just in case
-sudoversion=`sudo --version 2>/dev/null`
-if [ "$sudoversion" ]; then
-  echo -e "\e[00;31mSudo version, check for vulns:\e[00m\n$sudoversion"
-  echo -e "\n"
-else
-  :
 fi
 }
 
@@ -973,16 +1109,11 @@ fi
 
 # arp -a/e #e is better formatted automatically							#ARP information
 # /etc/resolv.conf | grep "nameserver"									#DNS settings
-# route
-# netstat -antup -e/ee is verbosity
+# route, ifconfig, ip addr show, /sbin/route -nee, cat /etc/network/interfaces
+# cat /etc/sysconfig/network, cat /etc/networks, netstat -antup -e/ee is verbosity
 # netstat -tulpn -e/ee is verbosity
-# /sbin/route -nee
-
-#!!lsof -i
-#!!lsof -i :80
-# grep 80 /etc/services
-#!!chkconfig --list              #not default utility, must be SU
-#!!chkconfig --list | grep 3:on  #not default utility, must be SU
+#!!lsof -i tcp -n -P -R, !!lsof -i udp -n -P -R, !!grep 80 /etc/services
+#!!chkconfig --list, !!chkconfig --list | grep 3:on  #not default utility, must be SU
 networking_info()
 {
 echo -e "\e[00;33m### NETWORKING  ##########################################\e[00m" 
@@ -996,6 +1127,25 @@ else
   :
 fi
 
+#ifconfig info
+ifconfigcmd=`ifconfig -a 2>/dev/null`
+if [ "$ifconfigcmd" ]; then
+  echo -e "\e[00:31mifconfig -a information:\e[00m\n$ifconfigcmd"
+  echo -e "\n"
+else
+  :
+fi
+
+#ip cmd for newer distros
+ipcmd=`ip addr show 2>/dev/null`
+if [ "$ipcmd" ]; then
+  echo -e "\e[00;31mip addr show information:\e[00m\n$ipcmd"
+  echo -e "\n"
+else
+  :
+fi
+
+#ARP info
 arpinfo=`arp -e 2>/dev/null`
 if [ "$arpinfo" ]; then
   echo -e "\e[00;31mARP history:\e[00m\n$arpinfo" 
@@ -1022,10 +1172,46 @@ else
   :
 fi
 
+#interfaces config
+interfacescmd=`cat /etc/network/interfaces 2>/dev/null`
+if [ "$interfacescmd" ]; then
+  echo -e "\e[00;31mEtc/network/interfaces config:\e[00m\n$interfacescmd"
+  echo -e "\n"
+else
+  :
+fi
+
+#network config
+networkcmd=`cat /etc/sysconfig/network 2>/dev/null`
+if [ "$networkcmd" ]; then
+  echo -e "\e[00;31mEtc/sysconfig/network config:\e[00m\n$networkcmd"
+  echo -e "\n"
+else
+  :
+fi
+
+#networks
+networkscmd2=`cat /etc/networks 2>/dev/null`
+if [ "$networkscmd2" ]; then
+  echo -e "\e[00;31mEtc/networks config:\e[00m\n$networkscmd2"
+  echo -e "\n"
+else
+  :
+fi
+
+#IPTables
+iptablescmd=`iptables -L 2>/dev/null`
+if [ "$iptablescmd" ]; then
+  echo -e "\e[00;31mIPTables listing:\e[00m\n$iptablescmd"
+  echo -e "\n"
+else
+  :
+fi
+
 #listening TCP
 tcpservs=`netstat -antpl 2>/dev/null`
 if [ "$tcpservs" ]; then
-  echo -e "\e[00;31mListening TCP:\e[00m\n$tcpservs" 
+  echo -e "\e[00;31mDon't forget about LSOF. Netstat listening TCP.:\e[00m\n$tcpservs" 
   echo -e "\n" 
 else 
   :
@@ -1034,13 +1220,16 @@ fi
 #listening UDP
 udpservs=`netstat -anupl 2>/dev/null`
 if [ "$udpservs" ]; then
-  echo -e "\e[00;31mListening UDP:\e[00m\n$udpservs" 
+  echo -e "\e[00;31mDon't forget about LSOF. Netstat listening UDP:\e[00m\n$udpservs" 
   echo -e "\n" 
 else 
   :
 fi
 }
 
+# /etc/hosts.equiv
+# /etc/shosts.equiv
+# aux, inetd.conf, xinetd.conf, init.d, rc.d/init.d, 
 services_info()
 {
 echo -e "\e[00;33m### SERVICES #############################################\e[00m" 
@@ -1179,9 +1368,41 @@ else
   :
 fi
 }
-software_configs()
+
+#enum some rbash escape bins, sudo version
+# check for dev tools (awk/perl/python/nc/etc)
+# list installed packages
+# ls -alh /usr/bin/
+# ls -alh /sbin/
+# dpkg -l
+# rpm -qa
+# ls -alh /var/cache/apt/archivesO
+# ls -alh /var/cache/yum/ 
+binary_search()
 {
-echo -e "\e[00;33m### SOFTWARE #############################################\e[00m" 
+echo -e "\e[00;33m### Installed Binary Information ####################################\e[00m" 
+
+#checks to see if various files are installed
+echo -e "\e[00;31mUseful file locations:\e[00m" ; which nc 2>/dev/null ; which netcat 2>/dev/null ; which wget 2>/dev/null ; which nmap 2>/dev/null ; which gcc 2>/dev/null 
+echo -e "\n" 
+
+#limited search for installed compilers
+compiler=`dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 2>/dev/null && yum list installed 'gcc*' 2>/dev/null| grep gcc 2>/dev/null`
+if [ "$compiler" ]; then
+  echo -e "\e[00;31mInstalled compilers:\e[00m\n$compiler" 
+  echo -e "\n" 
+ else 
+  :
+fi
+
+#known 'good' breakout binaries
+sudopwnage=`echo '' | sudo -S -l 2>/dev/null | grep -w 'nmap\|perl\|'awk'\|'find'\|'bash'\|'sh'\|'man'\|'more'\|'less'\|'vi'\|'emacs'\|'vim'\|'nc'\|'netcat'\|python\|ruby\|lua\|irb' | xargs -r ls -la 2>/dev/null`
+if [ "$sudopwnage" ]; then
+  echo -e "\e[00;33m***Possible Sudo PWNAGE!\e[00m\n$sudopwnage" 
+  echo -e "\n" 
+else 
+  :
+fi
 
 #sudo version - check to see if there are any known vulnerabilities with this
 sudover=`sudo -V 2>/dev/null| grep "Sudo version" 2>/dev/null`
@@ -1191,6 +1412,64 @@ if [ "$sudover" ]; then
 else 
   :
 fi
+}
+
+####APACHE########www####
+# apache --version, apache invokee, apache modules, /etc/apache2/apache2.conf
+# /etc/httpd/conf/httpd.conf
+# ls -alhR /var/www/, ls -alhR /srv/www/htdocs/, ls -alhR /usr/local/www/apache22/data/
+# ls -alhR /opt/lampp/htdocs/, ls -alhR /var/www/html/
+apache_enum()
+{
+echo -e "\e[00;33m### Apache Information ####################################\e[00m" 
+
+#apache details - if installed
+apachever=`apache2 -v 2>/dev/null; httpd -v 2>/dev/null;`
+if [ "$apachever" ]; then
+  echo -e "\e[00;31mApache version:\e[00m\n$apachever" 
+  echo -e "\n" 
+else 
+  :
+fi
+
+#what account is apache running under
+apacheusr=`grep -i 'user\|group' /etc/apache2/envvars 2>/dev/null |awk '{sub(/.*\export /,"")}1' 2>/dev/null`
+if [ "$apacheusr" ]; then
+  echo -e "\e[00;31mApache user configuration:\e[00m\n$apacheusr" 
+  echo -e "\n" 
+else 
+  :
+fi
+
+if [ "$export" ] && [ "$apacheusr" ]; then
+  mkdir --parents $format/etc-export/apache2/ 2>/dev/null
+  cp /etc/apache2/envvars $format/etc-export/apache2/envvars 2>/dev/null
+else 
+  :
+fi
+
+#installed apache modules
+apachemodules=`apache2ctl -M 2>/dev/null; httpd -M 2>/dev/null`
+if [ "$apachemodules" ]; then
+  echo -e "\e[00;31mInstalled Apache modules:\e[00m\n$apachemodules" 
+  echo -e "\n" 
+else 
+  :
+fi
+
+#anything in the default http home dirs
+apachehomedirs=`ls -alhR /var/www/ 2>/dev/null; ls -alhR /srv/www/htdocs/ 2>/dev/null; ls -alhR /usr/local/www/apache2/data/ 2>/dev/null; ls -alhR /opt/lampp/htdocs/ 2>/dev/null`
+if [ "$apachehomedirs" ]; then
+  echo -e "\e[00;31mAnything in the Apache home dirs?:\e[00m\n$apachehomedirs" 
+  echo -e "\n" 
+else 
+  :
+fi
+}
+
+mysql_enum()
+{
+echo -e "\e[00;33m### MySQL Information ####################################\e[00m" 
 
 #mysql details - if installed
 mysqlver=`mysql --version 2>/dev/null`
@@ -1218,6 +1497,17 @@ if [ "$mysqlconnectnopass" ]; then
 else 
   :
 fi
+}
+
+####POSTGRES####
+# postgres --version
+#!!postgres default login
+#!!trust relationships
+#!!verify trust relationships
+#!!check permissions of postgres config file #default login
+postgres_enum()
+{
+echo -e "\e[00;33m### Postgres Information ####################################\e[00m" 
 
 #postgres details - if installed
 postgver=`psql -V 2>/dev/null`
@@ -1260,220 +1550,16 @@ if [ "$postcon22" ]; then
 else 
   :
 fi
-
-#apache details - if installed
-apachever=`apache2 -v 2>/dev/null; httpd -v 2>/dev/null`
-if [ "$apachever" ]; then
-  echo -e "\e[00;31mApache version:\e[00m\n$apachever" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-#what account is apache running under
-apacheusr=`grep -i 'user\|group' /etc/apache2/envvars 2>/dev/null |awk '{sub(/.*\export /,"")}1' 2>/dev/null`
-if [ "$apacheusr" ]; then
-  echo -e "\e[00;31mApache user configuration:\e[00m\n$apacheusr" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-if [ "$export" ] && [ "$apacheusr" ]; then
-  mkdir --parents $format/etc-export/apache2/ 2>/dev/null
-  cp /etc/apache2/envvars $format/etc-export/apache2/envvars 2>/dev/null
-else 
-  :
-fi
-
-#installed apache modules
-apachemodules=`apache2ctl -M 2>/dev/null; httpd -M 2>/dev/null`
-if [ "$apachemodules" ]; then
-  echo -e "\e[00;31mInstalled Apache modules:\e[00m\n$apachemodules" 
-  echo -e "\n" 
-else 
-  :
-fi
-
-#anything in the default http home dirs
-apachehomedirs=`ls -alhR /var/www/ 2>/dev/null; ls -alhR /srv/www/htdocs/ 2>/dev/null; ls -alhR /usr/local/www/apache2/data/ 2>/dev/null; ls -alhR /opt/lampp/htdocs/ 2>/dev/null`
-if [ "$apachehomedirs" ]; then
-  echo -e "\e[00;31mAnything in the Apache home dirs?:\e[00m\n$apachehomedirs" 
-  echo -e "\n" 
-else 
-  :
-fi
 }
+
+software_configs()
+{
+echo -e "\e[00;33m### SOFTWARE #############################################\e[00m" 
+}
+
 interesting_files()
 {
 echo -e "\e[00;33m### INTERESTING FILES ####################################\e[00m" 
-
-#checks to see if various files are installed
-echo -e "\e[00;31mUseful file locations:\e[00m" ; which nc 2>/dev/null ; which netcat 2>/dev/null ; which wget 2>/dev/null ; which nmap 2>/dev/null ; which gcc 2>/dev/null 
-echo -e "\n" 
-
-#limited search for installed compilers
-compiler=`dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 2>/dev/null && yum list installed 'gcc*' 2>/dev/null| grep gcc 2>/dev/null`
-if [ "$compiler" ]; then
-  echo -e "\e[00;31mInstalled compilers:\e[00m\n$compiler" 
-  echo -e "\n" 
- else 
-  :
-fi
-
-#manual check - lists out sensitive files, can we read/modify etc.
-echo -e "\e[00;31mCan we read/write sensitive files:\e[00m" ; ls -la /etc/passwd 2>/dev/null ; ls -la /etc/group 2>/dev/null ; ls -la /etc/profile 2>/dev/null; ls -la /etc/shadow 2>/dev/null ; ls -la /etc/master.passwd 2>/dev/null 
-echo -e "\n" 
-
-#search for suid files - this can take some time so is only 'activated' with thorough scanning switch (as are all suid scans below)
-if [ "$thorough" = "1" ]; then
-findsuid=`find / -perm -4000 -type f -exec ls -la {} 2>/dev/null \;`
-	if [ "$findsuid" ]; then
-		echo -e "\e[00;31mSUID files:\e[00m\n$findsuid" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-if [ "$thorough" = "1" ]; then
-	if [ "$export" ] && [ "$findsuid" ]; then
-		mkdir $format/suid-files/ 2>/dev/null
-		for i in $findsuid; do cp $i $format/suid-files/; done 2>/dev/null
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-#list of 'interesting' suid files - feel free to make additions
-if [ "$thorough" = "1" ]; then
-intsuid=`find / -perm -4000 -type f 2>/dev/null | grep -w 'nmap\|perl\|'awk'\|'find'\|'bash'\|'sh'\|'man'\|'more'\|'less'\|'vi'\|'vim'\|'emacs'\|'nc'\|'netcat'\|python\|ruby\|lua\|irb\|pl' | xargs -r ls -la 2>/dev/null`
-	if [ "$intsuid" ]; then
-		echo -e "\e[00;33m***Possibly interesting SUID files:\e[00m\n$intsuid" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-#lists word-writable suid files
-if [ "$thorough" = "1" ]; then
-wwsuid=`find / -perm -4007 -type f -exec ls -la {} 2>/dev/null \;`
-	if [ "$wwsuid" ]; then
-		echo -e "\e[00;31mWorld-writable SUID files:\e[00m\n$wwsuid" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-#lists world-writable suid files owned by root
-if [ "$thorough" = "1" ]; then
-wwsuidrt=`find / -uid 0 -perm -4007 -type f -exec ls -la {} 2>/dev/null \;`
-	if [ "$wwsuidrt" ]; then
-		echo -e "\e[00;31mWorld-writable SUID files owned by root:\e[00m\n$wwsuidrt" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-#search for guid files - this can take some time so is only 'activated' with thorough scanning switch (as are all guid scans below)
-if [ "$thorough" = "1" ]; then
-findguid=`find / -perm -2000 -type f -exec ls -la {} 2>/dev/null \;`
-	if [ "$findguid" ]; then
-		echo -e "\e[00;31mGUID files:\e[00m\n$findguid" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-if [ "$thorough" = "1" ]; then
-	if [ "$export" ] && [ "$findguid" ]; then
-		mkdir $format/guid-files/ 2>/dev/null
-		for i in $findguid; do cp $i $format/guid-files/; done 2>/dev/null
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-#list of 'interesting' guid files - feel free to make additions
-if [ "$thorough" = "1" ]; then
-intguid=`find / -perm -2000 -type f 2>/dev/null | grep -w 'nmap\|perl\|'awk'\|'find'\|'bash'\|'sh'\|'man'\|'more'\|'less'\|'vi'\|'emacs'\|'vim'\|'nc'\|'netcat'\|python\|ruby\|lua\|irb\|pl' | xargs -r ls -la 2>/dev/null`
-	if [ "$intguid" ]; then
-		echo -e "\e[00;33m***Possibly interesting GUID files:\e[00m\n$intguid" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-#lists world-writable guid files
-if [ "$thorough" = "1" ]; then
-wwguid=`find / -perm -2007 -type f -exec ls -la {} 2>/dev/null \;`
-	if [ "$wwguid" ]; then
-		echo -e "\e[00;31mWorld-writable GUID files:\e[00m\n$wwguid" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-#lists world-writable guid files owned by root
-if [ "$thorough" = "1" ]; then
-wwguidrt=`find / -uid 0 -perm -2007 -type f -exec ls -la {} 2>/dev/null \;`
-	if [ "$wwguidrt" ]; then
-		echo -e "\e[00;31mAWorld-writable GUID files owned by root:\e[00m\n$wwguidrt" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-#list all world-writable files excluding /proc
-if [ "$thorough" = "1" ]; then
-wwfiles=`find / ! -path "*/proc/*" -perm -2 -type f -exec ls -la {} 2>/dev/null \;`
-	if [ "$wwfiles" ]; then
-		echo -e "\e[00;31mWorld-writable files (excluding /proc):\e[00m\n$wwfiles" 
-		echo -e "\n" 
-	else 
-		:
-	fi
-  else
-	:
-fi
-
-if [ "$thorough" = "1" ]; then
-	if [ "$export" ] && [ "$wwfiles" ]; then
-		mkdir $format/ww-files/ 2>/dev/null
-		for i in $wwfiles; do cp --parents $i $format/ww-files/; done 2>/dev/null
-	else 
-		:
-	fi
-  else
-	:
-fi
 
 #are any .plan files accessible in /home (could contain useful information)
 usrplan=`find /home -iname *.plan -exec ls -la {} \; -exec cat {} 2>/dev/null \;`
@@ -1548,64 +1634,6 @@ fi
 if [ "$export" ] && [ "$rhostssys" ]; then
   mkdir $format/rhosts/ 2>/dev/null
   for i in $rhostssys; do cp --parents $i $format/rhosts/; done 2>/dev/null
-else 
-  :
-fi
-
-#list nfs shares/permisisons etc.
-nfsexports=`ls -la /etc/exports 2>/dev/null; cat /etc/exports 2>/dev/null`
-if [ "$nfsexports" ]; then
-  echo -e "\e[00;31mNFS config details: \e[00m\n$nfsexports" 
-  echo -e "\n" 
-  else 
-  :
-fi
-
-if [ "$export" ] && [ "$nfsexports" ]; then
-  mkdir $format/etc-export/ 2>/dev/null
-  cp /etc/exports $format/etc-export/exports 2>/dev/null
-else 
-  :
-fi
-
-if [ "$thorough" = "1" ]; then
-  #phackt
-  #displaying /etc/fstab
-  fstab=`cat /etc/fstab 2>/dev/null`
-  if [ "$fstab" ]; then
-    echo -e "\e[00;31mNFS displaying partitions and filesystems - you need to check if exotic filesystems\e[00m"
-    echo -e "$fstab"
-    echo -e "\n"
-  fi
-fi
-
-#looking for credentials in /etc/fstab
-fstab=`grep username /etc/fstab 2>/dev/null |awk '{sub(/.*\username=/,"");sub(/\,.*/,"")}1' 2>/dev/null| xargs -r echo username: 2>/dev/null; grep password /etc/fstab 2>/dev/null |awk '{sub(/.*\password=/,"");sub(/\,.*/,"")}1' 2>/dev/null| xargs -r echo password: 2>/dev/null; grep domain /etc/fstab 2>/dev/null |awk '{sub(/.*\domain=/,"");sub(/\,.*/,"")}1' 2>/dev/null| xargs -r echo domain: 2>/dev/null`
-if [ "$fstab" ]; then
-  echo -e "\e[00;33m***Looks like there are credentials in /etc/fstab!\e[00m\n$fstab"
-  echo -e "\n"
-  else 
-  :
-fi
-
-if [ "$export" ] && [ "$fstab" ]; then
-  mkdir $format/etc-exports/ 2>/dev/null
-  cp /etc/fstab $format/etc-exports/fstab done 2>/dev/null
-else 
-  :
-fi
-
-fstabcred=`grep cred /etc/fstab 2>/dev/null |awk '{sub(/.*\credentials=/,"");sub(/\,.*/,"")}1' 2>/dev/null | xargs -I{} sh -c 'ls -la {}; cat {}' 2>/dev/null`
-if [ "$fstabcred" ]; then
-    echo -e "\e[00;33m***/etc/fstab contains a credentials file!\e[00m\n$fstabcred" 
-    echo -e "\n" 
-    else
-    :
-fi
-
-if [ "$export" ] && [ "$fstabcred" ]; then
-  mkdir $format/etc-exports/ 2>/dev/null
-  cp /etc/fstab $format/etc-exports/fstab done 2>/dev/null
 else 
   :
 fi
@@ -1707,6 +1735,15 @@ else
   :
 fi
 
+#find all jar files, these may be interesting executables
+alljars=`find / -name *.jar -type f -exec ls -la {} \; 2>/dev/null`
+if [ "$alljars" ]; then
+  echo -e "\e[00;31mAll .jar files. These may be exec or can be decompiled for potentially interesting information:\e[00m\n$alljars"
+  echo -e "\n"
+else
+  :
+fi
+
 #extract any user history files that are accessible
 usrhist=`ls -la ~/.*_history 2>/dev/null`
 if [ "$usrhist" ]; then
@@ -1763,9 +1800,39 @@ if [ "$export" ] && [ "$readmailroot" ]; then
 else 
   :
 fi
+
+#lets grab interesting log files
+if [ "$thorough" = "1" ]; then
+  logfiles=`find / -name *.log -type f -exec ls -lah {} \; 2>/dev/null`
+  if [ "$logfiles" ]; then
+    echo -e "\e[00;31mLog files identified:\e[00m\n$logfiles"
+    echo -e "\n"
+  else
+    :
+  fi
+else
+  :
+fi
+
+if [ "$export" ] && [ "$logfiles" ]; then
+  mkdir $format/log-files/ 2>/dev/null
+    for i in $logfiles; do cp --parents $i $format/log-files/ ; done 2>/dev/null
+else
+  :
+fi
 }
+
+
+
+####DOCKER####
+# check if in a docker container
+# check if in a docket host
+# check if in a docker group
+# check for docker files
 docker_checks()
 {
+echo -e "\e[00;33m### Docker Checks ####################################\e[00m" 
+
 #specific checks - check to see if we're in a docker container
 dockercontainer=` grep -i docker /proc/self/cgroup  2>/dev/null; find / -name "*dockerenv*" -exec ls -la {} \; 2>/dev/null`
 if [ "$dockercontainer" ]; then
@@ -1814,6 +1881,8 @@ fi
 
 lxc_container_checks()
 {
+echo -e "\e[00;33m### LXC Container Checks ####################################\e[00m" 
+
   #specific checks - are we in an lxd/lxc container
   lxccontainer=`grep -qa container=lxc /proc/1/environ 2>/dev/null`
   if [ "$lxccontainer" ]; then
@@ -1842,9 +1911,22 @@ call_each()
   system_info
   user_info
   environmental_info
+  users_and_groups
+  quick_passwd_wins
+  home_and_user_files
+  ssh_enum
+  mount_information
+  special_perm_files
+  executable_files_folders
+  writeable_files_folders
+  readable_files_folders
   job_info
   networking_info
   services_info
+  binary_search
+  apache_enum
+  mysql_enum
+  postgres_enum
   software_configs
   interesting_files
   docker_checks
@@ -1862,7 +1944,6 @@ while getopts "h:k:r:e:t" option; do
     *) usage; exit;;
  esac
 done
-
 
 
 call_each | tee -a $report 2> /dev/null
