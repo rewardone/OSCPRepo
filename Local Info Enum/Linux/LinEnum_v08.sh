@@ -2,10 +2,17 @@
 #A script to enumerate local information from a Linux host
 v="version 0.8"
 #@rebootuser
-#LinEnum
+#github.com/rewardone
 
-#TODO, change backticks to $()
 #TODO, change easy "wins" that are found to color green
+#TODO, find -writable specifies if the user running the find command has write access
+#TODO, php checks
+#TODO, actually flag potential vulnerabilities
+#TODO, keyword for .history files
+#TODO, keyword for files under /var/www
+#TODO, nginx modules
+#TODO, gpg keys
+#TODO, printer information
 
 #help function
 usage () 
@@ -16,6 +23,7 @@ echo -e "\e[00;31m#########################################################\e[00
 echo -e "\e[00;33m# www.rebootuser.com | @rebootuser \e[00m"
 echo -e "\e[00;33m# $v\e[00m\n"
 echo -e "\e[00;33m# Example: ./LinEnum.sh -k keyword -r report -e /tmp/ -t \e[00m\n"
+echo -e "\e[00;33m# Recommended: ./LinEnum.sh -k password -r ReportName.txt -e /tmp/ -t \e[00m\n"
 
 		echo "OPTIONS:"
 		echo "-k	Enter keyword"
@@ -398,7 +406,7 @@ fi
 #check for /etc/security/passwd
 readsecuritypass=`cat /etc/security/passwd 2>/dev/null`
 if [ "$readsecuritypass" ]; then
-  echo -e "\e[00;31mEtc/security/password file can be read:\e[00m$readsecuritypass"
+  echo -e "\e[00;31mEtc/security/password file can be read:\e[00m\n$readsecuritypass"
   echo -e "\n"
 else
   :
@@ -407,7 +415,7 @@ fi
 #check for lib/misc/shadow
 miscshadow=`cat /lib/misc/shadow 2>/dev/null`
 if [ "$miscshadow" ]; then
-  echo -e "\e[00;31mLib/misc/shadow file can be read:\e[00m$miscshadow"
+  echo -e "\e[00;31mLib/misc/shadow file can be read:\e[00m\n$miscshadow"
   echo -e "\n"
 else
   :
@@ -420,7 +428,7 @@ echo -e "\n"
 #pull out vital sudoers info
 sudoers=`grep -v -e '^$' /etc/sudoers 2>/dev/null |grep -v "#" 2>/dev/null`
 if [ "$sudoers" ]; then
-  echo -e "\e[00;31mSudoers configuration (condensed):\e[00m$sudoers" | tee -a $report 2>/dev/null
+  echo -e "\e[00;31mSudoers configuration (condensed):\e[00m\n$sudoers" | tee -a $report 2>/dev/null
   echo -e "\n" 
 else 
   :
@@ -474,7 +482,7 @@ fi
 if [ "$thorough" = "1" ]; then
 homedircontents=`ls -ahl ~ 2>/dev/null`
 	if [ "$homedircontents" ] ; then
-		echo -e "\e[00;31mHome directory contents:\e[00m\n$homedircontents" 
+		echo -e "\e[00;31mCurrent user home directory contents:\e[00m\n$homedircontents" 
 		echo -e "\n" 
 	else 
 		:
@@ -585,7 +593,7 @@ fi
 #check ssh_config
 sshconfigcmd=`cat /etc/ssh/ssh_config 2>/dev/null`
 if [ "$sshconfigcmd" = "yes" ]; then
-  echo -e "\e[00;31mSSH config may also contain interesting settings:\e[00m$sshconfigcmd"
+  echo -e "\e[00;31mSSH config may also contain interesting settings:\e[00m\n$sshconfigcmd"
   echo -e "\n" 
 else 
   :
@@ -595,6 +603,55 @@ if [ "$export" ] && [ "$sshconfigcmd" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/ssh_config $format/etc-export/ssh_config 2>/dev/null
 else 
+  :
+fi
+}
+
+#/etc/netsvc.conf, /etc/nsswitch.conf
+authentication_information()
+{
+echo -e "\e[00;33m### Authentication Information ####################################\e[00m" 
+
+#cat /etc/netsvc.conf
+netsvcconf=`cat /etc/netsvc.conf 2>/dev/null`
+if [ "$netsvcconf" ]; then
+  echo -e "\e[00;31mEtc Netsvc conf information. Identify NIS or LDAP if available:\e[00m\n$netsvcconf"
+  echo -e "\n"
+else
+  :
+fi
+
+#cat /etc/nsswitch.conf
+nsswitchconf=`cat /etc/nsswitch.conf 2>/dev/null`
+if [ "$nsswitchconf" ]; then
+  echo -e "\e[00;31mEtc  Nsswitch conf information. Identify NIS or LDAP if available:\e[00m\n$nsswitchconf"
+  echo -e "\n"
+else
+  :
+fi
+
+#cat pam.conf
+pamconf=`cat /etc/pam.conf 2>/dev/null`
+if [ "$pamconf" ]; then
+  echo -e "\e[00;31mPam authentication information. Pam.conf used if pam.d modules do not exist. Order matters:\e[00m\n$pamconf"
+  echo -e "\n"
+else
+  :
+fi
+
+#ls pam.d dir
+pamdconf=`ls -alh /etc/pam.d 2>/dev/null`
+if [ "$pamdconf" ]; then
+  echo -e "\e[00;31mSpecific pam auth modules. These are used if available and /etc/pam.conf used if they are not.\e[00m\n$pamdconf"
+  echo -e "\n"
+  pamdconfwrite=`find /etc/pam.d/ -type f -writable -exec ls -alh {} \; 2>/dev/null`
+  if [ "$pamdconfwrite" ]; then
+    echo -e "\e[00;31mYour user can write to these pam.d modules!:\e[00m\n$pamdconfwrite"
+    echo -e "\n"
+  else
+    :
+  fi
+else
   :
 fi
 }
@@ -688,6 +745,7 @@ fi
 special_perm_files()
 {
 echo -e "\e[00;33m### Special Permission Files ####################################\e[00m" 
+rootcheck=`id -u`
 
 #Find all SUID files, only on thorough
 if [ "$thorough" = "1" ]; then
@@ -789,9 +847,13 @@ fi
 
 #Find all GUID dirs, only on thorough
 if [ "$thorough" = "1" ]; then
-  guidcmd2=`find / \( -perm -2000 -a -type d \) 2>/dev/null`
+  if [ "$rootcheck" != "0" ]; then
+    guidcmd2=`find / \( -perm -2000 -a -type d \) 2>/dev/null`
+  else
+    echo -e "All GUID Dirs: You're running under UID 0, too many files to list...\n"
+  fi
   if [ "$guidcmd2" ]; then
-    echo -e "\e[00;31mAll GUID files. These exec as the group!:\e[00m\n$guidcmd2"
+    echo -e "\e[00;31mAll GUID dirs. These exec as the group!:\e[00m\n$guidcmd2"
     echo -e "\n"
   else
     :
@@ -853,6 +915,24 @@ else
 	:
 fi
 
+#Find dirs with sticky bit set
+stickydirs=`find / \( -perm -1000 -a -type d \) 2>/dev/null`
+if [ "$stickydirs" ]; then
+  echo -e "\e[00;31mThese dirs have the sticky bit set (no deletions unless you're the owner:\e[00m\n$stickydirs"
+  echo -e "\n"
+else
+  :
+fi
+
+#Find files with sticky bit set
+stickyfiles=`find / \( -perm -1000 -a -type f \) -exec ls -lah {} \; 2>/dev/null`
+if [ "$stickyfiles" ]; then
+  echo -e "\e[00;31mThese files have the sticky bit set (no deletions unless you're the owner:\e[00m\n$stickyfiles"
+  echo -e "\n"
+else
+  :
+fi
+
 #Only find files in the home dirs with perm 4000 or 2000
 suidguid2=`for i in \`locate -r "home$"\`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
 if [ "$suidguid2" ]; then
@@ -871,13 +951,13 @@ fi
 
 #Only find files you are the owner of
 rootcheck=`id -u`
-if [ "$rootcheck" != "0"]; then
+if [ "$rootcheck" != "0" ]; then
   mystuff=`find / \( -user \`whoami\` -a -type f \) -exec ls -alh {} \; 2>/dev/null`
 else
-  :
+  echo -e "Files you are the owner of: You're running under UID 0, too many files to list...\n"
 fi
 if [ "$mystuff" ]; then
-  echo -e "\e[00;31mFiles that your user owns\e[00m\n$mystuff"
+  echo -e "\e[00;31mFiles that this user owns\e[00m\n$mystuff"
   echo -e "\n"
 else
   :
@@ -890,11 +970,14 @@ else
 	:
 fi
 
-#TODO Fix
-#Only find dirs with perm 1000 (yourself)
-mystuff2=`find / \( -user \`whoami\` -a -type d \) 2>/dev/null`
+#Only find dirs you own
+if [ "$rootcheck" != "0" ]; then
+  mystuff2=`find / \( -user \`whoami\` -a -type d \) 2>/dev/null`
+else
+  echo -e "Dirs you are the owner of: You're running under UID 0, too many files to list...\n"
+fi
 if [ "$mystuff2" ]; then
-  echo -e "\e[00;31mFiles that your user owns\e[00m\n$mystuff2"
+  echo -e "\e[00;31mDirs that this user owns\e[00m\n$mystuff2"
   echo -e "\n"
 else
   :
@@ -964,7 +1047,11 @@ if [ "$thorough" = "1" ]; then
 fi
 
 #Group writable files
-groupwrite=`find / \( -perm -g=w -a -type f \) -exec ls -lah {} \; 2>/dev/null`
+if [ "$rootcheck" != "0" ]; then
+  groupwrite=`find / \( -perm -g=w -a -type f \) -exec ls -lah {} \; 2>/dev/null`
+else
+  echo -e "Group writable files: You're running under UID 0, too many files to list...\n"
+fi
 if [ "$groupwrite" ]; then
   echo -e "\e[00;31mGroup writeable files:\e[00m\n$groupwrite"
   echo -e "\n"
@@ -974,7 +1061,11 @@ fi
 
 #looks for files we can write to that don't belong to us
 if [ "$thorough" = "1" ]; then
-  grfilesall=`find / -writable -not -user \`whoami\` -type f -not -path "/proc/*" -exec ls -alh {} \; 2>/dev/null`
+  if [ "$rootcheck" != "0" ]; then
+    grfilesall=`find / -writable -not -user \`whoami\` -type f -not -path "/proc/*" -exec ls -alh {} \; 2>/dev/null`
+  else
+    echo -e "Files you can write that you don't own: You're running under UID 0, too many files to list...\n"
+  fi
   if [ "$grfilesall" ]; then
     echo -e "\e[00;31mFiles not owned by user but writable by group:\e[00m\n$grfilesall" 
     echo -e "\n" 
@@ -986,7 +1077,7 @@ fi
 #Odd files with no owner or group
 noownergroup=`find / \( -nouser -o -nogroup -type f -a -not -name "." -a -not -name ".." \) -exec ls -lah {} \; 2>/dev/null`
 if [ "$noownergroup" ]; then
-  echo -e "\e[00;31mFiles that have no owner and no group. Suspicious:\e[00m\n$noownergroup"
+  echo -e "\e[00;31mFiles that have no owner and no group:\e[00m\n$noownergroup"
   echo -e "\n"
 else
   :
@@ -1127,15 +1218,6 @@ else
   :
 fi
 
-#ifconfig info
-ifconfigcmd=`ifconfig -a 2>/dev/null`
-if [ "$ifconfigcmd" ]; then
-  echo -e "\e[00:31mifconfig -a information:\e[00m\n$ifconfigcmd"
-  echo -e "\n"
-else
-  :
-fi
-
 #ip cmd for newer distros
 ipcmd=`ip addr show 2>/dev/null`
 if [ "$ipcmd" ]; then
@@ -1202,7 +1284,49 @@ fi
 #IPTables
 iptablescmd=`iptables -L 2>/dev/null`
 if [ "$iptablescmd" ]; then
-  echo -e "\e[00;31mIPTables listing:\e[00m\n$iptablescmd"
+  configwc=`iptables --list --numeric | grep -v "^[(Chain|target|$)]" | wc -l | tr -d ''`
+  if [ "$configwc" ]; then
+    echo -e "\e[00;31mIPTables does not appear to be configured.\e[00m\n$iptablescmd"
+    echo -e "\n"
+  else
+    echo -e "\e[00;31mIPTables listing:\e[00m\n$iptablescmd"
+    echo -e "\n"
+  fi
+else
+  :
+fi
+
+#pf
+pfexist=`cat /def/pf 2>/dev/null`
+if [ "$pfexist" ]; then
+  echo -e "\e[00;31mPF firewall exists.\e[00m\n$pfexist"
+  echo -e "\n"
+else
+  :
+fi
+
+#pfconfig
+pfconf=`cat /etc/pf.conf 2>/dev/null`
+if [ "$pfconf" ]; then
+  echo -e "\e[00;31mEtc pf.conf. Manually check.\e[00m\n$pfconf"
+  echo -e "\n"
+else
+  :
+fi
+
+#/etc/csf/csf.conf
+csfconf=`cat /etc/csf/csf.conf 2>/dev/null`
+if [ "$csfconf" ]; then
+  echo -e "\e[00;31mEtc csf conf. Manually check.\e[00m\n$csfconf"
+  echo -e "\n"
+else
+  :
+fi
+
+#MacOS firewall
+macosxfw=`/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate 2>/dev/null | grep "Firewall is enabled"`
+if [ ! -z "$macosxfw" ]; then
+  echo -e "\e[00;31mMacOS X Firewall is enabled\e[00m\n"
   echo -e "\n"
 else
   :
@@ -1412,6 +1536,184 @@ if [ "$sudover" ]; then
 else 
   :
 fi
+
+#ansible
+ansiblecmd=`which ansible 2>/dev/null`
+if [ "$ansiblecmd" ]; then
+  echo -e "\e[00;31mAnsible installed, it may be in use\e[00m\n$ansiblecmd"
+  echo -e "\n"
+else
+  :
+fi
+
+#cfengine
+cfenginecmd=`which cfagent 2>/dev/null`
+if [ "$cfenginecmd" ]; then
+  echo -e "\e[00;31mCFEngine installed, it may be in use\e[00m\n$cfenginecmd"
+  echo -e "\n"
+else
+  :
+fi
+
+#chef
+chefcmd=`which erchef 2>/dev/null`
+if [ "$chefcmd" ]; then
+  echo -e "\e[00;31mChef installed, it may be in use\e[00m\n$chefcmd"
+  echo -e "\n"
+else
+  :
+fi
+
+#puppet
+puppetcmd=`which puppet 2>/dev/null`
+if [ "$puppetcmd" ]; then
+  echo -e "\e[00;31mPuppet installed, it may be in use\e[00m\n$puppetcmd"
+  echo -e "\n"
+else
+  :
+fi
+
+#list all debian packages
+if [ "$thorough" = "1" ]; then
+  echo -e "\e[00;31mListing all installed packages: dpkg -l:\e[00m\n"
+  cmd=`dpkg --list | grep "^ii" | awk '{print $2 " " $3 " " $5}'`
+  if [ "$cmd" ]; then
+    echo -e "Name                                        Version                          Description\n"
+    echo -e "$cmd"
+    echo -e "\n"
+  else
+    :
+  fi
+fi
+}
+
+os_protections()
+{
+echo -e "\e[00;33m### OS Protections and Binary Protection Information ####################################\e[00m" 
+
+#fail2ban
+fail2bancmd=`which fail2ban 2>/dev/null`
+fail2bancmd2=`which fail2ban-client 2>/dev/null`
+if [ "$fail2bancmd" -o "$fail2bancmd2" ]; then
+  fail2banconfigs=`cat /etc/fail2ban/jail.local 2>/dev/nul`
+  fail2banconfigs2=`cat /etc/fail2ban/jail.conf`
+  echo -e "\e[00;31mjail.local config\e[00m\n$fail2banconfigs"
+  echo -e "\n"
+  echo -e "\e[00;31mjail.conf config\e[00m\n$fail2banconfigs2"
+  echo -e "\n"
+else
+  :
+fi
+
+#Solaris NX
+nxcmd=`grep noexec_user_stack /etc/system | grep -v _log | grep 1`
+if [ -z "$nxcmd" ]; then
+  echo -e "\e[00;31mEtc System No NX\e[00m"
+  echo -e "\n"
+else
+  :
+fi
+
+#Solaris NXlog
+nxlog=`grep noexec_user_stack_log /etc/system | grep 1`
+if [ -z "$nxlog" ]; then
+  echo -e "\e[00;31mEtc System No NX Logging\e[00m"
+  echo -e "\n"
+else
+  :
+fi
+
+#Solaris Auditing
+nxaudit=`grep c2audit:audit_load /etc/system |  grep 1`
+if [ -z "$nsaudit" ]; then
+  echo -e "\e[00;31mEtc System No Auditing\e[00m"
+  echo -e "\n"
+else
+  :
+fi
+
+#hpux NX
+nxcmd2=`kmtune -q executable_stack | grep executable_stack | awk '{print $2}'`
+if [ "$nxcmd2" = "1" ]; then
+  echo -e "\e[00;31mkmtune -q executable_stack No NX!\e[00m"
+  echo -e "\n"
+elif [ "$nxcmd2" = "2" ]; then
+  echo -e "\e[00;31mkmtune -q executable_stack NX set to logging only!\e[00m"
+  echo -e "\n"
+else
+  :
+fi
+
+#linux ASLR
+aslrcmd=`sysctl kernel.randomize_va_space | awk '{print $3}'`
+if [ "$aslrcmd" = "0" ]; then
+  echo -e "\e[00;31msysctl kernel.randomize_va_space No NX\e[00m"
+  echo -e "\n"
+elif [ "$aslrcmd" = "1" ]; then
+  echo -e "\e[00;31msysctl kernel.randomize_va_space Conservative ASLR\e[00m"
+  echo -e "\n"
+else
+  :
+fi
+
+#linux mmap
+mmapcmd=`cat /proc/sys/vm/mmap_min_addr`
+if [ "$mmapcmd" = "0" -o "$mmapcmd" = "" ]; then
+  echo -e "\e[00;31mCat Proc/sys/vm/mmap_min_addr allows map to 0\e[00m"
+  echo -e "\n"
+else
+  :
+fi
+
+#linux se linux
+if [ ! -f /selinux/enforce ]; then
+  echo -e "\e[00;31mSelinux/enforce, SELinux does not enforce\e[00m"
+  echo -e "\n"
+else
+  :
+fi
+
+#Identify programs and gather some specific stats
+echo -e "\e[00;31mProcesses, their directories, and possible protections\e[00m"
+for PROCDIR in /proc/[0-9]*; do
+  unset PROGPATH
+  PID=`echo $PROCDIR | cut -f 3 -d /`
+  echo ------------------------
+  echo "PID:           $PID"
+  if [ -d "$PROCDIR" ]; then
+    if [ -r "$PROCDIR/exe" ]; then
+      PROGPATH=`ls -l "$PROCDIR/exe" 2>&1 | sed 's/ (deleted)//' | awk '{print $NF}'`
+    else
+      if [ -r "$PROCDIR/cmdline" ]; then
+	    P=`cat $PROCDIR/cmdline | tr "\0" = | cut -f 1 -d = | grep '^/'`
+        if [ -z "$P" ]; then
+          echo "ERROR: Can't find full path of running program: "`cat $PROCDIR/cmdline`
+        else
+          PROGPATH=$P
+        fi
+      else
+        echo "ERROR: Can't find full path of running program: "`cat $PROCDIR/cmdline`
+        continue
+      fi
+    fi
+  else
+    echo "ERROR: Can't find full path of running process.  Process has gone."
+    continue
+  fi
+  if [ -n "$PROGPATH" ]; then
+    echo "Program path: $PROGPATH"
+    NX=`grep stack $PROCDIR/maps | grep -v "rw-"`
+    if [ -n "$NX" ]; then
+      echo "[UPC040] WARNING: NX not enabled"
+    fi
+				
+    SSP=`objdump -D $PROCDIR/exe | grep stack_chk`
+    if [ -z "$SSP" ]; then
+      echo "[UPC041] WARNING: SSP not enabled"
+    fi
+  fi
+done
+
 }
 
 ####APACHE########www####
@@ -1467,6 +1769,31 @@ else
 fi
 }
 
+nginx_enum()
+{
+nginxbin=`which nginx 2>/dev/null`
+if [ "$nginxbin" ]; then
+  echo -e "\e[00;31mNginx bin installed, it may be in use\e[00m\n$nginxbin"
+  echo -e "\n"
+else
+  :
+fi
+
+nginxconf=`find /etc/ -name nginx.conf -type f 2>/dev/null`
+nginxconfalt=`find /usr/local/ -name nginx.conf -type f 2>/dev/null`
+if [ "$nginxconf" ]; then
+  catconf=`cat "$nginxconf" 2>/dev/null`
+  echo -e "\e[00;31mEtc nginx.conf\e[00m\n$nginxconf\n$catconf"
+  echo -e "\n"
+elif [ "$nginxconfalt" ]; then
+  catconf=`cat "$nginxconfalt" 2>/dev/null`
+  echo -e "\e[00;31mUsr local nginx.conf\e[00m\n$nginxconfalt\n$catconf"
+  echo -e "\n"
+else
+  :
+fi
+}
+
 mysql_enum()
 {
 echo -e "\e[00;33m### MySQL Information ####################################\e[00m" 
@@ -1482,10 +1809,27 @@ fi
 
 #checks to see if root/root will get us a connection
 mysqlconnect=`mysqladmin -uroot -proot version 2>/dev/null`
+mysqlconnect2=`mysql -uroot -proot version 2>/dev/null`
 if [ "$mysqlconnect" ]; then
   echo -e "\e[00;33m***We can connect to the local MYSQL service with default root/root credentials!\e[00m\n$mysqlconnect" 
   echo -e "\n" 
+elif [ "$mysqlconnect2" ]; then
+  echo -e "\e[00;33m***We can connect to the local MYSQL service with default root/root credentials!\e[00m\n$mysqlconnect2"
+  echo -e "\n"
 else 
+  :
+fi
+
+#check to see if root can connect without a password
+mysqlconnect3=`mysqladmin -uroot --password= version 2>/dev/null`
+mysqlconnect4=`mysql -uroot --password= version 2>/dev/null`
+if [ "$mysqlconnect3" ]; then
+  echo -e "\e[00;33m***We can connect to the local MYSQL service with root and NO password!\e[00m\n$mysqlconnect3"
+  echo -e "\n"
+elif [ "$mysqlconnect4" ]; then
+  echo -e "\e[00;33m***We can connect to the local MYSQL service with root and NO password!\e[00m\n$mysqlconnect4"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1495,6 +1839,18 @@ if [ "$mysqlconnectnopass" ]; then
   echo -e "\e[00;33m***We can connect to the local MYSQL service as 'root' and without a password!\e[00m\n$mysqlconnectnopass" 
   echo -e "\n" 
 else 
+  :
+fi
+}
+
+mongo_enum()
+{
+#check for install #TODO make this better, check for service instead
+mongodbinstalled=`which mongodb 2>/dev/null`
+if [ "$mongodbinstalled" ]; then
+  echo -e "\e[00;31mMongoDB installed at:\e[00m\n$mongodbinstalled"
+  echo -e "\n"
+else
   :
 fi
 }
@@ -1822,8 +2178,6 @@ else
 fi
 }
 
-
-
 ####DOCKER####
 # check if in a docker container
 # check if in a docket host
@@ -1914,6 +2268,7 @@ call_each()
   users_and_groups
   quick_passwd_wins
   home_and_user_files
+  authentication_information
   ssh_enum
   mount_information
   special_perm_files
@@ -1924,8 +2279,11 @@ call_each()
   networking_info
   services_info
   binary_search
+  os_protections
   apache_enum
+  nginx_enum
   mysql_enum
+  mongo_enum
   postgres_enum
   software_configs
   interesting_files
