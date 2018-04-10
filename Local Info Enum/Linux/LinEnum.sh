@@ -11,8 +11,6 @@ v="version 0.81"
 #TODO, nginx modules in the conf, need hands on to write a parser/grep string
 #TODO, executable files/folders
 #TODO, tar.gz exported files for easy transport
-#TODO, add chkconfig --list | grep $(runlevel | awk '{ print $2}'):on	 ##RHEL/CentOS services that start at Boot
-#TODO, add rpm -qa #RHEL dpkg --list
 
 #help function
 #31m is red, 33m is yellow, 32m is green
@@ -1414,6 +1412,15 @@ else
   :
 fi
 
+#RHEL/Cent OS Services
+rhservices=`chkconfig --list | grep $(runlevel | awk '{ print $2}'):on	2>/dev/null` ##RHEL/CentOS services that start at Boot
+if [ "$rhservices" ]; then
+  echo -e "\e[00;31mChkconfig --list of services that start on  boot:\e[00m\n$rhservices"
+  echo -e "\n"
+else
+  :
+fi
+
 #anything 'useful' in inetd.conf
 inetdread=`cat /etc/inetd.conf 2>/dev/null`
 if [ "$inetdread" ]; then
@@ -1667,6 +1674,24 @@ if [ "$thorough" = "1" ]; then
     echo -e "\n"
     if [ "$verinfo" = "1" ]; then
       echo -e $cmd2 >> verinfo.txt 2>/dev/null
+    else
+      :
+    fi
+  else
+    :
+  fi
+fi
+
+#list all RH/rpm packages
+#rpm -qa #RHEL dpkg --list
+if [ "$thorough" = "1" ]; then
+  echo -e "\e[00;31mListing all installed packages: rpm -qa:\e[00m\n"
+  rpmcmd=`rpm -qa 2>/dev/null`
+  if [ "$rpmcmd" ]; then
+    echo -e "$rpmcmd"
+    echo -e "\n"
+    if [ "$verinfo" = "1" ]; then
+      echo -e $rpmcmd >> verinfo.txt 2>/dev/null
     else
       :
     fi
