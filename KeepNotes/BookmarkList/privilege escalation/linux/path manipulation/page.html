@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PATH Manipulation</title>
+</head><body>Several scenarios where the PATH can be useful <br/>
+<br/>
+1: Can you alter the PATH variable?<br/>
+2: A program is running with higher privs and executing a program without the full path. If you can place a file of the same name in a part of the path you have write access to, you can win!<br/>
+<br/>
+<br/>
+Whenever I call a program – like cat – bash will look for the above directories for it. Let’s make a file called cat with the following contents inside and make exec:<br/>
+<br/>
+echo "/bin/sh" &gt; cat<br/>
+chmod +x cat<br/>
+<br/>
+Now, let’s change our PATH variable to “.”. This will make bash look at the “.” (current) directory every time it needs to run a program.<br/>
+<br/>
+Can you imagine what would happen if we execute the msgmike program again? As you can recall, msgmike executes the cat command to view the contents of a file (/home/mike/msg.txt). Now that we have changed the PATH variable, though, it will look for the cat program inside the current directory. As we have created an executable file called cat – which pops a shell – our cat file will be executed, and we should normally get a shell as mike. Let’s see! As you can see, we have successfully logged in as mike! The real challenge doesn’t stop here, though. </body></html>

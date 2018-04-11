@@ -101,7 +101,8 @@ echo -e "\e[00m\n"
 }
 
 #SYSTEM INFO
-#hostname, issue, *-release, version, uname -arms
+#hostname, issue, *-release (lsb-release, redhat-release), version, uname -arms
+#reference: rpm -q kernel, dmesg | grep Linux, ls /boot | grep vmlinuz-
 system_info()
 {
 echo -e "\e[00;33m### SYSTEM ##############################################\e[00m" 
@@ -265,6 +266,18 @@ if [ "$pathinfo" ]; then
   echo -e "\e[00;31mPath information:\e[00m\n$pathinfo" 
   echo -e "\n" 
 else 
+  :
+fi
+
+#get permissions of $PATH
+pathvar=`echo $PATH 2>/dev/null | sed 's/:/ /g'`
+if [ "$pathvar" ]; then
+  echo -e "\e[00;31mPermissions of each dir in PATH:\e[00m\n"
+  for i in $pathvar; do
+    ls -ld "$pathvar";
+  done
+  echo -e "\n"
+else
   :
 fi
 
@@ -749,8 +762,27 @@ fi
 
 mountcmd=`mount 2>/dev/null | column -t`
 if [ "$mountcmd" ]; then
-  echo -e "\e[00;31mMount command output:\e[00m\n$mountcmd"
+  echo -e "\e[00;31mFull mount command output:\e[00m\n$mountcmd"
   echo -e "\n"
+  grepvnoexec=`cat "$mountcmd" 2>/dev/null | grep "noexec" | awk '{print $1 " " $2 " " $3 " " $6}'`
+  grepvnosuid=`cat "$mountcmd" 2>/dev/null | grep "noexec" | awk '{print $1 " " $2 " " $3 " " $6}'`
+  grepvnodev=`cat "$mountcmd" 2>/dev/null | grep "noexec" | awk '{print $1 " " $2 " " $3 " " $6}'`
+  unamecmd=`uname -r 2>/dev/null`
+  if [ "$grepvnoexec" ]; then
+    echo -e "\e[00;31mMounts with 'noexec' detcted. If $unamecmd < 2.4.25 / 2.6.0, then /lib/ld*.so execution bypass may work.\e[00m\n"
+  else
+    :
+  fi
+  if [ "$grepvnosuid" ]; then
+    echo -e "\e[00;31mMounts with 'nosuid' detected.\e[00m\n"
+  else
+    :
+  fi
+  if [ "$grepvnodev" ]; then
+    echo -e "\e[00;31mMounts with 'nodev' detected.\e[00m\n"
+  else
+    :
+  fi  
 else
   :
 fi
@@ -1386,12 +1418,21 @@ services_info()
 {
 echo -e "\e[00;33m### SERVICES #############################################\e[00m" 
 
-#running processes
-psaux=`ps aux 2>/dev/null`
+#processes running as NOT root
+psaux=`ps aux 2>/dev/null | grep -v root | awk '{print $1 " " $2 " " $5 " " $6 " " $9 " " $10 " " $11}' | column -t`
 if [ "$psaux" ]; then
-  echo -e "\e[00;31mRunning processes:\e[00m\n$psaux" 
+  echo -e "\e[00;31mRProcesses that are NOT running as root:\e[00m\n$psaux" 
   echo -e "\n" 
 else 
+  :
+fi
+
+#processes running as root
+psauxroot=`ps aux 2>/dev/null | grep root | awk '{print $1 " " $2 " " $5 " " $6 " " $9 " " $10 " " $11}' | column -t`
+if [ "$psauxroot" ]; then
+  echo -e "\n[00;33mProcesses that are running as root! Scrutinize these:\e[00m\n$psauxroot"
+  echo -e "\n"
+else
   :
 fi
 

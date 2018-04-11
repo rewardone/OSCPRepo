@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>PATH Manipulation</string>
+  <key>nodeid</key><string>ea992aac-50a8-4180-b1ad-766e9d9dc6c8</string>
+  <key>modified_time</key><integer>1523471848</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1523471545</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

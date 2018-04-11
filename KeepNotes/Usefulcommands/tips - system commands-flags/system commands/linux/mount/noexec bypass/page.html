@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>noexec bypass</title>
+</head><body>This trick fails since Linux 2.4.25 / 2.6.0.)<br/>
+$ /lib/ld-linux.so.2 ~/id<br/>
+uid=1001(edd) gid=1001(edd) groups=1001(edd),1002(wheel)<br/>
+<br/>
+<br/>
+mount -o remount,suid,exec,dev /&lt;mount&gt;<br/>
+<br/>
+<br/>
+<br/>
+http://www.win.tue.nl/~aeb/linux/hh/hh-14.html<br/>
+<br/>
+Under later kernels, this was made more difficult, but not fixed.<br/>
+% /lib/ld-linux.so.2 /zip/hello<br/>
+/zip/hello: error while loading shared libraries: /zip/hello: failed to map segment from shared object: Operation not permitted<br/>
+% ./fixelf /zip/hello<br/>
+% /lib/ld-linux.so.2 /zip/hello<br/>
+Hello!<br/>
+% cat /proc/version<br/>
+Linux version 2.6.19<br/>
+The tiny utility fixelf removes the PF_X flag from the ELF program headers:<br/>
+<br/>
+/* fixelf.c */<br/>
+...<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Elf32_Ehdr *eh;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Elf32_Phdr *ph;<br/>
+...<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; eh = (Elf32_Ehdr *) program;<br/>
+...<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; for (i=0; i&lt;eh-&gt;e_phnum; i++) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ph = (Elf32_Phdr *)(program + eh-&gt;e_phoff + i*eh-&gt;e_phentsize);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ph-&gt;p_flags &amp;= ~PF_X;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+...<br/>
+Today (2.6.21) this still works.</body></html>
