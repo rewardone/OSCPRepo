@@ -1413,7 +1413,7 @@ else
 fi
 
 #RHEL/Cent OS Services
-rhservices=`chkconfig --list | grep $(runlevel | awk '{ print $2}'):on	2>/dev/null` ##RHEL/CentOS services that start at Boot
+rhservices=`chkconfig --list 2>/dev/null | grep $(runlevel | awk '{ print $2}'):on	2>/dev/null` ##RHEL/CentOS services that start at Boot
 if [ "$rhservices" ]; then
   echo -e "\e[00;31mChkconfig --list of services that start on  boot:\e[00m\n$rhservices"
   echo -e "\n"
@@ -1621,7 +1621,7 @@ fi
 clamcmd=`which clamconf 2>/dev/null`
 clamscancmd=`whichslamscan 2>/dev/null`
 if [ "$clamcmd" -o "$clamscancmd" ]; then
-  echo -e "\e[00;31mClamAV malware scanner installed installed, it may be in use\e[00m\n"
+  echo -e "\e[00;31mClamAV malware scanner installed, it may be in use\e[00m\n"
   if [ ! -z "$clamcsm" ]; then
     echo -e "Clamconf: $clamconf\n"
   else
@@ -1639,7 +1639,7 @@ fi
 #chkrootkit binary check
 chkrootkitcmd=`which chkrootkit 2>/dev/null`
 if [ "$chkrootkitcmd" ]; then
-  echo -e "\e00;31mChkrootkit malware scanner installed installed, it may be in use\e[00m\n$chkrootkitcmd"
+  echo -e "\e[00;31mChkrootkit malware scanner installed, it may be in use\e[00m\n$chkrootkitcmd"
   echo -e "\n"
 else
   :
@@ -1648,7 +1648,7 @@ fi
 #maldet binary check
 malcmd=`which maldet 2>/dev/null`
 if [ "$malcmd" ]; then
-  echo -e "\e00;31mMaldet malware scanner installed, it may be in use\e[00m\n$malcdm"
+  echo -e "\e[00;31mMaldet malware scanner installed, it may be in use\e[00m\n$malcdm"
   echo -e "\n"
 else
   :
@@ -1657,7 +1657,7 @@ fi
 #snort binary check
 snortcmd=`which snort 2>/dev/null`
 if [ "$snortcmd" ]; then
-  echo -e "\e00;31mSnort IDS installed, it may be in use\e[00m\n$snortcmd"
+  echo -e "\e[00;31mSnort IDS installed, it may be in use\e[00m\n$snortcmd"
   echo -e "\n"
 else
   :
@@ -1666,14 +1666,14 @@ fi
 #list all debian packages
 if [ "$thorough" = "1" ]; then
   echo -e "\e[00;31mListing all installed packages: dpkg -l:\e[00m\n"
-  cmd=`dpkg --list | grep "^ii" | awk '{print $2 " " $3 " " $5}'`
-  cmd2=`dpkg --list | grep "^ii" | awk '{print $2 " " $3}'`
+  cmd=`dpkg --list 2>/dev/null | grep "^ii" | awk '{print $2 " " $3 " " $5}'`
+  cmd2=`dpkg --list 2>/dev/null | grep "^ii" | awk '{print $2 " " $3}'`
   if [ "$cmd" ]; then
     echo -e "Name                                        Version                          Description\n"
     echo -e "$cmd"
     echo -e "\n"
     if [ "$verinfo" = "1" ]; then
-      echo -e $cmd2 >> verinfo.txt 2>/dev/null
+      echo -e "$cmd2" >> verinfo.txt 2>/dev/null
     else
       :
     fi
@@ -1720,7 +1720,7 @@ else
 fi
 
 #Solaris NX
-nxcmd=`grep noexec_user_stack /etc/system | grep -v _log | grep 1`
+nxcmd=`grep noexec_user_stack /etc/system 2>/dev/null | grep -v _log | grep 1`
 if [ -z "$nxcmd" ]; then
   echo -e "\e[00;31mEtc System No NX\e[00m"
   echo -e "\n"
@@ -1729,7 +1729,7 @@ else
 fi
 
 #Solaris NXlog
-nxlog=`grep noexec_user_stack_log /etc/system | grep 1`
+nxlog=`grep noexec_user_stack_log /etc/system 2>/dev/null | grep 1`
 if [ -z "$nxlog" ]; then
   echo -e "\e[00;31mEtc System No NX Logging\e[00m"
   echo -e "\n"
@@ -1738,7 +1738,7 @@ else
 fi
 
 #Solaris Auditing
-nxaudit=`grep c2audit:audit_load /etc/system |  grep 1`
+nxaudit=`grep c2audit:audit_load /etc/system 2>/dev/null |  grep 1`
 if [ -z "$nsaudit" ]; then
   echo -e "\e[00;31mEtc System No Auditing\e[00m"
   echo -e "\n"
@@ -1747,7 +1747,7 @@ else
 fi
 
 #hpux NX
-nxcmd2=`kmtune -q executable_stack | grep executable_stack | awk '{print $2}'`
+nxcmd2=`kmtune -q executable_stack 2>/dev/null | grep executable_stack | awk '{print $2}'`
 if [ "$nxcmd2" = "1" ]; then
   echo -e "\e[00;31mkmtune -q executable_stack No NX!\e[00m"
   echo -e "\n"
@@ -1759,7 +1759,7 @@ else
 fi
 
 #linux ASLR
-aslrcmd=`sysctl kernel.randomize_va_space | awk '{print $3}'`
+aslrcmd=`sysctl kernel.randomize_va_space 2>/dev/null | awk '{print $3}'`
 if [ "$aslrcmd" = "0" ]; then
   echo -e "\e[00;31msysctl kernel.randomize_va_space No NX\e[00m"
   echo -e "\n"
@@ -1771,7 +1771,7 @@ else
 fi
 
 #linux mmap
-mmapcmd=`cat /proc/sys/vm/mmap_min_addr`
+mmapcmd=`cat /proc/sys/vm/mmap_min_addr 2>/dev/null`
 if [ "$mmapcmd" = "0" -o "$mmapcmd" = "" ]; then
   echo -e "\e[00;31mCat Proc/sys/vm/mmap_min_addr allows map to 0\e[00m"
   echo -e "\n"
@@ -2494,7 +2494,7 @@ call_each()
   footer
 }
 
-while getopts "h:k:r:e:t" option; do
+while getopts "h:k:r:e:s:t" option; do
  case "${option}" in
     k) keyword=${OPTARG};;
     r) report=${OPTARG}"-"`date +"%d-%m-%y"`;;
