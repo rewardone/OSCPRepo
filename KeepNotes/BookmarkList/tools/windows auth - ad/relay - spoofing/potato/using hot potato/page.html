@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Using Hot Potato</title>
+</head><body>Using The Exploit<br/>
+Usage is currently operating system dependent.<br/>
+<br/>
+It is also a bit flaky sometimes, due to the quirks in how Windows handles proxy settings and the WPAD file. Often when the exploit doesn’t work, it is required to leave it running and wait. When Windows already has a cached entry for WPAD, or is allowing direct internet access because no WPAD was found, it could take 30-60 minutes for it to refresh the WPAD file. It is necessary to leave the exploit running and try to trigger it again later, after this time has elapsed.<br/>
+<br/>
+<br/>
+<b>Windows 7</b>&nbsp;<br/>
+Fairly reliably exploited through the Windows Defender update mechanism.<br/>
+<br/>
+Potato.exe has code to automatically trigger this. Simply run the following:<br/>
+<br/>
+Potato.exe -ip -cmd [cmd to run] -disable_exhaust true<br/>
+<br/>
+This will spin up the NBNS spoofer, spoof “WPAD” to 127.0.0.1, then check for Windows Defender updates.<br/>
+<br/>
+If your network has a DNS entry for “WPAD” already, you can try “-disable_exhaust false”. This should cause the DNS lookup (through DNS port exhaustion) to fail and it should fallback to NBNS. This seems to work pretty reliably on Windows 7.<br/>
+<br/>
+<br/>
+<b>Windows Server 2008</b><br/>
+Since Windows Server doesn’t come with Defender, we need an alternate method. Instead we’ll simply check for Windows updates. The other caveat is that, at least on my domain, Server 2K8 wanted WPAD.DOMAIN.TLD instead of just WPAD. The following is an example usage:<br/>
+<br/>
+&lt;br /&gt;Potato.exe -ip -cmd [cmd to run] -disable_exhaust true -disable_defender true -spoof_host WPAD.EMC.LOCAL<br/>
+<br/>
+After this runs successfully, simply check for Windows updates. If it doesn’t trigger, wait about 30m with the exploit running and check again. If it still doesn’t work, try actually downloading an update.<br/>
+<br/>
+If your network has a DNS entry for “WPAD” already, you can try “-disable_exhaust false”, however it might break things here. Doing DNS port exhaustion causes ALL DNS lookups to fail. The Windows Update process may need to do a few DNS lookups before reaching out for WPAD. You would have to nail the timing JUST right to get it working in this case.<br/>
+<br/>
+<br/>
+<b>Windows 8/10/Server 2012</b>&nbsp;<br/>
+In the newest versions of Windows, it appears that Windows Update may no longer respect the proxy settings set in “Internet Options”, or check for WPAD. Instead proxy settings for Windows Update are controlled using “netsh winhttp proxy…”<br/>
+<br/>
+Instead for these versions, we rely on a newer feature of Windows, the “automatic updater of untrusted certificates”. Details can be found https://support.microsoft.com/en-us/kb/2677070 and https://technet.microsoft.com/en-us/library/dn265983.aspx<br/>
+<br/>
+From the technet article “The Windows Server 2012 R2, Windows Server 2012, Windows 8.1, and Windows 8 operating systems include an automatic update mechanism that downloads certificate trust lists (CTLs) on a daily basis.”<br/>
+<br/>
+It appears that this part of Windows still uses WPAD, even when the winhttp proxy setting is set to direct. Why is a bit of a mystery…<br/>
+<br/>
+In this case the usage of Potato is as follows:<br/>
+<br/>
+Potato.exe -ip -cmd [cmd to run] -disable_exhaust true -disable_defender true<br/>
+<br/>
+At this point, you will need to wait up to 24hrs or find another way to trigger this update.<br/>
+<br/>
+If your network has a DNS entry for “WPAD” already, refer to the documentation for this situation in Server 2008. You can try port exhaustion but it might be tricky.<br/>
+<br/>
+</body></html>

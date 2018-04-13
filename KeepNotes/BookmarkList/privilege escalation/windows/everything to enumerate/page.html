@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Everything To Enumerate</title>
+</head><body>SYSTEM<br/>
+C:\Windows\system32&gt; systeminfo | findstr /B /C:"OS Name" /C:"OS Version"<br/>
+OS Name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Microsoft Windows 7 Professional<br/>
+OS Version: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;6.1.7601 Service Pack 1 Build 7601<br/>
+<br/>
+HOSTNAME<br/>
+C:\Windows\system32&gt; hostname<br/>
+b33f<br/>
+<br/>
+WHOAMI<br/>
+C:\Windows\system32&gt; echo %username%<br/>
+user1<br/>
+<br/>
+USERS (local users)<br/>
+C:\Windows\system32&gt; net users<br/>
+<br/>
+SPECIFIC USER DETAILS (active/password expiry/groups)<br/>
+C:\Windows\system32&gt; net user user1<br/>
+<br/>
+NETWORKING<br/>
+<span style="font-family: inherit">C:\Windows\system32</span>&gt; <span style="font-family: inherit">ipconfig /all</span>&nbsp; <br/>
+<br/>
+ROUTING<br/>
+<span style="font-family: inherit">C:\Windows\system32</span>&gt; <span style="font-family: inherit">route print</span>&nbsp; <br/>
+<br/>
+ARP<br/>
+<span style="font-family: inherit">C:\Windows\system32</span>&gt; <span style="font-family: inherit">arp -A</span>&nbsp; <br/>
+<br/>
+ACTIVE CONNECTIONS<br/>
+<span style="font-family: inherit">C:\Windows\system32</span>&gt; <span style="font-family: inherit">netstat -ano</span>&nbsp; <br/>
+<br/>
+FIREWALL<br/>
+<span style="font-family: inherit">C:\Windows\system32&gt; netsh firewall show state</span><br/>
+<br/>
+FIREWALL CONFIG<br/>
+C:\Windows\system32&gt; netsh firewall show config<br/>
+<br/>
+SCHEDULED TASKS<br/>
+C:\Windows\system32&gt; schtasks /query /fo LIST /v<br/>
+<br/>
+PROCESSES and their SERVICES<br/>
+C:\Windows\system32&gt; tasklist /SVC<br/>
+<br/>
+STARTED WINDOWS SERVICES<br/>
+C:\Windows\system32&gt; net start<br/>
+<br/>
+(Optionall) DRIVERS LOADED<br/>
+C:\Windows\system32&gt; DRIVERQUERY<br/>
+<br/>
+WMIC enumeration (see child page)<br/>
+<br/>
+</body></html>

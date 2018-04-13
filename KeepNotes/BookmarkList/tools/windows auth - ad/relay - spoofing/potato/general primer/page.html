@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Breen's work includes NetBIOS Name Service spoofing attacks across network broadcast domains which has been brewed into a module for the the popular <a href="https://www.trustwave.com/Resources/SpiderLabs-Blog/Introducing-Responder-1-0/">Responder</a>&nbsp;tool.<br/>
+<br/>
+The exploit basically consists of three aspects:<br/>
+<br/>
+Local NBNS Spoofer<br/>
+Fake WPAD Proxy Server<br/>
+HTTP -&gt; SMB NTLM Relay<br/>
+<br/>
+The techniques that this exploit uses to gain privilege escalation aren’t new, but the way they are combined is. Microsoft is aware of all of these issues and has been for some time (circa 2000). These are unfortunately hard to fix without breaking backward compatibility and have been leveraged by attackers for over 15 years.<br/>
+<br/>
+The exploit consists of 3 main parts, all of which are somewhat configurable through command-line switches. Each part corresponds to an already well known attack that has been in use for years:<br/>
+<br/>
+<b>1. Local NBNS Spoofer</b><br/>
+When you (or Windows) perform a DNS lookup, first Windows will check the “hosts” file. If no entry exists, it will then attempt a DNS lookup. If this fails, an NBNS lookup will be performed. The NBNS protocol basically just asks all hosts on the local broadcast domain “Who knows the IP address for host XXX?”. Any host on the network is free to respond however they wish.<br/>
+<br/>
+We will impersonate all hosts, replying to every request with our IP address in hopes that the resulting connection will do something interesting, like try to authenticate. For privilege escalation purposes, we can’t assume that we are able to sniff network traffic. Why? Because this requires local administrator access. So how can we accomplish NBNS spoofing?<br/>
+<br/>
+If we can know ahead of time which hostname a target machine (in this case our target is 127.0.0.1) will be sending an NBNS query for, we can craft a fake response and flood the target host with NBNS responses very quickly (since it is a UDP protocol). One complication is that a 2-byte field in the NBNS packet, the TXID, must match in the request and response, and we are unable to see the request. We can overcome this by flooding quickly and iterating over all 65536 possible values.<br/>
+<br/>
+What if the network we are targeting has a DNS record for the host we want to spoof? We can use a technique called UDP port exhaustion to force ALL DNS lookups on the system to fail. All we do is bind to EVERY single UDP port. This causes DNS to fail because there will be no available UDP source port for the request. When DNS fails, NBNS will be the fallback.<br/>
+<br/>
+In testing, this has proved to be 100% effective due to the speed we are able to send UDP packets to 127.0.0.1.<br/>
+<br/>
+<b>2. Fake WPAD Proxy Server</b><br/>
+In Windows, Internet Explorer by default will automatically try to detect network proxy setting configuration by accessing the URL “http://wpad/wpad.dat&amp;#8221;. This also surprisingly applies to some Windows services such as Windows Update, but exactly how and under what conditions seems to be version dependent.<br/>
+<br/>
+Of course the URL “http://wpad/wpad.dat&amp;#8221; wont exist on all networks because the hostname “wpad” wont necessarily exist in the DNS nameserver. However as we saw above, we can spoof host names using NBNS spoofing.<br/>
+<br/>
+With the ability to spoof NBNS responses, we can target our NBNS spoofer at 127.0.0.1. We flood the target machine (our own machine) with NBNS response packets for the host “WPAD”, or “WPAD.DOMAIN.TLD”, and we say that the WPAD host has IP address 127.0.0.1.<br/>
+<br/>
+At the same time, we run an HTTP server locally on 127.0.0.1. When it receives a request for “http://wpad/wpad.dat&amp;#8221;, it responds with something like the following:<br/>
+<br/>
+FindProxyForURL(url,host){<br/>
+if (dnsDomainIs(host, "localhost")) return "DIRECT";<br/>
+return "PROXY 127.0.0.1:80";}<br/>
+<br/>
+This will cause all HTTP traffic on the target to be redirected through our server running on 127.0.0.1.<br/>
+<br/>
+<b>3. HTTP -&gt; SMB NTLM Relay</b><br/>
+NTLM relay is a well known, but often misunderstood attack against Windows NTLM authentication. The NTLM protocol is vulnerable to man-in-the-middle attacks. If an attacker can trick a user into trying to authenticate using NTLM to his machine, he can relay that authentication attempt to another machine!<br/>
+<br/>
+The old version of this attack had the victim attempting to authenticate to the attacker using the SMB protocol with NTLM authentication. The attacker would then relay those credentials back to the victim’s computer and gain remote access using a “psexec” like technique.<br/>
+<br/>
+Microsoft patched this by disallowing same-protocol NTLM authentication using a challenge that is already in flight. What this means is that SMB-&gt;SMB NTLM relay from one host back to itself will no longer work. However cross-protocol attacks such as HTTP-&gt;SMB will still work with no issue!<br/>
+<br/>
+With all HTTP traffic now presumably flowing through an HTTP server that we control, we can do things like redirect them somewhere that will request NTLM authentication.<br/>
+<br/>
+<br/>
+In the Potato exploit, all HTTP requests are redirected with a 302 redirect to “http://localhost/GETHASHESxxxxx&amp;#8221;, where xxxxx is some unique identifier. Requests to “http://localhost/GETHASHESxxxxx&amp;#8221; respond with a 401 request for NTLM authentication.<br/>
+<br/>
+Any NTLM credentials are then relayed to the local SMB listener to create a new system service that runs a user-defined command.<br/>
+<br/>
+When the HTTP request in question originates from a high privilege account, for example, when it is a request from the Windows Update service, this command will run with “NT AUTHORITY\SYSTEM” privilege!<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

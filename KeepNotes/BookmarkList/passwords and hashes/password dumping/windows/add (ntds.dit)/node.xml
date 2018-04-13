@@ -6,6 +6,7 @@
   <key>title</key><string>ADD (ntds.dit)</string>
   <key>nodeid</key><string>a7e1c99e-4037-41e9-a187-3e052c453ece</string>
   <key>modified_time</key><integer>1522533821</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522532615</integer>

