@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Unattended Installs</string>
+  <key>nodeid</key><string>e3a388d9-cf78-4f7c-8ca5-d455edf0883e</string>
+  <key>modified_time</key><integer>1513187921</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1513018044</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

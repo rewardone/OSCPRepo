@@ -3,9 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>General Privilege Escalation</title>
-</head><body>Linux: For Enumeration scripts, see Tools &gt; Linux Security &gt; Auditing and Enumeration<br/>
-Windows: For Enumeration scripts, see Tools &gt; Windows Security &gt; Auditing and Enumeration<br/>
-<br/>
+</head><body>Linux: For Enumeration scripts, see Tools &gt; Linux Local Enumeration &gt; Auditing and Enumeration<br/>
+Windows: For Enumeration scripts, see Tools &gt; Windows Local Enumeration &gt; Auditing and Enumeration<br/>
 <br/>
 Linux<br/>
 [Its Too Funky In Here04 Linux priv esc for fun profit and mischief Jake Willi](<a href="https://www.youtube.com/watch?v=dk2wsyFiosg">https://www.youtube.com/watch?v=dk2wsyFiosg</a>)<br/>
@@ -20,14 +19,23 @@ http://www.greyhathacker.net/?p=738 | Elevating privileges by exploiting weak fo
 <a href="http://www.toshellandback.com/2015/11/24/ms-priv-esc/">www.toshellandback.com/2015/11/24/ms-priv-esc/</a>&nbsp; - Windows<br/>
 <a href="http://www.blackhillsinfosec.com/?p=5824">http://www.blackhillsinfosec.com/?p=5824</a>&nbsp; <br/>
 <a href="https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/">https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/</a>&nbsp;<br/>
+https://www.commonexploits.com/unquoted-service-paths/ &nbsp;<br/>
+https://room362.com/post/2011/2011-06-27-fxsstdll-persistence-the-evil-fax-machine/ <br/>
+<a href="From https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/">From https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/</a>&nbsp;<br/>
+https://adsecurity.org/?p=2288<br/>
+http://blogs.technet.com/b/markrussinovich/archive/2006/05/01/the-power-in-power-users.aspx<br/>
+<a href="https://www.commonexploits.com/unquoted-service-paths/">https://www.commonexploits.com/unquoted-service-paths/</a>&nbsp;<br/>
+<a href="https://hi.cybereason.com/hubfs/Siofra-Research-Tool-Cybereason.pdf?t=1515089088070">https://hi.cybereason.com/hubfs/Siofra-Research-Tool-Cybereason.pdf?t=1515089088070<br/>
+</a>https://pentestlab.blog/2017/03/27/dll-hijacking/ <br/>
+<a href="http://www.greyhathacker.net/?p=738">http://www.greyhathacker.net/?p=738</a>&nbsp;<br/>
+https://pentestlab.blog/2017/03/27/dll-hijacking/<br/>
 <br/>
-<br/>
-<span style="font-size: 13pt"><span style="font-family: Verdana"><div style="text-align: left">Privilege Escalation:</div></span></span><br/>
+<div style="text-align: left"><span style="font-family: Verdana"><span style="font-size: 13pt">Privilege Escalation:</span></span></div><br/>
 <a href="https://www.youtube.com/watch?v=kMG8IsCohHA">https://www.youtube.com/watch?v=kMG8IsCohHA</a>&nbsp;Encyclopaedia Of Windows Privilege Escalation (Brett Moore)<br/>
-<a href="http://harmj0y.net/">http://harmj0y.net</a><br/>
+<a href="http://harmj0y.net/">http://harmj0y.net</a>&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;Windows (harmj0y = Empire)<br/>
 <a href="http://www.tarasco.org/">http://www.tarasco.org/</a>&nbsp; <br/>
 <a href="http://www.youtube.com/watch?v=_8xJaaQlpBo">http://www.youtube.com/watch?v=_8xJaaQlpBo</a>&nbsp;DerbyCon 3 0 2105 Windows Attacks AT Is The New Black<br/>
-<a href="https://www.youtube.com/watch?v=PC_iMqiuIRQ">https://www.youtube.com/watch?v=PC_iMqiuIRQ</a><br/>
+<a href="https://www.youtube.com/watch?v=PC_iMqiuIRQ">https://www.youtube.com/watch?v=PC_iMqiuIRQ</a>&nbsp;Windows<br/>
 <br/>
 <br/>
 <br/>
@@ -78,11 +86,15 @@ http://insidetrust.blogspot.com/2011/04/quick-guide-to-linux-privilege.html<br/>
 [Privilege escalation linux with live example](<a href="http://resources.infosecinstitute.com/privilege-escalation-linux-live-examples/">http://resources.infosecinstitute.com/privilege-escalation-linux-live-examples/</a>) | covers a couple common PE methods in linux<br/>
 [Local Linux Enumeration &amp; Privilege Escalation Cheatsheet](<a href="https://www.rebootuser.com/?p=1623">https://www.rebootuser.com/?p=1623</a>) | good resources that could be compiled into a script<br/>
 [4 Ways get linux privilege escalation](<a href="http://www.hackingarticles.in/4-ways-get-linux-privilege-escalation/">http://www.hackingarticles.in/4-ways-get-linux-privilege-escalation/</a>) | shows different examples of PE scripts<br/>
-<br/>
+linux-exploit-suggester, older: <a href="https://github.com/PenturaLabs/Linux_Exploit_Suggester">https://github.com/PenturaLabs/Linux_Exploit_Suggester</a>&nbsp; <br/>
+linux-exploit-suggester, updated!: <a href="https://github.com/mzet-/linux-exploit-suggester">https://github.com/mzet-/linux-exploit-suggester</a>&nbsp; <br/>
+mimipenguin, mimicatz ish for linux: <a href="https://github.com/huntergregal/mimipenguin">https://github.com/huntergregal/mimipenguin</a><br/>
 <br/>
 Windows<br/>
 [Windows Privilege Escalation](<a href="http://www.bhafsec.com/wiki/index.php/Windows_Privilege_Escalation">http://www.bhafsec.com/wiki/index.php/Windows_Privilege_Escalation</a>) | collection of wiki pages covering Windows Privilege escalation<br/>
-<br/>
-<br/>
+https://github.com/PowerShellMafia/PowerSploit | In tools section<br/>
+https://github.com/pentestmonkey/windows-privesc-check &nbsp;| In tools section<br/>
+https://github.com/foxglovesec/RottenPotato &nbsp;| In tools section<br/>
+https://blog.gdssecurity.com/labs/2014/7/11/introducing-windows-exploit-suggester.html &nbsp;| In tools section<br/>
 <br/>
 </body></html>

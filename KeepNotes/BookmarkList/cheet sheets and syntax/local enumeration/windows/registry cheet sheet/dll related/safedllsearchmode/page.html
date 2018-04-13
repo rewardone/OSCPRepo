@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SafeDllSearchMode</title>
+</head><body><b>SafeDllSearchMode</b>&nbsp; <br/>
+Safe DLL search mode [4] is enabled by default. To disable this feature we can create a DWORD name SafeDllSearchMode with value 0<br/>
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager] &nbsp;<br/>
+If SafeDllSearchMode is enabled, the search order is as follows:<br/>
+<ul><li style="list-style-type: none">1 The directory from which the application loaded</li>
+<li style="list-style-type: none">2 32-bit System directory (C:\Windows\System32)</li>
+<li style="list-style-type: none">3 16-bit System directory (C:\Windows\System)</li>
+<li style="list-style-type: none">4 Windows directory (C:\Windows)</li>
+<li style="list-style-type: none">5 The current working directory (CWD) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </li>
+<li style="list-style-type: none">6 Directories in the PATH environment variable (system then user)</li>
+<li style="list-style-type: none"></li>
+</ul>
+If SafeDllSearchMode is disabled, the search order is as follows:<br/>
+<ul><li style="list-style-type: none">1 The directory from which the application loaded</li>
+<li style="list-style-type: none">2 The current working directory (CWD) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [ moved up the list ]</li>
+<li style="list-style-type: none">3 32-bit System directory (C:\Windows\System32)</li>
+<li style="list-style-type: none">4 16-bit System directory (C:\Windows\System)</li>
+<li style="list-style-type: none">5 Windows directory (C:\Windows) &nbsp; </li>
+<li style="list-style-type: none">6 Directories in the PATH environment variable (system then user)</li>
+<li style="list-style-type: none"></li>
+</ul>
+Calling the SetDllDirectory(“”) or SetDllDirectory(“C:\\program files\\MyApp\\”) disables SafeDllSearchMode and uses the search order described for SetDllDirectory.<br/>
+<br/>
+LoadLibraryEx function [5] takes another argument where a flag can be set to change the search order but I didnt get round to test it.</body></html>

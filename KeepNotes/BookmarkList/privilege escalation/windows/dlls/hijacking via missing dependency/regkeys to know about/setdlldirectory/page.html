@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SetDllDirectory</title>
+</head><body><b>SetDllDirectory</b>&nbsp; <br/>
+This function [3] removes the current working directory (CWD) from the search order when loading DLLs. For instance, the DLL search order after calling SetDllDirectory(“C:\\program files\\MyApp\\”) becomes:<br/>
+<br/>
+The directory from which the application loaded<ul><li style="list-style-type: none">1 C:\program files\MyApp\ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[ added ]</li>
+<li style="list-style-type: none">2 32-bit System directory (C:\Windows\System32)</li>
+<li style="list-style-type: none">3 16-bit System directory (C:\Windows\System)</li>
+<li style="list-style-type: none">4 Windows directory (C:\Windows)</li>
+<li style="list-style-type: none">5 The current working directory (CWD) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[ removed ]</li>
+<li style="list-style-type: none">6 Directories in the PATH environment variable (system then user)</li>
+</ul>
+Passing an empty string to SetDllDirectory(“”) the current working directory (CWD) is removed from the search order<br/>
+<br/>
+The directory from which the application loaded<ul><li style="list-style-type: none">1 32-bit System directory (C:\Windows\System32)</li>
+<li style="list-style-type: none">2 16-bit System directory (C:\Windows\System)</li>
+<li style="list-style-type: none">3 Windows directory (C:\Windows)</li>
+<li style="list-style-type: none">4 The current working directory (CWD) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [ removed ]</li>
+<li style="list-style-type: none">5 Directories in the PATH environment variable (system then user)</li>
+<li style="list-style-type: none">6 If this parameter is NULL, the function restores the default search order.</li>
+</ul>
+</body></html>

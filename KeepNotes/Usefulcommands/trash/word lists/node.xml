@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>Word Lists</string>
   <key>nodeid</key><string>b1696931-b18c-4340-b354-7d75b3ab665e</string>
   <key>modified_time</key><integer>1512674016</integer>

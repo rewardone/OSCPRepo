@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>UAC Bypass Mitigations</title>
+</head><body>Mitigation<br/>
+The best way to mitigate this bypass is just by not giving users local admin rights to their machines. Majority of user accounts in a corporate environment you should be able to do this reducing the attack surface. This however does not apply home users which would have local admin rights by default.<br/>
+<br/>
+The actual bypass only works when set to the middle two UAC settings which will let it auto-elevate. <br/>
+Notify me only when apps try to make changes to my computer (default)<br/>
+Notify me only when apps try to make changes to my computer (do not dim desktop settings)<br/>
+<br/>
+To see your settings you need to go to Control Panel – User Accounts – Change User Account Control settings.<br/>
+so we could set to Always notify but this would bring it back to like it was on Windows Vista with constant notifications and not really practical and the user would end up setting it to Never notify which is definitely not a good idea.<br/>
+<br/>
+Microsoft has given us 10 UAC policies to play with so it’s worth spending some time understanding and testing these out before implementing it in your own domain environment. To see what is applied on your local machine type secpol.msc into Start-Run to open the Local Security Policy snap-in and expand the Local Policies-Security Options folder. Run rsop.msc to view group policies applied on machines in a domain environment.<br/>
+<br/>
+User Account Control: Run all administrators in Admin Approval Mode<br/>
+User Account Control: Admin Approval Mode for the built-in Administrator account<br/>
+<br/>
+Another option would be to look into renaming or deleting the executables Mcx2Prov.exe, sysprep.exe, cliconfg.exe and pwcreator.exe if definitely not required on the system so the second stage to exploit DLL hijacking fails.<br/>
+<br/>
+Finally if users do require local admin privileges then worth setting their machine UAC policy to Always notify and they live with the constant notifications.<br/>
+<br/>
+User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode (2-Prompt for consent on the secure desktop)<br/>
+<br/>
+Conclusion<br/>
+This bypass only works when all of the requirements are available to abuse. Remove one requirement and the bypass will fail. Office documents are opened in medium integrity so these are ideal targets to abuse the UAC bypass. Since these bypasses are so effortlessly achieved the only real course of action would be to set UAC to “Always notify” or remove local admin rights for the user. In the end using agents like Microsoft EMET or MalwareBytes Anti-Exploit would be the best mitigating action to take from initially being exploited in the first place.</body></html>

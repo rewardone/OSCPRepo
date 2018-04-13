@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ClickOnce</title>
+</head><body>This can be a vector for both initial exploitation and privilege escalation<br/>
+<br/>
+By default, ClickOnce packages that come from My Computer, Local Intranet, IE Trusted Sites, and the Internet allow a user to grant the application temporary admin privileges in order to install.<br/>
+\HKEY_LOCAL_MACHINE\SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\PromptingLevel<br/>
+<br/>
+Option&#09;&#09;&#09;&#09;Registry setting value&#09;&#09;&#09;Description<br/>
+Enable the trust prompt.&#09;Enabled&#09;&#09;&#09;&#09;&#09;The ClickOnce trust prompt is display so that end users <ul><li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;can grant trust to ClickOnce applications.</li>
+</ul>
+Restrict the trust prompt.&#09;AuthenticodeRequired&#09;&#09;The ClickOnce trust prompt is only displayed if ClickOnce <br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;applications are signed with a certificate that identifies the <br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;publisher.<br/>
+Disable the trust prompt.&#09;Disabled&#09;&#09;&#09;&#09;&#09;The ClickOnce trust prompt is not displayed for any <br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;ClickOnce applications that are not signed with an <br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;explicitly trusted certificate.<br/>
+<br/>
+Zone&#09;&#09;&#09;Applications&#09;Office solutions<br/>
+MyComputer&#09;Enabled&#09;&#09;Enabled<br/>
+LocalIntranet&#09;Enabled&#09;&#09;Enabled<br/>
+TrustedSites&#09;Enabled&#09;&#09;Enabled<br/>
+Internet&#09;&#09;Enabled&#09;&#09;AuthenticodeRequired<br/>
+UntrustedSites&#09;Disabled&#09;&#09;Disabled<br/>
+<br/>
+<br/>
+Complete<br/>
+https://blog.netspi.com/all-you-need-is-one-a-clickonce-love-story/<br/>
+https://bohops.com/2017/12/02/clickonce-twice-or-thrice-a-technique-for-social-engineering-and-untrusted-command-execution/<br/>
+</body></html>

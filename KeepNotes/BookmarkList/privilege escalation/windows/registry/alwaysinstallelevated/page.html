@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>AlwaysInstallElevated</title>
+</head><body>AlwaysInstallElevated is a setting that allows non-privileged users the ability to run Microsoft Windows Installer Package Files (MSI) with elevated (SYSTEM) permissions. However, granting users this ability is a security concern because it is too easy to abuse this privilege. &nbsp; For this to occur, there are two registry entries that have to be set to the value of “1” on the machine:<br/>
+<br/>
+[HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Installer]<br/>
+“AlwaysInstallElevated”=dword:00000001 <br/>
+<br/>
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer]<br/>
+“AlwaysInstallElevated”=dword:00000001<br/>
+<br/>
+The easiest way to check the values of these two registry entries is to utilize the built-in command line tool, reg query:<br/>
+<br/>
+reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated<br/>
+reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated<br/>
+<br/>
+</body></html>

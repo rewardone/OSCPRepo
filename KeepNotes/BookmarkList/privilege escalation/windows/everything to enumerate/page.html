@@ -22,6 +22,9 @@ C:\Windows\system32&gt; net users<br/>
 SPECIFIC USER DETAILS (active/password expiry/groups)<br/>
 C:\Windows\system32&gt; net user user1<br/>
 <br/>
+PATH<br/>
+echo %PATH%<br/>
+<br/>
 NETWORKING<br/>
 <span style="font-family: inherit">C:\Windows\system32</span>&gt; <span style="font-family: inherit">ipconfig /all</span>&nbsp; <br/>
 <br/>
@@ -54,4 +57,31 @@ C:\Windows\system32&gt; DRIVERQUERY<br/>
 <br/>
 WMIC enumeration (see child page)<br/>
 <br/>
-</body></html>
+OS Patch level<br/>
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB.." /C:"KB.."<br/>
+<br/>
+Clear text password/configuration files<br/>
+c:\sysprep.inf<br/>
+c:\sysprep\sysprep.xml<br/>
+%WINDIR%\Panther\Unattend\Unattended.xml<br/>
+%WINDIR%\Panther\Unattended.xml<br/>
+%SYSVOL$<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+REG KEYS (see cheatsheets &gt; reg keys for everything to enum, from AlwaysInstallElevated to UAC to PassTheHash related items)<br/>
+<br/>
+<br/>
+We can find which programs autoElevate themselves with a little strings magic:<br/>
+cd c:\windows\<br/>
+strings –s *.exe | findstr /i autoelevate</body></html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Windows DLL Search Order</title>
+</head><body>Generally a Windows application will use pre-defined search paths to find DLL's and it will check these paths in a specific order. DLL hijacking usually happens by placing a malicious DLL in one of these paths while making sure that DLL is found before the legitimate one. This problem can be mitigated by having the application specify absolute paths to the DLL's that it needs.<br/>
+<br/>
+You can see the DLL search order on 32-bit systems below:<br/>
+1 - The directory from which the application loaded<br/>
+2 - 32-bit System directory (C:\Windows\System32)<br/>
+3 - 16-bit System directory (C:\Windows\System)<br/>
+4 - Windows directory (C:\Windows)<br/>
+5 - The current working directory (CWD)<br/>
+6 - Directories in the PATH environment variable (system then user)<br/>
+</body></html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Password Files</title>
+</head><body>Groups.xml &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Stored in <a href="https://technet.microsoft.com/en-us/library/cc816833(v=ws.10).aspx">SYSVOL</a>&nbsp;<br/>
+#PowerSploit module PowerSploit/Exfiltration/<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-GPPPassword.ps1">Get-GPPPassword.ps1</a>&nbsp;<br/>
+Services\Services.xml: &#09;&#09;&#09;&#09;&#09;&#09;<a href="http://msdn.microsoft.com/en-us/library/cc980070.aspx">Element-Specific Attributes</a><br/>
+ScheduledTasks\ScheduledTasks.xml: &#09;&#09;&#09;<a href="http://msdn.microsoft.com/en-us/library/cc422920.aspx">Task Inner Element</a>, <a href="">TaskV2 Inner Element</a>, <a href="http://msdn.microsoft.com/en-us/library/dd304114.aspx">ImmediateTaskV2 Inner Element</a><br/>
+Printers\Printers.xml: &#09;&#09;&#09;&#09;&#09;&#09;<a href="http://msdn.microsoft.com/en-us/library/cc422918.aspx">SharedPrinter Element</a><br/>
+Drives\Drives.xml: &#09;&#09;&#09;&#09;&#09;&#09;&#09;<a href="http://msdn.microsoft.com/en-us/library/cc704598.aspx">Element-Specific Attributes</a><br/>
+DataSources\DataSources.xml: &#09;&#09;&#09;&#09;&#09;<a href="http://msdn.microsoft.com/en-us/library/cc422926.aspx">Element-Specific Attributes</a><br/>
+<br/>
+Search for configuration files that may contain passwords:<br/>
+c:\sysprep.inf<br/>
+c:\sysprep\sysprep.xml<br/>
+%WINDIR%\Panther\Unattend\Unattended.xml<br/>
+%WINDIR%\Panther\Unattended.xml<br/>
+c:\Windows\System32\Unattended.xml<br/>
+c:\Windows\System32\sysprep\Unattended.xml<br/>
+c:\unattend.txt<br/>
+<br/>
+# Windows autologin<br/>
+reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon"<br/>
+<br/>
+# VNC<br/>
+reg query "HKCU\Software\ORL\WinVNC3\Password"<br/>
+<br/>
+# SNMP Parameters<br/>
+reg query "HKLM\SYSTEM\Current\ControlSet\Services\SNMP"<br/>
+<br/>
+# Putty<br/>
+reg query "HKCU\Software\SimonTatham\PuTTY\Sessions"<br/>
+<br/>
+# Similarly the two commands below can be used to grep the registry for keywords, in this case "password".<br/>
+&nbsp;reg query HKLM /f password /t REG_SZ /s<br/>
+&nbsp;reg query HKCU /f password /t REG_SZ /s<br/>
+<br/>
+# The command below will search the file system for file names containing certain keywords. You can specify as many keywords as you wish.<br/>
+&nbsp;dir /s *pass* == *cred* == *vnc* == *.config*<br/>
+<br/>
+# Search certain file types for a keyword, this can generate a lot of output.<br/>
+&nbsp;findstr /si password *.xml | *.ini | *.txt<br/>
+<br/>
+# Additional<br/>
+&nbsp;reg query HKLM /s | findstr /i password &gt; temp.txt<br/>
+&nbsp;reg query HKCU /s | findstr /i password &gt; temp.txt</body></html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Meterpreter GetSystem</title>
+</head><body>Summary of three techniques:<br/>
+1. Name pipe impersonation as SYSTEM using cmd from service<br/>
+2. Name pipe impersonation using DLL to disk, schedules rundll32 to exe the dll<br/>
+3. x86 systems only, uses debug privs to inject dll into process running as SYSTEM to obtain token<br/>
+<br/>
+The getsystem command has three techniques. The first two rely on named pipe impersonation. The last one relies on token duplication.<br/>
+<br/>
+meterpreter &gt; getsystem -h<br/>
+Usage: getsystem [options]<br/>
+&nbsp;<br/>
+Attempt to elevate your privilege to that of local system.<br/>
+&nbsp;<br/>
+OPTIONS:<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; -h &nbsp; &nbsp; &nbsp; &nbsp;Help Banner.<br/>
+&nbsp; &nbsp; -t &nbsp; The technique to use. (Default to '0').<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 0 : All techniques available<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 1 : Service - Named Pipe Impersonation (In Memory/Admin)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 2 : Service - Named Pipe Impersonation (Dropper/Admin)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 3 : Service - Token Duplication (In Memory/Admin)<br/>
+Let’s go through them:<br/>
+<br/>
+Technique 1 creates a named pipe from Meterpreter. It also creates and runs a service that runs cmd.exe /c echo “some data” &gt;\\.\pipe\[random pipe here]. When the spawned cmd.exe connects to Meterpreter’s named pipe, Meterpreter has the opportunity to impersonate that security context. Impersonation of clients is a named pipes feature. The context of the service is SYSTEM, so when you impersonate it, you become SYSTEM.<br/>
+<br/>
+Technique 2 is like technique 1. It creates a named pipe and impersonates the security context of the first client to connect to it. To create a client with the SYSTEM user context, this technique drops a DLL to disk(!) and schedules rundll32.exe as a service to run the DLL as SYSTEM. The DLL connects to the named pipe and that’s it. Look at elevate_via_service_namedpipe2 in Meterpreter’s source to see this technique.<br/>
+<br/>
+As the help information states, this technique drops a file to disk. This is an opportunity for an anti-virus product to catch you. If you’re worried about anti-virus or leaving forensic evidence, I’d avoid getsystem –t 0 (which tries every technique) and I’d avoid getsystem –t 2.<br/>
+<br/>
+Technique 3 is a little different. This technique assumes you have SeDebugPrivileges—something getprivs can help with. It loops through all open services to find one that is running as SYSTEM and that you have permissions to inject into. It uses reflective DLL injection to run its elevator.dll in the memory space of the service it finds. This technique also passes the current thread id (from Meterpreter) to elevator.dll. When run, elevator.dll gets the SYSTEM token, opens the primary thread in Meterpreter, and tries to apply the SYSTEM token to it.<br/>
+<br/>
+This technique’s implementation limits itself to x86 environments only. On the bright side, it does not require spawning a new process and it takes place entirely in memory.<br/>
+<br/>
+Let’s say techniques 1-3 fail. You can always fall back to getting system by hand. All of these techniques rely on your ability, as a privileged user, to create or inject into a service. If these techniques fail, generate an executable for your payload and use sc or at to run it as SYSTEM. There you go, you’ve got system.</body></html>

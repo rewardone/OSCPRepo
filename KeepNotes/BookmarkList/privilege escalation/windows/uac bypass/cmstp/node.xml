@@ -4,11 +4,11 @@
 <dict>
   <key>title</key><string>CMSTP</string>
   <key>nodeid</key><string>fc1c23b9-2ef4-4932-894f-1b8f7e8a8469</string>
-  <key>modified_time</key><integer>1522771130</integer>
+  <key>modified_time</key><integer>1523632133</integer>
   <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522769785</integer>
-  <key>order</key><integer>0</integer>
+  <key>order</key><integer>1</integer>
 </dict>
 </node>

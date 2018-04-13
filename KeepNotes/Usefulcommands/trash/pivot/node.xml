@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>Pivot</string>
   <key>nodeid</key><string>4055dd2f-aba2-49f1-882d-c12be74e624a</string>
   <key>modified_time</key><integer>1513625855</integer>

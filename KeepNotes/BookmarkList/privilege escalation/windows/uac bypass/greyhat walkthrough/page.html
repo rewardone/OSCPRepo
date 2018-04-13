@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>GreyHat Walkthrough</title>
+</head><body><b>Bypassing UAC</b><br/>
+Exploiting UAC is a trivial process. There are <b>two stages needed</b>&nbsp;to be taken to achieve bypass to elevate from standard user rights to administrator user rights. <br/>
+<ul><li>Writing to a secure location (use iFileOperation COM Object or Windows Update Standalone Installer (wusa.exe))</li>
+<li>Exploiting DLL hijacking vulnerability</li>
+</ul>
+<br/>
+In order for our bypass to be successful to start off with we need<ul><li style="list-style-type: none"></li>
+<li>A medium integrity process</li>
+<li>A standard user in an administrators group (required for COM / wusa)</li>
+<li>Windows executable must be signed by Microsoft code signing certificate</li>
+<li>Windows executable must be located in a secure directory</li>
+<li>Windows executable also must specify the <b>auto Elevate</b>&nbsp;property in their manifest</li>
+</ul>
+<br/>
+For auto-elevation the Windows executable must be signed, located in a secure directory such as C:\Windows\System32 and must specify the autoElevate property in their manifest.</body></html>

@@ -9,4 +9,24 @@ Some easy wins can be:<br/>
 &nbsp;Passwords stored in clear or reversible format on public shares/filesystem<br/>
 &nbsp;UAC Bypasses<br/>
 &nbsp;DLL hijacking<br/>
-&nbsp;Unquoted paths </body></html>
+&nbsp;Unquoted paths <br/>
+&nbsp;OS Patches<br/>
+<br/>
+General Methodology:<ul><li>User wmic/other to enumerate patches. Look for privilege escalation exploits and look up their respective KB patch numbers.</li>
+<li style="list-style-type: none"><ul><li>KiTrap0D (KB979682), MS11-011 (KB2393802), MS10-059 (KB982799), MS10-021 (KB979683), MS11-080 (KB2592799), and others</li>
+</ul>
+</li>
+<li>Search for configuration files that may contain passwords:</li>
+<li>Search for Group Policy Preference saved passwords</li>
+<li>Search files for passwords</li>
+<li>Search services for access misconfiguration</li>
+<li style="list-style-type: none"><ul><li>Unquoted paths: place an .exe anywhere along the executable path</li>
+<li>Folder permissions: replace the service's .exe</li>
+<li>binpath permissions: replace the service's binpath variable</li>
+<li>regkey permissions: replace the .exe path in the service's regkey (may be ImagePath)</li>
+</ul>
+</li>
+<li>AlwaysInstallElevated</li>
+<li>Scheduled Tasks</li>
+</ul>
+</body></html>
