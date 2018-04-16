@@ -2,10 +2,22 @@
 
 This is a list of resources and scripts that I have been gathering (and continuing to gather) in preparation for the OSCP. These are all free resources on the Internet, so feel free to use however you want to help you in your studies/reference material. If I have taken information from you or your work, please let me know so that I can acknowledge you.
 
-# Three Primary Functions
+Do you have a million bookmarks saved? Do all of those bookmarks contain unique information? Github repos starred for later? 
+I wanted to actually compose and provide a compilation of all of these resources into a single organized notebook. No more need for bookmarked links. No need to open a web browser. Everything will be here for you.
+
+# Keepnote
+
+Keepnote continues to be my main notebook application. Included with Kali and has a client for Windows and MacOS. 
+CherryTree has many useful features; however, I (personally) want tabbed notebooks (instead of multiple instances of CherryTree) and the ability to Cut/Copy/Paste nodes from one notebook to another. These are on the developers wish list. CherryTree can still import any of my Keepnote folders. Just give it enough time to import. Note that the nodes will be jumbled due to the import, but an alphabetical sort ascending will fix most of it.
+
+# Notable Resources
 UsefulCommands.nbk
 
-Nearly everything important is in the KeepNote notebook 'Usefulcommands'. It started as a reference using KeepNote since it was easy, relatively hassle free, and part of the default install on Kali. The Windows version is great as well. It contains methodologies, links to scripts, tools, links to popular resources, reference guides on numerous subjects, and more. Over time, I have been moving many of the references to BookmarkList.
+It contains methodologies, commands, and interesting file locations. This has been moving more and more into BookmarkList. The goal will be to ensure UsefulCommands is just that. UsefulCommands. Man pages, reference material, etc. For walkthroughs and detailed information, head to BookmarkList.
+
+BookmarkList.nbk
+
+List after list of compiled bookmarks, github pages, blogs, OSCP reviews, tools, and a lot more compiled into an organized list of bookmarks and references I could go back to (offline). Sources for all resources are still there so you can read the material directly if you desire. This is a work in progress and there are sections I have not read through yet and made child-nodes for yet, but it is still incredibly extensive with more work being done (almost) every day (look at the commit history!)
 
 Recon_Scan.py
 
@@ -15,13 +27,14 @@ Reconscan.py has the ability to run unicornscan, tens of nmap scripts, gobuster/
 
 There is now a setup.sh script in /scripts folder that will clone some required repositories, move folders into place, and should make reconscan ready to go.
 
-BookmarkList.nbk
+LinEnum.sh
 
-Going through list after list of compiled resource, github pages, etc, and I wanted an organized list of bookmarks and references I could go back to. It contains organized links from two of the largest bookmark sources I've found. More will be added. Links will probably move out of Usefulcommands and into BookmarkList over time. 
+I've tagged it as v0.81. I believe RebootUser is still updating the script every once in a while. This is essentially my fork of it. I still have some TODOs, but it has been expanded significantly. Too much info? Maybe. As a pentester, you will need to tailor how much information you gather to your own liking. Please submit bugs/issues through Github. 
+
 
 # Other Stuff
 
-Folders mostly speak for themselves. Lists contains a bunch of wordlists. Some methodologies and cheat sheets are downloaded. Some tools and scripts are kept local until they become integrated. ListOfSoftwareToAptGet.txt contains some information on setup that a user might want to consider when this repo is cloned from a default Kali installation, though this functionality is essentially replaced with setup.sh in the scripts folder.
+Folders mostly speak for themselves. Lists contains a bunch of wordlists (setup.sh will download more). Some methodologies and cheat sheets are downloaded. Some tools and scripts are kept local until they become integrated. ListOfSoftwareToAptGet.txt contains some information on setup that a user might want to consider when this repo is cloned from a default Kali installation, though this functionality is essentially replaced with setup.sh in the scripts folder.
 
 GetGitHubStars
 

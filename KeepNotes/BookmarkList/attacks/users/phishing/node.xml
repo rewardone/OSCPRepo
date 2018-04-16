@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Phishing</string>
   <key>nodeid</key><string>63984831-ca2f-4a1a-8534-076cf5131b8a</string>
   <key>modified_time</key><integer>1522778888</integer>
