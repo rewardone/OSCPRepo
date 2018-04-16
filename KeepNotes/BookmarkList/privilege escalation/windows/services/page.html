@@ -1,2 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><body></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Services</title>
+</head><body>Check for the services that "Log On As" SYSTEM for highest privs. Alternative is a user who is part of the local Administrators group on the box.<br/>
+<br/>
+In Windows, information related to services is stored in HKLM\SYSTEM\CurrentControlSet\Services registry key. If we want to see information about our “Vulnerable Service” we should check <br/>
+HKLM\SYSTEM\ControlSet001\Services\Vulnerable Service key.<br/>
+<br/>
+Permissions on folders can be done with built-in tool: cacls, icacls<br/>
+<br/>
+Permissions on services can be done with built-in tool: sc sdshow<br/>
+#the output is very cryptic, need a reference sheet<br/>
+sc sdshow &lt;ServiceName&gt; <br/>
+<br/>
+Permissions on services can be set with built-in tool: sc sdset<br/>
+sc &lt;server&gt; sdset &lt;ServiceName&gt; &lt;SD in SDLL format&gt;<br/>
+<br/>
+Permissions on services can be done with non-built-in tool: accesschk.exe and subinacl<br/>
+accesschk.exe -uwcqv "Authenticated Users" * /accepteula</body></html>

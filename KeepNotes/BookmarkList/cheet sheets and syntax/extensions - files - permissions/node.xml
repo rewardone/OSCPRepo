@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Extensions / Files / Permissions</string>
   <key>nodeid</key><string>c2e5a41d-c072-4116-9dbe-de588c5c192a</string>
   <key>modified_time</key><integer>1522075495</integer>

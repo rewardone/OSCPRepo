@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Get-DecryptedPassword</string>
+  <key>nodeid</key><string>8e12f13a-cd26-43a8-a240-66c2c3276203</string>
+  <key>modified_time</key><integer>1523846049</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1523846022</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

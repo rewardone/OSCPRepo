@@ -11,5 +11,12 @@ This can be done one of two ways<ul><li>Service itself is configurable</li>
 <li>Registry key related to service is configurable</li>
 </ul>
 <br/>
+A popular service to enum is upnphost<br/>
 <br/>
-</body></html>
+Metasploit module: exploit/windows/local/service_permissions<br/>
+&nbsp;&#09;1. Tries to create and start a service<br/>
+&nbsp;&#09;2. Attempts to change binpath of a service and restart<br/>
+&nbsp;&#09;3. See if binpath exe file's folder is writeable, create a new exe and restart the service<br/>
+First, if the Meterpreter session is currently running under Administrator privileges, the module will aim to create and run a new service. &nbsp;If the current account privileges do not allow for service creation, the module will then seek out to determine if weak folder or file permissions will allow for hijacking existing services.<br/>
+<br/>
+When creating new services or hijacking existing ones, the module creates an executable, which has a randomly-generated filename as well as installation folder path. &nbsp;Enabling the AGGRESSIVE option on this module will exploit every vulnerable service on the target host. &nbsp;With the option disabled, the module stops at the first successful escalation attempt.</body></html>

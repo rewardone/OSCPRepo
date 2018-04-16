@@ -17,4 +17,25 @@ Modifying the value of a registry property value:<br/>
 Use the Push-Location cmdlet to save the current working location.<br/>
 Use the Set-Location cmdlet to change to the appropriate registry drive.<br/>
 Use the Set-ItemProperty cmdlet to assign a new value to the registry property.<br/>
-Use the Pop-Location cmdlet to return to the original working location.</body></html>
+Use the Pop-Location cmdlet to return to the original working location.<br/>
+<br/>
+Permissions<br/>
+To get the permissions on a registry key:<br/>
+Get-Acl -Path &lt;REG PATH&gt; | Format-List&#09;&#09;Key like HKLM:\System\CurentControlSet\Control<br/>
+<br/>
+<br/>
+Granting permissions on a Registry key<br/>
+To add or remove an access rule you need to create the rule as an object of type RegistryAccessRule, and then either create or remove the rule from the ACL with the SetAccessRule() or RemoveAccessRule() methods:<br/>
+<br/>
+$rule = New-Object System.Security.AccessControl.RegistryAccessRule ("T-Alien\Tome","FullControl","Allow")<br/>
+$acl.SetAccessRule($rule)<br/>
+<br/>
+Now that the ACL is set up to provide the permissions you would like you can pass the ACL into Set-ACL:<br/>
+<br/>
+$acl |Set-Acl -Path HKLM:\SOFTWARE\powertoe<br/>
+<br/>
+Putting it altogether you have a very simple way of controlling permissions in the registry via Powershell:<br/>
+<br/>
+$acl = Get-Acl HKLM:\SOFTWARE\powertoe<br/>
+$rule = New-Object System.Security.AccessControl.RegistryAccessRule ("T-Alien\Tome","FullControl","Allow")<br/>
+$acl.SetAccessRule($rule)</body></html>

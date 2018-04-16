@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get-DecryptedPassword</title>
+</head><body>#Function in Get-GPPPassword.ps1<br/>
+&nbsp; &nbsp; function Get-DecryptedCpassword {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [CmdletBinding()]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Param (<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [string] $Cpassword <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; )<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; try {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #Append appropriate padding based on string length &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $Mod = ($Cpassword.length % 4)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; switch ($Mod) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '1' {$Cpassword = $Cpassword.Substring(0,$Cpassword.Length -1)}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '2' {$Cpassword += ('=' * (4 - $Mod))}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '3' {$Cpassword += ('=' * (4 - $Mod))}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $Base64Decoded = [Convert]::FromBase64String($Cpassword)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #Create a new AES .NET Crypto Object<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $AesObject = New-Object System.Security.Cryptography.AesCryptoServiceProvider<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Byte[]] $AesKey = @(0x4e,0x99,0x06,0xe8,0xfc,0xb6,0x6c,0xc9,0xfa,0xf4,0x93,0x10,0x62,0x0f,0xfe,0xe8,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;0xf4,0x96,0xe8,0x06,0xcc,0x05,0x79,0x90,0x20,0x9b,0x09,0xa4,0x33,0xb6,0x6c,0x1b)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #Set IV to all nulls to prevent dynamic generation of IV value<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $AesIV = New-Object Byte[]($AesObject.IV.Length) <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $AesObject.IV = $AesIV<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $AesObject.Key = $AesKey<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $DecryptorObject = $AesObject.CreateDecryptor() <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Byte[]] $OutBlock = $DecryptorObject.TransformFinalBlock($Base64Decoded, 0, $Base64Decoded.length)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return [System.Text.UnicodeEncoding]::Unicode.GetString($OutBlock)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; } <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; catch {Write-Error $Error[0]}<br/>
+} </body></html>

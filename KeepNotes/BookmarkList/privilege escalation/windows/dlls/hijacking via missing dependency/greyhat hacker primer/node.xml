@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>GreyHat Hacker Primer</string>
+  <key>nodeid</key><string>30501854-bca4-40cb-9cf2-c68df244c315</string>
+  <key>modified_time</key><integer>1523841020</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1523841010</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

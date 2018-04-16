@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body><br/>
+<b>Mitigation for developers</b><br/>
+For software developers there are a number of actions they can take<br/>
+&nbsp;<ul><li>&nbsp;Use SetEnvironmentVariable(TEXT(“PATH”),NULL) API which removes the path environment variable from its search order</li>
+<li>Change default installation folder to C:\Program Files</li>
+<li>Use fully qualified path when loading DLLs, i.e. LoadLibrary(“C:\\program files\\MyApp\\mylibrary.dll”);</li>
+<li>Use SetDllDirectory(“”) API removing the current working directory from the search order</li>
+</ul>
+<br/>
+<b>Mitigation for IT professionals</b><br/>
+For IT support professionals there are also a number of actions that can be taken<br/>
+&nbsp;<ul><li>&nbsp;When packaging and deploying software via deployment tools such as Marimba, Landesk, etc. or manually  installing software change the installation folder to C:\Program Files</li>
+<li>If software needs to be installed on the root check there are no binaries needing SYSTEM privileges</li>
+<li>If SYSTEM privileges are required then change the ACL’s of the folder</li>
+<li>Remove the path entry from the SYSTEM path variable if not needed</li>
+</ul>
+</body></html>

@@ -16,6 +16,7 @@ Note: In addition to Unattend.xml files, be on the lookout for sysprep.xml and s
 <br/>
 Microsoft appends “Password” to all passwords within Unattend files before encoding them; therefore, our Local Administrator password is in fact just “P@ssword123!”.<br/>
 <br/>
+Once you’ve located an Unattend file, open it up and search for the &lt;UserAccounts&gt; tag. &nbsp;This section will define the settings for any local accounts (and sometimes even Domain accounts). (See examples page)<br/>
 <br/>
 Metasploit module: post/windows/gather/enum_unattend<br/>
 Will only search unattend files, not sysprep</body></html>

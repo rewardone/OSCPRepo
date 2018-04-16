@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Examples</title>
+</head><body># This is a sample from sysprep.inf with clear-text credentials.<br/>
+[GuiUnattended]<br/>
+OEMSkipRegional=1<br/>
+OemSkipWelcome=1<br/>
+AdminPassword=s3cr3tp4ssw0rd<br/>
+TimeZone=20<br/>
+<br/>
+# This is a sample from sysprep.xml with Base64 "encoded" credentials. Please people Base64 is not<br/>
+encryption, I take more precautions to protect my coffee. The password here is "SuperSecurePassword".<br/>
+&lt;LocalAccounts&gt;<br/>
+&nbsp; &nbsp; &lt;LocalAccount wcm:action="add"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Password&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Value&gt;U3VwZXJTZWN1cmVQYXNzd29yZA==&lt;/Value&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;PlainText&gt;false&lt;/PlainText&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/Password&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Description&gt;Local Administrator&lt;/Description&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;DisplayName&gt;Administrator&lt;/DisplayName&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Group&gt;Administrators&lt;/Group&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Name&gt;Administrator&lt;/Name&gt;<br/>
+&nbsp; &nbsp; &lt;/LocalAccount&gt;<br/>
+&lt;/LocalAccounts&gt;<br/>
+<br/>
+# Sample from Unattended.xml with the same "secure" Base64 encoding.<br/>
+&lt;AutoLogon&gt;<br/>
+&nbsp; &nbsp; &lt;Password&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Value&gt;U3VwZXJTZWN1cmVQYXNzd29yZA==&lt;/Value&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;PlainText&gt;false&lt;/PlainText&gt;<br/>
+&nbsp; &nbsp; &lt;/Password&gt;<br/>
+&nbsp; &nbsp; &lt;Enabled&gt;true&lt;/Enabled&gt;<br/>
+&nbsp; &nbsp; &lt;Username&gt;Administrator&lt;/Username&gt;<br/>
+&lt;/AutoLogon&gt;<br/>
+<br/>
+<img src="image.png" /><br/>
+</body></html>

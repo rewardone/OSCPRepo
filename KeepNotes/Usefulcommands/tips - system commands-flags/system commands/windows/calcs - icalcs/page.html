@@ -3,5 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>calcs / icalcs</title>
-</head><body>icalcs &lt;DIR&gt;&#09;&#09;&#09;&#09;&#09;&#09;&#09;display folder permissions<br/>
-cacls "C:\Program Files" /T | findstr Users&#09;&#09;finding weak file permissions</body></html>
+</head><body>icalcs &lt;DIR&gt;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;display folder permissions<br/>
+cacls "C:\Program Files" /T | findstr Users&#09;&#09;finding weak file permissions<br/>
+icacls testdir /grant "NT AUTHORITY\NetworkService":(OI)(M) &#09;Granting permissions on testdir<br/>
+<br/>
+#Loop through all *.exe file and icacls permission list<br/>
+cd C:\Windows\System32<br/>
+for %s in (*.exe) do icacls %s //Ensure this command is executed after navigating into C://Windows/System32 directory</body></html>
