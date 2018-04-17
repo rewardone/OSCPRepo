@@ -4,10 +4,12 @@
 <dict>
   <key>title</key><string>MySQL</string>
   <key>nodeid</key><string>eba49203-3a3f-490f-9a4c-31d1fbff7dbe</string>
-  <key>modified_time</key><integer>1522860121</integer>
+  <key>modified_time</key><integer>1523993147</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1519523528</integer>
+  <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
 </dict>
 </node>

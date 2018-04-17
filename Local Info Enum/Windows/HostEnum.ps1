@@ -807,12 +807,56 @@ Pulls potentially interesting registry keys
     
     # HKCU SNMP Keys 
     "`n[+] SNMP community strings for current user:`n"
-    Get-ItemProperty "HKCU:\SYSTEM\CurrentControlSet\services\snmp\parameters\validcommunities"| Format-Table -auto |Out-String
+    Get-ItemProperty "HKCU:\SYSTEM\CurrentControlSet\services\snmp\parameters\validcommunities"| Format-Table -auto | Out-String
     
     # Putty Saved Session Keys
     "`n[+] Putty saved sessions:`n"
-    Get-ItemProperty "HKCU:\Software\SimonTatham\PuTTY\Sessions\*" |Format-Table -auto | Out-String
+    Get-ItemProperty "HKCU:\Software\SimonTatham\PuTTY\Sessions\*" | Format-Table -auto | Out-String
     
+    # FilterAdminsitratorToken: Default disabled, if enabled: RID 500 account will be medium-integrity through NON-RDP access
+    "`n[+] FilterAdminsitratorToken:`n"
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select FilterAdministratorToken | Format-Table -auto | Out-String
+    
+    # TokenFilterPolicy: Default not-exist, if enabled and set to 1: Remote connections from ALL local Adminsitrators are given high-integrity (non-RID 500 can PTH)
+    "`n[+] TokenFilterPolicy:`n"
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select TokenFilterPolicy | Format-Table -auto | Out-String
+    
+    # WDigest\UseLogonCredential: Default 0 or not-exist, If 1, Digest forces clear-text passwords! 
+    "`n[+] WDigest UseLogonCredential:`n"
+    Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest\" | Select UseLogonCredential | Format-Table -auto | Out-String
+    
+    # UAC Controls:
+    # Default: Admin:5, User:3, Detection:1, LUA:1, Paths:1, Toggle:0, Virt:1, Token:0, Desktop:1, Signatures:0.
+    # Always notify: Admin:2
+    # Notify me only when apps try to make changes to comp (do not dim): Desktop:0
+    # Never notify: Admin:0, LUA:0, Desktop:0...Later versions do not set LUA:0
+    "`n[+] UAC Values:`n"
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select ConsentPromptBehaviorAdmin | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select ConsentPromptBehaviorUser | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select EnableInstallerDetection | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select EnableLUA | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select EnableSecureUIAPaths | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select EnableVirtualization | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select PromptOnSecureDesktop | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select ValidateAdminCodeSignatures | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\" | Select EnableUIADesktopToggle | Format-Table -auto | Out-String
+    
+    # ClickOnce: If enabled, prompt user. If disabled, only run signed
+    "`n[+] ClickOnce:`n"
+    Get-ItemProperty "HKLM:\SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\" | Select PromptingLevel | Format-Table -auto | Out-String
+    
+    # DLL Related
+    # CWDIllegalDllSearch: not-exist or 0, still vulnerable. 
+    # SetDllDirectory: removes CWD from search order
+    # SafeDllSearchMode: enabled by default (CWD #5 on the search order), disable with 0 (set CWD as #2 on the search order)
+    "`n[+] DLL Search Order Values:`n"
+    Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" | Select CWDIllegalInDllSearch | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" | Select SetDllDirectory | Format-Table -auto | Out-String
+    Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" | Select CWDIllegalInDllSearch | Format-Table -auto | Out-String
+    
+    # Backdoored sethc and utilman
+    "`n[+] Backdoors:`n"
+    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Option" | Format-Table -auto | Out-String
 }
 
 function Get-IndexedFiles {
@@ -4872,7 +4916,7 @@ function Invoke-AllChecks {
             "[+] Run a BypassUAC attack to elevate privileges to admin."
 
             if($HTMLReport) {
-                ConvertTo-HTML -Fragment -Pre "<H2> User In Local Group With Administrative Privileges</H2>" | Out-File -Append $HtmlReportFile
+                ConvertTo-HTML -Fragment -Pre "<H2> User Is In A Local Group With Administrative Privileges</H2>" | Out-File -Append $HtmlReportFile
             }
         }
     }

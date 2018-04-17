@@ -592,3 +592,235 @@ Disable the random delay between connection attempts.
     $report | where {$_.Status -eq "open"} | Sort-Object Port | Format-Table $columns -AutoSize
     Write-Output "[*] $tcp_count out of $total scanned ports are open!"
 }
+
+
+###################
+Sn0wfall win_enum
+###################
+Requires accesschk.exe in same folder
+Puts various info into multiple separate files
+systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
+hostname
+echo %username%
+echo %path%
+net users
+net localgroup Administrators
+net localgroup "Remote Desktop Users"
+
+ipconfig /all
+route print
+arp -A
+netstat -ano
+
+netsh firewall show state
+netsh firewall show config
+
+schtasks /query /fo LIST /v
+tasklist /SVC
+
+echo SERVICE_CHANGE_CONFIG == Can reconfigure the service binary
+'echo WRITE_DAC == Can reconfigure permissions to SERVICE_CHANGE_CONFIG
+echo WRITE_OWNER == Can become owner, reonfigure permissions
+echo GENERIC_WRITE == Inherits SERVICE_CHANGE_CONFIG
+echo GENERIC_ALL == Inherits SERVICE_CHANGE_CONFIG
+sys_call('sc queryex type= service state= all | findstr /B /C:"SERVICE_NAME"', service_tmp1)
+  lines = [line.rstrip('\n') for line in open(service_tmp1)]
+  for line in lines:
+    name = line.split(' ')[1]
+    name = name.strip()
+    command = 'sc qc ' + name + ' | findstr /C:"BINARY_PATH_NAME"'
+    sys_call_new(command, service_tmp2)
+    path_lines = [path_line.rstrip('\n') for path_line in open(service_tmp2)]
+    for path_line in path_lines:
+	  path_line = path_line.strip()
+	  path = path_line.split(':')[1] + ':' + path_line.split(':')[2] 
+	  path = path.strip()
+	  path = path.split(' -')[0]
+	  path = path.split(' /')[0]
+	  path = path.strip()
+	  path = quote_string(path)
+	
+    sys_call('sc qc ' + name, service)
+    blank_line(service)
+    sys_call('accesschk.exe -ucqv "' + name + '" /accepteula', service)
+    blank_line(service)
+    sys_call('accesschk.exe -q ' + path + ' /accepteula', service)
+    divider(service)
+	
+  os.remove(service_tmp1)
+  os.remove(service_tmp2)
+  divider(service)
+
+DRIVERQUERY
+
+wmic qfe get Caption,Description,HotFixID,InstalledOn /format:table > ' + patches
+
+def first_check():
+  out = open(check, 'w')
+  out.write('wmic service get name,displayname,pathname,startmode |findstr /i "Auto" |findstr /i /v "C:\\Windows\\\\" |findstr /i /v """\n')
+  out.write('reg query HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer /v AlwaysInstallElevated\n')
+  out.write('reg query HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer /v AlwaysInstallElevated\n')
+  out.close()
+    
+  section_heading("Unquoted Service Paths and Always Installed Elevated", fast_priv)
+  sys_call(check, fast_priv)
+  divider(fast_priv)
+  
+  os.remove(check)
+
+def second_check():
+  section_heading("Unattended Install Check", fast_priv)
+  sys_call('reg query HKLM\\System\\Setup!UnattendFile', fast_priv)
+  file_list = ['unattend.xml', 'sysprep.xml', 'sysprep.inf', 'autounattend.xml']
+  path_list = ['c:\\', 'c:\\Windows\\Panther\\', 'c:\\Windows\\Panther\\Unattend\\', 'c:\\Windows\\System32\\', 'c:\\Windows\\System32\\sysprep\\']
+  for file in file_list:
+    for path in path_list:
+	  if os.path.isfile(path + file):
+	    sys_call('echo Possible Unattended Install File: ', fast_priv)
+	    sys_call('echo ' + path + file, fast_priv)
+
+  blank_line(fast_priv)
+
+def third_check():
+  section_heading("Quck Accesschk Look - Won't Work >= Win XP SP2", fast_priv)
+  sys_call('accesschk.exe -uwcqv "Authenticated Users" * /accepteula', fast_priv)
+  blank_line(fast_priv) 
+
+def fast_priv_enum():
+  print "Running Fast Privilege Escalation Enumeration."
+  file_header(fast_priv)
+  first_check()
+  second_check()
+  third_check()
+
+def wmic_check():
+  print "Running WMIC Check"
+  file_header(wmic_chk)
+  servicelist = "wmic service get name,pathname /format:csv > " + raw
+  cal = subprocess.call(servicelist, shell=True)
+
+  if os.path.isfile(raw) == False:
+    print "Something went wrong with service enumeration."
+    return
+  
+  section_heading("Service Executable Rights Enumeration", wmic_chk)
+  sys_call('echo SERVICE_CHANGE_CONFIG == Can reconfigure the service binary', wmic_chk)
+  sys_call('echo WRITE_DAC == Can reconfigure permissions to SERVICE_CHANGE_CONFIG', wmic_chk)
+  sys_call('echo WRITE_OWNER == Can become owner, reonfigure permissions', wmic_chk)
+  sys_call('echo GENERIC_WRITE == Inherits SERVICE_CHANGE_CONFIG', wmic_chk)
+  sys_call('echo GENERIC_ALL == Inherits SERVICE_CHANGE_CONFIG', wmic_chk)
+  divider(wmic_chk)
+  blank_line(wmic_chk)
+  
+  f = codecs.open(raw,"rb","utf-16")
+  csvreader = csv.reader(f,delimiter=',')
+  csvreader.next()
+  csvreader.next()
+  
+  for row in csvreader:
+    if len(row) < 2:
+      continue
+    service_name = row[1]
+    raw_path = row[2]
+    raw_path = raw_path.split(' -')[0]
+    raw_path = raw_path.split('/')[0]
+    service_path = raw_path.strip()
+    if service_path == "":
+      continue
+    if service_path in path_list:
+      continue
+  
+    path_list.append(service_path)
+  
+    sys_call('sc qc ' + service_name, wmic_chk)
+    blank_line(wmic_chk)
+    sys_call('accesschk.exe -ucqv "' + service_name + '" /accepteula', wmic_chk)
+    blank_line(wmic_chk)
+    sys_call('accesschk.exe -q "' + service_path + '" /accepteula', wmic_chk)
+    divider(wmic_chk)
+  
+  f.close()
+  os.remove(raw)
+
+###################
+HostEnum.ps1
+###################
+Too many lines of code!
+A compilation of multiple system enumeration / situational awareness techniques collected over time. 
+
+    If system is a member of a domain, it can perform additional enumeration. However, the included domain enumeration is limited with the intention that PowerView, BoodHound, etc will be also be used.
+    
+    Report HTML file is written in the format of YYYYMMDD_HHMMSS_HOSTNAME.html in the current working directory.  
+
+    Invoke-HostEnum is Powershell 2.0 compatible to ensure it functions on the widest variety of Windows targets
+
+    Enumerated Information:
+    
+    - OS Details, Hostname, Uptime, Installdate
+    - Installed Applications and Patches
+    - Network Adapter Configuration, Network Shares, Listening Ports, Connections, Routing Table, DNS Cache, Firewall Status
+    - Running Processes and Installed Services
+    - Interesting Registry Entries
+    - Local Users, Groups, Administrators 
+    - Personal Security Product Status, AV Processes
+    - Interesting file locations and keyword searches via file indexing
+    - Interesting Windows Logs (User logins)
+    - Basic Domain enumeration (users, groups, trusts, domain controllers, account policy, SPNs)
+
+Functions that you'll use:
+Invoke-HostEnum
+.PARAMETER All
+    Executes Local, Domain, and Privesc functions
+.PARAMETER Local
+    Executes the local enumeration functions
+.PARAMETER Domain
+    Executes the domain enumeration functions
+.PARAMETER Privesc
+    Executes modified version of PowerUp privilege escalation enumeration (Invoke-AllChecks)
+.PARAMETER Quick
+    Executes a brief initial survey that may be useful when initially accessing a host
+    Only enumerates basic system info, processes, av, network adapters, firewall state, network connections, users, and groups
+Get-SysInfo
+Get-ProcessInfo
+Get-GroupMembership
+Get-ActiveTCPConnections
+Get-ActiveListeners
+Get-FirewallStatus
+Get-InterestingRegistryKeys
+Get-IndexedFiles
+Get-InterestingFiles
+Get-RecycleBin
+Get-AVInfo
+Get-McafeeLogs
+Get-AVProcesses
+Get-DomainAdmins
+Get-DomainAccountPolicy
+Get-ComputerDetails
+Find-4648Logons
+Find-4624Logons
+Find-AppLockerLogs
+Find-PSScriptsInPSAppLog
+Find-RDPClientConnections
+Get-BrowserInformation
+Get-ActiveIEURLS
+Get-UserSPNS
+Get-ModifiablePath
+Get-CurrentUserTokenGroupSid
+Add-ServiceDacl
+Test-ServiceDaclPermission
+Get-ServiceUnquoted
+Get-ModifiableServiceFile
+Get-ModifiableService
+Get-ServiceDetail
+Find-ProcessDLLHijack
+Find-PathDLLHijack
+Get-RegistryAlwaysInstallElevated
+Get-RegistryAutoLogon
+Get-ModifiableRegistryAutoRun
+Get-ModifiableScheduledTaskFile
+Get-UnattendedInstallFile
+Get-WebConfig
+Get-ApplicationHost
+Get-SiteListPassword
+Get-CachedGPPPasswords
+Invoke-AllChecks

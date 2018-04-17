@@ -1,0 +1,915 @@
+Running list of checks accross scripts:
+
+common_checks
+###############################################################################################################
+#
+####HOST####
+# hostname
+# 
+####KERNEL####
+# uname -arms
+# /proc/version															#kernel
+# /etc/*-release														#operating system
+# /etc/issue 															#operating system
+#
+####NETWORK###
+# ifconfig -a															#interfaces
+# route																	#routing information
+# netstat -antup | grep -v 'TIME_WAIT'									#Netstat
+# cat /etc/network/interfaces
+# cat /etc/sysconfig/network
+# cat /etc/resolv.conf
+# cat /etc/networks
+# dnsdomainname
+#
+####IPTABLES####
+# iptables -L
+#
+####USER####
+# whoami																#current user
+# id 																	#current user id
+# check for super users in /etc/passwd									#/etc/passwd
+# check for other users	in /etc/passwd									#/etc/passwd
+# /etc/group
+# w 																	#who is logged on
+# last																	#pulls from /var/log/wtmp which deals with more than just user logins. Virtually any change to the system-wide state is recorded there
+# lastlog																#pulls from /var/log/lastlog which is only concerned with previous logins
+# env																	#environment variables
+# echo $PATH															#path
+#
+####USER STUFF####
+# user home directories: writable?
+# user home directories: Readable and executable?
+# user .*_history files
+# /etc/profile
+# /etc/bashrc
+# ~/.bash_profile
+# ~/.bashrc
+# ~/.bash_logout
+# ~/.bash_history
+# ~/.nano_history
+# ~/.aftp_history
+# ~/.mysql_history
+# ~/.php_history
+#
+####SSH####
+# check system for readable or encrypted ssh keys
+# check for ssh agents
+# check ssh config
+# check for 'authorized_hosts'
+# cat ~/.ssh/authorized_keys
+# cat ~/.ssh/identity.pub
+# cat ~/.ssh/identity
+# cat ~/.ssh/id_rsa.pub
+# cat ~/.ssh/id_rsa
+# cat ~/.ssh/id_dsa.pub
+# cat ~/.ssh/id_dsa
+# cat /etc/ssh/ssh_config
+# cat /etc/ssh/sshd_config
+# cat /etc/ssh/ssh_host_dsa_key.pub
+# cat /etc/ssh/ssh_host_dsa_key
+# cat /etc/ssh/ssh_host_rsa_key.pub
+# cat /etc/ssh/ssh_host_rsa_key
+# cat /etc/ssh/ssh_host_key.pub
+# cat /etc/ssh/ssh_host_key
+#
+####PROCESSES####
+# ps aux | awk '{print $1,$2,$9,$10,$11}'								#current processes 
+# ps -ef | /bin/grep root												#processes running as root
+# top
+# cat /etc/services
+#
+####MOUNT####
+# /etc/fstab															#mount information
+# mount | column -t
+# df -h
+#
+#######FILES#######
+#
+####Password Related####
+# hashes in /etc/passwd?
+# users with no password in /etc/passwd
+# read /etc/shadow? 
+# read lib/misc/shadow?
+#
+####SUDO(ERS)####
+# sudo version
+# /etc/sudoers
+#
+####FILE/FOLDER PERMISSIONS: WORLD####
+# files with sticky bit (+sS)
+# find / -perm -1000 -type d 2>/dev/null   								# Sticky bit 
+# find / -perm -g=s -o -perm -u=s -type f 2>/dev/null    				# SGID or SUID
+# world writable folders
+# find / -writable -type d 2>/dev/null      							# world-writeable folders
+# find / -perm -222 -type d 2>/dev/null     							# world-writeable folders
+# find / -perm -o w -type d 2>/dev/null     							# world-writeable folders
+# find / -perm -o x -type d 2>/dev/null     							# world-executable folders
+# find / \( -perm -o w -perm -o x \) -type d 2>/dev/null   				# world-writeable & executable folders
+# world writable files
+# list potentially sensitive files
+# ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null     					# Anyone - write
+# find /etc/ -readable -type f 2>/dev/null               				# Anyone - read
+# find /etc/ -readable -type f -maxdepth 1 2>/dev/null   				# Anyone - read
+# find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print   		# world-writeable files
+#
+####FILE/FOLDER PERMISSIONS: OWN/GROUP
+# find / -perm -g=s -type f 2>/dev/null    								# SGID (chmod 2000) - run as the group, not the user who started it.
+# find / -perm -u=s -type f 2>/dev/null    								# SUID (chmod 4000) - run as the owner, not the user who started it
+# for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null; done    # Looks in 'common' places: /bin, /sbin, /usr/bin, /usr/sbin, /usr/local/bin, /usr/local/sbin and any other *bin, for SGID or SUID (Quicker search)
+# files owned by current user
+# list group-writable files
+# ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null      					# Owner
+# ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null    					# Group
+# find /dir -xdev \( -nouser -o -nogroup \) -print   					# Noowner files
+#
+####BINARIES####
+# check for dev tools (awk/perl/python/nc/etc)
+# list installed packages
+# ls -alh /usr/bin/
+# ls -alh /sbin/
+# dpkg -l
+# rpm -qa
+# ls -alh /var/cache/apt/archivesO
+# ls -alh /var/cache/yum/ 
+#
+###############################################################################################################
+
+extra_checks
+###############################################################################################################
+#
+####NETWORK####
+# arp -a																#ARP information
+# arp -e
+# /etc/resolv.conf | grep "nameserver"									#DNS settings
+# lsof -i
+# lsof -i :80
+# grep 80 /etc/services
+# netstat -antup
+# netstat -antpx
+# netstat -tulpn
+# chkconfig --list
+# chkconfig --list | grep 3:on
+# route
+# /sbin/route -nee
+#
+####PRINTER####
+# lpstat -a
+#
+####FILES####
+####password####
+# /etc/master.passwd
+# /etc/security/passwd
+####config####
+# search for all *.conf files
+# other .conf files
+#  /etc/syslog.conf
+#  /etc/chttp.conf
+#  /etc/lighttpd.conf
+#  /etc/cups/cupsd.conf
+#  /opt/lampp/etc/httpd.conf
+####system####
+# /etc/init
+# /etc/rc
+# /etc/inetd
+# /etc/xinetd
+# /etc/bash.bashrc
+# /etc/profile
+# /etc/hosts.equiv
+# /etc/shosts.equiv
+#
+####all####
+# world readable folders
+# world readable files
+# list all jar files
+#
+####var####
+# ls -alh /var/log
+# ls -alh /var/mail
+# ls -alh /var/spool
+# ls -alh /var/spool/lpd
+# ls -alh /var/lib/pgsql
+# ls -alh /var/lib/mysql
+# cat /var/lib/dhcp3/dhclient.lease
+#
+####www####
+# ls -alhR /var/www/
+# ls -alhR /srv/www/htdocs/
+# ls -alhR /usr/local/www/apache22/data/
+# ls -alhR /opt/lampp/htdocs/
+# ls -alhR /var/www/html/
+#
+####CRON####
+# ls -al /etc/cron* 2>/dev/null											#scheduled cron jobs
+# ls -aRl /etc/cron* 2>/dev/null | awk '$1 ~ /w.$/' 2>/dev/null			#writable cron directories
+# ls -al /etc/anacrontab 2>/dev/null; cat /etc/anacrontab 2>/dev/null	#anacrontab
+# crontab -l
+# ls -alh /var/spool/cron
+# ls -al /etc/ | grep cron
+# ls -al /etc/cron*
+# cat /etc/cron*
+# cat /etc/at.allow
+# cat /etc/at.deny
+# cat /etc/cron.allow
+# cat /etc/cron.deny
+# cat /etc/crontab
+# cat /etc/anacrontab
+# cat /var/spool/cron/crontabs/root
+#
+####APACHE####
+# apache --version
+# apache invokee
+# apache modules
+# /etc/apache2/apache2.conf
+# /etc/httpd/conf/httpd.conf
+#
+####POSTGRES####
+# postgres --version
+# postgres default login
+# trust relationships
+# verify trust relationships
+# check permissions of postgres config file
+#
+####MYSQL####
+# mysql --version														#check version
+# mysql root:root														#default login
+#
+#
+###############################################################################################################
+
+uncommon_checks
+###############################################################################################################
+#
+####SECURITY####
+# SELinux 'enforce'
+# NX bit
+# mmap to 0
+# ASLR
+# gpg-agent
+#
+####DOCKER####
+# check if in a docker container
+# check if in a docket host
+# check if in a docker group
+# check for docker files
+#
+####AUTHENTICATION####
+# check if NIS used 
+# check if LDAP used
+#
+####FILES####
+# .plan files
+# .rhosts files
+# find files with 'username' and/or 'password'
+#
+####MAIL####
+# check for user mail
+# check for root mail
+# cat /var/mail/root
+# cat /var/spool/mail/root
+#
+####TCP Listen to traffic####
+# tcpdump tcp dst <IP> <PORT> and tcp dst <IP> <PORT>
+#
+####Logs####
+# cat /etc/httpd/logs/access_log
+# cat /etc/httpd/logs/access.log
+# cat /etc/httpd/logs/error_log
+# cat /etc/httpd/logs/error.log
+# cat /var/log/apache2/access_log
+# cat /var/log/apache2/access.log
+# cat /var/log/apache2/error_log
+# cat /var/log/apache2/error.log
+# cat /var/log/apache/access_log
+# cat /var/log/apache/access.log
+# cat /var/log/auth.log
+# cat /var/log/chttp.log
+# cat /var/log/cups/error_log
+# cat /var/log/dpkg.log
+# cat /var/log/faillog
+# cat /var/log/httpd/access_log
+# cat /var/log/httpd/access.log
+# cat /var/log/httpd/error_log
+# cat /var/log/httpd/error.log
+# cat /var/log/lastlog
+# cat /var/log/lighttpd/access.log
+# cat /var/log/lighttpd/error.log
+# cat /var/log/lighttpd/lighttpd.access.log
+# cat /var/log/lighttpd/lighttpd.error.log
+# cat /var/log/messages
+# cat /var/log/secure
+# cat /var/log/syslog
+# cat /var/log/wtmp
+# cat /var/log/xferlog
+# cat /var/log/yum.log
+# cat /var/run/utmp
+# cat /var/webmin/miniserv.log
+# cat /var/www/logs/access_log
+# cat /var/www/logs/access.log
+# ls -alh /var/lib/dhcp3/
+# ls -alh /var/log/postgresql/
+# ls -alh /var/log/proftpd/
+# ls -alh /var/log/samba/
+#
+###############################################################################################################
+
+Lynis Checks
+###############################################################################################################
+#
+####AUTH####
+# multiple uses with UID 0
+#
+####BOOT####
+# Check for Linux boot services (systemd and chkconfig)
+# Check for Linux boot services (Debian style)
+# Check world writable startup scripts
+#
+####DATABASE####
+# Check empty MySQL root password
+# Check MongoDB status
+# Check empty MongoDB authorization
+# Check if Oracle is being used
+# Check Oracle home paths from oratab
+# Checks if a DB2 instance is currently running
+# Determine if redis is running
+# Determine Redis configuration
+#
+####FIREWALL####
+# Check iptables kernel module
+# Check iptables chain policies
+# Check iptables for empty ruleset (should have at least 10 or more rules)
+# Check iptables for unused rules
+# Checking status of pf firewall components
+# Check for CSF (ConfigServer Security & Firewall)
+# Check ipf (Solaris)
+# Check IPFW (FreeBSD)
+# Check Application Firewall in macOS
+# Check nftables kernel module
+# Check nftables configuration
+# Check if at least one firewall if active
+#
+####HARDENING####
+# Check for installed compilers
+# Check for permissions of installed compilers
+#
+####MAIL####
+# Check Exim process status
+# Check Postfix process
+# Check Postfix configuration
+# Check Postfix configuration for error
+#
+####PHP####
+# Check Possible locations of php.ini
+# Check php disable functions option
+#
+####SHELL####
+# check all console TTYs in which root user can enter single user mode without password
+# which shells are available according /etc/shells
+# 
+####SNMP####
+# Check for a running SNMP daemon
+# Determine SNMP daemon configuration file location
+# Determine SNMP communities
+#
+####SSH####
+# Determine SSH daemon configuration file location
+# Check SSH specific defined options
+# Check if only a specific amount of users/groups can log in to the system
+#
+####NFS STORAGE###
+# Check rpcinfo
+# Check nfs versions in rpcinfo
+# Check nfs protocols (TCP/UDP) and port in rpcinfo
+# Check for running NFS daemons
+# Check NFS exports
+# Check for empty exports file while NFS is running
+# Check client access to nfs share
+#
+####TOOLING####
+# Check if automation tools are found (ansible, cfagent, chef, puppet, etc)
+# Check for Fail2ban
+# Check for Fail2ban enabled tests
+# Check for Snort
+# Check for an IDS/IPS tool
+#
+####VIRTUALIZATION####
+# Check if in a VMWare VM
+#
+####WEB####
+# Test for Apache installation
+# Testing main Apache configuration file
+# Testing other Apache configuration files
+# Search for available Apache modules
+# Search for special Apache modules: evasive, QoS, security
+# Search for nginx process
+# Search for nginx configuration file
+# Search for includes within nginx configuration file
+# Check discovered nginx configuration settings for further hardening
+# Check SSL configuration of nginx
+#
+#
+###############################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lin_Enum
+###############################################################################################################
+#
+# whoami
+#kernel information
+# uname -a 2>/dev/null					
+# cat /prov/version 2>/dev/null
+# cat /etc/*-release 2>/dev/null
+#
+# hostname 2>/dev/null										#hostname
+# id 2>/dev/null											#current user information
+# lastlog 2>/dev/null |grep -v "Never" 2>/dev/null			#last logged on user
+# w 2>/dev/null												#who else is logged on
+#
+#list all user id's and respective groups
+# for i in $(cat /etc/passwd 2>/dev/null| cut -d":" -f1 2>/dev/null);do id $i;done 2>/dev/null
+#
+# grep -v '^[^:]*:[x]' /etc/passwd 2>/dev/null				#check for hashes being stored in /etc/passwd
+#
+#Locate custom user accounts with 'known default' UIDs
+#grep -v "^#" /etc/passwd | awk -F: '$3 == 0 || $3 == 500 || $3 == 501 || $3 == 502 || $3 == 1000 || $3 == 1001 || $3 == 1002 || $3 == 2000 || $3 == 2001 || $3 == 2002 { print }'
+#
+# cat /etc/shadow 2>/dev/null								#check read /etc/shadow
+# cat /etc/master.passwd 2>/dev/null						#check read /etc/master.passwd (BSD 'shadow' variant)
+# check for root accounts (/etc/passwd UID 0)
+#
+#Pull out vital sudoers info (if readable)
+# cat /etc/sudoers 2>/dev/null | grep -v -e '^$' 2>/dev/null |grep -v "#" 2>/dev/null
+#
+# echo '' | sudo -S -l 2>/dev/null							#check sudo without password
+#
+#Print known 'good' breakout binaries
+#echo '' | sudo -S -l 2>/dev/null | grep -w 'nmap\|perl\|'awk'\|'find'\|'bash'\|'sh'\|'man'\|'more'\|'less'\|'vi'\|'emacs'\|'vim'\|'nc'\|'netcat'\|python\|ruby\|lua\|irb' | xargs -r ls -la 2>/dev/null
+#
+# ls -ahl /root/ 2>/dev/null								#check root home accessible
+# ls -ahl /home/ 2>/dev/null								#check /home directory accessible
+#
+#Find world writable files
+#find / -writable -not -user \`whoami\` -type f -not -path "/proc/*" -exec ls -al {} \; 2>/dev/null
+#
+#Find world readable files within /home
+#find /home/ -perm -4 -type f -exec ls -al {} \; 2>/dev/null
+#
+# ls -ahl ~ 2>/dev/null										#list /home directories contents
+#
+#Check for various ssh files
+find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" \) -exec ls -la {} 2>/dev/null \;
+#
+#Check root login via SSH (/etc/ssh/sshd_config)
+#grep "PermitRootLogin " /etc/ssh/sshd_config 2>/dev/null | grep -v "#" | awk '{print  $2}'
+#
+# env 2>/dev/null | grep -v 'LS_COLORS' 2>/dev/null			#print $env information
+# echo $PATH 2>/dev/null										#print $PATH information
+# cat /etc/shells 2>/dev/null								#list available shells
+# umask -S 2>/dev/null & umask 2>/dev/null					#umask value with octal and symbolic output
+#
+#Umask value as in /etc/login.defs
+#cat /etc/login.defs 2>/dev/null |grep -i UMASK 2>/dev/null |grep -v "#" 2>/dev/null
+#
+#Password policy information as stored in /etc/login.defs
+#cat /etc/login.defs 2>/dev/null | grep "PASS_MAX_DAYS\|PASS_MIN_DAYS\|PASS_WARN_AGE\|ENCRYPT_METHOD" 2>/dev/null | grep -v "#" 2>/dev/null
+#
+# ls -la /etc/cron* 2>/dev/null								#Check cron jobs
+#
+#Check permissions on cron jobs
+#find /etc/cron* -perm -0002 -type f -exec ls -la {} \; -exec cat {} 2>/dev/null \;
+#
+# cat /etc/crontab 2>/dev/null								#Print crontab contents
+# ls -la /var/spool/cron/crontabs 2>/dev/null				#Print crontab contents
+# ls -la /var/spool/anacron 2>/dev/null						#Print anacron contents
+#
+#Check anacron
+#ls -la /etc/anacrontab 2>/dev/null; cat /etc/anacrontab 2>/dev/null
+#
+#(priv) Check account name associated cronjobs
+#cat /etc/passwd | cut -d ":" -f 1 | xargs -n1 crontab -l -u 2>/dev/null
+#
+# /sbin/ifconfig -a 2>/dev/null								#nic information
+# arp -a 2>/dev/null										#arp information
+# cat /etc/resolv.conf 2>/dev/null | grep "nameserver"		#dns settings
+# route 2>/dev/null | grep default							#default route configuration
+# netstat -antp 2>/dev/null									#netstat listening TCP
+# netstat -anup 2>/dev/null									#netstat listening UDP
+# ps aux 2>/dev/null										#running processes
+# 
+#Lookup process binary path and permissions
+#ps aux 2>/dev/null | awk '{print $11}'|xargs -r ls -la 2>/dev/null |awk '!x[$0]++' 2>/dev/null
+#
+# check xinetd.conf, try to show permissions of binaries
+# check init.d files NOT belonging to root
+# check rc.d files NOT belonging to root
+# sudo version
+# mysql --version
+# mysql root:root default login
+# postgres --version
+# postgres default login
+# apache --version
+# apache invokee
+# apache modules
+# any readable in /home directories
+# check for binaries (wget, nc, gcc, etc)
+# world readable files
+# world writable files
+# suid files (+sS)
+# world writable suid files
+# world writable suid files owned by root
+# guid files
+# world writable guid files owned by root
+# .plan files accessible in home (seen when 'finger' command is used)
+# check for .rhosts (rlogin)
+# check for /etc/hosts.equiv (rlogin)
+# check nfs shares/permissions
+# check for creds in /etc/fstab
+# check for .conf files
+# check for .ini files
+# check for user .*_history files
+# check for root .*_history files
+# check for user mail
+# check roots mail
+# checks to detect if in a docker container
+# checks to detect if in a docker host
+# checks to detect if in a docker group
+# check for any docker files (docker / *.yml)
+#
+###############################################################################################################
+
+
+privesc-check-master (from lib/misc/kernel, stealthy checks?)
+These are checks in lib/checks....there are more in lib/misc...OS specific, enhancements?
+###############################################################################################################
+#
+# include files in bash or sh with . or source
+# . lib/misc/file
+# . lib/misc/permission
+# . lib/misc/stdio
+# . lib/misc/kernel
+#
+#
+# Check all world writeable files
+#
+#world_writable_main () {
+#	file_show_non_symlink_perms "^........w. " | while read filename permissions userid groupid
+#	do
+#		case "${permissions}" in
+#			????????w?)
+#				if [ "`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1 ]
+#				then
+#					stdio_message_warn "world_writable" "${filename} is owned by user ${userid} (group ${groupid}) and is world-writable with sticky bit (${permissions})"
+#				else
+#					stdio_message_warn "world_writable" "${filename} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"
+#				fi
+#				;;
+#		esac
+#	done
+#}
+#
+# check SELinux 'enforce'			 
+# 	SELinux is a set of extra security restrictions on top of the normal Linux security tools. 																
+# 	It gives the systems administrator a finer grain of control than what the kernel typically provides.	
+# 	quick test with: 'selinuxenabled && echo enabled || echo disabled'
+# 	quick test with: 'getenforce'
+# 	quick test with: 'sestatus'
+# 	show security contexts: 'sestatus -v' 
+# 	show booleans: 'sestatus -b | grep on$'
+# 	temp disable: 'setenforce 0'
+#
+#system_selinux_main () {
+#	if [ "`kernel_selinux_enforce`" -eq 0 ]
+#	then
+#		stdio_message_warn "system_selinux" "SELinux does not enforce system-wide"
+#	else
+#		stdio_message_debug "system_selinux" "SELinux enforces system-wide"
+#	fi
+#}
+#
+# check NX bit / logging
+#	'if kernel_nx or SunOS'
+#
+#system_nx_main () {
+#	if [ "`kernel_nx`" -eq 0 ]
+#	then
+#		stdio_message_warn "system_nx" "The CPU does not support NX"
+#	else
+#		stdio_message_debug "system_nx" "The CPU supports NX"
+#	fi
+#
+# check mmap (memory map) allows mapping to zero
+#
+#system_mmap_main () {
+#	if [ "`kernel_mmap_zero_allowed`" -eq 1 ]
+#	then
+#		stdio_message_warn "system_mmap" "mmap allows map to 0"
+#	else
+#		stdio_message_debug "system_mmap" "mmap does not allow map to 0"
+#	fi
+#}
+#
+# extensive file permissions checker. Looks for the following:
+#	"`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1				(${systemfilename}) ${filename} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"	
+#	"`group_is_in_group_name \"${groupid}\"`" -eq 1										(${systemfilename}) ${filename} is owned by user ${userid} (group ${groupid}: YOU) and is group-writable (${permissions})"
+#	 "`user_is_root \"${userid}\"`" -ne 1 -a "`user_show_user_name`" = "${userid}"		(${systemfilename}) ${filename} is owned by user ${userid} (YOU) (group ${groupid}), non-root user (${permissions})"
+#
+# check sensitive files:
+#	sensitive_config_files="
+#	/etc/passwd
+#	/etc/shadow
+#	/etc/master.passwd
+#	/etc/security/passwd
+#	/etc/group
+#	/etc/cron
+#	/etc/fstab
+#	/etc/init
+#	/etc/rc
+#	/etc/inetd
+#	/etc/xinetd
+#	/etc/bash.bashrc
+#	/etc/profile
+#	/etc/sudoers
+#	/etc/hosts.equiv
+#	/etc/shosts.equiv"
+#
+# check ASLR
+#system_aslr_main () {
+#	if [ "`kernel_aslr`" -eq 0 ]
+#	then
+#		if [ "`kernel_aslr_pax`" -eq 0 ]
+#		then
+#			stdio_message_warn "system_aslr" "ASLR is not supported system-wide"
+#		else
+#			stdio_message_debug "system_aslr" "PAX ASLR is supported system-wide"
+#		fi
+#	elif [ "`kernel_aslr`" -eq 1 ]
+#	then
+#		stdio_message_log "system_aslr" "Conservative ASLR is supported system-wide (heap addresses are not randomized)"
+#	else
+#		stdio_message_debug "system_aslr" "ASLR is supported system-wide"
+#	fi
+#}
+#
+# check /etc/sudoers and list permissions/groups
+# check for readable and or encrypted ssh keys 
+# check for running ssh agents and try to identify the key in use
+# check lib/misc/shadow and if readable check for users with no password
+# find files with setuid bit set (runs as root)
+# find files with the setgid bit set (runs as group)
+# Check PostgreSQL trust relationships
+# Verify PostgreSQL trust relationships by connecting to localhost with common usernames and no password
+# Check permissions of PostgreSQL configuration file pg_hba.conf
+# List users with no password set or password in /etc/passwd (also checked in system_configuration)
+# Check if NIS is used for authentication
+# Check if LDAP is used for authentication
+# List potentially sensitive files (world readable etc)
+# List all jar files
+# Check for writable permission on home directories
+# Check for readable and executable permissions on home directories
+# List all .*_history files
+# List group-writable files
+# Check if the gpg-agent is running
+# Check for world-readable and world-writable permissions on devices files
+# Check for weak options on devices files
+# Check for read permissions on sensitive files
+# (priv) List group-writable and world-writable privileged files (their parent directories too) and processes
+# (priv) Check if privileged files call temporary files handling functions. Based on ideas found at http://people.redhat.com/sgrubb/security/
+# (priv) Check for stack canary (SSP) support
+# (priv) List group-writable and world-writable privileged files (their parent directories too) and processes that trust other filepaths (with RPATH variable)
+# (priv) Check if privileged files call random() or strand() functions
+# (priv) Check for PIE (ASLR-compliant executable) support Based on ideas found at http://people.redhat.com/sgrubb/security/
+# (priv) Check if privileged files set PATH variable Based on ideas found at http://people.redhat.com/sgrubb/security/
+# (priv) Check for NX (NoExecute) support (privileged vs unprivileged check above)
+# (priv) Check if textual privileged files (like bash scripts) use environment variables
+# (priv) Check for write permissions over privileged files and processes' linked libraries
+# (priv) Check if privileged files calling chroot() function call also chdir() function Based on ideas found at http://people.redhat.com/sgrubb/security/
+# (priv) Check if privileged files drop their privileges Based on ideas found at http://people.redhat.com/sgrubb/security/
+# (priv) Check if privileged files call banned (and potentially dangerous) functions Based on Microsoft's banned API list as parsed by ../../tools/generate_banned.sh **update script?**
+# (priv) Check if textual privileged files (like bash scripts) accept user-provided arguments
+#
+#
+#
+###############################################################################################################
+
+Linux-local-enum.sh
+# ###############################################################################################################
+# v1.0
+#
+# Provides the following functions
+# Cat files:
+#     /etc/issue
+#     /etc/*-release
+#     /etc/sysconfig/network
+#     /etc/resolv.conf
+#     /etc/fstab
+#     /etc/passwd
+#     /etc/shadow
+#     /etc/group
+#     /etc/sudoers
+#
+# Run commands:
+#     uname -ar
+#     df -h         			(This information  includes  the file system name, the total space
+#				    			 allocated in the file system, the amount of space	allocated
+#				     			to  existing  files, the total amount of space available for
+#				     			the creation of new files by  unprivileged  users,  and  the
+#				     			percentage  of  normally  available  space that is currently
+#				     			allocated to all files on the file system. This option over-
+#				     			rides the -b, -e, -n, and -t options.
+#                    			)
+#     mount | column -t
+#     ls -ahlR /home/
+#     ls -ahlR /root/
+#     w			     																	##find logged on users and what they're doing
+#     last			 																	##Last logged on users
+#     ps -ef | /bin/grep root															##Processes running as root
+#     dpkg -l																			##List installed packages for Debian/RHEL based systems
+#     rpm -qa																			##List installed packages for RHEL/Debian based systems
+#     chkconfig --list | grep $(runlevel | awk '{ print $2}'):on						##RHEL/CentOS services that start at Boot
+#     ls /etc/init.d/																	##List of init scripts / system services
+#
+# Find files:
+#
+# find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 3 -exec ls -ld {} \; 2>/dev/null  ##Sticky Bit Files
+# find / -perm -222 -type d 2>/dev/null 												 ##World Writable Directories
+# find / -type f -perm 0777 2>/dev/null													 ##World Writable Files
+# find / -user $(whoami) 2>/dev/null													 ##Files owned by Current User
+#
+################################################################################################################
+
+
+
+linuxprivchecker.py
+###############################################################################################################
+#
+# Cat files:
+#	/etc/issue															#Operating system
+#	/proc/version														#Kernel
+#	/etc/fstab 2>/dev/null												#fstab entries
+#	/etc/passwd															#user entries
+#	/etc/shadow 2>/dev/null												#user passwords
+#	/etc/apache2/apache2.conf 2>/dev/null								#Apache conf file
+#
+# Run Command:
+#	hostname															#hostname
+#	ifconfig -a															#Interfaces
+#	route																#Route
+#	netstat -antup | grep -v 'TIME_WAIT'								#Netstat (active connections?)
+#	mount																#Mount information
+#	ls -la /etc/cron* 2>/dev/null										#Scheduled cron jobs
+#	ls -aRl /etc/cron* 2>/dev/null | awk '$1 ~ /w.$/' 2>/dev/null		#Writable cron directories
+#	whoami																#current user	
+#	id																	#current user id
+#	grep -v -E '^#' /etc/passwd | awk -F: '$3 == 0{print $1}'			#super users in /etc/passwd
+#	ls -la ~/.*_history; ls -la /root/.*_history 2>/dev/null			#root and current user history (privs dependant)
+#	env 2>/dev/null | grep -v 'LS_COLORS'								#Environment variables
+#	cat /etc/sudoers 2>/dev/null | grep -v '#' 2>/dev/null				#Sudoers (privs dependant)
+#	w 2>/dev/null														#Who is logged in and what they're doing
+#	dpkg -l | awk '{$1=$4=\"\"; print $0}'								#Debian systems, find packages
+#	rpm -qa | sort -u													#RH/other, find packages
+#	ps aux | awk '{print $1,$2,$9,$10,$11}'								#Current processes
+# 	sudo -V | grep version 2>/dev/null									#Sudo Version (check exploitdb)
+#	apache2 -v; apache2ctl -M; httpd -v; apachectl -l 2>/dev/null		#Apache version and modules
+#	which awk perl python ruby gcc cc vi vim nmap find netcat nc wget tftp ftp 2>/dev/null	#dev tools available				
+#
+#		#World writable directories for User/Group 'Root'
+#	find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep root
+#
+#		#World writeable directories for users other than 'Root'
+#	find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep -v root
+#
+#		#World writeable files
+#	find / \( -wholename '/home/homedir/*' -prune -o -wholename '/proc/*' -prune \) -o \( -type f -perm -0002 \) -exec ls -l '{}' ';' 2>/dev/null
+#
+#		#SUID/SGID Files and directories (+s 'sticky' bit)
+#	find / \( -perm -2000 -o -perm -4000 \) -exec ls -ld {} \; 2>/dev/null
+#
+#		#Check if root's /home/ folder is accessible
+#	ls -ahlR /root 2>/dev/null
+#
+#		#Logs containing the keyword 'password'
+#	find /var/log -name '*.log' 2>/dev/null | xargs -l10 egrep 'pwd|password' 2>/dev/null
+#
+#		#Config files **ending with '*.c*' ** containing the keyword 'password'
+#	find /etc -name '*.c*' 2>/dev/null | xargs -l10 egrep 'pwd|password' 2>/dev/null
+#
+#
+#	#Function for identifying processes and packages running as root or other superuser#
+#
+#	#Print popular shell escape sequences#
+#	vi
+#		:!bash
+#		:set shell=/bin/bash:shell
+#	awk
+#		awk 'BEGIN {system(\"/bin/bash\")}'
+#
+#	perl
+#		perl -e 'exec \"/bin/bash\";'
+#
+#	find
+#		find / -exec /usr/bin/awk 'BEGIN {system(\"/bin/bash\")}' \\;
+#
+#	nmap
+#		--interactive
+#
+#
+#	#Enumerate hard coded exploit checking based on kernel/OS version#
+#
+#
+###############################################################################################################
+
+
+
+
+# Now check for relevant exploits (note: this list should be updated over time; source: Exploit-DB)
+# sploit format = sploit name : {minversion, maxversion, exploitdb#, language, {keywords for applicability}} -- current keywords are 'kernel', 'proc', 'pkg' (unused), and 'os'
+
+sploits= {      "2.2.x-2.4.x ptrace kmod local exploit":{"minver":"2.2", "maxver":"2.4.99", "exploitdb":"3", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"< 2.4.20 Module Loader Local Root Exploit":{"minver":"0", "maxver":"2.4.20", "exploitdb":"12", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4.22 "'do_brk()'" local Root Exploit (PoC)":{"minver":"2.4.22", "maxver":"2.4.22", "exploitdb":"129", "lang":"asm", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"<= 2.4.22 (do_brk) Local Root Exploit (working)":{"minver":"0", "maxver":"2.4.22", "exploitdb":"131", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4.x mremap() bound checking Root Exploit":{"minver":"2.4", "maxver":"2.4.99", "exploitdb":"145", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"<= 2.4.29-rc2 uselib() Privilege Elevation":{"minver":"0", "maxver":"2.4.29", "exploitdb":"744", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4 uselib() Privilege Elevation Exploit":{"minver":"2.4", "maxver":"2.4", "exploitdb":"778", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4.x / 2.6.x uselib() Local Privilege Escalation Exploit":{"minver":"2.4", "maxver":"2.6.99", "exploitdb":"895", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4/2.6 bluez Local Root Privilege Escalation Exploit (update)":{"minver":"2.4", "maxver":"2.6.99", "exploitdb":"926", "lang":"c", "keywords":{"loc":["proc","pkg"], "val":"bluez"}},
+		"<= 2.6.11 (CPL 0) Local Root Exploit (k-rad3.c)":{"minver":"0", "maxver":"2.6.11", "exploitdb":"1397", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"MySQL 4.x/5.0 User-Defined Function Local Privilege Escalation Exploit":{"minver":"0", "maxver":"99", "exploitdb":"1518", "lang":"c", "keywords":{"loc":["proc","pkg"], "val":"mysql"}},
+		"2.6.13 <= 2.6.17.4 sys_prctl() Local Root Exploit":{"minver":"2.6.13", "maxver":"2.6.17.4", "exploitdb":"2004", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6.13 <= 2.6.17.4 sys_prctl() Local Root Exploit (2)":{"minver":"2.6.13", "maxver":"2.6.17.4", "exploitdb":"2005", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6.13 <= 2.6.17.4 sys_prctl() Local Root Exploit (3)":{"minver":"2.6.13", "maxver":"2.6.17.4", "exploitdb":"2006", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6.13 <= 2.6.17.4 sys_prctl() Local Root Exploit (4)":{"minver":"2.6.13", "maxver":"2.6.17.4", "exploitdb":"2011", "lang":"sh", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"<= 2.6.17.4 (proc) Local Root Exploit":{"minver":"0", "maxver":"2.6.17.4", "exploitdb":"2013", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6.13 <= 2.6.17.4 prctl() Local Root Exploit (logrotate)":{"minver":"2.6.13", "maxver":"2.6.17.4", "exploitdb":"2031", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"Ubuntu/Debian Apache 1.3.33/1.3.34 (CGI TTY) Local Root Exploit":{"minver":"4.10", "maxver":"7.04", "exploitdb":"3384", "lang":"c", "keywords":{"loc":["os"], "val":"debian"}},
+		"Linux/Kernel 2.4/2.6 x86-64 System Call Emulation Exploit":{"minver":"2.4", "maxver":"2.6", "exploitdb":"4460", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"< 2.6.11.5 BLUETOOTH Stack Local Root Exploit":{"minver":"0", "maxver":"2.6.11.5", "exploitdb":"4756", "lang":"c", "keywords":{"loc":["proc","pkg"], "val":"bluetooth"}},
+		"2.6.17 - 2.6.24.1 vmsplice Local Root Exploit":{"minver":"2.6.17", "maxver":"2.6.24.1", "exploitdb":"5092", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6.23 - 2.6.24 vmsplice Local Root Exploit":{"minver":"2.6.23", "maxver":"2.6.24", "exploitdb":"5093", "lang":"c", "keywords":{"loc":["os"], "val":"debian"}},
+		"Debian OpenSSL Predictable PRNG Bruteforce SSH Exploit":{"minver":"0", "maxver":"99", "exploitdb":"5720", "lang":"python", "keywords":{"loc":["os"], "val":"debian"}},
+		"Linux Kernel < 2.6.22 ftruncate()/open() Local Exploit":{"minver":"0", "maxver":"2.6.22", "exploitdb":"6851", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"< 2.6.29 exit_notify() Local Privilege Escalation Exploit":{"minver":"0", "maxver":"2.6.29", "exploitdb":"8369", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6 UDEV Local Privilege Escalation Exploit":{"minver":"2.6", "maxver":"2.6.99", "exploitdb":"8478", "lang":"c", "keywords":{"loc":["proc","pkg"], "val":"udev"}},
+		"2.6 UDEV < 141 Local Privilege Escalation Exploit":{"minver":"2.6", "maxver":"2.6.99", "exploitdb":"8572", "lang":"c", "keywords":{"loc":["proc","pkg"], "val":"udev"}},
+		"2.6.x ptrace_attach Local Privilege Escalation Exploit":{"minver":"2.6", "maxver":"2.6.99", "exploitdb":"8673", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6.29 ptrace_attach() Local Root Race Condition Exploit":{"minver":"2.6.29", "maxver":"2.6.29", "exploitdb":"8678", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"Linux Kernel <=2.6.28.3 set_selection() UTF-8 Off By One Local Exploit":{"minver":"0", "maxver":"2.6.28.3", "exploitdb":"9083", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"Test Kernel Local Root Exploit 0day":{"minver":"2.6.18", "maxver":"2.6.30", "exploitdb":"9191", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"PulseAudio (setuid) Priv. Escalation Exploit (ubu/9.04)(slack/12.2.0)":{"minver":"2.6.9", "maxver":"2.6.30", "exploitdb":"9208", "lang":"c", "keywords":{"loc":["pkg"], "val":"pulse"}},
+		"2.x sock_sendpage() Local Ring0 Root Exploit":{"minver":"2", "maxver":"2.99", "exploitdb":"9435", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.x sock_sendpage() Local Root Exploit 2":{"minver":"2", "maxver":"2.99", "exploitdb":"9436", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4/2.6 sock_sendpage() ring0 Root Exploit (simple ver)":{"minver":"2.4", "maxver":"2.6.99", "exploitdb":"9479", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6 < 2.6.19 (32bit) ip_append_data() ring0 Root Exploit":{"minver":"2.6", "maxver":"2.6.19", "exploitdb":"9542", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4/2.6 sock_sendpage() Local Root Exploit (ppc)":{"minver":"2.4", "maxver":"2.6.99", "exploitdb":"9545", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"< 2.6.19 udp_sendmsg Local Root Exploit (x86/x64)":{"minver":"0", "maxver":"2.6.19", "exploitdb":"9574", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"< 2.6.19 udp_sendmsg Local Root Exploit":{"minver":"0", "maxver":"2.6.19", "exploitdb":"9575", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4/2.6 sock_sendpage() Local Root Exploit [2]":{"minver":"2.4", "maxver":"2.6.99", "exploitdb":"9598", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4/2.6 sock_sendpage() Local Root Exploit [3]":{"minver":"2.4", "maxver":"2.6.99", "exploitdb":"9641", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4.1-2.4.37 and 2.6.1-2.6.32-rc5 Pipe.c Privelege Escalation":{"minver":"2.4.1", "maxver":"2.6.32", "exploitdb":"9844", "lang":"python", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"'pipe.c' Local Privilege Escalation Vulnerability":{"minver":"2.4.1", "maxver":"2.6.32", "exploitdb":"10018", "lang":"sh", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.6.18-20 2009 Local Root Exploit":{"minver":"2.6.18", "maxver":"2.6.20", "exploitdb":"10613", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"Apache Spamassassin Milter Plugin Remote Root Command Execution":{"minver":"0", "maxver":"99", "exploitdb":"11662", "lang":"sh", "keywords":{"loc":["proc"], "val":"spamass-milter"}},
+		"<= 2.6.34-rc3 ReiserFS xattr Privilege Escalation":{"minver":"0", "maxver":"2.6.34", "exploitdb":"12130", "lang":"python", "keywords":{"loc":["mnt"], "val":"reiser"}},
+		"Ubuntu PAM MOTD local root":{"minver":"7", "maxver":"10.04", "exploitdb":"14339", "lang":"sh", "keywords":{"loc":["os"], "val":"ubuntu"}},
+		"< 2.6.36-rc1 CAN BCM Privilege Escalation Exploit":{"minver":"0", "maxver":"2.6.36", "exploitdb":"14814", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"Kernel ia32syscall Emulation Privilege Escalation":{"minver":"0", "maxver":"99", "exploitdb":"15023", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"Linux RDS Protocol Local Privilege Escalation":{"minver":"0", "maxver":"2.6.36", "exploitdb":"15285", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"<= 2.6.37 Local Privilege Escalation":{"minver":"0", "maxver":"2.6.37", "exploitdb":"15704", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"< 2.6.37-rc2 ACPI custom_method Privilege Escalation":{"minver":"0", "maxver":"2.6.37", "exploitdb":"15774", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"CAP_SYS_ADMIN to root Exploit":{"minver":"0", "maxver":"99", "exploitdb":"15916", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"CAP_SYS_ADMIN to Root Exploit 2 (32 and 64-bit)":{"minver":"0", "maxver":"99", "exploitdb":"15944", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"< 2.6.36.2 Econet Privilege Escalation Exploit":{"minver":"0", "maxver":"2.6.36.2", "exploitdb":"17787", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"Sendpage Local Privilege Escalation":{"minver":"0", "maxver":"99", "exploitdb":"19933", "lang":"ruby", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.4.18/19 Privileged File Descriptor Resource Exhaustion Vulnerability":{"minver":"2.4.18", "maxver":"2.4.19", "exploitdb":"21598", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.2.x/2.4.x Privileged Process Hijacking Vulnerability (1)":{"minver":"2.2", "maxver":"2.4.99", "exploitdb":"22362", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"2.2.x/2.4.x Privileged Process Hijacking Vulnerability (2)":{"minver":"2.2", "maxver":"2.4.99", "exploitdb":"22363", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"Samba 2.2.8 Share Local Privilege Elevation Vulnerability":{"minver":"2.2.8", "maxver":"2.2.8", "exploitdb":"23674", "lang":"c", "keywords":{"loc":["proc","pkg"], "val":"samba"}},
+		"open-time Capability file_ns_capable() - Privilege Escalation Vulnerability":{"minver":"0", "maxver":"99", "exploitdb":"25307", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+		"open-time Capability file_ns_capable() Privilege Escalation":{"minver":"0", "maxver":"99", "exploitdb":"25450", "lang":"c", "keywords":{"loc":["kernel"], "val":"kernel"}},
+}
