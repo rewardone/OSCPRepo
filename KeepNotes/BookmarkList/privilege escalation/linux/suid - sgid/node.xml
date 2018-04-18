@@ -2,12 +2,12 @@
 <node>
 <version>6</version>
 <dict>
-  <key>title</key><string>set uid/gid/shell in C program</string>
-  <key>nodeid</key><string>1f9a80c8-03aa-459d-b9f0-b585143a8871</string>
-  <key>modified_time</key><integer>1523629642</integer>
+  <key>title</key><string>SUID / SGID</string>
+  <key>nodeid</key><string>61acfe3c-4802-4bd3-a2f5-2a80a4260ab1</string>
+  <key>modified_time</key><integer>1524022113</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
-  <key>created_time</key><integer>1480276314</integer>
+  <key>created_time</key><integer>1524022113</integer>
   <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>7</integer>
   <key>info_sort</key><string>order</string>

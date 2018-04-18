@@ -1,7 +1,6 @@
 #!/bin/sh
 #This script will do basic setup to make sure everything is in place
 #This should would on default Kali installation
-#TODO every once in a while, check for updates to SecLists and fuzzdb
 
 echo "### Downloading things...### \n\n"
 echo "Install new software: Shutter, exiftool, gobuster, git"
@@ -24,6 +23,14 @@ echo "\nCloning Vulners exploit database/search tool \n"
 direc=/root/Documents/Getsploit
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/vulnersCom/getsploit.git $direc; fi
 
+echo "\nCloning PowershellEmpire\n"
+direc=/root/Documents/Empire
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/EmpireProject/Empire.git $direc; fi
+
+echo "\nCloning PowerSploit\n"
+direc=/root/Documents/PowerSploit
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/PowerShellMafia/PowerSploit.git $direc; fi
+
 echo "\n ### Processing actions...### \n\n"
 echo "Setup install Impacket"
 chmod +x /root/Documents/Impacket/setup.py && cd /root/Documents/Impacket && ./setup.py install
@@ -37,6 +44,9 @@ cp /root/Documents/Getsploit/getsploit/getsploit.py /usr/local/sbin
 echo "\nSetup OSCPRepo \n"
 cp -r /root/Documents/OSCPRepo/scripts /root/
 cp -r /root/Documents/OSCPRepo/lists /root/
+
+echo "\nSetup Empire\n"
+/root/Documents/Empire/setup/./install.sh
 
 echo "\nDownloading additional lists: SecLists fuzzdb naughtystrings \n"
 direc=/root/lists/secLists

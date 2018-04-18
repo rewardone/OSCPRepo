@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tmux</title>
+</head><body>Here is a list of a few basic tmux commands:<br/>
+<br/>
+&nbsp; &nbsp; Ctrl+b " — split pane horizontally.<br/>
+&nbsp; &nbsp; Ctrl+b % — split pane vertically.<br/>
+&nbsp; &nbsp; Ctrl+b arrow key — switch pane.<br/>
+&nbsp; &nbsp; Hold Ctrl+b, don’t release it and hold one of the arrow keys — resize pane.<br/>
+&nbsp; &nbsp; Ctrl+b c — (c)reate a new window.<br/>
+&nbsp; &nbsp; Ctrl+b n — move to the (n)ext window.<br/>
+&nbsp; &nbsp; Ctrl+b p — move to the (p)revious window.<br/>
+<br/>
+Other thing worth knowing is that scrolling is enabled by pressing Ctrl+b PgUp/PgDown. In fact, it enables the copy mode, which can also be done by pressing Ctrl+b [. When in copy mode, you can use PgUp/PgDown and arrow keys to scroll through the terminal contents. To (q)uit the copy mode, simply press the q key.<br/>
+<br/>
+That should do the trick. At least, most of it.<br/>
+<br/>
+<br/>
+KEY BINDINGS<br/>
+&nbsp; &nbsp; &nbsp;tmux may be controlled from an attached client by using a key combination of a prefix key, ‘C-b’ (Ctrl-b) by<br/>
+&nbsp; &nbsp; &nbsp;default, followed by a command key.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;The default command key bindings are:<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;C-b &nbsp; &nbsp; &nbsp; &nbsp; Send the prefix key (C-b) through to the application.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;C-o &nbsp; &nbsp; &nbsp; &nbsp; Rotate the panes in the current window forwards.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;C-z &nbsp; &nbsp; &nbsp; &nbsp; Suspend the tmux client.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>! &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Break the current pane out of the window.</b><br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Split the current pane into two, top and bottom.</b><br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; List all paste buffers.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>$ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Rename the current session</b>.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>% &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Split the current pane into two, left and right.</b><br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&amp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Kill the current window.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Prompt for a window index to select.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch the attached client to the previous session.</b><br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch the attached client to the next session.</b><br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Rename the current window.</b><br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Delete the most recently copied buffer of text.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Prompt for an index to move the current window.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;0 to 9 &nbsp; &nbsp; &nbsp;Select windows 0 to 9.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Enter the tmux command prompt.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Move to the previously active pane.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;= &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Choose which buffer to paste interactively from a list.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; List all key bindings.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;D &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Choose a client to detach.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;L &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Switch the attached client back to the last session.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Enter copy mode to copy text or view the history.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Paste the most recently copied buffer of text.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Create a new window.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;d &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Detach the current client.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;f &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Prompt to search for text in open windows.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;i &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Display some information about the current window.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;l &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Move to the previously selected window.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Change to the next window.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;o &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Select the next pane in the current window.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;p &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Change to the previous window.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;q &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Briefly display pane indexes.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;r &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Force redraw of the attached client.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;m &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Mark the current pane (see select-pane -m).<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;M &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Clear the marked pane.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;s &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Select a new session for the attached client interactively.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;t &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Show the time.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;w &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Choose the current window interactively.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;x &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Kill the current pane.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;z &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Toggle zoom state of the current pane.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Swap the current pane with the previous pane.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Swap the current pane with the next pane.<ul><li style="list-style-type: none">&nbsp; &nbsp;~ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Show previous messages from tmux, if any.</li>
+</ul>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Page Up &nbsp; &nbsp; Enter copy mode and scroll one page up.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Up, Down<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Left, Right<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Change to the pane above, below, to the left, or to the right of the current pane.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;M-1 to M-5 &nbsp;Arrange panes in one of the five preset layouts: even-horizontal, even-vertical, main-horizontal,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;main-vertical, or tiled.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Space &nbsp; &nbsp; &nbsp; Arrange the current window in the next preset layout.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;M-n &nbsp; &nbsp; &nbsp; &nbsp; Move to the next window with a bell or activity marker.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;M-o &nbsp; &nbsp; &nbsp; &nbsp; Rotate the panes in the current window backwards.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;M-p &nbsp; &nbsp; &nbsp; &nbsp; Move to the previous window with a bell or activity marker.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;C-Up, C-Down<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;C-Left, C-Right<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Resize the current pane in steps of one cell.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;M-Up, M-Down<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;M-Left, M-Right<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Resize the current pane in steps of five cells.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;Key bindings may be changed with the bind-key and unbind-key commands.</body></html>
