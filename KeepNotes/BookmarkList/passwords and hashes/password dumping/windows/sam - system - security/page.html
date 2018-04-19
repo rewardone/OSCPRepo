@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SAM / SYSTEM / SECURITY</title>
+</head><body>1 – Dumping the SAM file &nbsp;<br/>
+This is probably the most common way to escalate privileges. Often, it is possible to retrieve the LM hashes from a system thatmay include some domain credentials. <br/>
+&nbsp;<br/>
+Depending on the penetration test, this can be done repeatedly, onmany servers, until you find a domain administrator's hash. It is also possible to utilize theshadow copy feature from Microsoft Systems to get the "SYSKEY" and "SAM" files. One of thepossible tools that could be used for this is hobocopy.<br/>
+<br/>
+Once you have the SAM and SYSTEM, many other tools can extract the hashes<br/>
+&nbsp;&#09;Cain &amp; Abel<br/>
+&nbsp;&#09;Creddump<br/>
+&nbsp;&#09;Mimikatz<br/>
+&nbsp;&#09;Meterpreter<br/>
+&nbsp;&#09;gsecdump<br/>
+&nbsp;&#09;fgdump<br/>
+&nbsp;&#09;pwdump<br/>
+&nbsp;&#09;hobocopy<br/>
+<br/>
+The SAM and SYSTEM are located by default in<br/>
+C:\Windows\System32\config<br/>
+<br/>
+You can also check in <br/>
+C:\Windows\repair\</body></html>

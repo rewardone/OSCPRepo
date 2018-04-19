@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Escalate To System</title>
+</head><body>If you are Admin, you can escalate to SYSTEM using various methods:<br/>
+<br/>
+psexec.exe -i -s cmd.exe<br/>
+<br/>
+AT 12:00 /interactive cmd.exe &nbsp;<br/>
+<br/>
+C:\sc create RunCMDAsLSA binpath= "cmd /k &lt;cmd&gt;" type= own type= interact<br/>
+C:\sc start RunCMDAsLSA</body></html>
