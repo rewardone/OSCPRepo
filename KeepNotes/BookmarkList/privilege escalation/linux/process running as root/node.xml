@@ -3,15 +3,15 @@
 <version>6</version>
 <dict>
   <key>expanded</key><false/>
-  <key>title</key><string>Process running as root</string>
   <key>nodeid</key><string>08da08f0-0c3f-4361-a77c-3ef7b7690242</string>
   <key>modified_time</key><integer>1523993150</integer>
   <key>expanded2</key><false/>
-  <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1519523522</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>4</integer>
+  <key>title</key><string>Process running as root</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>5</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

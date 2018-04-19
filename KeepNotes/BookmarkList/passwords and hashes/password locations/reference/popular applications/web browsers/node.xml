@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Web Browsers</string>
+  <key>nodeid</key><string>47ab1ca1-f528-4f2e-bd2c-e56aab20840c</string>
+  <key>modified_time</key><integer>1524104751</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524104751</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

@@ -6,6 +6,7 @@
   <key>title</key><string>Windows</string>
   <key>nodeid</key><string>09c272ee-dc24-4200-ad74-688e5b05b074</string>
   <key>modified_time</key><integer>1522535051</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522525726</integer>

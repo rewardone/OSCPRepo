@@ -48,7 +48,7 @@ cp -r /root/Documents/OSCPRepo/lists /root/
 echo "\nSetup Empire\n"
 /root/Documents/Empire/setup/./install.sh
 
-echo "\nDownloading additional lists: SecLists fuzzdb naughtystrings \n"
+echo "\nDownloading additional lists: secLists fuzzdb naughtystrings payloadallthethings probable-wordlists\n"
 direc=/root/lists/secLists
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/danielmiessler/SecLists.git $direc; fi
 direc=/root/lists/fuzzdb

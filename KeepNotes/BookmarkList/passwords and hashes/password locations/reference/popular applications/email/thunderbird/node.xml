@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>ThunderBird</string>
+  <key>nodeid</key><string>00570e35-7f3d-4dc0-9a95-7ff64521e417</string>
+  <key>modified_time</key><integer>1524104870</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524104860</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>
