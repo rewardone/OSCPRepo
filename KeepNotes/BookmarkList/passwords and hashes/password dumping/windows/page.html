@@ -3,7 +3,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Windows</title>
-</head><body>The primary techniques for dumping credentials from Active Directory involve:<ul><li><a href="https://adsecurity.org/?page_id=1821">interacting with LSASS on a live DC</a>&nbsp;(See Mimikatz Dump &gt; Remotely Using DCSync child page)</li>
+</head><body>Several types and locations of passwords:<ul><li>Registry Hives (SAM/Security/System)</li>
+<li>Password hashes of local accounts in LSA</li>
+<li>GPO files</li>
+<li>In-Memory LSASS creds</li>
+<li style="list-style-type: none"><ul><li>Logon Sessions</li>
+</ul>
+</li>
+<li>LSA secrets</li>
+<li>Credential Manager ("Remember my password" passwords)</li>
+<li>Protected Storage (Other applications)</li>
+<li></li>
+</ul>
+<br/>
+<br/>
+The primary techniques for dumping credentials from Active Directory involve:<ul><li><a href="https://adsecurity.org/?page_id=1821">interacting with LSASS on a live DC</a>&nbsp;(See Mimikatz Dump &gt; Remotely Using DCSync child page)</li>
 <li>grabbing a copy of the AD datafile (ntds.dit), or </li>
 <li><a href="https://adsecurity.org/?p=1729">tricking a Domain Controller into replicating password data to the attacker</a>&nbsp;(“I’m a Domain Controller!”).</li>
 </ul>

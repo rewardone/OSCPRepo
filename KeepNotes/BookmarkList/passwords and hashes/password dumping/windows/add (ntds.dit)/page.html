@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>ADD (mtds.dit)</title>
-</head><body>The Active Directory domain database is stored in the <a href="https://technet.microsoft.com/en-us/library/cc961761.aspx">ntds.dit file</a>&nbsp;(stored in c:\Windows\NTDS by default, but often on a different logical drive). The AD database is a <a href="https://en.wikipedia.org/wiki/Microsoft_Jet_Database_Engine">Jet database engine</a>&nbsp;which uses the <a href="https://en.wikipedia.org/wiki/Extensible_Storage_Engine">Extensible Storage Engine (ESE)</a>&nbsp;which provides data storage and indexing services; ESE level indexing enables object attributes to be quickly located. ESE ensures the database complies with <a href="https://en.wikipedia.org/wiki/ACID">ACID </a>(Atomic, Consistent, Isolated, and Durable) – all operations in a transaction complete or none do. The AD ESE database is very fast and reliable.<br/>
+<title>ADD (ntds.dit)</title>
+</head><body>The Active Directory domain database is stored in the <a href="https://technet.microsoft.com/en-us/library/cc961761.aspx">ntds.dit file</a>&nbsp;(stored in c:\Windows\NTDS, or %SystemRoot%\ntds\ntds.dit by default, but often on a different logical drive). The AD database is a <a href="https://en.wikipedia.org/wiki/Microsoft_Jet_Database_Engine">Jet database engine</a>&nbsp;which uses the <a href="https://en.wikipedia.org/wiki/Extensible_Storage_Engine">Extensible Storage Engine (ESE)</a>&nbsp;which provides data storage and indexing services; ESE level indexing enables object attributes to be quickly located. ESE ensures the database complies with <a href="https://en.wikipedia.org/wiki/ACID">ACID </a>(Atomic, Consistent, Isolated, and Durable) – all operations in a transaction complete or none do. The AD ESE database is very fast and reliable.<br/>
 <img src="https://i-technet.sec.s-msft.com/dynimg/IC195573.gif" /><br/>
 &nbsp;<br/>
 Note: Microsoft also uses the Jet database for Exchange mailbox databases.<br/>
@@ -36,6 +36,8 @@ Note, that in the previous list there are numerous fields that are described as 
 &nbsp;<br/>
 The solution introduced by Microsoft in order to provide this protection is complex and composed of 3 layers of encryption of which 2 layers use RC4 and the third layer uses DES.<br/>
 <br/>
-<br/>
+<b>Location</b><br/>
+Confirm the location of the ntds.dit file from the “DSA Database file” parameter:<br/>
+reg.exe query hklm\system\currentcontrolset\services\ntds\parameters<br/>
 <br/>
 </body></html>

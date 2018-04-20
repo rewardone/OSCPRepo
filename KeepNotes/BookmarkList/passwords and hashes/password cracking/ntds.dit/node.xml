@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>NTDS.dit</string>
+  <key>nodeid</key><string>a0fa7ee1-58d4-4b29-a30c-d3b541a3b8f4</string>
+  <key>modified_time</key><integer>1524235192</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524235093</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

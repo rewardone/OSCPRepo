@@ -17,4 +17,33 @@ reg query "HKCU\Software\SimonTatham\PuTTY\Sessions"<br/>
 <br/>
 # Search for password in registry<br/>
 reg query HKLM /f password /t REG_SZ /s<br/>
-reg query HKCU /f password /t REG_SZ /s</body></html>
+reg query HKCU /f password /t REG_SZ /s<br/>
+<br/>
+# SAM and SYSTEM hives<br/>
+# HKLM:\SECURITY\Cache<br/>
+<br/>
+#LSA Secrets<br/>
+#Account passwords for services that are set to run by OS users (as opposed to Local System, Network Service, and Local Service)<br/>
+#Password used to logon to Windows if auto-logon is enabled, or, generally, the password of the user logged to the console)<br/>
+#Each secret has its own key. The parent Policy key contains the data necessary for accessing and decoding secrets<br/>
+HKLM:\Security\Policy\Secrets<br/>
+<br/>
+Older versions of Windows (Windows 95,98 and ME) stored the network passwords in pwl files located under the main Windows folder.<br/>
+<br/>
+Starting from Windows XP, the network passwords are encrypted inside the Credentials file:<br/>
+Documents and Settings\&lt;User Name&gt;\Application Data\Microsoft\Credentials\&lt;User SID&gt;. <br/>
+May also be stored in the Credentials file:<br/>
+Documents and Settings\&lt;User Name&gt;\Local Settings\Application Data\Microsoft\Credentials\&lt;User SID&gt;. <br/>
+<br/>
+#Domain Controller Only<br/>
+Confirm the location of the ntds.dit file from the “DSA Database file” parameter:<br/>
+reg.exe query hklm\system\currentcontrolset\services\ntds\parameters<br/>
+<br/>
+The base key of the Protected Storage is located under the following key:<br/>
+"HKEY_CURRENT_USER\Software\Microsoft\Protected Storage System Provider"<br/>
+You can browse the above key in the Registry Editor (RegEdit), but you won't be able to watch the passwords, because they are encrypted<br/>
+<br/>
+#Cached Creds at HKLM:\SECURITY\Cache<br/>
+#If HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\ CachedLogonsCount &gt; 0<br/>
+<span style="font-size: 10pt"><span style="font-family: Helvetica Neue Light"><div style="text-align: justify">#By default on workstations, this value is set to 0 and on domain controllers it is set to 24.<br/>
+</div></span></span></body></html>

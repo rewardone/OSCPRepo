@@ -7,6 +7,8 @@
 <br/>
 psexec.exe -i -s cmd.exe<br/>
 <br/>
+<br/>
+The cool thing about AT jobs and scheduled tasks is that if you run them as "admin" they really get run as SYSTEM, so you can do neat stuff like dump lsass memory or get SYSTEM shells when the job executes your binary.<br/>
 AT 12:00 /interactive cmd.exe &nbsp;<br/>
 <br/>
 C:\sc create RunCMDAsLSA binpath= "cmd /k &lt;cmd&gt;" type= own type= interact<br/>

@@ -5,7 +5,7 @@
   <key>title</key><string>Mimikatz Dump</string>
   <key>nodeid</key><string>9072e5ef-f3d9-4edd-85e8-12d3d4bed1d2</string>
   <key>modified_time</key><integer>1522534812</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522534700</integer>

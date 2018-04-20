@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Cached Domain Credentials</string>
+  <key>nodeid</key><string>c72a7158-ec02-4966-82e7-a462074ba2fa</string>
+  <key>modified_time</key><integer>1524232521</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524232426</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

