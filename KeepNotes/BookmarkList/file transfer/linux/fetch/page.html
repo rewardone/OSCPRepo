@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Fetch</title>
+</head><body>Free-BSD<br/>
+<b>fetch</b>&nbsp;-- retrieve a file by Uniform Resource Locator<br/>
+The <b>fetch</b>&nbsp;utility provides a command-line interface to the <a href="https://www.freebsd.org/cgi/man.cgi?query=fetch&sektion=3&apropos=0&manpath=FreeBSD+11.1-RELEASE+and+Ports">fetch(3)</a>&nbsp;library. Its purpose is to retrieve the file(s) pointed to by the URL(s) on the command line. <br/>
+<br/>
+The following options are available:<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-1, --one-file<br/>
+&#09;&#09; Stop and return exit code 0 at&#09;the first successfully<br/>
+&#09;&#09; retrieved file.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-4, --ipv4-only<br/>
+&#09;&#09; Forces&#09;fetch to use IPv4 addresses only.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-6, --ipv6-only<br/>
+&#09;&#09; Forces&#09;fetch to use IPv6 addresses only.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-A, --no-redirect<br/>
+&#09;&#09; Do not&#09;automatically follow ``temporary'' (302) redirects.<br/>
+&#09;&#09; Some broken Web sites will return a redirect instead of a<br/>
+&#09;&#09; not-found error when the requested object does&#09;not exist.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-a, --retry<br/>
+&#09;&#09; Automatically retry the transfer upon soft failures.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-B&#09;bytes, --buffer-size=bytes<br/>
+&#09;&#09; Specify the read buffer size in bytes.&#09; The default is&#09;16,384<br/>
+&#09;&#09; bytes.&#09; Attempts to set a buffer size lower than this will be<br/>
+&#09;&#09; silently ignored. &nbsp;The&#09;number of reads&#09;actually performed is<br/>
+&#09;&#09; reported at verbosity level two or higher (see&#09;the -v flag).<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--bind-address=host<br/>
+&#09;&#09; Specifies a hostname or IP address to which sockets used for<br/>
+&#09;&#09; outgoing connections will be bound.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-c&#09;dir&#09; The file to retrieve is in directory dir on the remote&#09;host.<br/>
+&#09;&#09; This option is&#09;deprecated and is provided for backward&#09;com-<br/>
+&#09;&#09; patibility only.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--ca-cert=file<br/>
+&#09;&#09; [SSL] Path to certificate bundle containing trusted CA&#09;cer-<br/>
+&#09;&#09; tificates. &nbsp;If&#09;not specified, /usr/local/etc/ssl/cert.pem is<br/>
+&#09;&#09; used.&#09;If this&#09;file does not exist, /etc/ssl/cert.pem is used<br/>
+&#09;&#09; instead. &nbsp;If neither file exists and no CA path has been con-<br/>
+&#09;&#09; figured, OpenSSL's default CA cert and&#09;path settings apply.<br/>
+&#09;&#09; The certificate bundle&#09;can contain multiple CA&#09;certificates.<br/>
+&#09;&#09; The security/ca_root_nss port is a common source of a current<br/>
+&#09;&#09; CA bundle.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--ca-path=dir<br/>
+&#09;&#09; [SSL] The directory dir contains trusted CA hashes.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--cert=file<br/>
+&#09;&#09; [SSL] file is a PEM encoded client certificate/key which will<br/>
+&#09;&#09; be used in client certificate authentication.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--crl=file&#09; [SSL] Points to certificate revocation&#09;list file, which has<br/>
+&#09;&#09; to be in PEM format and may contain peer certificates that<br/>
+&#09;&#09; have been revoked.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-d, --direct<br/>
+&#09;&#09; Use a direct connection even if a proxy is configured.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-F, --force-restart<br/>
+&#09;&#09; In combination&#09;with the -r flag, forces a restart even&#09;if the<br/>
+&#09;&#09; local and remote files&#09;have different modification times.<br/>
+&#09;&#09; Implies -R.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-f&#09;file&#09; The file to retrieve is named file on the remote host.&#09; This<br/>
+&#09;&#09; option&#09;is deprecated and is provided for backward compatibil-<br/>
+&#09;&#09; ity only.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-h&#09;host&#09; The file to retrieve is located on the&#09;host host. &nbsp;This<br/>
+&#09;&#09; option&#09;is deprecated and is provided for backward compatibil-<br/>
+&#09;&#09; ity only.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-i&#09;file, --if-modified-since=file<br/>
+&#09;&#09; If-Modified-Since mode: the remote file will only be<br/>
+&#09;&#09; retrieved if it is newer than file on the local host.&#09;(HTTP<br/>
+&#09;&#09; only)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--key=file&#09; [SSL] file is a PEM encoded client key&#09;that will be used in<br/>
+&#09;&#09; client&#09;certificate authentication in case key and client cer-<br/>
+&#09;&#09; tificate are stored separately.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-l, --symlink<br/>
+&#09;&#09; If the&#09;target is a file-scheme&#09;URL, make a symbolic link to<br/>
+&#09;&#09; the target rather than&#09;trying to copy it.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-M<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-m, --mirror<br/>
+&#09;&#09; Mirror&#09;mode: if the file already exists locally and has the<br/>
+&#09;&#09; same size and modification time as the&#09;remote file, it&#09;will<br/>
+&#09;&#09; not be&#09;fetched. &nbsp;Note that the&#09;-m and -r flags&#09;are mutually<br/>
+&#09;&#09; exclusive.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-N&#09;file, --netrc=file<br/>
+&#09;&#09; Use file instead of ~/.netrc to look up login names and pass-<br/>
+&#09;&#09; words for FTP sites. &nbsp;See ftp(1) for a&#09;description of the<br/>
+&#09;&#09; file format. &nbsp;This feature is experimental.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-n, --no-mtime<br/>
+&#09;&#09; Do not&#09;preserve the modification time of the transferred<br/>
+&#09;&#09; file.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--no-passive<br/>
+&#09;&#09; Forces&#09;the FTP&#09;code to&#09;use active mode.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--no-proxy=list<br/>
+&#09;&#09; Either&#09;a single asterisk, which disables the use of proxies<br/>
+&#09;&#09; altogether, or&#09;a comma- or whitespace-separated list of hosts<br/>
+&#09;&#09; for which proxies should not be used.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--no-sslv3&#09; [SSL] Do not allow SSL&#09;version&#09;3 when negotiating the connec-<br/>
+&#09;&#09; tion.&#09;This option is deprecated and is provided for backward<br/>
+&#09;&#09; compatibility only. &nbsp;SSLv3 is disabled&#09;by default. &nbsp;Set<br/>
+&#09;&#09; SSL_ALLOW_SSL3&#09;to change this behavior.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--no-tlsv1&#09; [SSL] Do not allow TLS&#09;version&#09;1 when negotiating the connec-<br/>
+&#09;&#09; tion.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--no-verify-hostname<br/>
+&#09;&#09; [SSL] Do not verify that the hostname matches the subject of<br/>
+&#09;&#09; the certificate presented by the server.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--no-verify-peer<br/>
+&#09;&#09; [SSL] Do not verify the peer certificate against trusted CAs.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-o&#09;file, -output=file<br/>
+&#09;&#09; Set the output&#09;file name to file. &nbsp;By default,&#09;a ``pathname''<br/>
+&#09;&#09; is extracted from the specified URI, and its basename is used<br/>
+&#09;&#09; as the&#09;name of&#09;the output file. &nbsp;A file argument of `-' indi-<br/>
+&#09;&#09; cates that results are&#09;to be directed to the standard output.<br/>
+&#09;&#09; If the&#09;file argument is a directory, fetched file(s) will be<br/>
+&#09;&#09; placed&#09;within the directory, with name(s) selected as in the<br/>
+&#09;&#09; default behaviour.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-P<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-p, --passive<br/>
+&#09;&#09; Use passive FTP. &nbsp;These flags have no effect, since passive<br/>
+&#09;&#09; FTP is&#09;the default, but are provided for compatibility&#09;with<br/>
+&#09;&#09; earlier versions where&#09;active FTP was the default. &nbsp;To&#09;force<br/>
+&#09;&#09; active&#09;mode, use the --no-passive flag&#09;or set the<br/>
+&#09;&#09; FTP_PASSIVE_MODE environment variable to `NO'.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--referer=URL<br/>
+&#09;&#09; Specifies the referrer&#09;URL to use for HTTP requests. &nbsp;If URL<br/>
+&#09;&#09; is set&#09;to ``auto'', the document URL will be used as referrer<br/>
+&#09;&#09; URL.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-q, --quiet<br/>
+&#09;&#09; Quiet mode.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-R, --keep-output<br/>
+&#09;&#09; The output files are precious,&#09;and should not be deleted<br/>
+&#09;&#09; under any circumstances, even if the transfer failed or was<br/>
+&#09;&#09; incomplete.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-r, --restart<br/>
+&#09;&#09; Restart a previously interrupted transfer. &nbsp;Note that the -m<br/>
+&#09;&#09; and -r&#09;flags are mutually exclusive.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-S&#09;bytes, --require-size=bytes<br/>
+&#09;&#09; Require the file size reported&#09;by the server to match the<br/>
+&#09;&#09; specified value. &nbsp;If it does not, a message is&#09;printed&#09;and<br/>
+&#09;&#09; the file is not fetched. &nbsp;If the server does not support<br/>
+&#09;&#09; reporting file&#09;sizes, this option is ignored and the file is<br/>
+&#09;&#09; fetched unconditionally.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-s, --print-size<br/>
+&#09;&#09; Print the size&#09;in bytes of each requested file, without<br/>
+&#09;&#09; fetching it.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-T&#09;seconds, --timeout=seconds<br/>
+&#09;&#09; Set timeout value to seconds.&#09;Overrides the environment<br/>
+&#09;&#09; variables FTP_TIMEOUT for FTP transfers or HTTP_TIMEOUT for<br/>
+&#09;&#09; HTTP transfers&#09;if set.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-U, --passive-portrange-default<br/>
+&#09;&#09; When using passive FTP, allocate the port for the data&#09;con-<br/>
+&#09;&#09; nection from the low (default)&#09;port range. &nbsp;See ip(4) for<br/>
+&#09;&#09; details on how&#09;to specify which port range this corresponds<br/>
+&#09;&#09; to.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;--user-agent=agent-string<br/>
+&#09;&#09; Specifies the User-Agent string to use&#09;for HTTP requests.<br/>
+&#09;&#09; This can be useful when working with HTTP origin or proxy<br/>
+&#09;&#09; servers that differentiate between user agents.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-v, --verbose<br/>
+&#09;&#09; Increase verbosity level.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-w&#09;seconds, --retry-delay=seconds<br/>
+&#09;&#09; When the -a flag is specified,&#09;wait this many seconds between<br/>
+&#09;&#09; successive retries.</body></html>

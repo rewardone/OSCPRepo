@@ -9,6 +9,12 @@ net localgroup Administrators&#09;&#09;&#09;&#09;&#09;&#09;List users in the loc
 net localgroup Administrators rottenadmin /add &nbsp;&#09;&#09;&#09;Add a user to the localgroup Administrators<br/>
 net use * \\IP\Share /user:&lt;&gt;&#09;&#09;&#09;&#09;&#09;&#09;Connect to a share<br/>
 net view&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;View shares<br/>
+net time&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;<br/>
+net file<br/>
+net session&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;List of all established SMB sessions<br/>
+net use<br/>
+<br/>
+net config workstation&#09;&#09;&#09;&#09;&#09;&#09;NetBIOS name, full comp name, username, domain, workgroup, more<br/>
 <br/>
 net user markitzeroda hackersPassword! /add /domain /y &amp;&amp; net group "domain admins" markitzeroda /add'<ul><li style="list-style-type: none"></li>
 </ul>
@@ -25,4 +31,4 @@ netsh firewall set service remoteadmin enable<br/>
 netsh firewall set service remotedesktop enable<br/>
 <br/>
 <br/>
-net session&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;List of all established SMB sessions</body></html>
+</body></html>

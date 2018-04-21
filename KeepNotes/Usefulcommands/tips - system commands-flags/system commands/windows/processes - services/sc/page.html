@@ -8,6 +8,8 @@ sc qc Spooler<br/>
 sc config &lt;service&gt;&#09;ex: sc config &lt;service&gt; binpath= "net user rottenadmin P@ssword123! /add" <br/>
 sc create &lt;servicename&gt; binpath= “c:\windows\system32\cmd.exe /k &lt;pathtobinaryexecutable&gt;” DisplayName= &lt;displayname&gt;<br/>
 sc start &lt;servicename&gt;<br/>
+sc getkeyname &lt;servicename&gt; &#09;&#09;Use name from 'net start' to get the 'key name' you want more information on<br/>
+sc queryex &lt;key&gt;&#09;&#09;&#09;&#09;&#09;Use key from getkeyname, query status, pid, and other information<br/>
 <br/>
 Other flags<br/>
 start= auto <br/>

@@ -3,7 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Reg Query</title>
-</head><body>Examples<br/>
+</head><body>reg save &lt;key&gt; &lt;output file&gt;<br/>
+red add &lt;\\IP&gt; &lt;domain&gt; &lt;\key&gt;<br/>
+reg export &lt;domain&gt;\&lt;key&gt; &lt;output file&gt;<br/>
+reg import &lt;filename&gt;<br/>
+reg query &lt;\\ip&gt; &lt;domain&gt;\&lt;key&gt; /v &lt;value&gt;<br/>
+<br/>
+<br/>
+<br/>
+Examples<br/>
 <br/>
 reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated<br/>
 reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated<br/>

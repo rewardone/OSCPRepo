@@ -4,10 +4,12 @@
 <dict>
   <key>title</key><string>Popular Post Modules</string>
   <key>nodeid</key><string>6a73a59f-ac2e-48a4-aa98-c107d4b86474</string>
-  <key>modified_time</key><integer>1524169954</integer>
+  <key>modified_time</key><integer>1524284449</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524169928</integer>
+  <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>5</integer>
+  <key>info_sort</key><string>order</string>
 </dict>
 </node>
