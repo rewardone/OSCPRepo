@@ -33,7 +33,7 @@
 ## [TODO]
 ##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
-## Fix SNMPrecon:
+## Expand SNMPrecon:
 ##     Extend: Additional snmpwalk strings?
 ## Fix DIRB scan in dirbustEVERYTHING
 ## Expand DNSRecon
@@ -43,7 +43,9 @@
 ##     INFO: File retrieve only uses first vulnerable URL...try more? ability to specify?
 ## Expand http:
 ##		Whateb on every status 200 page, parse, and present feedback
-## Option to run reconscan with an IP range to pass to aliverecon 
+## Option to run reconscan with an IP range to pass to aliverecon
+## Expand ReconScan:
+##      Parse outputs and run through searchsploit and getsploit
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...

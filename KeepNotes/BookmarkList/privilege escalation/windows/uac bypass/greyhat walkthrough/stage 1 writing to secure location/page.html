@@ -8,4 +8,11 @@ Two good options:<br/>
 <ul><li>Using the IFileOperation COM Object</li>
 <li>Using Windows Update Standalone Installer (wusa.exe)</li>
 </ul>
-</body></html>
+<br/>
+<br/>
+From Fuzzy 27<br/>
+Traditionally, the attacker writes a dll which instantiates the IFileOperation COM object and executes a method which moves the attackers file(s) to the protected directory (eg: C:\Windows\System32\wbem\wbemcomn.dll as in the example above). To get the COM object to auto-elevate the dll is injected into a medium integrity process running in a trusted directory, commonly “explorer.exe” (-&gt; fdwReason == DLL_PROCESS_ATTACH). Sample dll source can be found in <a href="https://twitter.com/ParvezGHH">@ParvezGHH</a>&nbsp;post <a href="https://www.greyhathacker.net/?p=796">here</a>.<br/>
+<br/>
+As it turns out, however, there is a more flexible way to wield IFileOperation methods that won’t trigger alarm bells by injecting dll’s all over the place. COM objects rely on the Process Status API (<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms684884(v=vs.85).aspx">PSAPI</a>) to identify which process they are running in. The funny thing is that the PSAPI parses the process PEB to get this information but an attacker can get a handle to their own process and overwrite the PEB to fool the PSAPI and as a result any COM objects instantiated from the spoofed PID (= mind blown)!<br/>
+<br/>
+I wrote a PowerShell POC, <a href="https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Masquerade-PEB.ps1">Masquerade-PEB</a>, to illustrate this. In the example below PowerShell is masqueraded as explorer and Sysinternals process explorer is evidently also fooled..</body></html>

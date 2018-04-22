@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>EventVwr Hijack</title>
+</head><body>Before diving in too far, it is important to understand what the HKEY_CLASSES_ROOT (HKCR) and HKEY_CURRENT_USER (HKCU) registry hives are and how they interact. The HKCR hive is simply a combination of HKLM:\Software\Classes and HKCU:\Software\Classes. You can read more about HKCR and why the HKLM and HKCU hives are merged <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724475(v=vs.85).aspx">here</a>. Since these hives are merged, you can often hijack keys in HKCR:\ by creating them in HKCU:\Software\Classes. Since this relationship exists between these 2 hives, any elevated process that interacts with both HKCU and HKCR in succession are particularly interesting since you are able to tamper with values in HKCU. As a normal user, you have write access to keys in HKCU; if an elevated process interacts with keys you are able to manipulate, you can potentially interfere with actions a high-integrity process is attempting to perform. <br/>
+<br/>
+While digging deeper into the ProcMon output, I noticed that “eventvwr.exe” was interacting with <b>HKCU\Software\Classes\mscfile\shell\open\command</b>, which resulted in a “NAME NOT FOUND” result. Shortly after, eventvwr.exe was seen interacting with the key <b>HKCR\mscfile\shell\open\command</b>. Looking at <b>HKCR\mscfile\shell\open\command</b>, I noticed that the default value was set to call mmc.exe. As mentioned above, calls to HKEY_CURRENT_USER (or HKCU) from a high integrity process are particularly interesting. This often means that an elevated process is somehow interacting with a registry location that a medium integrity process can tamper with. In this case, it was observed that “eventvwr.exe” was querying <b>HKCU\Software\Classes\mscfile\shell\open\command </b>before <b>HKCR\mscfile\shell\open\command</b>. Since the HKCU value returned with “NAME NOT FOUND”, the elevated process queried the HKCR location.<br/>
+<br/>
+Since the (Default) value located in <b>HKCR\mscfile\shell\open\command </b>contained an executable, I decided to simply replace the executable with powershell.exe<br/>
+<br/>
+</body></html>

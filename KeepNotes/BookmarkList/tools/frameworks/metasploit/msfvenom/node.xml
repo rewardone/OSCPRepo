@@ -6,6 +6,7 @@
   <key>title</key><string>MSFVenom</string>
   <key>nodeid</key><string>4da82cfa-92e4-47f2-a552-eeb459baafdf</string>
   <key>modified_time</key><integer>1522678246</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516637498</integer>

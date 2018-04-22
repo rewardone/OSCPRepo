@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SilentCleanup Race Condition</title>
+</head><body>SilentCleanup is configured on stock Windows 10 installations, launchable by unpriv users, but run with high integrity. <br/>
+Discovered by going through each task and inspecting the security options for "Run with Highest Privileges" under a non elevated account such as "Users".<br/>
+<br/>
+The actual process that is started is cleanmgr.exe and auto-elevates due to "Run &nbsp;with Highest Privileges" seen earlier. <br/>
+When cleanmgr.exe executes, it creates a new folder with the name of a GUID in “C:\Users\&lt;username&gt;\AppData\Local\Temp”.<br/>
+Once cleanmgr.exe creates the temporary folder, it then copies multiple DLLs along with “dismhost.exe” into the new folder.<br/>
+After copying DismHost.exe and its DLLs to “C:\Users\&lt;username&gt;\AppData\Temp\&lt;guid&gt;”, cleanmgr.exe then starts “dismhost.exe” out of the newly created path as a high integrity process:<br/>
+Since dismhost.exe launches out of “C:\Users\&lt;username&gt;\AppData\Local\Temp\&lt;guid&gt;”, it begins to load DLLs out of the same folder in a certain order.<br/>
+<br/>
+Because the &nbsp;current medium integrity process has write access to the user’s %TEMP% directory, it is possible to hijack a DLL loaded by dismhost.exe and obtain code execution in a high integrity process. This is commonly known as a “BypassUAC” attack.<br/>
+Since <b>this particular situation is a race condition</b>, we have to replace the target DLL before dismhost.exe loads it. We examined the entire process more closely and determined that <b>“LogProvider.dll” is the last DLL loaded</b>&nbsp;by dismhost.exe, giving us the best chance for a hijack opportunity. With this information, we can use a WMI event to monitor for the creation of “C:\Users\&lt;username&gt;\AppData\Local\Temp\&lt;guid&gt;” and then assign that WMI event an action of hijacking “LogProvider.dll” by copying our “malicious” DLL into “C:\Users\&lt;username&gt;\AppData\Local\Temp\&lt;guid&gt;” and naming it “LogProvider.dll”. Since this action happens before dismhost.exe loads it, it will load our DLL instead of the intended one.<br/>
+<br/>
+After additional testing, <b>this technique does not apply to standard user accounts</b>&nbsp;as cleanmgr.exe does not extract any files to %TEMP%. When executed as a standard user in low or medium integrity, the task runs as medium integrity and never elevates past that.<br/>
+<br/>
+<br/>
+This particular technique can be remediated or fixed by disabling the task or removing the requirement for running with highest privileges. Further, if you would like to monitor for this attack, you could utilize methods/signatures to look for new WMI events as it is required to monitor for new folder creation for this attack to succeed. Combining this with App/DLL whitelisting and monitoring for abnormal modules being loaded (e.g. Sysmon event ID 7) would also limit the success of such an attack. <br/>
+As always, users should follow best practices and not use an administrative account for daily computer usage.<br/>
+</body></html>

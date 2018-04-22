@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Volatility</title>
+</head><body>Using the "<b>hivelist</b>" plugin we can now get the memory offsets for the various registry hives.<br/>
+<br/>
+<br/>
+root@Josjikawa:~/Tools/volatility# ./vol.py hivelist -f ../../Desktop/memory.dmp --profile=Win7SP1x86<br/>
+<br/>
+Volatility Foundation Volatility Framework 2.4<br/>
+<br/>
+Virtual &nbsp; &nbsp;Physical &nbsp; Name<br/>
+---------- ---------- ----<br/>
+0x988349c8 0x3945a9c8 \??\C:\Users\Fubar\AppData\Local\Microsoft\Windows\UsrClass.dat<br/>
+0x87a0c008 0x27f9f008 [no name]<br/>
+0x87a1c008 0x280ed008 \REGISTRY\MACHINE\SYSTEM &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# SYSTEM<br/>
+0x87a3a6b0 0x27d4b6b0 \REGISTRY\MACHINE\HARDWARE<br/>
+0x87abe5c0 0x2802a5c0 \SystemRoot\System32\Config\DEFAULT<br/>
+0x880b5008 0x231b7008 \SystemRoot\System32\Config\SECURITY<br/>
+0x88164518 0x231cc518 \SystemRoot\System32\Config\SAM &nbsp; &nbsp; &nbsp; &nbsp; # SAM<br/>
+0x8bd019c8 0x24aec9c8 \Device\HarddiskVolume1\Boot\BCD<br/>
+0x8bdd2008 0x24772008 \SystemRoot\System32\Config\SOFTWARE<br/>
+0x8f5549c8 0x1f39e9c8 \??\C:\Windows\ServiceProfiles\NetworkService\NTUSER.DAT<br/>
+0x90e83008 0x1f09f008 \??\C:\Windows\ServiceProfiles\LocalService\NTUSER.DAT<br/>
+0x955a9450 0x15468450 \??\C:\System Volume Information\Syscache.hve<br/>
+0x988069c8 0x3aa329c8 \??\C:\Users\Fubar\ntuser.dat<br/>
+<br/>
+<br/>
+All that remains now is to dump the hashes. To do this we need to pass volatility's "<b>hashdump</b>" module the virtual memory offsets to the SYSTEM and SAM hives, which we have.<br/>
+<br/>
+<br/>
+root@Josjikawa:~/Tools/volatility# ./vol.py hashdump -f ../../Desktop/memory.dmp --profile=Win7SP1x86<br/>
+sys-offset=0x87a1c008 sam-offset=0x88164518<br/>
+<br/>
+Volatility Foundation Volatility Framework 2.4<br/>
+<br/>
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::<br/>
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::<br/>
+Fubar:1001:aad3b435b51404eeaad3b435b51404ee:8119935c5f7fa5f57135620c8073aaca:::<br/>
+user1:1003:aad3b435b51404eeaad3b435b51404ee:7d65996108fccae892d38134a2310a4e:::</body></html>

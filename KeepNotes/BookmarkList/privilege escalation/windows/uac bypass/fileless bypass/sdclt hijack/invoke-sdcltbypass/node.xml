@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Invoke-SDCLTBypass</string>
+  <key>nodeid</key><string>5a26f503-fc9b-4a8a-9cf0-a63b14317bdf</string>
+  <key>modified_time</key><integer>1524362894</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524362884</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

@@ -11,6 +11,9 @@ In Windows Vista and later, processes run at three different levels of integrity
 <li>Mandatory Label\Medium Mandatory Level. This means I have standard user rights.</li>
 </ul>
 <br/>
+<b>Auto-Elevate</b><br/>
+If requirements are right and the process posesses the 'auto-elevate' property in their manifest file, then the program will execute with Administrator permissions. The binaries with this property should always be Microsoft signed binaries as well. The logic is that since they are signed and the user executing the binary is an admin (or part of an admin group) that Windows can silently auto-elevate and run with higher integrity. UAC Bypass looks for the binaries that posess this property and attempt to abuse them to execute without a user prompt. This is also why UAC bypass is not effective and cannot be used against a UAC setting like "Always Notify", but what corp sets that? <br/>
+<br/>
 <b>RunAs</b><br/>
 Simply runAs Administrator and ask the user to accept. Most executables can use ShellExecute and pass the 'runas' verb<br/>
 <br/>

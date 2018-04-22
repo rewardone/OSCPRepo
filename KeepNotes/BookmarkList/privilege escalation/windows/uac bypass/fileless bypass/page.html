@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Fileless Bypass</title>
+</head><body>Most of the common public techniques require a privileged file copy using the IFileOperation COM object or WUSA to extract. This technique can be seen as an alternative that doesn't rely on a privileged file copy or any code injection. <br/>
+<br/>
+Link to ../ &gt; Environment Variables In Scheduled Tasks &gt; <a href="nbk:///3a2b5aec-1e5e-41db-b904-674463077310">SilentCleanup</a>&nbsp;<br/>
+<br/>
+<br/>
+This technique differs from the other public techniques by having a few benefits that can be handy:<br/>
+&nbsp;<ul><li>This technique does not require any process injection, meaning the attack won’t get flagged by security solutions that monitor for this type of behavior. </li>
+<li>There is no privileged file copy required. Most UAC bypasses require some sort of privileged file copy in order to get a malicious DLL into a secure location to setup a DLL hijack. Since the scheduled task copies the required stuff to %TEMP%, no privileged file copy is required.</li>
+<li>This technique cleans up after itself. After the scheduled task is done (and loads our malicious DLL), the task deletes the GUID folder (and files) that it created in %TEMP%.</li>
+<li>This technique works with the UAC level being set at its highest setting (“Always Notify”) since the task is set to run with “Highest Privileges”. The majority of the public UAC bypasses rely on the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb775771(v=vs.85).aspx">IFileOperation</a>&nbsp;COM object to perform a privileged file copy. IFileOperation honors the “Always Notify” UAC setting and prompts when set, causing the privileged file copy to fail.</li>
+</ul>
+<br/>
+<br/>
+</body></html>

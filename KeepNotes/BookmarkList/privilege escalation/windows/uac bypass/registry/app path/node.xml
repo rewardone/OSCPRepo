@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>App Path</string>
+  <key>nodeid</key><string>13cf0235-9218-4a80-86aa-48a10eb8ba09</string>
+  <key>modified_time</key><integer>1524362395</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524362395</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

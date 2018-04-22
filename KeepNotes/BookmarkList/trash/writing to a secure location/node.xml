@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Writing To A Secure Location</string>
+  <key>nodeid</key><string>5a9dfcb9-4ec4-4170-ae34-232d76f92205</string>
+  <key>modified_time</key><integer>1524349288</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524349288</integer>
+  <key>order</key><integer>58</integer>
+</dict>
+</node>

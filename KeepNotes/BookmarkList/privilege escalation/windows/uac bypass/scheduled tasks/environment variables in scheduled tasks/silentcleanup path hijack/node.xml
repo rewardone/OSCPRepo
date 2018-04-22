@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>SilentCleanup PATH Hijack</string>
+  <key>nodeid</key><string>3a2b5aec-1e5e-41db-b904-674463077310</string>
+  <key>modified_time</key><integer>1524360488</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524188012</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

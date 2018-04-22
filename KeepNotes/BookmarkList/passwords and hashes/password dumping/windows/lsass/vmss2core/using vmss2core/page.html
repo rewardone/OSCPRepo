@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Using</title>
+</head><body># We are working with a suspended state so we need to combine *.vmss and *.vmem. If we were<br/>
+&nbsp; dealing with a snapshot we would need to combine *.vmsn and *.vmem.<br/>
+&#09;<br/>
+Avalon:Tools b33f$ ./vmss2core_mac64 -W<br/>
+/Users/b33f/Documents/VMware/VMs/Win7-Testbed/Windows\ 7.vmwarevm/Windows\ 7-e7a44fca.vmss <br/>
+/Users/b33f/Documents/VMware/VMs/Win7-Testbed/Windows\ 7.vmwarevm/Windows\ 7-e7a44fca.vmem<br/>
+<br/>
+vmss2core version 3157536 Copyright (C) 1998-2013 VMware, Inc. All rights reserved.<br/>
+Win32: found DDB at PA 0x2930c28<br/>
+Win32: MmPfnDatabase=0x82970700<br/>
+Win32: PsLoadedModuleList=0x82950850<br/>
+Win32: PsActiveProcessHead=0x82948f18<br/>
+Win32: KiBugcheckData=0x82968a40<br/>
+Win32: KernBase=0x82806000<br/>
+<br/>
+Win32: NtBuildLab=0x82850fa8<br/>
+Win: ntBuildLab=7601.17514.x86fre.win7sp1_rtm.101119-1850 &nbsp;# Win7 SP1 x86<br/>
+CoreDumpScanWin32: MinorVersion set to 7601<br/>
+... 10 MBs written.<br/>
+... 20 MBs written.<br/>
+... 30 MBs written.<br/>
+... 40 MBs written.<br/>
+... 50 MBs written.<br/>
+<br/>
+[...Snip...]<br/>
+<br/>
+Finished writing core.</body></html>

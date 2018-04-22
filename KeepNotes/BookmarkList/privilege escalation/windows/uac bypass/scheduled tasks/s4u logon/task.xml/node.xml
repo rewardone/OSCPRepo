@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>task.xml</string>
+  <key>nodeid</key><string>e4e5ef55-00ed-4c1d-9884-42bd92c3bd1b</string>
+  <key>modified_time</key><integer>1524360681</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524360675</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>
