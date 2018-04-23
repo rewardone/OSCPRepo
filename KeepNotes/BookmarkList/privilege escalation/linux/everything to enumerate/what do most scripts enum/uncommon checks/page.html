@@ -6,6 +6,20 @@
 </head><body>uncommon_checks<br/>
 ###############################################################################################################<br/>
 #<br/>
+####SYSTEM#####<br/>
+# getenforce<br/>
+# Get the status of SELinux (Enforcing, Permissive or Disabled)<br/>
+# dmesg &nbsp; &nbsp;<br/>
+# Informations from the last system boot<br/>
+# lspci<br/>
+# prints all PCI buses and devices<br/>
+# lsusb<br/>
+# prints all USB buses and devices/h<br/>
+# lscpu<br/>
+# prints CPU information<br/>
+# lshw<br/>
+# cat /proc/cpuinfo &nbsp; <br/>
+# cat /proc/meminfo<br/>
 ####SECURITY####<br/>
 # SELinux 'enforce'<br/>
 # NX bit<br/>
@@ -22,7 +36,8 @@
 ####AUTHENTICATION####<br/>
 # check if NIS used <br/>
 # check if LDAP used<br/>
-#<br/>
+# Kerberos tickets: /tmp/krb5cc_*, /tmp/krb5.keytab<br/>
+# PGP keys: /home/*/.gnupg/secring.gpgs<br/>
 ####FILES####<br/>
 # .plan files<br/>
 # .rhosts files<br/>

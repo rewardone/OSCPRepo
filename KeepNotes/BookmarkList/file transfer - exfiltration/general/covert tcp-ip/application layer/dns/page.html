@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DNS</title>
+</head><body>Domain Name System (DNS). DNS is very suitable for creating covert channels for tunnelling other protocols,<br/>
+for example IP, TCP or UDP over DNS. Specially interested are NS, CNAME and TXT records with length up<br/>
+to 255B, and experimental NULL record with length up to 65536B (300B-1200B in implementations).<br/>
+Two IPv4-over-DNS tools implemented in C, are Nameserver Transfer Protocol - NSTX [100] and Iodine [60].<br/>
+Both split IP packets into several chunks, send them separately, then reassemble the IP packets at the other<br/>
+endpoint. For encoding data into queries, NSTX uses a non-compliant Base64 encoding, and replies are carried<br/>
+with TXT records. Iodine has support for a DNS extension EDNS0, which allows to use DNS packets longer<br/>
+than the initially chosen 512-byte limit. For download traffic, Iodine uses NULL records (or TXT, SRV, MX,<br/>
+CNAME, A records), and upload traffic is gzziped and Base32 or non-compliant Base64 encoded in the Domain<br/>
+Name field from DNS Resource record. DNSCat [94] is a Java IPv4-over-DNS tool which uses CNAME records<br/>
+for download traffic. TUNS [87] is another IPv4-over-DNS tool (in Ruby), which doesn‘t split IP packets. It uses<br/>
+only CNAME records with Base32 encoding for sending data, which are frequently used in normal DNS traffic,<br/>
+so TUNS traffic is harder to filter. TUNS uses caching to resolve the problem with duplicated DNS queries and<br/>
+experiments showed that for perfect network conditions it is the slowest implementation, but in presence of packet<br/>
+loss, performs much better.<br/>
+OzymanDNS [55] and DNS2TCP [25] are two tools for tunnelling TCP or SSH over DNS, which use TXT records.<br/>
+Their main drawback is that they must provide a reliable communication channel over an unreliable protocol,<br/>
+and thus deal with losses, retransmissions, reordering and duplication of DNS packets.<br/>
+Covert timing channel for DNS, which uses DNS negative caching, i.e. caching NXDOMAIN answer for nonexistent<br/>
+domains, is given in [8]. By querying a previously agreed set of subdomains of one non-existent domain,<br/>
+two hosts can covertly exchange messages, treating each cached subdomain as a binary one, and non-cached domain as binary zero. There is no need hosts to maintain or run a DNS server, and no need to know each other<br/>
+addresses.<br/>
+Another interesting area for deployment of covert channels are real-time applications over IP, as for example<br/>
+Voice over IP (VoIP), on-line multi-player games, streaming live A/V, etc. In these applications, usually audio<br/>
+and/or video is transmitted using separated streams by Real-Time Transport Protocol (RTP), supported by its<br/>
+companion RTP Control Protocol (RTCP). One part of the RTP works in the Transport layer above UDP, and<br/>
+second in the Application layer. On the other hand, VoIP has signalling phase at the beginning (before audio<br/>
+transfer using RTP), which is carrying by some signalling protocol, like Session Initiation Protocol (SIP). SIP<br/>
+usually is accompanied by some protocol for description of multimedia sessions, like Session Description Protocol<br/>
+(SDP).<br/>
+<br/>
+<img src="image.png" /></body></html>

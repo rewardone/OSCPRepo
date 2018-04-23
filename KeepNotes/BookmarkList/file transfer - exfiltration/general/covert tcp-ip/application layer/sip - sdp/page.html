@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SIP / SDP</title>
+</head><body>Session Initiation Protocol (SIP) and Session Description Protocol (SDP). Mazurczyk and Szczypiorski<br/>
+[77] suggest to use some tokens and fields in SIP for hiding data, like randomly generated tag in From field<br/>
+(which forms SIP dialog identifier), branch in Via field (which forms transaction identifier), Call-ID field (which<br/>
+uniquely identifies a call), first part of CSeq field (initial sequence number that serves as a way to identify and<br/>
+order transactions), Max-Forwards fields and several other fields. They also suggest to hide data in SDP in the<br/>
+fields v (version field ignored by SIP), o (owner/creator), s (session name - field ignored by SIP), t (time session<br/>
+is active - field ignored by SIP), and k (potential encryption key if the secure communication is used). Another<br/>
+covert channel exploits the fact that the order of headers in the SIP/SDP message depends on implementation,<br/>
+thus reordering of headers is possible as a mean to covertly send data. For example, Call-ID field after CSeq field<br/>
+is binary 1, and opposite is binary 0. Fields are not case sensitive, so one can create channel by using upcase for<br/>
+binary 1 and lowercase for binary 0.<br/>
+The authors of [77] suggest also creating of covert channels in SIP and SDP using security mechanisms for<br/>
+providing authentication and confidentiality. SDP content embedded into the SIP INVITE message, may be<br/>
+encrypted and signed using S/MIME, and the secured parts of the message are divided from themselves using<br/>
+boundary randomly generated value, so this is first possible covert channel. Second possibility is to use the<br/>
+signature bits inside the boundary values (application/pkcs7-signature) to transfer covert data.</body></html>

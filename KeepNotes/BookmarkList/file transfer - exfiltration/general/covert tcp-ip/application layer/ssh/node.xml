@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>SSH</string>
+  <key>nodeid</key><string>761e06d1-d0e2-4b2c-acc6-f1767c6ed690</string>
+  <key>modified_time</key><integer>1524495859</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524495787</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

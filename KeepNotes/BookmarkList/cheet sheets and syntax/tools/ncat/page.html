@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ncat</title>
+</head><body>http://alexcreek.com/ncat-cheatsheet.html<br/>
+https://bitrot.sh/cheatsheet/19-12-2017-ncat/<br/>
+<br/>
+Ncat<br/>
+Ncat is a piece of software created by the same person who made Nmap, Fyodor, as an upgrade to netcat.<br/>
+<br/>
+Ncat command output:(from: http://nmap.org/book/ncat-man-options-summary.html) <br/>
+Ncat 6.46 ( http://nmap.org/ncat )<br/>
+Usage: ncat [options] [hostname] [port]<br/>
+<br/>
+Options taking a time assume seconds. Append 'ms' for milliseconds,<br/>
+'s' for seconds, 'm' for minutes, or 'h' for hours (e.g. 500ms).<br/>
+&nbsp; -4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use IPv4 only<br/>
+&nbsp; -6 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use IPv6 only<br/>
+&nbsp; -U, --unixsock &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use Unix domain sockets only<br/>
+&nbsp; -C, --crlf &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use CRLF for EOL sequence<br/>
+&nbsp; -c, --sh-exec &lt;command&gt; &nbsp; &nbsp;Executes the given command via /bin/sh<br/>
+&nbsp; -e, --exec &lt;command&gt; &nbsp; &nbsp; &nbsp; Executes the given command<br/>
+&nbsp; &nbsp; &nbsp; --lua-exec &lt;filename&gt; &nbsp;Executes the given Lua script<br/>
+&nbsp; -g hop1[,hop2,...] &nbsp; &nbsp; &nbsp; &nbsp; Loose source routing hop points (8 max)<br/>
+&nbsp; -G &lt;n&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Loose source routing hop pointer (4, 8, 12, ...)<br/>
+&nbsp; -m, --max-conns &lt;n&gt; &nbsp; &nbsp; &nbsp; &nbsp;Maximum &lt;n&gt; simultaneous connections<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Display this help screen<br/>
+&nbsp; -d, --delay &lt;time&gt; &nbsp; &nbsp; &nbsp; &nbsp; Wait between read/writes<br/>
+&nbsp; -o, --output &lt;filename&gt; &nbsp; &nbsp;Dump session data to a file<br/>
+&nbsp; -x, --hex-dump &lt;filename&gt; &nbsp;Dump session data as hex to a file<br/>
+&nbsp; -i, --idle-timeout &lt;time&gt; &nbsp;Idle read/write timeout<br/>
+&nbsp; -p, --source-port port &nbsp; &nbsp; Specify source port to use<br/>
+&nbsp; -s, --source addr &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Specify source address to use (doesn't affect -l)<br/>
+&nbsp; -l, --listen &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Bind and listen for incoming connections<br/>
+&nbsp; -k, --keep-open &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Accept multiple connections in listen mode<br/>
+&nbsp; -n, --nodns &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Do not resolve hostnames via DNS<br/>
+&nbsp; -t, --telnet &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Answer Telnet negotiations<br/>
+&nbsp; -u, --udp &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Use UDP instead of default TCP<br/>
+&nbsp; &nbsp; &nbsp; --sctp &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use SCTP instead of default TCP<br/>
+&nbsp; -v, --verbose &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Set verbosity level (can be used several times)<br/>
+&nbsp; -w, --wait &lt;time&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Connect timeout<br/>
+&nbsp; &nbsp; &nbsp; --append-output &nbsp; &nbsp; &nbsp; &nbsp;Append rather than clobber specified output files<br/>
+&nbsp; &nbsp; &nbsp; --send-only &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Only send data, ignoring received; quit on EOF<br/>
+&nbsp; &nbsp; &nbsp; --recv-only &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Only receive data, never send anything<br/>
+&nbsp; &nbsp; &nbsp; --allow &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Allow only given hosts to connect to Ncat<br/>
+&nbsp; &nbsp; &nbsp; --allowfile &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;A file of hosts allowed to connect to Ncat<br/>
+&nbsp; &nbsp; &nbsp; --deny &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Deny given hosts from connecting to Ncat<br/>
+&nbsp; &nbsp; &nbsp; --denyfile &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; A file of hosts denied from connecting to Ncat<br/>
+&nbsp; &nbsp; &nbsp; --broker &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Enable Ncat's connection brokering mode<br/>
+&nbsp; &nbsp; &nbsp; --chat &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Start a simple Ncat chat server<br/>
+&nbsp; &nbsp; &nbsp; --proxy &lt;addr[:port]&gt; &nbsp;Specify address of host to proxy through<br/>
+&nbsp; &nbsp; &nbsp; --proxy-type &lt;type&gt; &nbsp; &nbsp;Specify proxy type ("http" or "socks4" or "socks5")<br/>
+&nbsp; &nbsp; &nbsp; --proxy-auth &lt;auth&gt; &nbsp; &nbsp;Authenticate with HTTP or SOCKS proxy server<br/>
+&nbsp; &nbsp; &nbsp; --ssl &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Connect or listen with SSL<br/>
+&nbsp; &nbsp; &nbsp; --ssl-cert &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Specify SSL certificate file (PEM) for listening<br/>
+&nbsp; &nbsp; &nbsp; --ssl-key &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Specify SSL private key (PEM) for listening<br/>
+&nbsp; &nbsp; &nbsp; --ssl-verify &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Verify trust and domain name of certificates<br/>
+&nbsp; &nbsp; &nbsp; --ssl-trustfile &nbsp; &nbsp; &nbsp; &nbsp;PEM file containing trusted SSL certificates<br/>
+&nbsp; &nbsp; &nbsp; --version &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Display Ncat's version information and exit<br/>
+<br/>
+See the ncat(1) manpage for full options, descriptions and usage examples</body></html>

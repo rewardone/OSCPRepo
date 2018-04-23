@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Initial Access</title>
+</head><body>Initial Access<br/>
+Tactic Description<br/>
+The initial access tactic represents the vectors adversaries use to gain an initial foothold within a network.<br/>
+<br/>
+Techniques<br/>
+Below is a list of all the Initial Access techniques in enterprise:<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1189">Drive-by Compromise</a><br/>
+A drive-by compromise is when an adversary gains access to a system through a user visiting a website over the normal course of browsing. With this technique, the user's web browser is targeted for exploitation. This can happen in several ways, but there are a few main components:<br/>
+Multiple ways of delivering exploit code to a browser exist, including:<br/>
+<ul><li>A legitimate website is compromised where adversaries have injected some form of malicious code such as JavaScript, iFrames, cross-site scripting.</li>
+<li>Malicious ads are paid for and served through legitimate ad providers.</li>
+<li>Built-in web application interfaces are leveraged for the insertion of any other kind of object that can be used to display web content or contain a script that executes on the visiting client (e.g. forum posts, comments, and other user controllable web content).</li>
+<li>Often the website used by an adversary is one visited by a specific community, such as government, a particular industry, or region, where the goal is to compromise a specific user or set of users based on a shared interest. This kind of targeted attack is referred to a strategic web compromise or watering hole attack. There are several known examples of this occurring.1</li>
+</ul>
+<br/>
+Typical drive-by compromise process:<br/>
+<ul><li>A user visits a website that is used to host the adversary controlled content.</li>
+<li>Scripts automatically execute, typically searching versions of the browser and plugins for a potentially vulnerable version.</li>
+<li style="list-style-type: none"><ul><li>The user may be required to assist in this process by enabling scripting or active website components and ignoring warning dialog boxes.</li>
+</ul>
+</li>
+<li>Upon finding a vulnerable version, exploit code is delivered to the browser.</li>
+<li>If exploitation is successful, then it will give the adversary code execution on the user's system unless other protections are in place.</li>
+<li style="list-style-type: none"><ul><li>In some cases a second visit to the website after the initial scan is required before exploit code is delivered.</li>
+</ul>
+</li>
+</ul>
+Unlike Exploit Public-Facing Application, the focus of this technique is to exploit software on a client endpoint upon visiting a website. This will commonly give an adversary access to systems on the internal network instead of external systems that may be in a DMZ.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1190">Exploit Public-Facing Application</a><br/>
+The use of software, data, or commands to take advantage of a weakness in an Internet-facing computer system or program in order to cause unintended or unanticipated behavior. The weakness in the system can be a bug, a glitch, or a design vulnerability. These applications are often websites, but can include databases (like SQL)2, standard services (like SMB3 or SSH), and any other applications with Internet accessible open sockets, such as web servers and related services.4 Depending on the flaw being exploited this may include Exploitation for Defense Evasion. For websites and databases, the OWASP top 10 gives a good list of the top 10 most common web-based vulnerabilities.5<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1200">Hardware Additions</a><br/>
+Computer accessories, computers or networking hardware may be introduced into a system as a vector to gain execution. While public references of usage by APT groups are scarce, many penetration testers leverage hardware additions for initial access. Commercial and open source products are leveraged with capabilities such as passive network tapping6, man-in-the middle encryption breaking7, keystroke injection8, kernel memory reading via DMA9, adding new wireless access to an existing network10, and others.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1091">Replication Through Removable Media</a><br/>
+Adversaries may move onto systems, possibly those on disconnected or air-gapped networks, by copying malware to removable media and taking advantage of Autorun features when the media is inserted into a system and executes. In the case of Lateral Movement, this may occur through modification of executable files stored on removable media or by copying malware and renaming it to look like a legitimate file to trick users into executing it on a separate system. In the case of Initial Access, this may occur through manual manipulation of the media, modification of systems used to initially format the media, or modification to the media's firmware itself.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1193">Spearphishing Attachment</a><br/>
+Spearphishing attachment is a specific variant of spearphishing. Spearphishing attachment is different from other forms of spearphishing in that it employs the use of malware attached to an email. All forms of spearphishing are electronically delivered social engineering targeted at a specific individual, company, or industry. In this scenario, adversaries attach a file to the spearphishing email and usually rely upon User Execution to gain execution. There are many options for the attachment such as Microsoft Office documents, executables, PDFs, or archived files. Upon opening the attachment (and potentially clicking past protections), the adversary's payload exploits a vulnerability or directly executes on the user's system. The text of the spearphishing email usually tries to give a plausible reason why the file should be opened, and may explain how to bypass system protections in order to do so. The email may also contain instructions on how to decrypt an attachment, such as a zip file password, in order to evade email boundary defenses. adversaries frequently manipulate file extensions and icons in order to make attached executables appear to be document files, or files exploiting one application appear to be a file for a different one.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1192">Spearphishing Link</a><br/>
+Spearphishing with a link is a specific variant of spearphishing. It is different from other forms of spearphishing in that it employs the use of links to download malware contained in email, instead of attachment malicious files to the email itself, to avoid defenses that may inspect email attachments. All forms of spearphishing are electronically delivered social engineering targeted at a specific individual, company, or industry. In this case, the malicious emails contain links. Generally, the links will be accompanied by social engineering text and require the user to actively click or copy and paste a URL into a browser, leveraging User Execution. The visited website may compromise the web browser using an exploit, or the user will be prompted to download applications, documents, zip files, or even executables depending on the pretext for the email in the first place. Adversaries may also include links that are intended to interact directly with an email reader, including embedded images intended to exploit the end system directly or verify the receipt of an email (i.e. web bugs/web beacons).<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1194">Spearphishing via Service</a><br/>
+Spearphishing via service is a specific variant of spearphishing. It is different from other forms of spearphishing in that it employs the use of third party services rather than directly via enterprise email channels.<br/>
+All forms of spearphishing are electronically delivered social engineering targeted at a specific individual, company, or industry. In this scenario, adversaries send messages through various social media services, personal webmail, and other non-enterprise controlled services. These services are more likely to have a less-strict security policy than an enterprise. As with most kinds of spearphishing, the goal is to generate rapport with the target or get the target's interest in some way. Adversaries will create fake social media accounts and message employees for potential job opportunities. Doing so allows a plausible reason for asking about services, policies, and software that's running in an environment. The adversary can then send malicious links or attachments through these services.<br/>
+<br/>
+A common example is to build rapport with a target via social media, then send content to a personal webmail service that the target uses on their work computer. This allows an adversary to bypass some email restrictions on the work account, and the target is more likely to open the file since it's something they were expecting. If the payload doesn't work as expected, the adversary can continue normal communications and troubleshoot with the target on how to get it working.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1195">Supply Chain Compromise</a><br/>
+Supply chain compromise is the manipulation of products or product delivery mechanisms prior to receipt by a final consumer for the purpose of data or system compromise. Supply chain compromise can take place at any stage of the supply chain including:<ul><li>Manipulation of development tools</li>
+<li>Manipulation of a development environment</li>
+<li>Manipulation of source code repositories (public or private)</li>
+<li>Manipulation of software update/distribution mechanisms</li>
+<li>Compromised/infected system images (multiple cases of removable media infected at the factory)</li>
+<li>Replacement of legitimate software with modified versions</li>
+<li>Sales of modified/counterfeit products to legitimate distributors</li>
+<li>Shipment interdiction</li>
+</ul>
+While supply chain compromise can impact any component of hardware or software, attackers looking to gain execution have often focused on malicious additions to legitimate software in software distribution or update channels.111213 Targeting may be specific to a desired victim set14 or malicious software may be distributed to a broad set of consumers but only move on to additional tactics on specific victims.1113<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1199">Trusted Relationship</a><br/>
+Adversaries may breach or otherwise leverage organizations who have access to intended victims. Access through trusted third party relationship exploits an existing connection that may not be protected or receives less scrutiny than standard mechanisms of gaining access to a network. Organizations often grant elevated access to second or third-party external providers in order to allow them to manage internal systems. Some examples of these relationships include IT services contractors, managed security providers, infrastructure contractors (e.g. HVAC, elevators, physical security). The third-party provider's access may be intended to be limited to the infrastructure being maintained, but may exist on the same network as the rest of the enterprise. As such, Valid Accounts used by the other party for access to internal network systems may be compromised and used.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1078">Valid Accounts</a><br/>
+Adversaries may steal the credentials of a specific user or service account using Credential Access techniques or capture credentials earlier in their reconnaissance process through social engineering for means of gaining Initial Access.<br/>
+Compromised credentials may be used to bypass access controls placed on various resources on systems within the network and may even be used for persistent access to remote systems and externally available services, such as VPNs, Outlook Web Access and remote desktop. Compromised credentials may also grant an adversary increased privilege to specific systems or access to restricted areas of the network. Adversaries may choose not to use malware or tools in conjunction with the legitimate access those credentials provide to make it harder to detect their presence.<br/>
+<br/>
+Adversaries may also create accounts, sometimes using pre-defined account names and passwords, as a means for persistence through backup access in case other means are unsuccessful.<br/>
+<br/>
+The overlap of credentials and permissions across a network of systems is of concern because the adversary may be able to pivot across accounts and systems to reach a high level of access (i.e., domain or enterprise administrator) to bypass access controls set within the enterprise.15</body></html>

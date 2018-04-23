@@ -45,7 +45,16 @@
 ##		Whateb on every status 200 page, parse, and present feedback
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
-##      Parse outputs and run through searchsploit and getsploit
+##      POST SCAN COMPLETION:
+##           Parse outputs and run through searchsploit and getsploit
+##           If windows: give additional commands to run 
+##                (if Windows AND SMB: github/enternal_check) #not mandatory because of additional dependencies
+##                                                            #unless they are already in Kali...
+##
+## Expand ReconScan:
+##      Other tools to consider: WHOIS, TheHarvester, Metagoofil, DNSRecon, Sublist3r
+##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti
+##      Other tools to consider: WPscan, WPscanner, WPSeku, Droopescan, SSLScan, SSLyze A2SV
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...

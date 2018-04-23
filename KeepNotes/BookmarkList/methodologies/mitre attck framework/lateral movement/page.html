@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Lateral Movement</title>
+</head><body>Lateral Movement<br/>
+Tactic Description<br/>
+Lateral movement consists of techniques that enable an adversary to access and control remote systems on a network and could, but does not necessarily, include execution of tools on remote systems. The lateral movement techniques could allow an adversary to gather information from a system without needing additional tools, such as a remote access tool.<br/>
+<br/>
+An adversary can use lateral movement for many purposes, including remote Execution of tools, pivoting to additional systems, access to specific information or files, access to additional credentials, or to cause an effect. The ability to remotely execute scripts or code can be a feature of adversary remote access tools, but adversaries may also reduce their tool footprint on the network by using legitimate credentials alongside inherent network and operating system functionality to remotely connect to systems.<br/>
+<br/>
+Movement across a network from one system to another may be necessary to achieve an adversary’s goals. Thus lateral movement, and the techniques that lateral movement relies on, are often very important to an adversary's set of capabilities and part of a broader set of information and access dependencies that the adversary takes advantage of within a network. To understand intrinsic security dependencies, it is important to know the relationships between accounts and access privileges across all systems on a network.1 Lateral movement may not always be a requirement for an adversary. If an adversary can reach the goal with access to the initial system, then additional movement throughout a network may be unnecessary.<br/>
+<br/>
+Techniques<br/>
+Below is a list of all the Lateral Movement techniques in enterprise:<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1155">AppleScript</a>&nbsp;<br/>
+macOS and OS X applications send AppleEvent messages to each other for interprocess communications (IPC). These messages can be easily scripted with AppleScript for local or remote IPC. Osascript executes AppleScript and any other Open Scripting Architecture (OSA) language scripts. A list of OSA languages installed on a system can be found by using the osalang program.<br/>
+AppleEvent messages can be sent independently or as part of a script. These events can locate open windows, send keystrokes, and interact with almost any open application locally or remotely.<br/>
+<br/>
+Adversaries can use this to interact with open SSH connection, move to remote machines, and even present users with fake dialog boxes. These events cannot start applications remotely (they can start them locally though), but can interact with applications if they're already running remotely. Since this is a scripting language, it can be used to launch more common techniques as well such as a reverse shell via python 2. Scripts can be run from the command lie via osascript /path/to/script or osascript -e "script here".<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1017">Application Deployment Software</a>&nbsp;<br/>
+Adversaries may deploy malicious software to systems within a network using application deployment systems employed by enterprise administrators. The permissions required for this action vary by system configuration; local credentials may be sufficient with direct access to the deployment server, or specific domain credentials may be required. However, the system may require an administrative account to log in or to perform software deployment. Access to a network-wide or enterprise-wide software deployment system enables an adversary to have remote code execution on all systems that are connected to such a system. The access may be used to laterally move to systems, gather information, or cause a specific effect, such as wiping the hard drives on all endpoints.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1175">Distributed Component Object Model</a>&nbsp;<br/>
+Windows Distributed Component Object Model (DCOM) is transparent middleware that extends the functionality of Component Object Model (COM)3 beyond a local computer using remote procedure call (RPC) technology. COM is a component of the Windows application programming interface (API) that enables interaction between software objects. Through COM, a client object can call methods of server objects, which are typically Dynamic Link Libraries (DLL) or executables (EXE).<br/>
+Permissions to interact with local and remote server COM objects are specified by access control lists (ACL) in the Registry.456 By default, only Administrators may remotely activate and launch COM objects through DCOM.<br/>
+<br/>
+Adversaries may use DCOM for lateral movement. Through DCOM, adversaries operating in the context of an appropriately privileged user can remotely obtain arbitrary and even direct shellcode execution through Office applications7 as well as other Windows objects that contain insecure methods.89 DCOM can also execute macros in existing documents10 and may also invoke Dynamic Data Exchange (DDE) execution directly through a COM created instance of a Microsoft Office application11, bypassing the need for a malicious document.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1210">Exploitation of Remote Services</a><br/>
+Exploitation of a software vulnerability occurs when an adversary takes advantage of a programming error in a program, service, or within the operating system software or kernel itself to execute adversary-controlled code. A common goal for post-compromise exploitation of remote services is for lateral movement to enable access to a remote system.<br/>
+An adversary may need to determine if the remote system is in a vulnerable state, which may be done through Network Service Scanning or other Discovery methods looking for common, vulnerable software that may be deployed in the network, the lack of certain patches that may indicate vulnerabilities, or security software that may be used to detect or contain remote exploitation. Servers are likely a high value target for lateral movement exploitation, but endpoint systems may also be at risk if they provide an advantage or access to additional resources.<br/>
+<br/>
+There are several well-known vulnerabilities that exist in common services such as SMB12 and RDP13 as well as applications that may be used within internal networks such as MySQL14 and web server services.15<br/>
+<br/>
+Depending on the permissions level of the vulnerable remote service an adversary may achieve Exploitation for Privilege Escalation as a result of lateral movement exploitation as well.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1037">Logon Scripts</a>&nbsp;<br/>
+<b>Windows</b>&nbsp;<br/>
+Windows allows logon scripts to be run whenever a specific user or group of users log into a system.16 The scripts can be used to perform administrative functions, which may often execute other programs or send information to an internal logging server.<br/>
+<br/>
+If adversaries can access these scripts, they may insert additional code into the logon script to execute their tools when a user logs in. This code can allow them to maintain persistence on a single system, if it is a local script, or to move laterally within a network, if the script is stored on a central server and pushed to many systems. Depending on the access configuration of the logon scripts, either local credentials or an administrator account may be necessary.<br/>
+<br/>
+<b>Mac</b><br/>
+Mac allows login and logoff hooks to be run as root whenever a specific user logs into or out of a system. A login hook tells Mac OS X to execute a certain script when a user logs in, but unlike startup items, a login hook executes as root17. There can only be one login hook at a time though. If adversaries can access these scripts, they can insert additional code to the script to execute their tools when a user logs in.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1075">Pass the Hash</a>&nbsp;<br/>
+Pass the hash (PtH) is a method of authenticating as a user without having access to the user's cleartext password. This method bypasses standard authentication steps that require a cleartext password, moving directly into the portion of the authentication that uses the password hash. In this technique, valid password hashes for the account being used are captured using a Credential Access technique. Captured hashes are used with PtH to authenticate as that user. Once authenticated, PtH may be used to perform actions on local or remote systems. Windows 7 and higher with KB2871997 require valid domain user credentials or RID 500 administrator hashes.18<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1097">Pass the Ticket</a>&nbsp;<br/>
+Pass the ticket (PtT) is a method of authenticating to a system using Kerberos tickets without having access to an account's password. Kerberos authentication can be used as the first step to lateral movement to a remote system.<br/>
+In this technique, valid Kerberos tickets for Valid Accounts are captured by Credential Dumping. A user's service tickets or ticket granting ticket (TGT) may be obtained, depending on the level of access. A service ticket allows for access to a particular resource, whereas a TGT can be used to request service tickets from the Ticket Granting Service (TGS) to access any resource the user has privileges to access.1920<br/>
+<br/>
+Silver Tickets can be obtained for services that use Kerberos as an authentication mechanism and are used to generate tickets to access that particular resource and the system that hosts the resource (e.g., SharePoint).19<br/>
+<br/>
+Golden Tickets can be obtained for the domain using the Key Distribution Service account KRBTGT account NTLM hash, which enables generation of TGTs for any account in Active Directory.21<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1076">Remote Desktop Protocol</a>&nbsp;<br/>
+Remote desktop is a common feature in operating systems. It allows a user to log into an interactive session with a system desktop graphical user interface on a remote system. Microsoft refers to its implementation of the Remote Desktop Protocol (RDP) as Remote Desktop Services (RDS).22 There are other implementations and third-party tools that provide graphical access Remote Services similar to RDS.<br/>
+Adversaries may connect to a remote system over RDP/RDS to expand access if the service is enabled and allows access to accounts with known credentials. Adversaries will likely use Credential Access techniques to acquire credentials to use with RDP. Adversaries may also use RDP in conjunction with the Accessibility Features technique for Persistence.23<br/>
+<br/>
+Adversaries may also perform RDP session hijacking which involves stealing a legitimate user's remote session. Typically, a user is notified when someone else is trying to steal their session and prompted with a question. With System permissions and using Terminal Services Console, c:\windows\system32\tscon.exe [session number to be stolen], an adversary can hijack a session without the need for credentials or prompts to the user.24 This can be done remotely or locally and with active or disconnected sessions.25 It can also lead to Remote System Discovery and Privilege Escalation by stealing a Domain Admin or higher privileged account session. All of this can be done by using native Windows commands, but it has also been added as a feature in RedSnarf.26<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1105">Remote File Copy</a>&nbsp;<br/>
+Files may be copied from one system to another to stage adversary tools or other files over the course of an operation. Files may be copied from an external adversary-controlled system through the Command and Control channel to bring tools into the victim network or through alternate protocols with another tool such as FTP. Files can also be copied over on Mac and Linux with native tools like scp, rsync, and sftp. Adversaries may also copy files laterally between internal victim systems to support Lateral Movement with remote Execution using inherent file sharing protocols such as file sharing over SMB to connected network shares or with authenticated connections with Windows Admin Shares or Remote Desktop Protocol.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1021">Remote Services</a>&nbsp;<br/>
+An adversary may use Valid Accounts to log into a service specifically designed to accept remote connections, such as telnet, SSH, and VNC. The adversary may then perform actions as the logged-on user<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1091">Replication Through Removable Media</a>&nbsp;<br/>
+Adversaries may move onto systems, possibly those on disconnected or air-gapped networks, by copying malware to removable media and taking advantage of Autorun features when the media is inserted into a system and executes. In the case of Lateral Movement, this may occur through modification of executable files stored on removable media or by copying malware and renaming it to look like a legitimate file to trick users into executing it on a separate system. In the case of Initial Access, this may occur through manual manipulation of the media, modification of systems used to initially format the media, or modification to the media's firmware itself.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1184">SSH Hijacking</a>&nbsp;<br/>
+Secure Shell (SSH) is a standard means of remote access on Linux and Mac systems. It allows a user to connect to another system via an encrypted tunnel, commonly authenticating through a password, certificate or the use of an asymmetric encryption key pair.<br/>
+In order to move laterally from a compromised host, adversaries may take advantage of trust relationships established with other systems via public key authentication in active SSH sessions by hijacking an existing connection to another system. This may occur through compromising the SSH agent itself or by having access to the agent's socket. If an adversary is able to obtain root access, then hijacking SSH sessions is likely trivial.272829 Compromising the SSH agent also provides access to intercept SSH credentials.30<br/>
+<br/>
+SSH Hijacking differs from use of Remote Services because it injects into an existing SSH session rather than creating a new session using Valid Accounts.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1051">Shared Webroot</a>&nbsp;<br/>
+Adversaries may add malicious content to an internally accessible website through an open network file share that contains the website's webroot or Web content directory and then browse to that content with a Web browser to cause the server to execute the malicious content. The malicious content will typically run under the context and permissions of the Web server process, often resulting in local system or administrative privileges, depending on how the Web server is configured. This mechanism of shared access and remote execution could be used for lateral movement to the system running the Web server. For example, a Web server running PHP with an open network share could allow an adversary to upload a remote access tool and PHP script to execute the RAT on the system running the Web server when a specific page is visited.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1080">Taint Shared Content</a>&nbsp;<br/>
+Content stored on network drives or in other shared locations may be tainted by adding malicious programs, scripts, or exploit code to otherwise valid files. Once a user opens the shared tainted content, the malicious portion can be executed to run the adversary's code on a remote system. Adversaries may use tainted shared content to move laterally. A directory share pivot is a variation on this technique that uses several other techniques to propagate malware when users access a shared network directory. It uses Shortcut Modification of directory .LNK files that use Masquerading to look like the real directories, which are hidden through Hidden Files and Directories. The malicious .LNK-based directories have an embedded command that executes the hidden malware file in the directory and then opens the real intended directory so that the user's expected action still occurs. When used with frequently used network directories, the technique may result in frequent reinfections and broad access to systems and potentially to new and higher privileged accounts.31<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1072">Third-party Software</a>&nbsp;<br/>
+Third-party applications and software deployment systems may be in use in the network environment for administration purposes (e.g., SCCM, VNC, HBSS, Altiris, etc.). If an adversary gains access to these systems, then they may be able to execute code.<br/>
+Adversaries may gain access to and use third-party application deployment systems installed within an enterprise network. Access to a network-wide or enterprise-wide software deployment system enables an adversary to have remote code execution on all systems that are connected to such a system. The access may be used to laterally move to systems, gather information, or cause a specific effect, such as wiping the hard drives on all endpoints.<br/>
+<br/>
+The permissions required for this action vary by system configuration; local credentials may be sufficient with direct access to the deployment server, or specific domain credentials may be required. However, the system may require an administrative account to log in or to perform software deployment.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1077">Windows Admin Shares</a>&nbsp;<br/>
+Windows systems have hidden network shares that are accessible only to administrators and provide the ability for remote file copy and other administrative functions. Example network shares include C$, ADMIN$, and IPC$.<br/>
+Adversaries may use this technique in conjunction with administrator-level Valid Accounts to remotely access a networked system over server message block (SMB)32 to interact with systems using remote procedure calls (RPCs),33 transfer files, and run transferred binaries through remote Execution. Example execution techniques that rely on authenticated sessions over SMB/RPC are Scheduled Task, Service Execution, and Windows Management Instrumentation. Adversaries can also use NTLM hashes to access administrator shares on systems with Pass the Hash and certain configuration and patch levels.34<br/>
+<br/>
+The Net utility can be used to connect to Windows admin shares on remote systems using net use commands with valid credentials.35<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1028">Windows Remote Management</a>&nbsp;<br/>
+Windows Remote Management (WinRM) is the name of both a Windows service and a protocol that allows a user to interact with a remote system (e.g., run an executable, modify the Registry, modify services).36 It may be called with the winrm command or by any number of programs such as PowerShell.37<br/>
+</body></html>

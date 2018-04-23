@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ICMP</title>
+</head><body>Internet Control Message Protocol (ICMP) is another connectionless protocol on Internet layer, used to<br/>
+transfer error messages and other information between the nodes. ICMP messages are send encapsulated in IP<br/>
+packets. There are 14 (and 16 deprecated) different types of ICMP messages, which have common only first 4 byte<br/>
+of the 8-byte ICMP header. Project Loki [22, 23] demonstrated a covert channel by putting arbitrary information<br/>
+tunnelling in the payload of ICMP Echo Request and ICMP Echo Reply packets. Additionally, the Loki client<br/>
+allows a remote attacker to wrap and transmit commands in ICMP payloads and the Loki server, unwraps and<br/>
+executes the commands, sending the results back wrapped in ICMP packets. This channel will work for any<br/>
+network device which does not filter the contents of ICMP Echo traffic, and is very simple to deploy.<br/>
+Other implementations of IP-over-ICMP tunnels are ICMPTX [113], Skeeve [128], ICMP-Chat [84], etc. Their<br/>
+PRBR depends on operating system and implementation, and can goes up to 24B, 56B or more. <br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+</body></html>

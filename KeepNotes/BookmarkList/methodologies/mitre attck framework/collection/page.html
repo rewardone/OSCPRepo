@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Collection</title>
+</head><body>Collection<br/>
+Tactic Description<br/>
+Collection consists of techniques used to identify and gather information, such as sensitive files, from a target network prior to exfiltration. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1123">Audio Capture</a><br/>
+An adversary can leverage a computer's peripheral devices (e.g., microphones and webcams) or applications (e.g., voice and video call services) to capture audio recordings for the purpose of listening into sensitive conversations to gather information. Malware or scripts may be used to interact with the devices through an available API provided by the operating system or an application to capture audio. Audio files may be written to disk and exfiltrated later.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1119">Automated Collection</a><br/>
+Once established within a system or network, an adversary may use automated techniques for collecting internal data. Methods for performing this technique could include use of <a href="https://attack.mitre.org/wiki/Technique/T1064">Scripting</a> to search for and copy information fitting set criteria such as file type, location, or name at specific time intervals. This functionality could also be built into remote access tools. This technique may incorporate use of other techniques such as <a href="https://attack.mitre.org/wiki/Technique/T1083">File and Directory Discovery</a> and <a href="https://attack.mitre.org/wiki/Technique/T1105">Remote File Copy</a> to identify and move files. &nbsp;<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1115">Clipboard Data</a>&nbsp;<br/>
+Adversaries may collect data stored in the Windows clipboard from users copying information within or between applications.<br/>
+Windows<br/>
+Applications can access clipboard data by using the Windows API. <a href="https://attack.mitre.org/wiki/Collection#scite-4b0c02d428364cee01939022b37a18ab">1</a><br/>
+<br/>
+Mac<br/>
+OSX provides a native command, pbpaste, to grab clipboard contents <a href="https://attack.mitre.org/wiki/Collection#scite-d1a3072d87ae0b1faafb95203f36b226">2</a><br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1074">Data Staged</a><br/>
+Collected data is staged in a central location or directory prior to <a href="https://attack.mitre.org/wiki/Exfiltration">Exfiltration</a>. Data may be kept in separate files or combined into one file through techniques such as<a href="https://attack.mitre.org/wiki/Technique/T1002">&nbsp;Data Compressed</a>&nbsp;or <a href="https://attack.mitre.org/wiki/Technique/T1022">Data Encrypted</a>. Interactive command shells may be used, and common functionality within <a href="https://attack.mitre.org/wiki/Software/S0106">cmd</a>&nbsp;and bash may be used to copy data into a staging location.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1213">Data from Information Repositories</a>&nbsp;<br/>
+Adversaries may leverage information repositories to mine valuable information. Information repositories are tools that allow for storage of information, typically to facilitate collaboration or information sharing between users, and can store a wide variety of data that may aid adversaries in further objectives, or direct access to the target information.<br/>
+The following is a brief list of example information that may hold potential value to an adversary and may also be found on an information repository:<br/>
+<ul><li>Policies, procedures, and standards</li>
+<li>Physical / logical network diagrams</li>
+<li>System architecture diagrams</li>
+<li>Technical system documentation</li>
+<li>Testing / development credentials</li>
+<li>Work / project schedules</li>
+<li>Source code snippets</li>
+<li>Links to network shares and other internal resources</li>
+</ul>
+Common information repositories:<br/>
+<br/>
+Microsoft SharePoint<br/>
+Found in many enterprise networks and often used to store and share significant amounts of documentation.<br/>
+<br/>
+Atlassian Confluence<br/>
+Often found in development environments alongside Atlassian JIRA, Confluence is generally used to store development-related documentation.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1005">Data From Local System</a>&nbsp;<br/>
+Sensitive data can be collected from local system sources, such as the file system or databases of information residing on the system prior to <a href="https://attack.mitre.org/wiki/Exfiltration">Exfiltration</a>. Adversaries will often search the file system on computers they have compromised to find files of interest. They may do this using a <a href="https://attack.mitre.org/wiki/Technique/T1059">Command-Line Interface</a>, such as cmd, which has functionality to interact with the file system to gather information. Some adversaries may also use Automated Collection on the local system.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1039">Data from Shared Network Drive</a>&nbsp;<br/>
+Sensitive data can be collected from remote systems via shared network drives (host shared directory, network file server, etc.) that are accessible from the current system prior to Exfiltration. Adversaries may search network shares on computers they have compromised to find files of interest. Interactive command shells may be in use, and common functionality within cmd may be used to gather information.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1025">Data from Removable Media</a>&nbsp;<br/>
+Sensitive data can be collected from any removable media (optical disk drive, USB memory, etc.) connected to the compromised system prior to Exfiltration. Adversaries may search connected removable media on computers they have compromised to find files of interest. Interactive command shells may be in use, and common functionality within cmd may be used to gather information. Some adversaries may also use Automated Collection on removable media<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1114">Email Collection</a>&nbsp;<br/>
+Adversaries may target user email to collect sensitive information from a target.<br/>
+Files containing email data can be acquired from a user's system, such as Outlook storage or cache files .pst and .ost.<br/>
+<br/>
+Adversaries may leverage a user's credentials and interact directly with the Exchange server to acquire information from within a network.<br/>
+<br/>
+Some adversaries may acquire user credentials and access externally facing webmail applications, such as Outlook Web Access.<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1056">Input Capture</a>&nbsp;<br/>
+Adversaries can use methods of capturing user input for obtaining credentials for Valid Accounts and information Collection that include keylogging and user input field interception.<br/>
+Keylogging is the most prevalent type of input capture, with many different ways of intercepting keystrokes,3 but other methods exist to target information for specific purposes, such as performing a UAC prompt or wrapping the Windows default credential provider.4<br/>
+<br/>
+Keylogging is likely to be used to acquire credentials for new access opportunities when Credential Dumping efforts are not effective, and may require an adversary to remain passive on a system for a period of time before an opportunity arises.<br/>
+<br/>
+Adversaries may also install code on externally facing portals, such as a VPN login page, to capture and transmit credentials of users who attempt to log into the service. This variation on input capture may be conducted post-compromise using legitimate administrative access as a backup measure to maintain network access through External Remote Services and Valid Accounts or as part of the initial compromise by exploitation of the externally facing web service.5<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1185">Man in the Browser</a>&nbsp;<br/>
+Adversaries can take advantage of security vulnerabilities and inherent functionality in browser software to change content, modify behavior, and intercept information as part of various man in the browser techniques.6<br/>
+A specific example is when an adversary injects software into a browser that allows an them to inherit cookies, HTTP sessions, and SSL client certificates of a user and use the browser as a way to pivot into an authenticated intranet.78<br/>
+<br/>
+Browser pivoting requires the SeDebugPrivilege and a high-integrity process to execute. Browser traffic is pivoted from the adversary's browser through the user's browser by setting up an HTTP proxy which will redirect any HTTP and HTTPS traffic. This does not alter the user's traffic in any way. The proxy connection is severed as soon as the browser is closed. Whichever browser process the proxy is injected into, the adversary assumes the security context of that process. Browsers typically create a new process for each tab that is opened and permissions and certificates are separated accordingly. With these permissions, an adversary could browse to any resource on an intranet that is accessible through the browser and which the browser has sufficient permissions, such as Sharepoint or webmail. Browser pivoting also eliminates the security provided by 2-factor authentication.9<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1113">Screen Capture</a>&nbsp;<br/>
+Adversaries may attempt to take screen captures of the desktop to gather information over the course of an operation. Screen capturing functionality may be included as a feature of a remote access tool used in post-compromise operations.<br/>
+Mac<br/>
+On OSX, the native command screencapture is used to capture screenshots.<br/>
+<br/>
+Linux<br/>
+On Linux, there is the native command xwd.10<br/>
+<br/>
+<a href="https://attack.mitre.org/wiki/Technique/T1125">Video Capture</a><br/>
+An adversary can leverage a computer's peripheral devices (e.g., integrated cameras or webcams) or applications (e.g., video call services) to capture video recordings for the purpose of gathering information. Images may also be captured from devices or applications, potentially in specified intervals, in lieu of video files.<br/>
+Malware or scripts may be used to interact with the devices through an available API provided by the operating system or an application to capture video or images. Video or image files may be written to disk and exfiltrated later. This technique differs from Screen Capture due to use of specific devices or applications for video recording rather than capturing the victim's screen.<br/>
+<br/>
+In macOS, there are a few different malware samples that record the user's webcam such as FruitFly and Proton. 11<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

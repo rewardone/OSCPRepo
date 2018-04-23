@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>RTP / RTCP</title>
+</head><body>Real-Time Transport Protocol (RTP) and RTP Control Protocol (RTCP). Mazurczyk and Szczypiorski<br/>
+[78] explained how to create covert channels in RTP, using 8-bits Padding field, variable-length Extension header,<br/>
+randomly generated initial values of the 16-bit Sequence Number and 32-bit Timestamp fields in the first RTP<br/>
+packet, or applying here Giffin et al [42] method with low order bit of Timestamp for creating one-bit-per-RTP<br/>
+packet covert channel (Table 9). The last method can be used also in NTP Timestamp field in RTCP, but even<br/>
+more, up to 160 bits per packet covert channel can be obtain from report blocks in Receiver Report (RR) and<br/>
+Sender Report (SR) in RTCP. One can use also security mechanisms‘ fields in Secure RTP or in RTCP, like up<br/>
+to 80-bit authentication tag. In the same paper, authors suggest one method called LACK (Lost Audio Packets<br/>
+Steganographic Method) for creating covert channel, using intentionally delayed (and in consequence lost) packets<br/>
+payloads. The payload of the intentionally delayed packets is used to transmit secret information to receivers<br/>
+aware of the procedure. If the delay of such packets at the receiver is considered excessive, the packets are<br/>
+discarded by a receiver. Additionally, communication parties must consider the accepted level of packet loss for<br/>
+IP telephony and do not exceed it. First practical evaluation of this method is given in [83]. Other RTP payload<br/>
+based covert channels are not of our interests.<br/>
+Bai et al [9] used the 32-bit interarrival jitter field of the RTCP header for creating a covert channel. They used<br/>
+two phases: in the first phase, statistics of the value of the jitter field in the current network are calculated. In<br/>
+the second phase, the secret message is modulated into the interarrival jitter field according to the previously<br/>
+calculated parameters. Lizhi et al [64] suggest novel covert timing channel, which utilizes Run Length Code and<br/>
+Multi-Zero Code (to avoid frequently sending RTCP packets) to improve imperceptibility and robustness. The<br/>
+basic idea is very simple, if the current stegobit is the same as previous, an RTP packet is sent, otherwise an<br/>
+RTCP packet and an RTP packet are both sent</body></html>

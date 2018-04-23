@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Detecting File Transfers / Exfil Activity</string>
+  <key>nodeid</key><string>9e0433d9-5553-4ce6-a4ef-eb06fc86f2e8</string>
+  <key>modified_time</key><integer>1524494506</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524494467</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

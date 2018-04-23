@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTTP</title>
+</head><body>HyperText Transfer Protocol (HTTP). Even most restrictive organizations usually allow the HTTP traffic.<br/>
+Dyatlov et al [30] suggest covert storage channels using header and/or body of the HTTP request/response. There<br/>
+is no limits from the protocol itself in the size of the HTTP header or the body. But the size of all HTTP headers<br/>
+together depends on platform - Apache servers accept headers with size up to 8KB, IIS up to 8KB or 16KB<br/>
+depending on the version. The Reverse WWW Shell tool [118] demonstrates how effective is HTTP in hidden<br/>
+messages delivery. In practice, the client slave application contacts the pre-configured master via an outgoing<br/>
+HTTP Request. The master application send shell commands as HTTP Response packets, and output from<br/>
+commands return from the slave as cgi script HTTP GETs. Bowyer [15] uses HTTP for secret communication<br/>
+with Trojans behind firewalls, with the secret messages encoded as URL parameters or after GET request.<br/>
+Bauer [10] suggests a protocol “Muted Posthorn” that allows to create an anonymous overlay network by exploiting<br/>
+the web browsing activities of regular users. the protocol uses five HTTP/HTML mechanisms: redirects, cookies,<br/>
+Referer headers, HTML elements and Active contents.<br/>
+Kwecka [61] hides data in HTTP using the fact that HTTP treats any amount of consequent linear white space<br/>
+characters (optional line feed [CLRF], spaces [SP] and tabs [HT]) present in the header, in the same way as a<br/>
+single space character. For example, [HT] can be a binary one and [SP] can be a binary zero. Headers come in no<br/>
+specified order, so it is possible to embed data in the ordering of the headers. Header names are case-insensitive,<br/>
+so using the different capitalisation of the header values can be used for covert channel. Alman [5] showed that<br/>
+due to a weakness in the CONNECT method in the HTTP protocol, arbitrary connection can be made through<br/>
+a HTTP proxy server and even a VPN can be established. Van Horenbeeck [119] implemented a tool Wondjina<br/>
+that creates a tunnel using the HTTP Entity tags (ETag and If-None-Match headers), which allows a client to<br/>
+verify whether its locally cached copy is still current. Even a Content-MD5 header can be used for transferring up<br/>
+to 128 bits of data per HTTP message. Similar ideas are used in [29], together with Access-Control-Allow-Origin<br/>
+and Content-Location header. Another approach involves modulating the least significant bits of the date-based<br/>
+fields such as Date and Last-Modified.<br/>
+Eßer and Freiling [32] suggest covert timing channel using HTTP, in which a web server sends covert data to a<br/>
+client by delaying a response (binary 1) or responding immediately (binary 0). Castro [19] suggest using cookies<br/>
+for creating covert channels in HTTP.<br/>
+Padgett [89] developed a tool Corkscrew for tunneling SSH over HTTP proxy, and LeBoutillier [63] implemented<br/>
+a tool HTTunnel for tunneling TCP or UDP over HTTP.<br/>
+Infranet [33] is a framework which uses covert channels in HTTP to circumvent censorship. Infranet’s web servers<br/>
+receive covert requests for censured web pages encoded as a sequence of HTTP requests to harmless web pages<br/>
+and return their content hidden inside harmless images using steganography.<br/>
+<br/>
+<img src="image.png" /></body></html>

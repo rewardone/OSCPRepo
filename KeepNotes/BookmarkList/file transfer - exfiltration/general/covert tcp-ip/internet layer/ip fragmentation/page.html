@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IP Fragmentation</title>
+</head><body>Some of the steganographic techniques, and presented in Mazurczyk and Szczypiorski paper[79], also deploy the<br/>
+IP fragmentation process. The authors suggest:<br/>
+ dividing the original IP packet into predefined number of fragments (for example, even number will be binary 0, and odd number will be binary 1) - 1 bit per packet is send;<br/>
+ modulating the values that are inserted into Fragment Offset field (for example, even value will be binary 1, and odd value will be binary 0) - NF − 1 bits per packet are send, where NF is the number of fragments<ul><li>for that packet;</li>
+<li> using legitimate fragment with steganogram inserted into payload - NF ·FS bits per packet are send, whereNF is the number of fragments for that packet and the FS is the size of the fragment. It has big covert rateand uses legitimate fragments, so it is harder to detect. Authors even suggested a method for the problemof differentiating the covert fragments by applying hash function;</li>
+</ul>
+<br/>
+ using different rates for packet fragmentation (for example, one rate will be binary 1, and other will bebinary 0) - log2h bits per packet are send, where h is the number of packets generation rates.<br/>
+Covert channels can be created using fields in protocol’s header that are changing during transmission, like 1-bitper-packet<br/>
+noisy covert channel using Time To Live (TTL) field, suggested by Qu et al [95]. Zander et al [125]<br/>
+proposed an improved 1-bit-per-packet covert channel encoding in the TTL field, analysing initial TTL values<br/>
+and normal TTL occurring in networks. They suggest using two different starting values of TTL in packets, the<br/>
+typical initial value as High-TTL (binary 1) and High-TTL -1 as Low-TTL (binary 0).<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<img src="image 2.png" /></body></html>
