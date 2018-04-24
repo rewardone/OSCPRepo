@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Accounts</string>
+  <key>nodeid</key><string>b362cd7a-75a1-4ece-b048-d773d614f8b4</string>
+  <key>modified_time</key><integer>1524591017</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524590924</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

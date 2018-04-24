@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Use</title>
+</head><body>net use<br/>
+Connects or disconnects to a network share. Used with no qualifiers lists the current network mappings.<br/>
+<br/>
+Syntax:<br/>
+<br/>
+net use &lt;device name&gt; or * \\&lt;computer name&gt;\&lt;share name&gt; \[password or *\] \[/user:\[domain\user\] /delete or \[persistent:\[yes or no\]\]<br/>
+net use &lt;device name&gt; /home /delete or /persistent:\[yes or no\]<br/>
+<br/>
+Options:<br/>
+<br/>
+&lt;device name&gt;&#09;&#09;&#09;Name of the device to map to. Use * to use the next available device name<br/>
+\\computer name&#09;&#09;The name of the computer controlling the resource<br/>
+\sharename&#09;&#09;&#09;Name of the share<br/>
+\volume&#09;&#09;&#09;&#09;Name of the volume if on a NetWare server<br/>
+password&#09;&#09;&#09;&#09;Password to which to map<br/>
+*&#09;&#09;&#09;&#09;&#09;Gives a prompt to which to enter the password<br/>
+/user:&lt;domain&gt;\&lt;user&gt;&#09;Specifies the user to connect as<br/>
+/home&#09;&#09;&#09;&#09;Connects to a users home directory<br/>
+/delete&#09;&#09;&#09;&#09;Closes a connection<br/>
+/persistent:\[yes or no&gt;&#09;Sets if the connection should be reconnected at next logon</body></html>

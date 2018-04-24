@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Accounts</title>
+</head><body>net accounts<br/>
+Used to modify user accounts. Specified on its own will give information about the current logon.<br/>
+<br/>
+Options:<br/>
+<br/>
+/forcelogoff:&lt;minutes or no&gt;&#09;&#09;&#09;Minutes until the user gets logged off after logon hours expire. No means a forced logoff will not occur<br/>
+/lockoutthreshold:&lt;number of failed attempts&gt;&#09;This parameter allows you to configure the number of failed logon attempts before the account is locked. The range is 1 to 999.<br/>
+/lockoutduration:&lt;minutes&gt; &#09;&#09;&#09;This parameter specifies the number of minutes accounts remain locked before automatically becoming unlocked. The range is 1 to 99999.<br/>
+/lockoutwindow:&lt;minutes&gt; &#09; &#09;&#09;This parameter lets you configure the maximum number of minutes between two consecutive failed logon attempts before an account is locked. The range is 1 to 99999.<br/>
+/minpwlen:&lt;length&gt;&#09;&#09;&#09;&#09;&#09;Minimum number of characters for the password. Default is 6, valid range is between 0 and 14<br/>
+/maxpwage:&lt;days&gt;&#09;&#09;&#09;&#09;&#09;Maximum number of days a password is valid. Default is 90, valid range is between 0 and 49710<br/>
+/minpwage:&lt;days&gt;&#09;&#09;&#09;&#09;&#09;Number of days that must occur before the password can be changed. Default is 0, valid range is between 0 and maxpwage<br/>
+/uniquepw:&lt;number&gt;&#09;&#09;&#09;&#09;&#09;Password may not be reused for number attempts<br/>
+/sync&#09;&#09;&#09;&#09;&#09;&#09;&#09;Forces a domain sync<br/>
+/domain&#09;&#09;&#09;&#09;&#09;&#09;&#09;Performs any of the above actions on the domain controller</body></html>

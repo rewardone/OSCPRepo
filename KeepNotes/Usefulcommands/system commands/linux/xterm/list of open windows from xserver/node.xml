@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>List of Open Windows From Xserver</string>
+  <key>nodeid</key><string>ee8d67a7-51ad-4994-bd78-8fb4a3be88c7</string>
+  <key>modified_time</key><integer>1524591718</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524591657</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

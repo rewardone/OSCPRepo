@@ -19,4 +19,20 @@ Inventory all different fily types that exist in a given directory tree and tall
 find . -print|xargs file|awk '{$1="";x[$0]++;}END{for(y in x)printf("%d\t%s\n",x[y],y);}'|sort -nr<br/>
 <br/>
 for grouping order of operations, a space is required before and after parens<br/>
-&nbsp;\( \)</body></html>
+&nbsp;\( \)<br/>
+<br/>
+<br/>
+<br/>
+More Examples<br/>
+find&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;List all files in current and sub dirs (same as find . and find . -print)<br/>
+find /path&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Look for files in /path dir. Lists all files by default<br/>
+find /path -name "abc.txt"&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files with name "abc.txt" in /path (also works with wildcards)<br/>
+find /path -maxdepth 2 &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files in /path but only go 2 dirs deep<br/>
+find /path -not -name "*.php" &#09;&#09;&#09;&#09;&#09;&#09;&#09;Invert match, find files that are NOT *.php<br/>
+find /path -name 'abc*' ! -name '*.php'&#09;&#09;&#09;&#09;&#09;&#09;Combine name 'abc' and NOT '*.php'<br/>
+find /path -name '*.php' -o -name '*.txt'&#09;&#09;&#09;&#09;&#09;&#09;Use -o for OR operator. Find *.php OR *.txt<br/>
+find /path -type f -name 'abc*'&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find only files with name abc<br/>
+find /path -type d -name 'abc*' &#09;&#09;&#09;&#09;&#09;&#09;&#09;Find only dirs with name abc<br/>
+find /path -type f -name ".*"&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find hidden files (start with .)<br/>
+find /path -type f ! -perm 0777&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files with NOT perm 0777<br/>
+</body></html>
