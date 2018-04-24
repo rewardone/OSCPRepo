@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>MITRE ATT&amp;CK Framework</string>
   <key>nodeid</key><string>a2bca8d2-bfbc-4a59-9cd6-405e101f56b0</string>
   <key>modified_time</key><integer>1524503659</integer>
