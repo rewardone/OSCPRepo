@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>857b19fd-5251-44f1-8eb3-3b5a057f69e3</string>
+  <key>title</key><string>Sales People</string>
+  <key>nodeid</key><string>4b5e6d5c-ef9a-4cb4-b75b-b32760a4d4b9</string>
+  <key>modified_time</key><integer>1515439838</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515439706</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

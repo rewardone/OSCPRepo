@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>f1ac24b6-e42a-4de6-90ce-c32aeaaddc90</string>
+  <key>title</key><string>Use Dictionary and rules (3 minutes*)</string>
+  <key>nodeid</key><string>38557dac-3c09-4f54-8b1b-b3626d2459b8</string>
+  <key>modified_time</key><integer>1515081540</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515081498</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

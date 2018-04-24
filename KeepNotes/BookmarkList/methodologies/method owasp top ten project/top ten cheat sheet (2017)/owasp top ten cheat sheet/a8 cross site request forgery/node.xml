@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>e4a131d0-0a90-4be8-ae4a-a89484a63aeb</string>
+  <key>title</key><string>A8 Cross Site Request Forgery</string>
+  <key>nodeid</key><string>77c59e26-7ee9-4ffa-8c35-5ea64e961fb3</string>
+  <key>modified_time</key><integer>1515430130</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515430130</integer>
+  <key>order</key><integer>7</integer>
+</dict>
+</node>

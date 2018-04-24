@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><true/>
+  <key>duplicate_of</key><string>85ab4d9d-7c98-43d6-9370-64da4c0ea1fc</string>
+  <key>title</key><string>Common Attacks</string>
+  <key>nodeid</key><string>ff0c0e3b-fe6c-4b1e-ad17-489fe961b106</string>
+  <key>modified_time</key><integer>1515440231</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515438939</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>5</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

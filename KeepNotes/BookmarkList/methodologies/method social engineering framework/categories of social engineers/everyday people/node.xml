@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>aea74e6c-24ca-40a2-9987-3cc8ff606db8</string>
+  <key>title</key><string>Everyday People</string>
+  <key>nodeid</key><string>3d11bb11-0b80-4e6b-a4e8-8d79054f6026</string>
+  <key>modified_time</key><integer>1515439969</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515439710</integer>
+  <key>order</key><integer>10</integer>
+</dict>
+</node>

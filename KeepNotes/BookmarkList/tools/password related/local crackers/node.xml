@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Local Crackers</string>
   <key>nodeid</key><string>9f80c75b-1146-4256-a1cb-feafc178469c</string>
   <key>modified_time</key><integer>1524231781</integer>

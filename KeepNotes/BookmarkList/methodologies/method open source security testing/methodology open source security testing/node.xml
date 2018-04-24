@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>68b7f2b6-5d8f-4ebe-ab55-6a2128733b46</string>
+  <key>title</key><string>Methodology Open Source Security Testing</string>
+  <key>nodeid</key><string>633df612-fcbc-4ffc-bfea-3c4f1c7a3523</string>
+  <key>modified_time</key><integer>1513267750</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1513267732</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>624fbe76-0bce-4719-8181-c065162fb7f9</string>
+  <key>title</key><string>Scan Artists</string>
+  <key>nodeid</key><string>365ab461-5018-4684-a9a7-d58d746f9b4b</string>
+  <key>modified_time</key><integer>1515439706</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515439064</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

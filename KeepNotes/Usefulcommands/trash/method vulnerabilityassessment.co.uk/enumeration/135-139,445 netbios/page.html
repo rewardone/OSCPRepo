@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>135-139,445: NetBIOS</title>
+</head><body><div style="text-align: left"><span style="font-family: sans-serif">NetBIOS Ports 135-139,445 open</span></div><ul><li><img src="image.png" /> NetBIOS enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.bindview.com/Services/RAZOR/Utilities/Windows/enum_readme.cfm">Enum</a> <a href="http://www.bindview.com/Services/RAZOR/Utilities/Windows/enum_readme.cfm"><img src="image 2.png" /></a></li>
+<li style="list-style-type: none"><ul><li>enum &lt;-UMNSPGLdc&gt; &lt;-u username&gt; &lt;-p password&gt; &lt;-f dictfile&gt; &lt;hostname|ip&gt;</li>
+</ul>
+</li>
+<li>Null Session</li>
+<li style="list-style-type: none"><ul><li>net use \\192.168.1.1\ipc$ "" /u:""</li>
+<li style="list-style-type: none"><ul><li>net view \\ip_address</li>
+<li><a href="http://www.systemtools.com/download/dumpacl.zip">Dumpsec</a> <a href="http://www.systemtools.com/download/dumpacl.zip"><img src="image 3.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Smbclient</li>
+<li style="list-style-type: none"><ul><li>smbclient -L //server/share password options</li>
+</ul>
+</li>
+<li><a href="http://www.foundstone.com/index.htm?subnav=resources/navigation.htm&subcontent=/resources/proddesc/superscan.htm">Superscan</a> <a href="http://www.foundstone.com/index.htm?subnav=resources/navigation.htm&subcontent=/resources/proddesc/superscan.htm"><img src="image 4.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Enumeration tab.</li>
+</ul>
+</li>
+<li><a href="http://packetstormsecurity.org/NT/hack/sid.zip">user2sid/sid2user</a> <a href="http://packetstormsecurity.org/NT/hack/sid.zip"><img src="image 5.png" /></a></li>
+<li><a href="http://ntsecurity.nu/toolbox/winfo/">Winfo</a> <a href="http://ntsecurity.nu/toolbox/winfo/"><img src="image 6.png" /></a></li>
+</ul>
+</li>
+<li><img src="image 7.png" /> NetBIOS brute force</li>
+<li style="list-style-type: none"><ul><li><a href="http://freeworld.thc.org/">Hydra</a> <a href="http://freeworld.thc.org/"><img src="image 8.png" /></a></li>
+<li><a href="http://www.hoobie.net/brutus/">Brutus</a> <a href="http://www.hoobie.net/brutus/"><img src="image 9.png" /></a></li>
+<li><a href="http://www.oxid.it/cain.html">Cain &amp; Abel</a> <a href="http://www.oxid.it/cain.html"><img src="image 10.png" /></a></li>
+<li><a href="http://www.securityfriday.com/tools/GetAcct.html">getacct</a> <a href="http://www.securityfriday.com/tools/GetAcct.html"><img src="image 11.png" /></a></li>
+<li><a href="http://www.cotse.com/tools/netbios.htm">NAT (NetBIOS Auditing Tool)</a> <a href="http://www.cotse.com/tools/netbios.htm"><img src="image 12.png" /></a></li>
+</ul>
+</li>
+<li><img src="image 13.png" /> Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>Smb.conf</li>
+<li>lmhosts</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

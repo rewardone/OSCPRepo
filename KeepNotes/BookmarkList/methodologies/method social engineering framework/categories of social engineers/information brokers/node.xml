@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>01c68313-0864-4d05-918f-cdbf3ca79c82</string>
+  <key>title</key><string>Information Brokers</string>
+  <key>nodeid</key><string>92fdb17b-b4d5-4c5c-a0fc-290ab700f330</string>
+  <key>modified_time</key><integer>1515439669</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515439064</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

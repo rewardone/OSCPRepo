@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>53: DNS</title>
+</head><body><div style="text-align: left"><span style="font-family: sans-serif">DNS port 53 open</span></div><ul><li><img src="image.png" /> Fingerprint server/ service</li>
+<li style="list-style-type: none"><ul><li>host</li>
+<li style="list-style-type: none"><ul><li>host [-aCdlnrTwv ] [-c class ] [-N ndots ] [-R number ] [-t type ] [-W wait ] name [server ] -v verbose format -t (query type) Allows a user to specify a record type i.e. A, NS, or PTR. -a Same as –t ANY. -l Zone transfer (if allowed). -f Save to a specified filename.</li>
+</ul>
+</li>
+<li>nslookup</li>
+<li style="list-style-type: none"><ul><li>nslookup [ -option ... ] [ host-to-find | - [ server ]]</li>
+</ul>
+</li>
+<li>dig</li>
+<li style="list-style-type: none"><ul><li>dig [ @server ] [-b address ] [-c class ] [-f filename ] [-k filename ] [-p port# ] [-t type ] [-x addr ] [-y name:key ] [-4 ] [-6 ] [name ] [type ] [class ] [queryopt... ]</li>
+</ul>
+</li>
+<li>whois-h Use the named host to resolve the query -a Use ARIN to resolve the query -r Use RIPE to resolve the query -p Use APNIC to resolve the query -Q Perform a quick lookup</li>
+</ul>
+</li>
+<li><img src="image 2.png" /> DNS Enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.sensepost.com/">Bile Suite</a> <a href="http://www.sensepost.com/"><img src="image 3.png" /></a></li>
+<li style="list-style-type: none"><ul><li>perl BiLE.pl [website] [project_name]</li>
+<li>perl BiLE-weigh.pl [website] [input file]</li>
+<li>perl vet-IPrange.pl [input file] [true domain file] [output file] &lt;range&gt;</li>
+<li>perl vet-mx.pl [input file] [true domain file] [output file]</li>
+<li>perl exp-tld.pl [input file] [output file]</li>
+<li>perl jarf-dnsbrute [domain_name] (brutelevel) [file_with_names]</li>
+<li>perl qtrace.pl [ip_address_file] [output_file]</li>
+<li>perl jarf-rev [subnetblock] [nameserver]</li>
+</ul>
+</li>
+<li><a href="http://www.txdns.net/">txdns</a> <a href="http://www.txdns.net/"><img src="image 4.png" /></a></li>
+<li style="list-style-type: none"><ul><li>txdns -rt -t domain_name</li>
+<li>txdns -x 50 -bb domain_name</li>
+<li>txdns --verbose -fm wordlist.dic --server ip_address -rr SOA domain_name -h c: \hostlist.txt</li>
+</ul>
+</li>
+<li>nmap nse scripts</li>
+<li style="list-style-type: none"><ul><li><a href="http://nmap.org/nsedoc/scripts/dns-random-srcport.html">dns-random-srcport</a> <a href="http://nmap.org/nsedoc/scripts/dns-random-srcport.html"><img src="image 5.png" /></a></li>
+<li><a href="http://nmap.org/nsedoc/scripts/dns-random-txid.html">dns-random-txid</a> <a href="http://nmap.org/nsedoc/scripts/dns-random-txid.html"><img src="image 6.png" /></a></li>
+<li><a href="http://nmap.org/nsedoc/scripts/dns-recursion.html">dns-recursion</a> <a href="http://nmap.org/nsedoc/scripts/dns-recursion.html"><img src="image 7.png" /></a></li>
+<li><a href="http://nmap.org/nsedoc/scripts/dns-zone-transfer.html">dns-zone-transfer</a> <a href="http://nmap.org/nsedoc/scripts/dns-zone-transfer.html"><img src="image 8.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 9.png" /> Examine Configuration Files</li>
+<li style="list-style-type: none"><ul><li>host.conf</li>
+<li>resolv.conf</li>
+<li>named.conf</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

@@ -9,24 +9,47 @@ https://github.com/huntergregal/mimipenguin <br/>
 Windows<br/>
 The top dumpers for Windows (IMO are Mimikatz, WCE, and (old) Cain&amp;Abel)<br/>
 <br/>
+Popular<br/>
 [mimikatz](<a href="https://github.com/gentilkiwi/mimikatz">https://github.com/gentilkiwi/mimikatz</a>) | A useful tool to play with Windows security including extracting plaintext passwords, kerberos tickets, etc<br/>
-[WCE]( ) | Windows Credencial Editor. 32bit and 64bit versions. wce32.exe -w. Grab hashes and also implements PtH and PtT<br/>
-[Cain&amp;Abel](http://www.oxid.it/cain.html)<br/>
+[mimikittenz](<a href="https://github.com/putterpanda/mimikittenz">https://github.com/putterpanda/mimikittenz</a>) | <ul>mimikittenz is a post-exploitation powershell tool that utilizes the Windows function</ul>
+&nbsp;ReadProcessMemory() in order to extract plain-text passwords from various target processes.<br/>
+[out-minidump](<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Out-Minidump.ps1">https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Out-Minidump.ps1</a>) | PowerSploit<br/>
+[WCE](<a href="http://www.ampliasecurity.com/research/wcefaq.html">http://www.ampliasecurity.com/research/wcefaq.html</a>) | Windows Credencial Editor. 32bit and 64bit versions. wce32.exe -w. Grab hashes and also implements PtH and PtT<br/>
+<a href="https://github.com/Neohapsis/creddump7">Creddump7</a>&nbsp;(<a href="https://github.com/Neohapsis/creddump7">https://github.com/Neohapsis/creddump7</a>)<br/>
+[Cain&amp;Abel](<a href="http://www.oxid.it/cain.html">http://www.oxid.it/cain.html</a>)<br/>
 Meterpreter: smart_hashdump<br/>
 Meterpreter: hashdump<br/>
-[procdump]( sysinternals ) | dump the process<br/>
+[procdump]( <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procdump">sysinternals</a>&nbsp;) | dump the process<br/>
 [secretsdump.py](<a href="https://github.com/CoreSecurity/impacket/blob/master/examples/secretsdump.py">https://github.com/CoreSecurity/impacket/blob/master/examples/secretsdump.py</a>) | dumps SAM and LSA and can gather information from NTDS.dit<br/>
-[lsadump](<a href="https://github.com/Neohapsis/creddump7">https://github.com/Neohapsis/creddump7</a>) <br/>
-[pwdump7](http://www.tarasco.org/security/pwdump_7/) | Similar to secretsdump, takes a sam, system, and security and dumps hashes<br/>
+[lsadump] (<a href="http://www.nirsoft.net/utils/lsa_secrets_dump.html">http://www.nirsoft.net/utils/lsa_secrets_dump.html</a>)<br/>
+[pwdump7](<a href="http://www.tarasco.org/security/pwdump_7">http://www.tarasco.org/security/pwdump_7</a>/) | Similar to secretsdump, takes a sam, system, and security and dumps hashes<br/>
+[<a href="http://foofus.net/goons/fizzgig/fgdump/">fgdump.exe</a>](in kali) | Extract NTLM and LM hashes<br/>
+<a href="https://technet.microsoft.com/en-us/library/cc753343.aspx">ntdsutil</a>&nbsp;<br/>
+<br/>
+Others<br/>
 [NetPass](www.nirsoft.net/utils/network_password_recovery.html) | WinXP-10 saved passwords, logins, mail accounts, messenger, IE 7/8, RDP 6<br/>
-[NetPassx64](http://www.nirsoft.net/utils/netpass-x64.zip)<br/>
+[NetPassx64](<a href="http://www.nirsoft.net/utils/netpass-x64.zip">http://www.nirsoft.net/utils/netpass-x64.zip</a>)<br/>
 [cachedump]<br/>
 [PySecDump] <a href="https://github.com/pentestmonkey/pysecdump">https://github.com/pentestmonkey/pysecdump</a>&nbsp;| Dumps password info, probably not better than mimikatz, but cool python implementation<br/>
-[fgdump.exe](in kali) | Extract NTLM and LM hashes<br/>
+[<a href="https://web.archive.org/web/20180419073843/www.nirsoft.net/utils/internet_explorer_password.html">IE PassView</a>] | Password management utility for Internet Explorer.<br/>
+[<a href="https://web.archive.org/web/20180419073843/www.nirsoft.net/utils/mailpv.html">Mail PassView</a>] | Recover POP3/IMAP/SMTP email passwords.<br/>
+[<a href="http://www.nirsoft.net/utils/pspv.html">Protected Storage PassView</a>] | MSN Explorer, Outlook Express, IE <br/>
+[<a href="https://github.com/AlessandroZ/LaZagne/blob/master/README.md">LaZagne</a>] | The LaZagne project is an open source application used to retrieve lots of passwords stored on a local computer. Each software stores its passwords using different techniques (plaintext, APIs, custom algorithms, databases, etc.). This tool has been developed for the purpose of finding these passwords for the most commonly-used software.<br/>
+[<a href="https://github.com/denandz/KeeFarce">KeeFarce</a>] |<ul><li>Extracts passwords from a KeePass 2.x database, directly from memory.</li>
+</ul>
+[<a href="https://github.com/HarmJ0y/KeeThief">KeeThief</a>] |<ul><li>Methods for attacking KeePass 2.X databases, including extracting of encryption key material from memory.</li>
+</ul>
+[<a href="https://github.com/lgandx/PCredz">PCredz</a>] | This tool extracts Credit card numbers, NTLM(DCE-RPC, HTTP, SQL, LDAP, etc), Kerberos (AS-REQ Pre-Auth etype 23), HTTP Basic, SNMP, POP, SMTP, FTP, IMAP, etc from a pcap file or from a live interface.<br/>
+[](<a href="http://www.nirsoft.net/password_recovery_tools.html">http://www.nirsoft.net/password_recovery_tools.html</a>) | RDP, Mail, IE, VNC, Dialup, Protected Storage and more tools!<br/>
 <br/>
-[<a href="https://web.archive.org/web/20180419073843/www.nirsoft.net/utils/internet_explorer_password.html">IE PassView</a>] - Password management utility for Internet Explorer.<br/>
-[<a href="https://web.archive.org/web/20180419073843/www.nirsoft.net/utils/mailpv.html">Mail PassView</a>] - Recover POP3/IMAP/SMTP email passwords.<br/>
+[CredCrack](<a href="https://github.conetsem/gojhonny/CredCrack">https://github.conetsem/gojhonny/CredCrack</a>) | <ul><li>CredCrack is a fast and stealthy credential harvester. It exfiltrates credentials recusively in memory and in the clear. Upon completion, CredCrack will parse and output the credentials while identifying any domain administrators obtained. CredCrack also comes with the ability to list and enumerate share access and yes, it is threaded! CredCrack has been tested and runs with the tools found natively in Kali Linux. CredCrack solely relies on having PowerSploit's "Invoke-Mimikatz.ps1" under the /var/www directory.</li>
+</ul>
 &nbsp;<br/>
 <br/>
+[redsnarf](<a href="https://github.com/nccgroup/redsnarf">https://github.com/nccgroup/redsnarf</a>)<br/>
+[Cachedump](<a href="https://www.rapid7.com/db/modules/post/windows/gather/cachedump">https://www.rapid7.com/db/modules/post/windows/gather/cachedump</a>) <br/>
 <br/>
-http://www.nirsoft.net/password_recovery_tools.html | RDP, Mail, IE, VNC, Dialup, Protected Storage and more tools!</body></html>
+<br/>
+<br/>
+<br/>
+[GrepWin](<a href="https://sourceforge.net/projects/grepwin/">https://sourceforge.net/projects/grepwin/</a>) | Search and replace tool</body></html>

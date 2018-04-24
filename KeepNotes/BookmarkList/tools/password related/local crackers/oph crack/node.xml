@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>3f3d60d1-8bac-4c4e-97f3-120322295b8d</string>
+  <key>title</key><string>OPH Crack</string>
+  <key>nodeid</key><string>cbabdf4e-8df6-4123-9d3a-1cfff213500e</string>
+  <key>modified_time</key><integer>1512491419</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1512491419</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>5</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

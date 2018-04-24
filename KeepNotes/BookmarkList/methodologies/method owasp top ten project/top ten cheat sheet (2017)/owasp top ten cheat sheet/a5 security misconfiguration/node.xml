@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>c16b2075-f1c3-404c-88d2-112e285bba7a</string>
+  <key>title</key><string>A5 Security Misconfiguration</string>
+  <key>nodeid</key><string>495ef84f-f1bf-4109-8f62-d65957d4edce</string>
+  <key>modified_time</key><integer>1515430129</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515430129</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

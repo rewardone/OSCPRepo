@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>321f064a-f018-4af5-97e7-8991ca8b2e15</string>
+  <key>title</key><string>OWASP Top Ten Cheat Sheet</string>
+  <key>nodeid</key><string>7520a2d9-0207-4c4a-9aee-8123f6a62c1f</string>
+  <key>modified_time</key><integer>1515430114</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515430114</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

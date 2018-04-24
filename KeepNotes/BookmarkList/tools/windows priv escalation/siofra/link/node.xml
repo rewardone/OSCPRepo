@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>7e190447-6fe8-480b-9491-f09ca7895013</string>
+  <key>title</key><string>Link</string>
+  <key>nodeid</key><string>6d2379a8-a662-4bf9-9d6a-2534154d041a</string>
+  <key>modified_time</key><integer>1515092708</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515092666</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

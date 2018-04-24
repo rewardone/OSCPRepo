@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>788d7110-cad3-4445-8845-e1d7dbba0a1c</string>
+  <key>title</key><string>Disgruntled Employees</string>
+  <key>nodeid</key><string>b8e43e13-adb8-43b4-9ab9-f3d744e4929c</string>
+  <key>modified_time</key><integer>1515439623</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515439063</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

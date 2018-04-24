@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>6ecc6447-ce36-490f-af30-b53087b9ff04</string>
+  <key>title</key><string>When all else fails, brute force</string>
+  <key>nodeid</key><string>b268421d-672a-478f-a602-334d31b52193</string>
+  <key>modified_time</key><integer>1515081960</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515081939</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

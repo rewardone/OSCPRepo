@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Link</title>
+</head><body><a href="https://github.com/rofl0r/proxychains-ng">https://github.com/rofl0r/proxychains-ng</a>&nbsp;<br/>
+<br/>
+Configuration:<br/>
+--------------<br/>
+<br/>
+proxychains looks for config file in following order:<br/>
+1)&#09;file listed in environment variable PROXYCHAINS_CONF_FILE or<br/>
+&#09;provided as a -f argument to proxychains script or binary.<br/>
+2)&#09;./proxychains.conf<br/>
+3)&#09;$(HOME)/.proxychains/proxychains.conf<br/>
+4)&#09;$(sysconfdir)/proxychains.conf &nbsp;**<br/>
+<br/>
+** usually /etc/proxychains.conf<br/>
+<br/>
+Usage Example:<br/>
+<br/>
+&#09;$ proxychains telnet targethost.com<br/>
+<br/>
+in this example it will run telnet through proxy(or chained proxies)<br/>
+specified by proxychains.conf<br/>
+<br/>
+Usage Example:<br/>
+<br/>
+&#09;$ proxychains -f /etc/proxychains-other.conf telnet targethost2.com<br/>
+<br/>
+in this example it will use different configuration file then proxychains.conf<br/>
+to connect to targethost2.com host.<br/>
+<br/>
+Usage Example:<br/>
+<br/>
+&#09;$ proxyresolv targethost.com<br/>
+<br/>
+in this example it will resolve targethost.com through proxy(or chained proxies)<br/>
+specified by proxychains.conf</body></html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tree</title>
+</head><body><div style="text-align: left"><span style="font-family: sans-serif">Report Template</span></div><ul><li>Introduction</li>
+<li style="list-style-type: none"><ul><li>Date carried out</li>
+<li>Testing Team details</li>
+<li style="list-style-type: none"><ul><li>Name</li>
+<li>Contact Nos.</li>
+<li>Relevant Experience if required.</li>
+</ul>
+</li>
+<li>Network Details</li>
+<li style="list-style-type: none"><ul><li>Peer to Peer, Client-Server, Domain Model, Active Directory integrated</li>
+<li>Number of Servers and workstations</li>
+<li>Operating System Details</li>
+<li>Major Software Applications</li>
+<li>Hardware configuration and setup</li>
+<li>Interconnectivity and by what means i.e. T1, Satelite, Wide Area Network, Lease Line Dial up etc.</li>
+<li>Encryption/ VPN's utilised etc.</li>
+<li>Role of the network or system</li>
+</ul>
+</li>
+<li>Scope of test</li>
+<li style="list-style-type: none"><ul><li>Constraints and limitations imposed on the team i.e. Out of scope items, hardware, IP addresses.</li>
+<li>Constraints, limitations or problems encountered by the team during the actual test</li>
+<li>Purpose of Test</li>
+<li style="list-style-type: none"><ul><li>Deployment of new software release etc.</li>
+<li>Security assurance for the Code of Connection</li>
+<li>Interconnectivity issues.</li>
+</ul>
+</li>
+<li>Type of Test</li>
+<li style="list-style-type: none"><ul><li>Complaince Test</li>
+<li>Vulnerability Assessment</li>
+<li>Penetration Test</li>
+</ul>
+</li>
+<li>Test Type</li>
+<li style="list-style-type: none"><ul><li>White-Box</li>
+<li style="list-style-type: none"><ul><li>The testing team has complete carte blanche access to the testing network and has been supplied with network diagrams, hardware, operating system and application details etc, prior to a test being carried out. This does not equate to a truly blind test but can speed up the process a great deal and leads to a more accurate results being obtained. The amount of prior knowledge leads to a test targeting specific operating systems, applications and network devices that reside on the network rather than spending time enumerating what could possibly be on the network. This type of test equates to a situation whereby an attacker may have complete knowledge of the internal network.</li>
+</ul>
+</li>
+<li>Black-Box</li>
+<li style="list-style-type: none"><ul><li>No prior knowledge of a company network is known. In essence an example of this is when an external web based test is to be carried out and only the details of a website URL or IP address is supplied to the testing team. It would be their role to attempt to break into the company website/ network. This would equate to an external attack carried out by a malicious hacker.</li>
+</ul>
+</li>
+<li>Grey-Box</li>
+<li style="list-style-type: none"><ul><li>The testing team would simulate an attack that could be carried out by a disgruntled, disaffected staff member. The testing team would be supplied with appropriate user level privileges and a user account and access permitted to the internal network by relaxation of specific security policies present on the network i.e. port level security.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Executive Summary (Brief and Non-technical)</li>
+<li style="list-style-type: none"><ul><li>OS Security issues discovered with appropriate criticality level specified</li>
+<li style="list-style-type: none"><ul><li>Exploited</li>
+<li style="list-style-type: none"><ul><li>Causes</li>
+<li style="list-style-type: none"><ul><li>Hardware failing</li>
+<li>Software failing</li>
+<li>Human error</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Unable to exploit - problem area</li>
+<li style="list-style-type: none"><ul><li>Causes</li>
+<li style="list-style-type: none"><ul><li>Hardware failing</li>
+<li>Software failing</li>
+<li>Human error</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Application Security issues discovered with appropriate criticality level specified</li>
+<li style="list-style-type: none"><ul><li>Exploited</li>
+<li>Unable to exploit - problem area</li>
+</ul>
+</li>
+<li>Physical Security issues discovered with appropriate criticality level specified</li>
+<li style="list-style-type: none"><ul><li>Exploited</li>
+<li>Unable to exploit - problem area</li>
+</ul>
+</li>
+<li>Personnel Security issues discovered with appropriate criticality level specified</li>
+<li style="list-style-type: none"><ul><li>Exploited</li>
+<li>Unable to exploit - problem area</li>
+</ul>
+</li>
+<li>General Security issues discoveredwith appropriate criticality level specified</li>
+<li style="list-style-type: none"><ul><li>Exploited</li>
+<li>Unable to exploit - problem area</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Technical Summary</li>
+<li style="list-style-type: none"><ul><li>OS Security issues discovered</li>
+<li style="list-style-type: none"><ul><li>File System Security</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: A FAT partition was found. FAT by default does not give the ability to set appropriate access control permissions to files. In addition moving files to this area removes the protection of the current acls applied to the file.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Format the file system to NTFS.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Password Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: LM Hashes found still being utilised on the network.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure NTLM2 is enforced by means of the correct setting in Group Policy.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Auditing Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Logon success adn failure was not enabled</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ammend appropriate Group Policy Objects and ensure it is tested and then applied to all relevant Organisational Units etc.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Patching Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Several of the latest Microsoft patches were found to be missing</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure a rigorous patching policy is instigated after first being tested on a development LAN to ensure stability. Review the settings on the WSUS server and ensure that it is regularly updated and an appropriate update strategy is instigated for the domain.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Anti-virus Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Several workstations were found to have out of date anti-virus software. In addition where it was found to be installed the actual product was found to be mis-configured and did not provide on-access protection.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure all workstations are regualrly updated and configured correctly to ensure maximum protection is afforded</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Trust Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Users from one domain were unable to access resources on another tree.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Review transitive and non-transitive trusts and ensure that all relevant trusts have been established.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Web Server Security</li>
+<li style="list-style-type: none"><ul><li>File System Security</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: i.e. Incorrect permission on www root</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Apply more stringent permissions or remove various users/groups that currently have access to this area.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Password Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Areas of the website that should be Protected did not have any password mechanism enforced.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure areas that require access to be limited are password protected.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Auditing Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Web server logs were not being reviewed for illicit behavious.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Regulalrly review all audit logs.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Patching Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: The latest patch was not applied to the server leaving it susceptible to a Denial of Service Attack.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Apply the latest patch after testing on a development server to ensure compatibility with installed applications and stability of the server is maintained.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Lockdown Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: The IIS lockdown tool has not been applied to the web server.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Apply the IIS lockdown tool to the server after first testing on a development server to ensure compatibility with installed applications and stability of the server is maintained.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Database Server Security</li>
+<li style="list-style-type: none"><ul><li>File System Security</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Loose access control permissions were found on directories containing important configuration files that govern access to the server.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure stringent access control permissions are enforced.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Password Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Clear text passwords were found stored within the database.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure all passwords, if required to be stored within the database are encrypted and afforded the maximum protection possible.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Auditing Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Reviewing the audit logs from the TNS Listener were not being carried out.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure all relevant audit logs are regularly inspected. Audit logs may give you the first clue to possible attempts to brute force access into the database.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Patching Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: The latest Oracle CPU was not installed, leaving the system susceptible to mutilple buffer and heap overflows and possible Denail of Service attacks.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Install the latest Oracle CPU after first trsting on a development server to ensure adequate compatibility and stability.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Lockdown Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Numerous extended stored procedures were directly accesible by the public role.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure the public role is revoked from all procedures that direct access is not required or utilised.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Trust Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li style="list-style-type: none"><ul><li>Example: Clear text Link passwords were discovered.</li>
+</ul>
+</li>
+<li>Recommendation and fix</li>
+<li style="list-style-type: none"><ul><li>Example: Ensure all Link passwords are encrypted, review the requirement to utilise these Links on a regualr basis.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>General Application Security</li>
+<li style="list-style-type: none"><ul><li>File System Security</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Password Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Auditing Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Patching Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Lockdown Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Trust Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Business Continuity Policy</li>
+<li style="list-style-type: none"><ul><li>Backup Policy</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Replacement premises provisioning</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Replacement personnel provisioning</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Replacement software provisioning</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Replacement hardware provisioning</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+<li>Replacement document provisioning</li>
+<li style="list-style-type: none"><ul><li>Details of finding</li>
+<li>Recommendation and fix</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Annexes</li>
+<li style="list-style-type: none"><ul><li>Glossary of Terms</li>
+<li style="list-style-type: none"><ul><li>Buffer Overflow</li>
+<li style="list-style-type: none"><ul><li>Normally takes the form of inputting an overly long string of characters or commands that the system cannot deal with. Some functions have a finite space available to store these characters or commands and any extra characters etc. over and above this will then start to overwrite other portions of code and in worse case scenarios will enable a remote user to gain a remote command prompt with the ability to interact directly with the local machine.</li>
+</ul>
+</li>
+<li>Denial of Service</li>
+<li style="list-style-type: none"><ul><li>This is an aimed attacks designed to deny a particular service that you could rely on to conduct your business. These are attacks designed to say overtax a web server with multiple requests which are intended to slow it down and possibly cause it to crash. Traditionally such attacks emanated from one particular source.</li>
+</ul>
+</li>
+<li>Directory Traversal</li>
+<li style="list-style-type: none"><ul><li>Basically when a user or function tries to “break” out of the normal parent directory specified for the application and traverse elsewhere within the system, possibly gaining access to sensitive files or directories in the process.</li>
+</ul>
+</li>
+<li>Social Engineering</li>
+<li style="list-style-type: none"><ul><li>Normally uses a limited range of distinct subject matter to entice users to open and run an attachment say. Usually associated with phishing/E-mail type attacks. The main themes are: </li>
+<li>• Sexual - Sexual ideas/pictures/websites, </li>
+<li>• Curiosity - Friendly themes/appealing to someone's passion or obsession, </li>
+<li>• Fear - Reputable sources/virus alert, </li>
+<li>• Authority - Current affairs/bank e-mails/company e-mails.</li>
+</ul>
+</li>
+<li>SQL Injection etc.</li>
+<li style="list-style-type: none"><ul><li>Basically when a low privileged user interactively executes PL/SQL commands on the database server by adding additional syntax into standard arguments, which is then passed to a particular function enabling enhanced privileges.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Network Map/Diagram</li>
+<li>Accompanying Scan Results - CD-ROM</li>
+<li>Vulnerability Definitions</li>
+<li style="list-style-type: none"><ul><li>Critical</li>
+<li style="list-style-type: none"><ul><li>A vulnerability allowing remote code execution, elevation of privilege or a denial of service on an affected system.</li>
+</ul>
+</li>
+<li>Important</li>
+<li style="list-style-type: none"><ul><li>A security weakness, whose exploitation may result in the compromise of the Confidentiality, Integrity or Availability of the company’s data.</li>
+</ul>
+</li>
+<li>Information Leak</li>
+<li style="list-style-type: none"><ul><li>Insecure services and protocols are being employed by the system allowing potentially allowing unrestricted access to sensitive information i.e.: </li>
+<li>a. The use of the Finger and Sendmail services may allow enumeration of User IDs. </li>
+<li>b. Anonymous FTP and Web based services are being offered on network devices or peripherals. </li>
+<li>c. Disclosure of Operating System, Application version details and personal details of system administration staffs.</li>
+</ul>
+</li>
+<li>Concern</li>
+<li style="list-style-type: none"><ul><li>The current systems configuration has a risk potential to the network concerned though the ability to exploit this is mitigated by factors such as default configuration, auditing, or the difficulty level or access level required to carry out an exploit. This includes the running of network-enabled services that are not required by the current business continuity process.</li>
+</ul>
+</li>
+<li>Unknowns</li>
+<li style="list-style-type: none"><ul><li>An unknown risk is an unclear response to a test or an action whose impact can be determined as having minimal impact on the system. The test identifying this risk may or may not be repeatable. While the results do not represent a security risk per see, they should be investigated and rectified where possible. Unknowns may also be due to false positives being reported, however, do require follow up response.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Details of Tools Utilised.</li>
+<li>Methodology Utilised.</li>
+<li style="list-style-type: none"><ul><li>Reconnaissance</li>
+<li style="list-style-type: none"><ul><li>The tester would attempt to gather as much information as possible about the selected network. Reconnaissance can take two forms i.e. active and passive. A passive attack is always the best starting point as this would normally defeat intrusion detection systems and other forms of protection etc. afforded to the network. This would usually involve trying to discover publicly available information by utilising a web browser and visiting newsgroups etc. An active form would be more intrusive and may show up in audit logs and may take the form of an attempted DNS zone transfer or a social engineering type of attack.</li>
+</ul>
+</li>
+<li>Enumeration</li>
+<li style="list-style-type: none"><ul><li>The tester would use varied operating system fingerprinting tools to determine what hosts are alive on the network and more importantly what services and operating systems they are running. Research into these services would then be carried out to tailor the test to the discovered services.</li>
+</ul>
+</li>
+<li>Scanning</li>
+<li style="list-style-type: none"><ul><li>By use of vulnerability scanners all discovered hosts would be tested for vulnerabilities. The result would then be analysed to determine if there any vulnerabilities that could be exploited to gain access to a target host on a network.</li>
+</ul>
+</li>
+<li>Obtaining Access</li>
+<li style="list-style-type: none"><ul><li>By use of published exploits or weaknesses found in applications, operating system and services access would then be attempted. This may be done surreptitiously or by more brute force methods. An example of this would be the use of exploit engines i.e. Metasploit or password cracking tools such as John the Ripper.</li>
+</ul>
+</li>
+<li>Maintaining Access</li>
+<li style="list-style-type: none"><ul><li>This is done by installing a backdoor into the target network to allow the tester to return as and when required. This may be by means of a rootkit, backdoor trojan or simply the addition of bogus user accounts.</li>
+</ul>
+</li>
+<li>Erasing Evidence</li>
+<li style="list-style-type: none"><ul><li>The ability to erase logs that may have detected the testing teams attempts to access the network should ideally not be possible. These logs are the first piece of evidence that may prove that a possible breach of company security has occurred and should be protected at all costs. An attempt to erase or alter these logs should prove unsuccessful to ensure that if a malicious attacker did in fact get access to the network then their every movement would be recorded.</li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/Penetration%20Test.html">See Penetration Test Framework for more details <img src="image.png" /></a></li>
+</ul>
+</li>
+<li>Sources of Information</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.nsa.gov/snac/index.cfm?MenuID=scg10.3.1">National Security Agency</a> <a href="http://www.nsa.gov/snac/index.cfm?MenuID=scg10.3.1"><img src="image 2.png" /></a></li>
+<li>Microsoft</li>
+<li style="list-style-type: none"><ul><li><a href="http://download.microsoft.com/download/8/c/c/8cc94365-13d6-4975-bf69-9d4cd16a01a7/w2kccscg.pdf">Microsoft Windows 2000 Security Configuration Guide.</a> <a href="http://download.microsoft.com/download/8/c/c/8cc94365-13d6-4975-bf69-9d4cd16a01a7/w2kccscg.pdf"><img src="image 3.png" /></a></li>
+<li><a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=8A2643C1-0685-4D89-B655-521EA6C7B4DB&displaylang=en">Windows Server 2003 Security Guide.</a> <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=8A2643C1-0685-4D89-B655-521EA6C7B4DB&displaylang=en"><img src="image 4.png" /></a></li>
+<li><a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=2D3E25BC-F434-4CC6-A5A7-09A8A229F118&displaylang=en">Windows XP Security Guide. <img src="image 5.png" /></a></li>
+<li><a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=1B6ACF93-147A-4481-9346-F93A4081EEA8&displaylang=en">The Threats and Countermeasures guide.</a> <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=1B6ACF93-147A-4481-9346-F93A4081EEA8&displaylang=en"><img src="image 6.png" /></a></li>
+</ul>
+</li>
+<li><a href="http://www.auscert.org.au/render.html?it=1935&cid=1920">Auscert</a> <a href="http://www.auscert.org.au/render.html?it=1935&cid=1920"><img src="image 7.png" /></a></li>
+<li><a href="http://www.cisecurity.org/">CISSecurity</a> <a href="http://www.cisecurity.org/"><img src="image 8.png" /></a></li>
+<li>ISO27001/2</li>
+<li>Sorbanes Oxley</li>
+<li>HIPAA</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>A9 Using Components with Known Vulnerabilities</string>
+  <key>nodeid</key><string>5941e16c-6dc2-45bc-b485-f6703bf24ef8</string>
+  <key>modified_time</key><integer>1515430131</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515430131</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

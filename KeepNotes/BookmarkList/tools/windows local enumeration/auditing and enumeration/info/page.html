@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Info</title>
+</head><body><a href="https://www.blackhillsinfosec.com/hostrecon-situational-awareness-tool/https://www.blackhillsinfosec.com/hostrecon-situational-awareness-tool/">https://www.blackhillsinfosec.com/hostrecon-situational-awareness-tool/</a><br/>
+<br/>
+<br/>
+Common Security Product Detection<br/>
+<br/>
+I wanted a tool that had the ability to help quickly identify security products in use on a system. HostRecon attempts to enumerate common security products on the system including AV, IDS, AppWhitelisting, Behavioral Analysis, etc. This will be an ever-changing/ever-growing list that I will attempt to keep as updated as possible. I’ve asked my colleagues at BHIS to help me grow this list of security products by sending me any new processes and product names they see on pentests.<br/>
+<br/>
+Situational Awareness<br/>
+<br/>
+HostRecon provides information from a target system that will assist a pentester in crafting further attacks. Prior to blindly running payloads on a system it’s good to know what security protections are in place.<br/>
+Is the system running application whitelisting? <br/>
+Is there a web proxy in use for Internet traffic? <br/>
+Is the local administrator’s password possibly randomized? <br/>
+HostRecon will attempt to answer some of these questions. Having a good situational awareness prior to moving forward should increase your chances of success.<br/>
+<br/>
+Here is a full list of things it currently checks:<br/>
+<br/>
+Current Hostname – Gathers the hostname of the local system<br/>
+IP Information – Gathers IP info; Alternative for ‘ipconfig’<br/>
+Current Username – Gathers current username; Alternative for ‘whoami’<br/>
+Current Domain Name – Gathers current domain name<br/>
+All Local Users – Gathers local users from the system; Alternative for ‘net users’<br/>
+Local Admins Group – Gathers local admins group members; Alternative for ‘net localgroup administrators’<br/>
+Netstat Information – Gathers listening and established connection info; Alternative for ‘netstat’<br/>
+DNS Cache Information – Gathers DNS cache information; Alternative for ‘ipconfig /displaydns’<br/>
+Shares – Gathers Share info; Alternative for ‘net use’<br/>
+Scheduled Tasks – Gathers any scheduled tasks from the system; Alternative for ‘schtasks’<br/>
+Web Proxy Information – Determines if a web proxy is in use<br/>
+Process Listing – Lists out all current running processes on the system<br/>
+AntiVirus Information – Checks if AV is enabled and what product is running<br/>
+Firewall Status – Determines if the local firewall is enabled or not<br/>
+Local Admin Password Solution (LAPS) – Attempts to locate the DLL used when installing LAPS.<br/>
+Domain Password Policy – Gathers the domain account password policy<br/>
+Domain Admins Group Members – Lists the members of the Domain Admins group<br/>
+Domain Controllers – Lists any Domain Controllers<br/>
+Checks for Common Security Products – Analyzes the process listing for common security product processes and names<br/>
+<br/>
+Egress Filter Check<br/>
+<br/>
+Invoke-HostRecon also includes a functionality for assessing egress filtering from the system. The -Portscan flag can be passed to initiate an outbound portscan against allports.exposed to help determine open ports allowed through an egress firewall. (Credit for the Portscan module goes to Joff Thyer). By running ‘Invoke-HostRecon -Portscan’ it will perform an egress check against allports.exposed as well.<br/>
+</body></html>

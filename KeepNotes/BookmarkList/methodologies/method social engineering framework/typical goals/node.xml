@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>299ae640-7f8a-486d-ba87-645bbb230b2f</string>
+  <key>title</key><string>Typical Goals</string>
+  <key>nodeid</key><string>8f4a5f6f-c04b-4087-8bf9-2985bc81dbda</string>
+  <key>modified_time</key><integer>1515440220</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515438938</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

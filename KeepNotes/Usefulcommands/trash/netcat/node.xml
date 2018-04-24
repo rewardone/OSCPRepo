@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>nodeid</key><string>1c14cdb8-451d-4a8d-8737-c1c18344eed3</string>
+  <key>modified_time</key><integer>1480902506</integer>
+  <key>expanded2</key><true/>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1480902506</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>NetCat</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>14</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

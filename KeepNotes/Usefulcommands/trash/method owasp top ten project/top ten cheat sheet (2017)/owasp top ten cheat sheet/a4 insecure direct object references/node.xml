@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>A4 Insecure Direct Object References</string>
+  <key>nodeid</key><string>e2660bcb-f859-4503-841c-0ca30b3c2c1f</string>
+  <key>modified_time</key><integer>1515430128</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515430128</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -5,7 +5,7 @@
   <key>title</key><string>20 Minute Rule</string>
   <key>nodeid</key><string>5b4fcb6d-dc96-4837-b0d0-2afea6bd2ce6</string>
   <key>modified_time</key><integer>1522815067</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522803063</integer>

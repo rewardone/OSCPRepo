@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>db9e2461-e0e4-4ffd-9042-cea579cdf99a</string>
+  <key>title</key><string>Why Attackers Might Use Social Engineering</string>
+  <key>nodeid</key><string>70207849-4342-4bb6-b0ae-5f61425fee3e</string>
+  <key>modified_time</key><integer>1515440055</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515438937</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

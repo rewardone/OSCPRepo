@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>d8fe43d8-f37d-4fc6-813c-91f57a4a80f6</string>
+  <key>title</key><string>Paper</string>
+  <key>nodeid</key><string>9cc0e708-ea81-4df6-979a-ca66cbafe977</string>
+  <key>modified_time</key><integer>1515092770</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515092729</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

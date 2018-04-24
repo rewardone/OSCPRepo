@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>68498b4d-2ac4-4625-9fb0-9d8b003fdfd3</string>
+  <key>title</key><string>Pastebin script</string>
+  <key>nodeid</key><string>654de36e-bd5c-4851-acb6-342e4aa9bae6</string>
+  <key>modified_time</key><integer>1515081749</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515081689</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

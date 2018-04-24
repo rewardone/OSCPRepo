@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>fb4c05e5-cbe4-4fe9-8b67-26117bdc41cc</string>
+  <key>title</key><string>A3 XSS</string>
+  <key>nodeid</key><string>7d326171-9f32-4729-a9c4-cd2648a86b23</string>
+  <key>modified_time</key><integer>1515430127</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515430127</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

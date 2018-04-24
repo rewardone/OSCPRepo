@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>801b7f47-92a9-4c78-bbe6-1a61eeae39e0</string>
+  <key>title</key><string>Con Men</string>
+  <key>nodeid</key><string>f4fbd45b-0f40-4993-bfc6-5385db7ee606</string>
+  <key>modified_time</key><integer>1515440772</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515440544</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>a79f95d0-cbdd-408d-ab9d-432e95ebc940</string>
+  <key>title</key><string>Back to Dictionary with more ammo (10 minutes*)</string>
+  <key>nodeid</key><string>e5fcd218-3f3b-443d-8168-30de151494a1</string>
+  <key>modified_time</key><integer>1515081810</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515081789</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

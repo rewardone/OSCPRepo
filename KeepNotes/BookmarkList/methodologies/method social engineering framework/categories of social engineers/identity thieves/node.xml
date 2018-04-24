@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>27d112ce-803e-4f19-addd-11c02e9c5e6d</string>
+  <key>title</key><string>Identity Thieves</string>
+  <key>nodeid</key><string>7a69cbb3-9a9e-40f0-b3ba-8afda283b8b4</string>
+  <key>modified_time</key><integer>1515439555</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515439062</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

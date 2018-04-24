@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>duplicate_of</key><string>db3a04bb-054b-4113-bae3-8b5b7eeee958</string>
+  <key>title</key><string>Hashcat</string>
+  <key>nodeid</key><string>f5306220-a428-4d19-b870-ea3080cc0e2b</string>
+  <key>modified_time</key><integer>1479666859</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1479666859</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

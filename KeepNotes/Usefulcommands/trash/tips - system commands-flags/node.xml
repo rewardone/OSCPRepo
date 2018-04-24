@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><true/>
+  <key>nodeid</key><string>793753bc-0cb1-46df-8ec3-53d88b219cb1</string>
+  <key>modified_time</key><integer>1479238455</integer>
+  <key>expanded2</key><false/>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1479238455</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>Tips - System Commands/Flags</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>25</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

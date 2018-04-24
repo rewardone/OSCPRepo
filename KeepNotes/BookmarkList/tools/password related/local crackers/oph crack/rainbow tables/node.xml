@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>fa88f58e-70ca-48fb-a013-2803b59f6a6a</string>
+  <key>title</key><string>Rainbow Tables</string>
+  <key>nodeid</key><string>ce589514-1fb7-49c6-8754-30ad87583c92</string>
+  <key>modified_time</key><integer>1512491469</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1512491430</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

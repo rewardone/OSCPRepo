@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>0bdb536a-969a-4720-b065-28c2de19cacb</string>
+  <key>title</key><string>Other Cheatsheets</string>
+  <key>nodeid</key><string>399cf33e-c4c5-42dd-a62f-3838935a27da</string>
+  <key>modified_time</key><integer>1515430864</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515430120</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>2</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>
