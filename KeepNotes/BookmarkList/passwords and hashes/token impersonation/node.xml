@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Token Impersonation</string>
   <key>nodeid</key><string>5266c4e4-b87a-4b63-9267-939a663f1ba4</string>
   <key>modified_time</key><integer>1524583341</integer>

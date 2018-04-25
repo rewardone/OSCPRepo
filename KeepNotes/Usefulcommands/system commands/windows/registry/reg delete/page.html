@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reg Delete</title>
+</head><body>Deletes a subkey or entries from the registry.<br/>
+<br/>
+For examples of how to use this command, see Examples.<br/>
+<br/>
+Syntax<br/>
+Reg delete &lt;KeyName&gt; [{/v ValueName | /ve | /va}] [/f]<br/>
+<br/>
+Parameters<br/>
+Parameter&#09;&#09;&#09;Description<br/>
+&lt;KeyName&gt;&#09;&#09;Specifies the full path of the subkey or entry to be deleted. To specify a remote computer, include the computer name (in the format \\ComputerName\) as part of the KeyName. Omitting \\ComputerName\ causes the operation to default to the local computer. The KeyName must include a valid root key. Valid root keys for the local computer are: HKLM, HKCU, HKCR, HKU, and HKCC. If a remote computer is specified, valid root keys are: HKLM and HKU.<br/>
+<br/>
+/v &lt;ValueName&gt;&#09;Deletes a specific entry under the subkey. If no entry is specified, then all entries and subkeys under the subkey will be deleted.<br/>
+<br/>
+/ve&#09;&#09;&#09;&#09;Specifies that only entries that have no value will be deleted.<br/>
+/va&#09;&#09;&#09;&#09;Deletes all entries under the specified subkey. Subkeys under the specified subkey are not deleted.<br/>
+/f&#09;&#09;&#09;&#09;Deletes the existing registry subkey or entry without asking for confirmation.<br/>
+/?&#09;&#09;&#09;&#09;Displays help for reg delete at the command prompt.</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Registry Check: AutoRun</string>
+  <key>nodeid</key><string>8964caad-89ac-4520-b62a-0e2a36a5b518</string>
+  <key>modified_time</key><integer>1524680459</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524680243</integer>
+  <key>order</key><integer>13</integer>
+</dict>
+</node>

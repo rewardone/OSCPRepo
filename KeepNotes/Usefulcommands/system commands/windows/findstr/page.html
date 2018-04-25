@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Findstr</title>
+</head><body>Searches for patterns of text in files.<br/>
+<br/>
+For examples of how to use this command, see Examples.<br/>
+<br/>
+Syntax<br/>
+findstr [/b] [/e] [/l | /r] [/s] [/i] [/x] [/v] [/n] [/m] [/o] [/p] [/f:&lt;File&gt;] [/c:&lt;String&gt;] [/g:&lt;File&gt;] [/d:&lt;DirList&gt;] [/a:&lt;ColorAttribute&gt;] [/off[line]] &lt;Strings&gt; [&lt;Drive&gt;:][&lt;Path&gt;]&lt;FileName&gt;[ ...]<br/>
+<br/>
+Parameters<br/>
+Parameter&#09;&#09;&#09;Description<br/>
+<br/>
+/b&#09;&#09;&#09;&#09;Matches the text pattern if it is at the beginning of a line.<br/>
+/e&#09;&#09;&#09;&#09;Matches the text pattern if it is at the end of a line.<br/>
+/l&#09;&#09;&#09;&#09;Processes search strings literally.<br/>
+/r&#09;&#09;&#09;&#09;Processes search strings as regular expressions. This is the default setting.<br/>
+/s&#09;&#09;&#09;&#09;Searches the current directory and all subdirectories.<br/>
+/i&#09;&#09;&#09;&#09;Ignores the case of the characters when searching for the string.<br/>
+/x&#09;&#09;&#09;&#09;Prints lines that match exactly.<br/>
+/v&#09;&#09;&#09;&#09;Prints only lines that do not contain a match.<br/>
+/n&#09;&#09;&#09;&#09;Prints the line number of each line that matches.<br/>
+/m&#09;&#09;&#09;&#09;Prints only the file name if a file contains a match.<br/>
+/o&#09;&#09;&#09;&#09;Prints character offset before each matching line.<br/>
+/p&#09;&#09;&#09;&#09;Skips files with non-printable characters.<br/>
+/off[line]&#09;&#09;&#09;Does not skip files that have the offline attribute set.<br/>
+/f:&lt;File&gt;&#09;&#09;&#09;Gets a file list from the specified file.<br/>
+/c:&lt;String&gt;&#09;&#09;Uses the specified text as a literal search string.<br/>
+/g:&lt;File&gt;&#09;&#09;&#09;Gets search strings from the specified file.<br/>
+/d:&lt;DirList&gt;&#09;&#09;Searches the specified list of directories. Each directory must be separated with a semicolon (;), for example dir1;dir2;dir3.<br/>
+<br/>
+/a:&lt;ColorAttribute&gt;&#09;Specifies color attributes with two hexadecimal digits. Type color /? for additional information.<br/>
+&lt;Strings&gt;&#09;&#09;&#09;Specifies the text to search for in FileName. Required.<br/>
+[&lt;Drive&gt;:][&lt;Path&gt;]&lt;FileName&gt;[ ...]&#09;Specifies the location and file or files to search. At least one file name is required.<br/>
+/?&#09;&#09;&#09;&#09;Displays Help at the command prompt.</body></html>

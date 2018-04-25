@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Service Check: Unqoted Path</string>
+  <key>nodeid</key><string>781edd48-8072-4f6d-8607-19bdd6e42bfe</string>
+  <key>modified_time</key><integer>1524676136</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524676008</integer>
+  <key>order</key><integer>12</integer>
+</dict>
+</node>

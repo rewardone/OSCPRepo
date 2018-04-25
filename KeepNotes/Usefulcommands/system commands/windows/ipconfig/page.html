@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ipconfig</title>
+</head><body>IPConfig is a command-line tool that displays the current configuration of the installed IP stack on a networked computer.<br/>
+<br/>
+When used with the /all switch, it displays a detailed configuration report for all interfaces, including any configured WAN miniports (typically used for remote access or VPN connections). Output can be redirected to a file and pasted into other documents. A sample report is shown here:<br/>
+<br/>
+C:&gt;\ipconfig /all<br/>
+Windows 2000 IP Configuration<br/>
+Host Name . . . . . . . . . . . . : TESTPC1<br/>
+Primary DNS Suffix . . . . . . . : reskit.com<br/>
+Node Type . . . . . . . . . . . . : Hybrid<br/>
+IP Routing Enabled. . . . . . . . : No<br/>
+WINS Proxy Enabled. . . . . . . . : No<br/>
+DNS Suffix Search List. . . . . . : ntcorpdc1.reskit.com<br/>
+dns.reskit.com<br/>
+reskit.com<br/>
+Ethernet adapter Local Area Connection:<br/>
+Connection-specific DNS Suffix . : dns.reskit.com<br/>
+Description . . . . . . . . . . . : Acme XL 10/100Mb Ethernet NIC<br/>
+Physical Address. . . . . . . . . : 00-CC-44-79-C3-AA<br/>
+DHCP Enabled. . . . . . . . . . . : Yes<br/>
+IP Address. . . . . . . . . . . . : 172.16.245.111<br/>
+Subnet Mask . . . . . . . . . . . : 255.255.248.0<br/>
+Default Gateway . . . . . . . . . : 172.16.240.1<br/>
+DHCP Server . . . . . . . . . . . : 172.16.248.8<br/>
+DNS Servers . . . . . . . . . . . : 172.16.55.85<br/>
+172.16.55.134<br/>
+172.16.55.54<br/>
+Primary WINS Server . . . . . . . : 172.16.248.10<br/>
+Secondary WINS Server . . . . . . : 172.16.248.9<br/>
+Lease Obtained. . . . . . . . . . : Friday, May 05, 1999 2:21:40 PM<br/>
+Lease Expires . . . . . . . . . . : Monday, May 07, 1999 2:21:40 PM<br/>
+<br/>
+A number of other useful parameters for Ipconfig include /flushdns , which deletes the DNS name cache; /registerdns , which refreshes all DHCP leases and re-registers DNS names; and /displaydns which displays the contents of the DNS resolver cache.<br/>
+<br/>
+The /release &lt; adapter &gt; and /renew &lt; adapter &gt; options release and renew the DHCP-allocated IP address for a specified adapter. If no adapter name is specified, the DHCP leases for all adapters bound to TCP/IP are released or renewed.<br/>
+<br/>
+For /setclassid , if no class ID is specified, then the Class ID is removed. Table 3.3 lists all Ipconfig switches.<br/>
+<br/>
+Table 3.3 Ipconfig Switches<br/>
+Switch&#09;&#09;&#09;Effect<br/>
+/all&#09;&#09;&#09;&#09;Produces a detailed configuration report for all interfaces.<br/>
+/flushdns&#09;&#09;&#09;Removes all entries from the DNS name cache.<br/>
+/registerdns&#09;&#09;Refreshes all DHCP leases and reregisters DNS names<br/>
+/displaydns&#09;&#09;Displays the contents of the DNS resolver cache.<br/>
+/release &lt; adapter &gt;&#09;Releases the IP address for a specified interface.<br/>
+/renew &lt; adapter &gt;&#09;Renews the IP address for a specified interface.<br/>
+/showclassid &lt; adapter &gt;&#09;Displays all the DHCP class IDs allowed for the adapter specified.<br/>
+/setclassid &lt; adapter &gt; &lt; classID to set &gt;&#09;Changes the DHCP class ID for the adapter specified.<br/>
+/?&#09;&#09;&#09;&#09;Displays this list.</body></html>

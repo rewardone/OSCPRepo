@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>sc Qc</title>
+</head><body>Queries the configuration information for a specified service.<br/>
+<br/>
+For examples of how to use this command, see Examples.<br/>
+<br/>
+Syntax<br/>
+sc [&lt;ServerName&gt;] qc [&lt;ServiceName&gt;] [&lt;BufferSize&gt;]<br/>
+<br/>
+Parameters<br/>
+Parameter&#09;&#09;&#09;Description<br/>
+&lt;ServerName&gt;&#09;&#09;Specifies the name of the remote server on which the service is located. The name must use the Universal Naming Convention (UNC) format (for example, \\myserver). To run SC.exe locally, omit this parameter.<br/>
+<br/>
+&lt;ServiceName&gt;&#09;&#09;Specifies the service name returned by the getkeyname operation.<br/>
+&lt;BufferSize&gt;&#09;&#09;Specifies the size (in bytes) of the buffer. The default buffer size is 1,024 bytes.<br/>
+/?&#09;&#09;&#09;&#09;Displays help at the command prompt.<br/>
+<br/>
+Remarks<br/>
+The qc command displays the following information about a service: SERVICE_NAME (service's registry subkey name), TYPE, ERROR_CONTROL, BINARY_PATH_NAME, LOAD_ORDER_GROUP, TAG, DISPLAY_NAME, DEPENDENCIES, and SERVICE_START_NAME.</body></html>

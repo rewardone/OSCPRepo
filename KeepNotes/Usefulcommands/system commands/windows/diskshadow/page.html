@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Diskshadow</title>
+</head><body>DiskShadow.exe is a tool that exposes the functionality offered by the Volume Shadow Copy Service (VSS). By default, DiskShadow uses an interactive command interpreter similar to that of DiskRAID or DiskPart. DiskShadow also includes a scriptable mode.<br/>
+<br/>
+Note<br/>
+Membership in the local Administrators group, or equivalent, is the minimum required to run DiskShadow.<br/>
+<br/>
+For examples of how to use DiskShadow commands, see Examples.<br/>
+<br/>
+Syntax<br/>
+For interactive mode, type the following at the command prompt to start the DiskShadow command interpreter:<br/>
+diskshadow<br/>
+<br/>
+For script mode, type the following, where script.txt is a script file containing DiskShadow commands:<br/>
+diskshadow -s script.txt<br/>
+<br/>
+DiskShadow commands<br/>
+You can run the following commands in the DiskShadow command interpreter or through a script file:<br/>
+<br/>
+Parameter&#09;&#09;&#09;Description<br/>
+Set1&#09;&#09;&#09;&#09;Sets the context, options, verbose mode, and metadata file for creating shadow copies.<br/>
+Simulate restore&#09;Tests writer involvement in restore sessions on the computer without issuing PreRestore or PostRestore events to writers.<br/>
+<br/>
+Load metadata&#09;&#09;Loads a metadata .cab file prior to importing a transportable shadow copy or loads the writer metadata in the case of a restore.<br/>
+<br/>
+Writer&#09;&#09;&#09;Verifies that a writer or component is included or excludes a writer or component from the backup or restore procedure.<br/>
+<br/>
+Add2&#09;&#09;&#09;Adds volumes to the set of volumes that are to be shadow copied, or adds aliases to the alias environment.<br/>
+Create2&#09;&#09;&#09;Starts the shadow copy creation process, using the current context and option settings.<br/>
+Exec&#09;&#09;&#09;Executes a file on the local computer.<br/>
+Begin backup&#09;&#09;Starts a full backup session.<br/>
+End backup&#09;&#09;Ends a full backup session and issues a BackupComplete event with the appropriate writer state, if needed.<br/>
+Begin restore&#09;&#09;Starts a restore session and issues a PreRestore event to involved writers.<br/>
+End restore&#09;&#09;Ends a restore session and issues a PostRestore event to involved writers.<br/>
+Reset&#09;&#09;&#09;Resets DiskShadow to the default state.<br/>
+List2&#09;&#09;&#09;&#09;Lists writers, shadow copies, or currently registered shadow copy providers that are on the system.<br/>
+Delete shadows&#09;&#09;Deletes shadow copies.<br/>
+Import1&#09;&#09;&#09;Imports a transportable shadow copy from a loaded metadata file into the system.<br/>
+Mask&#09;&#09;&#09;Removes hardware shadow copies that were imported by using the import command.<br/>
+Expose&#09;&#09;&#09;Exposes a persistent shadow copy as a drive letter, share, or mount point.<br/>
+Unexpose&#09;&#09;&#09;Unexposes a shadow copy that was exposed by using the expose command.<br/>
+Break2&#09;&#09;&#09;Disassociates a shadow copy volume from VSS.<br/>
+Revert&#09;&#09;&#09;Reverts a volume back to a specified shadow copy.<br/>
+Exit2&#09;&#09;&#09;Exits DiskShadow.</body></html>

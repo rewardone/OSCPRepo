@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>385e296a-594d-4553-90d4-201653724289</string>
+  <key>title</key><string>Passwords in Registry</string>
+  <key>nodeid</key><string>ff5ed2bb-4897-4cd4-9f66-a3e0efcafbff</string>
+  <key>modified_time</key><integer>1524681270</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1512756717</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>3</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

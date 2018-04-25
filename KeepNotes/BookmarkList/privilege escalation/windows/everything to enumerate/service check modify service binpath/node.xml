@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Service Check: Modify Service Binpath</string>
+  <key>nodeid</key><string>a091b065-e0df-45d9-bd51-2aff78fd914d</string>
+  <key>modified_time</key><integer>1524675714</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524675609</integer>
+  <key>order</key><integer>10</integer>
+</dict>
+</node>

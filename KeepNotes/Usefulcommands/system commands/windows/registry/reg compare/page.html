@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reg Compare</title>
+</head><body>Compares specified registry subkeys or entries.<br/>
+<br/>
+For examples of how to use this command, see Examples.<br/>
+<br/>
+Syntax<br/>
+reg compare &lt;KeyName1&gt; &lt;KeyName2&gt; [{/v ValueName | /ve}] [{/oa | /od | /os | on}] [/s]<br/>
+<br/>
+Parameters<br/>
+Parameter&#09;&#09;Description<br/>
+&lt;KeyName1&gt;&#09;Specifies the full path of the first subkey to be compared. To specify a remote computer, include the computer name (in the format \\ComputerName\) as part of the KeyName. Omitting \\ComputerName\ causes the operation to default to the local computer. The KeyName must include a valid root key. Valid root keys for the local computer are: HKLM, HKCU, HKCR, HKU, and HKCC. If a remote computer is specified, valid root keys are: HKLM and HKU.<br/>
+<br/>
+&lt;KeyName2&gt;&#09;Specifies the full path of the second subkey to be compared. To specify a remote computer, include the computer name (in the format \\ComputerName\) as part of the KeyName. Omitting \\ComputerName\ causes the operation to default to the local computer. Specifying only the computer name in KeyName2 causes the operation to use the path to the subkey specified in KeyName1. The KeyName must include a valid root key. Valid root keys for the local computer are: HKLM, HKCU, HKCR, HKU, and HKCC. If a remote computer is specified, valid root keys are: HKLM and HKU.<br/>
+<br/>
+/v &lt;ValueName&gt;&#09;Specifies the value name to compare under the subkey.<br/>
+/ve&#09;&#09;&#09;&#09;Specifies that only entries that have a value name of null should be compared.<br/>
+[{/oa | /od | /os | on}]&#09;Specifies how to display the results of the compare operation. The default is /od. See the specific options below.<br/>
+/oa&#09;Specifies that all differences and matches are displayed. By default, only the differences are listed.<br/>
+/od&#09;Specifies that only differences are displayed. This is the default behavior.<br/>
+/os&#09;Specifies that only matches are displayed. By default, only the differences are listed.<br/>
+/on&#09;Specifies that nothing is displayed. By default, only the differences are listed.<br/>
+<br/>
+/s&#09;&#09;&#09;&#09;Compares all subkeys and entries recursively.<br/>
+/?&#09;&#09;&#09;&#09;Displays help for reg compare at the command prompt.<br/>
+<br/>
+Remarks<br/>
+The following table lists the return values for reg compare.<br/>
+Value&#09;Description<br/>
+0&#09;&#09;The comparison is successful and the result is identical.<br/>
+1&#09;&#09;The comparison failed.<br/>
+2&#09;&#09;The comparison was successful and differences were found.<br/>
+<br/>
+The following table lists the symbols displayed in the results.<br/>
+Symbol&#09;Description<br/>
+=&#09;&#09;KeyName1 data is equal to KeyName2 data.<br/>
+&lt;&#09;&#09;KeyName1 data is less than KeyName2 data.<br/>
+&gt;&#09;&#09;KeyName1 data is greater than KeyName2 data.<br/>
+<br/>
+Examples<br/>
+To compare all values under the key MyApp with all values under the key SaveMyApp, type:<br/>
+<br/>
+REG COMPARE HKLM\Software\MyCo\MyApp HKLM\Software\MyCo\SaveMyApp<br/>
+<br/>
+To compare the value for the Version under the key MyCo and the value for the Version under the key MyCo1, type:<br/>
+<br/>
+REG COMPARE HKLM\Software\MyCo HKLM\Software\MyCo1 /v Version<br/>
+<br/>
+To compare all subkeys and values under HKLM\Software\MyCo on the computer named ZODIAC with all subkeys and values under HKLM\Software\MyCo on the local computer, type:<br/>
+<br/>
+REG COMPARE \\ZODIAC\HKLM\Software\MyCo \\. /s</body></html>

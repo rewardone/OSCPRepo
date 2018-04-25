@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>DLL Check: Hijack</string>
+  <key>nodeid</key><string>c00b295c-217e-40f7-9f56-32f4676fe073</string>
+  <key>modified_time</key><integer>1524675634</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524674378</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

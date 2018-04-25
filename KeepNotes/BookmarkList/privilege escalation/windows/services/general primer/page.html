@@ -18,4 +18,16 @@ Permissions on services can be set with built-in tool: sc sdset<br/>
 sc &lt;server&gt; sdset &lt;ServiceName&gt; &lt;SD in SDLL format&gt;<br/>
 <br/>
 Permissions on services can be done with non-built-in tool: accesschk.exe and subinacl<br/>
-accesschk.exe -uwcqv "Authenticated Users" * /accepteula</body></html>
+accesschk.exe -uwcqv "Authenticated Users" * /accepteula<br/>
+<br/>
+<br/>
+<br/>
+Security Descriptor<br/>
+A structure and associated data that contains the security information for a securable object. A security descriptor identifies the object's owner and primary group. It can also contain a DACL that controls access to the object, and a SACL that controls the logging of attempts to access the object.<br/>
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms721625(v=vs.85).aspx<br/>
+<br/>
+Discretionary Access Control Lists (DACLs)<br/>
+An access control list that is controlled by the owner of an object and that specifies the access particular users or groups can have to that object.<br/>
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms721573(v=vs.85).aspx#_security_discretionary_access_control_list_gly<br/>
+<br/>
+</body></html>

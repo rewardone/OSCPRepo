@@ -35,4 +35,19 @@ find /path -type f -name 'abc*'&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find only file
 find /path -type d -name 'abc*' &#09;&#09;&#09;&#09;&#09;&#09;&#09;Find only dirs with name abc<br/>
 find /path -type f -name ".*"&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find hidden files (start with .)<br/>
 find /path -type f ! -perm 0777&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files with NOT perm 0777<br/>
+find /path -perm /u=r&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find readonly files<br/>
+find /path -perm /a=x&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find executable files<br/>
+find /path -user bob&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files owned by a user<br/>
+find /path -group developer&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files owned by a group<br/>
+find /path -mtime 50&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files modified within the last 50 days<br/>
+find /path -atime 50&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files that were accessed within the last 50 days<br/>
+find /path -mtime +50 -mtime -100&#09;&#09;&#09;&#09;&#09;&#09;Find files that were modified between 50 and 100 days ago<br/>
+find /path -cmin -60&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files that were changed within the last hour<br/>
+find /path -mmin -60&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files that were modified within the last hour<br/>
+find /path -amin -60&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files that were access within the last hour<br/>
+find /path -size 50M&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find files based on size<br/>
+find /path -size +50M -size -100M&#09;&#09;&#09;&#09;&#09;&#09;Find files greater than 50mb and less than 100mb<br/>
+find /path -type f -exec ls -s {} \; | sort -n -r head -5&#09;&#09;&#09;Find 5 largest files<br/>
+find /path -type f -empty &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find empty files<br/>
+find /path -type d -empty&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Find empty directories<br/>
 </body></html>

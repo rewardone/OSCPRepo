@@ -25,4 +25,39 @@ See Powershell section for managing services in PowerShell<br/>
 sc sdshow &lt;Service&gt;&#09;&#09;&#09;&#09;&#09;Displays the security descriptor for a specific service<br/>
 sc &lt;server&gt; sdset &lt;Service&gt; &lt;SDDL&gt;&#09;Changes the security descriptor for a specific service<br/>
 <br/>
-for sdset, instead of a group, you can use a specific user's full SID like: (A;;RPWP;;;S-1-5-21-3778091102-209736168-4156975864-1108)</body></html>
+for sdset, instead of a group, you can use a specific user's full SID like: (A;;RPWP;;;S-1-5-21-3778091102-209736168-4156975864-1108)<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Sc Commands<br/>
+Sc command&#09;Description<br/>
+Sc boot&#09;&#09;Indicates whether the last boot should be saved as the last-known good boot configuration.<br/>
+Sc config&#09;&#09;Modifies the value of a service's entries in the registry and in the Service Control Manager database.<br/>
+Sc continue&#09;Sends a CONTINUE control request to a paused service.<br/>
+Sc control&#09;&#09;Sends a control to a service.<br/>
+Sc create&#09;&#09;Creates a subkey and entries for the service in the registry and in the Service Control Manager database.<br/>
+Sc delete&#09;&#09;Deletes a service subkey from the registry.<br/>
+Sc description&#09;Sets the description string for a service.<br/>
+Sc enumdepend&#09;Lists the services that cannot run unless the specified service is running.<br/>
+Sc failure&#09;&#09;Specifies one or more actions to be taken if a particular service fails.<br/>
+Sc failureflag&#09;Specifies whether to trigger recovery actions when a service stops as the result of an error.<br/>
+Sc getdisplayname&#09;Gets the display name associated with a particular service.<br/>
+Sc getkeyname&#09;&#09;Gets the key name associated with a particular service, using the display name as input.<br/>
+Sc interrogate&#09;Sends an INTERROGATE control request to a service.<br/>
+Sc lock&#09;&#09;Locks the Service Control Manager's database.<br/>
+Sc pause&#09;&#09;Sends a PAUSE control request to a service.<br/>
+Sc qc&#09;&#09;Queries the configuration information for a service.<br/>
+Sc qdescription&#09;Displays a service's description string.<br/>
+Sc qfailure&#09;Displays the actions that will be performed if the specified service fails.<br/>
+Sc query&#09;&#09;Obtains and displays information about the specified service, driver, type of service, or type of driver.<br/>
+Sc queryex&#09;Obtains and displays detailed information about the specified service, driver, type of service, or type of driver.<br/>
+Sc querylock&#09;Queries and displays the lock status for the Service Control Manager database.<br/>
+Sc sdset&#09;&#09;Sets a service's security descriptor, using Security Descriptor Definition Language (SDDL).<br/>
+Sc sdshow&#09;Displays a service's security descriptor, using SDDL.<br/>
+Sc start&#09;&#09;Starts a service.<br/>
+Sc stop&#09;&#09;Sends a STOP control request to a service.</body></html>

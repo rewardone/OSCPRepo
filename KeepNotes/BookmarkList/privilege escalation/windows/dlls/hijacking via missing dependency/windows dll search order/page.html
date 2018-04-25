@@ -7,9 +7,12 @@
 <br/>
 You can see the DLL search order on 32-bit systems below:<br/>
 1 - The directory from which the application loaded<br/>
-2 - 32-bit System directory (C:\Windows\System32)<br/>
+2 - 32-bit System directory (C:\Windows\System32) (use GetSystemDirectory to get this)<br/>
 3 - 16-bit System directory (C:\Windows\System)<br/>
-4 - Windows directory (C:\Windows)<br/>
+4 - Windows directory (C:\Windows) (use GetWindowsDirectory to get this)<br/>
 5 - The current working directory (CWD)<br/>
-6 - Directories in the PATH environment variable (system then user)<br/>
-</body></html>
+6 - Directories in the PATH environment variable (system then user)(Note: does not include App Paths registry key)<br/>
+<br/>
+Note the Current Working Directory position may change or even NOT on the list!<br/>
+See Cheat Sheets &gt; Windows &gt; Registry<br/>
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms682586(v=vs.85).aspx</body></html>

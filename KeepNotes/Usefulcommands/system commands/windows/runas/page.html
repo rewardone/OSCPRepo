@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Runas</title>
+</head><body>Allows a user to run specific tools and programs with different permissions than the user's current logon provides.<br/>
+<br/>
+Runas is a command-line tool that is built into Windows Vista. To use runas at the command line, open a command prompt, type runas with the appropriate parameters, and then press ENTER.<br/>
+<br/>
+In the user interface for Windows Vista, the Run as… command has been changed to Run as administrator. However, you should rarely have to use the Run as administrator command because Windows Vista will automatically prompt you for an administrator password when it is needed.<br/>
+<br/>
+For examples of how this command can be used, see Examples.<br/>
+<br/>
+Syntax<br/>
+runas [{/profile | /noprofile}] [/env] [{/netonly | /savecred}] [/smartcard] [/showtrustlevels] [/trustlevel] /user:&lt;UserAccountName&gt; "&lt;ProgramName&gt; &lt;PathToProgramFile&gt;"<br/>
+<br/>
+Parameters<br/>
+Parameter&#09;&#09;&#09;Description<br/>
+/profile&#09;&#09;&#09;Loads the user's profile. This is the default. This parameter cannot be used with the /netonly parameter.<br/>
+/no profile&#09;&#09;&#09;Specifies that the user's profile is not to be loaded. This allows the application to load more quickly, but it can also cause a malfunction in some applications.<br/>
+<br/>
+/env&#09;&#09;&#09;&#09;Specifies that the current network environment be used instead of the user's local environment.<br/>
+/netonly&#09;&#09;&#09;Indicates that the user information specified is for remote access only. This parameter cannot be used with the /profile parameter.<br/>
+<br/>
+/savecred&#09;&#09;&#09;Indicates if the credentials have been previously saved by this user. This parameter is not available and will be ignored on Windows Vista Home or Windows Vista Starter Editions. This parameter cannot be used with the /smartcard parameter.<br/>
+<br/>
+/smartcard&#09;&#09;Indicates whether the credentials are to be supplied from a smartcard. This parameter cannot be used with the /savecred parameter.<br/>
+<br/>
+/showtrustlevels&#09;&#09;Displays the trust levels that can be used as arguments to /trustlevel.<br/>
+/trustlevel&#09;&#09;&#09;Specifies the level of authorization at which the application is to run. Use /showtrustlevels to see the trust levels available.<br/>
+<br/>
+/user:&lt;UserAccountName&gt; "&lt;ProgramName&gt; &lt;PathToProgramFile&gt;"<br/>
+Specifies the name of the user account under which to run the program, the program name, and the path to the program file. The user account name format should be &lt;User&gt;@&lt;Domain&gt; or &lt;Domain&gt;\&lt;UserAccountName&gt;.<br/>
+<br/>
+/?&#09;&#09;&#09;&#09;Displays help at the command prompt.</body></html>

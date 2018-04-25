@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>icacls</title>
+</head><body>Displays or modifies discretionary access control lists (DACLs) on specified files, and applies stored DACLs to files in specified directories.<br/>
+<br/>
+For examples of how to use this command, see Examples.<br/>
+Syntax<br/>
+icacls &lt;FileName&gt; [/grant[:r] &lt;Sid&gt;:&lt;Perm&gt;[...]] [/deny &lt;Sid&gt;:&lt;Perm&gt;[...]] [/remove[:g|:d]] &lt;Sid&gt;[...]] [/t] [/c] [/l] [/q] [/setintegritylevel &lt;Level&gt;:&lt;Policy&gt;[...]]<br/>
+icacls &lt;Directory&gt; [/substitute &lt;SidOld&gt; &lt;SidNew&gt; [...]] [/restore &lt;ACLfile&gt; [/c] [/l] [/q]]<br/>
+<br/>
+Parameters<br/>
+Parameter&#09;&#09;&#09;&#09;&#09;Description<br/>
+&lt;FileName&gt;&#09;&#09;&#09;&#09;Specifies the file for which to display DACLs.<br/>
+&lt;Directory&gt;&#09;&#09;&#09;&#09;Specifies the directory for which to display DACLs.<br/>
+/t&#09;&#09;&#09;&#09;&#09;&#09;Performs the operation on all specified files in the current directory and its subdirectories.<br/>
+/c&#09;&#09;&#09;&#09;&#09;&#09;Continues the operation despite any file errors. Error messages will still be displayed.<br/>
+/l&#09;&#09;&#09;&#09;&#09;&#09;Performs the operation on a symbolic link versus its destination.<br/>
+/q&#09;&#09;&#09;&#09;&#09;&#09;Suppresses success messages.<br/>
+[/save &lt;ACLfile&gt; [/t] [/c] [/l] [/q]]&#09;Stores DACLs for all matching files into ACLfile for later use with /restore.<br/>
+[/setowner &lt;Username&gt; [/t] [/c] [/l] [/q]]&#09;Changes the owner of all matching files to the specified user.<br/>
+[/findSID &lt;Sid&gt; [/t] [/c] [/l] [/q]]&#09;Finds all matching files that contain a DACL explicitly mentioning the specified security identifier (SID).<br/>
+<br/>
+[/verify [/t] [/c] [/l] [/q]]&#09;&#09;Finds all files with ACLs that are not canonical or have lengths inconsistent with ACE (access control entry) counts.<br/>
+<br/>
+[/reset [/t] [/c] [/l] [/q]]&#09;&#09;Replaces ACLs with default inherited ACLs for all matching files.<br/>
+[/grant[:r] &lt;Sid&gt;:&lt;Perm&gt;[...]]&#09;Grants specified user access rights. Permissions replace previously granted explicit permissions.<ul><li style="list-style-type: none"></li>
+</ul>
+<ul>&nbsp;&#09;&#09;&#09;&#09;&#09;</ul>
+Without :r, permissions are added to any previously granted explicit permissions.<br/>
+[/deny &lt;Sid&gt;:&lt;Perm&gt;[...]]&#09;&#09;Explicitly denies specified user access rights. An explicit deny ACE is added for the stated permissions and the same permissions in any explicit grant are removed.<br/>
+<br/>
+[/remove[:g|:d]] &lt;Sid&gt;[...]] [/t] [/c] [/l] [/q]&#09;Removes all occurrences of the specified SID from the DACL.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;:g removes all occurrences of granted rights to the specified SID.<ul>&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;:</ul>
+d removes all occurrences of denied rights to the specified SID.<br/>
+[/setintegritylevel [(CI)(OI)]&lt;Level&gt;:&lt;Policy&gt;[...]]&#09;Explicitly adds an integrity ACE to all matching files. Level is specified as:<br/>
+L[ow]<br/>
+M[edium]<br/>
+H[igh]<br/>
+<br/>
+Inheritance options for the integrity ACE may precede the level and are applied only to directories.<br/>
+<br/>
+[/substitute &lt;SidOld&gt; &lt;SidNew&gt; [...]]&#09;Replaces an existing SID (SidOld) with a new SID (SidNew). Requires the Directory parameter.<br/>
+<br/>
+/restore &lt;ACLfile&gt; [/c] [/l] [/q]&#09;Applies stored DACLs from ACLfile to files in the specified directory. Requires the Directory parameter</body></html>

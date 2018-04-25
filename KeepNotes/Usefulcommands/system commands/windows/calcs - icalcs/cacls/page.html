@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>cacls</title>
+</head><body>Syntax<br/>
+<br/>
+cacls &lt;filename&gt; [/t] [/m] [/l] [/s[:sddl]] [/e] [/c] [/g user:&lt;perm&gt;] [/r user [...]] [/p user:&lt;perm&gt; [...]] [/d user [...]]<br/>
+Parameters<br/>
+<br/>
+Parameter&#09;&#09;&#09;&#09;&#09;Description<br/>
+<br/>
+&lt;filename&gt;&#09;&#09;Required. Displays ACLs of specified files.<br/>
+/t&#09;&#09;&#09;&#09;Changes ACLs of specified files in the current directory and all subdirectories.<br/>
+/m&#09;&#09;&#09;&#09;Changes ACLs of volumes mounted to a directory.<br/>
+/l&#09;&#09;&#09;&#09;Work on the Symbolic Link itself versus the target.<br/>
+/s:sddl&#09;&#09;&#09;Replaces the ACLs with those specified in the SDDL string (not valid with /e, /g, /r, /p, or /d).<br/>
+/e&#09;&#09;&#09;&#09;Edit ACL instead of replacing it.<br/>
+/c&#09;&#09;&#09;&#09;Continue on access denied errors.<br/>
+/g user:&lt;perm&gt;&#09;&#09;Grant specified user access rights.<br/>
+<br/>
+Valid values for permission:<br/>
+n: none<br/>
+r: read<br/>
+w: write<br/>
+c: change (write)<br/>
+f: full control<br/>
+<br/>
+/r user [...]&#09;&#09;Revoke specified user's access rights (only valid with /e).<br/>
+[/p user:&lt;perm&gt; [...]&#09;Replace specified user's access rights.<br/>
+<br/>
+Valid values for permission:<br/>
+n: none<br/>
+r: read<br/>
+w: write<br/>
+c: change (write)<br/>
+f: full control<br/>
+<br/>
+[/d user [...]&#09;&#09;Deny specified user access.<br/>
+/?&#09;&#09;&#09;&#09;Displays help at the command prompt.</body></html>

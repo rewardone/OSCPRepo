@@ -40,4 +40,43 @@ Refresh policies<br/>
 &nbsp; &nbsp; gpupdate /force<br/>
 <br/>
 Disable the Firewall<br/>
-&nbsp; &nbsp; reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f</body></html>
+&nbsp; &nbsp; reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Syntax<br/>
+reg query &lt;KeyName&gt; [{/v &lt;ValueName&gt; | /ve}] [/s] [/se &lt;Separator&gt;] [/f &lt;Data&gt;] [{/k | /d}] [/c] [/e] [/t &lt;Type&gt;] [/z]<br/>
+<br/>
+Parameters<br/>
+Parameter&#09;&#09;&#09;Description<br/>
+&lt;KeyName&gt;&#09;&#09;Specifies the full path of the subkey. For specifying remote computers, include the computer name (in the format \\ComputerName\) as part of the KeyName. Omitting \\ComputerName\ causes the operation to default to the local computer. The KeyName must include a valid root key. Valid root keys for the local computer are: HKLM, HKCU, HKCR, HKU, and HKCC. If a remote computer is specified, valid root keys are: HKLM and HKU.<br/>
+<br/>
+/v &lt;ValueName&gt;&#09;Specifies the registry value name that is to be queried. If omitted, all value names for KeyName are returned. ValueName for this parameter is optional if the /f option is also used.<br/>
+<br/>
+/ve&#09;&#09;&#09;&#09;Runs a query for value names that are empty.<br/>
+/s&#09;&#09;&#09;&#09;Specifies to query all subkeys and value names recursively.<br/>
+/se &lt;Separator&gt;&#09;Specifies the single value separator to search for in the value name type REG_MULTI_SZ. If Separator is not specified, \0 is used.<br/>
+<br/>
+/f &lt;Data&gt;&#09;&#09;&#09;Specifies the data or pattern to search for. Use double quotes if a string contains spaces. If not specified, a wildcard (*) is used as the search pattern.<br/>
+<br/>
+/k&#09;&#09;&#09;&#09;Specifies to search in key names only.<br/>
+/d&#09;&#09;&#09;&#09;Specifies to search in data only.<br/>
+/c&#09;&#09;&#09;&#09;Specifies that the query is case sensitive. By default, queries are not case sensitive.<br/>
+/e&#09;&#09;&#09;&#09;Specifies to return only exact matches. By default, all the matches are returned.<br/>
+/t &lt;Type&gt;&#09;&#09;&#09;Specifies registry types to search. Valid types are: REG_SZ, REG_MULTI_SZ, REG_EXPAND_SZ, REG_DWORD, REG_BINARY, REG_NONE. If not specified, all types are searched.<br/>
+<br/>
+/z&#09;&#09;&#09;&#09;Specifies to include the numeric equivalent for the registry type in search results.<br/>
+/?&#09;&#09;&#09;&#09;Displays help for reg query at the command prompt.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

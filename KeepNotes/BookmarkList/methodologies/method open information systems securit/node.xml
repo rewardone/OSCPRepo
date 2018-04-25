@@ -3,15 +3,15 @@
 <version>6</version>
 <dict>
   <key>duplicate_of</key><string>80f40016-4ee7-417c-b998-a5444a94cfa1</string>
-  <key>title</key><string>Method: Open Information Systems Security Group</string>
   <key>nodeid</key><string>43229d21-a76f-4e4f-8788-90245faa37b6</string>
   <key>modified_time</key><integer>1513267689</integer>
   <key>expanded2</key><false/>
-  <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1513267689</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>3</integer>
+  <key>title</key><string>Method: Open Information Systems Security Group</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>4</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

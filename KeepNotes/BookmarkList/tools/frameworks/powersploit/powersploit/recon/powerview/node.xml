@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>PowerView</string>
+  <key>nodeid</key><string>52f77135-d6b6-472e-a55e-92def04388f9</string>
+  <key>modified_time</key><integer>1524671483</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524671455</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

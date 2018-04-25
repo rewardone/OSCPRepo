@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>AT</title>
+</head><body>Syntax<br/>
+at [\\ComputerName] [{[ID] [/delete] | /delete [/yes]}]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;at [[\\ComputerName] Hours:Minutes [/interactive] [{/every:Date[,...] | /next:Date[,...]}] Command]<br/>
+<br/>
+Parameters<br/>
+<br/>
+&nbsp;**\\**ComputerName &#09;Specifies a remote computer. If you omit this parameter, at schedules the commands and programs on the local computer.<br/>
+<br/>
+&nbsp;ID &#09;&#09;&#09;&#09;Specifies the identification number assigned to a scheduled command.<br/>
+&nbsp;/delete &#09;&#09;&#09;Cancels a scheduled command. If you omit ID, all of the scheduled commands on the computer are canceled.<br/>
+&nbsp;/yes &#09;&#09;&#09;Answers yes to all queries from the system when you delete scheduled events.<br/>
+&nbsp;Hours**:Minutes &#09;Specifies the time when you want to run the command. Time is expressed as Hours:**Minutes in 24-hour notation (that is, 00:00 [midnight] through 23:59).<br/>
+<br/>
+&nbsp;/interactive &#09;&#09;Allows Command to interact with the desktop of the user who is logged on at the time Command runs.<br/>
+&nbsp;/every: &#09;&#09;&#09;Runs Command on every specified day or days of the week or month (for example, every Thursday, or the third day of every month).<br/>
+<br/>
+&nbsp;Date &#09;&#09;&#09;Specifies the date when you want to run the command. You can specify one or more days of the week (that is, type M,T,W,Th,F,S,Su) or one or more days of the month (that is, type 1 through 31). Separate multiple date entries with commas. If you omit Date, at uses the current day of the month.<br/>
+<br/>
+&nbsp;/next: &#09;&#09;&#09;Runs Command on the next occurrence of the day (for example, next Thursday).<br/>
+&nbsp;Command &#09;&#09;Specifies the Windows command, program (that is, .exe or .com file), or batch program (that is, .bat or .cmd file) that you want to run. When the command requires a path as an argument, use the absolute path (that is, the entire path beginning with the drive letter). If the command is on a remote computer, specify Universal Naming Convention (UNC) notation for the server and share name, rather than a remote drive letter.<br/>
+<br/>
+&nbsp;/? &#09;&#09;&#09;&#09;Displays help at the command prompt.</body></html>
