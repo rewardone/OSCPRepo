@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>SUID Check: Shared Objects</string>
+  <key>nodeid</key><string>8d64d88e-f234-4951-ab1e-4a987ae3a1c9</string>
+  <key>modified_time</key><integer>1524752224</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524751143</integer>
+  <key>order</key><integer>11</integer>
+</dict>
+</node>

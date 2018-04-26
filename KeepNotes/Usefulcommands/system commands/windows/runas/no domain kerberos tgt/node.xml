@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>No Domain Kerberos TGT</string>
+  <key>nodeid</key><string>eb219056-7a6a-4dbb-98b9-15e6bfab553b</string>
+  <key>modified_time</key><integer>1524768964</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524768920</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

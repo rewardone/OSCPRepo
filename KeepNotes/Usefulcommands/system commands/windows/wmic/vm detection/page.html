@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VM Detection</title>
+</head><body>Generic VM/Sandbox Detection<br/>
+Malware can use WMI to do generic detection of VM and sandbox environments. For example, if there is less than 2GB of physical memory or if there is only a single processor core, the OS is likely to be running in a<br/>
+virtual machine.<br/>
+Sample WQL Queries:<br/>
+SELECT * FROM Win32_ComputerSystem WHERE TotalPhysicalMemory &lt; 2147483648<br/>
+SELECT * FROM Win32_ComputerSystem WHERE NumberOfLogicalProcessors &lt; 2<br/>
+<br/>
+<br/>
+Detecting VMWare strings<br/>
+SELECT * FROM Win32_NetworkAdapter WHERE Manufacturer LIKE “%VMware%”<br/>
+SELECT * FROM Win32_BIOS WHERE SerialNumber LIKE “%VMware%”<br/>
+SELECT * FROM Win32_Process WHERE Name=”vmtoolsd.exe”<br/>
+SELECT * FROM Win32_NetworkAdapter WHERE Name LIKE “%VMware%”</body></html>

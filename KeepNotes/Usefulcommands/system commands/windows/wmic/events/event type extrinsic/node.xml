@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Event Type Extrinsic</string>
+  <key>nodeid</key><string>f31db27a-e37a-412d-bdba-0d524a6f8107</string>
+  <key>modified_time</key><integer>1524762951</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524762848</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

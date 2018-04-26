@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Implicit Loading/Linking</title>
+</head><body><b>1. Implicit loading/linking of shared objects</b><br/>
+The implicit linking consists to start a main program referencing symbols located in some shared objects which are automatically loaded and linked to the main program at startup.<br/>
+<br/>
+1.1. <b>TEST 1</b>&nbsp;: Building of shared lib with "ld"<br/>
+--&gt; Location of the shared libs at program startup :<br/>
+&gt; export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:`pwd`<br/>
+<br/>
+--&gt; Make the shared library :<br/>
+&gt; g++ -c base_shared.cc<br/>
+&gt; <b>ld -shared</b>&nbsp;base_shared.o -o libbase_shared.so<br/>
+<br/>
+--&gt; Make the main program<br/>
+&gt; g++ base.cc -L`pwd` -lbase_shared<br/>
+/usr/bin/ld: a.out : hidden symbole « __dso_handle » in /usr/lib/gcc/i486-linux-gnu/4.1.2/crtbegin.o est référencé par DSO<br/>
+/usr/bin/ld: édition de lien finale en échec: Section non-représentable pour la sortie<br/>
+collect2: ld returned 1 exit status<br/>
+<br/>
+We can see that the linking of the main program fails because of the referencing of a hidden symbol : __dso_handle.<br/>
+<br/>
+1.2. <b>TEST 2</b>&nbsp;: Building of shared lib with "gcc"<br/>
+--&gt; Location of the shared libs at program startup :<br/>
+&gt; export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:`pwd`<br/>
+<br/>
+--&gt; Make the shared library :<br/>
+&gt; g++ -c base_shared.cc<br/>
+&gt; <b>g++ -shared</b>&nbsp;base_shared.o -o libbase_shared.so<br/>
+<br/>
+--&gt; Make the main program<br/>
+&gt; g++ base.cc -L`pwd` -lbase_shared<br/>
+<br/>
+--&gt; Run the program<br/>
+&gt; ./a.out<br/>
+Constructor of toto<br/>
+Main entry point<br/>
+Shared lib entry point, toto's var = 18<br/>
+Destructor of toto<br/>
+<br/>
+<br/>
+We can see that the program is dynamically linked to the shared object. The static constructor and destructor of the shared library are run automatically at loading/unloading time.<br/>
+</body></html>

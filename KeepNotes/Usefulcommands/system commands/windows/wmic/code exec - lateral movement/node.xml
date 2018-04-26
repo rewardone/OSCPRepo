@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Code Exec / Lateral Movement</string>
+  <key>nodeid</key><string>9cd0b44e-fc14-4bc4-a97f-b97a7c843d9f</string>
+  <key>modified_time</key><integer>1524756409</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524756371</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>3</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

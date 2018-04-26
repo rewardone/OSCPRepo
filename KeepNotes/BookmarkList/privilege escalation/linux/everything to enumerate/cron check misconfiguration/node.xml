@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Cron Check: Misconfiguration</string>
+  <key>nodeid</key><string>8c2601d8-999d-41a1-ae97-fe0df40b40a0</string>
+  <key>modified_time</key><integer>1524750375</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524750375</integer>
+  <key>order</key><integer>10</integer>
+</dict>
+</node>

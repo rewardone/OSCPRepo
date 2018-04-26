@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Startup Check: Init.d</string>
+  <key>nodeid</key><string>f5fe1ba8-e5b0-4ac9-8cad-2d6e0e60da90</string>
+  <key>modified_time</key><integer>1524752695</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524752632</integer>
+  <key>order</key><integer>15</integer>
+</dict>
+</node>

@@ -19,4 +19,21 @@ wmic useraccount get /ALL<br/>
 wmic share get /ALL (you can use ? for gets help ! )<br/>
 wmic startup list full (this can be a huge list!!!)<br/>
 wmic /node:"hostname" bios get serialnumber (this can be great for finding warranty info about<br/>
-target)</body></html>
+target)<br/>
+<br/>
+<br/>
+wmic computerystem list full /format:list &nbsp;<br/>
+wmic process list /format:list &nbsp;<br/>
+wmic ntdomain list /format:list &nbsp;<br/>
+wmic useraccount list /format:list &nbsp;<br/>
+wmic group list /format:list &nbsp;<br/>
+wmic sysaccount list /format:list &nbsp;<br/>
+<br/>
+Get adminsitrators of /node<br/>
+wmic /node:ordws01 path win32_groupuser where (groupcomponent="win32_group.name=\"administrators\",domain=\"ORDWS01\"") <br/>
+<br/>
+Get loggedonusers<br/>
+wmic /node:ordws01 path win32_loggedonuser get antecedent &nbsp;<br/>
+<br/>
+Give wmic a file of targets<br/>
+wmic /node:@workstations.txt path win32_loggedonuser get antecedent &nbsp;</body></html>

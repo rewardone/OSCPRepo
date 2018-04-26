@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Obtain A Ticket WIthout A Domain</title>
+</head><body>If for some reason you find yourself not on a domain joined computer, you can use RunAs /netonly functionality in order to generate a ticket<br/>
+This will generate a TGT for the user you invoke "runas" for<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+In this new command prompt, we don't need to run the net use command to open connections with specified credentials. We can just use normal commands the Windows will use our LogonId with Kerberos authentication:<br/>
+We can verify that it used Kerberos authentication by running klist again and noting the principal name for the TGT, "jarrieta@cscou.lab":<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+From this command prompt we are essentially "on the domain" and can start running native Windows commands with the privileges of jarrieta.<br/>
+</body></html>

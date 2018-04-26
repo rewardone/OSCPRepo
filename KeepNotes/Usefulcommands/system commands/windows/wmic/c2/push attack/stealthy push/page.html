@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Stealthy Push</title>
+</head><body>Problem: Previous examples might get caught with command-line auditing (powershell.exe invocation / Win32_Process Create)<br/>
+<br/>
+Solution: Create a "Temporary" permanent WMI event subscription<br/>
+&nbsp;&#09;Event filter example: __IntervalTimerInstruction<br/>
+&nbsp;&#09;Event consumer: ActiveScriptEventConsumer<br/>
+&nbsp;&#09;&#09;Execute "pushed" payload<br/>
+&nbsp;&#09;&#09;Immediately delete the permanent event subscription<br/>
+&nbsp;&#09;Effect: Calls %SystemRoot%\system32\wbem\scrcons.exe -Embedding<br/>
+<br/>
+Implementation: Exercise for the reader</body></html>

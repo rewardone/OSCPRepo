@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>First, some design info. Windows Remote Management is the Microsoft implementation of the WS-Management Protocol. It uses SOAP (Simple Object Access Protocol) over HTTP and HTTPS, and thus is considered a firewall-friendly protocol. It was designed to provide interoperability and consistency for enterprise networks that have a variety of operating systems, to locate and exchange management information.<br/>
+<br/>
+WinRM provides a command line interface that can be used to perform common management tasks, and also provides a scripting API so you can write your own Windows Scripting Host based scripts. In the background, WinRM relies on management data provided by WMI; however it makes the exchange of data much easier by utilizing the HTTP protocol.<br/>
+<br/>
+Apart from WMI, WinRM utilizes the Intelligent Platform Management Interface (IPMI) driver for hardware management. The IPMI provider and driver enable you to control and diagnose remote server hardware through BMCs [Baseboard Management Controllers] even when the OS is not running or deployed. Effectively BMC is a chip connected to the processor board of a server; it has its own network adapter and hence can monitor the server in situations even when the server is malfunctioning.<br/>
+<br/>
+<u><b>Basic Configuration:</b></u>&nbsp; <br/>
+winrm quickconfig<br/>
+This command performs configuration actions to enable this machine for remote management, which includes:<br/>
+<ul><li>Starts the WinRM service</li>
+<li>Set the WinRM service type to auto start</li>
+<li>Create a listener to accept requests on any IP address</li>
+</ul>
+<br/>
+Enable firewall exception for WS-Management traffic (for http only)<br/>
+<br/>
+To list all the WinRM listeners, run this command:<br/>
+“Winrm enumerate winrm/config/listener”<br/>
+<br/>
+You can also get the configuration information of the Service, Client and WinRS by running the following command:<br/>
+“Winrm get winrm/config”<br/>
+<br/>
+Now let us look at the different operations that WinRM supports to access WMI data.<br/>
+<br/>
+The list of currently supported operations is:<br/>
+<br/>
+GET<br/>
+PUT<br/>
+ENUMERATION<br/>
+INVOKE<br/>
+<br/>
+Using the WinRM get command you can also query different services configuration running on the server.<br/>
+<br/>
+Example<br/>
+“Winrm get wmicimv2/Win32_Service?Name=spooler”<br/>
+<br/>
+You can also use the WinRm get command to query the remote computer:<br/>
+“Winrm get Winrm/config –r:remotemachinename”<br/>
+<br/>
+Run this to query the service of remote computer:<br/>
+“Winrm get wmicimv2/Win32_Service?Name=spooler –r:remotemachinename”<br/>
+<br/>
+To reboot a remote machine:<br/>
+“winrm invoke reboot wmicimv2/Win32_OperatingSystem -r:&lt;some computer&gt;”<br/>
+<br/>
+Start a service on a remote machine<br/>
+“winrm invoke startservice wmicimv2/Win32_Service?name=w32time -r:&lt;some computer&gt;”<br/>
+<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+</body></html>

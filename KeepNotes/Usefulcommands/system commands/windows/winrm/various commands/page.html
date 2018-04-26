@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Various Commands</title>
+</head><body>D<div style="text-align: center"><b>escription&#09;&#09;&#09;&#09;&#09;&#09;&#09;Command</b><i><br/>
+</i></div><i><div style="text-align: left">Run from an <b>Elevated</b> Command prompt</div></i><br/>
+<br/>
+winrm QuickConfig&#09;&#09;&#09;&#09;&#09;&#09;&#09;Quickly configure the WS-Man service<br/>
+winrm invoke Restore winrm/Config @{} &#09;&#09;&#09;Quickly delete the WS-Man listener<br/>
+<br/>
+<i><div style="text-align: left">Run from an <b>standard</b> Command prompt</div></i><div style="text-align: center"><br/>
+</div><br/>
+winrm enumerate wmicimv2/Win32_ComputerSystem&#09;Display your machine's basic hardware info<br/>
+winrm get wmicimv2/Win32_OperatingSystem&#09;&#09;Display your operating system properties<br/>
+winrm get wmicimv2/Win32_OperatingSystem -format:pretty &#09;Output your OS info in XML<br/>
+winrm id -auth:none -remote:&lt;some machine&gt; &#09;&#09;Ping WS-Man on a remote machine<br/>
+winrm id -remote:&lt;some machine&gt;&#09;&#09;&#09;&#09;Test WS-Man access to a remote machine**<br/>
+winrm get winrm/Config -r:&lt;some machine&gt;&#09;&#09;&#09;Grab a remote machine's WS-Man config<br/>
+<br/>
+Grab a remote machine's CPU load<br/>
+winrm g wmicimv2/Win32_Processor?DeviceID=CPU0 -fragment:LoadPercentage -r:&lt;some computer&gt;<br/>
+<br/>
+Grab a remote machine's free memory<br/>
+winrm g wmicimv2/Win32_OperatingSystem -fragment:FreePhysicalMemory -r:&lt;some computer&gt;<br/>
+<br/>
+Stop a service on a remote machine<br/>
+winrm invoke stopservice wmicimv2/Win32_Service?name=w32time -r:&lt;some computer&gt;<br/>
+<br/>
+Start a service on a remote machine<br/>
+winrm invoke startservice wmicimv2/Win32_Service?name=w32time -r:&lt;some computer&gt;<br/>
+<br/>
+Reboot a remote machine<br/>
+winrm invoke reboot wmicimv2/Win32_OperatingSystem -r:&lt;some computer&gt;<br/>
+<br/>
+Run a command on a remote machine (this uses winr<b>S</b>, not winr<b>M</b>)<br/>
+winrs -r:&lt;some computer&gt; ipconfig /all<br/>
+<br/>
+<i><div style="text-align: left">Run from <b>PowerShell</b></div></i><div style="text-align: center"><br/>
+</div><br/>
+Use PowerShell to grab the WS-Man Win32_OperatingSystem XML output<br/>
+[xml]$osInfo = winrm get wmicimv2/Win32_OperatingSystem /format:pretty<br/>
+<br/>
+$osInfo.Win32_OperatingSystem.Version&#09;&#09;&#09;Display the OS version property<br/>
+$osInfo.Win32_OperatingSystem.LastBootupTime.DateTime&#09;&#09;Display the last boot time<br/>
+<br/>
+Put free memory metric into an XML variable<br/>
+[xml]$freemem = cmd /c "winrm get wmicimv2/Win32_OperatingSystem -fragment:FreePhysicalMemory -f:pretty -r:&lt;some computer&gt;"<br/>
+<br/>
+$freemem.XMLFragment.FreePhysicalMemory&#09;&#09;Display the free memory value<br/>
+&nbsp; </body></html>

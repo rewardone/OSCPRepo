@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>d4acafc1-402a-4802-8200-6a2850fbb8c0</string>
+  <key>title</key><string>.so Injection</string>
+  <key>nodeid</key><string>e00a8286-d0a0-4918-a047-f9ac94d04d7f</string>
+  <key>modified_time</key><integer>1524672902</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524672704</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

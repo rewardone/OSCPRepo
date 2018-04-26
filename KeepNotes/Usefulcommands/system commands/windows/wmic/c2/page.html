@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>C2</title>
+</head><body>The previous example demonstrated the local creation of a WMI class. It is possible, however, to create WMI classes remotely as will be demonstrated in the next section. The ability to create and modify a class remotely gives an attacker the ability to store and retrieve arbitrary data, turning WMI into an effective C2 channel. <br/>
+<br/>
+It is up to the attacker to decide what they want to do with the data stored in the WMI repository. The next few examples show practical examples of how attackers have used this attack mechanism. <br/>
+<br/>
+WMI as a C2 Channel <br/>
+Using WMI as a mechanism to store and retrieve data also enables WMI to act as a pure C2 channel. This clever use of WMI was first demonstrated publicly by Andrei Dumitrescu in his WMI Shell tool15 that utilized the creation and modification of WMI namespaces as a C2 channel. There are actually numerous C2 staging mechanisms that could be used such as WMI class creation as was just discussed. It is also possible to use the registry to stage data for exfiltration over a WMI C2 channel. The following examples demonstrate some proof-of-concept code that utilizes WMI as a C2 channel. &nbsp;</body></html>

