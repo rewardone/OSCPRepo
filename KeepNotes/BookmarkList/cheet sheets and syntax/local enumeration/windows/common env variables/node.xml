@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Common Env Variables</string>
+  <key>nodeid</key><string>ecf38cb7-2063-4ad1-a4e3-71f41c8f0620</string>
+  <key>modified_time</key><integer>1524842096</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524842074</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

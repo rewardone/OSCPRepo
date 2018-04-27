@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Common Env Variables</title>
+</head><body>%ALLUSERSPROFILE% --- C:\ProgramData<br/>
+%APPDATA% --- C:\Users\{username}\AppData\Roaming<br/>
+%COMMONPROGRAMFILES% --- C:\Program Files\Common Files<br/>
+%COMMONPROGRAMFILES(x86)% --- C:\Program Files (x86)\Common Files<br/>
+%CommonProgramW6432% --- C:\Program Files\Common Files<br/>
+%COMSPEC% --- C:\Windows\System32\cmd.exe<br/>
+%HOMEDRIVE% --- C:\<br/>
+%HOMEPATH% --- C:\Users\{username}<br/>
+%LOCALAPPDATA% --- C:\Users\{username}\AppData\Local<br/>
+%LOGONSERVER% --- \\{domain_logon_server}<br/>
+%PATH% --- C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem<br/>
+%PathExt% --- .com;.exe;.bat;.cmd;.vbs;.vbe;.js;.jse;.wsf;.wsh;.msc<br/>
+%PROGRAMDATA% --- C:\ProgramData<br/>
+%PROGRAMFILES% --- C:\Program Files<br/>
+%ProgramW6432% --- C:\Program Files<br/>
+%PROGRAMFILES(X86)% --- C:\Program Files (x86)<br/>
+%PROMPT% --- $P$G<br/>
+%SystemDrive% --- C:<br/>
+%SystemRoot% --- C:\Windows<br/>
+%TEMP% --- C:\Users\{username}\AppData\Local\Temp<br/>
+%TMP% --- C:\Users\{username}\AppData\Local\Temp<br/>
+%USERDOMAIN% --- {userdomain}<br/>
+%USERNAME% --- {username}<br/>
+%USERPROFILE% --- C:\Users\{username}<br/>
+%WINDIR% --- C:\Windows<br/>
+%PUBLIC% --- C:\Users\Public<br/>
+%PSModulePath% --- %SystemRoot%\system32\WindowsPowerShell\v1.0\Modules\<br/>
+<br/>
+SET [variable=[string]]<br/>
+- variable: Specifies the environment-variable name.<br/>
+- string: Specifies a series of characters to assign to the variable.<br/>
+<br/>
+Type SET without parameters to display the current environment variables.</body></html>

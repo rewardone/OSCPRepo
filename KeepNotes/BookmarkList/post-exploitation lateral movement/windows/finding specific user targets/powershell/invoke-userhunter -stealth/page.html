@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Invoke-StealthUserHunter</title>
+</head><body>Uses an old red teaming trick:<br/>
+1. Queries AD for all users and extracts all homeDirectory fields to identify likely domain file servers<br/>
+2. Runs NetSessionEnum against each file server to enumerate remote sessions matching against target user list<br/>
+<br/>
+Gets reasonable coverage with a lot less traffic than UserHunter<br/>
+<br/>
+No Admin privs needed!<br/>
+<img src="image.png" /></body></html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>fb129689-8aa0-441b-b23c-a06586d0fefc</string>
+  <key>title</key><string>Group Policy SYSVOL creds</string>
+  <key>nodeid</key><string>e0e3d730-6ece-4fa0-9480-d2acdfba517e</string>
+  <key>modified_time</key><integer>1523845982</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1521463844</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

@@ -4,13 +4,14 @@
 <dict>
   <key>expanded</key><false/>
   <key>duplicate_of</key><string>73c21fae-c0c4-428d-9bd6-e29c72073161</string>
-  <key>title</key><string>John</string>
   <key>nodeid</key><string>d78bcc2e-d736-4d1d-9c63-56ef7d606b88</string>
   <key>modified_time</key><integer>1509681194</integer>
-  <key>version</key><integer>6</integer>
+  <key>expanded2</key><true/>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1509681194</integer>
   <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>John</string>
+  <key>version</key><integer>6</integer>
   <key>order</key><integer>2</integer>
   <key>info_sort</key><string>order</string>
 </dict>

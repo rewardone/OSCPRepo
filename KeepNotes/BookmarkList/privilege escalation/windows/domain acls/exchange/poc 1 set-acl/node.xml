@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>PoC 1: Set-ACL</string>
+  <key>nodeid</key><string>b213d04b-65b5-4d4a-aaf3-a3ea8b82294d</string>
+  <key>modified_time</key><integer>1524849836</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524849789</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

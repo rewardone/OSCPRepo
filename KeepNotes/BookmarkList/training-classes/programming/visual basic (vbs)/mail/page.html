@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mail</title>
+</head><body>' VBScript to Send Email Notification<br/>
+&nbsp;<br/>
+Sub SendEmail(ToAddress, Subject, Text)<br/>
+&nbsp; &nbsp; Dim iMsg <br/>
+&nbsp; &nbsp; Dim iConf<br/>
+&nbsp; &nbsp; Dim Flds<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; Set iMsg = CreateObject("CDO.Message")<br/>
+&nbsp; &nbsp; Set iConf = CreateObject("CDO.Configuration")<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; iConf.Load -1<br/>
+&nbsp; &nbsp; Set Flds = iConf.Fields<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; With Flds<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Item("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = True<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Item("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Item("http://schemas.microsoft.com/cdo/configuration/sendusername") = "email"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Item("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "password"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "smtp.gmail.com" 'smtp mail server<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Item("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 465 'stmp server<br/>
+&#09;&#09; iMsg.AddAttachment "C:\path" <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Update<br/>
+&nbsp; &nbsp; End With<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; With iMsg<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Set .Configuration = iConf<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .To = ToAddress<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .From = "jogn@gmail.com"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Subject = Subject<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .TextBody = Text<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; .Send<br/>
+&nbsp; &nbsp; End With<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; Set iMsg = Nothing<br/>
+&nbsp; &nbsp; Set iConf = Nothing<br/>
+End Sub<br/>
+&nbsp;<br/>
+If WScript.Arguments.Count &lt;&gt; 3 Then<br/>
+&nbsp; &nbsp; WScript.Echo "Usage: cscript.exe " &amp; WScript.ScriptFullName &amp; " email subject text"<br/>
+Else <br/>
+&nbsp; &nbsp; SendEmail WScript.Arguments(0), WScript.Arguments(1), WScript.Arguments(2)<br/>
+End If</body></html>

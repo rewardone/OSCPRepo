@@ -6,6 +6,7 @@
   <key>title</key><string>Password Locations</string>
   <key>nodeid</key><string>5ea9cb84-fe76-44cd-bbf2-d49ad4af2991</string>
   <key>modified_time</key><integer>1524105450</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522454869</integer>

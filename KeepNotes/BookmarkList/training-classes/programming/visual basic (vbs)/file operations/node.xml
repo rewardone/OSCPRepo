@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>File Operations</string>
+  <key>nodeid</key><string>bca55de0-1b84-42a5-837e-7110041a7ca8</string>
+  <key>modified_time</key><integer>1524841617</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524841617</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

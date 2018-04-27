@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Delete History / Logs</string>
   <key>nodeid</key><string>9c630c29-69bf-4414-af5c-86659b450353</string>
   <key>modified_time</key><integer>1524579939</integer>

@@ -5,6 +5,7 @@
   <key>title</key><string>Firefox</string>
   <key>nodeid</key><string>b85db95a-19af-4bfb-88ff-35f58260de9a</string>
   <key>modified_time</key><integer>1524104797</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524104789</integer>
