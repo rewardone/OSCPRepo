@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ICMPTX Use</title>
+</head><body>The way icmptx works is that you need to set up a proxy/server between you, the client, and the intended target on the web. First, let's set up the proxy/server.<br/>
+<br/>
+<b>To set up the up the proxy/serve</b>r, the syntax is simple:<br/>
+kali &gt; icmptx -s 10.0.0.1<br/>
+<br/>
+This points the server/proxy at the IP address 10.0.0.1. This is only an example; you will need to replace this IP with whatever the target IP address you are trying to connect to.<br/>
+<br/>
+<br/>
+<b>Next, we need to set up a tunne</b>l. A tunnel provides a packet transmission and reception place for user-based applications. Since icmptx is a user-based application, we need to set up a tunnel to send and receive packets, in this case, ICMP packets.<br/>
+<br/>
+We can check to see whether our kernel supports tunneling by typing:<br/>
+kali &gt; ifconfig tun0<br/>
+<br/>
+This response indicates that our Debian operating system (that Kali is built on) supports tunneling. Let's set up a tunnel on the server now.<br/>
+<br/>
+<br/>
+Next, we need to set up this server to first, ignore ICMP requests and second, forward IP traffic. If we didn't tell the kernel to ignore ICMP requests, it would respond with a echo reply (Type 8), which is the normal response. We don't want that. We want the ICMP traffic to enter the server and pass right through it.<br/>
+<br/>
+We can tell the kernel to ignore ICMP traffic by typing:<br/>
+kali &gt; echo 1 &gt; /proc/sys/net/ipv4/icmp_echo_ignore_all<br/>
+<br/>
+Then we need to forward IP traffic, by typing:<br/>
+kali &gt; echo 1 &gt; /proc/sys/net/ipv4/ip_forward<br/>
+<br/>
+<br/>
+<b>Now, let's set up our client. </b>This is the system we will be using to access the Internet from. We need to install icmptx on this system as well, but here we will be using the client and not the server setup.<br/>
+<br/>
+To do so, type:<br/>
+kali &gt; icmptx -c &lt;IP address of the proxy/server&gt;<br/>
+<br/>
+Then we need to establish a tunnel on this system as well.<br/>
+ifconfig tun0 mtu 65535 up 10.0.0.1 netmask 255.255.255.0<br/>
+<br/>
+Next, we need to set up a route to the proxy.<br/>
+route del default<br/>
+route add -host 76.23.54.12 gw 192.168.1.1 dev wlan0<br/>
+<br/>
+Lastly, we need to set a route through the tunnel we created (tun0) to the server on the web we want to access.<br/>
+route add default gw 10.0.0.1 tun0<br/>
+<br/>
+Although using icmptx is probably not a practical means of accessing the web on a daily basis, in a pinch or under severely clandestine circumstances, it will get you past web-based authentication and leave almost no trail.<br/>
+</body></html>

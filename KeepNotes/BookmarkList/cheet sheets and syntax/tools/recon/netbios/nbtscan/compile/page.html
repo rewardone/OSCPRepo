@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Compile</title>
+</head><body>nbtscan is a command line tool that finds exposed NETBIOS nameservers, it’s a good first step for finding open shares.<br/>
+<br/>
+Don't use the version of nbtscan that ships with KALI<br/>
+<br/>
+Grab nbtscan from the <a href="http://www.unixwiz.net/tools/nbtscan.html">link</a>&nbsp;and build it from source, this version tends to find more information<br/>
+<br/>
+Compile nbtscan on KALI<br/>
+root@kali:~/nbtscan# wget http://www.unixwiz.net/tools/nbtscan-source-1.0.35.tgz<br/>
+root@kali:~/nbtscan# tar -xvzf nbtscan-source-1.0.35.tgz<br/>
+root@kali:~/nbtscan# make<br/>
+root@kali:~/nbtscan# ./nbtscan<br/>
+nbtscan 1.0.35 - 2008-04-08 - http://www.unixwiz.net/tools/<br/>
+<br/>
+usage: ./nbtscan [options] target [targets...]<br/>
+<br/>
+&nbsp; &nbsp;Targets are lists of IP addresses, DNS names, or address<br/>
+&nbsp; &nbsp;ranges. Ranges can be in /nbits notation ("192.168.12.0/24")<br/>
+&nbsp; &nbsp;or with a range in the last octet ("192.168.12.64-97")</body></html>

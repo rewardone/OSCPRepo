@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>A flaw in WPS, or WiFi Protected Setup, known about for over a year by TNS, was finally exploited with proof of concept code. Both TNS, the discoverers of the exploit and Stefan at .braindump have created their respective "reaver" and "wpscrack" programs to exploit the WPS vulnerability. From this exploit, the WPA password can be recovered almost instantly in plain-text once the attack on the access point WPS is initiated, which normally takes 2-10 hours (depending on which program you use).<br/>
+<br/>
+This exploit defeats WPS via an intelligent brute force attack to the static WPS PIN. By guessing the PIN, the router will actually throw back, whether or not the first four digits (of eight) are correct. Then, the final number is a checking number used to satisfy an algorithm. This can be exploited to brute force the WPS PIN, and allow recovery of the WPA password in an incredibly short amount of time, as opposed to the standard attack on WPA.<br/>
+<br/>
+The Keys to Success<br/>
+It's important to note, though, that new APs no longer have this vulnerability. This attack will only work on APs sold during that window of 2006 and early 2012. Since many families keep their APs for many years, there are still many of these vulnerable ones around.</body></html>

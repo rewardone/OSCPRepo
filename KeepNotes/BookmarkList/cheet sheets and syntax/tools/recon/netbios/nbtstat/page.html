@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NbtStat</title>
+</head><body>The nbtstat command removes and corrects preloaded entries using a number of case-sensitive switches. The nbtstat - a &lt;name&gt;** command performs a NetBIOS adapter status command on the computer name specified by &lt; name&gt; . The adapter status command returns the local NetBIOS name table for that computer as well as the MAC address of the adapter card. The <b>nbtstat -A &lt; IP address &gt;</b>&nbsp;command performs the same function using a target IP address rather than a name.<br/>
+<br/>
+The <b>nbtstat - c</b>&nbsp;option shows the contents of the NetBIOS name cache, which contains NetBIOS name-to-IP address mappings.<br/>
+<br/>
+<b>nbtstat -n</b>&nbsp;displays the names that have been registered locally on the system by NetBIOS applications such as the server and redirector.<br/>
+<br/>
+The <b>nbtstat -r</b>&nbsp;command displays the count of all NetBIOS names resolved by broadcast and by querying a WINS server. The nbtstat -R command purges the name cache and reloads all #PRE entries from the LMHOSTS file. #PRE entries are the LMHOSTS name entries that are preloaded into the cache. For more information about the LMHOSTS file, see the appendix "LMHOSTS Files" in this book.<br/>
+<br/>
+<b>Nbtstat -RR</b>&nbsp;sends name release packets to the WINS server and starts a refresh, thus re-registering all names with the name server without having to reboot. This is a new option in Windows NT 4.0 with Service Pack 4 as well as in Windows 2000.<br/>
+<br/>
+You can use <b>nbtstat -S</b>&nbsp;to list the current NetBIOS sessions and their status, including statistics<br/>
+<br/>
+Table 3.4 Nbtstat Switches<br/>
+Switch&#09;&#09;&#09;Name&#09;&#09;Function<br/>
+-a &lt; name &gt;&#09;&#09;adapter status&#09;Returns the NetBIOS name table and MAC address of the address card for the computer name specified.<br/>
+-A &lt; IP address &gt;&#09;Adapter status&#09;Lists the same information as -a when given the target's IP address.<br/>
+-c&#09;&#09;&#09;&#09;cache&#09;&#09;Lists the contents of the NetBIOS name cache.<br/>
+[ Number ]&#09;&#09;Interval&#09;&#09;Typing a numerical value tells Nbtstat to redisplay selected statistics each interval seconds, pausing between each display. Press Ctrl+C to stop redisplaying statistics.<br/>
+-n&#09;&#09;&#09;&#09;names&#09;&#09;Displays the names registered locally by NetBIOS applications such as the server and redirector.<br/>
+-r&#09;&#09;&#09;&#09;resolved&#09;&#09;Displays a count of all names resolved by broadcast or WINS server.<br/>
+-R&#09;&#09;&#09;&#09;Reload&#09;&#09;Purges the name cache and reloads all #PRE entries from LMHOSTS.<br/>
+-RR&#09;&#09;&#09;&#09;ReleaseRefresh&#09;Releases and reregisters all names with the name server.<br/>
+-s&#09;&#09;&#09;&#09;sessions&#09;&#09;Lists the NetBIOS sessions table converting destination IP addresses to computer NetBIOS names.<br/>
+-S&#09;&#09;&#09;&#09;Sessions&#09;&#09;Lists the current NetBIOS sessions and their status, with the IP address.<br/>
+/?&#09;&#09;&#09;&#09;Help&#09;&#09;&#09;Displays this list.</body></html>

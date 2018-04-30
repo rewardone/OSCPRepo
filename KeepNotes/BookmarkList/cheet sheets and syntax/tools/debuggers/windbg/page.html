@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WinDBG</title>
+</head><body>Commands<br/>
+g - pass exception<br/>
+gN - step<br/>
+bp [address] - breakpoint<br/>
+bl - list breakpoints<br/>
+!exchain - view exception chain<br/>
+.load pykd.pyd - load python<br/>
+!py mona [command] [args] - exceute mona stuff<br/>
+a -&gt; [jmp address]<br/>
+u [address] - inspect<br/>
+u - view stack<br/>
+t - step<br/>
+<br/>
+Examples<br/>
+!py mona findmsp<br/>
+!py mona seh<br/>
+<br/>
+Shortcuts<br/>
+Open Executable: CTRL+E<br/>
+Attach to process: F6<br/>
+Memory: Alt+5<br/>
+Close Window: Ctrl+F4<br/>
+Restart: Ctrl+Shift+F5<br/>
+Break: Ctrl+Break</body></html>

