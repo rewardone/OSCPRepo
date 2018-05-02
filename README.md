@@ -19,7 +19,7 @@ BookmarkList.nbk
 
 List after list of compiled bookmarks, github pages, blogs, OSCP reviews, tools, and a lot more compiled into an organized list of bookmarks and references I could go back to (offline). Sources for all resources are still there so you can read the material directly if you desire. This is a work in progress and there are sections I have not read through yet and made child-nodes for yet, but it is still incredibly extensive with more work being done (almost) every day (look at the commit history!)
 
-![Parent Nodes](./KeepNotes/BookmarkList.png)
+![Parent Nodes](https://github.com/rewardone/OSCPRepo/blob/master/KeepNotes/BookmarkList.PNG)
 
 Recon_Scan.py
 
