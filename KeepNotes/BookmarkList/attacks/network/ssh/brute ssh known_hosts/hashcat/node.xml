@@ -5,7 +5,7 @@
   <key>title</key><string>Hashcat</string>
   <key>nodeid</key><string>77e36fde-0572-4cc1-998b-f8bdf69b294a</string>
   <key>modified_time</key><integer>1522781839</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522781397</integer>

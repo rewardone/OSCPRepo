@@ -59,6 +59,8 @@ direc=/root/lists/payloadsAllTheThings
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git $direc; fi
 direc=/root/lists/probableWordlists
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/berzerk0/Probable-Wordlists.git $direc; fi
+direc=/root/lists/passphrases
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/initstring/passphrase-wordlist.git $direc; fi
 
 echo "\nMake sure Metasploit is ready to go \n"
 service postgresql start

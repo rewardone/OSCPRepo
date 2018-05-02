@@ -3,14 +3,14 @@
 <version>6</version>
 <dict>
   <key>expanded</key><false/>
-  <key>title</key><string>Brute SSH known_hosts</string>
   <key>nodeid</key><string>6a93a43a-cd71-4188-a996-3d4a04e4edc2</string>
   <key>modified_time</key><integer>1522780999</integer>
-  <key>expanded2</key><true/>
-  <key>version</key><integer>6</integer>
+  <key>expanded2</key><false/>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522780754</integer>
   <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>Brute SSH known_hosts</string>
+  <key>version</key><integer>6</integer>
   <key>order</key><integer>0</integer>
   <key>info_sort</key><string>order</string>
 </dict>
