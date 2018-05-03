@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PSRemoting Admin Access</title>
+</head><body>Create a Silver Ticket for the “http” service and “wsman” service to gain admin rights to WinRM and/or PowerShell Remoting on the target system.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+After injecting the two Silver Tickets, http &amp; wsman, we can use PowerShell Remoting (or WinRM) to open a a shell to the target system (assuming it’s configured with PowerShell Remoting and/or WinRM). New-PSSession is the PowerShell cmdlet for creating a session to a remote system using PowerShell and Enter-PSSession opens the remote shell.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+<img src="image 4.png" /></body></html>

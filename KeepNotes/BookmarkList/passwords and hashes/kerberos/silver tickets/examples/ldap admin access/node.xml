@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>LDAP Admin Access</string>
+  <key>nodeid</key><string>f94353be-42d0-4b6e-812b-7831e6282e58</string>
+  <key>modified_time</key><integer>1525371620</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1525371577</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

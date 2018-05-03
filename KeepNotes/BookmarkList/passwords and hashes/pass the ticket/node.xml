@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Pass the Ticket</string>
   <key>nodeid</key><string>3464f163-6cba-40ae-9690-eb7907197688</string>
   <key>modified_time</key><integer>1524582575</integer>

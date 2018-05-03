@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body><b>Typical Kerberos Authentication Flow:</b><br/>
+<br/>
+User logs on with username &amp; password.<br/>
+<br/>
+1a. Password converted to NTLM hash, a timestamp is encrypted with the hash and <b>sent to the KDC as an authenticator in the authentication ticket (TGT) request</b>&nbsp;(AS-REQ).<br/>
+1b. <b>The Domain Controller</b>&nbsp;(KDC) checks user information (logon restrictions, group membership, etc) &amp; <b>creates Ticket-Granting Ticket</b>&nbsp;(TGT).<br/>
+<br/>
+2. The TGT is encrypted, signed, &amp; delivered to the user (AS-REP). Only the Kerberos service (KRBTGT) in the domain can open and read TGT data.<br/>
+<br/>
+3. The <b>User presents the TGT to the DC when requesting a Ticket Granting Service</b>&nbsp;(TGS) ticket (TGS-REQ). The DC opens the TGT &amp; validates PAC checksum – If the DC can open the ticket &amp; the checksum check out, TGT = valid. The data in the TGT is effectively copied to create the TGS ticket.<br/>
+<br/>
+4. The TGS is encrypted using the target service accounts’ NTLM password hash and sent to the user (TGS-REP).<br/>
+<br/>
+5.The <b>user connects</b>&nbsp;to the server hosting the service on the appropriate port <b>&amp; presents the TGS</b>&nbsp;(AP-REQ). The service opens the TGS ticket using its NTLM password hash.<br/>
+<br/>
+<br/>
+<b>Silver Ticket Overview:</b><br/>
+<br/>
+Silver Tickets are forged Kerberos Ticket Granting Service (TGS) tickets, also called service tickets.<br/>
+As shown in the following graphic, there is no AS-REQ / AS-REP (steps 1 &amp; 2) and no TGS-REQ / TGS-REP (steps 3 &amp; 4) communication with the Domain Controller. Since a Silver Ticket is a forged TGS, there is no communication with a Domain Controller.<br/>
+<br/>
+<img src="image.png" /><ul><li>The Kerberos Silver Ticket is a valid Ticket Granting Service (TGS) Kerberos ticket since it is encrypted/signed by the service account configured with a <a href="http://adsecurity.org/?p=230">Service Principal Name</a> for each server the Kerberos-authenticating service runs on.</li>
+<li>While a Golden ticket is a forged TGT valid for gaining access to any Kerberos service, the silver ticket is a forged TGS. This means the <b>Silver Ticket scope is limited to whatever service is targeted on a specific server</b>.</li>
+<li>While a Golden ticket is encrypted/signed with the domain Kerberos service account (<a href="http://adsecurity.org/?p=483">KRBTGT)</a>, a <b>Silver Ticket is encrypted/signed by the service account</b>&nbsp;(computer account credential extracted from the computer’s local SAM or service account credential).</li>
+<li><b>Most services don’t validate the PAC</b>&nbsp;(by sending the PAC checksum to the Domain Controller for PAC validation), so a valid TGS generated with the service account password hash can include a PAC that is entirely fictitious – even claiming the user is a Domain Admin without challenge or correction.</li>
+<li><b>The attacker needs the service account password hash</b></li>
+<li>TGS is forged, so no associated TGT, meaning the DC is never contacted.</li>
+<li>Any event logs are on the targeted server.</li>
+</ul>
+&nbsp;<br/>
+<br/>
+</body></html>

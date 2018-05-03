@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Kerberos</string>
+  <key>nodeid</key><string>3a4435ea-78b8-4317-8668-ea087104c1aa</string>
+  <key>modified_time</key><integer>1525372558</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1525372558</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>
