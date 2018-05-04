@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>NTLMv2 / Net-NTLMv2</string>
+  <key>nodeid</key><string>3a9dbf19-ebd3-4093-8575-7a4e060ec798</string>
+  <key>modified_time</key><integer>1525457637</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1525457637</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>LM Algorithm</string>
+  <key>nodeid</key><string>03d0f4e5-e827-42ff-9b15-48753af87bef</string>
+  <key>modified_time</key><integer>1525457414</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1525457407</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

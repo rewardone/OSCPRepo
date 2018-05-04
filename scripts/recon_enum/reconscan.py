@@ -12,6 +12,9 @@
 ##
 ## This script really likes when you put a targets.txt file containing targets (one per line) at 
 ## /root/scripts/recon_enum/results/exam/targets.txt 
+##
+## The script will run Unicornscan against all ports, pass open ports to Nmap, and then run an nmap scan 
+## against all ports.
 ##-------------------------------------------------------------------------------------------------------------
 ## [Run]:
 ## Execute setup.sh in the scripts folder
@@ -35,14 +38,15 @@
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
 ## Expand SNMPrecon:
 ##     Extend: Additional snmpwalk strings?
-## Fix DIRB scan in dirbustEVERYTHING
+## Expand SMBRecon: Ensure smbclient -L \\SERVER    for version fingerprinting
+##     Extend: rpcclient -v "" <SERVER>, smbclient -L \\<SERVER> for null sessions
 ## Expand DNSRecon
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
 ## Expand dirTrav:
 ##     Extend web: Data extraction from files, option for data extraction only when given a vulnerable URL
 ##     INFO: File retrieve only uses first vulnerable URL...try more? ability to specify?
 ## Expand http:
-##		Whateb on every status 200 page, parse, and present feedback
+##		Whatweb on every status 200 page, parse, and present feedback
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
 ##      POST SCAN COMPLETION:
@@ -50,11 +54,14 @@
 ##           If windows: give additional commands to run 
 ##                (if Windows AND SMB: github/enternal_check) #not mandatory because of additional dependencies
 ##                                                            #unless they are already in Kali...
-##
 ## Expand ReconScan:
 ##      Other tools to consider: WHOIS, TheHarvester, Metagoofil, DNSRecon, Sublist3r
 ##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti
 ##      Other tools to consider: WPscan, WPscanner, WPSeku, Droopescan, SSLScan, SSLyze A2SV
+##      Separate CMSscannerrecon
+## Banner grabs / web page screenshots
+## Option flag to run FullMAP or not
+## Fix DIRB scan in dirbustEVERYTHING
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...
@@ -173,7 +180,7 @@ def httpsEnum(ip_address, port):
 
 def mssqlEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
-	#MYSQLRECON in subdirectory in case multiple Hydra.restore files. default, nmap performs brute.
+	  #MYSQLRECON in subdirectory in case multiple Hydra.restore files. default, nmap performs brute.
     print "INFO: Detected MS-SQL on %s:%s" % (ip_address, port)
     SCRIPT = "mssql/./mssqlrecon.py %s %s" % (ip_address, port)
     results = subprocess.check_output(SCRIPT, shell=True)
@@ -181,7 +188,7 @@ def mssqlEnum(ip_address, port):
 
 def mysqlEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
-	#MYSQLRECON in subdirectory in case ftp/ssh/telnet are present, hydra will have
+	  #MYSQLRECON in subdirectory in case ftp/ssh/telnet are present, hydra will have
     #separate hydra.restore files. default, nmap performs the brute, but just in case
     print "INFO: Detected MySQL on %s:%s" % (ip_address, port)
     SCRIPT = "mysql/./mysqlrecon.py %s %s" % (ip_address, port)
@@ -197,9 +204,21 @@ def nfsEnum(ip_address, port):
     subprocess.call(NFSSCAN, shell=True)
     return
 
+def rpcbindEnum(ip_address, port):
+    print "INFO: Detected RPCBind on %s:%s" % (ip_address, port)
+    NMAPRPCNSE = "nmap -n -sV -Pn -vv -p %s --script rpc-grind -oX /root/scripts/recon_enum/results/exam/rpc/%s_rpc.xml %s" % (port, ip_address, ip_address)
+    subprocess.call(NMAPRPCNSE, shell=True)
+    RPCINFOSCAN1 = "rpcinfo %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e "\n" >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
+    subprocess.call(RPCINFOSCAN1, shell=True)
+    RPCINFOSCAN2 = "rpcinfo -p %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e "\n" >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
+    subprocess.call(RPCINFOSCAN2, shell=True)
+    RPCINFOSCAN3 = "rpcinfo -m %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e "\n" >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
+    subprocess.call(RPCINFOSCAN3, shell=True)
+    return
+
 def rdpEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
-	#RDPRECON in subdir in case multiple hydra.restore files
+	  #RDPRECON in subdir in case multiple hydra.restore files
     print "INFO: Detected RDP on %s:%s" % (ip_address, port)
     SCRIPT = "rdp/./rdprecon.py %s %s" % (ip_address, port)
     subprocess.call(SCRIPT, shell=True)
@@ -259,8 +278,8 @@ def fullMap(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running full TCP/UDP nmap scans for %s" % (ip_address)
    print "INFO: Full UDP takes a LONG time"
-   TCPSCAN = "nmap -n -vv -Pn -sS -T 4 -p- --max-retries 1 --min-rate 300 -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
-   UDPSCAN = "nmap -n -vv -Pn -sU -T 4 -p- --max-retries 1 --min-rate 300 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
+   TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sS -T 4 -p- --max-retries 1 --min-rate 300 -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
+   UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 4 -p- --max-retries 1 --min-rate 300 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
    tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
    for line in tcplines:
       line = line.strip()
@@ -286,77 +305,6 @@ def fullMap(ip_address):
    print "INFO: TCP/UDP Nmap scans completed for %s" % (ip_address) 
    return
 
-def nmapScan(ip_address):
-   ip_address = ip_address.strip()
-   print "INFO: Running general TCP/UDP nmap scans for " + ip_address
-   serv_dict = {}
-   TCPSCAN = "nmap -n -vv -Pn -A -sC -sS -T 4 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
-   UDPSCAN = "nmap -n -vv -Pn -A -sC -sU -T 4 --top-ports 200 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
-   #Scan will rarely finish, uncomment with caution
-   #UDPSCANALL = "nmap -vv -Pn -sU -T 5 -p- -oN '/root/scripts/recon_enum/results/exam/nmap/%sUall.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sUall_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
-   results = subprocess.check_output(TCPSCAN, shell=True)
-   udpresults = subprocess.check_output(UDPSCAN, shell=True)
-   #udpallresults = subprocess.check_output(UDPSCANALL, shell=True)
-   lines = results.split("\n")
-   for line in lines:
-      ports = []
-      line = line.strip()
-      if ("tcp" in line) and ("open" in line) and not ("Discovered" in line):
-	 while "  " in line: 
-            line = line.replace("  ", " ");
-         linesplit= line.split(" ")
-         service = linesplit[2] # grab the service name
-	 port = line.split(" ")[0] # grab the port/proto
-         print ("INFO: all port/proto before analyzing. Some may not be analyzed in depth by default modules " + port)
-         if service in serv_dict:
-	    ports = serv_dict[service] # if the service is already in the dict, grab the port list
-	 
-         ports.append(port) 
-	 serv_dict[service] = ports # add service to the dictionary along with the associated port(2)
-   
-   # go through the service dictionary to call additional targeted enumeration functions 
-   for serv in serv_dict: 
-      ports = serv_dict[serv]	
-      if (serv == "http"):
- 	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(httpEnum, ip_address, port)
-      elif (serv == "ssl/http") or ("https" in serv):
-	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(httpsEnum, ip_address, port)
-      elif "ssh" in serv:
-	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(sshEnum, ip_address, port)
-      elif "smtp" in serv:
- 	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(smtpEnum, ip_address, port)
-      elif "snmp" in serv:
- 	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(snmpEnum, ip_address, port)
-      elif ("domain" in serv):
- 	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(dnsEnum, ip_address, port)
-      elif ("ftp" in serv):
- 	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(ftpEnum, ip_address, port)
-      elif "microsoft-ds" in serv:	
- 	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(smbEnum, ip_address, port)
-      elif "ms-sql" in serv:
- 	 for port in ports:
-	    port = port.split("/")[0]
-	    multProc(httpEnum, ip_address, port)
-      
-   print "INFO: TCP/UDP Nmap scans completed for " + ip_address 
-   return
-
 #Be sure to change the interface if needed
 #-mT/-mU TCP/UDP respectively, full range of ports. -L timeout 3 seconds (7 default), 300 packets per second (default)
 def unicornScan(ip_address):
@@ -375,7 +323,7 @@ def unicornScan(ip_address):
    #pass to nmap for versioning
    for port in tcpPorts: #the last element in the list is blank
       if port != "":
-         uniNmapTCP = "nmap -n -vv -Pn -A -sC -sS -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%s_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
+         uniNmapTCP = "nmap -n -vv --stats-every 30s -Pn -A -sC -sS -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%s_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
          lines = subprocess.check_output(uniNmapTCP, shell=True).split("\n")
          print "INFO: nmap versioning for TCP %s:%s completed" % (ip_address, port)
          for line in lines:
@@ -407,6 +355,8 @@ def unicornScan(ip_address):
 			      multProc(nfsEnum, ip_address, port)
                elif ("rdp" in service):
 			      multProc(rdpEnum, ip_address, port)
+               elif ("rpc" in service):
+                  multProc(rpcbindEnum, ip_address, port)
                elif ("ssh/http" in service or "https" in service):
                   multProc(httpsEnum, ip_address, port)
                elif ("ssh" in service):
@@ -422,7 +372,7 @@ def unicornScan(ip_address):
                
    for port in udpPorts: #the last element in the list is blank
       if port != "":
-         uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
+         uniNmapUDP = "nmap -n -vv --stats-every 30s -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
          lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
          print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
          for line in lines:
@@ -457,7 +407,7 @@ def mkdir_p(path):
 #Create the directories that are currently hardcoded in the script
 #dotdotpwn directory for reports created automatically by dotdotpwn just in case user wants them
 def createDirectories():
-   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
+   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","rpc","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
    mkdir_p("/usr/share/dotdotpwn/Reports")

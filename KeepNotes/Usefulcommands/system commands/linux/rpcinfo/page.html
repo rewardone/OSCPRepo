@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>rpcinfo</title>
+</head><body><b>rpcinfo</b> makes an RPC call to an RPC server and reports what it finds.<br/>
+<br/>
+Options<br/>
+-m&#09;Display a table of statistics of rpcbind operations on the given host. The table shows statistics for each version of rpcbind (versions 2, 3 and 4), giving the number of times each procedure was requested and successfully serviced, the number and type of remote call requests that were made, and information about RPC address lookups that were handled. This is useful for monitoring RPC activities on host.<br/>
+-s&#09;Display a concise list of all registered RPC programs on host. If host is not specified, it defaults to the local host.<br/>
+-p&#09;Probe rpcbind on host using version 2 of the rpcbind protocol, and display a list of all registered RPC programs. If host is not specified, it defaults to the local host. Note that version 2 of the rpcbind protocol was previously known as the portmapper protocol.<br/>
+-t&#09;Make an RPC call to procedure 0 of prognum on the specified host using TCP, and report whether a response was received. This option is made obsolete by the -T option as shown in the third synopsis.<br/>
+-l&#09;Display a list of entries with a given prognum and versnum on the specified host. Entries are returned for all transports in the same protocol family as that used to contact the remote rpcbind.<br/>
+-b&#09;Make an RPC broadcast to procedure 0 of the specified prognum and versnum and report all hosts that respond. If transport is specified, it broadcasts its request only on the specified transport. If broadcasting is not supported by any transport, an error message is printed. Use of broadcasting should be limited because of the potential for adverse effect on other systems.<br/>
+-d&#09;Delete registration for the RPC service of the specified prognum and versnum. If transport is specified, unregister the service on only that transport, otherwise unregister the service on all the transports on which it was registered. Only the owner of a service can delete a registration, except the superuser who can delete any service.<br/>
+-u&#09;Make an RPC call to procedure 0 of prognum on the specified host using UDP, and report whether a response was received. This option is made obsolete by the -T option as shown in the third synopsis.<br/>
+-a serv_address&#09;Use serv_address as the (universal) address for the service on transport to ping procedure 0 of the specified prognum and report whether a response was received. The -T option is required with the -a option.<br/>
+If versnum is not specified, rpcinfo tries to ping all available version numbers for that program number. This option avoids calls to remote rpcbind to find the address of the service. The serv_address is specified in universal address format of the given transport.<br/>
+-n portnum&#09;Use portnum as the port number for the -t and -u options instead of the port number given by rpcbind. Use of this option avoids a call to the remote rpcbind to find out the address of the service. This option is made obsolete by the -a option.<br/>
+-T transport&#09;Specify the transport on which the service is required. If this option is not specified, rpcinfo uses the transport specified in the NETPATH environment variable, or if that is unset or NULL, the transport in the netconfig database is used. This is a generic option, and can be used in conjunction with other options.<br/>
+<br/>
+<b>rpcinfo examples</b><br/>
+rpcinfo cpuhope<br/>
+Show all RPC services registered with rpcbind on the machine named cpuhope.<br/>
+<br/>
+rpcinfo -s cpuhope<br/>
+Same as the above command, but shows more concise information (the default information display can be quite lengthy). Output will resemble the following:<br/>
+<br/>
+program &nbsp; version &nbsp; netid &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;service &nbsp; &nbsp;&#09;owner<br/>
+100000 &nbsp; &nbsp;2,3,4 &nbsp; &nbsp; local,tcp,udp,tcp6,udp6 &nbsp; rpcbind &nbsp; &nbsp;&#09;super-user<br/>
+100008 &nbsp; &nbsp;1 &nbsp; &nbsp; &nbsp; &nbsp; udp,tcp,udp6,tcp6 &nbsp; &nbsp; &nbsp; &nbsp;&#09;walld &nbsp; &nbsp; &nbsp;&#09;super-user<br/>
+100002 &nbsp; &nbsp;2,1 &nbsp; &nbsp; &nbsp; udp,udp6 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;rusersd &nbsp; &nbsp;&#09;super-user<br/>
+100001 &nbsp; &nbsp;2,3,4 &nbsp; &nbsp; udp,udp6 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;rstatd &nbsp; &nbsp; &#09;super-user<br/>
+100012 &nbsp; &nbsp;1 &nbsp; &nbsp; &nbsp; &nbsp; udp,tcp &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;sprayd &nbsp; &nbsp; &#09;super-user<br/>
+100007 &nbsp; &nbsp;3 &nbsp; &nbsp; &nbsp; &nbsp; udp,tcp &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;ypbind &nbsp; &nbsp; &#09;super-user<br/>
+<br/>
+rpcinfo -T tcp cpuhope prognum versnum<br/>
+Show whether the RPC service with program number prognum and version versnum is registered on the machine named cpuhope for the transport tcp.<br/>
+<br/>
+rpcinfo -p<br/>
+Show all RPC services registered with version 2 of the rpcbind protocol on the local machine.<br/>
+<br/>
+rpcinfo -d 100008 1<br/>
+Delete the registration for version 1 of the walld (program number 100008) service for all transports.<br/>
+<br/>
+rpcinfo -d walld 1<br/>
+Same as the above example, but specifies walld by name.</body></html>

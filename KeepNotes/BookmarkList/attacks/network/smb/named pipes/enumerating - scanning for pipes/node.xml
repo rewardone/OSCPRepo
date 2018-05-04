@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Enumerating / Scanning For Pipes</string>
+  <key>nodeid</key><string>70b5ce1e-bb41-47d9-ba27-07c84d0c5eab</string>
+  <key>modified_time</key><integer>1525458590</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1525458382</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

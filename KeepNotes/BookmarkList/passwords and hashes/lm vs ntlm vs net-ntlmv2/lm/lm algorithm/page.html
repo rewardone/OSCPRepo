@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LM Algorithm</title>
+</head><body>1. Convert all lower case to upper case<br/>
+2. Pad password to 14 characters with NULL characters<br/>
+3. Split the password to two 7 character chunks<br/>
+4. Create two DES keys from each 7 character chunk<br/>
+5. DES encrypt the string "KGS!@#$%" with these two chunks<br/>
+6. Concatenate the two DES encrypted strings. This is the LM hash.</body></html>

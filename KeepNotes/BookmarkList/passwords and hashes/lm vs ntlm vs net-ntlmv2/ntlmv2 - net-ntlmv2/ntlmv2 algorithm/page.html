@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NTLMv2 Algorithm</title>
+</head><body>SC = 8-byte server challenge, random<br/>
+CC = 8-byte client challenge, random<br/>
+CC* = (X, time, CC2, domain name)<br/>
+v2-Hash = HMAC-MD5(NT-Hash, user name, domain name)<br/>
+LMv2 = HMAC-MD5(v2-Hash, SC, CC)<br/>
+NTv2 = HMAC-MD5(v2-Hash, SC, CC*)<br/>
+response = LMv2 | CC | NTv2 | CC*</body></html>

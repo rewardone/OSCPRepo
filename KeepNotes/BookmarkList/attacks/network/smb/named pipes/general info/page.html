@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Info</title>
+</head><body>Named Pipes are one of the methods used to perform IPC in Windows<br/>
+One-way or duplex pipe communications between pipe server and one or more pipe clients<br/>
+Utilizes a unique files system called NPFS (Named Pipe Filysystem)<br/>
+Any process can access named pipes, subject to security checks<br/>
+All instances of a named pipe share the same pipe name, but each instance has its own buffers and handles<br/>
+<br/>
+Many configurations<br/>
+Half duplex, full duplex<br/>
+Byte-oriented, packet-oriented<br/>
+Local or Network!<br/>
+<br/>
+Named pipes network communication is NOT encrypted and uses the protocols SMB (445) or DCE/RPC (135)<br/>
+<br/>
+Named and Unnamed \ anonymous Pipes<br/>
+Two types of named pipes:<br/>
+• Named pipes: have a specific name, all instances share the name<br/>
+• Unnamed \ anonymous pipe: is not given a name<ul><li style="list-style-type: none">o Only used for communication between a child and it’s parent process</li>
+</ul>
+<ul>o Always local; they cannot be used for communication over a network</ul>
+<ul><li style="list-style-type: none">o Vanishes as soon as it is closed, or one of the process (parent or child) completes execution</li>
+<li style="list-style-type: none">o Actually named pipes with a random name</li>
+</ul>
+<br/>
+<br/>
+Named pipes have Access Control Lists<br/>
+By default DACL (discretionary access control lists) permissions are set to <b>everyone</b>&nbsp;using <b>anonymous login</b>&nbsp;(null session)<br/>
+There is a max number of instances of a pipe<br/>
+</body></html>
