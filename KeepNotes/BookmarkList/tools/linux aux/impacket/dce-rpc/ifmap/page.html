@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IfMap</title>
+</head><body>ifmap.py<br/>
+<br/>
+First, this binds to the MGMT interface and gets a list of interface IDs. It adds to this a large list of interface UUIDs seen in the wild. It then tries to bind to each interface and reports whether the interface is listed and/or listening.<br/>
+<br/>
+First, this binds to the MGMT interface and gets a list of interface IDs. It<br/>
+adds to this a large list of interface UUIDs seen in the wild. It then tries to<br/>
+bind to each interface and reports whether the interface is listed and/or<br/>
+listening.<br/>
+<br/>
+This will generate a burst of TCP connections to the given host:port!<br/>
+<br/>
+Example:<br/>
+$ ./ifmap.py 10.0.0.30 135<br/>
+('00000136-0000-0000-C000-000000000046', '0.0'): listed, listening<br/>
+('000001A0-0000-0000-C000-000000000046', '0.0'): listed, listening<br/>
+('0B0A6584-9E0F-11CF-A3CF-00805F68CB1B', '1.0'): other version listed, listening<br/>
+('0B0A6584-9E0F-11CF-A3CF-00805F68CB1B', '1.1'): listed, listening<br/>
+('1D55B526-C137-46C5-AB79-638F2A68E869', '1.0'): listed, listening<br/>
+('412F241E-C12A-11CE-ABFF-0020AF6E7A17', '0.0'): other version listed, listening<br/>
+('412F241E-C12A-11CE-ABFF-0020AF6E7A17', '0.2'): listed, listening<br/>
+('4D9F4AB8-7D1C-11CF-861E-0020AF6E7C57', '0.0'): listed, listening<br/>
+('99FCFEC4-5260-101B-BBCB-00AA0021347A', '0.0'): listed, listening<br/>
+('AFA8BD80-7D8A-11C9-BEF4-08002B102989', '1.0'): not listed, listening<br/>
+('B9E79E60-3D52-11CE-AAA1-00006901293F', '0.0'): other version listed, listening<br/>
+('B9E79E60-3D52-11CE-AAA1-00006901293F', '0.2'): listed, listening<br/>
+('C6F3EE72-CE7E-11D1-B71E-00C04FC3111A', '1.0'): listed, listening<br/>
+('E1AF8308-5D1F-11C9-91A4-08002B14A0FA', '3.0'): listed, listening<br/>
+('E60C73E6-88F9-11CF-9AF1-0020AF6E72F4', '2.0'): listed, listening<br/>
+<br/>
+Usually, only AFA8BD80-...-89, the MGMT interface, is not listed but always<br/>
+listening on any port. This is imposed by the DCERPC spec.<br/>
+<br/>
+usage: ./ifmap.py &lt;host&gt; &lt;port&gt;<br/>
+<br/>
+</body></html>

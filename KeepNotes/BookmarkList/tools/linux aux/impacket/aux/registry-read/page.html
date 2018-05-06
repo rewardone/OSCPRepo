@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Registry-Read</title>
+</head><body>registry-read.py<br/>
+<br/>
+A Windows offline registry Reader example<br/>
+<br/>
+# Description: A Windows Registry Reader Example<br/>
+<br/>
+usage: registry-read.py [-h]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hive {enum_key,enum_values,get_value,get_class,walk}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...<br/>
+<br/>
+Reads data from registry hives.<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; hive &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;registry hive to open<br/>
+&nbsp; {enum_key,enum_values,get_value,get_class,walk}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; actions<br/>
+&nbsp; &nbsp; enum_key &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;enumerates the subkeys of the specified open registry<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; key<br/>
+&nbsp; &nbsp; enum_values &nbsp; &nbsp; &nbsp; &nbsp; enumerates the values for the specified open registry<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; key<br/>
+&nbsp; &nbsp; get_value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; retrieves the data for the specified registry value<br/>
+&nbsp; &nbsp; get_class &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; retrieves the data for the specified registry class<br/>
+&nbsp; &nbsp; walk &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;walks the registry from the name node down<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+</body></html>

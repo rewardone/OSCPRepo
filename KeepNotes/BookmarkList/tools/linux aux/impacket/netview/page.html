@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Netview</title>
+</head><body>netview.py<br/>
+<br/>
+Gets a list of the sessions opened at the remote hosts and keep track of them looping over the hosts found and keeping track of who logged in/out from remote servers<br/>
+<br/>
+# Description:<br/>
+# &nbsp; The idea of this script is to get a list of the sessions<br/>
+# &nbsp; opened at the remote hosts and keep track of them.<br/>
+# &nbsp; Coincidentally @mubix did something similar a few years<br/>
+# &nbsp; ago so credit goes to him (and the script's name ;)).<br/>
+# &nbsp; Check it out at https://github.com/mubix/netview<br/>
+# &nbsp; The main difference with our approach is we keep <br/>
+# &nbsp; looping over the hosts found and keep track of who logged<br/>
+# &nbsp; in/out from remote servers. Plus, we keep the connections<br/>
+# &nbsp; with the target systems and just send a few DCE-RPC packets.<br/>
+#<br/>
+# &nbsp; One VERY IMPORTANT thing is:<br/>
+# &nbsp; <br/>
+# &nbsp; YOU HAVE TO BE ABLE TO RESOLV THE DOMAIN MACHINES NETBIOS <br/>
+# &nbsp; NAMES. That's usually solved by setting your DNS to the <br/>
+# &nbsp; domain DNS (and the right search domain).<br/>
+# &nbsp; <br/>
+# &nbsp; Some examples of usage are:<br/>
+#<br/>
+# &nbsp; netview.py -target 192.168.1.10 beto<br/>
+# &nbsp; <br/>
+# &nbsp; This will show the sessions on 192.168.1.10 and will authenticate as 'beto'<br/>
+# &nbsp; (password will be prompted)<br/>
+#<br/>
+# &nbsp; netview.py FREEFLY.NET/beto<br/>
+#<br/>
+# &nbsp; This will download all machines from FREEFLY.NET, authenticated as 'beto'<br/>
+# &nbsp; and will gather the session information for those machines that appear<br/>
+# &nbsp; to be up. There is a background thread checking aliveness of the targets<br/>
+# &nbsp; at all times.<br/>
+#<br/>
+# &nbsp; netview.py -users /tmp/users -dc-ip freefly-dc.freefly.net -k FREEFLY.NET/beto<br/>
+# &nbsp;<br/>
+# &nbsp; This will download all machines from FREEFLY.NET, authenticating using<br/>
+# &nbsp; Kerberos (that's why -dc-ip parameter is needed), and filter<br/>
+# &nbsp; the output based on the list of users specified in /tmp/users file.<br/>
+<br/>
+<br/>
+usage: netview.py [-h] [-user USER] [-users USERS] [-target TARGET]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-targets TARGETS] [-noloop] [-delay DELAY]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-max-connections MAX_CONNECTIONS] [-debug]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-dc-ip ip address]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; identity<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; identity &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[domain/]username[:password]<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -user USER &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Filter output by this user<br/>
+&nbsp; -users USERS &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;input file with list of users to filter to output for<br/>
+&nbsp; -target TARGET &nbsp; &nbsp; &nbsp; &nbsp;target system to query info from. If not specified<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; script will run in domain mode.<br/>
+&nbsp; -targets TARGETS &nbsp; &nbsp; &nbsp;input file with targets system to query info from (one<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; per line). If not specified script will run in domain<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode.<br/>
+&nbsp; -noloop &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Stop after the first probe<br/>
+&nbsp; -delay DELAY &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;seconds delay between starting each batch probe<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (default 10 seconds)<br/>
+&nbsp; -max-connections MAX_CONNECTIONS<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Max amount of connections to keep opened (default<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1000)<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Turn DEBUG output ON<br/>
+<br/>
+authentication:<br/>
+&nbsp; -hashes LMHASH:NTHASH<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NTLM hashes, format is LMHASH:NTHASH<br/>
+&nbsp; -no-pass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;don't ask for password (useful for -k)<br/>
+&nbsp; -k &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Use Kerberos authentication. Grabs credentials from<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ccache file (KRB5CCNAME) based on target parameters.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If valid credentials cannot be found, it will use the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ones specified in the command line<br/>
+&nbsp; -aesKey hex key &nbsp; &nbsp; &nbsp; AES key to use for Kerberos Authentication (128 or 256<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bits)<br/>
+&nbsp; -dc-ip ip address &nbsp; &nbsp; IP Address of the domain controller. If ommited it use<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; the domain part (FQDN) specified in the target<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; parameter<br/>
+</body></html>

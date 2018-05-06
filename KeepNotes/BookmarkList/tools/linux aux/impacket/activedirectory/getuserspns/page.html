@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>GetUserSPNs</title>
+</head><body># Description:<br/>
+# &nbsp; &nbsp; This module will try to find Service Principal Names that are associated with normal user account.<br/>
+# &nbsp; &nbsp; Since normal account's password tend to be shorter than machine accounts, and knowing that a TGS request<br/>
+# &nbsp; &nbsp; will encrypt the ticket with the account the SPN is running under, this could be used for an offline<br/>
+# &nbsp; &nbsp; bruteforcing attack of the SPNs account NTLM hash if we can gather valid TGS for those SPNs.<br/>
+# &nbsp; &nbsp; This is part of the kerberoast attack researched by Tim Medin (@timmedin) and detailed at<br/>
+# &nbsp; &nbsp; https://files.sans.org/summit/hackfest2014/PDFs/Kicking%20the%20Guard%20Dog%20of%20Hades%20-%20Attacking%20Microsoft%20Kerberos%20%20-%20Tim%20Medin(1).pdf<br/>
+#<br/>
+# &nbsp; &nbsp; Original idea of implementing this in Python belongs to @skelsec and his<br/>
+# &nbsp; &nbsp; https://github.com/skelsec/PyKerberoast project<br/>
+#<br/>
+# &nbsp; &nbsp; This module provides a Python implementation for this attack, adding also the ability to PtH/Ticket/Key.<br/>
+# &nbsp; &nbsp; Also, disabled accounts won't be shown.<br/>
+#<br/>
+# ToDo:<br/>
+# &nbsp;[X] Add the capability for requesting TGS and output them in JtR/hashcat format<br/>
+# &nbsp;[ ] Improve the search filter, we have to specify we don't want machine accounts in the answer<br/>
+# &nbsp; &nbsp; &nbsp;(play with userAccountControl)<br/>
+<br/>
+usage: GetUserSPNs.py [-h] [-request] [-request-user username] [-save]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-outputfile OUTPUTFILE] [-debug]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-hashes LMHASH:NTHASH] [-no-pass] [-k]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-aesKey hex key] [-dc-ip ip address]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; target<br/>
+<br/>
+Queries target domain for SPNs that are running under a user account<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; target &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;domain/username[:password]<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -request &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Requests TGS for users and output them in JtR/hashcat<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; format (default False)<br/>
+&nbsp; -request-user username<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Requests TGS for the SPN associated to the user<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; specified (just the username, no domain needed)<br/>
+&nbsp; -save &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Saves TGS requested to disk. Format is<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;username&gt;.ccache. Auto selects -request<br/>
+&nbsp; -outputfile OUTPUTFILE<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Output filename to write ciphers in JtR/hashcat format<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Turn DEBUG output ON<br/>
+<br/>
+authentication:<br/>
+&nbsp; -hashes LMHASH:NTHASH<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NTLM hashes, format is LMHASH:NTHASH<br/>
+&nbsp; -no-pass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;don't ask for password (useful for -k)<br/>
+&nbsp; -k &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Use Kerberos authentication. Grabs credentials from<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ccache file (KRB5CCNAME) based on target parameters.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If valid credentials cannot be found, it will use the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ones specified in the command line<br/>
+&nbsp; -aesKey hex key &nbsp; &nbsp; &nbsp; AES key to use for Kerberos Authentication (128 or 256<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bits)<br/>
+&nbsp; -dc-ip ip address &nbsp; &nbsp; IP Address of the domain controller. If ommited it use<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; the domain part (FQDN) specified in the target<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; parameter<br/>
+</body></html>

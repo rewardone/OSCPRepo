@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WMIexec.py</title>
+</head><body>A semi-interactive shell, used through Windows Management Instrumentation. It does not require to install any service/agent at the target server. Runs as Administrator. Highly stealthy.<br/>
+<br/>
+# A similar approach to smbexec but executing commands through WMI.<br/>
+# Main advantage here is it runs under the user (has to be Admin) <br/>
+# account, not SYSTEM, plus, it doesn't generate noisy messages<br/>
+# in the event log that smbexec.py does when creating a service.<br/>
+# Drawback is it needs DCOM, hence, I have to be able to access <br/>
+# DCOM ports at the target machine.<br/>
+<br/>
+usage: wmiexec.py [-h] [-share SHARE] [-nooutput] [-debug] [-codec CODEC]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-dc-ip ip address] [-A authfile]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; target [command [command ...]]<br/>
+<br/>
+Executes a semi-interactive shell using Windows Management Instrumentation.<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; target &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[[domain/]username[:password]@]&lt;targetName or address&gt;<br/>
+&nbsp; command &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; command to execute at the target. If empty it will<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09; launch a semi-interactive shell<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;show this help message and exit<br/>
+&nbsp; -share SHARE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;share where the output will be grabbed from (default ADMIN$)<br/>
+&nbsp; -nooutput &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;whether or not to print the output (no SMB connection created)<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;Turn DEBUG output ON<br/>
+&nbsp; -codec CODEC &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;Sets encoding used (codec) from the target's output<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;(default "UTF-8"). If errors are detected, run<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;chcp.com at the target, map the result with<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;https://docs.python.org/2.4/lib/standard-<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;encodings.html and then execute wmiexec.py again with<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;-codec and the corresponding codec<br/>
+authentication:<br/>
+&nbsp; -hashes &#09;&#09;LMHASH:NTHASH<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;NTLM hashes, format is LMHASH:NTHASH<br/>
+&nbsp; -no-pass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;don't ask for password (useful for -k)<br/>
+&nbsp; -k &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;Use Kerberos authentication. Grabs credentials from<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;ccache file (KRB5CCNAME) based on target parameters.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;If valid credentials cannot be found, it will use the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;ones specified in the command line<br/>
+&nbsp; -aesKey hex key &nbsp; &nbsp; AES key to use for Kerberos Authentication (128 or 256 bits)<br/>
+&nbsp; -dc-ip ip address &nbsp; &nbsp; IP Address of the domain controller. If ommited it use the domain part (FQDN) specified in the target parameter<br/>
+&nbsp; -A authfile &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;smbclient/mount.cifs-style authentication file. See smbclient man page's -A option.</body></html>

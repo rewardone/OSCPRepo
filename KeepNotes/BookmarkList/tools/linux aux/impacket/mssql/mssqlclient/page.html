@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSSQLClient</title>
+</head><body>mssqlclient.py<br/>
+<br/>
+An MSSQL client, supporting SQL and Windows Authentications (hashes too). It also supports TLS<br/>
+<br/>
+# Description: [MS-TDS] &amp; [MC-SQLR] example.<br/>
+<br/>
+usage: mssqlclient.py [-h] [-port PORT] [-db DB] [-windows-auth] [-debug]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-file FILE] [-hashes LMHASH:NTHASH] [-no-pass] [-k]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-aesKey hex key] [-dc-ip ip address]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; target<br/>
+<br/>
+TDS client implementation (SSL supported).<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; target &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[[domain/]username[:password]@]&lt;targetName or address&gt;<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -port PORT &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;target MSSQL port (default 1433)<br/>
+&nbsp; -db DB &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;MSSQL database instance (default None)<br/>
+&nbsp; -windows-auth &nbsp; &nbsp; &nbsp; &nbsp; whether or not to use Windows Authentication (default<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; False)<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Turn DEBUG output ON<br/>
+&nbsp; -file FILE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;input file with commands to execute in the SQL shell<br/>
+<br/>
+authentication:<br/>
+&nbsp; -hashes LMHASH:NTHASH<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NTLM hashes, format is LMHASH:NTHASH<br/>
+&nbsp; -no-pass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;don't ask for password (useful for -k)<br/>
+&nbsp; -k &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Use Kerberos authentication. Grabs credentials from<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ccache file (KRB5CCNAME) based on target parameters.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If valid credentials cannot be found, it will use the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ones specified in the command line<br/>
+&nbsp; -aesKey hex key &nbsp; &nbsp; &nbsp; AES key to use for Kerberos Authentication (128 or 256<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bits)<br/>
+&nbsp; -dc-ip ip address &nbsp; &nbsp; IP Address of the domain controller. If ommited it use<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; the domain part (FQDN) specified in the target<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; parameter<br/>
+</body></html>

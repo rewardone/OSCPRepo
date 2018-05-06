@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>getST</title>
+</head><body># Description:<br/>
+# &nbsp; &nbsp;Given a password, hash, aesKey or TGT in ccache, it will request a Service Ticket and save it as ccache<br/>
+# &nbsp; &nbsp;If the account has constrained delegation (with protocol transition) privileges you will be able to use<br/>
+# &nbsp; &nbsp;the -impersonate switch to request the ticket on behalf other user (it will use S4U2Self/S4U2Proxy to<br/>
+# &nbsp; &nbsp;request the ticket.)<br/>
+#<br/>
+# &nbsp; &nbsp;Similar feature has been implemented already by Benjamin Delphi (@gentilkiwi) in Kekeo (s4u)<br/>
+#<br/>
+# Examples:<br/>
+#<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; ./getST.py -hashes lm:nt -spn cifs/contoso-dc contoso.com/user<br/>
+# or<br/>
+# If you have tickets cached (run klist to verify) the script will use them<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; ./getST.py -k -spn cifs/contoso-dc contoso.com/user<br/>
+# Be sure tho, that the cached TGT has the forwardable flag set (klist -f). getTGT.py will ask forwardable tickets<br/>
+# by default.<br/>
+#<br/>
+# Also, if the account is configured with unconstrained delegation (with protocol transition) you can request<br/>
+# service tickets for other users, assuming the target SPN is allowed for delegation:<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; ./getST.py -k -impersonate Administrator -spn cifs/contoso-dc contoso.com/user<br/>
+#<br/>
+# The output of this script will be a service ticket for the Administrator user.<br/>
+#<br/>
+# Once you have the ccache file, set it in the KRB5CCNAME variable and use it for fun and profit.<br/>
+<br/>
+usage: getST.py [-h] -spn SPN [-impersonate IMPERSONATE] [-debug]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-dc-ip ip address]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; identity<br/>
+<br/>
+Given a password, hash or aesKey, it will request a TGT and save it as ccache<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; identity &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[domain/]username[:password]<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -spn SPN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SPN (service/server) of the target service the service<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ticket will be generated for<br/>
+&nbsp; -impersonate IMPERSONATE<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; target username that will be impersonated (thru<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; S4U2Self) for quering the ST. Keep in mind this will<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; only work if the identity provided in this scripts is<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; allowed for delegation to the SPN specified<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Turn DEBUG output ON<br/>
+<br/>
+authentication:<br/>
+&nbsp; -hashes LMHASH:NTHASH<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NTLM hashes, format is LMHASH:NTHASH<br/>
+&nbsp; -no-pass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;don't ask for password (useful for -k)<br/>
+&nbsp; -k &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Use Kerberos authentication. Grabs credentials from<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ccache file (KRB5CCNAME) based on target parameters.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; If valid credentials cannot be found, it will use the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ones specified in the command line<br/>
+&nbsp; -aesKey hex key &nbsp; &nbsp; &nbsp; AES key to use for Kerberos Authentication (128 or 256<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bits)<br/>
+&nbsp; -dc-ip ip address &nbsp; &nbsp; IP Address of the domain controller. If ommited it use<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; the domain part (FQDN) specified in the target<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; parameter<br/>
+</body></html>

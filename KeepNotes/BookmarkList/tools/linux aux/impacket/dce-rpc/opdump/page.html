@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OpDump</title>
+</head><body>opdump.py<br/>
+<br/>
+This binds to the given hostname:port and DCERPC interface. Then, it tries to call each of the first 256 operation numbers in turn and reports the outcome of each call.<br/>
+<br/>
+This binds to the given hostname:port and DCERPC interface. Then, it tries to<br/>
+call each of the first 256 operation numbers in turn and reports the outcome<br/>
+of each call.<br/>
+<br/>
+This will generate a burst of TCP connections to the given host:port!<br/>
+<br/>
+Example:<br/>
+$ ./opdump.py 10.0.0.30 135 99FCFEC4-5260-101B-BBCB-00AA0021347A 0.0<br/>
+op 0 (0x00): rpc_x_bad_stub_data<br/>
+op 1 (0x01): rpc_x_bad_stub_data<br/>
+op 2 (0x02): rpc_x_bad_stub_data<br/>
+op 3 (0x03): success<br/>
+op 4 (0x04): rpc_x_bad_stub_data<br/>
+ops 5-255: nca_s_op_rng_error<br/>
+<br/>
+rpc_x_bad_stub_data, rpc_s_access_denied, and success generally means there's an<br/>
+operation at that number.<br/>
+<br/>
+usage: opdump.py hostname port interface version<br/>
+<br/>
+</body></html>

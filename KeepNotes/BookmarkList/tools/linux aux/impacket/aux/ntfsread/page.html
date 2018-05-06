@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NTFSread</title>
+</head><body>ntfs-read.py<br/>
+<br/>
+Mini shell for browsing an NTFS volume<br/>
+<br/>
+# Reference for:<br/>
+# &nbsp;Structure. Quick and dirty implementation.. just for fun.. ;)<br/>
+#<br/>
+# NOTE: Lots of info (mainly the structs) taken from the NTFS-3G project..<br/>
+<br/>
+usage: ntfs-read.py [-h] [-extract EXTRACT] [-debug] volume<br/>
+<br/>
+NTFS explorer (read-only)<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; volume &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;NTFS volume to open (e.g. \\.\C: or /dev/disk1s1)<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -extract EXTRACT &nbsp;extracts pathname (e.g. \windows\system32\config\sam)<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Turn DEBUG output ON<br/>
+</body></html>

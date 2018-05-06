@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>RPC server programs typically use dynamic port mappings to avoid conflicts with programs and protocols registered in the range of well-known TCP ports. RPC server programs associate their universally unique identifier (UUID) with a dynamic port and register the combination with the RPC EPM. The EPM provides a single point of contact for RPC clients. The RPC clients contact the EPM and use the server program’s UUID to determine the port being used by the server program. The following table indicates the network ports normally used by RPC.<br/>
+Port Assignments for RPC<br/>
+<br/>
+Service Name &#09;&#09;UDP &#09;&#09;&#09;TCP<br/>
+HTTP&#09;&#09;&#09;&#09;80, 443, 593&#09;&#09;80, 443, 593<br/>
+Named Pipes&#09;&#09;&#09;445&#09;&#09;&#09;&#09;445<br/>
+RPC Endpoint Mapper &#09;135&#09;&#09;&#09;&#09;135<br/>
+<br/>
+RPC Server Programs&#09;&lt;Dynamically assigned&gt;&#09;&lt;Dynamically assigned&gt;<br/>
+<br/>
+The MSRPC port mapper is advertised on TCP and UDP 135 by Windows systems. It cannot be disabled without drastically affecting the core functionality of the operating system<br/>
+<br/>
+MSRPC interfaces are also available via other ports, including TCP/UDP 139, 445 or 593, and can also be configured to listen over a custom HTTP port via IIS or COM Internet Services</body></html>

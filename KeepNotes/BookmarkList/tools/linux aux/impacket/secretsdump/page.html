@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SecretsDump</title>
+</head><body>secretsdump.py<br/>
+<br/>
+# Description: Performs various techniques to dump hashes from the<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;remote machine without executing any agent there.<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;For SAM and LSA Secrets (including cached creds)<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;we try to read as much as we can from the registry<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;and then we save the hives in the target system<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(%SYSTEMROOT%\\Temp dir) and read the rest of the<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;data from there.<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;For NTDS.dit we either:<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;a. Get the domain users list and get its hashes<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; and Kerberos keys using [MS-DRDS] DRSGetNCChanges()<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; call, replicating just the attributes we need.<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;b. Extract NTDS.dit via vssadmin executed &nbsp;with the<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; smbexec approach.<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; It's copied on the temp dir and parsed remotely.<br/>
+#<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;The script initiates the services required for its working<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if they are not available (e.g. Remote Registry, even if it is <br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;disabled). After the work is done, things are restored to the <br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;original state.<br/>
+<br/>
+usage: secretsdump.py [-h] [-debug] [-system SYSTEM] [-bootkey BOOTKEY]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-security SECURITY] [-sam SAM] [-ntds NTDS]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-resumefile RESUMEFILE] [-outputfile OUTPUTFILE]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-use-vss] [-exec-method [{smbexec,wmiexec,mmcexec}]]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-just-dc-user USERNAME] [-just-dc] [-just-dc-ntlm]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-pwd-last-set] [-user-status] [-history]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-hashes LMHASH:NTHASH] [-no-pass] [-k]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-aesKey hex key] [-dc-ip ip address]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-target-ip ip address]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; target<br/>
+</body></html>

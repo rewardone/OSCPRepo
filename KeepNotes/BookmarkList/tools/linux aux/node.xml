@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><true/>
   <key>title</key><string>Linux Aux</string>
   <key>nodeid</key><string>214e784c-ee88-4984-af61-70ce0d0b54b2</string>
   <key>modified_time</key><integer>1524769171</integer>

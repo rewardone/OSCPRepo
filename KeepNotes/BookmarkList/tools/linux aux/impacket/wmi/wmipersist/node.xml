@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>WMIPersist</string>
+  <key>nodeid</key><string>75fc456b-ee8c-40bb-b190-1acee91ca1b1</string>
+  <key>modified_time</key><integer>1525563715</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1525563625</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

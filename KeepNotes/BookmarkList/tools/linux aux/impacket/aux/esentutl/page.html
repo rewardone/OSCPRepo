@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Esentutl</title>
+</head><body>esentutl.py<br/>
+<br/>
+Allows dumping catalog, pages and tables of ESE databases (e.g. NTDS.dit)<br/>
+<br/>
+# Description:<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ESE utility. Allows dumping catalog, pages and tables.<br/>
+<br/>
+usage: esentutl.py [-h] [-debug] [-page PAGE]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;databaseFile {dump,info,export} ...<br/>
+<br/>
+Extensive Storage Engine utility. Allows dumping catalog, pages and tables.<br/>
+<br/>
+positional arguments:<br/>
+&nbsp; databaseFile &nbsp; &nbsp; &nbsp; &nbsp;ESE to open<br/>
+&nbsp; {dump,info,export} &nbsp;actions<br/>
+&nbsp; &nbsp; dump &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;dumps an specific page<br/>
+&nbsp; &nbsp; info &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;dumps the catalog info for the DB<br/>
+&nbsp; &nbsp; export &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;dumps the catalog info for the DB<br/>
+<br/>
+optional arguments:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Turn DEBUG output ON<br/>
+&nbsp; -page PAGE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;page to open<br/>
+</body></html>
