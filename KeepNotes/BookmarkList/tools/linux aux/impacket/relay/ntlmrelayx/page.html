@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NTLMrelayX</title>
+</head><body># Description:<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; This module performs the SMB Relay attacks originally discovered<br/>
+# by cDc extended to many target protocols (SMB, MSSQL, LDAP, etc).<br/>
+# It receives a list of targets and for every connection received it<br/>
+# will choose the next target and try to relay the credentials. Also, if<br/>
+# specified, it will first to try authenticate against the client connecting<br/>
+# to us.<br/>
+#<br/>
+# It is implemented by invoking a SMB and HTTP Server, hooking to a few<br/>
+# functions and then using the specific protocol clients (e.g. SMB, LDAP).<br/>
+# It is supposed to be working on any LM Compatibility level. The only way<br/>
+# to stop this attack is to enforce on the server SPN checks and or signing.<br/>
+#<br/>
+# If the authentication against the targets succeeds, the client authentication<br/>
+# succeeds as well and a valid connection is set against the local smbserver.<br/>
+# It's up to the user to set up the local smbserver functionality. One option<br/>
+# is to set up shares with whatever files you want to so the victim thinks it's<br/>
+# connected to a valid SMB server. All that is done through the smb.conf file or<br/>
+# programmatically.<br/>
+<br/>
+usage: ntlmrelayx.py [-h] [-debug] [-t TARGET] [-tf TARGETSFILE] [-w] [-i]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-ip INTERFACE_IP] [-ra] [-r SMBSERVER] [-l LOOTDIR]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-of OUTPUT_FILE] [-codec CODEC] [-smb2support] [-socks]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-wh WPAD_HOST] [-wa WPAD_AUTH_NUM] [-6] [-e FILE]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-c COMMAND] [-q QUERY] [--no-dump] [--no-da]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-k KEYWORD] [-m MAILBOX] [-a] [-im IMAP_MAX]<br/>
+<br/>
+For every connection received, this module will try to relay that connection<br/>
+to specified target(s) system or the original client<br/>
+<br/>
+Main options:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -debug &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Turn DEBUG output ON<br/>
+&nbsp; -t TARGET, --target TARGET<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Target to relay the credentials to, can be an IP,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hostname or URL like smb://server:445 If unspecified,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; it will relay back to the client<br/>
+&nbsp; -tf TARGETSFILE &nbsp; &nbsp; &nbsp; File that contains targets by hostname or full URL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; one per line<br/>
+&nbsp; -w &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Watch the target file for changes and update target<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; list automatically (only valid with -tf)<br/>
+&nbsp; -i, --interactive &nbsp; &nbsp; Launch an smbclient/mssqlclient console insteadof<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; executing a command after a successful relay. This<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; console will listen locally on a tcp port and can be<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; reached with for example netcat.<br/>
+&nbsp; -ip INTERFACE_IP, --interface-ip INTERFACE_IP<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; IP address of interface to bind SMB and HTTP servers<br/>
+&nbsp; -ra, --random &nbsp; &nbsp; &nbsp; &nbsp; Randomize target selection (HTTP server only)<br/>
+&nbsp; -r SMBSERVER &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Redirect HTTP requests to a file:// path on SMBSERVER<br/>
+&nbsp; -l LOOTDIR, --lootdir LOOTDIR<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Loot directory in which gathered loot such as SAM<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dumps will be stored (default: current directory).<br/>
+&nbsp; -of OUTPUT_FILE, --output-file OUTPUT_FILE<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; base output filename for encrypted hashes. Suffixes<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; will be added for ntlm and ntlmv2<br/>
+&nbsp; -codec CODEC &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Sets encoding used (codec) from the target's output<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (default "ascii"). If errors are detected, run<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; chcp.com at the target, map the result with<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; https://docs.python.org/2.4/lib/standard-<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; encodings.html and then execute wmiexec.py again with<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -codec and the corresponding codec<br/>
+&nbsp; -smb2support &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SMB2 Support (experimental!)<br/>
+&nbsp; -socks &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Launch a SOCKS proxy for the connection relayed<br/>
+&nbsp; -wh WPAD_HOST, --wpad-host WPAD_HOST<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Enable serving a WPAD file for Proxy Authentication<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; attack, setting the proxy host to the one supplied.<br/>
+&nbsp; -wa WPAD_AUTH_NUM, --wpad-auth-num WPAD_AUTH_NUM<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Prompt for authentication N times for clients without<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; MS16-077 installed before serving a WPAD file.<br/>
+&nbsp; -6, --ipv6 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Listen on both IPv6 and IPv4<br/>
+<br/>
+SMB client options:<br/>
+&nbsp; -e FILE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; File to execute on the target system. If not<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; specified, hashes will be dumped (secretsdump.py must<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; be in the same directory)<br/>
+&nbsp; -c COMMAND &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Command to execute on target system. If not specified,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hashes will be dumped (secretsdump.py must be in the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; same directory).<br/>
+<br/>
+MSSQL client options:<br/>
+&nbsp; -q QUERY, --query QUERY<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; MSSQL query to execute(can specify multiple)<br/>
+<br/>
+LDAP client options:<br/>
+&nbsp; --no-dump &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Do not attempt to dump LDAP information<br/>
+&nbsp; --no-da &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Do not attempt to add a Domain Admin<br/>
+<br/>
+IMAP client options:<br/>
+&nbsp; -k KEYWORD, --keyword KEYWORD<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; IMAP keyword to search for. If not specified, will<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; search for mails containing "password"<br/>
+&nbsp; -m MAILBOX, --mailbox MAILBOX<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Mailbox name to dump. Default: INBOX<br/>
+&nbsp; -a, --all &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Instead of searching for keywords, dump all emails<br/>
+&nbsp; -im IMAP_MAX, --imap-max IMAP_MAX<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Max number of emails to dump (0 = unlimited, default:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; no limit)</body></html>

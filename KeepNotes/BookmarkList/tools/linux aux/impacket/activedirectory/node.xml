@@ -5,7 +5,7 @@
   <key>title</key><string>ActiveDirectory</string>
   <key>nodeid</key><string>15bfc700-9b0b-468c-b8ee-81cbee59f069</string>
   <key>modified_time</key><integer>1525566364</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1525566364</integer>

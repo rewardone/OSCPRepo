@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ping6</title>
+</head><body># Simple ICMP6 ping.<br/>
+#<br/>
+# This implementation of ping uses the ICMP echo and echo-reply packets<br/>
+# to check the status of a host. If the remote host is up, it should reply<br/>
+# to the echo probe with an echo-reply packet.<br/>
+# Note that this isn't a definite test, as in the case the remote host is up<br/>
+# but refuses to reply the probes.<br/>
+# Also note that the user must have special access to be able to open a raw<br/>
+# socket, which this program requires.<br/>
+<br/>
+Usage: ping -6 [-aAbBdDfhLnOqrRUvV] [-c count] [-i interval] [-I interface]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-l preload] [-m mark] [-M pmtudisc_option]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-N nodeinfo_option] [-p pattern] [-Q tclass] [-s packetsize]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-S sndbuf] [-t ttl] [-T timestamp_option] [-w deadline]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[-W timeout] destination</body></html>
