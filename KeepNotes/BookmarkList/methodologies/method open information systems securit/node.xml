@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>duplicate_of</key><string>80f40016-4ee7-417c-b998-a5444a94cfa1</string>
   <key>nodeid</key><string>43229d21-a76f-4e4f-8788-90245faa37b6</string>
   <key>modified_time</key><integer>1513267689</integer>
