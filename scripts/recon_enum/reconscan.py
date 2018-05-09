@@ -204,6 +204,15 @@ def nfsEnum(ip_address, port):
     subprocess.call(NFSSCAN, shell=True)
     return
 
+def msrpc(ip_address, port):
+    print "INFO: Detected MSRPC on %s:%s" % (ip_address, port)
+    #Impacket RPC packages
+    SCRIPT = "msrpcrecon.py %s %s" % (ip_address, port)
+    subprocess.call(SCRIPT, shell=True)
+    return
+
+#port 111
+#apt-get install, nfs-common
 def rpcbindEnum(ip_address, port):
     print "INFO: Detected RPCBind on %s:%s" % (ip_address, port)
     NMAPRPCNSE = "nmap -n -sV -Pn -vv -p %s --script rpc-grind -oX /root/scripts/recon_enum/results/exam/rpc/%s_rpc.xml %s" % (port, ip_address, ip_address)
@@ -218,7 +227,7 @@ def rpcbindEnum(ip_address, port):
 
 def rdpEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
-	  #RDPRECON in subdir in case multiple hydra.restore files
+	#RDPRECON in subdir in case multiple hydra.restore files
     print "INFO: Detected RDP on %s:%s" % (ip_address, port)
     SCRIPT = "rdp/./rdprecon.py %s %s" % (ip_address, port)
     subprocess.call(SCRIPT, shell=True)
@@ -355,7 +364,7 @@ def unicornScan(ip_address):
 			      multProc(nfsEnum, ip_address, port)
                elif ("rdp" in service):
 			      multProc(rdpEnum, ip_address, port)
-               elif ("rpc" in service):
+               elif ("rpcbind" == service):
                   multProc(rpcbindEnum, ip_address, port)
                elif ("ssh/http" in service or "https" in service):
                   multProc(httpsEnum, ip_address, port)
@@ -407,7 +416,7 @@ def mkdir_p(path):
 #Create the directories that are currently hardcoded in the script
 #dotdotpwn directory for reports created automatically by dotdotpwn just in case user wants them
 def createDirectories():
-   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","mssql","mysql","nfs","nikto","nmap","rdp","rpc","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
+   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","msrpc","mssql","mysql","nfs","nikto","nmap","rdp","rpc","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
    mkdir_p("/usr/share/dotdotpwn/Reports")
