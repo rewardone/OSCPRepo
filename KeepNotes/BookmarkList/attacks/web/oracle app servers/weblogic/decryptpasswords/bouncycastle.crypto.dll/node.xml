@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>BouncyCastle.Crypto.Dll</string>
+  <key>nodeid</key><string>c0616b1f-457c-4601-86ef-f598477d866f</string>
+  <key>modified_time</key><integer>1525976439</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1525976426</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

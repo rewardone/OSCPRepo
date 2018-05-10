@@ -6,6 +6,7 @@
   <key>title</key><string>Oracle</string>
   <key>nodeid</key><string>e2ce5efb-15e3-4c42-833f-a4d68276ffc3</string>
   <key>modified_time</key><integer>1516929587</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516929587</integer>

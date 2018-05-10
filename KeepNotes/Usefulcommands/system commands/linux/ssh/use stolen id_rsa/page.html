@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Use Stolen ID_RSA</title>
+</head><body>Happens sometimes, but not always, additional work is needed to SSH without a password<br/>
+<br/>
+Steal someone's private key<br/>
+Note their UID<br/>
+Create a new user local to your machine with the user's UID<br/>
+SU as your local user and create .ssh dir, add id_rsa to it<br/>
+ssh-add id_rsa<br/>
+Now ssh to your target</body></html>
