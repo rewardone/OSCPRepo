@@ -25,4 +25,89 @@ Parameters<br/>
 &nbsp;/next: &#09;&#09;&#09;Runs Command on the next occurrence of the day (for example, next Thursday).<br/>
 &nbsp;Command &#09;&#09;Specifies the Windows command, program (that is, .exe or .com file), or batch program (that is, .bat or .cmd file) that you want to run. When the command requires a path as an argument, use the absolute path (that is, the entire path beginning with the drive letter). If the command is on a remote computer, specify Universal Naming Convention (UNC) notation for the server and share name, rather than a remote drive letter.<br/>
 <br/>
-&nbsp;/? &#09;&#09;&#09;&#09;Displays help at the command prompt.</body></html>
+&nbsp;/? &#09;&#09;&#09;&#09;Displays help at the command prompt.<br/>
+<br/>
+<br/>
+<br/>
+Remarks<br/>
+Schtasks is a more powerful superset command-line scheduling tool and includes all the functionality found in the at command-line utility. Use schtasks instead of at for all command-line scheduling tasks. For more information about schtasks, see Related Topics.<br/>
+<br/>
+Using at<br/>
+To use at, you must be a member of the local Administrators group.<br/>
+<br/>
+Loading Cmd.exe<br/>
+At does not automatically load Cmd.exe, the command interpreter, before running commands. If you are not running an executable (.exe) file, you must explicitly load Cmd.exe at the beginning of the command as follows:<br/>
+<br/>
+cmd /c dir &gt; c:\test.out<br/>
+<br/>
+Viewing scheduled commands<br/>
+<br/>
+When you use at without command-line options, scheduled tasks appear in a table formatted similar to the following:<br/>
+<br/>
+Status &nbsp;ID &nbsp; Day &nbsp; &nbsp; &nbsp; Time &nbsp; &nbsp; &nbsp; &nbsp;Command Line<br/>
+OK &nbsp; &nbsp; &nbsp;1 &nbsp; &nbsp;Each F &nbsp; &nbsp;4:30 PM &nbsp; &nbsp; net send group leads status due<br/>
+OK &nbsp; &nbsp; &nbsp;2 &nbsp; &nbsp;Each M &nbsp; &nbsp;12:00 AM &nbsp; &nbsp;chkstor &gt; check.file<br/>
+OK &nbsp; &nbsp; &nbsp;3 &nbsp; &nbsp;Each F &nbsp; &nbsp;11:59 PM &nbsp; &nbsp;backup2.bat <br/>
+Including identification number (ID)<br/>
+<br/>
+When you include identification number (ID) with at at a command prompt, information for a single entry appears in a format similar to the following:<br/>
+<br/>
+Task ID: &nbsp; &nbsp; &nbsp;1<br/>
+Status: &nbsp; &nbsp; &nbsp; OK<br/>
+Schedule: &nbsp; &nbsp; Each &nbsp;F<br/>
+Time of Day: &nbsp;4:30 PM<br/>
+Command: &nbsp; &nbsp; &nbsp;net send group leads status due<br/>
+After you schedule a command with at, especially a command that has command-line options, check that the command syntax is correct by typing at without command-line options. If the information in the Command Line column is incorrect, delete the command and retype it. If it is still incorrect, retype the command with fewer command-line options.<br/>
+<br/>
+Viewing results<br/>
+<br/>
+Commands scheduled with at run as background processes. Output is not displayed on the computer screen. To redirect output to a file, use the redirection symbol (&gt;). If you redirect output to a file, you need to use the escape symbol (^) before the redirection symbol, whether you are using at at the command line or in a batch file. For example, to redirect output to Output.text, type:<br/>
+<br/>
+at 14:45 c:\test.bat ^&gt;c:\output.txt<br/>
+<br/>
+The current directory for the executing command is the systemroot folder.<br/>
+<br/>
+Changing system time<br/>
+<br/>
+If you change the system time at a computer after you schedule a command to run with at, synchronize the at scheduler with the revised system time by typing at without command-line options.<br/>
+<br/>
+Storing commands<br/>
+<br/>
+Scheduled commands are stored in the registry. As a result, you do not lose scheduled tasks if you restart the Schedule service.<br/>
+<br/>
+Connecting to network drives<br/>
+<br/>
+Do not use a redirected drive for scheduled jobs that access the network. The Schedule service might not be able to access the redirected drive, or the redirected drive might not be present if a different user is logged on at the time the scheduled task runs. Instead, use UNC paths for scheduled jobs. For example:<br/>
+<br/>
+at 1:00pm my_backup \\server\share<br/>
+<br/>
+Do not use the following syntax, where x: is a connection made by the user:<br/>
+<br/>
+at 1:00pm my_backup x:<br/>
+<br/>
+If you schedule an at command that uses a drive letter to connect to a shared directory, include an at command to disconnect the drive when you are finished using the drive. If the drive is not disconnected, the assigned drive letter is not available at the command prompt.<br/>
+<br/>
+Examples<br/>
+To display a list of commands scheduled on the Marketing server, type:<br/>
+<br/>
+at \\marketing<br/>
+<br/>
+To learn more about a command with the identification number 3 on the Corp server, type:<br/>
+<br/>
+at \\corp 3<br/>
+<br/>
+To schedule a net share command to run on the Corp server at 8:00 A.M. and redirect the listing to the Maintenance server, in the Reports shared directory, and the Corp.txt file, type:<br/>
+<br/>
+at \\corp 08:00 cmd /c "net share reports=d:\marketing\reports &gt;&gt; \\maintenance\reports\corp.txt"<br/>
+<br/>
+To back up the hard drive of the Marketing server to a tape drive at midnight every five days, create a batch program called Archive.cmd, which contains the backup commands, and then schedule the batch program to run, type:<br/>
+<br/>
+at \\marketing 00:00 /every:5,10,15,20,25,30 archive<br/>
+<br/>
+To cancel all commands scheduled on the current server, clear the at schedule information as follows:<br/>
+<br/>
+at /delete<br/>
+<br/>
+To run a command that is not an executable (that is, .exe) file, precede the command with cmd /c to load Cmd.exe as follows:<br/>
+<br/>
+cmd /c dir &gt; c:\test.out</body></html>

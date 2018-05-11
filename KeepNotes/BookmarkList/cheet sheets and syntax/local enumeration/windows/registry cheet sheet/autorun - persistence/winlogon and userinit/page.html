@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WinLogon</title>
+</head><body>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon<br/>
+<br/>
+Type&#09;&#09;Range&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Default Value<br/>
+REG_SZ&#09;<i>Names of executable files (filename extension not required)</i>&#09;userinit<br/>
+<br/>
+Description<br/>
+<br/>
+Specifies the programs that Winlogon runs when a user logs on. By default, Winlogon runs Userinit.exe, which runs logon scripts, reestablishes network connections, and then starts Explorer.exe, the Windows user interface.<br/>
+<br/>
+You can change the value of this entry to add or remove programs. For example, to have a program run before the Windows Explorer user interface starts, substitute the name of that program for Userinit.exe in the value of this entry, then include instructions in that program to start Userinit.exe. You might also want to substitute Explorer.exe for Userinit.exe if you are working offline and are not using logon scripts.</body></html>

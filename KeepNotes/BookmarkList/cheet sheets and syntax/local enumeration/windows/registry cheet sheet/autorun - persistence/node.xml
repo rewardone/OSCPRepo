@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>AutoRun / Persistence</string>
+  <key>nodeid</key><string>ddc1e41d-c438-4bf2-93b2-d9c23685146b</string>
+  <key>modified_time</key><integer>1526045238</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524680157</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

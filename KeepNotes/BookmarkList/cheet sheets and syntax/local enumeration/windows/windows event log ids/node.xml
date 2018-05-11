@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Windows Event Log IDs</string>
+  <key>nodeid</key><string>aef1ca6e-e962-4de4-bec1-0d385b4663bf</string>
+  <key>modified_time</key><integer>1526060118</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526059891</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

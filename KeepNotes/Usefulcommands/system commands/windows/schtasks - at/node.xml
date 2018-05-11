@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Schtasks / AT</string>
   <key>nodeid</key><string>83ec7f41-8a9e-4050-b70d-bbb44ed50c88</string>
   <key>modified_time</key><integer>1524283892</integer>
