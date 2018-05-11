@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Wget-Mirror</string>
+  <key>nodeid</key><string>a188773b-28a2-4805-b606-db1635b53f02</string>
+  <key>modified_time</key><integer>1526003219</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526003201</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

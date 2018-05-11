@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Invoke-WScriptBypassUAC.ps1</string>
+  <key>nodeid</key><string>e625465a-c5b4-426f-824d-819bd79468d6</string>
+  <key>modified_time</key><integer>1524363639</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524363626</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

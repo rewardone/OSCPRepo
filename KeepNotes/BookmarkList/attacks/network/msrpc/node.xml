@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>MSRPC</string>
   <key>nodeid</key><string>3d9539e9-cc94-413e-a43b-7218e211d5a3</string>
   <key>modified_time</key><integer>1525488774</integer>

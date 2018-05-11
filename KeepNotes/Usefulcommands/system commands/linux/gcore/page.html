@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>gcore</title>
+</head><body>Dump a process on linux. Fun to gcore and then strings for passwords.<br/>
+Check out all processes, but especially things like gnome.keyring and firefox<br/>
+<br/>
+Generate a core dump of a running program with process ID <i>pid</i>. Produced file is equivalent to a kernel produced core file as if the process crashed (and if "ulimit -c" were used to set up an appropriate core dump limit). Unlike after a crash, after <b>gcore </b>the program remains running without any change.<br/>
+<br/>
+gcore [-a] [-o <i>filename</i>] <i>pid<br/>
+</i><i>&nbsp; &nbsp; &nbsp; &nbsp;-a &nbsp;Dump all memory mappings. &nbsp;The actual effect of this option<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;depends on the Operating System. &nbsp;On GNU/Linux, it will disable<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"use-coredump-filter" and enable "dump-excluded-mappings".<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;-o filename<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;The optional argument filename specifies the file name where to<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;put the core dump. &nbsp;If not specified, the file name defaults to<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;core.pid, where pid is the running program process ID.<br/>
+</i></body></html>

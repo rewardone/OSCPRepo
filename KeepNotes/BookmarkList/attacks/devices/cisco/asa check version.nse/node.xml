@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>ASA Check Version.nse</string>
+  <key>nodeid</key><string>e0dcbe70-a1b6-4182-88c4-6b29a4b3cca2</string>
+  <key>modified_time</key><integer>1526001888</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526001867</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
