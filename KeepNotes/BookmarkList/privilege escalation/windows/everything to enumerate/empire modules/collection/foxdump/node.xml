@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>FoxDump</string>
+  <key>nodeid</key><string>96f8fec8-adf3-48ad-b714-38de297a6ca1</string>
+  <key>modified_time</key><integer>1526160646</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526160536</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

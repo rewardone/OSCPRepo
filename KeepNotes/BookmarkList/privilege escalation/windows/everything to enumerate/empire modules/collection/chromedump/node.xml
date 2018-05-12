@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>ChromeDump</string>
+  <key>nodeid</key><string>a026a2b9-4c26-4ae3-9d5d-8e7c5cbb7773</string>
+  <key>modified_time</key><integer>1526160612</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526160534</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

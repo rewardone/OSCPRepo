@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Network</string>
+  <key>nodeid</key><string>ed5a42f9-ca0f-4820-8317-877b8141adb5</string>
+  <key>modified_time</key><integer>1526159847</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526159847</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

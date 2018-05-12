@@ -1,3 +1,5 @@
+Recommend to use HoseEnum (either standalone or in Empire)
+
 ###################
 WINENUM
 ###################

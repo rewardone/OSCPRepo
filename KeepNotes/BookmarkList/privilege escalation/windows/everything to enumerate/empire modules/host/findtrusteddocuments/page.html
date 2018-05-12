@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FindTrustedDocuments</title>
+</head><body>Enumerate the appropriate registry keys to determine what, if any, trusted documents exist on the host. It will also enumerate trusted locations. <br/>
+<br/>
+Does not need Admin<br/>
+<br/>
+def generate(self, obfuscate=False, obfuscationCommand=""):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # the PowerShell script itself, with the command to invoke<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # &nbsp; for execution appended to the end. Scripts should output<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # &nbsp; everything to the pipeline for proper parsing.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # the script should be stripped of comments, with a link to any<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # &nbsp; original reference script included in the comments. &nbsp; <br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; moduleSource = self.mainMenu.installPath + "/data/module_source/situational_awareness/host/Find-TrustedDocuments.ps1"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if obfuscate:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; helpers.obfuscate_module(moduleSource=moduleSource, obfuscationCommand=obfuscationCommand)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; moduleSource = moduleSource.replace("module_source", "obfuscated_module_source")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; try:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f = open(moduleSource, 'r')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; except:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print helpers.color("[!] Could not read module source path at: " + str(moduleSource))<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return ""<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; moduleCode = f.read()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; f.close()<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; script = moduleCode<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; scriptEnd = "Find-TrustedDocuments"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if obfuscate:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scriptEnd = helpers.obfuscate(self.mainMenu.installPath, psScript=scriptEnd, obfuscationCommand=obfuscationCommand)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; script += scriptEnd<br/>
+return script</body></html>

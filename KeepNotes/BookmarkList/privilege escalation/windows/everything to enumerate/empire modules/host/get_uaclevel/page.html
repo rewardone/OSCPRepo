@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get_UACLevel</title>
+</head><body>Enumerates UAC Level<br/>
+Does not need Admin<br/>
+<br/>
+Grabs registry key values and maps them to UAC level<br/>
+<br/>
+function Get-UACLevel<br/>
+{<br/>
+&nbsp; &nbsp; &lt;# &nbsp;<br/>
+&nbsp; &nbsp; .Synopsis<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Enumerates the UAC Level<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Author: Petr Medonos<br/>
+&nbsp; &nbsp; .DESCRIPTION<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Enumerates the UAC Level<br/>
+&nbsp; &nbsp; .EXAMPLE<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;C:\&gt; Get-UACLevel<br/>
+&nbsp; &nbsp; #&gt; &nbsp;<br/>
+&nbsp; &nbsp; New-Variable -Name Key <br/>
+&nbsp; &nbsp; New-Variable -Name PromptOnSecureDesktop_Name <br/>
+&nbsp; &nbsp; New-Variable -Name ConsentPromptBehaviorAdmin_Name <br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; $Key = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" <br/>
+&nbsp; &nbsp; $ConsentPromptBehaviorAdmin_Name = "ConsentPromptBehaviorAdmin" <br/>
+&nbsp; &nbsp; $PromptOnSecureDesktop_Name = "PromptOnSecureDesktop" <br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; $ConsentPromptBehaviorAdmin_Value = (Get-ItemProperty $Key $ConsentPromptBehaviorAdmin_Name).$ConsentPromptBehaviorAdmin_Name<br/>
+&nbsp; &nbsp; $PromptOnSecureDesktop_Value = (Get-ItemProperty $Key $PromptOnSecureDesktop_Name).$PromptOnSecureDesktop_Name<br/>
+&nbsp; &nbsp; If($ConsentPromptBehaviorAdmin_Value -Eq 0 -And $PromptOnSecureDesktop_Value -Eq 0){ <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "Never notify" <br/>
+&nbsp; &nbsp; } &nbsp; <br/>
+&nbsp; &nbsp; ElseIf($ConsentPromptBehaviorAdmin_Value -Eq 5 -And $PromptOnSecureDesktop_Value -Eq 0){ <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "Notify me only when apps try to make changes to my computer (do not dim my desktop)" <br/>
+&nbsp; &nbsp; } &nbsp; <br/>
+&nbsp; &nbsp; ElseIf($ConsentPromptBehaviorAdmin_Value -Eq 5 -And $PromptOnSecureDesktop_Value -Eq 1){ <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "Notify me only when apps try to make changes to my computer (default)" <br/>
+&nbsp; &nbsp; } &nbsp; <br/>
+&nbsp; &nbsp; ElseIf($ConsentPromptBehaviorAdmin_Value -Eq 2 -And $PromptOnSecureDesktop_Value -Eq 1){ <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "Always notify" <br/>
+&nbsp; &nbsp; } &nbsp; <br/>
+&nbsp; &nbsp; Else{ <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "Unknown" <br/>
+&nbsp; &nbsp; } &nbsp; <br/>
+} Get-UACLevel"""</body></html>

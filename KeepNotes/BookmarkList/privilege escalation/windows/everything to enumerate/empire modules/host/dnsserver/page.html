@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DNSServer</title>
+</head><body>Enumerates the DNS Servers used by a system<br/>
+Does not need Admin<br/>
+<br/>
+function Get-SystemDNSServer<br/>
+{<br/>
+&nbsp; &nbsp; &lt;#<br/>
+&nbsp; &nbsp; .Synopsis<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Enumerates the DNS Servers used by a system<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Part of Posh-SecMod (https://github.com/darkoperator/Posh-SecMod/)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Author: darkoperator<br/>
+&nbsp; &nbsp; .DESCRIPTION<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Enumerates the DNS Servers used by a system returning an IP Address .Net object for each.<br/>
+&nbsp; &nbsp; .EXAMPLE<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;C:\&gt; Get-SystemDNSServer<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Address &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: 16885952<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; AddressFamily &nbsp; &nbsp; &nbsp;: InterNetwork<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ScopeId &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; IsIPv6Multicast &nbsp; &nbsp;: False<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; IsIPv6LinkLocal &nbsp; &nbsp;: False<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; IsIPv6SiteLocal &nbsp; &nbsp;: False<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; IsIPv6Teredo &nbsp; &nbsp; &nbsp; : False<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; IsIPv4MappedToIPv6 : False<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; IPAddressToString &nbsp;: 192.168.1.1<br/>
+&nbsp; &nbsp; #&gt;<br/>
+&nbsp; &nbsp; $DNSServerAddresses = @()<br/>
+&nbsp; &nbsp; $interfaces = [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces()<br/>
+&nbsp; &nbsp; foreach($interface in $interfaces)<br/>
+&nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if($interface.OperationalStatus -eq "Up")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $DNSConfig = $interface.GetIPProperties().DnsAddresses<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!$DNSConfig.IsIPv6SiteLocal)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $DNSServerAddresses += $DNSConfig<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; $DNSServerAddresses<br/>
+} Get-SystemDNSServer"""</body></html>

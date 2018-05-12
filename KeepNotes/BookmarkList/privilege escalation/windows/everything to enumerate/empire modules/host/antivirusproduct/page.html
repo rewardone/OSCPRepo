@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Antivirusproduct</title>
+</head><body>Uses WMIC to attempt to enumerate AV products<br/>
+Does not need admin<br/>
+<br/>
+function Get-AntiVirusProduct { <br/>
+&nbsp; &nbsp; &nbsp; [CmdletBinding()] <br/>
+&nbsp; &nbsp; &nbsp; param ( <br/>
+&nbsp; &nbsp; &nbsp; [parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)] <br/>
+&nbsp; &nbsp; &nbsp; [Alias('name')] <br/>
+&nbsp; &nbsp; &nbsp; $ComputerName=$env:computername )<br/>
+&nbsp; &nbsp; &nbsp; $Query = 'select * from AntiVirusProduct'<br/>
+&nbsp; &nbsp; &nbsp; $AntivirusProduct = Get-WmiObject -Namespace 'root\SecurityCenter2' -Query $Query @psboundparameters -ErrorVariable myError -ErrorAction 'SilentlyContinue'<br/>
+&nbsp; &nbsp; &nbsp; switch ($AntiVirusProduct.productState) { <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '262144' {$defstatus = 'Up to date' ;$rtstatus &nbsp;= 'Disabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '262160' {$defstatus = 'Out of date' ;$rtstatus = 'Disabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '266240' {$defstatus = 'Up to date' ;$rtstatus &nbsp;= 'Enabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '266256' {$defstatus = 'Out of date' ;$rtstatus = 'Enabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '393216' {$defstatus = 'Up to date' ;$rtstatus &nbsp;= 'Disabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '393232' {$defstatus = 'Out of date' ;$rtstatus = 'Disabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '393488' {$defstatus = 'Out of date' ;$rtstatus = 'Disabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '397312' {$defstatus = 'Up to date' ;$rtstatus &nbsp;= 'Enabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '397328' {$defstatus = 'Out of date' ;$rtstatus = 'Enabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '397584' {$defstatus = 'Out of date' ;$rtstatus = 'Enabled'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; default {$defstatus = 'Unknown' ;$rtstatus = 'Unknown'} <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; $ht = @{} <br/>
+&nbsp; &nbsp; &nbsp; $ht.Computername = $ComputerName <br/>
+&nbsp; &nbsp; &nbsp; $ht.Name = $AntiVirusProduct.displayName <br/>
+&nbsp; &nbsp; &nbsp; $ht.ProductExecutable = $AntiVirusProduct.pathToSignedProductExe <br/>
+&nbsp; &nbsp; &nbsp; $ht.'Definition Status' = $defstatus <br/>
+&nbsp; &nbsp; &nbsp; $ht.'Real-time Protection Status' = $rtstatus<br/>
+&nbsp; &nbsp; &nbsp; New-Object -TypeName PSObject -Property $ht<br/>
+}<br/>
+Get-AntiVirusProduct """</body></html>
