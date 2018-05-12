@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Microsoft Digest Authentication</title>
+</head><body>Microsoft Digest performs an initial authentication when the server receives the first challenge response from a client. The server verifies that the client has not been authenticated and then performs the initial authentication by accessing the services of a domain controller. For a detailed description of this procedure, see Initial Authentication Using Microsoft Digest.<br/>
+<br/>
+When the initial authentication is successful the server receives a Digest session key. The server caches this key and uses it to authenticate subsequent requests for resources from the client. This authentication is local, that is, it does not require access to a domain controller. For a detailed description of this procedure see Authenticating Subsequent Requests Using Microsoft Digest.<br/>
+<br/>
+When using HTTP, there is no connection maintained between client and server. To reduce domain controller traffic and improve performance, Microsoft Digest caches information received after successful authentication. For information about this process, see Maintaining the Security Context Between Connections.</body></html>

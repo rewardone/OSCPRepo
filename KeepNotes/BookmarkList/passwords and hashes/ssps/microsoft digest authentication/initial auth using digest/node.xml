@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Initial Auth Using DIgest</string>
+  <key>nodeid</key><string>84c17e6b-9230-479d-8e02-4707d0d3ddc7</string>
+  <key>modified_time</key><integer>1526077411</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526077362</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ciphers</title>
+</head><body>&nbsp;The following material is valid only when Digest is used as a SASL mechanism. Ciphers and encryption are not available for HTTP authentication using Microsoft Digest.<br/>
+<br/>
+A Digest SASL challenge's cipher directive contains a list of the ciphers supported by a server that requires confidential communications. The cipher directive can only be included if the qop directive is set to "auth-conf". The ciphers recognized by Microsoft Digest are listed in the following table, in order from strongest to weakest.<br/>
+Cipher value&#09;Description<br/>
+"rc4"&#09;&#09;The RC4 cipher with a 128-bit key.<br/>
+"3des"&#09;&#09;The triple DES cipher in CBC mode with EDE with the same key for each E stage (two keys mode). Total key length is 112 bits.<br/>
+"rc4-56"&#09;&#09;The RC4 cipher with a 56-bit key.<br/>
+"rc4-40"&#09;&#09;The RC4 cipher with a 40-bit key.<br/>
+"des"&#09;&#09;The Data Encryption Standard (DES) cipher in cipher block chaining (CBC) mode with a 56-bit key.<br/>
+<br/>
+&nbsp;<br/>
+<br/>
+When a server application requests confidentiality (qop="auth-conf") Microsoft Digest will generate a challenge that offers the client all of the ciphers installed on the server and supported by Digest. The Digest client will select the strongest available cipher. For details on specifying confidentiality, see Generating the Digest Challenge.</body></html>

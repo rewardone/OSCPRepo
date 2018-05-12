@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Authenticating Subsequent Requests</title>
+</head><body>&nbsp;The server sends the client a reference to their shared security context using the opaque directive of the Digest challenge. After a successful authentication, the client must specify this value in subsequent requests to the target server. Including the opaque value in requests for resources that are accessible using the existing security context eliminates the need to re-authenticate at the domain controller. Such requests are re-authenticated at the server, using the Digest session key cached after the initial authentication.<br/>
+<br/>
+The following diagram illustrates the steps taken by client and server during a subsequent request for access-protected resources.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+To request additional resources after a successful authentication, the client calls the Microsoft Digest MakeSignature function to generate a Digest challenge response. The opaque value is included in the opaque directive of the challenge response sent to the server as an Authorization header (shown as HTTP Request).<br/>
+<br/>
+The server calls the AcceptSecurityContext (Digest) function to determine whether there is an existing security context for the client. When an existing context is found, the function returns SEC_E_COMPLETE_NEEDED to indicate the server must then call the CompleteAuthToken function. This function performs the client authentication using the Digest session key cached during the initial authentication instead of re-authenticating at the domain controller.</body></html>
