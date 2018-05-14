@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>This works anywhere in linux that may be using wildcards. Novel idea but still useful. <br/>
+<br/>
+Let's check one very basic wildcard argument injection example.<br/>
+<br/>
+[root@defensecode public]# ls -al<br/>
+total 20<br/>
+drwxrwxr-x. &nbsp;5 leon &nbsp; leon &nbsp; 4096 Oct 28 17:04 .<br/>
+drwx------. 22 leon &nbsp; leon &nbsp; 4096 Oct 28 16:15 ..<br/>
+drwxrwxr-x. &nbsp;2 leon &nbsp; leon &nbsp; 4096 Oct 28 17:04 DIR1<br/>
+drwxrwxr-x. &nbsp;2 leon &nbsp; leon &nbsp; 4096 Oct 28 17:04 DIR2<br/>
+drwxrwxr-x. &nbsp;2 leon &nbsp; leon &nbsp; 4096 Oct 28 17:04 DIR3<br/>
+-rw-rw-r--. &nbsp;1 leon &nbsp; leon &nbsp; &nbsp; &nbsp;0 Oct 28 17:03 file1.txt<br/>
+-rw-rw-r--. &nbsp;1 leon &nbsp; leon &nbsp; &nbsp; &nbsp;0 Oct 28 17:03 file2.txt<br/>
+-rw-rw-r--. &nbsp;1 leon &nbsp; leon &nbsp; &nbsp; &nbsp;0 Oct 28 17:03 file3.txt<br/>
+-rw-rw-r--. &nbsp;1 nobody nobody &nbsp; &nbsp;0 Oct 28 16:38 -rf<br/>
+<br/>
+We have directory with few subdirectories and few files in it.<br/>
+There is also file with '-rf' filename ther owned by the user 'nobody'.<br/>
+Now, let's run 'rm *' command, and check directory content again.<br/>
+<br/>
+[root@defensecode public]# rm *<br/>
+[root@defensecode public]# ls -al<br/>
+total 8<br/>
+drwxrwxr-x. &nbsp;2 leon &nbsp; leon &nbsp; 4096 Oct 28 17:05 .<br/>
+drwx------. 22 leon &nbsp; leon &nbsp; 4096 Oct 28 16:15 ..<br/>
+-rw-rw-r--. &nbsp;1 nobody nobody &nbsp; &nbsp;0 Oct 28 16:38 -rf<br/>
+<br/>
+<br/>
+Directory is totally empty, except for '-rf' file in it.<br/>
+All files and directories were recursively deleted, and it's pretty obvious what happened...<br/>
+When we started 'rm' command with asterisk argument, all filenames in current<br/>
+directory were passed as arguments to 'rm' on command line, exactly same as <br/>
+following line:<br/>
+<br/>
+[user@defensecode WILD]$ rm DIR1 DIR2 DIR3 file1.txt file2.txt file3.txt -rf<br/>
+<br/>
+Since there is '-rf' filename in current directory, 'rm' got -rf option as the<br/>
+last argument, and all files in current directory were recursively deleted.<br/>
+We can also check that with strace:<br/>
+<br/>
+[leon@defensecode WILD]$ strace rm *<br/>
+execve("/bin/rm", ["rm", "DIR1", "DIR2", "DIR3", "file1.txt", "file2.txt", <br/>
+"file3.txt", "-rf"], [/* 25 vars */]) = 0<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ^- HERE<br/>
+<br/>
+Now we know how it's possible to inject arbitrary arguments to the unix<br/>
+shell programs. In the following chapter we will discuss how we can abuse that<br/>
+feature to do much more than just recursively delete files.<br/>
+</body></html>

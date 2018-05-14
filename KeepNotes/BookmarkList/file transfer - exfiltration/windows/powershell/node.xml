@@ -4,7 +4,8 @@
 <dict>
   <key>title</key><string>Powershell</string>
   <key>nodeid</key><string>45ffaa82-8a4c-454c-ac62-3eab9a568502</string>
-  <key>modified_time</key><integer>1523741284</integer>
+  <key>modified_time</key><integer>1526306563</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516810946</integer>

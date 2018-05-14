@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Via New-Win32Process</string>
+  <key>nodeid</key><string>ca96db30-9f0b-41c6-bd03-cb058e69cae4</string>
+  <key>modified_time</key><integer>1526306203</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526306082</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

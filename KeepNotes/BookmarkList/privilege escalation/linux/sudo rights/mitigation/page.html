@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigation</title>
+</head><body>Solution<br/>
+<br/>
+The execution of other binaries might be prevented by adding the NOEXEC tag in the sudoer’s file. This works only if “sudo” has been compiled with noexec support and if the underlaying OS supports this as well.<br/>
+<br/>
+hacker10 ALL= (root) NOEXEC: /bin/less /var/log/*<br/>
+The following two screenshots shows the results of the previously described methods to run an arbitrary command or default editor.<br/>
+<br/>
+<br/>
+Or just remove these binaries from Sudo<br/>
+<br/>
+<br/>
+In the case of 'less'<br/>
+When the environment variable LESSSECURE is set to 1, less<br/>
+runs in a "secure" mode. This means these features are disabled:<br/>
+! &nbsp; &nbsp; &nbsp;the shell command<br/>
+| &nbsp; &nbsp; &nbsp;the pipe command<br/>
+:e &nbsp; &nbsp; the examine command.<br/>
+v &nbsp; &nbsp; &nbsp;the editing command<br/>
+s -o &nbsp;log files<br/>
+-k &nbsp; &nbsp; use of lesskey files<br/>
+-t &nbsp; &nbsp; use of tags files<br/>
+metacharacters in filenames, such as *<br/>
+filename completion (TAB, ^L)<br/>
+Less can also be compiled to be permanently in "secure" mode.<br/>
+<br/>
+The trick is to make the environment variable readonly with the following command:<br/>
+readonly LESSSECURE</body></html>

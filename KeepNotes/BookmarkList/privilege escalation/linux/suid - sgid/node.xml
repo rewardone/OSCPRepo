@@ -6,6 +6,7 @@
   <key>title</key><string>SUID / SGID</string>
   <key>nodeid</key><string>163feca1-cf68-4803-86a8-665959798e63</string>
   <key>modified_time</key><integer>1524750948</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524750948</integer>

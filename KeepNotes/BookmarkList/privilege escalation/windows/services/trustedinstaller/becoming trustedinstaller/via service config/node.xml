@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Via Service Config</string>
+  <key>nodeid</key><string>93661a5c-5c16-4659-8e2f-9808bcc228f1</string>
+  <key>modified_time</key><integer>1526306073</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526306062</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
