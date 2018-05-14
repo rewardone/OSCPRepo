@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>BypassUAC</string>
+  <key>nodeid</key><string>72bdd86b-99ed-4aa8-a1bc-0d24afb00a9e</string>
+  <key>modified_time</key><integer>1526217018</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526216729</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

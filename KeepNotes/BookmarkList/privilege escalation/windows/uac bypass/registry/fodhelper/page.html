@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FodHelper</title>
+</head><body>Fodhelper.exe was introduced in Win10 to managed optional features. Located in C:\Windows\System32\fodhelper.exe and is signed by Microsoft<br/>
+<br/>
+When initiating the start of fodhelper.exe, process monitor starts to capture the process and reveals (among other things) every read- or write-activity to the registry and filesystem. &nbsp;One of the interesting activities are the read accesses to registry, although some specific keys or values are not found. Especially registry keys in HKEY_CURRENT_USER are great to test how the behavior of a program may change after the creation of a not yet existing registry key, because we do not need special privileges to modify entries.<br/>
+<br/>
+E.g. fodhelper.exe is looking for <b>“HKCU:\Software\Classes\ms-settings\shell\open\command”.</b>&nbsp;By default this key does not exist in Windows 10.<br/>
+<br/>
+After creation of the key: “HKCU:\Software\Classes\ms-settings\shell\open\command”, fodhelper.exe will find it and will start looking for the value: “<b>HKCU:\Software\Classes\ms-settings\shell\open\command\DelegateExecute</b>” which it would not look for, if the mentioned key did not exist. As soon as the value “DelegateExecute” exists, it will be found, too, even if it is empty.<br/>
+<br/>
+Once the value “DelegateExecute” is created, fodhelper.exe will look for the default value in: “<b>HKCU:\Software\Classes\ms-settings\shell\open\command\</b>”.<br/>
+<br/>
+This value is the critical point. The registry value “shell\open\command\(default)” enables us to provide to the program additional instructions what to do when the program opens.<br/>
+<br/>
+In this scenario, I set the value of “shell\open\command\(default)” to: “C:\Windows\System32\cmd.exe /c powershell.exe”. After this modification, fodhelper.exe will lookup the (default)-value and follow the instructions how to behave after &nbsp;the process starts. =&gt; start cmd.exe which starts powershell.exe (just checking if it is possible to pass parameters to cmd.exe, too)<br/>
+<br/>
+To demonstrate this vulnerability, I created and published a script on Github, which will create the registry keys, opens up “C:\Windows\System32\cmd.exe /c powershell.exe” and which deletes the registry keys.<br/>
+<br/>
+This technique is based on a similiar flaw, found by Matt Nelson (https://enigma0x3.net/) and has the following benefits:<br/>
+<br/>
+&nbsp; &nbsp; There is no need to drop a file on disk.<br/>
+&nbsp; &nbsp; There is no need to hijack any .dll file<br/>
+&nbsp; &nbsp; There is no need for any suspicious action on the operating system which could alert an antivirus software.<br/>
+<br/>
+Ways of mitigation:<br/>
+<br/>
+&nbsp; &nbsp; Do not use a local administrator account if you do not have to. Restricted users are not able to execute and elevate such programs.<br/>
+&nbsp; &nbsp; Set the UAC level to “Always notify”, which leads to a prompt that needs to be accepted by the user.<br/>
+</body></html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Service_EXE_Restore</title>
+</head><body>Restore a backed up service binary<br/>
+Does not need Admin<br/>
+<br/>
+https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerUp<br/>
+moduleSource = self.mainMenu.installPath + "/data/module_source/privesc/PowerUp.ps1<br/>
+<br/>
+function Restore-ServiceBinary {<br/>
+&lt;#<br/>
+&nbsp; &nbsp; .SYNOPSIS<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Restores a service binary backed up by Install-ServiceBinary.<br/>
+<br/>
+Takes a service Name or a ServiceProcess.ServiceController on the pipeline and<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; checks for the existence of an "OriginalServiceBinary.exe.bak" in the service<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; binary location. If it exists, the backup binary is restored to the original<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; binary path.</body></html>

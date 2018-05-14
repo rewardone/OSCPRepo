@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Get-SPN</string>
+  <key>nodeid</key><string>261dfd0d-b547-4ccf-a754-4eacb7303c4e</string>
+  <key>modified_time</key><integer>1526257764</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526257748</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

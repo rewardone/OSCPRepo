@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Invoke-TokenManipulation Primer</title>
+</head><body>nvoke-TokenManipulation allows you to enumerate all available security tokens on a system. You can create new processes with these tokens (run processes as another user without needing their password) or you can make the current PowerShell thread impersonate one of the tokens (which has issues, see below).<br/>
+<br/>
+All right, so how does this script actually work?<br/>
+<br/>
+First, you must enumerate the tokens on the system:<br/>
+<br/>
+&nbsp; &nbsp; Enumerate all processes<br/>
+&nbsp; &nbsp; Call OpenProcess to get a handle to each process<br/>
+&nbsp; &nbsp; Call OpenProcessToken to get the token of the process<br/>
+&nbsp; &nbsp; Enumerate all threads<br/>
+&nbsp; &nbsp; Call OpenThread to get a handle to each thread<br/>
+&nbsp; &nbsp; Call OpenThreadToken to get the token of the thread (if it has one)<br/>
+&nbsp; &nbsp; Call GetTokenInformation to retrieve information about the token such as if it is elevated, who it belongs to, and what privileges it has<br/>
+<br/>
+Now the script has a list of the tokens available on the system. It’s worth noting that <b>protected processes cannot be opened with the permissions required to capture their token</b>.<br/>
+<br/>
+To impersonate a users token:<br/>
+<br/>
+&nbsp; &nbsp; Call DuplicateTokenEx to get a copy of the token being impersonated<br/>
+&nbsp; &nbsp; Call ImpersonateLoggedOnUser to impersonate the token<br/>
+<br/>
+To create a process using a users token:<br/>
+<br/>
+&nbsp; &nbsp; Call DuplicateTokenEx to get a copy of the token being impersonated<br/>
+&nbsp; &nbsp; Call CreateProcessWithTokenW to create a process using the specified token</body></html>

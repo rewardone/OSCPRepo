@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Service_EXE_Stager</string>
+  <key>nodeid</key><string>3c87c86a-bdc2-4611-a9fa-60e846cdeaee</string>
+  <key>modified_time</key><integer>1526255883</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526255199</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

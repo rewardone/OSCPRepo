@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>The Attack: Kerberoasting &nbsp;Attack Goals Domain privesc &amp; lateral movement.  If you have domain credentials and access to the domain, this is a relatively easy way to gain additional access within the domain. If all goes well, you'll end up with new domain credentials that might have administrative access to additional resources.<br/>
+<br/>
+&nbsp;Attack Prerequisites In order to Kerberoast, you either need to have:<br/>
+<ul><li>Interactive access to a domain connected machine (you are logged on)</li>
+<li>Remote access to a domain connected machine via Metasploit, Empire, CobaltStrike, etc.</li>
+<li>A valid set of domain credentials and be on the network (Impacket, Crackmapexec, etc.)</li>
+</ul>
+<br/>
+Common ways you get this type of access are:<br/>
+<ul><li>You phished someone</li>
+<li>You gained physical access to an unlocked machine</li>
+<li>You have network access and performed LLMNR/NBT-NS spoofing with a tool like Responder to get domain credentials</li>
+</ul>
+<br/>
+<b>What are SPNs</b><br/>
+Service Principal Names are a unique identifier of a service instance. SPNs are used by Kerberos authentication to associate a service instance with a service logon account. <br/>
+Basically mapping a service running on a server to an account it's running as so that it can do / accept kerberos authentication. Normally, these services, like "CIFS" (Windows Shares) run under the context of the computer account. <br/>
+<br/>
+<b>Why would SPNs be associated with users?</b><br/>
+This was part of the shift away from NT AUTHORITY\SYSTEM running services. MS created NT AUTHORITY\NETWORK SERVICE and NT AUTHORITY\LOCAL SERVICE. <br/>
+<br/>
+<b>Why should I care?</b><br/>
+Any valid domain user can request a kerberos ticket for any domain service (or even services outside the domain as long as there is a trust there). Once the ticket is received, password cracking can be done offline on the ticket to attempt to break the password for whatever user the service is running as. The users running these services usually are at the very least adminsitrators on the computers for which they are a service on, but more commonly they are some sort of adminsitrative account (Domain Admins)<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Because of how Kerberos works, any user can request a TGS for any service that has a registered SPN (HOST or arbitrary) in a user or computer account in Active Directory. Remember that just requesting this ticket doesn’t grant access to the requesting user, as it’s up to the server/service to ultimately determine whether the user should be given access. Tim realized that because of this, and because part of a TGS requested for an SPN instance is encrypted with the NTLM hash of a service account’s plaintext password, any user can request these TGS tickets and then crack the service account’s plaintext password offline, without the risk of account lockout!<br/>
+<br/>
+To reiterate, any domain user account that has a service principal name set can have a TGS for that SPN requested by any user in the domain, allowing for the offline cracking of the service account plaintext password! This is obviously dependent on a crackable service account plaintext, but luckily for us service accounts tend to often have simple passwords that change very infrequently. ¯\_(ツ)_/¯<br/>
+<br/>
+<br/>
+</body></html>

