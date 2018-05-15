@@ -39,6 +39,11 @@
 ## Expand SMBRecon: Ensure smbclient -L \\SERVER    for version fingerprinting
 ##     Extend: rpcclient -v "" <SERVER>, smbclient -L \\<SERVER> for null sessions
 ## Expand DNSRecon
+## Expand DirbustEverything
+##     Run a gobust. Run a gobust follow redirects on 301s. grab 200s from both.
+##     run a cewl on those URLs, feed back uniques to gobust
+##     TODO: check again on utilizing gobuster follow redirects as default instead. Timing? Total URLS? Junk?
+##     TODO: run and debug dirbustEVERYTHING
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
 ## Expand dirTrav:
 ##     Extend web: Data extraction from files, option for data extraction only when given a vulnerable URL
