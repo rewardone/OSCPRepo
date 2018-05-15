@@ -10,7 +10,8 @@ v="version 0.81"
 #TODO, php checks
 #TODO, nginx modules in the conf, need hands on to write a parser/grep string
 #TODO, executable files/folders
-#TODO, tar.gz exported files for easy transport
+#TODO, tar.gz exported files for easy transport tar zcvf archive.tar.gz file1 file2 etc
+#TODO, 'interesting' file extensions. Looking for .dat,.db (more?)
 
 #help function
 #31m is red, 33m is yellow, 32m is green

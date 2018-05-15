@@ -5,7 +5,7 @@
 echo "### Downloading things...### \n\n"
 echo "Install new software: Shutter, exiftool, gobuster, git"
 apt-get update
-apt-get install -y shutter exiftool gobuster git
+apt-get install -y shutter exiftool gobuster git nbtscan-unixwiz
 
 echo "\nCloning Impacket \n"
 direc=/root/Documents/Impacket

@@ -36,8 +36,6 @@
 ## [TODO]
 ##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
-## Expand SNMPrecon:
-##     Extend: Additional snmpwalk strings?
 ## Expand SMBRecon: Ensure smbclient -L \\SERVER    for version fingerprinting
 ##     Extend: rpcclient -v "" <SERVER>, smbclient -L \\<SERVER> for null sessions
 ## Expand DNSRecon
@@ -45,8 +43,6 @@
 ## Expand dirTrav:
 ##     Extend web: Data extraction from files, option for data extraction only when given a vulnerable URL
 ##     INFO: File retrieve only uses first vulnerable URL...try more? ability to specify?
-## Expand http:
-##		Whatweb on every status 200 page, parse, and present feedback
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
 ##      POST SCAN COMPLETION:
@@ -143,7 +139,6 @@ def fingerEnum(ip_address, port):
 #http-sitemap-generator: spider site and display dir structure with number and types of files in each folder
 #http-sql-injection: spider server looking for URLs containing queries vuln to SQLi. Extracts forms and tries to identify fields that are vuln
 #http-unsafe-output-escaping: fuzz parameters and checks to see if they are reflected
-
 def httpEnum(ip_address, port):
     print "INFO: Detected http on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
@@ -156,9 +151,6 @@ def httpEnum(ip_address, port):
     print "INFO: nikto scan started on port %s" % (port)
     NIKTOSCAN = "nikto -host http://%s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto" % (ip_address, port, ip_address, port, ip_address, port)
     subprocess.call(NIKTOSCAN, shell=True)
-    print "INFO: whatweb started on port %s" % (port)
-    WHATWEBFINGER = "whatweb http://%s:%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml > /root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb" % (ip_address, port, ip_address, port, ip_address, port)
-    subprocess.call(WHATWEBFINGER, shell=True)
     return
 
 def httpsEnum(ip_address, port):
@@ -173,9 +165,6 @@ def httpsEnum(ip_address, port):
     print "INFO: nikto scan started on port %s" % (port)
     NIKTOSCAN = "nikto -host https://%s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto" % (ip_address, port, ip_address, port, ip_address, port)
     subprocess.call(NIKTOSCAN, shell=True)
-    print "INFO: whatweb started on port %s" % (port)
-    WHATWEBFINGER = "whatweb https://%s:%s --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_%s_S_whatweb.xml > /root/scripts/recon_enum/results/exam/whatweb/%s_%s_S_whatweb" % (ip_address, port, ip_address, port, ip_address, port)
-    subprocess.call(WHATWEBFINGER, shell=True)
     return
 
 def mssqlEnum(ip_address, port):
@@ -217,11 +206,11 @@ def rpcbindEnum(ip_address, port):
     print "INFO: Detected RPCBind on %s:%s" % (ip_address, port)
     NMAPRPCNSE = "nmap -n -sV -Pn -vv -p %s --script rpc-grind -oX /root/scripts/recon_enum/results/exam/rpc/%s_rpc.xml %s" % (port, ip_address, ip_address)
     subprocess.call(NMAPRPCNSE, shell=True)
-    RPCINFOSCAN1 = "rpcinfo %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e "\n" >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
+    RPCINFOSCAN1 = "rpcinfo %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
     subprocess.call(RPCINFOSCAN1, shell=True)
-    RPCINFOSCAN2 = "rpcinfo -p %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e "\n" >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
+    RPCINFOSCAN2 = "rpcinfo -p %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
     subprocess.call(RPCINFOSCAN2, shell=True)
-    RPCINFOSCAN3 = "rpcinfo -m %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e "\n" >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
+    RPCINFOSCAN3 = "rpcinfo -m %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
     subprocess.call(RPCINFOSCAN3, shell=True)
     return
 
@@ -429,11 +418,8 @@ def backupExisting():
       os.rename("/root/scripts/recon_enum/results/exam/targets.txt", "/root/scripts/recon_enum/results/targets.txt")
       moved = True
    backupName = "backup_%s.tar.gz" % (time.strftime("%H:%M"))
-   BACKUP = "tar czf /root/Downloads/%s /root/scripts/recon_enum/results/exam/*" % (backupName)
+   BACKUP = "tar czf /root/Downloads/%s /root/scripts/recon_enum/results/exam/* --remove-files" % (backupName)
    backupResults = subprocess.check_output(BACKUP, shell=True)
-   #ugly, but rm everything in exam and recreate empty dir to put targets.txt back
-   shutil.rmtree("/root/scripts/recon_enum/results/exam")
-   mkdir_p("/root/scripts/recon_enum/results/exam")
    if moved == True:
       os.rename("/root/scripts/recon_enum/results/targets.txt", "/root/scripts/recon_enum/results/exam/targets.txt")
 
@@ -454,24 +440,27 @@ def mksymlink():
             raise
 
 # grab the discover scan results and start scanning up hosts
-print "##############################################################"
-print "####                      RECON SCAN                      ####"
-print "####            A multi-process service scanner           ####"
-print "####        finger, http, mssql, mysql, nfs, nmap,        ####"
-print "####        rdp, smb, smtp, snmp, ssh, telnet, tftp       ####"
-print "##############################################################"
-print "############# Don't forget to start your TCPDUMP #############"
-print "############ Don't forget to start your RESPONDER ############"
-print "##############################################################"
-print "##### This tool relies on many others. Please ensure you #####"
-print "##### run setup.sh first and have all tools in your PATH #####"
-print "##############################################################"
-
+def printBanner():
+   print "##############################################################"
+   print "####                      RECON SCAN                      ####"
+   print "####            A multi-process service scanner           ####"
+   print "####        finger, http, mssql, mysql, nfs, nmap,        ####"
+   print "####        rdp, smb, smtp, snmp, ssh, telnet, tftp       ####"
+   print "##############################################################"
+   print "############# Don't forget to start your TCPDUMP #############"
+   print "############ Don't forget to start your RESPONDER ############"
+   print "##############################################################"
+   print "##### This tool relies on many others. Please ensure you #####"
+   print "##### run setup.sh first and have all tools in your PATH #####"
+   print "##############################################################"
 
 #The script creates the directories that the results will be placed in
 #User needs to place the targets in the results/exam/targets.txt file
 if __name__=='__main__':
-   backupExisting()
+   printBanner()
+   if os.path.isdir('/root/scripts/recon_enum/results/exam/unicorn'):
+      backupExisting()
+
    mksymlink()
    createDirectories()
 
@@ -485,10 +474,10 @@ if __name__=='__main__':
                raise
        else:
            print "ERROR: Is targets.txt blank?! Please ensure targets.txt is populated. Run aliverecon.py or something"
-           sys.exit(0)
+           exit(0)
    else:
         print "ERROR: No targets.txt detected! Please ensure targets.txt is populated. Run aliverecon.py or something"
-        sys.exit(0)
+        exit(0)
 
    for scanip in f:
        jobs = []

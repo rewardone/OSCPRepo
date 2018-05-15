@@ -3,7 +3,7 @@
 import sys
 import os
 import subprocess
-from reconscan import mkdir_p
+import errno
 
 def help():
     print "Usage: dirbust.py <target url:port> <scan name> <tool-to-use (optional)>"
@@ -14,6 +14,17 @@ def help():
 
 if len(sys.argv) < 3:
     help()
+
+#makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+#Compatible with Python >2.5, but there is a more advanced function for python 3.5
+def mkdir_p(path):
+   try:
+      os.makedirs(path)
+   except OSError as exc: #Python >2.5
+      if exc.errno == errno.EEXIST and os.path.isdir(path):
+         pass
+      else:
+         raise
 
 #url is http(s)://IP_ADDRESS
 url = str(sys.argv[1])
@@ -128,7 +139,7 @@ def sortBySize(nameAndPathOfResults):
             tmpsize = tmpsize[:-2] #-2 for ]\n, -1 leaves the ]
             sizear.add(tmpsize)
     for size in sizear:
-        GREPV = "grep -v %s %s > /root/scripts/recon_enum/results/exam/dirb/%s/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, port, name, port, size)
+        GREPV = "grep %s %s > /root/scripts/recon_enum/results/exam/dirb/%s/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, port, name, port, size)
         GREPVRESULTS = subprocess.call(GREPV, shell=True)
     f.close()
 
@@ -147,5 +158,17 @@ if (tool == "gobuster"):
     COMUNI = "awk \'!a[$0]++\' /root/scripts/recon_enum/results/exam/dirb/%s/gobuster* > %s" % (port, combined_scanname)
     comuniresults = subprocess.check_output(COMUNI, shell=True)
     sortBySize(combined_scanname)
+    print "INFO: whatweb started on port %s" % (port)
+    #
+    #-i     input file
+    #-a     Aggression level from 1 (quiet) to 3 (brute)
+    #-u     User agent
+    #-v     Verbose
+    prepWhatWebFile = 'cat %s | cut -d" " -f1 > /root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs' % (combined_scanname, ip_address, port)
+    subprocess.call(prepWhatWebFile, shell=True)
+    whatWebURLs = "/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (ip_address, port)
+    WHATWEBFINGER = "whatweb -i %s -u %s -a 3 -v --log-xml=/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (whatWebURLs, user_agent, ip_address, port)
+    subprocess.call(WHATWEBFINGER, shell=True)
             
 print "INFO: Directory brute of %s completed" % (url)
+print "INFO: WhatWeb identification of %s completed" % (url)
