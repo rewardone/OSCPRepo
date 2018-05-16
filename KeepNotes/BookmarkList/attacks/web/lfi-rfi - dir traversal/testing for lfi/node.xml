@@ -5,7 +5,7 @@
   <key>title</key><string>Testing for LFI</string>
   <key>nodeid</key><string>695ddc62-8615-46a4-a8a0-dd2d224985e0</string>
   <key>modified_time</key><integer>1516889226</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516889226</integer>

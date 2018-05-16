@@ -6,7 +6,7 @@ import subprocess
 import errno
 
 def help():
-    print "Usage: dirbust.py <target url:port> <scan name> <tool-to-use (optional)>"
+    print "Usage: dirbust.py <http(s)://target url:port> <scan name> <tool-to-use (optional)>"
     print "tool-to-use: available options are dirb and gobuster. gobuster is the default"
     print "Warning: this version still uses old logic for dirb. gobuster uses new word list"
     print "Warning: gobuster is not set to follow redirects!"
@@ -170,7 +170,7 @@ def gobuster(wordlist, scanname):
     #-v	Verbose output (errors)
     #-w string: Path to the wordlist
     #-x string: File extension(s) to search for (dir mode only)
-    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > %s/%s" % (user_agent, url, wordlist, BASE, scanname)
+    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > %s" % (user_agent, url, wordlist, scanname)
     results = subprocess.check_call(GOBUSTERSCAN, shell=True)
 
 def sortBySize(nameAndPathOfResults):
@@ -196,7 +196,7 @@ def whatWeb():
     #-a     Aggression level from 1 (quiet) to 3 (brute)
     #-u     User agent
     #-v     Verbose
-    prepWhatWebFile = 'cat %s | cut -d" " -f1 > %s' % (GOB_COMBINED, WW_URLS)
+    prepWhatWebFile = 'cat %s | grep -v "(" | grep -v ")" | cut -d" " -f1 > %s' % (GOB_COMBINED, WW_URLS)
     subprocess.check_call(prepWhatWebFile, shell=True)
     WHATWEBFINGER = "whatweb -i %s -u '%s' -a 3 -v --log-xml=%s" % (WW_URLS, user_agent, WW_OUT)
     subprocess.call(WHATWEBFINGER, shell=True)
@@ -210,13 +210,14 @@ if (tool == "gobuster"):
     #CEWL back to gobuster, combine and unique gobuster outputs, sort by response body size
     print "INFO: Starting gobuster scan for %s" % (url)
     gobuster(default_wordlist, GOB_DEFAULT)
+    print "INFO: Finished initial gobuster scan for %s:%s" % (url, port)
     genlistLoop()
     gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
+    print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
     COMUNI = "awk \'!a[$0]++\' %s/gobuster* > %s" % (BASE, GOB_COMBINED)
     comuniresults = subprocess.check_call(COMUNI, shell=True)
     sortBySize(GOB_COMBINED)
     whatWeb()
-
 
 print "INFO: Directory brute of %s completed" % (url)
 print "INFO: WhatWeb identification of %s completed" % (url)

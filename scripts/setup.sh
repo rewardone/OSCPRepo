@@ -3,7 +3,7 @@
 #This should would on default Kali installation
 
 echo "### Downloading things...### \n\n"
-echo "Install new software: Shutter, exiftool, gobuster, git"
+echo "Install new software: Shutter, exiftool, gobuster, git, nbtscan-unixwiz"
 apt-get update
 apt-get install -y shutter exiftool gobuster git nbtscan-unixwiz
 

@@ -154,7 +154,7 @@ def httpEnum(ip_address, port):
     DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
     print "INFO: nikto scan started on port %s" % (port)
-    NIKTOSCAN = "nikto -host http://%s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto" % (ip_address, port, ip_address, port, ip_address, port)
+    NIKTOSCAN = "nikto -host %s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto" % (ip_address, port, ip_address, port, ip_address, port)
     subprocess.call(NIKTOSCAN, shell=True)
     return
 
@@ -168,7 +168,7 @@ def httpsEnum(ip_address, port):
     DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.call(DIRBUST, shell=True)
     print "INFO: nikto scan started on port %s" % (port)
-    NIKTOSCAN = "nikto -host https://%s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto" % (ip_address, port, ip_address, port, ip_address, port)
+    NIKTOSCAN = "nikto -host %s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto" % (ip_address, port, ip_address, port, ip_address, port)
     subprocess.call(NIKTOSCAN, shell=True)
     return
 
