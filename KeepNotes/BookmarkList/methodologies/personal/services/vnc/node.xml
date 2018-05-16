@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>VNC</string>
+  <key>nodeid</key><string>f928f08d-a744-4791-8af5-cad6b308367f</string>
+  <key>modified_time</key><integer>1526498423</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526498375</integer>
+  <key>order</key><integer>17</integer>
+</dict>
+</node>

@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>File Locations / Blind Files</string>
   <key>nodeid</key><string>8a1e67ee-29b9-498b-be6b-0a25805737dd</string>
   <key>modified_time</key><integer>1522779038</integer>
@@ -9,6 +10,8 @@
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516821973</integer>
+  <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>3</integer>
+  <key>info_sort</key><string>order</string>
 </dict>
 </node>

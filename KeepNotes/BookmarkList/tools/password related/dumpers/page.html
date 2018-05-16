@@ -12,10 +12,12 @@ The top dumpers for Windows (IMO are Mimikatz, WCE, and (old) Cain&amp;Abel)<br/
 Popular<br/>
 [mimikatz](<a href="https://github.com/gentilkiwi/mimikatz">https://github.com/gentilkiwi/mimikatz</a>) | A useful tool to play with Windows security including extracting plaintext passwords, kerberos tickets, etc<br/>
 [MassMimikatz](https://raw.githubusercontent.com/NetSPI/PowerShell/master/Invoke-MassMimikatz-PsRemoting.psm1) | Use PSRemoting to invoke Mimikatz on multiple computers <br/>
-[mimikittenz](<a href="https://github.com/putterpanda/mimikittenz">https://github.com/putterpanda/mimikittenz</a>) | <br/>
-mimikittenz is a post-exploitation powershell tool that utilizes the Windows function ReadProcessMemory() in order to extract plain-text passwords from various target processes.<br/>
+[mimikittenz](<a href="https://github.com/putterpanda/mimikittenz">https://github.com/putterpanda/mimikittenz</a>) | mimikittenz is a post-exploitation powershell tool that utilizes the Windows function ReadProcessMemory() in order to extract plain-text passwords from various target processes.<br/>
+[PowerMemory](https://github.com/giMini/PowerMemory) | Exploit creds present in files and memory using Microsoft signed binaries<br/>
+[SessionGopher](https://github.com/fireeye/SessionGopher) | use WMI to extract saved session information from RAT tools like PuTTY/RDP/etc<br/>
 [out-minidump](<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Out-Minidump.ps1">https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Out-Minidump.ps1</a>) | PowerSploit<br/>
 [WCE](<a href="http://www.ampliasecurity.com/research/wcefaq.html">http://www.ampliasecurity.com/research/wcefaq.html</a>) | Windows Credencial Editor. 32bit and 64bit versions. wce32.exe -w. Grab hashes and also implements PtH and PtT<br/>
+[Invoke-WCMDump](https://github.com/peewpw/Invoke-WCMDump) | grab creds for current user from Credential Manager, no admin required<br/>
 <a href="https://github.com/Neohapsis/creddump7">Creddump7</a>&nbsp;(<a href="https://github.com/Neohapsis/creddump7">https://github.com/Neohapsis/creddump7</a>)<br/>
 [Cain&amp;Abel](<a href="http://www.oxid.it/cain.html">http://www.oxid.it/cain.html</a>)<br/>
 Meterpreter: smart_hashdump<br/>
@@ -28,6 +30,7 @@ Meterpreter: hashdump<br/>
 <a href="https://technet.microsoft.com/en-us/library/cc753343.aspx">ntdsutil</a>&nbsp;<br/>
 <br/>
 Others<br/>
+[Dump-Clear](https://github.com/3gstudent/Dump-Clear-Password-after-KB2871997-installed) | auto start Wdigest AUth, Lock Screen Detect User Logon and get a clear password<br/>
 [NetPass](www.nirsoft.net/utils/network_password_recovery.html) | WinXP-10 saved passwords, logins, mail accounts, messenger, IE 7/8, RDP 6<br/>
 [NetPassx64](<a href="http://www.nirsoft.net/utils/netpass-x64.zip">http://www.nirsoft.net/utils/netpass-x64.zip</a>)<br/>
 [cachedump]<br/>
@@ -42,10 +45,11 @@ Others<br/>
 </ul>
 [<a href="https://github.com/lgandx/PCredz">PCredz</a>] | This tool extracts Credit card numbers, NTLM(DCE-RPC, HTTP, SQL, LDAP, etc), Kerberos (AS-REQ Pre-Auth etype 23), HTTP Basic, SNMP, POP, SMTP, FTP, IMAP, etc from a pcap file or from a live interface.<br/>
 [](<a href="http://www.nirsoft.net/password_recovery_tools.html">http://www.nirsoft.net/password_recovery_tools.html</a>) | RDP, Mail, IE, VNC, Dialup, Protected Storage and more tools!<br/>
+[GPO-Passwords.ps1](http://www.nathanv.com/2012/07/04/pshell-script-extract-all-gpo-set-passwords-from-domain/) | find and grab creds from groups.xml GPO file<br/>
+[CredCrack](<a href="https://github.conetsem/gojhonny/CredCrack">https://github.conetsem/gojhonny/CredCrack</a>) | <br/>
+CredCrack is a fast and stealthy credential harvester. It exfiltrates credentials recusively in memory and in the clear. Upon completion, CredCrack will parse and output the credentials while identifying any domain administrators obtained. CredCrack also comes with the ability to list and enumerate share access and yes, it is threaded! CredCrack has been tested and runs with the tools found natively in Kali Linux. CredCrack solely relies on having PowerSploit's "Invoke-Mimikatz.ps1" under the /var/www directory.<br/>
+[BrowserGather](https://github.com/sekirkity/BrowserGather) | Web browser sensitive information gather. Only chrome right now...<br/>
 <br/>
-[CredCrack](<a href="https://github.conetsem/gojhonny/CredCrack">https://github.conetsem/gojhonny/CredCrack</a>) | <ul><li>CredCrack is a fast and stealthy credential harvester. It exfiltrates credentials recusively in memory and in the clear. Upon completion, CredCrack will parse and output the credentials while identifying any domain administrators obtained. CredCrack also comes with the ability to list and enumerate share access and yes, it is threaded! CredCrack has been tested and runs with the tools found natively in Kali Linux. CredCrack solely relies on having PowerSploit's "Invoke-Mimikatz.ps1" under the /var/www directory.</li>
-</ul>
-&nbsp;<br/>
 <br/>
 [redsnarf](<a href="https://github.com/nccgroup/redsnarf">https://github.com/nccgroup/redsnarf</a>)<br/>
 [Cachedump](<a href="https://www.rapid7.com/db/modules/post/windows/gather/cachedump">https://www.rapid7.com/db/modules/post/windows/gather/cachedump</a>) <br/>

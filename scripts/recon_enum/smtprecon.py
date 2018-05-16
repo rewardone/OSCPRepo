@@ -25,7 +25,7 @@ ip_address = sys.argv[1].strip()
 #smtp-open-relay: attempt to relay mail by issuing combination of SMTP commands.
 #smtp-strageport: check if SMTP is running on non-standard port. 
 print "INFO: Performing nmap SMTP script scan for " + ip_address + ":25,465,587"
-SMTPSCAN = "nmap -n -sV -Pn -vv -p 25,465,587 --script=smtp-commands,smtp-enum-users,smtp-ntlm-info,vulners,smtp-vuln* -oN '/root/scripts/recon_enum/results/exam/smtp/%s_smtp.nmap' %s" % (ip_address, ip_address)
+SMTPSCAN = "nmap -n -sV -Pn -vv -p 25,465,587 --script=banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,vulners,smtp-vuln* -oN '/root/scripts/recon_enum/results/exam/smtp/%s_smtp.nmap' %s" % (ip_address, ip_address)
 results = subprocess.check_output(SMTPSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/smtp/" + ip_address + "_smtprecon.txt"
 f = open(outfile, "w")

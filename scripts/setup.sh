@@ -1,6 +1,8 @@
 #!/bin/sh
 #This script will do basic setup to make sure everything is in place
 #This should would on default Kali installation
+#
+# TODO, getsploit setup.py instead of moving into path?
 
 echo "### Downloading things...### \n\n"
 echo "Install new software: Shutter, exiftool, gobuster, git, nbtscan-unixwiz"
@@ -66,7 +68,11 @@ echo "\nMake sure Metasploit is ready to go \n"
 service postgresql start
 msfdb reinit
 
-echo "\nEdit dotdotpwn so you don't have to press 'ENTER' to start it \n"
+echo "\nUpdating exploit-db and getsploit (vulners) \n"
+searchsploit -u
+getsploit --update
+
+echo "\nEditing dotdotpwn so you don't have to press 'ENTER' to start it \n"
 sed -e "s/<STDIN>;/#<STDIN>;/" /usr/share/dotdotpwn/dotdotpwn.pl > /usr/share/dotdotpwn/dotdotpwn_TMP && mv /usr/share/dotdotpwn/dotdotpwn_TMP /usr/share/dotdotpwn/dotdotpwn.pl
 chmod +x /usr/share/dotdotpwn/dotdotpwn.pl
 direc=/usr/share/dotdotpwn/Reports

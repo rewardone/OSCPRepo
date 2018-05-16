@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>MSRPC SMB</string>
+  <key>nodeid</key><string>9fa3a0c9-73e3-40f0-95d9-3728c9d274a8</string>
+  <key>modified_time</key><integer>1526497783</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526497725</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

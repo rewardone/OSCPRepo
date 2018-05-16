@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSRPC SMB</title>
+</head><body>NetBIOS Ports 135-139,445 open<br/>
+•  NetBIOS enumeration<ul><li style="list-style-type: none">• Enum </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• enum &lt;-UMNSPGLdc&gt; &lt;-u username&gt; &lt;-p password&gt; &lt;-f dictfile&gt; &lt;hostname|ip&gt;</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Null Session</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• net use \\192.168.1.1\ipc$ "" /u:""</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• net view \\ip_address</li>
+<li style="list-style-type: none">• Dumpsec </li>
+</ul>
+</li>
+<li style="list-style-type: none">• Smbclient</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• smbclient -L //server/share password options</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Superscan </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• Enumeration tab.</li>
+</ul>
+</li>
+<li style="list-style-type: none">• user2sid/sid2user </li>
+<li style="list-style-type: none">• Winfo </li>
+</ul>
+</li>
+</ul>
+•  NetBIOS brute force<ul><li style="list-style-type: none">• Hydra </li>
+<li style="list-style-type: none">• Brutus </li>
+<li style="list-style-type: none">• Cain &amp; Abel </li>
+<li style="list-style-type: none">• getacct </li>
+<li style="list-style-type: none">• NAT (NetBIOS Auditing Tool) </li>
+</ul>
+•  Examine Configuration Files<ul><li style="list-style-type: none">• Smb.conf</li>
+<li style="list-style-type: none">• lmhosts</li>
+</ul>
+&nbsp;<br/>
+Crackmapexec<br/>
+</body></html>

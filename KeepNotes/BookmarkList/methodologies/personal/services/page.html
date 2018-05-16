@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Box</title>
+</head><body>&#09;TARGET IDENTIFIED: SPECIFIC HOST RECON<br/>
+&#09;&#09;Networks<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Automated initial recon</li>
+<li style="list-style-type: none">&nbsp; RECONCSAN.py</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09; &nbsp;nmap port scan, UDP/TCP, etc (5/10 min per host)<br/>
+&#09;&#09;&#09; &nbsp;nmap script options<br/>
+&#09;&#09;&#09; &nbsp;SPECIFIC SERVICE RECON<br/>
+&#09;&#09;&#09; &#09; FTP (with hydra: 10-20 min per host)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">NMAP scripts</li>
+<li style="list-style-type: none">Hydra</li>
+<li style="list-style-type: none">Banner grab</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09;&#09; SSH (with hydra: 10-20 min per host)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">NMAP scripts</li>
+<li style="list-style-type: none">Hydra</li>
+<li style="list-style-type: none">Banner grab</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09;&#09; TELNET<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">NMAP scripts</li>
+<li style="list-style-type: none">Hydra</li>
+<li style="list-style-type: none">Banner grab</li>
+<li style="list-style-type: none">DotDotPwn</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09;&#09; WEB (with gobuster/more: 30-60 min per host)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Tested: </li>
+<li style="list-style-type: none">&nbsp;&#09; Burp / Zap for manual/fine grain testing</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Gobuster/Dirb are dir brute tools of choice</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Gobuster fast</li>
+<li style="list-style-type: none">&nbsp;Dirb can recurse if desired</li>
+<li style="list-style-type: none">&nbsp;dirbuster/wfuzz/dirsearch/etc are slower..</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;Nikto: super fast web vuln scan</li>
+<li style="list-style-type: none">&nbsp;WhatWeb: super fast generic server fingerprint</li>
+<li style="list-style-type: none">&nbsp;DotDotPwn: Document every page and throw into ..pwn</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp; : Document every URL parameter and throw into ..pwn</li>
+<li style="list-style-type: none">&nbsp; &nbsp; : These actions can take a while to test everything</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;Not tested:</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09;&#09;&#09;Builtwith<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;Wappalyzer<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;Patator<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;Parameth<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;Wordlists<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; FiMap</li>
+<li style="list-style-type: none">&nbsp; LFIFreak</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&#09;&#09;&#09;&#09;&#09;OWASP-Xenotix-XSS-Exploit-Framework<br/>
+&#09;&#09;&#09;&#09;&#09;OWASP-owtf (offensive web testing framework)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; XSSer</li>
+<li style="list-style-type: none"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp;Must run separate:</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;WEB:</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;wapiti: more full featured web vuln scan and exploiter. page specific? takes a long time to run (60m+)</li>
+<li style="list-style-type: none">&nbsp;w3af: huge. requires extensive config or loading profile. SQLmap and other auto exploit, so prob not allowed on OSCP.</li>
+</ul>
+</li>
+<li style="list-style-type: none">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;BlindElephant: requires URL AND appname for specific fingerprint</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp;&#09;&#09;&#09;&#09; &nbsp; &nbsp; &nbsp; SQLMap (not allowed on OSCP)</body></html>

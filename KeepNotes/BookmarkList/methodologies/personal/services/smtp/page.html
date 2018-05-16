@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SMTP</title>
+</head><body>Sendmail Port 25 open<br/>
+•  Fingerprint server<ul><li style="list-style-type: none">• telnet ip_address 25 (banner grab)</li>
+</ul>
+•  Mail Server Testing<ul><li style="list-style-type: none">• Enumerate users</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• VRFY username (verifies if username exists - enumeration of accounts)</li>
+<li style="list-style-type: none">• EXPN username (verifies if username is valid - enumeration of accounts)</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Mail Spoof Test</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• HELO anything MAIL FROM: spoofed_address RCPT TO:valid_mail_account DATA . QUIT</li>
+</ul>
+</li>
+</ul>
+<ul>• Mail Relay Test</ul>
+<ul><ul>• HELO anything</ul>
+</ul>
+<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">• Identical to/from - mail from: &lt;nobody@domain&gt; rcpt to: &lt;nobody@domain&gt;</li>
+<li style="list-style-type: none">• Unknown domain - mail from: &lt;user@unknown_domain&gt;</li>
+<li style="list-style-type: none">• Domain not present - mail from: &lt;user@localhost&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul><ul><ul>• Domain not supplied - mail from: &lt;user&gt;</ul>
+</ul>
+</ul>
+<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">• Source address omission - mail from: &lt;&gt; rcpt to: &lt;nobody@recipient_domain&gt;</li>
+<li style="list-style-type: none">• Use IP address of target server - mail from: &lt;user@IP_Address&gt; rcpt to: &lt;nobody@recipient_domain&gt;</li>
+<li style="list-style-type: none">• Use double quotes - mail from: &lt;user@domain&gt; rcpt to: &lt;"user@recipent-domain"&gt;</li>
+<li style="list-style-type: none">• User IP address of the target server - mail from: &lt;user@domain&gt; rcpt to: &lt;nobody@recipient_domain@[IP Address]&gt;</li>
+<li style="list-style-type: none">• Disparate formatting - mail from: &lt;user@[IP Address]&gt; rcpt to: &lt;@domain:nobody@recipient-domain&gt;</li>
+<li style="list-style-type: none">• Disparate formatting2 - mail from: &lt;user@[IP Address]&gt; rcpt to: &lt;recipient_domain!nobody@[IP Address]&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+•  Examine Configuration Files<ul><li style="list-style-type: none">• sendmail.cf</li>
+<li style="list-style-type: none">• submit.cf</li>
+</ul>
+&nbsp;<br/>
+smtp-user-enum is a tool for enumerating OS-level user accounts on Solaris via the SMTP service (sendmail). Enumeration is performed by inspecting the responses to VRFY, EXPN and RCPT TO commands.<br/>
+<br/>
+iSMTP is the kali Linux toolw which is use for testing SMTP user enumeration (RCPT TO and VRFY), internal spoofing, and relay.</body></html>

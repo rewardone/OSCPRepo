@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DNS</title>
+</head><body>DNS port 53 open<br/>
+•  Fingerprint server/ service<ul><li style="list-style-type: none">• host</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• host [-aCdlnrTwv ] [-c class ] [-N ndots ] [-R number ] [-t type ] [-W wait ] name [server ] -v verbose format -t (query type) Allows a user to specify a record type i.e. A, NS, or PTR. -a Same as –t ANY. -l Zone transfer (if allowed). -f Save to a specified filename.</li>
+</ul>
+</li>
+<li style="list-style-type: none">• nslookup</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• nslookup [ -option ... ] [ host-to-find | - [ server ]]</li>
+</ul>
+</li>
+<li style="list-style-type: none">• dig</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• dig [ @server ] [-b address ] [-c class ] [-f filename ] [-k filename ] [-p port# ] [-t type ] [-x addr ] [-y name:key ] [-4 ] [-6 ] [name ] [type ] [class ] [queryopt... ]</li>
+</ul>
+</li>
+<li style="list-style-type: none">• whois-h Use the named host to resolve the query -a Use ARIN to resolve the query -r Use RIPE to resolve the query -p Use APNIC to resolve the query -Q Perform a quick lookup</li>
+</ul>
+•  DNS Enumeration<ul><li style="list-style-type: none">• Bile Suite </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• perl BiLE.pl [website] [project_name]</li>
+<li style="list-style-type: none">• perl BiLE-weigh.pl [website] [input file]</li>
+<li style="list-style-type: none">• perl vet-IPrange.pl [input file] [true domain file] [output file] &lt;range&gt;</li>
+<li style="list-style-type: none">• perl vet-mx.pl [input file] [true domain file] [output file]</li>
+<li style="list-style-type: none">• perl exp-tld.pl [input file] [output file]</li>
+<li style="list-style-type: none">• perl jarf-dnsbrute [domain_name] (brutelevel) [file_with_names]</li>
+<li style="list-style-type: none">• perl qtrace.pl [ip_address_file] [output_file]</li>
+<li style="list-style-type: none">• perl jarf-rev [subnetblock] [nameserver]</li>
+</ul>
+</li>
+<li style="list-style-type: none">• txdns </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• txdns -rt -t domain_name</li>
+<li style="list-style-type: none">• txdns -x 50 -bb domain_name</li>
+<li style="list-style-type: none">• txdns --verbose -fm wordlist.dic --server ip_address -rr SOA domain_name -h c: \hostlist.txt</li>
+</ul>
+</li>
+<li style="list-style-type: none">• nmap nse scripts</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• dns-random-srcport </li>
+<li style="list-style-type: none">• dns-random-txid </li>
+<li style="list-style-type: none">• dns-recursion </li>
+<li style="list-style-type: none">• dns-zone-transfer </li>
+</ul>
+</li>
+</ul>
+•  Examine Configuration Files<ul><li style="list-style-type: none"><ul><li style="list-style-type: none">• host.conf</li>
+<li style="list-style-type: none">• resolv.conf</li>
+<li style="list-style-type: none">• named.conf</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

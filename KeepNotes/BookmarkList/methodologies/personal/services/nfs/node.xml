@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>NFS</string>
+  <key>nodeid</key><string>2b8a1504-b8fa-461c-bd1f-b7c3aebee77b</string>
+  <key>modified_time</key><integer>1526498176</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526498158</integer>
+  <key>order</key><integer>15</integer>
+</dict>
+</node>

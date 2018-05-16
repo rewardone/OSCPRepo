@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LDAP</title>
+</head><body>LDAP Port 389 Open<br/>
+•  ldap enumeration<ul><li style="list-style-type: none">• ldapminer </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• ldapminer -h ip_address -p port (not required if default) -d</li>
+</ul>
+</li>
+<li style="list-style-type: none">• luma </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• Gui based tool</li>
+</ul>
+</li>
+<li style="list-style-type: none">• ldp </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• Gui based tool</li>
+</ul>
+</li>
+<li style="list-style-type: none">• openldap </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• ldapsearch [-n] [-u] [-v] [-k] [-K] [-t] [-A] [-L[L[L]]] [-M[M]] [-d debuglevel] [-f file] [-D binddn] [-W] [-w passwd] [-y passwdfile] [-H ldapuri] [-h ldaphost] [-p ldapport] [-P 2|3] [-b searchbase] [-s base|one|sub] [-a never|always|search|find] [-l timelimit] [-z sizelimit] [-O security-properties] [-I] [-U authcid] [-R realm] [-x] [-X authzid] [-Y mech] [-Z[Z]] filter [attrs...]</li>
+<li style="list-style-type: none">• ldapadd [-c][-S file][-n][-v][-k][-K][-M[M]][-d debuglevel][-D binddn][-W][-w passwd][-y passwdfile][-h ldaphost][-p ldap-port][-P 2|3][-O security-properties][-I][-Q][-U authcid][-R realm][-x][-X authzid][-Y mech][-Z[Z]][-f file]</li>
+<li style="list-style-type: none">• ldapdelete [-n][-v][-k][-K][-c][-M[M]][-d debuglevel][-f file][-D binddn][-W][-w passwd][-y passwdfile][-H ldapuri][-h ldaphost][-P 2|3][-p ldapport][-O security-properties][-U authcid][-R realm][-x][-I][-Q] [-X authzid][-Y mech][-Z[Z]][dn]</li>
+<li style="list-style-type: none">• ldapmodify [-a][-c][-S file][-n][-v][-k][-K][-M[M]][-d debuglevel][-D binddn][-W][-w passwd][-y passwdfile][-H ldapuri][-h ldaphost][-p ldapport][-P 2|3][-O security-properties][-I][-Q][-U authcid][-R realm][-x][-X authzid][-Y mech][-Z[Z]][-f file]</li>
+<li style="list-style-type: none">• ldapmodrdn [-r][-n][-v][-k][-K][-c][-M[M]][-d debuglevel][-D binddn][-W][-w passwd][-y passwdfile] [-H ldapuri][-h ldaphost][-p ldapport][-P 2|3][-O security-properties][-I][-Q][-U authcid][-R realm][-x] [-X authzid][-Y mech][-Z[Z]][-f file][dn rdn]</li>
+</ul>
+</li>
+</ul>
+ ldap brute force<ul><li style="list-style-type: none">• bf_ldap </li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• bf_ldap -s server -d domain name -u|-U username | users list file name -L|-l passwords list | length of passwords to generate optional: -p port (default 389) -v (verbose mode) -P Ldap user path (default ,CN=Users,)</li>
+</ul>
+</li>
+<li style="list-style-type: none">• K0ldS </li>
+<li style="list-style-type: none">• LDAP_Brute.pl </li>
+</ul>
+•  Examine Configuration Files<ul><li style="list-style-type: none">• General</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• containers.ldif</li>
+<li style="list-style-type: none">• ldap.cfg</li>
+<li style="list-style-type: none">• ldap.conf</li>
+<li style="list-style-type: none">• ldap.xml</li>
+<li style="list-style-type: none">• ldap-config.xml</li>
+<li style="list-style-type: none">• ldap-realm.xml</li>
+<li style="list-style-type: none">• slapd.conf</li>
+</ul>
+</li>
+<li style="list-style-type: none">• IBM SecureWay V3 server</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• V3.sas.oc</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Microsoft Active Directory server</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• msadClassesAttrs.ldif</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Netscape Directory Server 4</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• nsslapd.sas_at.conf</li>
+<li style="list-style-type: none">• nsslapd.sas_oc.conf</li>
+</ul>
+</li>
+<li style="list-style-type: none">• OpenLDAP directory server</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• slapd.sas_at.conf</li>
+<li style="list-style-type: none">• slapd.sas_oc.conf</li>
+</ul>
+</li>
+<li style="list-style-type: none">• Sun ONE Directory Server 5.1</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">• 75sas.ldif</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

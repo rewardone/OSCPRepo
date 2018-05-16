@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>DigitalSignatureHijack_v1.ps1</string>
+  <key>nodeid</key><string>5e9c3f2b-b7b9-4077-b61d-6fca33b460db</string>
+  <key>modified_time</key><integer>1526482066</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526481894</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

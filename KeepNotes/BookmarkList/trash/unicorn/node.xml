@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>duplicate_of</key><string>a6e423dd-4c86-4d0b-bc1b-5461e740b81a</string>
+  <key>title</key><string>Unicorn</string>
+  <key>nodeid</key><string>383fda53-0fda-44e8-9e6d-c7cefa39fbd8</string>
+  <key>modified_time</key><integer>1515372264</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515372264</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>32</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

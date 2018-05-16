@@ -40,14 +40,10 @@
 ##     Extend: rpcclient -v "" <SERVER>, smbclient -L \\<SERVER> for null sessions
 ## Expand DNSRecon
 ## Expand DirbustEverything
-##     Run a gobust. Run a gobust follow redirects on 301s. grab 200s from both.
-##     run a cewl on those URLs, feed back uniques to gobust
 ##     TODO: check again on utilizing gobuster follow redirects as default instead. Timing? Total URLS? Junk?
-##     TODO: run and debug dirbustEVERYTHING
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
 ## Expand dirTrav:
-##     Extend web: Data extraction from files, option for data extraction only when given a vulnerable URL
-##     INFO: File retrieve only uses first vulnerable URL...try more? ability to specify?
+##     Extend web: option for data extraction only when given a vulnerable URL
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
 ##      POST SCAN COMPLETION:
@@ -63,12 +59,15 @@
 ## Banner grabs / web page screenshots
 ## Option flag to run FullMAP or not
 ## Fix DIRB scan in dirbustEVERYTHING
+## Full Connect on Unicornscan or not...testing required
+## Need scripts for:
+##       LDAP, rlogin, rsh, vnc
+## Get rid of duplicate output logs from each script
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...
 ## Is it faster to launch multiple nmap scans or is it faster to run one nmap scan over multiple
 ## open ports discovered. Probably better with one scan if bandwidth available? 
-## Not so great when new ports are discovered, maybe break reconscan out into more separate files?
 ## Edit web wordlist so lines never start with /? (only small percentage of them do)
 ## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
 ##       : But benefit of having less 301 / false negatives

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Constrained Language Mode</string>
+  <key>nodeid</key><string>8887aa51-4ad6-4fe1-9845-3ee5d5812fa0</string>
+  <key>modified_time</key><integer>1526481655</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526481647</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>
