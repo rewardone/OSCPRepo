@@ -40,15 +40,16 @@ chmod +x /root/Documents/Impacket/setup.py && cd /root/Documents/Impacket && ./s
 echo "\nCopy vulners to nmap scripts location \n"
 cp /root/Documents/Vulners/vulners.nse /usr/share/nmap/scripts/vulners.nse
 
-echo "\nCopy getsploit to /usr/local/sbin for PATH \n"
-cp /root/Documents/Getsploit/getsploit/getsploit.py /usr/local/sbin
+echo "\nSetup Getsploit\n"
+cd /root/Documents/Getsploit && chmod +x setup.py && ./setup.py install
 
 echo "\nSetup OSCPRepo \n"
 cp -r /root/Documents/OSCPRepo/scripts /root/
 cp -r /root/Documents/OSCPRepo/lists /root/
 
 echo "\nSetup Empire\n"
-/root/Documents/Empire/setup/./install.sh
+#Empire calls ./setup from ./install, so needs to be in its directory
+cd /root/Documents/Empire/setup && chmod +x setup_database.py && ./install.sh
 
 echo "\nDownloading additional lists: secLists fuzzdb naughtystrings payloadallthethings probable-wordlists\n"
 direc=/root/lists/secLists
@@ -70,7 +71,7 @@ msfdb reinit
 
 echo "\nUpdating exploit-db and getsploit (vulners) \n"
 searchsploit -u
-getsploit --update
+getsploit -u
 
 echo "\nEditing dotdotpwn so you don't have to press 'ENTER' to start it \n"
 sed -e "s/<STDIN>;/#<STDIN>;/" /usr/share/dotdotpwn/dotdotpwn.pl > /usr/share/dotdotpwn/dotdotpwn_TMP && mv /usr/share/dotdotpwn/dotdotpwn_TMP /usr/share/dotdotpwn/dotdotpwn.pl

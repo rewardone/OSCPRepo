@@ -119,10 +119,10 @@ def getStatus200():
     g = open(GOB_DEFAULT, 'r')
     status200=[]
     for line in g:
-        if ("Status 200" in line):
+        if ("(Status: 200)" in line):
             status200.append(line)
     g.close()
-    g.open(STAT_200, 'w')
+    g = open(STAT_200, 'w')
     for line in status200:
         g.write(line)
     g.close()
@@ -170,6 +170,9 @@ def gobuster(wordlist, scanname):
     #-v	Verbose output (errors)
     #-w string: Path to the wordlist
     #-x string: File extension(s) to search for (dir mode only)
+    #-P string: Password for basic auth
+    #-U string: Username for basic auth
+    #-fw: Force continued operation when wildcard found
     GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > %s" % (user_agent, url, wordlist, scanname)
     results = subprocess.check_call(GOBUSTERSCAN, shell=True)
 

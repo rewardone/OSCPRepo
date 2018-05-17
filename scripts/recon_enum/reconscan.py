@@ -418,14 +418,20 @@ def backupExisting():
    print "INFO: Previous folders found, zipping backup"
    #tmp move targets.txt, zip files, backup, remove dirs, restore targets.txt
    moved = False
+   movedDotTemplate = False
    if os.path.isfile("/root/scripts/recon_enum/results/exam/targets.txt"):
       os.rename("/root/scripts/recon_enum/results/exam/targets.txt", "/root/scripts/recon_enum/results/targets.txt")
-      moved = True
+      movedTargets = True
+   if os.path.isfile("/root/scripts/recon_enum/results/exam/dot_template"):
+      os.rename("/root/scripts/recon_enum/results/exam/dot_template", "/root/scripts/recon_enum/results/dot_template")
+      movedDotTemplate = True
    backupName = "backup_%s.tar.gz" % (time.strftime("%H:%M"))
    BACKUP = "tar czf /root/Downloads/%s /root/scripts/recon_enum/results/exam/* --remove-files" % (backupName)
    backupResults = subprocess.check_output(BACKUP, shell=True)
-   if moved == True:
+   if movedTargets == True:
       os.rename("/root/scripts/recon_enum/results/targets.txt", "/root/scripts/recon_enum/results/exam/targets.txt")
+   if movedDotTemplate == True:
+      os.rename("/root/scripts/recon_enum/results/dot_template", "/root/scripts/recon_enum/results/exam/dot_template")
 
 #Symlink needed directories into /usr/share/wordlists
 #This functionality for a distro like Kali
