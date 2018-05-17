@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Manifests</string>
+  <key>nodeid</key><string>28244bff-33eb-4db8-a326-eb8b4c6dcf99</string>
+  <key>modified_time</key><integer>1526564331</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526564236</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

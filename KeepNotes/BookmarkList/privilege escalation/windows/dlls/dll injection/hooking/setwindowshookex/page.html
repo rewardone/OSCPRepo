@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SetWindowsHookEx</title>
+</head><body>SetWindowsHookEx()<br/>
+In order to use this technique the first thing we need to understand is how MS Windows hooks work. Basically, hooks are a way to intercept events and act on them.<br/>
+<br/>
+As you may guess, there are many different types of hooks. The most common ones might be WH_KEYBOARD and WH_MOUSE. You guessed right, these can be used to monitor, the keyboard and mouse input.<br/>
+<br/>
+The ‘<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms644990%28v=vs.85%29.aspx">SetWindowsHookEx</a>()’ “installs an application-defined hook procedure into a hook chain.”<br/>
+<br/>
+HHOOK WINAPI SetWindowsHookEx(<br/>
+&nbsp; _In_ int &nbsp; &nbsp; &nbsp; idHook,<br/>
+&nbsp; _In_ HOOKPROC &nbsp;lpfn,<br/>
+&nbsp; _In_ HINSTANCE hMod,<br/>
+&nbsp; _In_ DWORD &nbsp; &nbsp; dwThreadId<br/>
+);<br/>
+idHook [in]<br/>
+<br/>
+&nbsp; &nbsp; Type: int<br/>
+&nbsp; &nbsp; The type of hook procedure to be installed. (...)<br/>
+<br/>
+lpfn [in]<br/>
+<br/>
+&nbsp; &nbsp; Type: HOOKPROC<br/>
+&nbsp; &nbsp; A pointer to the hook procedure. (...)<br/>
+hMod [in]<br/>
+<br/>
+&nbsp; &nbsp; Type: HINSTANCE<br/>
+&nbsp; &nbsp; A handle to the DLL containing the hook procedure pointed to by the lpfn parameter. (...)<br/>
+dwThreadId [in]<br/>
+<br/>
+&nbsp; &nbsp; Type: DWORD<br/>
+<br/>
+&nbsp; &nbsp; The identifier of the thread with which the hook procedure is to be associated. (...)<br/>
+An interesting remark on MSDN states that:<br/>
+<br/>
+“SetWindowsHookEx can be used to inject a DLL into another process. A 32-bit DLL cannot be injected into a 64-bit process, and a 64-bit DLL cannot be injected into a 32-bit process. If an application requires the use of hooks in other processes, it is required that a 32-bit application call SetWindowsHookEx to inject a 32-bit DLL into 32-bit processes, and a 64-bit application call SetWindowsHookEx to inject a 64-bit DLL into 64-bit processes. The 32-bit and 64-bit DLLs must have different names.”<br/>
+<br/>
+Keep this in mind.<br/>
+<br/>
+Here’s a simple extract of the implementation.<br/>
+<br/>
+GetWindowThreadProcessId(targetWnd, &amp;dwProcessId);<br/>
+<br/>
+HHOOK handle = SetWindowsHookEx(WH_KEYBOARD, addr, dll, threadID);<br/>
+We need to understand that every event that occurs will go through a hook chain, which is a series of procedures that will run on the event. The setup of ‘SetWindowsHookExe()’ is basically how we put our own hook procedure into the hook chain.<br/>
+<br/>
+The code above takes the type of hook to be installed (WH_KEYBOARD), the pointer to the procedure, the handle to the DLL with the procedure, and the thread id to associate the hook to.<br/>
+<br/>
+In order to get the pointer to the procedure we need to first load the DLL using the ‘LoadLibrary()’ call. Then we call ‘SetWindowsHookEx()’ and wait for the event that we want (in our case pressing a key). Once that event happens our DLL is executed.<br/>
+<br/>
+Note that even the CIA guys are, potentially, having some fun with ‘SetWindowsHookEx()’ as we can see on Wikileaks.<br/>
+<br/>
+For the complete source code see ‘t_SetWindowsHookEx.cpp’.</body></html>

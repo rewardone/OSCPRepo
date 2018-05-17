@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>What is Side-Loading<br/>
+Cyber attackers have long abused this search feature by placing a malicious DLL in one of these directories. In these attacks, Windows reaches and loads the malicious DLL before finding the legitimateversion (DLL Hijacking). &nbsp;A less common variant of this technique called DLL side-loading has been trending in recent attacks.3,4,5 DLL side-loading takes advantage of Windows’ side-by-side (SxS or WinSxS) assembly feature, which helps manage conflicting and duplicate DLL versions by loading them on demand from a common directory. &nbsp;<br/>
+<br/>
+DLL side-loading, in contrast, utilizes the WinSxS assembly to load the malicious DLL from the SxS listing, which is located in the following registry key: <br/>
+%TEMP%\RarSFX%\%ALLUSERS PROFILE%\SXS\ <br/>
+or <br/>
+%TEMP%\RarSFX%\%ALLUSERS PROFILE%\WinSxS\ &nbsp;<br/>
+<br/>
+WinSxS Primer<br/>
+WinSxS detailed WinSxS mainfests, which are embedded in the executable as XML data, describe dependencies and libraries used by the application. The manifests contain the resource and library metadata. WinSxS is designed to give developers flexibility to update binaries by easily replacing the old binaries in the same location. &nbsp;<br/>
+<br/>
+The problem with this technique is that it offers little to no validation of the loaded DLL other than what is explicit in the manifest’s DLL metadata. This omission may inadvertently grant trusted installer privileges to malicious payloads &nbsp;<br/>
+<br/>
+<br/>
+Visualization<br/>
+This exploit has existed for a long time and is the result of Microsoft looking to make binary updates easier for Windows developers through the Windows side-by-side (WinSxS) assembly feature. <br/>
+<br/>
+Threats use side-loading to bypass AV as the infected files run in-memory.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+</body></html>

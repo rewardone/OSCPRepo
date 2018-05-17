@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>QueueUserAPC</title>
+</head><body>QueueUserAPC()<br/>
+An alternative to the previous techniques, that doesn’t create a new thread in the target/remote process, is the ‘<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms684954%28v=vs.85%29.aspx">QueueUserAPC</a>()’ call.<br/>
+<br/>
+As documented on MSDN, this call “adds a user-mode asynchronous procedure call (APC) object to the APC queue of the specified thread.”<br/>
+<br/>
+Here’s the definition.<br/>
+<br/>
+DWORD WINAPI QueueUserAPC(<br/>
+&nbsp; _In_ PAPCFUNC &nbsp;pfnAPC,<br/>
+&nbsp; _In_ HANDLE &nbsp; &nbsp;hThread,<br/>
+&nbsp; _In_ ULONG_PTR dwData<br/>
+);<br/>
+pfnAPC [in]<br/>
+<br/>
+&nbsp; &nbsp; A pointer to the application-supplied APC function to be called when the specified thread performs an alertable wait operation. (...)<br/>
+hThread [in]<br/>
+<br/>
+&nbsp; &nbsp; A handle to the thread. The handle must have the THREAD_SET_CONTEXT access right. (...)<br/>
+dwData [in]<br/>
+<br/>
+&nbsp; &nbsp; A single value that is passed to the APC function pointed to by the pfnAPC parameter.<br/>
+So, if we don’t want to create our own thread, we can use ‘QueueUserAPC()’ to “hijack” an existing thread in the target/remote process. That is, calling this function will queue an asynchronous procedure call on the specified thread.<br/>
+<br/>
+We can use a real APC callback function instead of ‘LoadLibrary()’. The parameter can actually be a pointer to the filename of the DLL we want to inject.<br/>
+<br/>
+DWORD dwResult = QueueUserAPC((PAPCFUNC)pfnThreadRtn, hThread, (ULONG_PTR)pszLibFileRemote);<br/>
+There’s a little gotcha that you might notice if you try this technique, which is related to the way MS Windows executes APC’s. There’s no scheduler looking at the APC queue, meaning the queue is only examined when the thread becomes alertable.<br/>
+<br/>
+Because of this we basically hijack every single thread, see below.<br/>
+<br/>
+&nbsp; BOOL bResult = Thread32First(hSnapshot, &amp;threadEntry);<br/>
+&nbsp; while (bResult)<br/>
+&nbsp; {<br/>
+&nbsp; &nbsp; bResult = Thread32Next(hSnapshot, &amp;threadEntry);<br/>
+&nbsp; &nbsp; if (bResult)<br/>
+&nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; if (threadEntry.th32OwnerProcessID == dwProcessId)<br/>
+&nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; threadId = threadEntry.th32ThreadID;<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; wprintf(TEXT("[+] Using thread: %i\n"), threadId);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; HANDLE hThread = OpenThread(THREAD_SET_CONTEXT, FALSE, threadId);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (hThread == NULL)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; wprintf(TEXT("[-] Error: Can't open thread. Continuing to try other threads...\n"));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; else<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; DWORD dwResult = QueueUserAPC((PAPCFUNC)pfnThreadRtn, hThread, (ULONG_PTR)pszLibFileRemote);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!dwResult)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; wprintf(TEXT("[-] Error: Couldn't call QueueUserAPC on thread&gt; Continuing to try othrt threads...\n"));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; wprintf(TEXT("[+] Success: DLL injected via CreateRemoteThread().\n"));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CloseHandle(hThread);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; }<br/>
+We basically do this expecting one thread to become alertable.<br/>
+<br/>
+As a side note, it was nice to see this technique being used by DOUBLEPULSAR.<br/>
+<br/>
+For the complete source code see ‘t_QueueUserAPC.cpp’.</body></html>

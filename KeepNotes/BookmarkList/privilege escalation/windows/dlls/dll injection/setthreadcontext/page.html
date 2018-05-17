@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SetThreadContext</title>
+</head><body>SetThreadContext()<br/>
+This is actually a very cool method. A specially crafted code is injected into the target/remote process by allocating a chunk of memory in the target/remote process. This code is responsible for loading the DLL.<br/>
+<br/>
+Here’s the code for 32 bits. See child page. <br/>
+For 64 bits I couldn’t actually find any assembly working code and I kinda wrote my own. See child page.<br/>
+<br/>
+Before we inject this code into the target process some placeholders need to be filled/patched with:<br/>
+<ul><li>Return address (address where the thread should resume once the code stub has finished execution)</li>
+<li>The DLL path name</li>
+<li>Address of LoadLibrary()</li>
+</ul>
+<br/>
+And that’s when the game of hijacking, suspending, injecting, and resuming a thread comes into play.<br/>
+<br/>
+We need first to attach to the target/remote process, of course, and allocate memory into the target/remote process. Note that we need to allocate memory with read and write privileges to hold the DLL path name and to hold our assembly code that will load the DLL.<br/>
+<br/>
+LPVOID lpDllAddr = VirtualAllocEx(hProcess, NULL, dwSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);<br/>
+<br/>
+stub = VirtualAllocEx(hProcess, NULL, stubLen, MEM_COMMIT, PAGE_EXECUTE_READWRITE);<br/>
+<br/>
+Next, we need to get the context of one of the threads running on the target/remote process (the one that is going to be injected with our assembly code).<br/>
+<br/>
+To find the thread, we use the function ‘getThreadID()’, you can find it on the file ‘auxiliary.cpp’.<br/>
+<br/>
+Once we have our thread id, we need to set the thread context.<br/>
+<br/>
+hThread = OpenThread((THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME), false, threadID);<br/>
+<br/>
+Next, we need to suspend the thread to capture its context. The context of a thread is the state of its registers. We are particularly interested in EIP/RIP (call it IP - instruction pointer, if you want).<br/>
+<br/>
+Since the thread is suspended, we can change the EIP/RIP value and force it to continue its execution in a different path (our code cave).<br/>
+<br/>
+ctx.ContextFlags = CONTEXT_CONTROL;<br/>
+GetThreadContext(hThread, &amp;ctx);<br/>
+DWORD64 oldIP = ctx.Rip;<br/>
+<br/>
+ctx.Rip = (DWORD64)stub;<br/>
+ctx.ContextFlags = CONTEXT_CONTROL;<br/>
+<br/>
+WriteProcessMemory(hProcess, (void *)stub, &amp;sc, stubLen, NULL); // write code cave<br/>
+<br/>
+SetThreadContext(hThread, &amp;ctx);<br/>
+ResumeThread(hThread);<br/>
+<br/>
+So, we suspend the thread, we capture the context, and from there we extract the EIP/RIP. This is saved to resume the execution when our injected code finishes. The new EIP/RIP is set as our injected code location.<br/>
+<br/>
+We then patch all the placeholders with the return address, the DLL path name address, and the ‘LoadLibrary()’ address.<br/>
+<br/>
+Once the thread starts executing, our DLL will be loaded and once it finishes it will return back to the point it was suspended at and resume its execution there.<br/>
+<br/>
+If you feel like debugging this technique as a learning exercise, here’s how to do it. Launch the application you want to inject into, let’s say ‘notepad.exe’. Run ‘injectAllTheThings_64.exe’ with ‘x64dbg’ as shown below.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+That is, using the following command line (adapt to your environment):<br/>
+<br/>
+"C:\Users\rui\Documents\Visual Studio 2013\Projects\injectAllTheThings\bin\injectAllTheThings_64.exe" -t 6 notepad.exe "c:\Users\rui\Documents\Visual Studio 2013\Projects\injectAllTheThings\bin\dllmain_64.dll"<br/>
+<br/>
+Set a breakpoint on the call to ‘WriteProcessMemory()’ as shown below.<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+Let it run and when the breakpoint is hit take note of the memory address at the register RDX. If you are asking yourself why RDX is time to read about the calling convention used in x64. Have fun and come back once you finish.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+Step over (F8) the call to ‘WriteProcessMemory()’, launch another instance of x64dbg and attach to ‘notepad.exe’. Go to the address copied before (the one at RDX) by pressing ‘Ctrl + g’ and you will see our code cave assembly as shown below.<br/>
+<br/>
+<img src="image 4.png" /><br/>
+<br/>
+Cool, huh!? Now set a breakpoint at the beginning of this shellcode. Go to the ‘injectAllTheThings’ debugged process and let it run. As you can see below our breakpoint is hit and we can now step over the code for fun and enjoy this piece of code working.<br/>
+<br/>
+<img src="image 5.png" /><br/>
+<br/>
+Once we call the ‘LoadLibrary()’ function, we get our DLL loaded<br/>
+<br/>
+<img src="image 6.png" /><br/>
+<br/>
+This is so beautiful…<br/>
+<br/>
+Our shellcode will return to the previously saved RIP and ‘notepad.exe’ will resume execution.<br/>
+<br/>
+For the complete source code see ‘t_suspendInjectResume.cpp’.<br/>
+<br/>
+</body></html>

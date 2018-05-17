@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CreateRemoteThread</title>
+</head><body>DLL Injection Using CreateRemoteThread<br/>
+Primarily two situations<ul><li>Inject DLL into a running process</li>
+<li>Create a process and Inject DLL into it.</li>
+</ul>
+&nbsp;<br/>
+CreateRemoteThread API: "Creates a thread that runs in the virtual address space of another process"<br/>
+&nbsp; &nbsp; &nbsp; HANDLE WINAPI CreateRemoteThread(<br/>
+&nbsp; __in &nbsp; HANDLE hProcess, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;?-------- 1<br/>
+&nbsp; __in &nbsp; LPSECURITY_ATTRIBUTES lpThreadAttributes,<br/>
+&nbsp; __in &nbsp; SIZE_T dwStackSize,<br/>
+&nbsp; __in &nbsp; LPTHREAD_START_ROUTINE lpStartAddress, &#09;?---------2<br/>
+&nbsp; __in &nbsp; LPVOID lpParameter, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;?---------3<br/>
+&nbsp; __in &nbsp; DWORD dwCreationFlags, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;?---------4<br/>
+&nbsp; __out &nbsp;LPDWORD lpThreadId &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+);<br/>
+<br/>
+&nbsp; #1 – handle to the process in which the thread is to be created.<br/>
+&nbsp; #2 – A pointer to function or entry point of the thread that is going to be executed<br/>
+&nbsp; #3 – parameters to the function<br/>
+&nbsp; #4 – Creation state of the thread<br/>
+<br/>
+Kernel32.dll exprot <b>LoadLibrary</b>&nbsp;API to load a DLL at run time and also kernel32.dll is loaded by default into every process. Pass LoadLibrary address to LPTHREAD_START_ROUTINE and LoadLibrary parameter to to LPVOID. This will execute LoadLibrary with its parameter into another process.<br/>
+<br/>
+This requires the parameter to LoadLibrary must be in the target process. If we use LoadLibrary (#2) with "mydll.dll" (#3) as parameter to LoadLibrary, then the name "mydll.dll" must be in our target process. <br/>
+<br/>
+Windows provides an API to do that. We can write into any process using WriteProcessMemory and allocate space into another process using VirtualAllocEx. So:<br/>
+<ul><li>Use OpenProcess or CreateProcess API to get the handle of our target process</li>
+<li>Use VirtualAllocEx to allocate space into our target process</li>
+<li>Use WriteProcessMemory to write our DLL name into our target process</li>
+<li>Use CreateRemoteThread to inject our DLL into our target process </li>
+</ul>
+<br/>
+Injecting into a system process requires se_debug privilege. <br/>
+<br/>
+Method 2 requires creating a process and then injecting into it. <br/>
+BOOL WINAPI CreateProcess(<br/>
+&nbsp; __in_opt &nbsp; &nbsp; LPCTSTR lpApplicationName,<br/>
+&nbsp; __inout_opt &nbsp;LPTSTR lpCommandLine,<br/>
+&nbsp; __in_opt &nbsp; &nbsp; LPSECURITY_ATTRIBUTES lpProcessAttributes,<br/>
+&nbsp; __in_opt &nbsp; &nbsp; LPSECURITY_ATTRIBUTES lpThreadAttributes,<br/>
+&nbsp; __in &nbsp; &nbsp; &nbsp; &nbsp; BOOL bInheritHandles,<br/>
+&nbsp; __in &nbsp; &nbsp; &nbsp; &nbsp; DWORD dwCreationFlags, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;&#09;?-------- 1<br/>
+&nbsp; __in_opt &nbsp; &nbsp; LPVOID lpEnvironment,<br/>
+&nbsp; __in_opt &nbsp; &nbsp; LPCTSTR lpCurrentDirectory,<br/>
+&nbsp; __in &nbsp; &nbsp; &nbsp; &nbsp; LPSTARTUPINFO lpStartupInfo,<br/>
+&nbsp; __out &nbsp; &nbsp; &nbsp; &nbsp;LPPROCESS_INFORMATION lpProcessInformation<br/>
+);<br/>
+<br/>
+dwCreationFlags is the important parameter. It is used to control the creation of a process. We can set it to "CREATE_SUSPENDED" to create a process in suspended mode. With CREATE_SUSPENDED, the execution will stop at the entry point of the thread. We can start it again with ResumeThread API. <br/>
+<br/>
+Process is: <ul><li>Create Process in suspended state</li>
+<li>Inject DLL into the process using above steps</li>
+<li>Resume the process</li>
+</ul>
+<br/>
+<br/>
+<br/>
+</body></html>

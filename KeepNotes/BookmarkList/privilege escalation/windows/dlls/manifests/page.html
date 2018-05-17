@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Manifests</title>
+</head><body>Manifests<br/>
+Manifests are XML files that accompany and describe side-by-side assemblies or isolated applications. Manifests uniquely identify the assembly through the assembly's <b>assemblyIdentity</b>&nbsp;element. They contain information used for binding and activation, such as COM classes, interfaces, and type libraries, that has traditionally been stored in the registry. Manifests also specify the files that make up the assembly and may include Windows classes if the assembly author wants them to be versioned. Side-by-side assemblies are not registered on the system, but are available to applications and other assemblies on the system that specify dependencies in manifest files.<br/>
+<br/>
+Manifest files enable administrators and applications to manage side-by-side assembly versions after deployment. Every side-by-side assembly must have a manifest associated with it. The installation of Windows XP installs the <a href="https://msdn.microsoft.com/en-us/library/aa376609">supported Microsoft side-by-side assemblies</a>&nbsp;with their manifests. If you develop your own side-by-side assemblies, you must also install manifest files. For more information, see <a href="https://msdn.microsoft.com/en-us/library/aa375180">Installing Side-by-Side Assemblies</a>&nbsp;and <a href="https://msdn.microsoft.com/en-us/library/aa375632">Manifest Files Reference</a>.<br/>
+<br/>
+Manifests and configuration files are not localized.<br/>
+<br/>
+The following types of manifests are used with side-by-side assemblies:<ul><li><a href="https://msdn.microsoft.com/en-us/library/aa374219">Assembly manifests</a>&nbsp;describe side-by-side assemblies. They are used to manage the names, versions, resources, and dependent assemblies of side-by-side assemblies. The manifests of <a href="https://msdn.microsoft.com/en-us/library/aa375996">shared assemblies</a>&nbsp;are stored in the WinSxS folder of the system. Private assembly manifests are stored either as a resource in the DLL or in the application folder</li>
+<li><a href="https://msdn.microsoft.com/en-us/library/aa374191">Application manifests</a>&nbsp;describe <a href="https://msdn.microsoft.com/en-us/library/aa375190">isolated applications</a>. They are used to manage the names and versions of shared side-by-side assemblies that the application should bind to at run time. Application manifests are copied into the same folder as the application executable file or included as a resource in the application's executable file.</li>
+<li><a href="https://msdn.microsoft.com/en-us/library/aa374182">Application Configuration Files</a>, are manifests used to override and redirect the versions of dependent assemblies used by side-by-side assemblies and applications.</li>
+<li><a href="https://msdn.microsoft.com/en-us/library/aa375682">Publisher Configuration Files</a>, are manifests used to redirect the version of a side-by-side assembly to another compatible version. The version that the assembly is being redirected to should have the same major.minor values as the original version.</li>
+</ul>
+</body></html>

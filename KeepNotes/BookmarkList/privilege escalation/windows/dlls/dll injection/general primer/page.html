@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>DLL Injection is the process of inserting code into a running process. The code we usuall insert is in the form of a Dynamic Link Library (DLL), since DLLs are meant to be loaded as needed at run time. This doesn't mean we cannot inject assembly in any other form. You'll ned to have an appropriate level of privileges on the system to start playing with other program's memory. <br/>
+<br/>
+There are a couple of methods to inject DLL into a process. Latest versions of Windows enforce <b>session separation</b>, so some methods may not work on the newest operating systems. <br/>
+<br/>
+Methods:<ul><li>Window hooks (SetWindowsHookEX)</li>
+<li>CreateRemoteThread (windows xp only)</li>
+<li>App_Init registry key</li>
+<li>ZwCreateThread or NtCreateThreadEx ? Global method (works well on all versions of windows)</li>
+</ul>
+<ul>Via APC (Asynchronous procedure calls)</ul>
+<ul><li>QueueUserAPC</li>
+<li>SetWindowsHookEx()</li>
+<li>RtlCreateUserThread()</li>
+<li>Code cave via SetThreadContext()</li>
+</ul>
+<ul>Reflective DLL</ul>
+<br/>
+&nbsp;<br/>
+<b>Overview</b><br/>
+Essentially, in any injection, you'll go through these steps<ul><li><b>Attach</b> to the process</li>
+<li><b>Allocate</b> Memory within the process</li>
+<li><b>Copy</b> the DLL or the DLL Path into the processes memory and determine appropriate memory addresses</li>
+<li>Instruct the process to <b>Execute</b> your DLL</li>
+</ul>
+<br/>
+&nbsp;<img src="image.png" /><br/>
+<br/>
+<br/>
+<b>DLL Proxying and DLL Hijacking</b>&nbsp;<br/>
+DLL injection is very much different from DLL Proxying and DLL Hijacking. People tend to confuse these. Proxying inserts a DLL into a process while its running. Hijacking tricks the program into loading it. <br/>
+<br/>
+DLL Proxying most commonly assumes you ahve full control voer the application's install directory. The "attacker" renames the legitimate DLL and copies their own DLL into the install directory. When the application reuns, it laods the attacker's DLL (since it's named correcftly) and then the attacker's DLL relays the function calls to the legitimate one. DLL Proxying is most commonly used by the actual owner of the system as a method to extend application functionality. For instance, DLL proxying is popular in the gaming world. Lots of people use this technique to modify game functionality for cheating or other sorts of fun. "Spy" applications also leverage proxying in an attempt to capture user provided application values. <br/>
+<br/>
+DLL Hijacking abuses Windows' DLL search order in order to compromise a system. It doesn't usually require the attacker to hav ewrite permission to the application's installation directory but rather the directory where the application was launched. In the case that the application attempts to call a non-existent DLL or if an attacker was able to place a malicious DLL in the same directory as a file that launches a vulnerable application, the attacker's DLL would be loaded and code execution would be achieved. This is because Windows [used to] search for application DLLs in the CWD from which the application was loaded before more other locations. <br/>
+<br/>
+<br/>
+All techniques described here have been implemented in a small project called <a href="https://github.com/OpenSecurityResearch/dllinjector">dllInjector</a>. <br/>
+</body></html>

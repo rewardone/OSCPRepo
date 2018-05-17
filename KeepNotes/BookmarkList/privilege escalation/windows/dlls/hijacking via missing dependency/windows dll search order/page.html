@@ -15,4 +15,10 @@ You can see the DLL search order on 32-bit systems below:<br/>
 <br/>
 Note the Current Working Directory position may change or even NOT on the list!<br/>
 See Cheat Sheets &gt; Windows &gt; Registry<br/>
-https://msdn.microsoft.com/en-us/library/windows/desktop/ms682586(v=vs.85).aspx</body></html>
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms682586(v=vs.85).aspx<br/>
+<br/>
+Factors That Affect Searching<ul><li>If a DLL with the same module name is already loaded in memory, the system checks <b>only for redirection and a manifest</b>&nbsp;before resolving to the loaded DLL, no matter which directory it is in. <b>The system does not search for the DLL</b>.</li>
+<li>If the DLL is on the list of known DLLs for the version of Windows on which the application is running, <b>the system uses its copy</b>&nbsp;of the known DLL (and the known DLL's dependent DLLs, if any) <b>instead of searching</b>&nbsp;for the DLL. For a list of known DLLs on the current system, see the following registry key: <b>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\KnownDLLs</b>.</li>
+<li>If a DLL has dependencies, the system<b>&nbsp;searches for the dependent DLLs</b>&nbsp;as if they were loaded with<b>&nbsp;just their module names</b>. This is true even if the first DLL was loaded by specifying a full path.</li>
+</ul>
+&nbsp;</body></html>

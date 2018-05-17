@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OpenProcess Function</title>
+</head><body>HANDLE WINAPI OpenProcess(<br/>
+&nbsp; _In_ DWORD dwDesiredAccess,<br/>
+&nbsp; _In_ BOOL &nbsp;bInheritHandle,<br/>
+&nbsp; _In_ DWORD dwProcessId<br/>
+);<br/>
+<br/>
+Parameters<br/>
+dwDesiredAccess [in]<br/>
+The access to the process object. This access right is checked against the security descriptor for the process. This parameter can be one or more of the process access rights.<br/>
+<br/>
+If the caller has enabled the SeDebugPrivilege privilege, the requested access is granted regardless of the contents of the security descriptor.<br/>
+<br/>
+bInheritHandle [in]<br/>
+If this value is TRUE, processes created by this process will inherit the handle. Otherwise, the processes do not inherit this handle.<br/>
+<br/>
+dwProcessId [in]<br/>
+The identifier of the local process to be opened.<br/>
+<br/>
+If the specified process is the System Process (0x00000000), the function fails and the last error code is ERROR_INVALID_PARAMETER. If the specified process is the Idle process or one of the CSRSS processes, this function fails and the last error code is ERROR_ACCESS_DENIED because their access restrictions prevent user-level code from opening them.<br/>
+<br/>
+If you are using GetCurrentProcessId as an argument to this function, consider using GetCurrentProcess instead of OpenProcess, for improved performance.<br/>
+<br/>
+<b>Return value</b><br/>
+If the function succeeds, the return value is an open handle to the specified process.<br/>
+<br/>
+If the function fails, the return value is NULL. To get extended error information, call GetLastError.<br/>
+<br/>
+<b>Remarks<br/>
+</b>To open a handle to another local process and obtain full access rights, you must enable the SeDebugPrivilege privilege. For more information, see Changing Privileges in a Token.<br/>
+<br/>
+The handle returned by the OpenProcess function can be used in any function that requires a handle to a process, such as the wait functions, provided the appropriate access rights were requested.<br/>
+<br/>
+When you are finished with the handle, be sure to close it using the CloseHandle function.<br/>
+<br/>
+<b>Examples</b><br/>
+For an example, see Taking a Snapshot and Viewing Processes.<br/>
+<br/>
+<b>Requirements</b><br/>
+Minimum supported client&#09;&#09;Windows XP [desktop apps | UWP apps]<br/>
+Minimum supported server&#09;&#09;Windows Server 2003 [desktop apps | UWP apps]<br/>
+Header<br/>
+WinBase.h on Windows XP, Windows Server 2003, Windows Vista, Windows 7, Windows Server 2008 and Windows Server 2008 R2 (include Windows.h);<br/>
+Processthreadsapi.h on Windows 8 and Windows Server 2012<br/>
+<br/>
+Library&#09;&#09;&#09;&#09;&#09;Kernel32.lib<br/>
+DLL&#09;&#09;&#09;&#09;&#09;&#09;Kernel32.dll</body></html>

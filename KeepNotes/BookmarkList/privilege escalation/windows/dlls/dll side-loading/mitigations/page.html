@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body>&nbsp;FireEye recommends the following mitigation techniques when loading updated DLLs for packaging: <br/>
+• Ensure that the full path is hardcoded. Avoid using relative paths for any resources. <br/>
+• Confirm that the imported DLL actually exists. <br/>
+• Ensure that imported functions are valid. As noted from the PlugX sample, the spoofed function was simply empty. <br/>
+• Ensure that the operating system is correct. <br/>
+• Utilize DLL redirection or a manifest. Recent versions of Visual Studio enable developers to create manifests to ensure that the loaded library is valid.</body></html>

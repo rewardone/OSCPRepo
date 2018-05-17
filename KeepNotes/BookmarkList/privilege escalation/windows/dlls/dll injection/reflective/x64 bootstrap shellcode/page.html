@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>x64 Bootstrap Shellcode</title>
+</head><body>// mov rcx, &lt;lpParameter&gt;<br/>
+bootstrap[i++] = 0x48;<br/>
+bootstrap[i++] = 0xB9;<br/>
+MoveMemory(bootstrap + i, &amp;lpParameter, sizeof(lpParameter));<br/>
+i += sizeof(lpParameter);<br/>
+<br/>
+// mov rdx, &lt;address of image base&gt;<br/>
+bootstrap[i++] = 0x48;<br/>
+bootstrap[i++] = 0xBA;<br/>
+MoveMemory(bootstrap + i, &amp;lpRemoteLibraryBuffer, sizeof(lpRemoteLibraryBuffer));<br/>
+i += sizeof(lpRemoteLibraryBuffer);<br/>
+<br/>
+// mov r8d, &lt;hash of function&gt;<br/>
+bootstrap[i++] = 0x41;<br/>
+bootstrap[i++] = 0xB8;<br/>
+MoveMemory(bootstrap + i, &amp;dwFunctionHash, sizeof(dwFunctionHash));<br/>
+i += sizeof(dwFunctionHash);<br/>
+<br/>
+// mov r9, &lt;address of userdata&gt;<br/>
+bootstrap[i++] = 0x49;<br/>
+bootstrap[i++] = 0xB9;<br/>
+MoveMemory(bootstrap + i, &amp;userdataAddr, sizeof(userdataAddr));<br/>
+i += sizeof(userdataAddr);<br/>
+<br/>
+// push &lt;size of userdata&gt;<br/>
+bootstrap[i++] = 0x68; // PUSH (word/dword)<br/>
+MoveMemory(bootstrap + i, &amp;nUserdataLen, sizeof(nUserdataLen));<br/>
+i += sizeof(nUserdataLen);<br/>
+<br/>
+// sub rsp, 0x20 (for "shadow space")<br/>
+bootstrap[i++] = 0x48;<br/>
+bootstrap[i++] = 0x83;<br/>
+bootstrap[i++] = 0xEC;<br/>
+bootstrap[i++] = 0x20;<br/>
+<br/>
+// move rax, &lt;address of reflective loader&gt;<br/>
+bootstrap[i++] = 0x48;<br/>
+bootstrap[i++] = 0xB8;<br/>
+MoveMemory(bootstrap + i, &amp;uiReflectiveLoaderAddr, sizeof(uiReflectiveLoaderAddr));<br/>
+i += sizeof(uiReflectiveLoaderAddr);<br/>
+<br/>
+// call rax<br/>
+bootstrap[i++] = 0xFF; // CALL<br/>
+bootstrap[i++] = 0xD0; // RAX<br/>
+<br/>
+// mov rcx, rax (return code from ReflectiveLoader) (__fastcall)<br/>
+bootstrap[i++] = 0x48;<br/>
+bootstrap[i++] = 0x89;<br/>
+bootstrap[i++] = 0xC1;<br/>
+<br/>
+// mov rax, &lt;value of exitthread&gt;<br/>
+bootstrap[i++] = 0x48;<br/>
+bootstrap[i++] = 0xB8;<br/>
+MoveMemory(bootstrap + i, &amp;exitthread, sizeof(exitthread));<br/>
+i += sizeof(exitthread);<br/>
+<br/>
+// call rax<br/>
+bootstrap[i++] = 0xFF; // CALL<br/>
+bootstrap[i++] = 0xD0; // RAX</body></html>

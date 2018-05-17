@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>x86 Bootstrap Shellcode</string>
+  <key>nodeid</key><string>d7ca6720-54de-4101-bec8-300d21d1a592</string>
+  <key>modified_time</key><integer>1526579200</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526579188</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

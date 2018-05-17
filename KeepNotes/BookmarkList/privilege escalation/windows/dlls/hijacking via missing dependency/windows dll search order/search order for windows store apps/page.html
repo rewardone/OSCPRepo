@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Search Order for Windows Store Apps</title>
+</head><body>When a Windows Store app loads a packaged module by calling the LoadPackagedLibrary function, the DLL must be in the package dependency graph of the process. For more information, see LoadPackagedLibrary. When a Windows Store app loads a module by other means and does not specify a full path, the system searches for the DLL and its dependencies at load time as described in this section.<br/>
+<br/>
+Windows 7, Windows Server 2008 R2, Windows Vista, Windows Server 2008, Windows Server 2003 and Windows XP: &nbsp;Windows Store apps are supported starting with Windows 8 and Windows Server 2012.<br/>
+<br/>
+Before the system searches for a DLL, it checks the following:<br/>
+<ul><li>If a DLL with the same module name is already loaded in memory, the system uses the loaded DLL, no matter which directory it is in. The system does not search for the DLL.</li>
+</ul>
+<ul>If the DLL is on the list of known DLLs for the version of Windows on which the application is running, the system uses its copy of the known DLL (and the known DLL's dependent DLLs, if any). The system does not search for the DLL. For a list of known DLLs on the current system, see the following registry key: <b>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\KnownDLLs</b>.</ul>
+<br/>
+<br/>
+If the system must search for a module or its dependencies, it always uses the search order for Windows Store apps even if a dependency is not Windows Store app code.<br/>
+<br/>
+Standard Search Order for Windows Store apps<br/>
+If the module is not already loaded or on the list of known DLLs, the system searches these locations in this order:<br/>
+<ul><li>The package dependency graph of the process. This is the application's package plus any dependencies specified as &lt;PackageDependency&gt; in the &lt;Dependencies&gt; section of the application's package manifest. Dependencies are searched in the order they appear in the manifest.</li>
+<li>The directory the calling process was loaded from.</li>
+<li>The system directory (%SystemRoot%\system32).</li>
+</ul>
+<br/>
+If a DLL has dependencies, the system searches for the dependent DLLs as if they were loaded with just their module names. This is true even if the first DLL was loaded by specifying a full path.<br/>
+<br/>
+<b>Alternate Search Order for Windows Store apps</b><br/>
+If a module changes the standard search order by calling the LoadLibraryEx function with LOAD_WITH_ALTERED_SEARCH_PATH, the system searches the directory the specified module was loaded from instead of the directory of the calling process. The system searches these locations in this order:<br/>
+<ul><li>The package dependency graph of the process. This is the application's package plus any dependencies specified as &lt;PackageDependency&gt; in the &lt;Dependencies&gt; section of the application's package manifest. Dependencies are searched in the order they appear in the manifest.</li>
+<li>The directory the specified module was loaded from.</li>
+<li>The system directory (%SystemRoot%\system32).</li>
+</ul>
+&nbsp;<br/>
+<br/>
+</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>NtCreateThreadEx Example</string>
+  <key>nodeid</key><string>5f85be84-d39c-41a4-8fb4-703cc81c332a</string>
+  <key>modified_time</key><integer>1526571733</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526571721</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

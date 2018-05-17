@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NtCreateThreadEx</title>
+</head><body>Undocumented function which provides a complete solution for executing remote threads across session boundaries. It allows any process to inject a DLL into any other process irrespective of session in which it is running as long as it has sufficient privileges. <br/>
+<br/>
+Limitations<br/>
+Though NtCreateThreadEx provides a universal solution on Vista+ for remote thread execution, it is risky to use in production code because it is an undocumented function. As things change, testing is necessary before putting in production, especially when injecting code into system critical processes such as LSASS or CSRSS. <br/>
+Another limitation is that it cannot be used in XP because it was not implemented. It is possible to dynamically use CreateRemoteThread on XP and NtCreateThreadEx on anything newer. <br/>
+<br/>
+Prototype NtCreateThreadEx function:<br/>
+typedef NTSTATUS (WINAPI *LPFUN_NtCreateThreadEx) <br/>
+(<br/>
+&nbsp; OUT PHANDLE hThread,<br/>
+&nbsp; IN ACCESS_MASK DesiredAccess,<br/>
+&nbsp; IN LPVOID ObjectAttributes,<br/>
+&nbsp; IN HANDLE ProcessHandle,<br/>
+&nbsp; IN LPTHREAD_START_ROUTINE lpStartAddress,<br/>
+&nbsp; IN LPVOID lpParameter,<br/>
+&nbsp; IN BOOL CreateSuspended, <br/>
+&nbsp; IN ULONG StackZeroBits,<br/>
+&nbsp; IN ULONG SizeOfStackCommit,<br/>
+&nbsp; IN ULONG SizeOfStackReserve,<br/>
+&nbsp; OUT LPVOID lpBytesBuffer<br/>
+);<br/>
+<br/>
+Function is almost similar to CreateRemoteThread except the last parameter which takes an unknown buffer structure. Here is the definition of that buffer structure. <br/>
+//Buffer argument passed to NtCreateThreadEx function<br/>
+<br/>
+struct NtCreateThreadExBuffer<br/>
+{<br/>
+&nbsp; ULONG Size;<br/>
+&nbsp; ULONG Unknown1;<br/>
+&nbsp; ULONG Unknown2;<br/>
+&nbsp; PULONG Unknown3;<br/>
+&nbsp; ULONG Unknown4;<br/>
+&nbsp; ULONG Unknown5;<br/>
+&nbsp; ULONG Unknown6;<br/>
+&nbsp; PULONG Unknown7;<br/>
+&nbsp; ULONG Unknown8;<br/>
+};<br/>
+<br/>
+This is derived based on reverse engineering work. The above functions can be changed by Microsoft at any time. <br/>
+<br/>
+<br/>
+<br/>
+Executing Remote Thread into System Process using NtCreateThreadEx<br/>
+Execution is so similar to CreateRemoteThread function that allocating and copying are not mentioned here. <br/>
+<br/>
+Need to load NtCreateThreadEx function from Ntdll.dll:<br/>
+HMODULE modNtDll = GetModuleHandle("ntdll.dll"); <br/>
+<br/>
+if( !modNtDll )<br/>
+{<br/>
+&nbsp; &nbsp;printf("\n failed to get module handle for ntdll.dll, Error=0x%.8x", GetLastError());<br/>
+&nbsp; &nbsp;return;<br/>
+}<br/>
+<br/>
+LPFUN_NtCreateThreadEx funNtCreateThreadEx = <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(LPFUN_NtCreateThreadEx) GetProcAddress(modNtDll, "NtCreateThreadEx");<br/>
+<br/>
+if( !funNtCreateThreadEx )<br/>
+{<br/>
+&nbsp; &nbsp;printf("\n failed to get funtion address from ntdll.dll, Error=0x%.8x", GetLastError());<br/>
+&nbsp; &nbsp;return;<br/>
+}<br/>
+<br/>
+Now setup the buffer structure which is passed as the last param to NtCreateThreadEx:<br/>
+//setup and initialize the buffer<br/>
+NtCreateThreadExBuffer ntbuffer;<br/>
+<br/>
+memset (&amp;ntbuffer,0,sizeof(NtCreateThreadExBuffer));<br/>
+DWORD temp1 = 0;<br/>
+DWORD temp2 = 0;<br/>
+<br/>
+ntbuffer.Size = sizeof(NtCreateThreadExBuffer);<br/>
+ntbuffer.Unknown1 = 0x10003;<br/>
+ntbuffer.Unknown2 = 0x8;<br/>
+ntbuffer.Unknown3 = &amp;temp2;<br/>
+ntbuffer.Unknown4 = 0;<br/>
+ntbuffer.Unknown5 = 0x10004;<br/>
+ntbuffer.Unknown6 = 4;<br/>
+ntbuffer.Unknown7 = &amp;temp1;<br/>
+ntbuffer.Unknown8 = 0;<br/>
+<br/>
+Finally, execute remote thread 'pRemoteFunction' into remote process using NtCreateThreadEx function. Here one can use LoadLibraryA() function address instead of 'pRemoteFunction' thread to implement 'DLL Injection technique. <br/>
+NTSTATUS status = funNtCreateThreadEx( <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &amp;hThread, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0x1FFFFF, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NULL, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hProcess,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (LPTHREAD_START_ROUTINE) pRemoteFunction,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pRemoteParameter,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FALSE, //start instantly<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NULL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NULL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NULL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &amp;ntbuffer<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; );<br/>
+<br/>
+Now check for the result of NtCreateThreadEx function and wait for it to execute completely<br/>
+if (hThread == NULL)<br/>
+{<br/>
+&nbsp; &nbsp; printf("\n NtCreateThreadEx failed, Error=0x%.8x", GetLastError());<br/>
+&nbsp; &nbsp; return;<br/>
+}<br/>
+<br/>
+//Wait for thread to complete....<br/>
+WaitForSingleObject(hThread, INFINITE);<br/>
+<br/>
+Finally, retrieve the return value from the remote thread function, 'pRemoteFunction' to verify the result of function execution. <br/>
+'//Check the return code from remote thread function <br/>
+int dwExitCode;<br/>
+if( GetExitCodeThread(hThread, (DWORD*) &amp;dwExitCode) )<br/>
+{<br/>
+&nbsp; &nbsp; &nbsp;printf("\n Remote thread returned with status = %d", dwExitCode);<br/>
+}<br/>
+<br/>
+CloseHandle(hThread);<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Reflective</string>
+  <key>nodeid</key><string>0b48faf4-fa87-43fa-99de-037b758dfa63</string>
+  <key>modified_time</key><integer>1526579587</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526578541</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Copying the DLL / Determine Addresses</title>
+</head><body>We can now copy the DLL (path or contents) to the target process space. <br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+Now that we have space allocated in our target process, we can copy our DLL Path or the Full DLL (depending on the method you choose) into that process. We'll use <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms681674%28v=vs.85%29.aspx">WriteProcessMemory</a>() to do so:<br/>
+<br/>
+DLL Path:<br/>
+WriteProcessMemory(hHandle, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;dllPathAddr, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;dllPath, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;strlen(dllPath), <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;NULL);<br/>
+<br/>
+Full DLL<br/>
+We'll first need to read our DLL into memory before we copy it to the remote processes.<br/>
+lpBuffer = HeapAlloc( GetProcessHeap(), <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dllFileLength); <br/>
+<br/>
+ReadFile( hFile, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lpBuffer, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dllFileLength, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &amp;dwBytesRead, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NULL );<br/>
+<br/>
+WriteProcessMemory( hProcess, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lpRemoteLibraryBuffer, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lpBuffer, &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dllFileLength, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NULL );<br/>
+<br/>
+<b>Determining our Execution Starting Point</b><br/>
+Most execution functions take a memory address to start at, so we'll need to determine what that will be. <br/>
+<br/>
+DLL Path and LoadLibraryA()<br/>
+We'll search our own process memory for the starting address of LoadLibraryA(), then pass it to our execution function with the memory addres of DLL Path as it's parameter. To get LoadLibraryA()'s address, we'll use GetModuleHandle() and GetProcAddress():<br/>
+loadLibAddr = GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "LoadLibraryA"); &nbsp;<br/>
+<br/>
+Full DLL and Jump to DllMain<br/>
+By copying the entire DLL into memory we can avoid registering our DLL with the process and more reliably inject. The somewhat difficult part of doing this is obtaining the entry point to our DLL when it's loaded in memory. Luckily enough, Stephen Fewer has made our lives easy. He's pioneered the Reflective DLL Injection technique which offers a greater level of stealth in comparison to existing methods. The LoadRemoteLibraryR() function included within this ReflectiveDLLInjection Inject project implements this entirely, however, it limits our execution method to CreateRemoteThread(). So we'll use the GetReflectiveLoaderOffset() from it to determine our offset in our processes memory, and then use that offset plus the base address of the memory in the victim process we wrote our DLL to as the execution starting point. It's important to note here that the DLL we're injecting must complied with the appropriate includes and options so that it aligns itself with the ReflectiveDLLInjection method:<br/>
+dwReflectiveLoaderOffset = GetReflectiveLoaderOffset(lpWriteBuff); &nbsp;<br/>
+</body></html>

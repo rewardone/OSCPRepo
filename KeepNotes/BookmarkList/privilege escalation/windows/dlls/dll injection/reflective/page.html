@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reflective</title>
+</head><body>The process of reflective DLL injection is as follows:<br/>
+<ul><li>Open target process with RWX permissions and allocate memory large enough for the DLL.</li>
+<li>Copy the DLL into the allocated memory space.</li>
+<li>Calculate the memory offset within the DLL to the export used for doing reflective loading.</li>
+<li>Call CreateRemoteThread (or an equivalent undocumented API function like RtlCreateUserThread) to start execution in the remote process, using the offset address of the reflective loader function as the entry point.</li>
+<li>The reflective loader function finds the Process Environment Block (PEB) of the target process using the appropriate CPU register, and uses that to find the address in memory of kernel32.dll and any other required libraries.</li>
+<li>Parse the exports directory of kernel32 to find the memory addresses of required API functions such as LoadLibraryA, GetProcAddress, and VirtualAlloc.</li>
+<li>Use these functions to then properly load the DLL (itself) into memory and call its entry point, DllMain.</li>
+</ul>
+&nbsp;<br/>
+The assumption of reflective DLL injection is that calling the entry point of the DLL is sufficient to execute the full functionality of the DLL. However, this is often not the case. <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dn633971%28v=vs.85%29.aspx">Microsoft advice</a>&nbsp;to minimize the work does in DllMain and to do "lazy initialization" avoiding loading additional libaries or creating new threads. <br/>
+<br/>
+New <a href="http://www.codeproject.com/Articles/20084/A-More-Complete-DLL-Injection-Solution-Using-Creat">article</a>&nbsp;provides a more robust dll injection technique. Dynamically writing some bootstrap shellcode to the target process which loads the DLL (using LoadLibraryA()) and then finds and calls another exported entry point function (using GetProcAddress). While this is a great improvement, it is not reflective. <br/>
+<br/>
+Take this idea and apply it to reflective. The basic process is as follows, summarized for brevity:<br/>
+<ul><li>Open target process and allocate memory.</li>
+<li>Copy the DLL into the allocated memory.</li>
+<li>Copy a hash of the entry point function name and any arguments to the function into the memory space after the DLL.</li>
+<li>Copy over some bootstrap shellcode that calls a modified reflective loader with pointers to the data copied in step 3.</li>
+<li>Create a remote thread in the target process, using the address of the beginning of the shellcode as the entry point.</li>
+</ul>
+<br/>
+The reason we need the bootstrap shellcode is due to the limited amount of data we're able to pass to the reflective loader with the original reflective DLL injection technique. CreateRemoteThread's LPTHREAD_START_ROUTINE lpStartAddress is the entry point for execution of the created thread. This function is prototyped as: <br/>
+typedef DWORD (__stdcall *LPTHREAD_START_ROUTINE) ( [in] LPVOID lpThreadParameter ); &nbsp;<br/>
+<br/>
+It only takes a single LPVOID parameter. Reflective technique passess address of reflective loader to lpStartAddress. This is fine since the reflective loader only calls DllMain, which takes a void pointer as its lpvReserved parameter. <br/>
+<br/>
+If we want a new reflective loader to call an additional export after loading the DLL, we'll need to give it more ifnromation! We'll do this by passing additional parameters to the reflective loader function using some bootstrap shellcode. New declaration of our reflective loader function will be: <br/>
+DWORD WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddress, DWORD dwFunctionHash, LPVOID lpUserData, DWORD nUserdataLen ); &nbsp;<br/>
+<br/>
+Here, dwFunctionHash is a hash of the export function name we want to call, and lpUserData is a blob of data (of size nUserdataLen) that we'll pass to the export function when it's called by the reflective loader. <br/>
+<br/>
+Now instead of just allocating memory in the remote process for the DLL, we'll also include space for shellcode (64 bytes is sufficient) and the blob of data: <br/>
+DWORD nBufferSize = dwLength // size of the DLL<br/>
+&nbsp; &nbsp; + nUserdataLen<br/>
+&nbsp; &nbsp; + 64; // shellcode buffer<br/>
+<br/>
+// alloc memory (RWX) in the host process for the image...<br/>
+lpRemoteLibraryBuffer = VirtualAllocEx(hProcess, NULL, nBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);<br/>
+if (!lpRemoteLibraryBuffer)<br/>
+&nbsp; &nbsp; break;<br/>
+printf("Allocated memory address in remote process: 0x%p\n", lpRemoteLibraryBuffer);<br/>
+<br/>
+// write the image into the host process...<br/>
+if (!WriteProcessMemory(hProcess, lpRemoteLibraryBuffer, lpBuffer, dwLength, NULL))<br/>
+&nbsp; &nbsp; break;<br/>
+<br/>
+ULONG_PTR uiReflectiveLoaderAddr = (ULONG_PTR)lpRemoteLibraryBuffer + dwReflectiveLoaderOffset;<br/>
+<br/>
+// write our userdata blob into the host process<br/>
+ULONG_PTR userdataAddr = (ULONG_PTR)lpRemoteLibraryBuffer + dwLength;<br/>
+if (!WriteProcessMemory(hProcess, (LPVOID)userdataAddr, lpUserdata, nUserdataLen, NULL))<br/>
+&nbsp; &nbsp; break;<br/>
+<br/>
+ULONG_PTR uiShellcodeAddr = userdataAddr + nUserdataLen;<br/>
+<br/>
+<br/>
+The shellcode wil have two goals<ul><li>Call the reflective loader function with our additional parameters</li>
+<li>call ExitThread() for proper cleanup and so that we can get the exit code of the thread from our calling process</li>
+</ul>
+<br/>
+First we get the memory address of ExiThread, which should be the same for every process (since kernel32.dll is loaded by most (all?) processes). <br/>
+HMODULE kernel32 = LoadLibraryA("kernel32.dll");<br/>
+FARPROC exitthread = GetProcAddress(kernel32, "ExitThread");<br/>
+<br/>
+Next we'll write our bootstrap shellcode to a buffer, which we'll then write to the remote process memory space we allocated. The x86 version of the shellcode is simple, since we just need to push our parameters to the stack in verse order (per __stdcall calling convention) before calling the reflective loader:<br/>
+See child page<br/>
+<br/>
+The x64 shellcode is more complicated, since the calling convention requires using registers for passing parameters. It also needs to take into account "shadow space" when passing parameters to the reflective loader function. This is because while the x64 calling convention passes the first four parameters to a function in registers, the compiled function will often copy those parameters into stack space allocated by the caller located right before the return address (even in non-optimized code). If that "shadow space" on the stack was not allocated by the caller, the function may not work as expected. See more on shadow space debugging <a href="https://blogs.msdn.microsoft.com/ntdebugging/2009/01/09/challenges-of-debugging-optimized-x64-code/">here</a>. <br/>
+<br/>
+Last, we'll write the shellcode to the remote process and create a remote thread that uses the address of the shellcode as the entry point. <br/>
+// finally, write our shellcode into the host process<br/>
+if (!WriteProcessMemory(hProcess, (LPVOID)uiShellcodeAddr, bootstrap, i, NULL))<br/>
+&nbsp; &nbsp; break;<br/>
+<br/>
+// Make sure our changes are written right away<br/>
+FlushInstructionCache(hProcess, lpRemoteLibraryBuffer, nBufferSize);<br/>
+<br/>
+// create a remote thread in the host process to call the ReflectiveLoader!<br/>
+hThread = CreateRemoteThread(hProcess, NULL, 1024 * 1024, (LPTHREAD_START_ROUTINE)uiShellcodeAddr, lpParameter, (DWORD)NULL, &amp;dwThreadId);<br/>
+<br/>
+<br/>
+The reflective loader function itself hasn't changed much from the original version by Fewer, except for the additional parameters we pass to it and then the section that calls our chosen export in the DLL. After loading the DLL, it calls DllMain (which would ideally be empty), and then calls our export. We do this by comparing the passed hash of the export function name with the hashes of the DLL's exports after it loads, and then calling the export with the blob of data as a parameter:<br/>
+PIMAGE_DATA_DIRECTORY directory = &amp;((PIMAGE_NT_HEADERS)uiHeaderValue)-&gt;OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT];<br/>
+<br/>
+PIMAGE_EXPORT_DIRECTORY exports = (PIMAGE_EXPORT_DIRECTORY)(uiBaseAddress + directory-&gt;VirtualAddress);<br/>
+<br/>
+// search function name in list of exported names<br/>
+int idx = -1;<br/>
+DWORD *nameRef = (DWORD *)(uiBaseAddress + exports-&gt;AddressOfNames);<br/>
+WORD *ordinal = (WORD *)(uiBaseAddress + exports-&gt;AddressOfNameOrdinals);<br/>
+for (DWORD i = 0; i &lt; exports-&gt;NumberOfNames; i++, nameRef++, ordinal++) {<br/>
+&nbsp; &nbsp; if (hash((char *)(uiBaseAddress + (*nameRef))) == dwFunctionHash) {<br/>
+&#09; &nbsp; &nbsp;idx = *ordinal;<br/>
+&#09; &nbsp; &nbsp;break;<br/>
+&nbsp; &nbsp; }<br/>
+}<br/>
+<br/>
+// AddressOfFunctions contains the RVAs to the "real" functions<br/>
+// typedef BOOL (*EXPORTFUNC)(LPVOID, DWORD);<br/>
+EXPORTFUNC f = (EXPORTFUNC)(uiBaseAddress + (*(DWORD *)(uiBaseAddress + exports-&gt;AddressOfFunctions + (idx * 4))));<br/>
+f(lpUserData, nUserdataLen);<br/>
+<br/>
+The only downside to this technique is that all the exports you want to call from the reflective loader must have the same prototype. You might be abel to get around this by calling the export using x86 shellcode (pushing a variable number of parameters onto the stack before calling the function), but once you get into x64, you can't rely on that due to the way parameters are passed using registers. <br/>
+<br/>
+https://github.com/dismantl/ImprovedReflectiveDLLInjection<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>
