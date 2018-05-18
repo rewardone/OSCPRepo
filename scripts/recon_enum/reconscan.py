@@ -42,8 +42,9 @@
 ## Expand DirbustEverything
 ##     TODO: check again on utilizing gobuster follow redirects as default instead. Timing? Total URLS? Junk?
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
+## Expand SSHrecon: openssl s_client -connect server:443 -ssl2 to attempt to fingerprint exact openssl version
 ## Expand dirTrav:
-##     Extend web: option for data extraction only when given a vulnerable URL
+##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
 ##      POST SCAN COMPLETION:

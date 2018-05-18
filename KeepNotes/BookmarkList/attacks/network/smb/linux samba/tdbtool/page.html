@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tdbtool</title>
+</head><body>Name<br/>
+tdbtool — manipulate the contents TDB files<br/>
+<br/>
+Synopsis<br/>
+tdbtool<br/>
+<br/>
+tdbtool TDBFILE [ COMMANDS ...]<br/>
+<br/>
+DESCRIPTION<br/>
+This tool is part of the samba(1) suite.<br/>
+<br/>
+tdbtool a tool for displaying and altering the contents of Samba TDB (Trivial DataBase) files. Each of the commands listed below can be entered interactively or provided on the command line.<br/>
+<br/>
+<br/>
+COMMANDS<br/>
+create TDBFILE &nbsp; &nbsp;&#09;Create a new database named TDBFILE. <br/>
+open TDBFILE &nbsp; &nbsp;&#09;Open an existing database named TDBFILE. <br/>
+erase &nbsp; &nbsp;&#09;&#09;&#09;Erase the current database. <br/>
+dump &nbsp; &nbsp;&#09;&#09;&#09;Dump the current database as strings. <br/>
+cdump &nbsp; &nbsp;&#09;&#09;&#09;Dump the current database as connection records. <br/>
+keys &nbsp; &nbsp;&#09;&#09;&#09;Dump the current database keys as strings. <br/>
+hexkeys &nbsp; &nbsp;&#09;&#09;Dump the current database keys as hex values. <br/>
+info &nbsp; &nbsp;&#09;&#09;&#09;Print summary information about the current database. <br/>
+insert KEY DATA &nbsp; &nbsp;&#09;Insert a record into the current database. <br/>
+move KEY TDBFILE &nbsp; &nbsp;Move a record from the current database into TDBFILE. <br/>
+store KEY DATA &nbsp; &nbsp;&#09;Store (replace) a record in the current database. <br/>
+show KEY &nbsp; &nbsp;&#09;&#09;Show a record by key. <br/>
+delete KEY &nbsp; &nbsp;&#09;&#09;Delete a record by key. <br/>
+list &nbsp; &nbsp;&#09;&#09;&#09;Print the current database hash table and free list. <br/>
+free &nbsp; &nbsp;&#09;&#09;&#09;Print the current database and free list. <br/>
+! COMMAND&#09; &nbsp; &#09;Execute the given system command. <br/>
+first &nbsp; &nbsp;&#09;&#09;&#09;Print the first record in the current database. <br/>
+next &nbsp; &nbsp;&#09;&#09;&#09;Print the next record in the current database. <br/>
+quit &nbsp; &nbsp;&#09;&#09;&#09;Exit tdbtool. <br/>
+<br/>
+CAVEATS<br/>
+The contents of the Samba TDB files are private to the implementation and should not be altered with tdbtool. </body></html>

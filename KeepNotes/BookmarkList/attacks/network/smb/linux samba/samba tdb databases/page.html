@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Samba tdb Databases</title>
+</head><body>File name&#09;&#09;Preserve&#09;&#09;&#09;Description<br/>
+account_policy.tdb&#09;Y&#09;&#09;&#09;&#09;NT account policy settings such as pw expiration, etc...<br/>
+brlock.tdb&#09;&#09;N&#09;&#09;&#09;&#09;Byte range locks.<br/>
+browse.dat&#09;&#09;N&#09;&#09;&#09;&#09;Browse lists - gets rebuilt automatically.<br/>
+connections.tdb&#09;N&#09;&#09;&#09;&#09;Share connections. Used to enforce max connections, etc.<br/>
+gencache.tdb&#09;&#09;N&#09;&#09;&#09;&#09;Generic caching database.<br/>
+group_mapping.tdb&#09;Y&#09;&#09;&#09;Stores group mapping information. Not used when using LDAP backend.<br/>
+lang_en.tdb&#09;&#09;Y&#09;&#09;&#09;&#09;Stores language encoding information.<br/>
+locking.tdb&#09;&#09;N&#09;&#09;&#09;&#09;Stores share mode and oplock information.<br/>
+login_cache.tdb&#09;N&#09;&#09;&#09;&#09;Keeps a log of bad pw attempts.<br/>
+messages.tdb&#09;&#09;N&#09;&#09;&#09;&#09;Used to keep track of Samba internal messaging.<br/>
+netsamlogon_cache.tdb&#09;Y&#09;&#09;&#09;Cache of user net_info_3 struct from net_samlogon() requests from domain member machines.<br/>
+ntdrivers.tdb&#09;&#09;Y&#09;&#09;&#09;&#09;Stores installed printer driver information.<br/>
+ntforms.tdb&#09;&#09;Y&#09;&#09;&#09;&#09;Stores installed printer forms information.<br/>
+ntprinters.tdb&#09;&#09;Y&#09;&#09;&#09;&#09;Stores installed printers information.<br/>
+printing directory&#09;Y&#09;&#09;&#09;&#09;Directory containing tdb per print queue of cached lpq output.<br/>
+registry.tdb&#09;&#09;Y&#09;&#09;&#09;&#09;Windows registry skeleton (connect via regedit.exe).<br/>
+sessionid.tdb&#09;&#09;N&#09;&#09;&#09;&#09;Session information to support utmp = yes capabilities.<br/>
+share_info.tdb&#09;Y&#09;&#09;&#09;&#09;Stores share-level ACL configuration settings. Default ACL is Everyone - Full Control.<br/>
+unexpected.tdb&#09;N&#09;&#09;&#09;&#09;Unexpected packet queue needed to support windows clients that respond on a different port that the originating reques.<br/>
+winbindd_cache.tdb&#09;N&#09;&#09;&#09;Winbind's cache of user lists.<br/>
+winbindd_idmap.tdb&#09;Y&#09;&#09;&#09;Winbind's local IDMAP database.<br/>
+wins.dat&#09;&#09;&#09;N&#09;&#09;&#09;&#09;WINS database iused only when wins support = yes has been set. This gets rebuilt or updated at every restart.<br/>
+wins.tdb&#09;&#09;&#09;Y&#09;&#09;&#09;&#09;The working permanent storage for all WINS data. This database is used only when wins support = yes has been set in the smb.conf file. Note: This retains all manually configured WINS entries. Manual setting can be done use the net utility.<br/>
+<b>secrets.tdb</b>&#09;&#09;Y&#09;&#09;&#09;&#09;This tdb file stores internal settings such as the machine and the domain SID, secret passwords that are used with LDAP, the machine secret token, etc. This is an essential file that is stored in a secure area. Vendors locate this in various folders. Check smbd -b to find its location on your system.<br/>
+schannel_store.tdb&#09;Y&#09;&#09;&#09;&#09;This stores secure channel access token information used with SMB signing.<br/>
+<b>passdb.tdb</b>&#09;&#09;Y&#09;&#09;&#09;&#09;This stores the Samba SAM account information when using a tdbsam password backend. </body></html>

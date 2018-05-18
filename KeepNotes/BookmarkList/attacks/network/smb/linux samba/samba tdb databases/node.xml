@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Samba tdb Databases</string>
+  <key>nodeid</key><string>e348beb3-4e53-42de-bb9b-8379016b749f</string>
+  <key>modified_time</key><integer>1526612605</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526612014</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

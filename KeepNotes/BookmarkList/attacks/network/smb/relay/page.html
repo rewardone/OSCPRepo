@@ -3,9 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Relay</title>
-</head><body><br/>
-<br/>
-General Primer<br/>
+</head><body>General Primer<br/>
 <br/>
 With SMB Relay attacks, the attacker selects the target server he wants to authenticate to and then the attacker waits for someone on the network to authenticate to &lt;attacker&gt; machine. This is where rogue host detection, vulnerability scanners, and administrator scripts that automatically authenticate to hosts become a penetration tester's best friends. When the automated process connects to the attacker, &lt;attacker&gt; passes the authentication attempt off to his target (another system on the network, perhaps a server). The target generates a challenge and sends it back to the attacker. The attacker sends the challenge back to the originating scanning system. The scanning system encrypts the hash with the correct password hash and sends it to the attacker. The attacker passes the correctly encrypted response back to his target and successfully authenticates. <br/>
 <br/>
