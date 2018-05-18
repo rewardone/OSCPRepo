@@ -6,4 +6,10 @@
 </head><body><br/>
 <img src="image.png" /><br/>
 <br/>
-So, in essence, to get a TGT you need 1) correct time 2) username 3) key for username 4) name of DC / domain. &nbsp;Ben's 'overpass the hash' method uses Mimikatz to set the hash/user/domain in memory on a Windows box. &nbsp;Then when you request a service using that credential, Windows will automagically ask for the TGT and any subsequent service tickets. &nbsp;Sometimes it is a bit fiddly to get the right Kerberos information to make it work since some places prefer to use the netbios name everywhere, but it's not too hard to figure out if you have enumerated the domain controllers.</body></html>
+So, in essence, to get a TGT you need <br/>
+1) correct time <br/>
+2) username <br/>
+3) key for username <br/>
+4) name of DC / domain. &nbsp;<br/>
+<br/>
+Ben's 'overpass the hash' method uses Mimikatz to set the hash/user/domain in memory on a Windows box. &nbsp;Then when you request a service using that credential, Windows will automagically ask for the TGT and any subsequent service tickets. &nbsp;Sometimes it is a bit fiddly to get the right Kerberos information to make it work since some places prefer to use the netbios name everywhere, but it's not too hard to figure out if you have enumerated the domain controllers.</body></html>

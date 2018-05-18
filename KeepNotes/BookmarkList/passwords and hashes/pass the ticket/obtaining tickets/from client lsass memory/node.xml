@@ -4,7 +4,7 @@
 <dict>
   <key>title</key><string>From Client LSASS Memory</string>
   <key>nodeid</key><string>56c6f94d-ff56-4c43-adc6-6d116132abcd</string>
-  <key>modified_time</key><integer>1522802496</integer>
+  <key>modified_time</key><integer>1526658163</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522802142</integer>

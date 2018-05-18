@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>SAMBA</string>
+  <key>nodeid</key><string>c0a13524-dc34-4f70-87ba-b40fd6e21056</string>
+  <key>modified_time</key><integer>1526650543</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526650473</integer>
+  <key>order</key><integer>16</integer>
+</dict>
+</node>

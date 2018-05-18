@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>16829ecc-3550-4911-8e4a-d2e19694025c</string>
+  <key>title</key><string>From AD: Offline</string>
+  <key>nodeid</key><string>79f5ee86-a251-4d9f-8e80-5ccdc2acea67</string>
+  <key>modified_time</key><integer>1522799463</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522799362</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

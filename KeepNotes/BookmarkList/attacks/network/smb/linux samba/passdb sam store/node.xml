@@ -5,9 +5,10 @@
   <key>title</key><string>Passdb SAM Store</string>
   <key>nodeid</key><string>216f5130-fd18-4cad-af0c-7dc253f94db5</string>
   <key>modified_time</key><integer>1526613854</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1526611978</integer>
-  <key>order</key><integer>2</integer>
+  <key>order</key><integer>3</integer>
 </dict>
 </node>

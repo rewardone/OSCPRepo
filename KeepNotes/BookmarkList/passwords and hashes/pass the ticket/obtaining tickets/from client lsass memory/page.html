@@ -5,10 +5,10 @@
 <title>From Client LSASS Memory</title>
 </head><body>TGT &amp; TGS are in client LSASS memory<br/>
 The "normal" way: by API<br/>
-&nbsp;&#09;Users can only export their ticket(s) (without privilege)<br/>
-&nbsp;&#09;For TGT: AllowTgtSessionKey registry key must be set for session key export...<br/>
+&nbsp;&#09;Users can only export <b>their</b>&nbsp;ticket(s) (without privilege)<br/>
+&nbsp;&#09;For <b>TGT: </b>AllowTgtSessionKey registry key must be set for session key export...<br/>
 &nbsp;&#09;&#09;(Mandatory to use the TGT)<br/>
-&nbsp;&#09;For TGS: no restriction at all<br/>
+&nbsp;&#09;For <b>TGS</b>: no restriction at all<br/>
 To get tickets: LsaCallAuthenticationPackage/KerbRetrieveEncodedTicketMessage<br/>
 &nbsp;&#09;In mimikatz:kerberos::list [/export]<br/>
 To pass-the-ticket: LsaCallAuthenticationPackage/KerbSubmitTicketMessage<br/>
@@ -17,7 +17,7 @@ To pass-the-ticket: LsaCallAuthenticationPackage/KerbSubmitTicketMessage<br/>
 Not a hack: http://msdn.microsoft.com/library/windows/desktop/aa378099.aspx<br/>
 <br/>
 Ok, but I want <i>other</i>&nbsp;people's TGT &amp; TGS!<br/>
-Raw memory reading (yep, even with minidump<br/>
+Raw memory reading (yep, even with minidump)<br/>
 This time will all session keys<br/>
 <br/>
 Mimikatz<br/>

@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>samba-tool</title>
+</head><body>https://wiki.samba.org/index.php/Samba-tool-external<br/>
+https://www.samba.org/samba/docs/current/man-html/samba-tool.8.html<br/>
+<br/>
+OPTIONS<br/>
+-h|--help&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Show this help message and exit<br/>
+--realm=REALM&#09;&#09;&#09;&#09;&#09;&#09;Set the realm name<br/>
+--simple-bind-dn=DN&#09;&#09;&#09;&#09;&#09;&#09;DN to use for a simple bind<br/>
+--password=PASSWORD&#09;&#09;&#09;&#09;&#09;Password<br/>
+-U USERNAME|--username=USERNAME&#09;&#09;Username<br/>
+-W WORKGROUP|--workgroup=WORKGROUP&#09;Workgroup<br/>
+-N|--no-pass&#09;&#09;&#09;&#09;&#09;&#09;&#09;Don't ask for a password<br/>
+-k KERBEROS|--kerberos=KERBEROS&#09;&#09;Use Kerberos<br/>
+--ipaddress=IPADDRESS&#09;&#09;&#09;&#09;&#09;IP address of the server<br/>
+-d|--debuglevel=level&#09;&#09;&#09;&#09;&#09;&#09;Level is an integer from 0 to 10. The default value if this parameter is not specified is 1.<br/>
+The higher this value, the more detail will be logged to the log files about the activities of the server. At level 0, only critical errors and serious warnings will be logged. Level 1 is a reasonable level for day-to-day running - it generates a small amount of information about operations carried out.<br/>
+<br/>
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic.<br/>
+<br/>
+Note that specifying this parameter here will override the log level parameter in the smb.conf file.<br/>
+<br/>
+-V|--version&#09;&#09;&#09;&#09;&#09;&#09;&#09;Prints the program version number.<br/>
+-s|--configfile=&lt;configuration file&gt;&#09;&#09;&#09;The file specified contains the configuration details required by the server. The information in this file includes server-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide. See smb.conf for more information. The default configuration file name is determined at compile time.<br/>
+<br/>
+-l|--log-basename=logdirectory&#09;&#09;&#09;&#09;Base directory name for log/debug files. The extension ".progname" will be appended (e.g. log.smbclient, log.smbd, etc...). The log file is never removed by the client.<br/>
+<br/>
+--option=&lt;name&gt;=&lt;value&gt;&#09;&#09;&#09;&#09;&#09;Set the smb.conf(5) option "&lt;name&gt;" to value "&lt;value&gt;" from the command line. This overrides compiled-in defaults and options read from the configuration file.<br/>
+<br/>
+<b>dbcheck Check the local AD database for errors.</b><br/>
+<br/>
+<b>delegation Manage Delegations.</b><br/>
+delegation add-service accountname principal [options]&#09;&#09;Add a service principal as msDS-AllowedToDelegateTo.<br/>
+delegation del-service accountname principal [options]&#09;&#09;Delete a service principal as msDS-AllowedToDelegateTo.<br/>
+delegation for-any-protocol accountname [(on|off)] [options]&#09;Set/unset UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION (S4U2Proxy) for an account.<br/>
+<br/>
+delegation for-any-service accountname [(on|off)] [options]&#09;Set/unset UF_TRUSTED_FOR_DELEGATION for an account.<br/>
+delegation show accountname [options]&#09;&#09;&#09;&#09;Show the delegation setting of an account.<br/>
+<br/>
+<b>dns&#09;Manage Domain Name Service (DNS).</b><br/>
+dns add server zone name A|AAAA|PTR|CNAME|NS|MX|SRV|TXT data&#09;&#09;&#09;&#09;Add a DNS record.<br/>
+dns delete server zone name A|AAAA|PTR|CNAME|NS|MX|SRV|TXT data&#09;&#09;&#09;Delete a DNS record.<br/>
+dns query server zone name A|AAAA|PTR|CNAME|NS|MX|SRV|TXT|ALL [options] data&#09;Query a name.<br/>
+dns roothints server [name] [options]&#09;&#09;&#09;&#09;Query root hints.<br/>
+dns serverinfo server [options]&#09;&#09;&#09;&#09;&#09;Query server information.<br/>
+dns update server zone name A|AAAA|PTR|CNAME|NS|MX|SRV|TXT olddata newdata&#09;Update a DNS record.<br/>
+dns zonecreate server zone [options]&#09;&#09;&#09;&#09;Create a zone.<br/>
+dns zonedelete server zone [options]&#09;&#09;&#09;&#09;Delete a zone.<br/>
+dns zoneinfo server zone [options]&#09;&#09;&#09;&#09;Query zone information.<br/>
+dns zonelist server [options]&#09;&#09;&#09;&#09;&#09;List zones.<br/>
+<br/>
+<b>domain Manage Domain</b>.<br/>
+domain classicupgrade [options] classic_smb_conf&#09;Upgrade from Samba classic (NT4-like) database to Samba AD DC database.<br/>
+domain dcpromo dnsdomain [DC|RODC] [options]&#09;Promote an existing domain member or NT4 PDC to an AD DC.<br/>
+domain demote&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Demote ourselves from the role of domain controller.<br/>
+domain exportkeytab keytab [options]&#09;&#09;&#09;&#09;Dumps Kerberos keys of the domain into a keytab.<br/>
+domain info ip_address [options]&#09;&#09;&#09;&#09;&#09;Print basic info about a domain and the specified DC.<br/>
+domain join dnsdomain [DC|RODC|MEMBER|SUBDOMAIN] [options]&#09;Join a domain as either member or backup domain controller.<br/>
+domain level show|raise options [options]&#09;&#09;&#09;Show/raise domain and forest function levels.<br/>
+domain passwordsettings show|set options [options]&#09;Show/set password settings.<br/>
+domain provision&#09;&#09;&#09;&#09;&#09;&#09;&#09;Promote an existing domain member or NT4 PDC to an AD DC.<br/>
+domain trust&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Domain and forest trust management.<br/>
+domain trust create DOMAIN options [options]&#09;&#09;Create a domain or forest trust.<br/>
+domain trust delete DOMAIN options [options]&#09;&#09;Delete a domain trust.<br/>
+domain trust list options [options]&#09;&#09;&#09;&#09;List domain trusts.<br/>
+domain trust namespaces [DOMAIN] options [options]&#09;Manage forest trust namespaces.<br/>
+domain trust show DOMAIN options [options]&#09;&#09;Show trusted domain details.<br/>
+domain trust validate DOMAIN options [options]&#09;&#09;Validate a domain trust.<br/>
+<br/>
+<br/>
+<b>drs Manage Directory Replication Services (DRS).</b><br/>
+drs bind&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Show DRS capabilities of a server.<br/>
+drs kcc&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Trigger knowledge consistency center run.<br/>
+drs options&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Query or change options for NTDS Settings object of a domain controller.<br/>
+drs replicate destination_DC source_DC NC [options]&#09;Replicate a naming context between two DCs.<br/>
+drs showrepl&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Show replication status.<br/>
+<br/>
+<b>dsacl Administer DS ACLs</b><br/>
+dsacl set&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Modify access list on a directory object.<br/>
+<br/>
+<b>fsmo Manage Flexible Single Master Operations (FSMO).</b><br/>
+fsmo seize [options]&#09;&#09;&#09;&#09;&#09;&#09;&#09;Seize the role.<br/>
+fsmo show&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Show the roles.<br/>
+fsmo transfer [options]&#09;&#09;&#09;&#09;&#09;&#09;Transfer the role.<br/>
+<br/>
+<b>gpo Manage Group Policy Objects (GPO).</b><br/>
+gpo create displayname [options]&#09;&#09;&#09;&#09;Create an empty GPO.<br/>
+gpo del gpo [options]&#09;&#09;&#09;&#09;&#09;&#09;&#09;Delete GPO.<br/>
+gpo dellink container_dn gpo [options]&#09;&#09;&#09;&#09;Delete GPO link from a container.<br/>
+gpo fetch gpo [options]&#09;&#09;&#09;&#09;&#09;&#09;Download a GPO.<br/>
+gpo getinheritance container_dn [options]&#09;&#09;&#09;Get inheritance flag for a container.<br/>
+gpo getlink container_dn [options]&#09;&#09;&#09;&#09;List GPO Links for a container.<br/>
+gpo list username [options]&#09;&#09;&#09;&#09;&#09;List GPOs for an account.<br/>
+gpo listall&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;List all GPOs.<br/>
+gpo listcontainers gpo [options]&#09;&#09;&#09;&#09;&#09;List all linked containers for a GPO.<br/>
+gpo setinheritance container_dn block|inherit [options]&#09;Set inheritance flag on a container.<br/>
+gpo setlink container_dn gpo [options]&#09;&#09;&#09;&#09;Add or Update a GPO link to a container.<br/>
+gpo show gpo [options]&#09;&#09;&#09;&#09;&#09;&#09;Show information for a GPO.<br/>
+group&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Manage groups.<br/>
+group add groupname [options]&#09;&#09;&#09;&#09;&#09;Create a new AD group.<br/>
+group addmembers groupname members [options]&#09;Add members to an AD group.<br/>
+group delete groupname [options]&#09;&#09;&#09;&#09;Delete an AD group.<br/>
+group list&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;List all groups.<br/>
+group listmembers groupname [options]&#09;&#09;&#09;List all members of the specified AD group.<br/>
+group removemembers groupname members [options]&#09;Remove members from the specified AD group.<br/>
+<br/>
+<b>ldapcmp URL1 URL2 domain|configuration|schema|dnsdomain|dnsforest [options]</b>&nbsp;&#09;Compare two LDAP databases.<br/>
+<br/>
+<b>ntacl Manage NT ACLs.</b><br/>
+ntacl get file [options]&#09;&#09;&#09;&#09;&#09;&#09;&#09;Get ACLs on a file.<br/>
+ntacl set acl file [options]&#09;&#09;&#09;&#09;&#09;&#09;Get ACLs on a file.<br/>
+ntacl sysvolcheck&#09;&#09;&#09;&#09;&#09;&#09;&#09;Check sysvol ACLs match defaults (including correct ACLs on GPOs).<br/>
+ntacl sysvolreset&#09;&#09;&#09;&#09;&#09;&#09;&#09;Reset sysvol ACLs to defaults (including correct ACLs on GPOs).<br/>
+<br/>
+<b>rodc Manage Read-Only Domain Controller (RODC).</b><br/>
+rodc preload SID|DN|accountname [options]&#09;&#09;&#09;Preload one account for an RODC.<br/>
+sites&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Manage sites.<br/>
+sites create site [options]&#09;&#09;&#09;&#09;&#09;&#09;Create a new site.<br/>
+sites remove site [options]&#09;&#09;&#09;&#09;&#09;&#09;Delete an existing site.<br/>
+<br/>
+<b>spn Manage Service Principal Names (SPN).</b><br/>
+spn add name user [options]&#09;&#09;&#09;&#09;&#09;Create a new SPN.<br/>
+spn delete name [user] [options]&#09;&#09;&#09;&#09;&#09;Delete an existing SPN.<br/>
+spn list user [options]&#09;&#09;&#09;&#09;&#09;&#09;List SPNs of a given user.<br/>
+<br/>
+<b>testparm&#09;Check the syntax of the configuration file.</b><br/>
+<br/>
+<b>time&#09;Retrieve the time on a server.</b><br/>
+<br/>
+<b>user Manage users.</b><br/>
+user add username [password]&#09;&#09;&#09;&#09;&#09;Create a new user. Please note that this subcommand is deprecated and available for compatibility reasons only. Please use samba-tool user create instead.<br/>
+<br/>
+user create username [password]&#09;&#09;&#09;&#09;Create a new user in the Active Directory Domain.<br/>
+user delete username [options]&#09;&#09;&#09;&#09;&#09;Delete an existing user account.<br/>
+user disable username&#09;&#09;&#09;&#09;&#09;&#09;Disable an user account.<br/>
+user enable username&#09;&#09;&#09;&#09;&#09;&#09;Enable an user account.<br/>
+user list&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;List all users.<br/>
+user password [options]&#09;&#09;&#09;&#09;&#09;&#09;Change password for an user account (the one provided in authentication).<br/>
+user setexpiry username [options]&#09;&#09;&#09;&#09;Set the expiration of an user account.<br/>
+user setpassword username [options]&#09;&#09;&#09;&#09;Sets or resets the password of an user account.<br/>
+user getpassword username [options]&#09;&#09;&#09;&#09;Gets the password of an user account.<br/>
+user syncpasswords --cache-ldb-initialize [options]&#09;Syncs the passwords of all user accounts, using an optional script.<br/>
+<br/>
+Note that this command should run on a single domain controller only (typically the PDC-emulator).</body></html>

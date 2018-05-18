@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>149fde61-6a8e-46e0-9a13-a35c5290a35b</string>
+  <key>title</key><string>With Mimikatz</string>
+  <key>nodeid</key><string>41f803d8-9707-4d87-ab78-819202959ab8</string>
+  <key>modified_time</key><integer>1526657053</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1522802000</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

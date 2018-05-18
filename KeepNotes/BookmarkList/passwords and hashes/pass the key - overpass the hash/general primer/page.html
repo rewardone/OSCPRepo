@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Kerberos<br/>
+It's all about keys and tickets<br/>
+<br/>
+Example:<br/>
+Adminsitrateur wants to access <b>cifs</b>&nbsp;on a Win81 machine on chocolate.local domain<br/>
+Needs 3 keys, all are in Active Directory<br/>
+&nbsp;&#09;And all are derived from password<br/>
+<br/>
+Kerberos::Keys<ul><li>The <b>DC</b>&nbsp;long-term secret key (domain key)</li>
+<li style="list-style-type: none"><ul><li>Under the <i>mysterious</i>&nbsp;<b>krbtgt</b>&nbsp;account (rc4, aes128, aes256, des . . . )</li>
+<li>Needed to sign Microsoft specific data in "PAC", encrypt TGT</li>
+</ul>
+</li>
+<li>The <b>Client</b>&nbsp;long-term secret key (<i>derived from password</i>)</li>
+<li style="list-style-type: none"><ul><li>Under the user/computer/server account</li>
+<li>Needed to check <b>AS-REQ</b>, encrypt session key</li>
+</ul>
+</li>
+<li>The <b>Target/Service</b>&nbsp;long-term secret key (<i>derived from password</i>)</li>
+<li style="list-style-type: none"><ul><li>Under the computer/server account</li>
+<li>Needed to countersign data in "PAC" of TGS, encrypt TGS</li>
+</ul>
+</li>
+</ul>
+&nbsp;<br/>
+<img src="image.png" /><br/>
+<img src="image 2.png" /></body></html>

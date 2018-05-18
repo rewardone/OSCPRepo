@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>do_join</title>
+</head><body>&nbsp; &nbsp; def do_join(ctx):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # nc_list is the list of naming context (NC) for which we will<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # replicate in and send a updateRef command to the partner DC<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # full_nc_list is the list of naming context (NC) we hold<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # read/write copies of. &nbsp;These are not subsets of each other.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ctx.nc_list = [ ctx.config_dn, ctx.schema_dn ]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ctx.full_nc_list = [ ctx.base_dn, ctx.config_dn, ctx.schema_dn ]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if ctx.subdomain and ctx.dns_backend != "NONE":<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.full_nc_list += [ctx.domaindns_zone]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; elif not ctx.subdomain:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.nc_list += [ctx.base_dn]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if ctx.dns_backend != "NONE":<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.nc_list += [ctx.domaindns_zone]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.nc_list += [ctx.forestdns_zone]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.full_nc_list += [ctx.domaindns_zone]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.full_nc_list += [ctx.forestdns_zone]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if not ctx.clone_only:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if ctx.promote_existing:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.promote_possible()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.cleanup_old_join()<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; try:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if not ctx.clone_only:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.join_add_objects()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.join_provision()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.join_replicate()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (not ctx.clone_only and ctx.subdomain):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.join_add_objects2()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.join_provision_own_domain()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.join_setup_trusts()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.join_finalise()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; except:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print "Join failed - cleaning up"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; except IOError:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pass<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if not ctx.clone_only:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.cleanup_old_join()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; raise</body></html>
