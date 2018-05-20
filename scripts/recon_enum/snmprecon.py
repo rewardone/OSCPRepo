@@ -28,7 +28,7 @@ def onesixtyone():
                 communities_found.append(result.split("[")[1].split("]")[0])
     if len(communities_found) != 0:
         return communities_found
-    else: 
+    else:
         return False
 
 #NSE Documentation
@@ -45,9 +45,8 @@ def onesixtyone():
 #snmp-win32-users: attempt to enumerate winodws users accounts through SNMP
 
 #Not running
-#snmp-interfaces: attempts to enum nework interfaces through SNMP. snmp-interfaces.host arg is required  
+#snmp-interfaces: attempts to enum nework interfaces through SNMP. snmp-interfaces.host arg is required
 #snmp-brute: Attempt to find community string by brute force guessing. default wordlist: nselib/data/snmpcommunities.lst. provide own with snmp-brute.communitiesdb arg
-
 def nmap_communities(communities):
     for community in communities:
         print "INFO: Performing nmap SNMP script scan for %s:161 and community %s" % (ip_address, community)
@@ -67,7 +66,6 @@ def nmap():
     f.write(results)
     f.close
 
-    
 # script_version     = 'v1.8'; written in perl
 # Usage ./$name -t <IP address>\n
 #-t : target host;
@@ -89,7 +87,7 @@ def nmap():
 # -w --write       : detect write access (separate action by enumeration);\n
 # -d --disable_tcp : disable TCP connections enumeration!
 # -t --timeout     : timeout in seconds. Default is 5;
-# -r --retries     : request retries. Default is 1; 
+# -r --retries     : request retries. Default is 1;
 # -i --info        : show script version;
 # -h --help        : show help menu;\n\n"
 def snmp_check(communities):
@@ -112,6 +110,6 @@ communities = onesixtyone()
 if communities:
     nmap_communities(communities)
     snmp_check(communities)
-else: 
+else:
     nmap()
 print "INFO: SNMPrecon complete. If communities were found and you want more information than snmp-check, please query snmpwalk manually"

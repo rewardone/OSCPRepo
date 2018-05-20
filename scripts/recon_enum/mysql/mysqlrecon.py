@@ -18,12 +18,11 @@ port = sys.argv[2].strip()
 #mysql-enum: performs user enum using a bug. 5.x are susceptible when using old auth mechanism. seclists.org/fulldisclosure/2012/Dec/9
 #mysql-info: connects and prints proto, version, thread, status, capabilities, password salt, etc
 #mysql-variables: attempt to show variables on a server. requires auth. will use empty password if non provided.
-#mysql-vuln-cve2012-2122: auth bypass in versions up to 5.1.61, 5.2.11, 5.3.5, 5.5.22. 
+#mysql-vuln-cve2012-2122: auth bypass in versions up to 5.1.61, 5.2.11, 5.3.5, 5.5.22.
 
 #Not Running
 #mysql-audit: audit security config against parts of CIS MySQL 1.0.2 benchmark --script-args mysql-audit.username,password,filename
 #mysql-query: runs a query and returns the table args 'query''username''password'
-
 print "INFO: Performing nmap MySQL script scan for %s:%s" % (ip_address, port)
 MySQLSCAN = "nmap -n -sV -Pn -vv -p %s --script mysql-empty-password,mysql-vuln-cve2012-2122,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners -oN '/root/scripts/recon_enum/results/exam/mysql/%s_mysql.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(MySQLSCAN, shell=True)
@@ -41,6 +40,6 @@ try:
     resultarr = results.split("\n")
     for result in resultarr:
         if "login:" in result:
-	    print "[*] Valid mysql credentials found: " + result 
+	    print "[*] Valid mysql credentials found: %s" % (result)
 except:
     print "INFO: No valid mysql credentials found"

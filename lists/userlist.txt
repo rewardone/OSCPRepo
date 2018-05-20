@@ -1,5 +1,3 @@
 root
 administrator
 admin
-guest
-test

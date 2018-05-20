@@ -36,15 +36,14 @@
 ## [TODO]
 ##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
-## Expand SMBRecon: Ensure smbclient -L \\SERVER    for version fingerprinting
-##     Extend: rpcclient -v "" <SERVER>, smbclient -L \\<SERVER> for null sessions
 ## Expand DNSRecon
 ## Expand DirbustEverything
 ##     TODO: check again on utilizing gobuster follow redirects as default instead. Timing? Total URLS? Junk?
+##     TODO: list without extensions, then a final list (after cewl) with most common extensions, option for every extension
+##     TODO: normal no ext, normal with most common ext, cewl, cewl with ext. Tell user more specific ext lists to use
+##     TODO: Dirb is still reaaly fast. As fast as or faster than gobuster. Need to tweak settings though.
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
-## Expand SSHrecon: openssl s_client -connect server:443 -ssl2 to attempt to fingerprint exact openssl version
-## Expand dirTrav:
-##     Need to debug all cases (page?= vulns and windows)
+## Expand dirTrav: Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
 ##      POST SCAN COMPLETION:
@@ -53,11 +52,11 @@
 ##                (if Windows AND SMB: github/enternal_check) #not mandatory because of additional dependencies
 ##                                                            #unless they are already in Kali...
 ## Expand ReconScan:
+##      Other tools to consider: dirsearch (up to 50% slower than gobuster), DirBuster, vhostscan etc
 ##      Other tools to consider: WHOIS, TheHarvester, Metagoofil, DNSRecon, Sublist3r
 ##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti
 ##      Other tools to consider: WPscan, WPscanner, WPSeku, Droopescan, SSLScan, SSLyze A2SV
 ##      Separate CMSscannerrecon
-## Banner grabs: easy to do, just update nmap scripts with --script banner
 ## web page screenshots
 ## Option flag to run FullMAP or not
 ## Full Connect on Unicornscan or not...testing required
@@ -472,7 +471,7 @@ def printBanner():
    print "####        finger, http, mssql, mysql, nfs, nmap,        ####"
    print "####        rdp, smb, smtp, snmp, ssh, telnet, tftp       ####"
    print "##############################################################"
-   print "############# Don't forget to start your TCPDUMP #############"
+   print "######## Don't forget to start your TCPDUMP/NET-CREDS ########"
    print "############ Don't forget to start your RESPONDER ############"
    print "##############################################################"
    print "##### This tool relies on many others. Please ensure you #####"

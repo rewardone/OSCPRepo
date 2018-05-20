@@ -11,15 +11,15 @@ port = sys.argv[2].strip()
 
 #NSE Documentation
 #Running
-#smb-enum-domains: attempt to enum domains on a system with policies. generally requires creds. 
+#smb-enum-domains: attempt to enum domains on a system with policies. generally requires creds.
 #smb-enum-groups: obtain a list of grous from remote system as well as a list of groups users. Works similar to 'enum.exe /g'
 #smb-enum-processes: pull list of processes from remote server over SMB. Done by query remote registry service. disabled by default on Vista. Requires Admin on others.
 #smb-enum-sessions: enumerate users logged in locally or through share. reading remote registry (Vista disabled by default). Requires higher than 'anonymous'
 #smb-enum-shares: attempt to list shares using srvsvc.NetShareEnumAll MSRPC and NetShareGetInfo. NetShareGetInfo requires Admin
 #mb-enum-users: attempt to enum users on remote system through MSRPC over 445 or 139. SAMR enum and LSA brute.
 #smb-os-discovery: attempt to determine OS, computer name, domain, workgroup, and current time over SMB. anonymous.
-#smb-protocols: attempts to initiate a connection using each version of SMB. if SMBv1 is found, it will mark it as insecure. 
-#smb-system-info: pulls info from registry. Requires Admin, though auth user should get some info. 
+#smb-protocols: attempts to initiate a connection using each version of SMB. if SMBv1 is found, it will mark it as insecure.
+#smb-system-info: pulls info from registry. Requires Admin, though auth user should get some info.
 #smb-vuln-cve-2017-7494: check if vuln to Arbitrary Shared Library Load vuln CVE-2017-7494. Unpatched Samba from 3.5.0-4.4.13 and prior to 4.5.10 and 4.6.4 are affected by RCE.
 #smb-vuln-ms17-010: check if vuln to MS17-010 aka EternalBlue. Connects to $IPC tree, executes transaction and checks if error. SMBv1 vuln.
 #smb-double-pulsar-backdoor: check if target is running Double Pulsar SMB backdoor
@@ -32,7 +32,7 @@ port = sys.argv[2].strip()
 #Not running
 #smb-enum-services: retries list of services running. Requires Admin. No longer default available.
 #smb-brute: Attempt to guess login over SMB
-#smb-flood: exhausts a remote SMB server's connection limit by opening as many as possible. 
+#smb-flood: exhausts a remote SMB server's connection limit by opening as many as possible.
 #smb-mbenum: queries information managed by the Windows Master Browser
 #smb-print-text: attempt to print test on a shared printer by calling Printer Spooler Service RPC functions
 #smb-psexec: arguably most powerful module. requires configuration. config places in /nselib/data/psexec. Read documentation. https://github.com/nmap/nmap/blob/master/scripts/smb-psexec.nse
@@ -43,7 +43,7 @@ port = sys.argv[2].strip()
 #smb-vuln-ms07-029: check if vuln to MS07-029 DNS RPC vulnerability. Will crash the service if vulnerable
 #smb-vuln-ms08-067: check if vuln to MS08-067. Dangerous and may crash systems
 #smb-vuln-ms10-054: check if vuln to MS10-054. Dangerous and will BSOD system
-#smb-vuln-regsvc-dos: check if vuln to null pointer dereference in regsvc. Will crash service if vuln. 
+#smb-vuln-regsvc-dos: check if vuln to null pointer dereference in regsvc. Will crash service if vuln.
 #smb2-capabilities: attempt to list supported cabilities in a SMBv2 server for each enabled dialect.
 #smb2-time: attempt to obtain the current system date and start date of a SMB2 server
 
@@ -59,7 +59,20 @@ print "INFO: Performing samrdump scan for %s:%s" % (ip_address, port)
 NBTSCAN = "samrdump.py %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_samrdump" % (ip_address, ip_address, port)
 nbtresults = subprocess.check_output(NBTSCAN, shell=True)
 
-#-va : run verbosely and try all commands
+#-va:   run verbosely and try all commands
+#-U:    get userlist
+#-M:    get machine list
+#-S:    get sharelist
+#-P:    get password policy information
+#-G:    get group and member list
+#-d:    be detailed, applies to -U and -S
+#-a:    -USGProni
+#-r:    RID cycle
+#-l:    get limited info via LDAP 389 (DCs only)
+#-o:    get OS information
+#-i:    get printer information
+#-n:    do an nmblookup
+#-v:    Be verbose
 print "INFO: Performing enum4linux scan for %s:%s" % (ip_address, port)
 ENUM4LINUXSCAN = "enum4linux -va %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address, ip_address, port)
 enum4linuxresults = subprocess.check_output(ENUM4LINUXSCAN, shell=True)

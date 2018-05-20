@@ -45,7 +45,7 @@ if (name == ""):
     print "NAME ERROR"
     name = "TEMP_NO_NAME_PASSED"
 user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
-default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
+default_wordlist = "/root/lists/Web/secProb_no_ext.txt"
 if ("http" in url):
     ip_address = url.strip("http://")
 elif ("https" in url):
@@ -156,6 +156,7 @@ def dirb(wordlist, scanname):
     #-X <ext>:      Amplify search with this extensions
     #-z <milisec>:  Amplify search with this extensions
     #Dirb actually cannot handle too many wordlists passed at a time....have to loop each individually
+    #Dirb can't handle very large lists, 2mb seems fine, so defaulting to new secProb_no_ext.txt list
     if (wordlist == ""):
         cwd = os.getcwd() #get it so we can pop back to it later because reasons
         os.chdir(LISTS)
@@ -242,7 +243,7 @@ def comuni(tool,combined_name):
 
 if (tool == "dirb"):
     print "INFO: Starting dirb scan for %s:%s" % (url, port)
-    dirb("", DIRB_DEFAULT)
+    dirb(default_wordlist, DIRB_DEFAULT)
     print "INFO: Finished initial dirb scan for %s:%s" % (url, port)
     genlistLoop(DIRB_DEFAULT)
     dirb(CEWL_OUT, DIRB_CEWL_OUTPUT)

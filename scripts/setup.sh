@@ -62,17 +62,19 @@ echo "\nSetup Empire\n"
 cd /root/Documents/Empire/setup && chmod +x setup_database.py && ./install.sh
 
 echo "\nDownloading additional lists: secLists fuzzdb naughtystrings payloadallthethings probable-wordlists\n"
+webDirec=/root/lists/Web
 direc=/root/lists/secLists
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/danielmiessler/SecLists.git $direc; fi
+ln -s $direc/Discovery/Web-Content $webDirec
 direc=/root/lists/fuzzdb
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/fuzzdb-project/fuzzdb.git $direc; fi
 direc=/root/lists/naughty
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/minimaxir/big-list-of-naughty-strings.git $direc; fi
 direc=/root/lists/payloadsAllTheThings
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git $direc; fi
-direc=/root/lists/probableWordlists
+direc=/root/lists/Password/probableWordlists
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/berzerk0/Probable-Wordlists.git $direc; fi
-direc=/root/lists/passphrases
+direc=/root/lists/Password/passphrases
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/initstring/passphrase-wordlist.git $direc; fi
 
 echo "\nMake sure Metasploit is ready to go \n"

@@ -13,8 +13,8 @@ port = sys.argv[2].strip()
 #NSE Documentation
 #Running
 #msrpc-enum: Queries an MSRPC endoing mapper for a list of mapped services and displays the gathered information.
-#   SMB library, so you can specify an optional username and password. 
-print "INFO: Performing nmap MSRPC script scan for " + ip_address + ":" + port
+#   SMB library, so you can specify an optional username and password.
+print "INFO: Performing nmap MSRPC script scan for %s:%s" % (ip_address, port)
 MSRPCSCAN = "nmap -n -sV -Pn -vv -p %s --script=msrpc-enum,vulners -oN '/root/scripts/recon_enum/results/exam/msrpc/%s_msrpc.nmap' %s" % (port, ip_address, ip_address)
 results = subprocess.check_output(MSRPCSCAN, shell=True)
 
