@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Remotely Using Samba-Tools Join</title>
+</head><body>Initial setup (may or may not be required)<br/>
+Start with fresh samba files:<br/>
+rm -rf /var/lib/samba; mkdir /var/lib/samba; rm -f /etc/samba/smb.conf<br/>
+<br/>
+Make sure you can resolv to the DC<br/>
+echo nameserver 192.168.92.37 &gt; /etc/resolv.conf # this is the IP address of the DC<br/>
+<br/>
+We have a command called "samba-tool drs clone-dc-database", which is similar to "samba-tool domain join DC". The difference is that it only tests the replication without creating an account for a new dc (and it requires the --targetdir option, which should point to a temporary location). This is developed for debugging purposes, but not for setting up another DC. You can read more about clone-dc-database and exportkeytab <a href="https://wiki.samba.org/index.php/Keytab_Extraction">here</a>. &nbsp;<br/>
+There is also: <br/>
+samba-tool drs clone-dc-database --include-secrets<br/>
+<br/>
+You only need to be aware that the "SYSVOL" folder is not automatically replicated between windows and samba. And the GPO-GUI should only be used against the remaining windows server with manual syncing of the SYSVOL. You may also need to use "samba-tool ntacl sysvolreset" after the sync.<br/>
+<br/>
+Now, the actual way to replicate is to join your new DC to the domain and then start replication. This can be done with:<br/>
+samba-tool domain join &lt;domain&gt; DC -U domain\\username<br/>
+<br/>
+<b>There is a catch!</b>&nbsp;Typically a DC replicates both ways, but as an attacker you may not want that to happen. There used to be a patch from securusglobal (see child page), but it no longer exists. If the text on their page shows the full patch, it should be simple to implement the patch in any installation of samba 4 by editing join.py. <br/>
+<br/>
+<b>The old way with patching</b><br/>
+The patch essentially adds a GUID, calls .join_provision(), join_replicate(), and then returns (essentially stopping after a replicate). <br/>
+The section that needs to be patched can be found in the source on <br/>
+Github: samba/python/join.py<br/>
+And (as of writing this) the do_join() function starts on line 1122. <br/>
+<br/>
+What is interesting is (in the latest version) that a parameter ctx.clone_only essentially accomplishes what we want. By setting clone_only to true, join.py will call join_provision(), join_replicate(), and join_finalise(). <br/>
+<br/>
+clone_only is initially set to False in join.py __init__ on lines 51-56:<br/>
+&nbsp; &nbsp; def __init__(ctx, logger=None, server=None, creds=None, lp=None, site=None,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;netbios_name=None, targetdir=None, domain=None,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;machinepass=None, use_ntvfs=False, dns_backend=None,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;promote_existing=False, clone_only=False):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ctx.clone_only=clone_only<br/>
+<br/>
+join_finalise has the same switches for clone_only. It will log some info, set a message element to "isSynchronized", will set the GUID for us to the remote_dc_ntds_guid, set message element to "dsServiceName", and then return. <br/>
+<br/>
+These actions therefore cover everything from the original securus patch as long as you modify join.py and set clone_only=True.*<br/>
+*Note I haven't actually tested this at all. <br/>
+<br/>
+<b>The new way with join_clone</b><br/>
+Patching join.py can be done or (upon futher investigation) there is a method that can be called: join_clone<br/>
+It automatically sets inits with clone_only=True, sets replica flags, and then calls do_join(). Simple as that. <br/>
+This looks like it's called from class cmd_drs_clone_dc_database(Command) in drs, which will call join_clone. <br/>
+It needs testing since the information at the top mentions it's only for debug, but if a simple:<br/>
+<br/>
+samba-tool drs clone-dc-database &lt;domain&gt; --target-dir=/tmp<br/>
+<br/>
+is all that is needed, then all the better.<br/>
+</body></html>

@@ -15,9 +15,9 @@ v="version 0.81"
 
 #help function
 #31m is red, 33m is yellow, 32m is green
-usage () 
-{ 
-echo -e "\n\e[00;31m#########################################################\e[00m" 
+usage ()
+{
+echo -e "\n\e[00;31m#########################################################\e[00m"
 echo -e "\e[00;31m#\e[00m" "\e[00;33mLocal Linux Enumeration & Privilege Escalation Script\e[00m" "\e[00;31m#\e[00m"
 echo -e "\e[00;31m#########################################################\e[00m"
 echo -e "\e[00;33m# www.rebootuser.com | @rebootuser \e[00m"
@@ -31,44 +31,44 @@ echo -e "\e[00;33m# Recommended: ./LinEnum.sh -k 'pass\|password' -r ReportName.
 		echo "-e	Enter export location"
     echo "-s  Write software versions (only) to separate file: verinfo.txt"
 		echo "-t	Include thorough (lengthy) tests"
-		echo "-r	Enter report name" 
+		echo "-r	Enter report name"
 		echo "-h	Displays this help text"
 		echo -e "\n"
 		echo "Running with no options = limited scans/no output file"
-		
-echo -e "\e[00;31m#########################################################\e[00m"		
+
+echo -e "\e[00;31m#########################################################\e[00m"
 }
 
 header()
 {
-echo -e "\n\e[00;31m#########################################################\e[00m" 
-echo -e "\e[00;31m#\e[00m" "\e[00;33mLocal Linux Enumeration & Privilege Escalation Script\e[00m" "\e[00;31m#\e[00m" 
-echo -e "\e[00;31m#########################################################\e[00m" 
-echo -e "\e[00;33m# www.rebootuser.com\e[00m" 
+echo -e "\n\e[00;31m#########################################################\e[00m"
+echo -e "\e[00;31m#\e[00m" "\e[00;33mLocal Linux Enumeration & Privilege Escalation Script\e[00m" "\e[00;31m#\e[00m"
+echo -e "\e[00;31m#########################################################\e[00m"
+echo -e "\e[00;33m# www.rebootuser.com\e[00m"
 echo -e "\e[00;33m# www.github.com/rewardone\e[00m"
-echo -e "\e[00;33m# $version\e[00m\n" 
+echo -e "\e[00;33m# $version\e[00m\n"
 }
 
 ##DEBUG INFO and ARGS
 debug_info()
 {
-echo "Debug Info" 
+echo "Debug Info"
 
-if [ "$keyword" ]; then 
-	echo "keyword = $keyword" 
-else 
+if [ "$keyword" ]; then
+	echo "keyword = $keyword"
+else
 	:
 fi
 
-if [ "$report" ]; then 
-	echo "report name = $report" 
-else 
+if [ "$report" ]; then
+	echo "report name = $report"
+else
 	:
 fi
 
-if [ "$export" ]; then 
-	echo "export location = $export" 
-else 
+if [ "$export" ]; then
+	echo "export location = $export"
+else
 	:
 fi
 
@@ -78,10 +78,10 @@ else
   echo "Software versions will not be written to separate file"
 fi
 
-if [ "$thorough" ]; then 
-	echo "thorough tests = enabled" 
-else 
-	echo "thorough tests = disabled" 
+if [ "$thorough" ]; then
+	echo "thorough tests = enabled"
+else
+	echo "thorough tests = disabled"
 fi
 
 sleep 2
@@ -90,15 +90,15 @@ if [ "$export" ]; then
   mkdir $export 2>/dev/null
   format=$export/LinEnum-export-`date +"%d-%m-%y"`
   mkdir $format 2>/dev/null
-else 
+else
   :
 fi
 
-who=`whoami` 2>/dev/null 
-echo -e "\n" 
+who=`whoami` 2>/dev/null
+echo -e "\n"
 
-echo -e "\e[00;33mScan started at:"; date 
-echo -e "\e[00m\n" 
+echo -e "\e[00;33mScan started at:"; date
+echo -e "\e[00m\n"
 }
 
 #SYSTEM INFO
@@ -106,46 +106,46 @@ echo -e "\e[00m\n"
 #reference: rpm -q kernel, dmesg | grep Linux, ls /boot | grep vmlinuz-
 system_info()
 {
-echo -e "\e[00;33m### SYSTEM ##############################################\e[00m" 
+echo -e "\e[00;33m### SYSTEM ##############################################\e[00m"
 
 #basic kernel info
 unameinfo=`uname -arms 2>/dev/null`
 if [ "$unameinfo" ]; then
-  echo -e "\e[00;31mKernel information:\e[00m\n$unameinfo" 
-  echo -e "\n" 
+  echo -e "\e[00;31mKernel information:\e[00m\n$unameinfo"
+  echo -e "\n"
   if [ "$verinfo" = "1" ]; then
     echo -e $unameinfo >> verinfo.txt 2>/dev/null
   else
     :
   fi
-else 
+else
   :
 fi
 
 procver=`cat /proc/version 2>/dev/null`
 if [ "$procver" ]; then
-  echo -e "\e[00;31mKernel information (continued):\e[00m\n$procver" 
-  echo -e "\n" 
+  echo -e "\e[00;31mKernel information (continued):\e[00m\n$procver"
+  echo -e "\n"
   if [ "$verinfo" = "1" ]; then
     echo -e $procver >> verinfo.txt 2>/dev/null
   else
     :
   fi
-else 
+else
   :
 fi
 
 #search all *-release files for version info
 release=`cat /etc/*-release 2>/dev/null`
 if [ "$release" ]; then
-  echo -e "\e[00;31mSpecific release information:\e[00m\n$release" 
-  echo -e "\n" 
+  echo -e "\e[00;31mSpecific release information:\e[00m\n$release"
+  echo -e "\n"
   if [ "$verinfo" = "1" ]; then
     echo -e $release >> verinfo.txt 2>/dev/null
   else
     :
   fi
-else 
+else
   :
 fi
 
@@ -166,9 +166,9 @@ fi
 #target hostname info
 hostnamed=`hostname 2>/dev/null`
 if [ "$hostnamed" ]; then
-  echo -e "\e[00;31mHostname:\e[00m\n$hostnamed" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mHostname:\e[00m\n$hostnamed"
+  echo -e "\n"
+else
   :
 fi
 }
@@ -177,14 +177,14 @@ fi
 #whoami, id, last wx, lastlog, w, env, groups
 user_info()
 {
-echo -e "\e[00;33m### USER/GROUP ##########################################\e[00m" 
+echo -e "\e[00;33m### USER/GROUP ##########################################\e[00m"
 
 #current user details
 currusr=`id 2>/dev/null`
 if [ "$currusr" ]; then
-  echo -e "\e[00;31mCurrent user/group info:\e[00m\n$currusr" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mCurrent user/group info:\e[00m\n$currusr"
+  echo -e "\n"
+else
   :
 fi
 
@@ -209,46 +209,46 @@ fi
 if [ "$export" ] && [ "$lastcmd" ]; then
   mkdir $format/var-export/ 2>/dev/null
   cp /var/log/wtmp $format/var-export/wtmp 2>/dev/null
-else 
+else
   :
 fi
 
 #last logged on user information
 lastlogedonusrs=`lastlog 2>/dev/null |grep -v "Never" 2>/dev/null`
 if [ "$lastlogedonusrs" ]; then
-  echo -e "\e[00;31mUsers that have previously logged onto the system:\e[00m\n$lastlogedonusrs" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mUsers that have previously logged onto the system:\e[00m\n$lastlogedonusrs"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$lastlogedonusrs" ]; then
   mkdir $format/var-export/ 2>/dev/null
   cp /var/log/lastlog $format/var-export/lastlog 2>/dev/null
-else 
+else
   :
 fi
 
 #who else is logged on
 loggedonusrs=`w 2>/dev/null`
 if [ "$loggedonusrs" ]; then
-  echo -e "\e[00;31mWho else is logged on:\e[00m\n$loggedonusrs" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mWho else is logged on:\e[00m\n$loggedonusrs"
+  echo -e "\n"
+else
   :
 fi
 }
 
 environmental_info()
 {
-echo -e "\e[00;33m### ENVIRONMENTAL #######################################\e[00m" 
+echo -e "\e[00;33m### ENVIRONMENTAL #######################################\e[00m"
 
 #env information
 envinfo=`env 2>/dev/null | grep -v 'LS_COLORS' 2>/dev/null`
 if [ "$envinfo" ]; then
-  echo -e "\e[00;31m Environment information:\e[00m\n$envinfo" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m Environment information:\e[00m\n$envinfo"
+  echo -e "\n"
+else
   :
 fi
 
@@ -264,9 +264,9 @@ fi
 #current path configuration
 pathinfo=`echo $PATH 2>/dev/null`
 if [ "$pathinfo" ]; then
-  echo -e "\e[00;31mPath information:\e[00m\n$pathinfo" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mPath information:\e[00m\n$pathinfo"
+  echo -e "\n"
+else
   :
 fi
 
@@ -285,43 +285,43 @@ fi
 #lists available shells
 shellinfo=`cat /etc/shells 2>/dev/null`
 if [ "$shellinfo" ]; then
-  echo -e "\e[00;31mAvailable shells:\e[00m\n$shellinfo" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAvailable shells:\e[00m\n$shellinfo"
+  echo -e "\n"
+else
   :
 fi
 
 #current umask value with both octal and symbolic output
 umask=`umask -S 2>/dev/null & umask 2>/dev/null`
 if [ "$umask" ]; then
-  echo -e "\e[00;31mCurrent umask value:\e[00m\n$umask" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mCurrent umask value:\e[00m\n$umask"
+  echo -e "\n"
+else
   :
 fi
 
 #umask value as in /etc/login.defs
 umaskdef=`grep -i "^UMASK" /etc/login.defs 2>/dev/null`
 if [ "$umaskdef" ]; then
-  echo -e "\e[00;31mumask value as specified in /etc/login.defs:\e[00m\n$umaskdef" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mumask value as specified in /etc/login.defs:\e[00m\n$umaskdef"
+  echo -e "\n"
+else
   :
 fi
 
 #password policy information as stored in /etc/login.defs
 logindefs=`grep "^PASS_MAX_DAYS\|^PASS_MIN_DAYS\|^PASS_WARN_AGE\|^ENCRYPT_METHOD" /etc/login.defs 2>/dev/null`
 if [ "$logindefs" ]; then
-  echo -e "\e[00;31mPassword and storage information:\e[00m\n$logindefs" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mPassword and storage information:\e[00m\n$logindefs"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$logindefs" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/login.defs $format/etc-export/login.defs 2>/dev/null
-else 
+else
   :
 fi
 }
@@ -331,7 +331,7 @@ fi
 # check for super users in /etc/passwd, check for other users	in /etc/passwd
 users_and_groups()
 {
-echo -e "\e[00;33m### User and Group Information ####################################\e[00m" 
+echo -e "\e[00;33m### User and Group Information ####################################\e[00m"
 
 #list only user id's from /etc/passwd
 usersfrompasswd=`cut -d":" -f1 /etc/passwd 2>/dev/null`
@@ -345,13 +345,13 @@ fi
 if [ "$export" ] && [ "$usersfrompasswd" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/passwd $format/etc-export/passwd 2>/dev/null
-else 
+else
   :
 fi
 
 #all root accounts (uid 0)
-echo -e "\e[00;31mSuper user account(s):\e[00m" | tee -a $report 2>/dev/null; grep -v -E "^#" /etc/passwd 2>/dev/null| awk -F: '$3 == 0 { print $1}' 2>/dev/null 
-echo -e "\n" 
+echo -e "\e[00;31mSuper user account(s):\e[00m" | tee -a $report 2>/dev/null; grep -v -E "^#" /etc/passwd 2>/dev/null| awk -F: '$3 == 0 { print $1}' 2>/dev/null
+echo -e "\n"
 
 #lists all id's and respective group(s)
 grpinfo=`for i in $(cut -d":" -f1 /etc/passwd 2>/dev/null);do id $i;done 2>/dev/null`
@@ -365,7 +365,7 @@ if [ "$grpinfo" ]; then
     echo -e "$adm_users\n"
   fi
   echo -e "\n"
-else 
+else
   :
 fi
 
@@ -383,16 +383,16 @@ fi
 if [ "$export" ] && [ "$groupcmd" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/group $format/etc-export/group 2>/dev/null
-else 
+else
   :
 fi
 
 #locate custom user accounts with some 'known default' uids
 readpasswd=`grep -v "^#" /etc/passwd | awk -F: '$3 == 0 || $3 == 500 || $3 == 501 || $3 == 502 || $3 == 1000 || $3 == 1001 || $3 == 1002 || $3 == 2000 || $3 == 2001 || $3 == 2002 { print }'`
 if [ "$readpasswd" ]; then
-  echo -e "\e[00;31mSample entires from /etc/passwd (searching for uid values 0, 500, 501, 502, 1000, 1001, 1002, 2000, 2001, 2002):\e[00m\n$readpasswd" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mSample entires from /etc/passwd (searching for uid values 0, 500, 501, 502, 1000, 1001, 1002, 2000, 2001, 2002):\e[00m\n$readpasswd"
+  echo -e "\n"
+else
   :
 fi
 }
@@ -402,46 +402,46 @@ fi
 # users with no password in /etc/passwd
 quick_passwd_wins()
 {
-echo -e "\e[00;33m### Password Files (Quick Wins) ####################################\e[00m" 
+echo -e "\e[00;33m### Password Files (Quick Wins) ####################################\e[00m"
 
 #checks to see if any hashes are stored in /etc/passwd (depreciated  *nix storage method)
 hashesinpasswd=`grep -v '^[^:]*:[x]' /etc/passwd 2>/dev/null`
 if [ "$hashesinpasswd" ]; then
-  echo -e "\e[00;33mIt looks like we have password hashes in /etc/passwd!\e[00m\n$hashesinpasswd" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33mIt looks like we have password hashes in /etc/passwd!\e[00m\n$hashesinpasswd"
+  echo -e "\n"
+else
   :
 fi
 
 #checks to see if the shadow file can be read
 readshadow=`cat /etc/shadow 2>/dev/null`
 if [ "$readshadow" ]; then
-  echo -e "\e[00;33m***We can read the shadow file!\e[00m\n$readshadow" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can read the shadow file!\e[00m\n$readshadow"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$readshadow" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/shadow $format/etc-export/shadow 2>/dev/null
-else 
+else
   :
 fi
 
 #checks to see if /etc/master.passwd can be read - BSD 'shadow' variant
 readmasterpasswd=`cat /etc/master.passwd 2>/dev/null`
 if [ "$readmasterpasswd" ]; then
-  echo -e "\e[00;33m***We can read the master.passwd file!\e[00m\n$readmasterpasswd" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can read the master.passwd file!\e[00m\n$readmasterpasswd"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$readmasterpasswd" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/master.passwd $format/etc-export/master.passwd 2>/dev/null
-else 
+else
   :
 fi
 
@@ -464,59 +464,59 @@ else
 fi
 
 #manual check - lists out sensitive files, can we read/modify etc.
-echo -e "\e[00;31mCan we read/write sensitive files:\e[00m" ; ls -la /etc/passwd 2>/dev/null ; ls -la /etc/group 2>/dev/null ; ls -la /etc/profile 2>/dev/null; ls -la /etc/shadow 2>/dev/null ; ls -la /etc/master.passwd 2>/dev/null 
-echo -e "\n" 
+echo -e "\e[00;31mCan we read/write sensitive files:\e[00m" ; ls -la /etc/passwd 2>/dev/null ; ls -la /etc/group 2>/dev/null ; ls -la /etc/profile 2>/dev/null; ls -la /etc/shadow 2>/dev/null ; ls -la /etc/master.passwd 2>/dev/null
+echo -e "\n"
 
 #pull out vital sudoers info
 sudoers=`grep -v -e '^$' /etc/sudoers 2>/dev/null |grep -v "#" 2>/dev/null`
 if [ "$sudoers" ]; then
   echo -e "\e[00;31mSudoers configuration (condensed):\e[00m\n$sudoers" | tee -a $report 2>/dev/null
-  echo -e "\n" 
-else 
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$sudoers" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/sudoers $format/etc-export/sudoers 2>/dev/null
-else 
+else
   :
 fi
 
 #can we sudo without supplying a password
 sudoperms=`echo '' | sudo -S -l 2>/dev/null`
 if [ "$sudoperms" ]; then
-  echo -e "\e[00;33mWe can sudo without supplying a password!\e[00m\n$sudoperms" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33mWe can sudo without supplying a password!\e[00m\n$sudoperms"
+  echo -e "\n"
+else
   :
 fi
 }
 
-#roots home, home dir perms, enum home, 
+#roots home, home dir perms, enum home,
 # user home directories: writable? user home directories: Readable and executable?
 # user .*_history files, ~/.bash_profile, ~/.bashrc, ~/.bash_logout, ~/.bash_history
 # ~/.nano_history, ~/.aftp_history, ~/.mysql_history, ~/.php_history, /etc/profile
 # /etc/bashrc
 home_and_user_files()
 {
-echo -e "\e[00;33m### Home and User File Information ####################################\e[00m" 
+echo -e "\e[00;33m### Home and User File Information ####################################\e[00m"
 
 #checks to see if roots home directory is accessible
 rthmdir=`ls -ahl /root/ 2>/dev/null`
 if [ "$rthmdir" ]; then
-  echo -e "\e[00;33m***We can read root's home directory!\e[00m\n$rthmdir" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can read root's home directory!\e[00m\n$rthmdir"
+  echo -e "\n"
+else
   :
 fi
 
 #displays /home directory permissions - check if any are lax
 homedirperms=`ls -ahl /home/ 2>/dev/null`
 if [ "$homedirperms" ]; then
-  echo -e "\e[00;31mAre permissions on /home directories lax:\e[00m\n$homedirperms" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAre permissions on /home directories lax:\e[00m\n$homedirperms"
+  echo -e "\n"
+else
   :
 fi
 
@@ -524,9 +524,9 @@ fi
 if [ "$thorough" = "1" ]; then
 homedircontents=`ls -ahl ~ 2>/dev/null`
 	if [ "$homedircontents" ] ; then
-		echo -e "\e[00;31mCurrent user home directory contents:\e[00m\n$homedircontents" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31mCurrent user home directory contents:\e[00m\n$homedircontents"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -561,7 +561,7 @@ fi
 if [ "$export" ] && [ "$etcprofilecmd" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/profile $format/etc-export/profile 2>/dev/null
-else 
+else
   :
 fi
 
@@ -577,7 +577,7 @@ fi
 if [ "$export" ] && [ "$etcbashrccmd" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/bashrc $format/etc-export/bashrc 2>/dev/null
-else 
+else
   :
 fi
 }
@@ -586,19 +586,19 @@ fi
 # check system for readable or encrypted ssh keys
 #!! check for ssh agents
 # cat ~/.ssh/authorized_keys, cat ~/.ssh/identity, cat ~/.ssh/id_rsa, cat ~/.ssh/id_dsa
-# cat /etc/ssh/ssh_config, cat /etc/ssh/sshd_config, 
+# cat /etc/ssh/ssh_config, cat /etc/ssh/sshd_config,
 #!!cat /etc/ssh/ssh_host_dsa_key, cat /etc/ssh/ssh_host_rsa_key, cat /etc/ssh/ssh_host_key
 ssh_enum()
 {
-echo -e "\e[00;33m### SSH Information ####################################\e[00m" 
+echo -e "\e[00;33m### SSH Information ####################################\e[00m"
 
 #checks for if various ssh files are accessible - this can take some time so is only 'activated' with thorough scanning switch
 if [ "$thorough" = "1" ]; then
 sshfiles=`find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "identity*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" \) -exec ls -la {} 2>/dev/null \;`
 	if [ "$sshfiles" ]; then
-		echo -e "\e[00;31mSSH keys/host information found in the following locations. If known_hosts, it may be crackable:\e[00m\n$sshfiles" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31mSSH keys/host information found in the following locations. If known_hosts, it may be crackable:\e[00m\n$sshfiles"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -609,7 +609,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$sshfiles" ]; then
 		mkdir $format/ssh-files/ 2>/dev/null
 		for i in $sshfiles; do cp --parents $i $format/ssh-files/; done 2>/dev/null
-	else 
+	else
 		:
 	fi
   else
@@ -619,16 +619,16 @@ fi
 #is root permitted to login via ssh
 sshrootlogin=`grep "PermitRootLogin " /etc/ssh/sshd_config 2>/dev/null | grep -v "#" | awk '{print  $2}'`
 if [ "$sshrootlogin" = "yes" ]; then
-  echo -e "\e[00;31mRoot is allowed to login via SSH:\e[00m" ; grep "PermitRootLogin " /etc/ssh/sshd_config 2>/dev/null | grep -v "#" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mRoot is allowed to login via SSH:\e[00m" ; grep "PermitRootLogin " /etc/ssh/sshd_config 2>/dev/null | grep -v "#"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$sshrootlogin" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/sshd_config $format/etc-export/sshd_config 2>/dev/null
-else 
+else
   :
 fi
 
@@ -636,15 +636,15 @@ fi
 sshconfigcmd=`cat /etc/ssh/ssh_config 2>/dev/null`
 if [ "$sshconfigcmd" = "yes" ]; then
   echo -e "\e[00;31mSSH config may also contain interesting settings:\e[00m\n$sshconfigcmd"
-  echo -e "\n" 
-else 
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$sshconfigcmd" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/ssh_config $format/etc-export/ssh_config 2>/dev/null
-else 
+else
   :
 fi
 }
@@ -652,7 +652,7 @@ fi
 #/etc/netsvc.conf, /etc/nsswitch.conf
 authentication_information()
 {
-echo -e "\e[00;33m### Authentication Information ####################################\e[00m" 
+echo -e "\e[00;33m### Authentication Information ####################################\e[00m"
 
 #cat /etc/netsvc.conf
 netsvcconf=`cat /etc/netsvc.conf 2>/dev/null`
@@ -701,21 +701,21 @@ fi
 #/etc/fstab, mount | column -t, df -h
 mount_information()
 {
-echo -e "\e[00;33m### Mount Information ####################################\e[00m" 
+echo -e "\e[00;33m### Mount Information ####################################\e[00m"
 
 #list nfs shares/permisisons etc.
 nfsexports=`ls -la /etc/exports 2>/dev/null; cat /etc/exports 2>/dev/null`
 if [ "$nfsexports" ]; then
-  echo -e "\e[00;31mNFS config details: \e[00m\n$nfsexports" 
-  echo -e "\n" 
-  else 
+  echo -e "\e[00;31mNFS config details: \e[00m\n$nfsexports"
+  echo -e "\n"
+  else
   :
 fi
 
 if [ "$export" ] && [ "$nfsexports" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/exports $format/etc-export/exports 2>/dev/null
-else 
+else
   :
 fi
 
@@ -735,21 +735,21 @@ fstab=`grep username /etc/fstab 2>/dev/null |awk '{sub(/.*\username=/,"");sub(/\
 if [ "$fstab" ]; then
   echo -e "\e[00;33m***Looks like there are credentials in /etc/fstab!\e[00m\n$fstab"
   echo -e "\n"
-  else 
+  else
   :
 fi
 
 if [ "$export" ] && [ "$fstab" ]; then
   mkdir $format/etc-exports/ 2>/dev/null
   cp /etc/fstab $format/etc-exports/fstab done 2>/dev/null
-else 
+else
   :
 fi
 
 fstabcred=`grep cred /etc/fstab 2>/dev/null |awk '{sub(/.*\credentials=/,"");sub(/\,.*/,"")}1' 2>/dev/null | xargs -I{} sh -c 'ls -la {}; cat {}' 2>/dev/null`
 if [ "$fstabcred" ]; then
-    echo -e "\e[00;33m***/etc/fstab contains a credentials file!\e[00m\n$fstabcred" 
-    echo -e "\n" 
+    echo -e "\e[00;33m***/etc/fstab contains a credentials file!\e[00m\n$fstabcred"
+    echo -e "\n"
     else
     :
 fi
@@ -757,7 +757,7 @@ fi
 if [ "$export" ] && [ "$fstabcred" ]; then
   mkdir $format/etc-exports/ 2>/dev/null
   cp /etc/fstab $format/etc-exports/fstab done 2>/dev/null
-else 
+else
   :
 fi
 
@@ -783,7 +783,7 @@ if [ "$mountcmd" ]; then
     echo -e "\e[00;31mMounts with 'nodev' detected.\e[00m\n"
   else
     :
-  fi  
+  fi
 else
   :
 fi
@@ -805,7 +805,7 @@ fi
 # find -exec ls -lah {} is not what you want for dirs
 special_perm_files()
 {
-echo -e "\e[00;33m### Special Permission Files ####################################\e[00m" 
+echo -e "\e[00;33m### Special Permission Files ####################################\e[00m"
 rootcheck=`id -u`
 
 #Find all SUID files, only on thorough
@@ -825,7 +825,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$suidcmd" ]; then
 		mkdir $format/suid-files/ 2>/dev/null
 		for i in $suidcmd; do cp --parents $i $format/suid-files/ ; done 2>/dev/null
-	else 
+	else
 		:
 	fi
 else
@@ -849,7 +849,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$suidcmd2" ]; then
 		mkdir $format/suid-files/ 2>/dev/null
 		for i in $suidcmd2; do cp --parents $i $format/suid-files/ ; done 2>/dev/null
-	else 
+	else
 		:
 	fi
 else
@@ -860,9 +860,9 @@ fi
 if [ "$thorough" = "1" ]; then
 wwsuidrt=`find / -uid 0 -perm -4007 -type f -exec ls -la {} 2>/dev/null \;`
 	if [ "$wwsuidrt" ]; then
-		echo -e "\e[00;31mWorld-writable SUID files, these exec as file owner: root, and you can write!:\e[00m\n$wwsuidrt" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31mWorld-writable SUID files, these exec as file owner: root, and you can write!:\e[00m\n$wwsuidrt"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -873,9 +873,9 @@ fi
 if [ "$thorough" = "1" ]; then
 wwsuid=`find / -perm -4007 -type f -exec ls -la {} 2>/dev/null \;`
 	if [ "$wwsuid" ]; then
-		echo -e "\e[00;31mWorld-writable SUID files, these exec as file owner and you can write!:\e[00m\n$wwsuid" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31mWorld-writable SUID files, these exec as file owner and you can write!:\e[00m\n$wwsuid"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -899,7 +899,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$guidcmd" ]; then
 		mkdir $format/guid-files/ 2>/dev/null
 		for i in $guidcmd; do cp --parents $i $format/guid-files/ ; done 2>/dev/null
-	else 
+	else
 		:
 	fi
 else
@@ -927,7 +927,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$guidcmd2" ]; then
 		mkdir $format/guid-files/ 2>/dev/null
 		for i in $guidcmd2; do cp --parents $i $format/guid-files/ ; done 2>/dev/null
-	else 
+	else
 		:
 	fi
 else
@@ -938,9 +938,9 @@ fi
 if [ "$thorough" = "1" ]; then
 wwguid=`find / -perm -2007 -type f -exec ls -la {} 2>/dev/null \;`
 	if [ "$wwguid" ]; then
-		echo -e "\e[00;31mWorld-writable GUID files, these exec as the group and you can write!:\e[00m\n$wwguid" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31mWorld-writable GUID files, these exec as the group and you can write!:\e[00m\n$wwguid"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -951,9 +951,9 @@ fi
 if [ "$thorough" = "1" ]; then
 wwguidrt=`find / -uid 0 -perm -2007 -type f -exec ls -la {} 2>/dev/null \;`
 	if [ "$wwguidrt" ]; then
-		echo -e "\e[00;31mWorld-writable GUID files, these exec as the group, owned by root, and you can write!:\e[00m\n$wwguidrt" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31mWorld-writable GUID files, these exec as the group, owned by root, and you can write!:\e[00m\n$wwguidrt"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -972,7 +972,7 @@ fi
 if [ "$export" ] && [ "$suidguid" ]; then
 	mkdir $format/suidguid-files/ 2>/dev/null
 	for i in $suidguid; do cp --parents $i $format/suidguid-files/ ; done 2>/dev/null
-else 
+else
 	:
 fi
 
@@ -1006,7 +1006,7 @@ fi
 if [ "$export" ] && [ "$suidguid2" ]; then
 	mkdir $format/suidguid2-files/ 2>/dev/null
 	for i in $suidguid2; do cp --parents $i $format/suidguid2-files/ ; done 2>/dev/null
-else 
+else
 	:
 fi
 
@@ -1027,7 +1027,7 @@ fi
 if [ "$export" ] && [ "$mystuff" ]; then
   mkdir $format/my-files/ 2>/dev/null
 	for i in $mystuff; do cp --parents $i $format/my-files/ ; done 2>/dev/null
-else 
+else
 	:
 fi
 
@@ -1047,7 +1047,7 @@ fi
 if [ "$export" ] && [ "$mystuff2" ]; then
   mkdir $format/my-files/ 2>/dev/null
 	for i in $mystuff2; do cp --parents $i $format/my-files/ ; done 2>/dev/null
-else 
+else
 	:
 fi
 }
@@ -1056,7 +1056,7 @@ fi
 #too much feedback at the moment
 executable_files_folders()
 {
-#echo -e "\e[00;33m### INTERESTING FILES ####################################\e[00m" 
+#echo -e "\e[00;33m### INTERESTING FILES ####################################\e[00m"
 
 worldwrite=`find / \( -perm -o x -type d \) 2>/dev/null | grep -v "denied"`
 }
@@ -1068,14 +1068,14 @@ worldwrite=`find / \( -perm -o x -type d \) 2>/dev/null | grep -v "denied"`
 # ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null     					    # Anyone - write
 # ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null      					    # Owner
 # ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null    					    # Group
-#group writable files, 
+#group writable files,
 # find /dir -xdev \( -nouser -o -nogroup \) -print   					    # Noowner files
 writeable_files_folders()
 {
-echo -e "\e[00;33m### Writable Files ####################################\e[00m" 
+echo -e "\e[00;33m### Writable Files ####################################\e[00m"
 
 # world-writeable & executable folders
-writeandexec=`find / \( -perm -o=w -a -perm -o=x -a -type d \) 2>/dev/null`   				    
+writeandexec=`find / \( -perm -o=w -a -perm -o=x -a -type d \) 2>/dev/null`
 if [ "$writeandexec" ]; then
   echo -e "\e[00;31mWriteable and executable folders:\e[00m\n$writeandexec"
   echo -e "\n:"
@@ -1087,9 +1087,9 @@ fi
 if [ "$thorough" = "1" ]; then
 wwfiles=`find / ! -path "*/proc/*" -perm -2 -type f -exec ls -la {} 2>/dev/null \;`
 	if [ "$wwfiles" ]; then
-		echo -e "\e[00;31mWorld-writable files (excluding /proc):\e[00m\n$wwfiles" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31mWorld-writable files (excluding /proc):\e[00m\n$wwfiles"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -1100,7 +1100,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$wwfiles" ]; then
 		mkdir $format/ww-files/ 2>/dev/null
 		for i in $wwfiles; do cp --parents $i $format/ww-files/; done 2>/dev/null
-	else 
+	else
 		:
 	fi
   else
@@ -1128,8 +1128,8 @@ if [ "$thorough" = "1" ]; then
     echo -e "Files you can write that you don't own: You're running under UID 0, too many files to list...\n"
   fi
   if [ "$grfilesall" ]; then
-    echo -e "\e[00;31mFiles not owned by user but writable by group:\e[00m\n$grfilesall" 
-    echo -e "\n" 
+    echo -e "\e[00;31mFiles not owned by user but writable by group:\e[00m\n$grfilesall"
+    echo -e "\n"
   else
     :
   fi
@@ -1147,18 +1147,18 @@ fi
 
 # find /etc/ -readable -type f 2>/dev/null               				# Anyone - read
 # find /etc/ -readable -type f -maxdepth 1 2>/dev/null   				# Anyone - read
-# world readable files, 
+# world readable files,
 readable_files_folders()
 {
-echo -e "\e[00;33m### Readable Files ####################################\e[00m" 
+echo -e "\e[00;33m### Readable Files ####################################\e[00m"
 
 #looks for world-reabable files within /home - depending on number of /home dirs & files, this can take some time so is only 'activated' with thorough scanning switch
 if [ "$thorough" = "1" ]; then
 wrfileshm=`find /home/ -perm -4 -type f -exec ls -al {} \; 2>/dev/null`
 	if [ "$wrfileshm" ]; then
-		echo -e "\e[00;31mWorld-readable files within /home:\e[00m\n$wrfileshm" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31mWorld-readable files within /home:\e[00m\n$wrfileshm"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -1169,7 +1169,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$wrfileshm" ]; then
 		mkdir $format/wr-files/ 2>/dev/null
 		for i in $wrfileshm; do cp --parents $i $format/wr-files/ ; done 2>/dev/null
-	else 
+	else
 		:
 	fi
   else
@@ -1195,65 +1195,65 @@ fi
 #!!cat /var/spool/cron/crontabs/root
 job_info()
 {
-echo -e "\e[00;33m### JOBS/TASKS ##########################################\e[00m" 
+echo -e "\e[00;33m### JOBS/TASKS ##########################################\e[00m"
 
 #are there any cron jobs configured
 cronjobs=`ls -la /etc/cron* 2>/dev/null`
 if [ "$cronjobs" ]; then
-  echo -e "\e[00;31mCron jobs:\e[00m\n$cronjobs" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mCron jobs:\e[00m\n$cronjobs"
+  echo -e "\n"
+else
   :
 fi
 
 #can we manipulate these jobs in any way
 cronjobwwperms=`find /etc/cron* -perm -0002 -type f -exec ls -la {} \; -exec cat {} 2>/dev/null \;`
 if [ "$cronjobwwperms" ]; then
-  echo -e "\e[00;33m***World-writable cron jobs and file contents:\e[00m\n$cronjobwwperms" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***World-writable cron jobs and file contents:\e[00m\n$cronjobwwperms"
+  echo -e "\n"
+else
   :
 fi
 
 #contab contents
 crontab=`cat /etc/crontab 2>/dev/null`
 if [ "$crontab" ]; then
-  echo -e "\e[00;31mCrontab contents:\e[00m\n$crontab" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mCrontab contents:\e[00m\n$crontab"
+  echo -e "\n"
+else
   :
 fi
 
 crontabvar=`ls -la /var/spool/cron/crontabs 2>/dev/null`
 if [ "$crontabvar" ]; then
-  echo -e "\e[00;31mAnything interesting in /var/spool/cron/crontabs:\e[00m\n$crontabvar" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAnything interesting in /var/spool/cron/crontabs:\e[00m\n$crontabvar"
+  echo -e "\n"
+else
   :
 fi
 
 anacronjobs=`ls -la /etc/anacrontab 2>/dev/null; cat /etc/anacrontab 2>/dev/null`
 if [ "$anacronjobs" ]; then
-  echo -e "\e[00;31mAnacron jobs and associated file permissions:\e[00m\n$anacronjobs" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAnacron jobs and associated file permissions:\e[00m\n$anacronjobs"
+  echo -e "\n"
+else
   :
 fi
 
 anacrontab=`ls -la /var/spool/anacron 2>/dev/null`
 if [ "$anacrontab" ]; then
-  echo -e "\e[00;31mWhen were jobs last executed (/var/spool/anacron contents):\e[00m\n$anacrontab" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mWhen were jobs last executed (/var/spool/anacron contents):\e[00m\n$anacrontab"
+  echo -e "\n"
+else
   :
 fi
 
 #pull out account names from /etc/passwd and see if any users have associated cronjobs (priv command)
 cronother=`cut -d ":" -f 1 /etc/passwd | xargs -n1 crontab -l -u 2>/dev/null`
 if [ "$cronother" ]; then
-  echo -e "\e[00;31mJobs held by all users:\e[00m\n$cronother" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mJobs held by all users:\e[00m\n$cronother"
+  echo -e "\n"
+else
   :
 fi
 }
@@ -1267,14 +1267,14 @@ fi
 #!!chkconfig --list, !!chkconfig --list | grep 3:on  #not default utility, must be SU
 networking_info()
 {
-echo -e "\e[00;33m### NETWORKING  ##########################################\e[00m" 
+echo -e "\e[00;33m### NETWORKING  ##########################################\e[00m"
 
 #nic information
 nicinfo=`/sbin/ifconfig -a 2>/dev/null`
 if [ "$nicinfo" ]; then
-  echo -e "\e[00;31mNetwork & IP info:\e[00m\n$nicinfo" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mNetwork & IP info:\e[00m\n$nicinfo"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1290,27 +1290,27 @@ fi
 #ARP info
 arpinfo=`arp -e 2>/dev/null`
 if [ "$arpinfo" ]; then
-  echo -e "\e[00;31mARP history:\e[00m\n$arpinfo" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mARP history:\e[00m\n$arpinfo"
+  echo -e "\n"
+else
   :
 fi
 
 #dns settings
 nsinfo=`grep "nameserver" /etc/resolv.conf 2>/dev/null`
 if [ "$nsinfo" ]; then
-  echo -e "\e[00;31mNameserver(s):\e[00m\n$nsinfo" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mNameserver(s):\e[00m\n$nsinfo"
+  echo -e "\n"
+else
   :
 fi
 
 #default route configuration
 defroute=`route -n 2>/dev/null | grep default`
 if [ "$defroute" ]; then
-  echo -e "\e[00;31mDefault route:\e[00m\n$defroute" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mDefault route:\e[00m\n$defroute"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1396,35 +1396,35 @@ fi
 #listening TCP
 tcpservs=`netstat -antpl 2>/dev/null`
 if [ "$tcpservs" ]; then
-  echo -e "\e[00;31mDon't forget about LSOF. Netstat listening TCP.:\e[00m\n$tcpservs" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mDon't forget about LSOF. Netstat listening TCP.:\e[00m\n$tcpservs"
+  echo -e "\n"
+else
   :
 fi
 
 #listening UDP
 udpservs=`netstat -anupl 2>/dev/null`
 if [ "$udpservs" ]; then
-  echo -e "\e[00;31mDon't forget about LSOF. Netstat listening UDP:\e[00m\n$udpservs" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mDon't forget about LSOF. Netstat listening UDP:\e[00m\n$udpservs"
+  echo -e "\n"
+else
   :
 fi
 }
 
 # /etc/hosts.equiv
 # /etc/shosts.equiv
-# aux, inetd.conf, xinetd.conf, init.d, rc.d/init.d, 
+# aux, inetd.conf, xinetd.conf, init.d, rc.d/init.d,
 services_info()
 {
-echo -e "\e[00;33m### SERVICES #############################################\e[00m" 
+echo -e "\e[00;33m### SERVICES #############################################\e[00m"
 
 #processes running as NOT root
 psaux=`ps aux 2>/dev/null | grep -v root | awk '{print $1 " " $2 " " $5 " " $6 " " $9 " " $10 " " $11}' | column -t`
 if [ "$psaux" ]; then
-  echo -e "\e[00;31mRProcesses that are NOT running as root:\e[00m\n$psaux" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mRProcesses that are NOT running as root:\e[00m\n$psaux"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1440,9 +1440,9 @@ fi
 #lookup process binary path and permissisons
 procperm=`ps aux 2>/dev/null | awk '{print $11}'|xargs -r ls -la 2>/dev/null |awk '!x[$0]++' 2>/dev/null`
 if [ "$procperm" ]; then
-  echo -e "\e[00;31mProcess binaries & associated permissions (from above list):\e[00m\n$procperm" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mProcess binaries & associated permissions (from above list):\e[00m\n$procperm"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1450,7 +1450,7 @@ if [ "$export" ] && [ "$procperm" ]; then
 procpermbase=`ps aux 2>/dev/null | awk '{print $11}' | xargs -r ls 2>/dev/null | awk '!x[$0]++' 2>/dev/null`
   mkdir $format/ps-export/ 2>/dev/null
   for i in $procpermbase; do cp --parents $i $format/ps-export/; done 2>/dev/null
-else 
+else
   :
 fi
 
@@ -1466,108 +1466,108 @@ fi
 #anything 'useful' in inetd.conf
 inetdread=`cat /etc/inetd.conf 2>/dev/null`
 if [ "$inetdread" ]; then
-  echo -e "\e[00;31mContents of /etc/inetd.conf:\e[00m\n$inetdread" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mContents of /etc/inetd.conf:\e[00m\n$inetdread"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$inetdread" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/inetd.conf $format/etc-export/inetd.conf 2>/dev/null
-else 
+else
   :
 fi
 
 #very 'rough' command to extract associated binaries from inetd.conf & show permisisons of each
 inetdbinperms=`awk '{print $7}' /etc/inetd.conf 2>/dev/null |xargs -r ls -la 2>/dev/null`
 if [ "$inetdbinperms" ]; then
-  echo -e "\e[00;31mThe related inetd binary permissions:\e[00m\n$inetdbinperms" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mThe related inetd binary permissions:\e[00m\n$inetdbinperms"
+  echo -e "\n"
+else
   :
 fi
 
 xinetdread=`cat /etc/xinetd.conf 2>/dev/null`
 if [ "$xinetdread" ]; then
-  echo -e "\e[00;31mContents of /etc/xinetd.conf:\e[00m\n$xinetdread" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mContents of /etc/xinetd.conf:\e[00m\n$xinetdread"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$xinetdread" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/xinetd.conf $format/etc-export/xinetd.conf 2>/dev/null
-else 
+else
   :
 fi
 
 xinetdincd=`grep "/etc/xinetd.d" /etc/xinetd.conf 2>/dev/null`
 if [ "$xinetdincd" ]; then
-  echo -e "\e[00;31m/etc/xinetd.d is included in /etc/xinetd.conf - associated binary permissions are listed below:\e[00m"; ls -la /etc/xinetd.d 2>/dev/null 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m/etc/xinetd.d is included in /etc/xinetd.conf - associated binary permissions are listed below:\e[00m"; ls -la /etc/xinetd.d 2>/dev/null
+  echo -e "\n"
+else
   :
 fi
 
 #very 'rough' command to extract associated binaries from xinetd.conf & show permisisons of each
 xinetdbinperms=`awk '{print $7}' /etc/xinetd.conf 2>/dev/null |xargs -r ls -la 2>/dev/null`
 if [ "$xinetdbinperms" ]; then
-  echo -e "\e[00;31mThe related xinetd binary permissions:\e[00m\n$xinetdbinperms" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mThe related xinetd binary permissions:\e[00m\n$xinetdbinperms"
+  echo -e "\n"
+else
   :
 fi
 
 initdread=`ls -la /etc/init.d 2>/dev/null`
 if [ "$initdread" ]; then
-  echo -e "\e[00;31m/etc/init.d/ binary permissions:\e[00m\n$initdread" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m/etc/init.d/ binary permissions:\e[00m\n$initdread"
+  echo -e "\n"
+else
   :
-fi  
+fi
 
 #init.d files NOT belonging to root!
 initdperms=`find /etc/init.d/ \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null`
 if [ "$initdperms" ]; then
-  echo -e "\e[00;31m/etc/init.d/ files not belonging to root (uid 0):\e[00m\n$initdperms" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m/etc/init.d/ files not belonging to root (uid 0):\e[00m\n$initdperms"
+  echo -e "\n"
+else
   :
 fi
 
 rcdread=`ls -la /etc/rc.d/init.d 2>/dev/null`
 if [ "$rcdread" ]; then
-  echo -e "\e[00;31m/etc/rc.d/init.d binary permissions:\e[00m\n$rcdread" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m/etc/rc.d/init.d binary permissions:\e[00m\n$rcdread"
+  echo -e "\n"
+else
   :
 fi
 
 #init.d files NOT belonging to root!
 rcdperms=`find /etc/rc.d/init.d \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null`
 if [ "$rcdperms" ]; then
-  echo -e "\e[00;31m/etc/rc.d/init.d files not belonging to root (uid 0):\e[00m\n$rcdperms" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m/etc/rc.d/init.d files not belonging to root (uid 0):\e[00m\n$rcdperms"
+  echo -e "\n"
+else
   :
 fi
 
 usrrcdread=`ls -la /usr/local/etc/rc.d 2>/dev/null`
 if [ "$usrrcdread" ]; then
-  echo -e "\e[00;31m/usr/local/etc/rc.d binary permissions:\e[00m\n$usrrcdread" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m/usr/local/etc/rc.d binary permissions:\e[00m\n$usrrcdread"
+  echo -e "\n"
+else
   :
 fi
 
 #rc.d files NOT belonging to root!
 usrrcdperms=`find /usr/local/etc/rc.d \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null`
 if [ "$usrrcdperms" ]; then
-  echo -e "\e[00;31m/usr/local/etc/rc.d files not belonging to root (uid 0):\e[00m\n$usrrcdperms" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m/usr/local/etc/rc.d files not belonging to root (uid 0):\e[00m\n$usrrcdperms"
+  echo -e "\n"
+else
   :
 fi
 }
@@ -1580,44 +1580,67 @@ fi
 # dpkg -l
 # rpm -qa
 # ls -alh /var/cache/apt/archivesO
-# ls -alh /var/cache/yum/ 
+# ls -alh /var/cache/yum/
 binary_search()
 {
-echo -e "\e[00;33m### Installed Binary Information ####################################\e[00m" 
+echo -e "\e[00;33m### Installed Binary Information ####################################\e[00m"
 
 #checks to see if various files are installed
 echo -e "\e[00;31mUseful file locations:\e[00m" ; which nc 2>/dev/null ; which netcat 2>/dev/null ; which wget 2>/dev/null ; which nmap 2>/dev/null ; which gcc 2>/dev/null ; which python 2>/dev/null
-echo -e "\n" 
+echo -e "\n"
 
 #limited search for installed compilers
 compiler=`dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 2>/dev/null && yum list installed 'gcc*' 2>/dev/null| grep gcc 2>/dev/null`
 if [ "$compiler" ]; then
-  echo -e "\e[00;31mInstalled compilers:\e[00m\n$compiler" 
-  echo -e "\n" 
- else 
+  echo -e "\e[00;31mInstalled compilers:\e[00m\n$compiler"
+  echo -e "\n"
+ else
   :
 fi
 
 #known 'good' breakout binaries
 sudopwnage=`echo '' | sudo -S -l 2>/dev/null | grep -w 'nmap\|perl\|'awk'\|'find'\|'bash'\|'sh'\|'man'\|'more'\|'less'\|'vi'\|'emacs'\|'vim'\|'nc'\|'netcat'\|python\|ruby\|lua\|irb' | xargs -r ls -la 2>/dev/null`
 if [ "$sudopwnage" ]; then
-  echo -e "\e[00;33m***Possible Sudo PWNAGE!\e[00m\n$sudopwnage" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***Possible Sudo PWNAGE!\e[00m\n$sudopwnage"
+  echo -e "\n"
+else
   :
 fi
 
 #sudo version - check to see if there are any known vulnerabilities with this
 sudover=`sudo -V 2>/dev/null| grep "Sudo version" 2>/dev/null`
 if [ "$sudover" ]; then
-  echo -e "\e[00;31mSudo version:\e[00m\n$sudover" 
-  echo -e "\n" 
+  echo -e "\e[00;31mSudo version:\e[00m\n$sudover"
+  echo -e "\n"
   if [ "$verinfo" = "1" ]; then
     echo -e $sudover >> verinfo.txt 2>/dev/null
   else
     :
   fi
-else 
+else
+  :
+fi
+
+#bash version checks
+bashversion=`bash --version 2>/dev/null | grep "version" 2>/dev/null`
+if [ "$bashversion" ]; then
+  echo -e "\e[00;31mBash version:\e[00m\n$bashversion"
+  echo -e "\n"
+  if [ "$verinfo" = "1" ]; then
+    echo -e $bashversion >> verinfo.txt 2>/dev/null
+  else
+    :
+  fi
+else
+  :
+fi
+
+#bash shellshock checks
+shellshock=`x='() { :;}; echo VULNERABLE' bash -c :`
+if [ "$shellshock" ]; then
+  echo -e "\e[00;32mShellshock check : \e[00m\n$shellshock"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1745,7 +1768,7 @@ fi
 
 os_protections()
 {
-echo -e "\e[00;33m### OS Protections and Binary Protection Information ####################################\e[00m" 
+echo -e "\e[00;33m### OS Protections and Binary Protection Information ####################################\e[00m"
 
 #fail2ban
 fail2bancmd=`which fail2ban 2>/dev/null`
@@ -1862,7 +1885,7 @@ for PROCDIR in /proc/[0-9]*; do
     if [ -n "$NX" ]; then
       echo "[UPC040] WARNING: NX not enabled"
     fi
-				
+
     SSP=`objdump -D $PROCDIR/exe | grep stack_chk`
     if [ -z "$SSP" ]; then
       echo "[UPC041] WARNING: SSP not enabled"
@@ -1879,53 +1902,53 @@ done
 # ls -alhR /opt/lampp/htdocs/, ls -alhR /var/www/html/
 apache_enum()
 {
-echo -e "\e[00;33m### Apache Information ####################################\e[00m" 
+echo -e "\e[00;33m### Apache Information ####################################\e[00m"
 
 #apache details - if installed
 apachever=`apache2 -v 2>/dev/null; httpd -v 2>/dev/null;`
 if [ "$apachever" ]; then
-  echo -e "\e[00;31mApache version:\e[00m\n$apachever" 
-  echo -e "\n" 
+  echo -e "\e[00;31mApache version:\e[00m\n$apachever"
+  echo -e "\n"
   if [ "$verinfo" = "1" ]; then
     echo -e $apachever >> verinfo.txt 2>/dev/null
   else
     :
   fi
-else 
+else
   :
 fi
 
 #what account is apache running under
 apacheusr=`grep -i 'user\|group' /etc/apache2/envvars 2>/dev/null |awk '{sub(/.*\export /,"")}1' 2>/dev/null`
 if [ "$apacheusr" ]; then
-  echo -e "\e[00;31mApache user configuration:\e[00m\n$apacheusr" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mApache user configuration:\e[00m\n$apacheusr"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$apacheusr" ]; then
   mkdir --parents $format/etc-export/apache2/ 2>/dev/null
   cp /etc/apache2/envvars $format/etc-export/apache2/envvars 2>/dev/null
-else 
+else
   :
 fi
 
 #installed apache modules
 apachemodules=`apache2ctl -M 2>/dev/null; httpd -M 2>/dev/null`
 if [ "$apachemodules" ]; then
-  echo -e "\e[00;31mInstalled Apache modules:\e[00m\n$apachemodules" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mInstalled Apache modules:\e[00m\n$apachemodules"
+  echo -e "\n"
+else
   :
 fi
 
 #anything in the default http home dirs
 apachehomedirs=`ls -alhR /var/www/ 2>/dev/null; ls -alhR /srv/www/htdocs/ 2>/dev/null; ls -alhR /usr/local/www/apache2/data/ 2>/dev/null; ls -alhR /opt/lampp/htdocs/ 2>/dev/null`
 if [ "$apachehomedirs" ]; then
-  echo -e "\e[00;31mAnything in the Apache home dirs?:\e[00m\n$apachehomedirs" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAnything in the Apache home dirs?:\e[00m\n$apachehomedirs"
+  echo -e "\n"
+else
   :
 fi
 }
@@ -1957,19 +1980,19 @@ fi
 
 mysql_enum()
 {
-echo -e "\e[00;33m### MySQL Information ####################################\e[00m" 
+echo -e "\e[00;33m### MySQL Information ####################################\e[00m"
 
 #mysql details - if installed
 mysqlver=`mysql --version 2>/dev/null`
 if [ "$mysqlver" ]; then
-  echo -e "\e[00;31mMYSQL version:\e[00m\n$mysqlver" 
-  echo -e "\n" 
+  echo -e "\e[00;31mMYSQL version:\e[00m\n$mysqlver"
+  echo -e "\n"
   if [ "$verinfo" = "1" ]; then
     echo -e $mysqlver >> verinfo.txt 2>/dev/null
   else
     :
   fi
-else 
+else
   :
 fi
 
@@ -1977,12 +2000,12 @@ fi
 mysqlconnect=`mysqladmin -uroot -proot version 2>/dev/null`
 mysqlconnect2=`mysql -uroot -proot version 2>/dev/null`
 if [ "$mysqlconnect" ]; then
-  echo -e "\e[00;33m***We can connect to the local MYSQL service with default root/root credentials!\e[00m\n$mysqlconnect" 
-  echo -e "\n" 
+  echo -e "\e[00;33m***We can connect to the local MYSQL service with default root/root credentials!\e[00m\n$mysqlconnect"
+  echo -e "\n"
 elif [ "$mysqlconnect2" ]; then
   echo -e "\e[00;33m***We can connect to the local MYSQL service with default root/root credentials!\e[00m\n$mysqlconnect2"
   echo -e "\n"
-else 
+else
   :
 fi
 
@@ -2002,9 +2025,9 @@ fi
 #mysql version details
 mysqlconnectnopass=`mysqladmin -uroot version 2>/dev/null`
 if [ "$mysqlconnectnopass" ]; then
-  echo -e "\e[00;33m***We can connect to the local MYSQL service as 'root' and without a password!\e[00m\n$mysqlconnectnopass" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can connect to the local MYSQL service as 'root' and without a password!\e[00m\n$mysqlconnectnopass"
+  echo -e "\n"
+else
   :
 fi
 }
@@ -2029,64 +2052,64 @@ fi
 #!!check permissions of postgres config file #default login
 postgres_enum()
 {
-echo -e "\e[00;33m### Postgres Information ####################################\e[00m" 
+echo -e "\e[00;33m### Postgres Information ####################################\e[00m"
 
 #postgres details - if installed
 postgver=`psql -V 2>/dev/null`
 if [ "$postgver" ]; then
-  echo -e "\e[00;31mPostgres version:\e[00m\n$postgver" 
+  echo -e "\e[00;31mPostgres version:\e[00m\n$postgver"
   echo -e "\n"
   if [ "$verinfo" = "1" ]; then
     echo -e $postgver >> verinfo.txt 2>/dev/null
   else
     :
   fi
-else 
+else
   :
 fi
 
 #checks to see if any postgres password exists and connects to DB 'template0' - following commands are a variant on this
 postcon1=`psql -U postgres template0 -c 'select version()' 2>/dev/null | grep version`
 if [ "$postcon1" ]; then
-  echo -e "\e[00;33m***We can connect to Postgres DB 'template0' as user 'postgres' with no password!:\e[00m\n$postcon1" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can connect to Postgres DB 'template0' as user 'postgres' with no password!:\e[00m\n$postcon1"
+  echo -e "\n"
+else
   :
 fi
 
 postcon11=`psql -U postgres template1 -c 'select version()' 2>/dev/null | grep version`
 if [ "$postcon11" ]; then
-  echo -e "\e[00;33m***We can connect to Postgres DB 'template1' as user 'postgres' with no password!:\e[00m\n$postcon11" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can connect to Postgres DB 'template1' as user 'postgres' with no password!:\e[00m\n$postcon11"
+  echo -e "\n"
+else
   :
 fi
 
 postcon2=`psql -U pgsql template0 -c 'select version()' 2>/dev/null | grep version`
 if [ "$postcon2" ]; then
-  echo -e "\e[00;33m***We can connect to Postgres DB 'template0' as user 'psql' with no password!:\e[00m\n$postcon2" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can connect to Postgres DB 'template0' as user 'psql' with no password!:\e[00m\n$postcon2"
+  echo -e "\n"
+else
   :
 fi
 
 postcon22=`psql -U pgsql template1 -c 'select version()' 2>/dev/null | grep version`
 if [ "$postcon22" ]; then
-  echo -e "\e[00;33m***We can connect to Postgres DB 'template1' as user 'psql' with no password!:\e[00m\n$postcon22" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can connect to Postgres DB 'template1' as user 'psql' with no password!:\e[00m\n$postcon22"
+  echo -e "\n"
+else
   :
 fi
 }
 
 software_configs()
 {
-echo -e "\e[00;33m### SOFTWARE #############################################\e[00m" 
+echo -e "\e[00;33m### SOFTWARE #############################################\e[00m"
 }
 
 interesting_files()
 {
-echo -e "\e[00;33m### INTERESTING FILES ####################################\e[00m" 
+echo -e "\e[00;33m### INTERESTING FILES ####################################\e[00m"
 
 #Specifically check to see if any user home dir has a gnupg folder for lax permissions
 gpgfolder=`find /home -name "*.gnupg" -type d -exec ls -la {} \; 2>/dev/null`
@@ -2100,92 +2123,92 @@ fi
 #are any .plan files accessible in /home (could contain useful information)
 usrplan=`find /home -iname *.plan -exec ls -la {} \; -exec cat {} 2>/dev/null \;`
 if [ "$usrplan" ]; then
-  echo -e "\e[00;31mPlan file permissions and contents:\e[00m\n$usrplan" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mPlan file permissions and contents:\e[00m\n$usrplan"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$usrplan" ]; then
   mkdir $format/plan_files/ 2>/dev/null
   for i in $usrplan; do cp --parents $i $format/plan_files/; done 2>/dev/null
-else 
+else
   :
 fi
 
 bsdusrplan=`find /usr/home -iname *.plan -exec ls -la {} \; -exec cat {} 2>/dev/null \;`
 if [ "$bsdusrplan" ]; then
-  echo -e "\e[00;31mPlan file permissions and contents:\e[00m\n$bsdusrplan" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mPlan file permissions and contents:\e[00m\n$bsdusrplan"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$bsdusrplan" ]; then
   mkdir $format/plan_files/ 2>/dev/null
   for i in $bsdusrplan; do cp --parents $i $format/plan_files/; done 2>/dev/null
-else 
+else
   :
 fi
 
 #are there any .rhosts files accessible - these may allow us to login as another user etc.
 rhostsusr=`find /home -iname *.rhosts -exec ls -la {} 2>/dev/null \; -exec cat {} 2>/dev/null \;`
 if [ "$rhostsusr" ]; then
-  echo -e "\e[00;31mrhost config file(s) and file contents:\e[00m\n$rhostsusr" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mrhost config file(s) and file contents:\e[00m\n$rhostsusr"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$rhostsusr" ]; then
   mkdir $format/rhosts/ 2>/dev/null
   for i in $rhostsusr; do cp --parents $i $format/rhosts/; done 2>/dev/null
-else 
+else
   :
 fi
 
 bsdrhostsusr=`find /usr/home -iname *.rhosts -exec ls -la {} 2>/dev/null \; -exec cat {} 2>/dev/null \;`
 if [ "$bsdrhostsusr" ]; then
-  echo -e "\e[00;31mrhost config file(s) and file contents:\e[00m\n$bsdrhostsusr" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mrhost config file(s) and file contents:\e[00m\n$bsdrhostsusr"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$bsdrhostsusr" ]; then
   mkdir $format/rhosts 2>/dev/null
   for i in $bsdrhostsusr; do cp --parents $i $format/rhosts/; done 2>/dev/null
-else 
+else
   :
 fi
 
 rhostssys=`find /etc -iname hosts.equiv -exec ls -la {} 2>/dev/null \; -exec cat {} 2>/dev/null \;`
 if [ "$rhostssys" ]; then
-  echo -e "\e[00;31mHosts.equiv file details and file contents: \e[00m\n$rhostssys" 
-  echo -e "\n" 
-  else 
+  echo -e "\e[00;31mHosts.equiv file details and file contents: \e[00m\n$rhostssys"
+  echo -e "\n"
+  else
   :
 fi
 
 if [ "$export" ] && [ "$rhostssys" ]; then
   mkdir $format/rhosts/ 2>/dev/null
   for i in $rhostssys; do cp --parents $i $format/rhosts/; done 2>/dev/null
-else 
+else
   :
 fi
 
 #use supplied keyword and cat *.conf files for potential matches - output will show line number within relevant file path where a match has been located
 if [ "$keyword" = "" ]; then
-  echo -e "Can't search *.conf files as no keyword was entered\n" 
+  echo -e "Can't search *.conf files as no keyword was entered\n"
   else
     confkey=`find / -maxdepth 4 -name *.conf -type f -exec grep -Hn $keyword {} \; 2>/dev/null`
     if [ "$confkey" ]; then
-      echo -e "\e[00;31mFind keyword ($keyword) in .conf files (recursive 4 levels - output format filepath:identified line number where keyword appears):\e[00m\n$confkey" 
-      echo -e "\n" 
-     else 
-	echo -e "\e[00;31mFind keyword ($keyword) in .conf files (recursive 4 levels):\e[00m" 
-	echo -e "'$keyword' not found in any .conf files" 
-	echo -e "\n" 
+      echo -e "\e[00;31mFind keyword ($keyword) in .conf files (recursive 4 levels - output format filepath:identified line number where keyword appears):\e[00m\n$confkey"
+      echo -e "\n"
+     else
+	echo -e "\e[00;31mFind keyword ($keyword) in .conf files (recursive 4 levels):\e[00m"
+	echo -e "'$keyword' not found in any .conf files"
+	echo -e "\n"
     fi
 fi
 
@@ -2196,23 +2219,23 @@ if [ "$keyword" = "" ]; then
 	  confkeyfile=`find / -maxdepth 4 -name *.conf -type f -exec grep -lHn $keyword {} \; 2>/dev/null`
       mkdir --parents $format/keyword_file_matches/config_files/ 2>/dev/null
       for i in $confkeyfile; do cp --parents $i $format/keyword_file_matches/config_files/ ; done 2>/dev/null
-    else 
+    else
       :
   fi
 fi
 
 #use supplied keyword and cat *.log files for potential matches - output will show line number within relevant file path where a match has been located
 if [ "$keyword" = "" ];then
-  echo -e "Can't search *.log files as no keyword was entered\n" 
+  echo -e "Can't search *.log files as no keyword was entered\n"
   else
     logkey=`find / -name *.log -type f -exec grep -Hn $keyword {} \; 2>/dev/null`
     if [ "$logkey" ]; then
-      echo -e "\e[00;31mFind keyword ($keyword) in .log files (output format filepath:identified line number where keyword appears):\e[00m\n$logkey" 
-      echo -e "\n" 
-     else 
-	echo -e "\e[00;31mFind keyword ($keyword) in .log files (recursive 2 levels):\e[00m" 
+      echo -e "\e[00;31mFind keyword ($keyword) in .log files (output format filepath:identified line number where keyword appears):\e[00m\n$logkey"
+      echo -e "\n"
+     else
+	echo -e "\e[00;31mFind keyword ($keyword) in .log files (recursive 2 levels):\e[00m"
 	echo -e "'$keyword' not found in any .log files"
-	echo -e "\n" 
+	echo -e "\n"
     fi
 fi
 
@@ -2223,22 +2246,22 @@ if [ "$keyword" = "" ];then
       logkeyfile=`find / -name *.log -type f -exec grep -lHn $keyword {} \; 2>/dev/null`
 	  mkdir --parents $format/keyword_file_matches/log_files/ 2>/dev/null
       for i in $logkeyfile; do cp --parents $i $format/keyword_file_matches/log_files/ ; done 2>/dev/null
-    else 
+    else
       :
   fi
 fi
 
 #use supplied keyword and cat *.ini files for potential matches - output will show line number within relevant file path where a match has been located
 if [ "$keyword" = "" ];then
-  echo -e "Can't search *.ini files as no keyword was entered\n" 
+  echo -e "Can't search *.ini files as no keyword was entered\n"
   else
     inikey=`find / -maxdepth 4 -name *.ini -type f -exec grep -Hn $keyword {} \; 2>/dev/null`
     if [ "$inikey" ]; then
-      echo -e "\e[00;31mFind keyword ($keyword) in .ini files (recursive 4 levels - output format filepath:identified line number where keyword appears):\e[00m\n$inikey" 
-      echo -e "\n" 
-     else 
-	echo -e "\e[00;31mFind keyword ($keyword) in .ini files (recursive 2 levels):\e[00m" 
-	echo -e "'$keyword' not found in any .ini files" 
+      echo -e "\e[00;31mFind keyword ($keyword) in .ini files (recursive 4 levels - output format filepath:identified line number where keyword appears):\e[00m\n$inikey"
+      echo -e "\n"
+     else
+	echo -e "\e[00;31mFind keyword ($keyword) in .ini files (recursive 2 levels):\e[00m"
+	echo -e "'$keyword' not found in any .ini files"
 	echo -e "\n"
     fi
 fi
@@ -2250,7 +2273,7 @@ if [ "$keyword" = "" ];then
 	  inikey=`find / -maxdepth 4 -name *.ini -type f -exec grep -Hn $keyword {} \; 2>/dev/null`
       mkdir --parents $format/keyword_file_matches/ini_files/ 2>/dev/null
       for i in $inikey; do cp --parents $i $format/keyword_file_matches/ini_files/ ; done 2>/dev/null
-    else 
+    else
       :
   fi
 fi
@@ -2258,16 +2281,16 @@ fi
 
 #use supplied keyword and cat /var/www* files for potential matches - output will show line number within relevant file path where a match has been located
 if [ "$keyword" = "" ]; then
-  echo -e "Can't search /var/www files as no keyword was entered\n" 
+  echo -e "Can't search /var/www files as no keyword was entered\n"
 else
   if [ -d "/var/www/" ]; then
     wwwkey=`find /var/www -type f -exec grep -Hn $keyword {} \; 2>/dev/null`
     if [ "$wwwkey" ]; then
-      echo -e "\e[00;31mFind keyword ($keyword) in /var/www files (output format filepath:identified line number where keyword appears):\e[00m\n$wwwkey" 
-      echo -e "\n" 
-    else 
-     echo -e "\e[00;31mFind keyword ($keyword) in /var/www files:\e[00m" 
-     echo -e "'$keyword' not found in any /var/www files" 
+      echo -e "\e[00;31mFind keyword ($keyword) in /var/www files (output format filepath:identified line number where keyword appears):\e[00m\n$wwwkey"
+      echo -e "\n"
+    else
+     echo -e "\e[00;31mFind keyword ($keyword) in /var/www files:\e[00m"
+     echo -e "'$keyword' not found in any /var/www files"
      echo -e "\n"
     fi
   fi
@@ -2280,23 +2303,23 @@ else
     wwwkey=`find /var/www -type f -exec grep -lHn $keyword {} \; 2>/dev/null`
     mkdir --parents $format/keyword_file_matches/www_files/ 2>/dev/null
     for i in $inikey; do cp --parents $i $format/keyword_file_matches/www_files/ ; done 2>/dev/null
-  else 
+  else
     :
   fi
 fi
 
 #use supplied keyword and cat /home/.* files for potential matches - output will show line number within relevant file path where a match has been located
 if [ "$keyword" = "" ]; then
-  echo -e "Can't search /home/.* files as no keyword was entered\n" 
+  echo -e "Can't search /home/.* files as no keyword was entered\n"
 else
   if [ -d "/home" ]; then
     hiddenkey=`find /home -name ".*" -type f -exec grep -Hn $keyword {} \; 2>/dev/null`
     if [ "$hiddenkey" ]; then
-      echo -e "\e[00;31mFind keyword ($keyword) in /home/.* files (output format filepath:identified line number where keyword appears):\e[00m\n$hiddenkey" 
-      echo -e "\n" 
-    else 
-     echo -e "\e[00;31mFind keyword ($keyword) in /home/.* files:\e[00m" 
-     echo -e "'$keyword' not found in any /home/.* files" 
+      echo -e "\e[00;31mFind keyword ($keyword) in /home/.* files (output format filepath:identified line number where keyword appears):\e[00m\n$hiddenkey"
+      echo -e "\n"
+    else
+     echo -e "\e[00;31mFind keyword ($keyword) in /home/.* files:\e[00m"
+     echo -e "'$keyword' not found in any /home/.* files"
      echo -e "\n"
     fi
   fi
@@ -2309,7 +2332,7 @@ else
     hiddenkey=`find /home -name ".*" -type f -exec grep -lHn $keyword {} \; 2>/dev/null`
     mkdir --parents $format/keyword_file_matches/home_files/ 2>/dev/null
     for i in $inikey; do cp --parents $i $format/keyword_file_matches/home_files/ ; done 2>/dev/null
-  else 
+  else
     :
   fi
 fi
@@ -2317,16 +2340,16 @@ fi
 #quick extract of .conf files from /etc - only 1 level
 allconf=`find /etc/ -maxdepth 1 -name *.conf -type f -exec ls -la {} \; 2>/dev/null`
 if [ "$allconf" ]; then
-  echo -e "\e[00;31mAll *.conf files in /etc (recursive 1 level):\e[00m\n$allconf" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAll *.conf files in /etc (recursive 1 level):\e[00m\n$allconf"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$allconf" ]; then
   mkdir $format/conf-files/ 2>/dev/null
   for i in $allconf; do cp --parents $i $format/conf-files/; done 2>/dev/null
-else 
+else
   :
 fi
 
@@ -2342,57 +2365,57 @@ fi
 #extract any user history files that are accessible
 usrhist=`ls -la ~/.*_history 2>/dev/null`
 if [ "$usrhist" ]; then
-  echo -e "\e[00;31mCurrent user's history files:\e[00m\n$usrhist" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mCurrent user's history files:\e[00m\n$usrhist"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$usrhist" ]; then
   mkdir $format/history_files/ 2>/dev/null
   for i in $usrhist; do cp --parents $i $format/history_files/; done 2>/dev/null
- else 
+ else
   :
 fi
 
 #can we read roots *_history files - could be passwords stored etc.
 roothist=`ls -la /root/.*_history 2>/dev/null`
 if [ "$roothist" ]; then
-  echo -e "\e[00;33m***Root's history files are accessible!\e[00m\n$roothist" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***Root's history files are accessible!\e[00m\n$roothist"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$roothist" ]; then
   mkdir $format/history_files/ 2>/dev/null
   cp $roothist $format/history_files/ 2>/dev/null
-else 
+else
   :
 fi
 
 #is there any mail accessible
 readmail=`ls -la /var/mail 2>/dev/null`
 if [ "$readmail" ]; then
-  echo -e "\e[00;31mAny interesting mail in /var/mail:\e[00m\n$readmail" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAny interesting mail in /var/mail:\e[00m\n$readmail"
+  echo -e "\n"
+else
   :
 fi
 
 #can we read roots mail
 readmailroot=`head /var/mail/root 2>/dev/null`
 if [ "$readmailroot" ]; then
-  echo -e "\e[00;33m***We can read /var/mail/root! (snippet below)\e[00m\n$readmailroot" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33m***We can read /var/mail/root! (snippet below)\e[00m\n$readmailroot"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$readmailroot" ]; then
   mkdir $format/mail-from-root/ 2>/dev/null
   cp $readmailroot $format/mail-from-root/ 2>/dev/null
-else 
+else
   :
 fi
 
@@ -2424,62 +2447,62 @@ fi
 # check for docker files
 docker_checks()
 {
-echo -e "\e[00;33m### Docker Checks ####################################\e[00m" 
+echo -e "\e[00;33m### Docker Checks ####################################\e[00m"
 
 #specific checks - check to see if we're in a docker container
 dockercontainer=` grep -i docker /proc/self/cgroup  2>/dev/null; find / -name "*dockerenv*" -exec ls -la {} \; 2>/dev/null`
 if [ "$dockercontainer" ]; then
-  echo -e "\e[00;33mLooks like we're in a Docker container:\e[00m\n$dockercontainer" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33mLooks like we're in a Docker container:\e[00m\n$dockercontainer"
+  echo -e "\n"
+else
   :
 fi
 
 #specific checks - check to see if we're a docker host
 dockerhost=`docker --version 2>/dev/null; docker ps -a 2>/dev/null`
 if [ "$dockerhost" ]; then
-  echo -e "\e[00;33mLooks like we're hosting Docker:\e[00m\n$dockerhost" 
+  echo -e "\e[00;33mLooks like we're hosting Docker:\e[00m\n$dockerhost"
   echo -e "\n"
   if [ "$verinfo" = "1" ]; then
     echo -e $dockerhost >> verinfo.txt 2>/dev/null
   else
     :
   fi
-else 
+else
   :
 fi
 
 #specific checks - are we a member of the docker group
 dockergrp=`id | grep -i docker 2>/dev/null`
 if [ "$dockergrp" ]; then
-  echo -e "\e[00;33mWe're a member of the (docker) group - could possibly misuse these rights!:\e[00m\n$dockergrp" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;33mWe're a member of the (docker) group - could possibly misuse these rights!:\e[00m\n$dockergrp"
+  echo -e "\n"
+else
   :
 fi
 
 #specific checks - are there any docker files present
 dockerfiles=`find / -name Dockerfile -exec ls -l {} 2>/dev/null \;`
 if [ "$dockerfiles" ]; then
-  echo -e "\e[00;31mAnything juicy in the Dockerfile?:\e[00m\n$dockerfiles" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAnything juicy in the Dockerfile?:\e[00m\n$dockerfiles"
+  echo -e "\n"
+else
   :
 fi
 
 #specific checks - are there any docker files present
 dockeryml=`find / -name docker-compose.yml -exec ls -l {} 2>/dev/null \;`
 if [ "$dockeryml" ]; then
-  echo -e "\e[00;31mAnything juicy in docker-compose.yml?:\e[00m\n$dockeryml" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31mAnything juicy in docker-compose.yml?:\e[00m\n$dockeryml"
+  echo -e "\n"
+else
   :
 fi
 }
 
 lxc_container_checks()
 {
-echo -e "\e[00;33m### LXC Container Checks ####################################\e[00m" 
+echo -e "\e[00;33m### LXC Container Checks ####################################\e[00m"
 
   #specific checks - are we in an lxd/lxc container
   lxccontainer=`grep -qa container=lxc /proc/1/environ 2>/dev/null`
@@ -2499,7 +2522,7 @@ echo -e "\e[00;33m### LXC Container Checks ####################################\
 
 footer()
 {
-echo -e "\e[00;33m### SCAN COMPLETE ####################################\e[00m" 
+echo -e "\e[00;33m### SCAN COMPLETE ####################################\e[00m"
 }
 
 call_each()

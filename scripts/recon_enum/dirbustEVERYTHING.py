@@ -20,8 +20,8 @@ if (len(sys.argv) <= 3):
    tool = "gobuster"
 else:
    if (sys.argv[3] == "dirb" or sys.argv[3] == "gobuster"):
-      tool = str(sys.argv[3]) 
-   help()
+      tool = str(sys.argv[3])
+   print "Using %s" % (tool)
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5
@@ -54,12 +54,16 @@ port = url.split(":")[2]
 
 #PRIVATE FILENAMES
 BASE="/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+LISTS="/root/lists/Web/AllWebLists/separate"
 CEWL_OUT="%s/cewl_%s_%s" % (BASE, name, port)
 CEWL_TMP="%s/cewlTMP" % (BASE)
 STAT_200="%s/stat200_%s_%s" % (BASE, name, port)
 GOB_DEFAULT="%s/gobuster_%s_%s_default" % (BASE, name, port)
 GOB_CEWL_OUTPUT="%s/gobuster_%s_%s_cewld" % (BASE, name, port)
 GOB_COMBINED="%s/gobuster_%s_%s_combined" % (BASE, name, port)
+DIRB_DEFAULT="%s/dirb_%s_%s_default" % (BASE, name, port)
+DIRB_CEWL_OUTPUT="%s/dirb_%s_%s_cewld" % (BASE, name, port)
+DIRB_COMBINED="%s/dirb_%s_%s_combined" % (BASE, name, port)
 WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (ip_address, port)
 WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (ip_address, port)
 
@@ -94,32 +98,39 @@ def genlist():
 #Call getStatus200
 #Grab CEWL output each run and add into set for uniqueness
 #Iterate through set and output words for further gobusting
-def genlistLoop():
+def genlistLoop(tool_default_list):
     print "INFO: generating custom wordlist"
-    getStatus200()
+    getStatus200(tool_default_list)
     g = open(STAT_200, 'r')
     cewldWords = set()
-    for line in g:
-        line = line.split(" ")[0]
-        CEWLSCAN = "cewl -d 2 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, line, CEWL_TMP)
+    if (os.path.getsize(STAT_200) != 0): #shouldn't happen, but if there are no 'new' dirs, just spider main page
+        for line in g:
+            line = line.split(" ")[0]
+            CEWLSCAN = "cewl -d 2 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, line, CEWL_TMP)
+            results = subprocess.check_call(CEWLSCAN, shell=True)
+            h = open(CEWL_TMP, 'r')
+            for res in h:
+                cewldWords.add(res)
+    else:
+        CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_TMP)
         results = subprocess.check_call(CEWLSCAN, shell=True)
         h = open(CEWL_TMP, 'r')
         for res in h:
             cewldWords.add(res)
-        h.close()
+    h.close()
     g.close()
     g = open(CEWL_OUT, 'w')
     for word in cewldWords:
         g.write(word)
     g.close()
 
-#After the first run of Gobuster, grab the results, 
+#After the first run of Gobuster, grab the results,
 #parse status 200 into another file for CEWL
-def getStatus200():
-    g = open(GOB_DEFAULT, 'r')
+def getStatus200(tool_default_list): #like GOB_DEFAULT/DIRB_DEFAULT
+    g = open(tool_default_list, 'r')
     status200=[]
     for line in g:
-        if ("(Status: 200)" in line):
+        if ("(Status: 200)" in line) or ("(CODE:200" in line): #Status for Gob, Code for dirb
             status200.append(line)
     g.close()
     g = open(STAT_200, 'w')
@@ -127,32 +138,53 @@ def getStatus200():
         g.write(line)
     g.close()
 
-def dirb(url):
-    folders = ["/root/lists/Web/AllWebLists/separate", "/usr/share/dirb/wordlists/vulns"]
-    found = []
-    print "INFO: Starting dirb scan for %s" % (url)
-    for folder in folders:
-        for filename in os.listdir(folder):
-            outfile = " -o " + "/root/scripts/recon_enum/results/exam/dirb/" + name + "_dirb_" + filename
-            DIRBSCAN = "dirb %s %s/%s %s -a -S -r" % (url, folder, filename, outfile, user_agent)
-            #print "Now trying dirb list: %s" % (filename)
+def dirb(wordlist, scanname):
+    #dirb documentation (not all options, just common ones)
+    #dirb <url_base> <url_base> [<wordlist_file(s)>] [options]
+    #-a string:     custom User_Agent
+    #-b :           don't squash or merge sequences of /../ or /./ in the given URL
+    #-f:            fine tunning of NOT_FOUND (404) detection
+    #-N <nf_code>:  ifnore responses with this HTTP code
+    #-o <output>:   save output to disk
+    #-r:            don't search recursively
+    #-R:            interactive recursion (ask for each)
+    #-S:            silent mode. Don't show tested words
+    #-t:            don't force an ending '/' on URLs
+    #-v:            show  also not existent pages
+    #-w:            don't stop on warning messages
+    #-x <ext_file>: amplify search with the extensions on this file
+    #-X <ext>:      Amplify search with this extensions
+    #-z <milisec>:  Amplify search with this extensions
+    #Dirb actually cannot handle too many wordlists passed at a time....have to loop each individually
+    if (wordlist == ""):
+        cwd = os.getcwd() #get it so we can pop back to it later because reasons
+        os.chdir(LISTS)
+        files = os.listdir(LISTS)
+        f = open(scanname, 'a')
+        for file in files:
+            DIRBSCAN = "dirb %s %s -a '%s' -b -f -S" % (url, file, user_agent)
+            results = subprocess.check_call(DIRBSCAN, shell=True)
             try:
-                results = subprocess.check_output(DIRBSCAN, shell=True)
-                resultarr = results.split("\n")
-                for line in resultarr:
-                    if "+" in line:
-	                    if line not in found:
-	                        found.append(line)
+                itter = results.split("\n")
+                for line in itter:
+                    if ( str("+") in results) or ( str("(!)") in results):
+                        f.write(results)
             except:
                 pass
-
-    try:
-        if found[0] != "":
-            print "[*] Dirb found the following items..."
-            for item in found:
-                print "   " + item
-    except:
-        print "INFO: No items found during dirb scan of " + url
+        os.chdir(cwd)
+        f.close()
+    else:
+        f = open(scanname, 'w')
+        DIRBSCAN = "dirb %s %s -a '%s' -b -f -S" % (url, wordlist, user_agent)
+        results = subprocess.check_call(DIRBSCAN, shell=True)
+        try:
+            itter = results.split("\n")
+            for line in itter:
+                if ("+" in results) or ("(!)" in results):
+                    f.write(results)
+        except:
+            pass
+        f.close()
 
 def gobuster(wordlist, scanname):
     #gobuster documentation (not all options, just common ones)
@@ -204,8 +236,19 @@ def whatWeb():
     WHATWEBFINGER = "whatweb -i %s -u '%s' -a 3 -v --log-xml=%s" % (WW_URLS, user_agent, WW_OUT)
     subprocess.call(WHATWEBFINGER, shell=True)
 
+def comuni(tool,combined_name):
+    COMUNI = "awk \'!a[$0]++\' %s/%s* > %s" % (BASE, tool, combined_name)
+    comuniresults = subprocess.check_call(COMUNI, shell=True)
+
 if (tool == "dirb"):
-    dirb(url)
+    print "INFO: Starting dirb scan for %s:%s" % (url, port)
+    dirb("", DIRB_DEFAULT)
+    print "INFO: Finished initial dirb scan for %s:%s" % (url, port)
+    genlistLoop(DIRB_DEFAULT)
+    dirb(CEWL_OUT, DIRB_CEWL_OUTPUT)
+    print "INFO: Finished cewl dirb scan for %s:%s" % (url, port)
+    comuni("dirb",DIRB_COMBINED)
+    sortBySize(DIRB_COMBINED)
 
 if (tool == "gobuster"):
     #Process:
@@ -214,13 +257,13 @@ if (tool == "gobuster"):
     print "INFO: Starting gobuster scan for %s" % (url)
     gobuster(default_wordlist, GOB_DEFAULT)
     print "INFO: Finished initial gobuster scan for %s:%s" % (url, port)
-    genlistLoop()
+    genlistLoop(GOB_DEFAULT)
     gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
     print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
-    COMUNI = "awk \'!a[$0]++\' %s/gobuster* > %s" % (BASE, GOB_COMBINED)
-    comuniresults = subprocess.check_call(COMUNI, shell=True)
+    comuni("gobuster",GOB_COMBINED)
     sortBySize(GOB_COMBINED)
-    whatWeb()
+
 
 print "INFO: Directory brute of %s completed" % (url)
+whatWeb()
 print "INFO: WhatWeb identification of %s completed" % (url)

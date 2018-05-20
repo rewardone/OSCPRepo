@@ -2,12 +2,22 @@
 #This script will do basic setup to make sure everything is in place
 #This should would on default Kali installation
 #
-# TODO, getsploit setup.py instead of moving into path?
+# Other notes
+# shutter preferences: hide on first launch
+# terminal preferences: Dark theme
+# latest version of firefox, firefox bookmarks and extensions (foxyproxy)
+# favorites menu (atom, firefox, keepnote, shutter)
+#
+# If in a VM and Copy/Paste is NOT working: apt-get install open-vm-tools open-vm-desktop
+# and then reboot!!
+#
 
 echo "### Downloading things...### \n\n"
-echo "Install new software: Shutter, exiftool, gobuster, git, nbtscan-unixwiz"
+echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz shutter"
+curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
 apt-get update
-apt-get install -y shutter exiftool gobuster git nbtscan-unixwiz
+apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz shutter
 
 echo "\nCloning Impacket \n"
 direc=/root/Documents/Impacket

@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Configuration Files</string>
   <key>nodeid</key><string>432abd7f-4320-40da-99a2-901eaecd4c81</string>
   <key>modified_time</key><integer>1524752835</integer>

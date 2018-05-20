@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>samba-4.1-replicate-only</string>
+  <key>nodeid</key><string>184d53ec-5a26-4de2-a63f-2a04ff4ab36d</string>
+  <key>modified_time</key><integer>1526667163</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1526667128</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
