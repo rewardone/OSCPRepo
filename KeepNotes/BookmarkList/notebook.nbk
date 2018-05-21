@@ -73,10 +73,9 @@
             <key>ids</key><dict>
                 <key>f07d806d-4ea3-41fa-b964-ae4d286b4667</key><dict>
                     <key>selected_treeview_nodes</key><array>
-                        <string>a6719b78-208f-44f6-9f11-fe367b9adcd5</string>
                     </array>
                     <key>selected_listview_nodes</key><array>
-                        <string>a6719b78-208f-44f6-9f11-fe367b9adcd5</string>
+                        <string>383fda53-0fda-44e8-9e6d-c7cefa39fbd8</string>
                     </array>
                 </dict>
                 <key>eb6d623b-faa3-49a0-97b4-ca4b884f9972</key><dict>

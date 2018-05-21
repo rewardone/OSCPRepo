@@ -17,7 +17,7 @@
 ## against all ports.
 ##-------------------------------------------------------------------------------------------------------------
 ## [Run]:
-## Execute setup.sh in the scripts folder
+## Execute setup.sh in the scripts folder and then
 ## /root/scripts/recon_enum/./reconscan.py
 ## or
 ## python /root/scripts/recon_enum/reconscan.py
@@ -63,6 +63,9 @@
 ## Need scripts for:
 ##       LDAP, rlogin, rsh, vnc
 ## Get rid of duplicate output logs from each script
+##
+## [Bug] Interesting bug, where unicornscan fails to detect an open port, but nmap does. Need to have fullMap
+##       check or alert the user.
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...
@@ -294,8 +297,8 @@ def fullMap(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running full TCP/UDP nmap scans for %s" % (ip_address)
    print "INFO: Full UDP takes a LONG time"
-   TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sS -T 4 -p- --max-retries 1 --min-rate 300 -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
-   UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 4 -p- --max-retries 1 --min-rate 300 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
+   TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 4 -p- --max-retries 1 --min-rate 10000 -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
+   UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 4 -p- --max-retries 1 --min-rate 10000 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
    tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
    for line in tcplines:
       line = line.strip()
@@ -323,11 +326,22 @@ def fullMap(ip_address):
 
 #Be sure to change the interface if needed
 #-mT/-mU TCP/UDP respectively, full range of ports. -L timeout 3 seconds (7 default), 300 packets per second (default)
+#-B #:      source port for sent packets. Think evasion, ie scanning from 53 into a network
+#-i dev:    interface
+#-I:        display results immediately as they are found
+#-l file:   logs the output of 'main' thread
+#-L #:      value representing number of seconds to wait before declaring the scan over
+#-m string: mode. U, T, A, and sf for UDP scanning, TCP scanning, Arp scanning, and TCP connect respectively
+#-M dir:    module directory
+#-p #:      ports
+#-Q:        Quiet
+#-r #:      Rate in packets per second
+#-s ip:     Source to use to override default address
 def unicornScan(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running general TCP/UDP unicorn scans for " + ip_address
-   TCPSCAN = "unicornscan -i eth0 -mT -p1-65535 %s -l /root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt -L 3 -r 300" % (ip_address, ip_address)
-   UDPSCAN = "unicornscan -i eth0 -mU -p1-65535 %s -l /root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt -L 3 -r 300" % (ip_address, ip_address)
+   TCPSCAN = "unicornscan -i eth0 -msf -p1-65535 %s -l /root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt -L 3 -r 500000" % (ip_address, ip_address)
+   UDPSCAN = "unicornscan -i eth0 -mU -p1-65535 %s -l /root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt -L 3 -r 500000" % (ip_address, ip_address)
    subprocess.check_output(TCPSCAN, shell=True)
    subprocess.check_output(UDPSCAN, shell=True)
    tcpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
