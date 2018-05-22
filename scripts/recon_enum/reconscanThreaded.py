@@ -348,53 +348,7 @@ def nmapFullFastScan(ip_address):
          print ("INFO: Quick Nmap for %s found TCP: %s on %s") % (ip_address, service, port)
    for port in tcpPorts: #the last element in the list is blank
       if port != "":
-         #need this to version ports and in case there is no recon module we'll have a scan for it. Runs default scripts.
-         uniNmapTCP = "nmap -n -vv -Pn -A -sC -sT -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%s_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
-         lines = subprocess.check_output(uniNmapTCP, shell=True).split("\n")
-         print "INFO: nmap versioning for TCP %s:%s completed" % (ip_address, port)
-         for line in lines:
-            line = line.strip()
-            if ("tcp" in line) and ("open" in line) and not ("Discovered" in line):
-               while "  " in line:
-                  line = line.replace("  ", " ");
-               linesplit= line.split(" ")
-               service = linesplit[2] # grab the service name
-               port = line.split(" ")[0] # grab the port/proto
-               port = port.split("/")[0]
-               if ("http" in service):
-                  multProc(httpEnum, ip_address, port)
-               elif ("domain" in service):
-                  multProc(dnsEnum, ip_address, port)
-               elif ("finger" in service):
-			      multProc(fingerEnum, ip_address, port)
-               elif ("ftp" in service):
-                  multProc(ftpEnum, ip_address, port)
-               elif ("netbios-ssn" in service):
-                  multProc(smbEnum, ip_address,port)
-               elif ("microsoft-ds" in service):
-                  multProc(smbEnum, ip_address, port)
-               elif ("ms-sql" in service or "mssql" in service):
-                  multProc(mssqlEnum, ip_address, port)
-               elif ("my-sql" in service or "mysql" in service):
-			      multProc(mysqlEnum, ip_address, port)
-               elif ("nfs" in service):
-			      multProc(nfsEnum, ip_address, port)
-               elif ("rdp" in service):
-			      multProc(rdpEnum, ip_address, port)
-               elif ("rpcbind" == service):
-                  multProc(rpcbindEnum, ip_address, port)
-               elif ("ssh/http" in service or "https" in service):
-                  multProc(httpsEnum, ip_address, port)
-               elif ("ssh" in service):
-                  multProc(sshEnum, ip_address, port)
-               elif ("smtp" in service):
-                  multProc(smtpEnum, ip_address, port)
-               elif ("snmp" in service):
-                  multProc(snmpEnum, ip_address, port)
-               elif ("telnet" in service):
-			      multProc(telnetEnum, ip_address, port)
-               elif ("tftp" in service):
-			      multProc(tftpEnum, ip_address, port)
+         multProc(nmapVersionTCPAndPass, ip_address, port)
    udplines = subprocess.check_output(UDPSCAN, shell=True).split("\n")
    for line in udplines:
       line = line.strip()
@@ -409,26 +363,78 @@ def nmapFullFastScan(ip_address):
          print ("INFO: Quick Nmap for %s found UDP: %s on %s") % (ip_address, service, port)
    for port in udpPorts: #the last element in the list is blank
       if port != "":
-         uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
-         lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
-         print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
-         for line in lines:
-            line = line.strip()
-            if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
-               while "  " in line:
-                  line = line.replace("  ", " ");
-               linesplit= line.split(" ")
-               service = linesplit[2] # grab the service name
-               port = line.split(" ")[0] # grab the port/proto
-               port = port.split("/")[0]
-               if ("domain" in service):
-                  multProc(dnsEnum, ip_address, port)
+         multProc(nmapVersionUDPAndPass, ip_address, port)
    print "INFO: General TCP/UDP nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
    jobs = []
    q = multiprocessing.Process(target=nmapFullSlowScan, args=(scanip,)) #comma needed
    jobs.append(q)
    q.start()
    return
+
+def nmapVersionTCPAndPass(ip_address, port):
+   #need this to version ports and in case there is no recon module we'll have a scan for it. Runs default scripts.
+   uniNmapTCP = "nmap -n -vv -Pn -A -sC -sT -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%s_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
+   lines = subprocess.check_output(uniNmapTCP, shell=True).split("\n")
+   print "INFO: nmap versioning for TCP %s:%s completed" % (ip_address, port)
+   for line in lines:
+      line = line.strip()
+   if ("tcp" in line) and ("open" in line) and not ("Discovered" in line):
+      while "  " in line:
+         line = line.replace("  ", " ");
+      linesplit= line.split(" ")
+      service = linesplit[2] # grab the service name
+      port = line.split(" ")[0] # grab the port/proto
+      port = port.split("/")[0]
+      if ("http" in service):
+         multProc(httpEnum, ip_address, port)
+      elif ("domain" in service):
+         multProc(dnsEnum, ip_address, port)
+      elif ("finger" in service):
+         multProc(fingerEnum, ip_address, port)
+      elif ("ftp" in service):
+         multProc(ftpEnum, ip_address, port)
+      elif ("netbios-ssn" in service):
+         multProc(smbEnum, ip_address,port)
+      elif ("microsoft-ds" in service):
+         multProc(smbEnum, ip_address, port)
+      elif ("ms-sql" in service or "mssql" in service):
+         multProc(mssqlEnum, ip_address, port)
+      elif ("my-sql" in service or "mysql" in service):
+         multProc(mysqlEnum, ip_address, port)
+      elif ("nfs" in service):
+         multProc(nfsEnum, ip_address, port)
+      elif ("rdp" in service):
+         multProc(rdpEnum, ip_address, port)
+      elif ("rpcbind" == service):
+         multProc(rpcbindEnum, ip_address, port)
+      elif ("ssh/http" in service or "https" in service):
+         multProc(httpsEnum, ip_address, port)
+      elif ("ssh" in service):
+         multProc(sshEnum, ip_address, port)
+      elif ("smtp" in service):
+         multProc(smtpEnum, ip_address, port)
+      elif ("snmp" in service):
+         multProc(snmpEnum, ip_address, port)
+      elif ("telnet" in service):
+         multProc(telnetEnum, ip_address, port)
+      elif ("tftp" in service):
+         multProc(tftpEnum, ip_address, port)
+
+def nmapVersionUDPAndPass(ip_address, port):
+   uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
+   lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
+   print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
+   for line in lines:
+      line = line.strip()
+   if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
+      while "  " in line:
+         line = line.replace("  ", " ");
+      linesplit= line.split(" ")
+      service = linesplit[2] # grab the service name
+      port = line.split(" ")[0] # grab the port/proto
+      port = port.split("/")[0]
+      if ("domain" in service):
+         multProc(dnsEnum, ip_address, port)
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5

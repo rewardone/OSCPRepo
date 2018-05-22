@@ -1,8 +1,10 @@
-#!/usr/bin/python
-#Overkill-httpRecon
+#!/usr/bin/env python
+
 import sys
 import os
 import subprocess
+import errno
+import time
 
 def help():
     print "Usage: nmapHttpVulns.py <ip address> <port>"
@@ -19,15 +21,16 @@ def mkdir_p(path):
          pass
       else:
          raise
-#This is needed in case of odd ports. May not be only 80/443
-path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
-mkdir_p(path)
 
 ip_address = sys.argv[1].strip()
 port = sys.argv[2].strip()
 
-BASE="/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
-STAT_200="%s/stat200_%s_%s" % (BASE, ip_address, port) #ip_address is typically used (by defaut), but a user can specify
+#This is needed in case of odd ports. May not be only 80/443
+path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+mkdir_p(path)
+
+BASE = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+STAT_200 = "%s/stat200_%s_%s" % (BASE, ip_address, port) #ip_address is typically used (by defaut), but a user can specify
 
 #running
 #http-vuln-cve2006-3392.nse: Webmin before 1.290 and Usermin before 1.220 file disclosure using %01
@@ -68,6 +71,8 @@ f.close
 #http-shellshock.nse: Attempt to exploit CVE-2014-6271 and CVE-2014-7169 Shellshock vulnerability in web applications http-shellshock.uri=/
 #http-sql-injection.nse: Very basic attempt to show SQL errors in forms. http-sql-injection.url=URLs relative to the scanned host ie /default.html
 #for status 200 in urls if the file exists
+while not os.path.exists(STAT_200):
+    time.sleep(5)
 if os.path.isfile(STAT_200):
     f = open(outfile, "a")
     g = open(STAT_200)
