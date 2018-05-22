@@ -17,7 +17,7 @@
 ## against all ports.
 ##-------------------------------------------------------------------------------------------------------------
 ## [Run]:
-## Execute setup.sh in the scripts folder and then
+## Execute setup.sh in the scripts folder
 ## /root/scripts/recon_enum/./reconscan.py
 ## or
 ## python /root/scripts/recon_enum/reconscan.py
@@ -36,14 +36,15 @@
 ## [TODO]
 ##
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
-## Expand DNSRecon
-## Expand DirbustEverything
-##     TODO: check again on utilizing gobuster follow redirects as default instead. Timing? Total URLS? Junk?
-##     TODO: list without extensions, then a final list (after cewl) with most common extensions, option for every extension
-##     TODO: normal no ext, normal with most common ext, cewl, cewl with ext. Tell user more specific ext lists to use
-##     TODO: Dirb is still reaaly fast. As fast as or faster than gobuster. Need to tweak settings though.
+## Fix DNSRecon
+## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
+##       : But benefit of having less 301 / false negatives
+##       : Initial testing: times are same. -r scan has more false negatives. Looks like best option will be
+##       : no redirect scan, grab (Status: 301) pages and gobust just on those
+## Fix WhatWeb: need error checking on URLs before calling WhatWeb on them all
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
-## Expand dirTrav: Need to debug all cases (page?= vulns and windows)
+## Expand dirTrav:
+##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
 ##      POST SCAN COMPLETION:
@@ -52,28 +53,22 @@
 ##                (if Windows AND SMB: github/enternal_check) #not mandatory because of additional dependencies
 ##                                                            #unless they are already in Kali...
 ## Expand ReconScan:
-##      Other tools to consider: dirsearch (up to 50% slower than gobuster), DirBuster, vhostscan etc
 ##      Other tools to consider: WHOIS, TheHarvester, Metagoofil, DNSRecon, Sublist3r
 ##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti
 ##      Other tools to consider: WPscan, WPscanner, WPSeku, Droopescan, SSLScan, SSLyze A2SV
 ##      Separate CMSscannerrecon
-## web page screenshots
-## Option flag to run FullMAP or not
-## Full Connect on Unicornscan or not...testing required
 ## Need scripts for:
 ##       LDAP, rlogin, rsh, vnc
+## web page screenshots
 ## Get rid of duplicate output logs from each script
 ##
-## [Bug] Interesting bug, where unicornscan fails to detect an open port, but nmap does. Need to have fullMap
-##       check or alert the user.
+## [Performance]
+## Need to examine Zombie processes...clean up with proper .joins() etc
+## Move versioning and multproc to a separate function, pass them all so each port doesn't have to wait to be versioned
+## Instead of check_output(,shell=True), pass directly to cmd check_output(['','','']) etc etc
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...
-## Edit web wordlist so lines never start with /? (only small percentage of them do)
-## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
-##       : But benefit of having less 301 / false negatives
-##       : Initial testing: times are same. -r scan has more false negatives. Looks like best option will be
-##       : no redirect scan, grab (Status: 301) pages and gobust just on those
 ## Split http nmap scripts
 ##
 ## [NOTES]
@@ -155,6 +150,8 @@ def fingerEnum(ip_address, port):
 #http-sql-injection: spider server looking for URLs containing queries vuln to SQLi. Extracts forms and tries to identify fields that are vuln
 #http-unsafe-output-escaping: fuzz parameters and checks to see if they are reflected
 def httpEnum(ip_address, port):
+    path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+    mkdir_p(path)
     print "INFO: Detected http on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
@@ -172,6 +169,8 @@ def httpEnum(ip_address, port):
     return
 
 def httpsEnum(ip_address, port):
+    path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+    mkdir_p(path)
     print "INFO: Detected https on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
@@ -293,12 +292,12 @@ def tftpEnum(ip_address, port):
    subprocess.call(TFTPSCAN, shell=True)
    return
 
-def fullMap(ip_address):
+def nmapFullSlowScan(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running full TCP/UDP nmap scans for %s" % (ip_address)
    print "INFO: Full UDP takes a LONG time"
-   TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 4 -p- --max-retries 1 --min-rate 10000 -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
-   UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 4 -p- --max-retries 1 --min-rate 10000 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
+   TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 3 -p- --max-retries 1 --min-rate 1000 -oN '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
+   UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 3 -p- --max-retries 1 --min-rate 1000 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
    tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
    for line in tcplines:
       line = line.strip()
@@ -309,7 +308,7 @@ def fullMap(ip_address):
          service = linesplit[2] # grab the service name
          port = line.split(" ")[0] # grab the port/proto
          port = port.split("/")[0]
-         print ("INFO: Full Nmap found TCP: %s on %s") % (service, port)
+         print ("INFO: Full Nmap for %s found TCP: %s on %s") % (ip_address, service, port)
    udplines = subprocess.check_output(UDPSCAN, shell=True).split("\n")
    for line in udplines:
       line = line.strip()
@@ -320,40 +319,35 @@ def fullMap(ip_address):
          service = linesplit[2] # grab the service name
          port = line.split(" ")[0] # grab the port/proto
          port = port.split("/")[0]
-         print ("INFO: Full Nmap found UDP: %s on %s") % (service, port)
+         print ("INFO: Full Nmap for %s found UDP: %s on %s") % (ip_address, service, port)
    print "INFO: TCP/UDP Nmap scans completed for %s" % (ip_address)
    return
 
 #Be sure to change the interface if needed
 #-mT/-mU TCP/UDP respectively, full range of ports. -L timeout 3 seconds (7 default), 300 packets per second (default)
-#-B #:      source port for sent packets. Think evasion, ie scanning from 53 into a network
-#-i dev:    interface
-#-I:        display results immediately as they are found
-#-l file:   logs the output of 'main' thread
-#-L #:      value representing number of seconds to wait before declaring the scan over
-#-m string: mode. U, T, A, and sf for UDP scanning, TCP scanning, Arp scanning, and TCP connect respectively
-#-M dir:    module directory
-#-p #:      ports
-#-Q:        Quiet
-#-r #:      Rate in packets per second
-#-s ip:     Source to use to override default address
-def unicornScan(ip_address):
+def nmapFullFastScan(ip_address):
    ip_address = ip_address.strip()
-   print "INFO: Running general TCP/UDP unicorn scans for " + ip_address
-   TCPSCAN = "unicornscan -i eth0 -msf -p1-65535 %s -l /root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt -L 3 -r 500000" % (ip_address, ip_address)
-   UDPSCAN = "unicornscan -i eth0 -mU -p1-65535 %s -l /root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt -L 3 -r 500000" % (ip_address, ip_address)
-   subprocess.check_output(TCPSCAN, shell=True)
-   subprocess.check_output(UDPSCAN, shell=True)
-   tcpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-tcp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
-   udpPorts = 'cat "/root/scripts/recon_enum/results/exam/unicorn/%s-udp.txt" | grep open | cut -d"[" -f2 | cut -d"]" -f1 | sed \'s/ //g\'' % (ip_address)
-   tcpPorts = subprocess.check_output(tcpPorts, shell=True).split("\n")
-   print "INFO: Unicorn TCP ports %s" % tcpPorts
-   udpPorts = subprocess.check_output(udpPorts, shell=True).split("\n")
-   print "INFO: Unicorn UDP ports %s" % udpPorts
-   #pass to nmap for versioning
+   print "INFO: Running general TCP/UDP nmap scans for " + ip_address
+   TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 4 -p- --max-retries 1 --min-rate 10000 -oN '/root/scripts/recon_enum/results/exam/nmap/%s_IDENT.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_IDENT_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
+   UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 4 -p- --max-retries 1 --min-rate 10000 -oN '/root/scripts/recon_enum/results/exam/nmap/%sU_IDENT.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%sU_IDENT_nmap_scan_import.xml' %s" % (ip_address, ip_address, ip_address)
+   tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
+   tcpPorts = []
+   udpPorts = []
+   for line in tcplines:
+      line = line.strip()
+      if ("tcp" in line) and ("open" in line) and not ("Discovered" in line):
+         while "  " in line:
+            line = line.replace("  ", " ");
+         linesplit= line.split(" ")
+         service = linesplit[2] # grab the service name
+         port = line.split(" ")[0] # grab the port/proto
+         port = port.split("/")[0]
+         tcpPorts.append(port)
+         print ("INFO: Full Nmap for %s found TCP: %s on %s") % (ip_address, service, port)
    for port in tcpPorts: #the last element in the list is blank
       if port != "":
-         uniNmapTCP = "nmap -n -vv --stats-every 30s -Pn -A -sC -sS -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%s_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
+         #need this to version ports and in case there is no recon module we'll have a scan for it. Runs default scripts.
+         uniNmapTCP = "nmap -n -vv -Pn -A -sC -sT -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%s.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%s_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
          lines = subprocess.check_output(uniNmapTCP, shell=True).split("\n")
          print "INFO: nmap versioning for TCP %s:%s completed" % (ip_address, port)
          for line in lines:
@@ -399,10 +393,21 @@ def unicornScan(ip_address):
 			      multProc(telnetEnum, ip_address, port)
                elif ("tftp" in service):
 			      multProc(tftpEnum, ip_address, port)
-
+   udplines = subprocess.check_output(UDPSCAN, shell=True).split("\n")
+   for line in udplines:
+      line = line.strip()
+      if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
+         while "  " in line:
+            line = line.replace("  ", " ");
+         linesplit= line.split(" ")
+         service = linesplit[2] # grab the service name
+         port = line.split(" ")[0] # grab the port/proto
+         port = port.split("/")[0]
+         udpPorts.append(port)
+         print ("INFO: Full Nmap for %s found UDP: %s on %s") % (ip_address, service, port)
    for port in udpPorts: #the last element in the list is blank
       if port != "":
-         uniNmapUDP = "nmap -n -vv --stats-every 30s -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
+         uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
          lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
          print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
          for line in lines:
@@ -416,9 +421,9 @@ def unicornScan(ip_address):
                port = port.split("/")[0]
                if ("domain" in service):
                   multProc(dnsEnum, ip_address, port)
-   print "INFO: General TCP/UDP unicorn and nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
+   print "INFO: General TCP/UDP nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
    jobs = []
-   q = multiprocessing.Process(target=fullMap, args=(scanip,)) #comma needed
+   q = multiprocessing.Process(target=nmapFullSlowScan, args=(scanip,)) #comma needed
    jobs.append(q)
    q.start()
    return
@@ -437,7 +442,7 @@ def mkdir_p(path):
 #Create the directories that are currently hardcoded in the script
 #dotdotpwn directory for reports created automatically by dotdotpwn just in case user wants them
 def createDirectories():
-   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","msrpc","mssql","mysql","nfs","nikto","nmap","rdp","rpc","smb","smtp","snmp","ssh","telnet","tftp","unicorn","whatweb"
+   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","msrpc","mssql","mysql","nfs","nikto","nmap","rdp","rpc","smb","smtp","snmp","ssh","telnet","tftp","whatweb"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
    mkdir_p("/usr/share/dotdotpwn/Reports")
@@ -485,7 +490,7 @@ def printBanner():
    print "####        finger, http, mssql, mysql, nfs, nmap,        ####"
    print "####        rdp, smb, smtp, snmp, ssh, telnet, tftp       ####"
    print "##############################################################"
-   print "######## Don't forget to start your TCPDUMP/NET-CREDS ########"
+   print "############# Don't forget to start your TCPDUMP #############"
    print "############ Don't forget to start your RESPONDER ############"
    print "##############################################################"
    print "##### This tool relies on many others. Please ensure you #####"
@@ -496,7 +501,7 @@ def printBanner():
 #User needs to place the targets in the results/exam/targets.txt file
 if __name__=='__main__':
    printBanner()
-   if os.path.isdir('/root/scripts/recon_enum/results/exam/unicorn'):
+   if os.path.isdir('/root/scripts/recon_enum/results/exam/nmap'):
       backupExisting()
 
    mksymlink()
@@ -518,10 +523,11 @@ if __name__=='__main__':
         exit(0)
 
    for scanip in f:
-       jobs = []
+      jobs = []
+      if scanip[0] != "#":
 #      Uncomment to maintain original nmap functionality. Comment out unicorn scan line.
 #      p = multiprocessing.Process(target=nmapScan, args=(scanip,))
-       p = multiprocessing.Process(target=unicornScan, args=(scanip,)) #comma needed to only pass single arg
-       jobs.append(p)
-       p.start()
+         p = multiprocessing.Process(target=nmapFullFastScan, args=(scanip,)) #comma needed to only pass single arg
+         jobs.append(p)
+         p.start()
    f.close()

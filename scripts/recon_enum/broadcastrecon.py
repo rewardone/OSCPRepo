@@ -6,7 +6,7 @@ if len(sys.argv) != 2:
     print "Usage: broadcastrecon.py <interface>"
     sys.exit(0)
 
-interface = sys.argv[2]
+interface = sys.argv[1]
 
 #NSE Documentation
 #Running
@@ -31,7 +31,7 @@ interface = sys.argv[2]
 #broadcast-wpad-discover: Retrieve a list of proxy servers on lan using WPAD. Both DHCP and DNS methods.
 
 print "INFO: Performing nmap broadcast discovery using interface: %s" % (interface)
-DISCOVERYSCAN = "nmap -vv --script=broadcast-ataoe-discover,broadcast-db2-discover,broadcast-dhcp-discover,broadcast-dhcp6-discover,broadcast-dns-service-discover,broadcast-listener,broadcast-ms-sql-discover,broadcast-netbios-master-browser,broadcast-ospf2-discover,broadcast-pc-anywhere,broadcast-rip-discover,broadcast-upnp-info,broadcast-wsdd-discover,broadcast-xdmcp-discover,targets-sniffer -oN '/root/scripts/recon_enum/results/exam/nmap/%s_broadcast.nmap' -e %s" % (interface, interface)
+DISCOVERYSCAN = "nmap -vv --script=broadcast-ataoe-discover,broadcast-db2-discover,broadcast-dhcp-discover,broadcast-dhcp6-discover,broadcast-dns-service-discovery,broadcast-listener,broadcast-ms-sql-discover,broadcast-netbios-master-browser,broadcast-ospf2-discover,broadcast-pc-anywhere,broadcast-rip-discover,broadcast-upnp-info,broadcast-wsdd-discover,broadcast-xdmcp-discover,targets-sniffer -oN '/root/scripts/recon_enum/results/exam/nmap/%s_broadcast.nmap' -e %s" % (interface, interface)
 results = subprocess.check_output(DISCOVERYSCAN, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/nmap/%s_broadcastrecon.txt" % (interface)
 f = open(outfile, "w")

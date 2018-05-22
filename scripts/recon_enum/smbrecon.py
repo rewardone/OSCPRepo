@@ -75,7 +75,10 @@ nbtresults = subprocess.check_output(NBTSCAN, shell=True)
 #-v:    Be verbose
 print "INFO: Performing enum4linux scan for %s:%s" % (ip_address, port)
 ENUM4LINUXSCAN = "enum4linux -va %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address, ip_address, port)
-enum4linuxresults = subprocess.check_output(ENUM4LINUXSCAN, shell=True)
+try:
+    enum4linuxresults = subprocess.check_call(ENUM4LINUXSCAN, shell=True)
+except subprocess.CalledProcessError, e:
+    print "WARN: SMBrecon non-0 exit for %s, but should still write output" % (ip_address)
 
 # usage: nbtscan-unixwiz [options] target [targets...]
 # Targets are lists of IP addresses, DNS names, or address

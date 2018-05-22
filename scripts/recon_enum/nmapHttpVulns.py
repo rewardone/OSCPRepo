@@ -11,6 +11,18 @@ def help():
 if len(sys.argv) < 2:
     help()
 
+def mkdir_p(path):
+   try:
+      os.makedirs(path)
+   except OSError as exc: #Python >2.5
+      if exc.errno == errno.EEXIST and os.path.isdir(path):
+         pass
+      else:
+         raise
+#This is needed in case of odd ports. May not be only 80/443
+path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+mkdir_p(path)
+
 ip_address = sys.argv[1].strip()
 port = sys.argv[2].strip()
 
@@ -44,7 +56,7 @@ STAT_200="%s/stat200_%s_%s" % (BASE, ip_address, port) #ip_address is typically 
 #http-vuln-cve2011-3192.nse: Denial of service against Apache handling multiple overlapping/simple ranges of a page
 #http-vuln-cve2013-6786.nse: URL redirection and reflected XSS vuln in Allegro RomPager
 #http-vuln-cve2014-2129.nse: Cisco ASA DoS
-print "INFO: Performing nmapHttpVulns script scans for " + ip_address + ":" + port
+print "INFO: Performing nmapHttpVulns script scans for %s:%s" % (ip_address, port)
 HTTPVULNS = "nmap -n -sV -Pn -p %s --script=banner,http-vuln-cve2006-3392.nse,http-vuln-cve2009-3960.nse,http-vuln-cve2010-0738.nse,http-vuln-cve2010-2861.nse,http-vuln-cve2011-3368.nse,http-vuln-cve2012-1823.nse,http-vuln-cve2013-0156.nse,http-vuln-cve2013-7091.nse,http-vuln-cve2014-2126.nse,http-vuln-cve2014-2127.nse,http-vuln-cve2014-2128.nse,http-vuln-cve2014-3704.nse,http-vuln-cve2014-8877.nse,http-vuln-cve2015-1427.nse,http-vuln-cve2015-1635.nse,http-vuln-cve2017-1001000.nse,http-vuln-cve2017-5638.nse,http-vuln-cve2017-5689.nse,http-vuln-cve2017-8917.nse,http-vuln-misfortune-cookie.nse,http-vuln-wnr1000-creds.nse,vulners %s" % (port, ip_address)
 results = subprocess.check_output(HTTPVULNS, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/dirb/%s/%s_%s_nmap_HttpVulns.txt" % (port, ip_address, port)

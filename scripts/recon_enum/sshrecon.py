@@ -30,7 +30,7 @@ f.write(results)
 f.close
 
 ##openssl s_client -connect server:port to attempt to fingerprint exact openssl version. opther options. works on 443, etc.
-OPENSSLGRAB = "openssl s_client -connect %s:%s > /root/scripts/recon_enum/results/exam/ssh/%s_openssl_connect 2>/root/scripts/recon_enum/results/exam/ssh/%s_openssl_connect_err" % (ip_address, port, ip_address,%ip_address)
+OPENSSLGRAB = "openssl s_client -connect %s:%s > /root/scripts/recon_enum/results/exam/ssh/%s_openssl_connect 2>/root/scripts/recon_enum/results/exam/ssh/%s_openssl_connect_err" % (ip_address, port, ip_address, ip_address)
 try:
     results = subprocess.check_output(OPENSSLGRAB, shell=True)
 except subprocess.CalledProcessError as e:
