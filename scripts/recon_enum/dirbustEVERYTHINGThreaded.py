@@ -48,6 +48,7 @@ if (name == ""):
     name = "TEMP_NO_NAME_PASSED"
 user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
 default_wordlist = "/root/lists/Web/secProb_no_ext.txt"
+#default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
 if ("http" in url):
     ip_address = url.strip("http://")
 elif ("https" in url):
@@ -66,8 +67,9 @@ GOB_COMBINED="%s/gobuster_%s_%s_combined" % (BASE, name, port)
 DIRB_DEFAULT="%s/dirb_%s_%s_default" % (BASE, name, port)
 DIRB_CEWL_OUTPUT="%s/dirb_%s_%s_cewld" % (BASE, name, port)
 DIRB_COMBINED="%s/dirb_%s_%s_combined" % (BASE, name, port)
-WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (ip_address, port)
-WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (ip_address, port)
+WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (name, port)
+WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (name, port)
+WW_OUT_VERBOSE="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb_verbose" % (name, port)
 
 #This is needed in case of odd ports. May not be only 80/443
 path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
@@ -105,21 +107,28 @@ def genlistLoop(tool_default_list):
     getStatus200(tool_default_list)
     g = open(STAT_200, 'r')
     cewldWords = set()
+    dev_null = open(os.devnull, 'w')
     if (os.path.getsize(STAT_200) != 0): #shouldn't happen, but if there are no 'new' dirs, just spider main page
         for line in g:
             line = line.split(" ")[0]
-            CEWLSCAN = "cewl -d 2 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, line, CEWL_TMP)
-            results = subprocess.check_call(CEWLSCAN, shell=True)
-            h = open(CEWL_TMP, 'r')
-            for res in h:
+            #CEWLSCAN = "cewl -d 2 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, line, CEWL_TMP)
+            results = subprocess.check_output(['cewl','-d 2','-k','-a','-m 5','-u %s' % user_agent,line],stderr=dev_null)
+            for res in results:
                 cewldWords.add(res)
+            #h = open(CEWL_TMP, 'r')
+            #for res in h:
+            #    cewldWords.add(res)
     else:
-        CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_TMP)
-        results = subprocess.check_call(CEWLSCAN, shell=True)
-        h = open(CEWL_TMP, 'r')
-        for res in h:
+        #CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_TMP)
+        results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_nul)
+        for res in results:
             cewldWords.add(res)
-    h.close()
+        #results = subprocess.check_call(CEWLSCAN, shell=True)
+        #h = open(CEWL_TMP, 'r')
+        #for res in h:
+        #    cewldWords.add(res)
+    #h.close()
+    dev_null.close()
     g.close()
     g = open(CEWL_OUT, 'w')
     for word in cewldWords:
@@ -234,28 +243,48 @@ def whatWeb():
     #-a     Aggression level from 1 (quiet) to 3 (brute)
     #-u     User agent
     #-v     Verbose
-    prepWhatWebFile = 'cat %s | grep -v "(" | grep -v ")" | cut -d" " -f1 > %s' % (GOB_COMBINED, WW_URLS)
-    subprocess.check_call(prepWhatWebFile, shell=True)
-    WHATWEBFINGER = "whatweb -i %s -u '%s' -a 3 -v --log-xml=%s" % (WW_URLS, user_agent, WW_OUT)
-    subprocess.call(WHATWEBFINGER, shell=True)
+    #prepWhatWebFile = 'cat %s | grep -v "(" | grep -v ")" | cut -d" " -f1 > %s' % (GOB_COMBINED, WW_URLS)
+    #subprocess.check_call(prepWhatWebFile, shell=True)
+    f = open(STAT_200)
+    g = open(WW_URLS,'w')
+    for line in f:
+        line = line.split(" ")[0]
+        if "(" in line or ")" in line:
+            pass
+        else:
+            g.write(line)
+    g.close()
+    f.close()
+    results = subprocess.check_output(['whatweb','-i',WW_URLS,'-u',user_agent,'-a 3','-v','--log-xml',WW_OUT])
+    f = open(WW_OUT_VERBOSE,'w')
+    for res in results:
+        f.write(res)
+    f.close()
+    #WHATWEBFINGER = "whatweb -i %s -u '%s' -a 3 -v --log-xml=%s" % (WW_URLS, user_agent, WW_OUT)
+    #subprocess.call(WHATWEBFINGER, shell=True)
 
 def chunkWordlist(wordlist):
-    chunk = []
-    fullBar = []
-    f = open(wordlist)
-    for line in f:
-        if "\n" in line:
-            line = line[:-1]
-        if "\r" in line:
-            line = line[:-1]
-        chunk.append(line)
-        if len(chunk) >= 10000:
-            fullBar.append(chunk)
-            chunk = []
-    print "Number of chunks: "
-    print len(fullBar)
-    return fullBar
-    
+    if not os.path.exists("/root/lists/Web/secProbChunked"):
+        mkdir_p("/root/lists/Web/secProbChunked")
+    if os.path.exists("/root/lists/Web/secProbChunked") and len(os.listdir("/root/lists/Web/secProbChunked")) == 0:
+        f = open(wordlist, 'r')
+        chunkCount = 0
+        chunkFileCount = 0
+        chunkFile = "/root/lists/Web/secProbChunked/secProb_no_ext_chunk_%s" % (str(chunkFileCount))
+        g = open(chunkFile, 'w')
+        for line in f:
+            g.write(line)
+            if chunkCount >= 50000:
+                g.close()
+                chunkFileCount += 1
+                chunkFile = "/root/lists/Web/secProbChunked/secProb_no_ext_chunk_%s" % (str(chunkFileCount))
+                chunkCount = 0
+                g = open(chunkFile, 'w')
+            chunkCount += 1
+        f.close()
+        g.close()
+        print "Number of chunks: "
+
 def comuni(tool,combined_name):
     COMUNI = "awk \'!a[$0]++\' %s/%s* > %s" % (BASE, tool, combined_name)
     comuniresults = subprocess.check_call(COMUNI, shell=True)
@@ -274,15 +303,38 @@ if (tool == "gobuster"):
     #Process:
     #gobuster (redirect?), status 200 to CEWL, CEWL loop 200s (unique set())
     #CEWL back to gobuster, combine and unique gobuster outputs, sort by response body size
-    print "INFO: Starting gobuster scan for %s" % (url)
-    gobuster(default_wordlist, GOB_DEFAULT)
-    print "INFO: Finished initial gobuster scan for %s:%s" % (url, port)
+    # print "INFO: Starting gobuster scan for %s" % (url)
+    # gobuster(default_wordlist, GOB_DEFAULT)
+    # print "INFO: Finished initial gobuster scan for %s:%s" % (url, port)
+    # genlistLoop(GOB_DEFAULT)
+    # gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
+    # print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
+    # comuni("gobuster",GOB_COMBINED)
+    # sortBySize(GOB_COMBINED)
+    #########################################################
+    print "INFO: Starting threaded gobust"
+    chunkWordlist(default_wordlist)
+    count = 0
+    jobs = []
+    for chunk in os.listdir("/root/lists/Web/secProbChunked"):
+        path = "/root/lists/Web/secProbChunked/%s" % chunk ##path.abspath uses CWD so hard code path here
+        if os.path.getsize(path) > 0:
+            scanname = "%s_%s" % (GOB_DEFAULT, str(count))
+            p = multiprocessing.Process(target=gobuster, args=(path,scanname))
+            p.start()
+            jobs.append(p)
+            count += 1
+    for p in jobs:
+        p.join()
+    print "Finished"
+    comuni("*default",GOB_DEFAULT)
+    remFiles = "rm %s_*" % (GOB_DEFAULT)
+    subprocess.check_output(remFiles, shell=True) #can't pass bash wildcards to subprocess
     genlistLoop(GOB_DEFAULT)
     gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
-    print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
     comuni("gobuster",GOB_COMBINED)
     sortBySize(GOB_COMBINED)
-
+    print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
 
 print "INFO: Directory brute of %s completed" % (url)
 whatWeb()

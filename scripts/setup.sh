@@ -81,9 +81,10 @@ echo "\nMake sure Metasploit is ready to go \n"
 service postgresql start
 msfdb reinit
 
-echo "\nUpdating exploit-db and getsploit (vulners) \n"
+echo "\nUpdating exploit-db, getsploit (vulners), and nmap scripts \n"
 searchsploit -u
 getsploit -u
+nmap --script-updatedb
 
 echo "\nEditing dotdotpwn so you don't have to press 'ENTER' to start it \n"
 sed -e "s/<STDIN>;/#<STDIN>;/" /usr/share/dotdotpwn/dotdotpwn.pl > /usr/share/dotdotpwn/dotdotpwn_TMP && mv /usr/share/dotdotpwn/dotdotpwn_TMP /usr/share/dotdotpwn/dotdotpwn.pl

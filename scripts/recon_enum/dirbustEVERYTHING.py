@@ -64,8 +64,9 @@ GOB_COMBINED="%s/gobuster_%s_%s_combined" % (BASE, name, port)
 DIRB_DEFAULT="%s/dirb_%s_%s_default" % (BASE, name, port)
 DIRB_CEWL_OUTPUT="%s/dirb_%s_%s_cewld" % (BASE, name, port)
 DIRB_COMBINED="%s/dirb_%s_%s_combined" % (BASE, name, port)
-WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (ip_address, port)
-WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (ip_address, port)
+WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (name, port)
+WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (name, port)
+WW_OUT_VERBOSE="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb_verbose" % (name, port)
 
 #This is needed in case of odd ports. May not be only 80/443
 path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
@@ -103,21 +104,28 @@ def genlistLoop(tool_default_list):
     getStatus200(tool_default_list)
     g = open(STAT_200, 'r')
     cewldWords = set()
+    dev_null = open(os.devnull, 'w')
     if (os.path.getsize(STAT_200) != 0): #shouldn't happen, but if there are no 'new' dirs, just spider main page
         for line in g:
             line = line.split(" ")[0]
-            CEWLSCAN = "cewl -d 2 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, line, CEWL_TMP)
-            results = subprocess.check_call(CEWLSCAN, shell=True)
-            h = open(CEWL_TMP, 'r')
-            for res in h:
+            #CEWLSCAN = "cewl -d 2 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, line, CEWL_TMP)
+            results = subprocess.check_output(['cewl','-d 2','-k','-a','-m 5','-u %s' % user_agent,line],stderr=dev_null)
+            for res in results:
                 cewldWords.add(res)
+            #h = open(CEWL_TMP, 'r')
+            #for res in h:
+            #    cewldWords.add(res)
     else:
-        CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_TMP)
-        results = subprocess.check_call(CEWLSCAN, shell=True)
-        h = open(CEWL_TMP, 'r')
-        for res in h:
+        #CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_TMP)
+        results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_nul)
+        for res in results:
             cewldWords.add(res)
-    h.close()
+        #results = subprocess.check_call(CEWLSCAN, shell=True)
+        #h = open(CEWL_TMP, 'r')
+        #for res in h:
+        #    cewldWords.add(res)
+    #h.close()
+    dev_null.close()
     g.close()
     g = open(CEWL_OUT, 'w')
     for word in cewldWords:
@@ -232,10 +240,25 @@ def whatWeb():
     #-a     Aggression level from 1 (quiet) to 3 (brute)
     #-u     User agent
     #-v     Verbose
-    prepWhatWebFile = 'cat %s | grep -v "(" | grep -v ")" | cut -d" " -f1 > %s' % (GOB_COMBINED, WW_URLS)
-    subprocess.check_call(prepWhatWebFile, shell=True)
-    WHATWEBFINGER = "whatweb -i %s -u '%s' -a 3 -v --log-xml=%s" % (WW_URLS, user_agent, WW_OUT)
-    subprocess.call(WHATWEBFINGER, shell=True)
+    #prepWhatWebFile = 'cat %s | grep -v "(" | grep -v ")" | cut -d" " -f1 > %s' % (GOB_COMBINED, WW_URLS)
+    #subprocess.check_call(prepWhatWebFile, shell=True)
+    f = open(STAT_200)
+    g = open(WW_URLS,'w')
+    for line in f:
+        line = line.split(" ")[0]
+        if "(" in line or ")" in line:
+            pass
+        else:
+            g.write(line)
+    g.close()
+    f.close()
+    results = subprocess.check_output(['whatweb','-i',WW_URLS,'-u',user_agent,'-a 3','-v','--log-xml',WW_OUT])
+    f = open(WW_OUT_VERBOSE,'w')
+    for res in results:
+        f.write(res)
+    f.close()
+    #WHATWEBFINGER = "whatweb -i %s -u '%s' -a 3 -v --log-xml=%s" % (WW_URLS, user_agent, WW_OUT)
+    #subprocess.call(WHATWEBFINGER, shell=True)
 
 def comuni(tool,combined_name):
     COMUNI = "awk \'!a[$0]++\' %s/%s* > %s" % (BASE, tool, combined_name)
