@@ -117,7 +117,7 @@ def genlistLoop(tool_default_list):
             #    cewldWords.add(res)
     else:
         #CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_TMP)
-        results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_nul)
+        results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_null)
         for res in results:
             cewldWords.add(res)
         #results = subprocess.check_call(CEWLSCAN, shell=True)

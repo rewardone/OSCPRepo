@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>LocalSecurityAuthority Domain</string>
+  <key>nodeid</key><string>18c8f1d7-897b-420e-8706-3adf114f9dff</string>
+  <key>modified_time</key><integer>1527101823</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1527101271</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

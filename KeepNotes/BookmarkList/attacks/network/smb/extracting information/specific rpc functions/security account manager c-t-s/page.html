@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Security Account Manager C-t-S</title>
+</head><body><a href="https://msdn.microsoft.com/en-us/library/cc245703.aspx">MSDN</a>&nbsp;SAMR Client to Server<br/>
+<br/>
+This section specifies the methods of the protocol along with their processing.<br/>
+<br/>
+The return value space of all methods is the NTSTATUS type, specified in [MS-ERREF] section 2.3. Unless specifically called out, error codes are returned to the client of the protocol and are not handled by any special processing at the client; therefore, the exact error code is implementation-specific. Cases in which the client might handle a specific error code are called out. The set of such error codes are found in section 2.2.1.15.<br/>
+<br/>
+Methods in RPC Opnum Order<br/>
+<br/>
+Method&#09;&#09;&#09;&#09;&#09;&#09;&#09;Description<br/>
+SamrConnect&#09;&#09;&#09;&#09;&#09;&#09;Returns a handle to a server object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 0<br/>
+SamrCloseHandle&#09;&#09;&#09;&#09;&#09;Closes any context handle obtained from this RPC interface.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 1<br/>
+SamrSetSecurityObject&#09;&#09;&#09;&#09;Sets the access control on a server, domain, user, group, or alias object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 2<br/>
+SamrQuerySecurityObject&#09;&#09;&#09;&#09;Queries the access control on a server, domain, user, group, or alias object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 3<br/>
+Opnum4NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 4<br/>
+SamrLookupDomainInSamServer&#09;&#09;Obtains the SID of a domain object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 5<br/>
+SamrEnumerateDomainsInSamServer&#09;&#09;Obtains a listing of all domains hosted by the server side.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 6<br/>
+SamrOpenDomain&#09;&#09;&#09;&#09;&#09;Obtains a handle to a domain object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 7<br/>
+SamrQueryInformationDomain&#09;&#09;&#09;Obtains attributes from a domain object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 8<br/>
+SamrSetInformationDomain&#09;&#09;&#09;Updates attributes on a domain object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 9<br/>
+SamrCreateGroupInDomain&#09;&#09;&#09;Creates a group object within a domain.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 10<br/>
+SamrEnumerateGroupsInDomain&#09;&#09;Enumerates all groups.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 11<br/>
+SamrCreateUserInDomain&#09;&#09;&#09;&#09;Creates a user.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 12<br/>
+SamrEnumerateUsersInDomain&#09;&#09;&#09;Enumerates all users.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 13<br/>
+SamrCreateAliasInDomain&#09;&#09;&#09;&#09;Creates an alias.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 14<br/>
+SamrEnumerateAliasesInDomain&#09;&#09;Enumerates all aliases.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 15<br/>
+SamrGetAliasMembership&#09;&#09;&#09;&#09;Obtains the union of all aliases of which a given set of SIDs is a member.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 16<br/>
+SamrLookupNamesInDomain&#09;&#09;&#09;Translates a set of account names into a set of RIDs.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 17<br/>
+SamrLookupIdsInDomain&#09;&#09;&#09;&#09;Translates a set of RIDs into account names.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 18<br/>
+SamrOpenGroup&#09;&#09;&#09;&#09;&#09;Obtains a handle to a group.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 19<br/>
+SamrQueryInformationGroup&#09;&#09;&#09;Obtains attributes from a group object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 20<br/>
+SamrSetInformationGroup&#09;&#09;&#09;&#09;Updates attributes on a group object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 21<br/>
+SamrAddMemberToGroup&#09;&#09;&#09;&#09;Adds a member to a group.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 22<br/>
+SamrDeleteGroup&#09;&#09;&#09;&#09;&#09;Removes a group object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 23<br/>
+SamrRemoveMemberFromGroup&#09;&#09;Removes a member from a group.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 24<br/>
+SamrGetMembersInGroup&#09;&#09;&#09;&#09;Reads the members of a group.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 25<br/>
+SamrSetMemberAttributesOfGroup&#09;&#09;Sets the attributes of a member relationship.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 26<br/>
+SamrOpenAlias&#09;&#09;&#09;&#09;&#09;&#09;Obtains a handle to an alias.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 27<br/>
+SamrQueryInformationAlias&#09;&#09;&#09;Obtains attributes from an alias object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 28<br/>
+SamrSetInformationAlias&#09;&#09;&#09;&#09;Updates attributes on an alias object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 29<br/>
+SamrDeleteAlias&#09;&#09;&#09;&#09;&#09;Removes an alias object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 30<br/>
+SamrAddMemberToAlias&#09;&#09;&#09;&#09;Adds a member to an alias.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 31<br/>
+SamrRemoveMemberFromAlias&#09;&#09;&#09;Removes a member from an alias.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 32<br/>
+SamrGetMembersInAlias&#09;&#09;&#09;&#09;Obtains the membership list of an alias.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 33<br/>
+SamrOpenUser&#09;&#09;&#09;&#09;&#09;&#09;Obtains a handle to a user.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 34<br/>
+SamrDeleteUser&#09;&#09;&#09;&#09;&#09;Removes a user object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 35<br/>
+SamrQueryInformationUser&#09;&#09;&#09;&#09;Obtains attributes from a user object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 36<br/>
+SamrSetInformationUser&#09;&#09;&#09;&#09;Updates attributes on a user object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 37<br/>
+SamrChangePasswordUser&#09;&#09;&#09;Changes the password of a user object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 38<br/>
+SamrGetGroupsForUser&#09;&#09;&#09;&#09;Obtains a list of groups of which a user is a member.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 39<br/>
+SamrQueryDisplayInformation&#09;&#09;&#09;Obtains a list of accounts in name-sorted order.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 40<br/>
+SamrGetDisplayEnumerationIndex&#09;&#09;Obtains an index into an account-name–sorted list of accounts.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 41<br/>
+Opnum42NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 42<br/>
+Opnum43NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 43<br/>
+SamrGetUserDomainPasswordInformation&#09;Obtains select password policy information.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 44<br/>
+SamrRemoveMemberFromForeignDomain&#09;Removes a member from all aliases.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 45<br/>
+SamrQueryInformationDomain2&#09;&#09;&#09;Obtains attributes from a domain object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 46<br/>
+SamrQueryInformationUser2&#09;&#09;&#09;Obtains attributes from a user object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 47<br/>
+SamrQueryDisplayInformation2&#09;&#09;&#09;Obtains a list of accounts in name-sorted order.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 48<br/>
+SamrGetDisplayEnumerationIndex2&#09;&#09;Obtains an index into an account-name–sorted list of accounts.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 49<br/>
+SamrCreateUser2InDomain&#09;&#09;&#09;Creates a user.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 50<br/>
+SamrQueryDisplayInformation3&#09;&#09;&#09;Obtains a list of accounts in name-sorted order.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 51<br/>
+SamrAddMultipleMembersToAlias&#09;&#09;Adds multiple members to an alias.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 52<br/>
+SamrRemoveMultipleMembersFromAlias&#09;Removes multiple members from an alias.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 53<br/>
+SamrOemChangePasswordUser2&#09;&#09;Changes a user's password.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 54<br/>
+SamrUnicodeChangePasswordUser2&#09;&#09;Changes a user account's password.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 55<br/>
+SamrGetDomainPasswordInformation&#09;&#09;Obtains select password policy information.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 56<br/>
+SamrConnect2&#09;&#09;&#09;&#09;&#09;&#09;Obtains a handle to a server object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 57<br/>
+SamrSetInformationUser2&#09;&#09;&#09;&#09;Updates attributes on a user object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 58<br/>
+Opnum59NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 59<br/>
+Opnum60NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 60<br/>
+Opnum61NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 61<br/>
+SamrConnect4&#09;&#09;&#09;&#09;&#09;&#09;Obtains a handle to a server object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 62<br/>
+Opnum63NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 63<br/>
+SamrConnect5&#09;&#09;&#09;&#09;&#09;&#09;Obtains a handle to a server object.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 64<br/>
+SamrRidToSid&#09;&#09;&#09;&#09;&#09;&#09;Obtains the SID of an account.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 65<br/>
+SamrSetDSRMPassword&#09;&#09;&#09;&#09;Sets a local recovery password.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 66<br/>
+SamrValidatePassword&#09;&#09;&#09;&#09;Validates an application password against the locally stored policy.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 67<br/>
+Opnum68NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 68<br/>
+Opnum69NotUsedOnWire&#09;&#09;&#09;&#09;Reserved for local use.<br/>
+&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Opnum: 69</body></html>

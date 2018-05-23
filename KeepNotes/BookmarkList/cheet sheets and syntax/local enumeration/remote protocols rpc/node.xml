@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Remote Protocols RPC</string>
+  <key>nodeid</key><string>c463fa9d-aa9b-4986-93f6-8747dd11a5b4</string>
+  <key>modified_time</key><integer>1527100884</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1527100482</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

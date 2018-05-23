@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>LDAP</string>
+  <key>nodeid</key><string>c5f5af9b-2e49-46f4-8dc2-1f8a43aa5dde</string>
+  <key>modified_time</key><integer>1527103405</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1527103220</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

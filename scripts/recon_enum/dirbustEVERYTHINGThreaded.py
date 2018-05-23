@@ -120,7 +120,7 @@ def genlistLoop(tool_default_list):
             #    cewldWords.add(res)
     else:
         #CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_TMP)
-        results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_nul)
+        results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_null)
         for res in results:
             cewldWords.add(res)
         #results = subprocess.check_call(CEWLSCAN, shell=True)
@@ -271,10 +271,11 @@ def chunkWordlist(wordlist):
         chunkCount = 0
         chunkFileCount = 0
         chunkFile = "/root/lists/Web/secProbChunked/secProb_no_ext_chunk_%s" % (str(chunkFileCount))
+        origSize = subprocess.check_output(['wc', '-l', wordlist]).split(" ")[0]
         g = open(chunkFile, 'w')
         for line in f:
             g.write(line)
-            if chunkCount >= 50000:
+            if chunkCount >= (int(origSize)/3):
                 g.close()
                 chunkFileCount += 1
                 chunkFile = "/root/lists/Web/secProbChunked/secProb_no_ext_chunk_%s" % (str(chunkFileCount))
@@ -283,7 +284,7 @@ def chunkWordlist(wordlist):
             chunkCount += 1
         f.close()
         g.close()
-        print "Number of chunks: "
+        print "Number of chunks: %s" % (str(chunkFileCount)) 
 
 def comuni(tool,combined_name):
     COMUNI = "awk \'!a[$0]++\' %s/%s* > %s" % (BASE, tool, combined_name)

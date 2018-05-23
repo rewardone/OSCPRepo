@@ -6,6 +6,7 @@
   <key>title</key><string>File Transfer / Exfil</string>
   <key>nodeid</key><string>c89fede0-351c-4b2f-8a03-ff08e2903244</string>
   <key>modified_time</key><integer>1524497996</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1524497996</integer>

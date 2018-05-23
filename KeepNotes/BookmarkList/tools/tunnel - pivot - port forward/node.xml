@@ -6,6 +6,7 @@
   <key>title</key><string>Tunnel / Pivot / Port Forward</string>
   <key>nodeid</key><string>25aae0a6-ffca-43b8-9c90-da107d93637b</string>
   <key>modified_time</key><integer>1524588600</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1524588600</integer>
