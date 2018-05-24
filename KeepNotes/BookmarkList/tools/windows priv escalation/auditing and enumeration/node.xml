@@ -4,7 +4,8 @@
 <dict>
   <key>title</key><string>Auditing and Enumeration</string>
   <key>nodeid</key><string>cab4a415-80bf-4b59-8323-4f67430b536c</string>
-  <key>modified_time</key><integer>1527098304</integer>
+  <key>modified_time</key><integer>1527185952</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1523630176</integer>

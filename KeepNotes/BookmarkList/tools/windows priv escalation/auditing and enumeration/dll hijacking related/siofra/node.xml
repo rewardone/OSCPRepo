@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>d077c5ee-daaa-4086-aa10-5e3098bfa08e</string>
+  <key>title</key><string>Siofra</string>
+  <key>nodeid</key><string>e5e5ef93-c30c-4c94-ba77-9e329cf185eb</string>
+  <key>modified_time</key><integer>1515092656</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1515092656</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

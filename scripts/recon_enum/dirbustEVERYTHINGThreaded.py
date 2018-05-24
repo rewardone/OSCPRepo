@@ -6,6 +6,7 @@ import subprocess
 import errno
 import multiprocessing
 from multiprocessing import Process
+import time
 
 def help():
     print "Usage: dirbust.py <http(s)://target url:port> <scan name> <tool-to-use (optional)>"
@@ -46,10 +47,12 @@ name = str(sys.argv[2])
 if (name == ""):
     print "NAME ERROR"
     name = "TEMP_NO_NAME_PASSED"
+
 user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
 default_wordlist = "/root/lists/Web/secProb_no_ext.txt"
 WORDLIST_CHUNK_DIR="/root/lists/Web/secProbChunked"
 #default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
+
 if ("http" in url):
     ip_address = url.strip("http://")
 elif ("https" in url):
@@ -60,7 +63,6 @@ port = url.split(":")[2]
 BASE="/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
 LISTS="/root/lists/Web/AllWebLists/separate"
 CEWL_OUT="%s/cewl_%s_%s" % (BASE, name, port)
-CEWL_TMP="%s/cewlTMP" % (BASE)
 STAT_200="%s/stat200_%s_%s" % (BASE, name, port)
 GOB_DEFAULT="%s/gobuster_%s_%s_default" % (BASE, name, port)
 GOB_CEWL_OUTPUT="%s/gobuster_%s_%s_cewld" % (BASE, name, port)
@@ -79,7 +81,7 @@ path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
 mkdir_p(path)
 
 #CEWL FUNCTION NOT IN USE YET. TESTING FOR THREADING
-def cewl(depth,urlLineOrFile):
+def cewl(depth,urlOrFile,scanname):
     # -c: count for each word found
     # -d: depth to spider Default 2
     # -k: keep downloaded files
@@ -100,37 +102,53 @@ def cewl(depth,urlLineOrFile):
     # --proxy_password: password
     # -v: verbose
     print "INFO: generating custom wordlist"
-    #CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_OUT)]
-    for line in urlLineOrFile:
-        results = subprocess.check_output(['cewl','-d',depth,'-k','-a','-m 5','-u',user_agent,urlLineOrFile])
-    #TODO write to tmp
-    #TODO comuni
-    #TODO cleanup
-    #FINISH cewlscan
+    dev_null = open(os.devnull, 'w')
+    if os.path.isfile(urlOrFile): #if we're passed a file (ie, chunks)
+        f = open(scanname,'w')
+        g = open(urlOrFile,'r')
+        for line in g:
+            line = line.split(" ")[0]
+            results = subprocess.check_output(['cewl','-d %d' % depth,'-k','-a','-m 5','-u',user_agent,line],stderr=dev_null)
+            f.write(results)
+        f.close()
+        g.close()
+    else: #else we just scan a single line
+        results = subprocess.check_output(['cewl','-d %d' % depth,'-k','-a','-m 5','-u',user_agent,urlOrFile,'-w',scanname],stderr=dev_null)
 
 #GENLISTLOOPPROC IN THEORY AND NOT IN USE YET
-def genListLoopProc(tool_default_list):
+def genlistLoopProc(tool_default_list):
     print "INFO: generating custom wordlist"
     getStatus200(tool_default_list)
+    jobs = []
+    count = 0
     #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
-    if (os.path.getsize(STAT_200) != 0): #shouldn't happen, but if there are no 'new' dirs, just spider main page
-        chunkWordlistGeneric(BASE,STAT_200,"stat200_chunk_",5)
-        count = 0
-        jobs = []
+    if (os.path.getsize(STAT_200) != 0):
+        tmp = "stat200_%s_%s_chunk" % (name, port)
+        chunkWordlistGeneric(BASE,STAT_200,tmp,3)
         for chunk in os.listdir(BASE):
-            if "stat200_chunk_" in chunk:
-                path = "%s/%s" % (BASE,chunk) ##path.abspath uses CWD so hard code path here
+            if tmp in chunk:
+                path = "%s/%s" % (BASE,chunk) #path.abspath uses CWD so hard code path here
                 if os.path.getsize(path) > 0:
-                    p = multiprocessing.Process(target=cewl, args=(5,path))
+                    scanname = "%s_results_chunk_%s" % (CEWL_OUT, str(count))
+                    p = multiprocessing.Process(target=cewl, args=(2,path,scanname))
                     p.start()
                     jobs.append(p)
                     count += 1
         for p in jobs:
             p.join()
-        print "Finished"
-    else:
-        results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_null)
-        #TODO write results
+        tmp = "cewl_%s_%s_results_chunk_" % (name,port)
+        comuni(tmp,CEWL_OUT) #comuni BASE/cewl_ip_port_results_chunk_*
+        time.sleep(1)
+        for resChunk in os.listdir(BASE):
+            if os.path.isfile("%s/%s" % (BASE,resChunk)):
+                if "_results_chunk_" in resChunk:
+                    resChunk = "%s/%s" % (BASE,resChunk)
+                    os.remove(resChunk)
+                if "stat200_chunk_" in resChunk:
+                    resChunk = "%s/%s" % (BASE,resChunk)
+                    os.remove(resChunk)
+    else: #shouldn't happen, but if there are no 'status 200' pages, just spider main page
+        cewl(5,url,CEWL_OUT)
 
 #Call getStatus200
 #Grab CEWL output each run and add into set for uniqueness
@@ -144,23 +162,13 @@ def genlistLoop(tool_default_list):
     if (os.path.getsize(STAT_200) != 0): #shouldn't happen, but if there are no 'new' dirs, just spider main page
         for line in g:
             line = line.split(" ")[0]
-            #CEWLSCAN = "cewl -d 2 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, line, CEWL_TMP)
             results = subprocess.check_output(['cewl','-d 2','-k','-a','-m 5','-u %s' % user_agent,line],stderr=dev_null)
             for res in results:
                 cewldWords.add(res)
-            #h = open(CEWL_TMP, 'r')
-            #for res in h:
-            #    cewldWords.add(res)
     else:
-        #CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_TMP)
         results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_null)
         for res in results:
             cewldWords.add(res)
-        #results = subprocess.check_call(CEWLSCAN, shell=True)
-        #h = open(CEWL_TMP, 'r')
-        #for res in h:
-        #    cewldWords.add(res)
-    #h.close()
     dev_null.close()
     g.close()
     g = open(CEWL_OUT, 'w')
@@ -273,14 +281,15 @@ def sortBySize(nameAndPathOfResults):
         GREPRESULTS = subprocess.call(GREP, shell=True)
     f.close()
 
-def whatWeb():
+def whatWeb(path):
     print "INFO: whatweb started on port %s" % (port)
     #
     #-i     input file
     #-a     Aggression level from 1 (quiet) to 3 (brute)
     #-u     User agent
     #-v     Verbose
-    f = open(STAT_200)
+    dev_null = open(os.devnull, 'w')
+    f = open(path) #COMBINED file
     g = open(WW_URLS,'w')
     for line in f:
         line = line.split(" ")[0]
@@ -289,17 +298,22 @@ def whatWeb():
         else:
             g.write(line)
     g.close()
-    f.close()
-    results = subprocess.check_output(['whatweb','-i',WW_URLS,'-u',user_agent,'-a 3','-v','--log-xml',WW_OUT])
+    results = subprocess.check_output(['whatweb','-i',WW_URLS,'-u',user_agent,'-a 3','-v','--log-xml',WW_OUT],stderr=dev_null)
     f = open(WW_OUT_VERBOSE,'w')
     for res in results:
         f.write(res)
     f.close()
+    dev_null.close()
 
 def chunkWordlistGeneric(dirToStoreChunks,absPathFileToChunk, chunkFileNames, numChunks):
     if not os.path.exists(dirToStoreChunks):
         mkdir_p(dirToStoreChunks)
-    if os.path.exists(dirToStoreChunks) and len(os.listdir(dirToStoreChunks)) == 0:
+    proceed = True
+    for thing in os.listdir(dirToStoreChunks):
+        if chunkFileNames in thing:
+            proceed = False
+            break
+    if os.path.exists(dirToStoreChunks) and proceed:
         f = open(absPathFileToChunk, 'r')
         chunkCount = 0
         chunkFileCount = 0
@@ -333,6 +347,9 @@ if (tool == "dirb"):
     print "INFO: Finished cewl dirb scan for %s:%s" % (url, port)
     comuni("dirb",DIRB_COMBINED)
     sortBySize(DIRB_COMBINED)
+    print "INFO: Directory brute of %s completed" % (url)
+    whatWeb(DIRB_COMBINED)
+    print "INFO: WhatWeb identification of %s completed" % (url)
 
 if (tool == "gobuster"):
     #Process:
@@ -348,14 +365,14 @@ if (tool == "gobuster"):
     # sortBySize(GOB_COMBINED)
     #########################################################
     print "INFO: Starting threaded gobust"
-    #chunkWordlist(default_wordlist)
-    chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,"secProb_no_ext",20)
+    #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
+    chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,"secProb_no_ext",2)
     count = 0
     jobs = []
-    for chunk in os.listdir("/root/lists/Web/secProbChunked"):
-        path = "/root/lists/Web/secProbChunked/%s" % chunk ##path.abspath uses CWD so hard code path here
+    for chunk in os.listdir(WORDLIST_CHUNK_DIR):
+        path = "%s/%s" % (WORDLIST_CHUNK_DIR,chunk) # path.abspath uses CWD so hard code path here
         if os.path.getsize(path) > 0:
-            scanname = "%s_%s" % (GOB_DEFAULT, str(count))
+            scanname = "%s_%s_%s_%s" % (GOB_DEFAULT, name, port, str(count))
             p = multiprocessing.Process(target=gobuster, args=(path,scanname))
             p.start()
             jobs.append(p)
@@ -363,16 +380,19 @@ if (tool == "gobuster"):
     for p in jobs:
         p.join()
     print "Finished"
-    comuni("*default",GOB_DEFAULT)
-    remFiles = "rm %s_*" % (GOB_DEFAULT)
-    #can't pass bash wildcards to subprocess, will keep shell=True
-    subprocess.check_output(remFiles, shell=True)
-    genlistLoop(GOB_DEFAULT)
+    comuni("*default_%s_%s_*" % (name, port) ,GOB_DEFAULT)
+    for resChunk in os.listdir(WORDLIST_CHUNK_DIR):
+        if os.path.isfile("%s/%s" % (BASE,resChunk)):
+            tmp = "_default_%s_%s_" % (name, port)
+            if tmp in resChunk:
+                resChunk = "%s/%s" % (BASE,resChunk)
+                os.remove(resChunk)
+    genlistLoopProc(GOB_DEFAULT)
     gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
     comuni("gobuster",GOB_COMBINED)
     sortBySize(GOB_COMBINED)
     print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
+    print "INFO: Directory brute of %s completed" % (url)
+    whatWeb(GOB_COMBINED)
+    print "INFO: WhatWeb identification of %s completed" % (url)
 
-print "INFO: Directory brute of %s completed" % (url)
-whatWeb()
-print "INFO: WhatWeb identification of %s completed" % (url)

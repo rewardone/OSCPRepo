@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>9a7028b6-56c0-4609-aa73-d715df84fcfb</string>
+  <key>title</key><string>GitHub Readme</string>
+  <key>nodeid</key><string>fea97221-451f-4e31-a026-d91e20718add</string>
+  <key>modified_time</key><integer>1515092727</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1515092708</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>
