@@ -48,6 +48,7 @@ if (name == ""):
     name = "TEMP_NO_NAME_PASSED"
 user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
 default_wordlist = "/root/lists/Web/secProb_no_ext.txt"
+WORDLIST_CHUNK_DIR="/root/lists/Web/secProbChunked"
 #default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
 if ("http" in url):
     ip_address = url.strip("http://")
@@ -70,12 +71,15 @@ DIRB_COMBINED="%s/dirb_%s_%s_combined" % (BASE, name, port)
 WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (name, port)
 WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (name, port)
 WW_OUT_VERBOSE="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb_verbose" % (name, port)
+FILE_EXT=".php,.html"
+
 
 #This is needed in case of odd ports. May not be only 80/443
 path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
 mkdir_p(path)
 
-def genlist():
+#CEWL FUNCTION NOT IN USE YET. TESTING FOR THREADING
+def cewl(depth,urlLineOrFile):
     # -c: count for each word found
     # -d: depth to spider Default 2
     # -k: keep downloaded files
@@ -96,8 +100,37 @@ def genlist():
     # --proxy_password: password
     # -v: verbose
     print "INFO: generating custom wordlist"
-    CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_OUT)
-    results = subprocess.check_call(CEWLSCAN, shell=True)
+    #CEWLSCAN = "cewl -d 5 -k -a -m 5 -u '%s' %s -w %s" % (user_agent, url, CEWL_OUT)]
+    for line in urlLineOrFile:
+        results = subprocess.check_output(['cewl','-d',depth,'-k','-a','-m 5','-u',user_agent,urlLineOrFile])
+    #TODO write to tmp
+    #TODO comuni
+    #TODO cleanup
+    #FINISH cewlscan
+
+#GENLISTLOOPPROC IN THEORY AND NOT IN USE YET
+def genListLoopProc(tool_default_list):
+    print "INFO: generating custom wordlist"
+    getStatus200(tool_default_list)
+    #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
+    if (os.path.getsize(STAT_200) != 0): #shouldn't happen, but if there are no 'new' dirs, just spider main page
+        chunkWordlistGeneric(BASE,STAT_200,"stat200_chunk_",5)
+        count = 0
+        jobs = []
+        for chunk in os.listdir(BASE):
+            if "stat200_chunk_" in chunk:
+                path = "%s/%s" % (BASE,chunk) ##path.abspath uses CWD so hard code path here
+                if os.path.getsize(path) > 0:
+                    p = multiprocessing.Process(target=cewl, args=(5,path))
+                    p.start()
+                    jobs.append(p)
+                    count += 1
+        for p in jobs:
+            p.join()
+        print "Finished"
+    else:
+        results = subprocess.check_output(['cewl','-d 5','-k','-a','-m 5','-u %s' % user_agent,url],stderr=dev_null)
+        #TODO write results
 
 #Call getStatus200
 #Grab CEWL output each run and add into set for uniqueness
@@ -175,7 +208,8 @@ def dirb(wordlist, scanname):
         f = open(scanname, 'a')
         for file in files:
             DIRBSCAN = "dirb %s %s -a '%s' -b -f -S" % (url, file, user_agent)
-            results = subprocess.check_call(DIRBSCAN, shell=True)
+            results = subprocess.check_output(['dirb',url,file,'-a',user_agent,'-b','-f','-S'])
+            #results = subprocess.check_call(DIRBSCAN, shell=True)
             try:
                 itter = results.split("\n")
                 for line in itter:
@@ -188,7 +222,8 @@ def dirb(wordlist, scanname):
     else:
         f = open(scanname, 'w')
         DIRBSCAN = "dirb %s %s -a '%s' -b -f -S" % (url, wordlist, user_agent)
-        results = subprocess.check_call(DIRBSCAN, shell=True)
+        results = subprocess.check_output(['dirb',url,wordlist,'-a',user_agent,'-b','-f','-S'])
+        #results = subprocess.check_call(DIRBSCAN, shell=True)
         try:
             itter = results.split("\n")
             for line in itter:
@@ -218,7 +253,8 @@ def gobuster(wordlist, scanname):
     #-U string: Username for basic auth
     #-fw: Force continued operation when wildcard found
     GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > %s" % (user_agent, url, wordlist, scanname)
-    results = subprocess.check_call(GOBUSTERSCAN, shell=True)
+    results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
+    #results = subprocess.check_call(GOBUSTERSCAN, shell=True)
 
 def sortBySize(nameAndPathOfResults):
     f = open(nameAndPathOfResults, 'r')
@@ -233,6 +269,7 @@ def sortBySize(nameAndPathOfResults):
             sizear.add(tmpsize)
     for size in sizear:
         GREP = "grep %s %s > %s/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, BASE, name, port, size)
+        #can't redirect in subprocess, leaving shell=True
         GREPRESULTS = subprocess.call(GREP, shell=True)
     f.close()
 
@@ -243,8 +280,6 @@ def whatWeb():
     #-a     Aggression level from 1 (quiet) to 3 (brute)
     #-u     User agent
     #-v     Verbose
-    #prepWhatWebFile = 'cat %s | grep -v "(" | grep -v ")" | cut -d" " -f1 > %s' % (GOB_COMBINED, WW_URLS)
-    #subprocess.check_call(prepWhatWebFile, shell=True)
     f = open(STAT_200)
     g = open(WW_URLS,'w')
     for line in f:
@@ -260,34 +295,33 @@ def whatWeb():
     for res in results:
         f.write(res)
     f.close()
-    #WHATWEBFINGER = "whatweb -i %s -u '%s' -a 3 -v --log-xml=%s" % (WW_URLS, user_agent, WW_OUT)
-    #subprocess.call(WHATWEBFINGER, shell=True)
 
-def chunkWordlist(wordlist):
-    if not os.path.exists("/root/lists/Web/secProbChunked"):
-        mkdir_p("/root/lists/Web/secProbChunked")
-    if os.path.exists("/root/lists/Web/secProbChunked") and len(os.listdir("/root/lists/Web/secProbChunked")) == 0:
-        f = open(wordlist, 'r')
+def chunkWordlistGeneric(dirToStoreChunks,absPathFileToChunk, chunkFileNames, numChunks):
+    if not os.path.exists(dirToStoreChunks):
+        mkdir_p(dirToStoreChunks)
+    if os.path.exists(dirToStoreChunks) and len(os.listdir(dirToStoreChunks)) == 0:
+        f = open(absPathFileToChunk, 'r')
         chunkCount = 0
         chunkFileCount = 0
-        chunkFile = "/root/lists/Web/secProbChunked/secProb_no_ext_chunk_%s" % (str(chunkFileCount))
-        origSize = subprocess.check_output(['wc', '-l', wordlist]).split(" ")[0]
+        chunkFile = "%s/%s_%s" % (dirToStoreChunks,chunkFileNames,str(chunkFileCount))
+        origSize = subprocess.check_output(['wc', '-l', absPathFileToChunk]).split(" ")[0]
         g = open(chunkFile, 'w')
         for line in f:
             g.write(line)
-            if chunkCount >= (int(origSize)/3):
+            if chunkCount >= (int(origSize)/numChunks):
                 g.close()
                 chunkFileCount += 1
-                chunkFile = "/root/lists/Web/secProbChunked/secProb_no_ext_chunk_%s" % (str(chunkFileCount))
+                chunkFile = "%s/%s_%s" % (dirToStoreChunks,chunkFileNames,str(chunkFileCount))
                 chunkCount = 0
                 g = open(chunkFile, 'w')
             chunkCount += 1
         f.close()
         g.close()
-        print "Number of chunks: %s" % (str(chunkFileCount)) 
+        print "Number of chunks: %s" % (str(chunkFileCount+1))
 
 def comuni(tool,combined_name):
     COMUNI = "awk \'!a[$0]++\' %s/%s* > %s" % (BASE, tool, combined_name)
+    #can't do wildcards in subprocess, will keep shell=True
     comuniresults = subprocess.check_call(COMUNI, shell=True)
 
 if (tool == "dirb"):
@@ -314,7 +348,8 @@ if (tool == "gobuster"):
     # sortBySize(GOB_COMBINED)
     #########################################################
     print "INFO: Starting threaded gobust"
-    chunkWordlist(default_wordlist)
+    #chunkWordlist(default_wordlist)
+    chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,"secProb_no_ext",20)
     count = 0
     jobs = []
     for chunk in os.listdir("/root/lists/Web/secProbChunked"):
@@ -330,7 +365,8 @@ if (tool == "gobuster"):
     print "Finished"
     comuni("*default",GOB_DEFAULT)
     remFiles = "rm %s_*" % (GOB_DEFAULT)
-    subprocess.check_output(remFiles, shell=True) #can't pass bash wildcards to subprocess
+    #can't pass bash wildcards to subprocess, will keep shell=True
+    subprocess.check_output(remFiles, shell=True)
     genlistLoop(GOB_DEFAULT)
     gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
     comuni("gobuster",GOB_COMBINED)
