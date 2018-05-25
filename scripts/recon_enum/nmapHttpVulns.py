@@ -5,6 +5,8 @@ import os
 import subprocess
 import errno
 import time
+import multiprocessing
+from multiprocessing import Process
 
 def help():
     print "Usage: nmapHttpVulns.py <ip address> <port>"
@@ -31,6 +33,9 @@ mkdir_p(path)
 
 BASE = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
 STAT_200 = "%s/stat200_%s_%s" % (BASE, ip_address, port) #ip_address is typically used (by defaut), but a user can specify
+outfile = "/root/scripts/recon_enum/results/exam/dirb/%s/%s_%s_nmap_HttpVulns.txt" % (port, ip_address, port)
+
+f = open(outfile, "a")
 
 #running
 #http-vuln-cve2006-3392.nse: Webmin before 1.290 and Usermin before 1.220 file disclosure using %01
@@ -59,35 +64,33 @@ STAT_200 = "%s/stat200_%s_%s" % (BASE, ip_address, port) #ip_address is typicall
 #http-vuln-cve2011-3192.nse: Denial of service against Apache handling multiple overlapping/simple ranges of a page
 #http-vuln-cve2013-6786.nse: URL redirection and reflected XSS vuln in Allegro RomPager
 #http-vuln-cve2014-2129.nse: Cisco ASA DoS
-print "INFO: Performing nmapHttpVulns script scans for %s:%s" % (ip_address, port)
-HTTPVULNS = "nmap -n -sV -Pn -p %s --script=banner,http-vuln-cve2006-3392.nse,http-vuln-cve2009-3960.nse,http-vuln-cve2010-0738.nse,http-vuln-cve2010-2861.nse,http-vuln-cve2011-3368.nse,http-vuln-cve2012-1823.nse,http-vuln-cve2013-0156.nse,http-vuln-cve2013-7091.nse,http-vuln-cve2014-2126.nse,http-vuln-cve2014-2127.nse,http-vuln-cve2014-2128.nse,http-vuln-cve2014-3704.nse,http-vuln-cve2014-8877.nse,http-vuln-cve2015-1427.nse,http-vuln-cve2015-1635.nse,http-vuln-cve2017-1001000.nse,http-vuln-cve2017-5638.nse,http-vuln-cve2017-5689.nse,http-vuln-cve2017-8917.nse,http-vuln-misfortune-cookie.nse,http-vuln-wnr1000-creds.nse,vulners %s" % (port, ip_address)
-results = subprocess.check_output(HTTPVULNS, shell=True)
-outfile = "/root/scripts/recon_enum/results/exam/dirb/%s/%s_%s_nmap_HttpVulns.txt" % (port, ip_address, port)
-f = open(outfile, "w")
-f.write(results)
-f.close
+def standardNmapHTTP():
+    print "INFO: Performing nmapHttpVulns script scans for %s:%s" % (ip_address, port)
+    results = subprocess.check_output(['nmap','-n','-sV','-Pn','-p',port,'--script=banner,http-vuln-cve2006-3392,http-vuln-cve2009-3960,http-vuln-cve2010-0738,http-vuln-cve2010-2861,http-vuln-cve2011-3368,http-vuln-cve2012-1823,http-vuln-cve2013-0156,http-vuln-cve2013-7091,http-vuln-cve2014-2126,http-vuln-cve2014-2127,http-vuln-cve2014-2128,http-vuln-cve2014-3704,http-vuln-cve2014-8877,http-vuln-cve2015-1427,http-vuln-cve2015-1635,http-vuln-cve2017-1001000,http-vuln-cve2017-5638,http-vuln-cve2017-5689,http-vuln-cve2017-8917,http-vuln-misfortune-cookie,http-vuln-wnr1000-creds,vulners',ip_address])
+    f.write(results)
 
 #running
 #http-shellshock.nse: Attempt to exploit CVE-2014-6271 and CVE-2014-7169 Shellshock vulnerability in web applications http-shellshock.uri=/
 #http-sql-injection.nse: Very basic attempt to show SQL errors in forms. http-sql-injection.url=URLs relative to the scanned host ie /default.html
 #for status 200 in urls if the file exists
-while not os.path.exists(STAT_200):
-    time.sleep(5)
-if os.path.isfile(STAT_200):
-    f = open(outfile, "a")
-    g = open(STAT_200)
-    for item in g:
-        if "\n" in item:
-            item = item[:-1]
-        nmapArg = item.split(port)[1]
-        if nmapArg[0] != "/":
-            nmapArg = "/" + nmapArg
-        SPECIFICVULNS = "nmap -n -sV -Pn -p %s --script=http-shellshock,http-sql-injection --script-args http-sql-injection.url='%s',http-shellshock.uri='%s' %s" % (port, nmapArg, nmapArg, ip_address)
-        results = subprocess.check_output(SPECIFICVULNS, shell=True)
-        f.write(results)
-    f.close()
-    g.close()
-else:
-    print "STATUS 200 URLS do not exist. Please create or run dirbEVERYTHING first"
+def shellshockSQL():
+    if os.path.isfile(STAT_200):
+        g = open(STAT_200)
+        for item in g:
+            item = item.split(" ")[0] #line is url [status ] etc, need to split
+            if "\n" in item:
+                item = item[:-1]
+            nmapArg = item.split(port)[1]
+            if nmapArg[0] != "/":
+                nmapArg = "/" + nmapArg
+            results = subprocess.check_output(['nmap','-n','-sV','-Pn','-p',port,'--script=http-shellshock,http-sql-injection','--script-args',"http-sql-injection.url='%s',http-shellsock.uri='%s'" % (nmapArg,nmapArg),ip_address])
+            f.write("URL " + nmapArg + "\n")
+            f.write(results)
+        g.close()
+    else:
+        print "STATUS 200 URLS do not exist. Please create or run dirbEVERYTHING first"
 
+standardNmapHTTP()
+shellshockSQL()
+f.close()
 print "INFO: nmapHttpVulns complete"

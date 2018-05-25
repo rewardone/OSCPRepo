@@ -159,7 +159,7 @@ def httpEnum(ip_address, port):
     results = subprocess.check_output(HTTPSCAN, shell=True)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
     #can opt to invoke dirbustEVERYTHING with <http://url:port> <output filename> <tool-to-use> ie dirb or gobuster (default)
-    DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
+    DIRBUST = "./dirbustEVERYTHINGThreaded.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.check_call(DIRBUST, shell=True)
     print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
     NMAPHTTPVULNS = "./nmapHttpVulns.py %s %s" % (ip_address, port)
@@ -179,7 +179,7 @@ def httpsEnum(ip_address, port):
     results = subprocess.check_output(HTTPSCANS, shell=True)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
     #can opt to invoke dirbustEVERYTHING with <http://url:port> <output filename> <tool-to-use> ie dirb or gobuster (default)
-    DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
+    DIRBUST = "./dirbustEVERYTHINGThreaded.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
     subprocess.check_call(DIRBUST, shell=True)
     print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
     NMAPHTTPVULNS = "./nmapHttpVulns.py %s %s" % (ip_address, port)
@@ -378,47 +378,47 @@ def nmapVersionTCPAndPass(ip_address, port):
    print "INFO: nmap versioning for TCP %s:%s completed" % (ip_address, port)
    for line in lines:
       line = line.strip()
-   if ("tcp" in line) and ("open" in line) and not ("Discovered" in line):
-      while "  " in line:
-         line = line.replace("  ", " ");
-      linesplit= line.split(" ")
-      service = linesplit[2] # grab the service name
-      port = line.split(" ")[0] # grab the port/proto
-      port = port.split("/")[0]
-      if ("http" in service):
-         multProc(httpEnum, ip_address, port)
-      elif ("domain" in service):
-         multProc(dnsEnum, ip_address, port)
-      elif ("finger" in service):
-         multProc(fingerEnum, ip_address, port)
-      elif ("ftp" in service):
-         multProc(ftpEnum, ip_address, port)
-      elif ("netbios-ssn" in service):
-         multProc(smbEnum, ip_address,port)
-      elif ("microsoft-ds" in service):
-         multProc(smbEnum, ip_address, port)
-      elif ("ms-sql" in service or "mssql" in service):
-         multProc(mssqlEnum, ip_address, port)
-      elif ("my-sql" in service or "mysql" in service):
-         multProc(mysqlEnum, ip_address, port)
-      elif ("nfs" in service):
-         multProc(nfsEnum, ip_address, port)
-      elif ("rdp" in service):
-         multProc(rdpEnum, ip_address, port)
-      elif ("rpcbind" == service):
-         multProc(rpcbindEnum, ip_address, port)
-      elif ("ssh/http" in service or "https" in service):
-         multProc(httpsEnum, ip_address, port)
-      elif ("ssh" in service):
-         multProc(sshEnum, ip_address, port)
-      elif ("smtp" in service):
-         multProc(smtpEnum, ip_address, port)
-      elif ("snmp" in service):
-         multProc(snmpEnum, ip_address, port)
-      elif ("telnet" in service):
-         multProc(telnetEnum, ip_address, port)
-      elif ("tftp" in service):
-         multProc(tftpEnum, ip_address, port)
+      if ("tcp" in line) and ("open" in line) and not ("Discovered" in line):
+         while "  " in line:
+            line = line.replace("  ", " ");
+         linesplit= line.split(" ")
+         service = linesplit[2] # grab the service name
+         port = line.split(" ")[0] # grab the port/proto
+         port = port.split("/")[0]
+         if ("http" in service):
+            multProc(httpEnum, ip_address, port)
+         elif ("domain" in service):
+            multProc(dnsEnum, ip_address, port)
+         elif ("finger" in service):
+            multProc(fingerEnum, ip_address, port)
+         elif ("ftp" in service):
+            multProc(ftpEnum, ip_address, port)
+         elif ("netbios-ssn" in service):
+            multProc(smbEnum, ip_address,port)
+         elif ("microsoft-ds" in service):
+            multProc(smbEnum, ip_address, port)
+         elif ("ms-sql" in service or "mssql" in service):
+            multProc(mssqlEnum, ip_address, port)
+         elif ("my-sql" in service or "mysql" in service):
+            multProc(mysqlEnum, ip_address, port)
+         elif ("nfs" in service):
+            multProc(nfsEnum, ip_address, port)
+         elif ("rdp" in service):
+            multProc(rdpEnum, ip_address, port)
+         elif ("rpcbind" == service):
+            multProc(rpcbindEnum, ip_address, port)
+         elif ("ssh/http" in service or "https" in service):
+            multProc(httpsEnum, ip_address, port)
+         elif ("ssh" in service):
+            multProc(sshEnum, ip_address, port)
+         elif ("smtp" in service):
+            multProc(smtpEnum, ip_address, port)
+         elif ("snmp" in service):
+            multProc(snmpEnum, ip_address, port)
+         elif ("telnet" in service):
+            multProc(telnetEnum, ip_address, port)
+         elif ("tftp" in service):
+            multProc(tftpEnum, ip_address, port)
 
 def nmapVersionUDPAndPass(ip_address, port):
    uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oN '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_%sU_nmap_scan_import.xml' %s"  % (port, ip_address, port, ip_address, port, ip_address)
@@ -426,15 +426,15 @@ def nmapVersionUDPAndPass(ip_address, port):
    print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
    for line in lines:
       line = line.strip()
-   if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
-      while "  " in line:
-         line = line.replace("  ", " ");
-      linesplit= line.split(" ")
-      service = linesplit[2] # grab the service name
-      port = line.split(" ")[0] # grab the port/proto
-      port = port.split("/")[0]
-      if ("domain" in service):
-         multProc(dnsEnum, ip_address, port)
+      if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
+         while "  " in line:
+            line = line.replace("  ", " ");
+         linesplit= line.split(" ")
+         service = linesplit[2] # grab the service name
+         port = line.split(" ")[0] # grab the port/proto
+         port = port.split("/")[0]
+         if ("domain" in service):
+            multProc(dnsEnum, ip_address, port)
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5

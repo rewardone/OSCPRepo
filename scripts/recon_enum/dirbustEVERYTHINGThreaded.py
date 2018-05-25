@@ -53,6 +53,8 @@ default_wordlist = "/root/lists/Web/secProb_no_ext.txt"
 WORDLIST_CHUNK_DIR="/root/lists/Web/secProbChunked"
 #default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
 
+PROCESSES = 10
+
 if ("http" in url):
     ip_address = url.strip("http://")
 elif ("https" in url):
@@ -101,7 +103,6 @@ def cewl(depth,urlOrFile,scanname):
     # --proxy_username: username
     # --proxy_password: password
     # -v: verbose
-    print "INFO: generating custom wordlist"
     dev_null = open(os.devnull, 'w')
     if os.path.isfile(urlOrFile): #if we're passed a file (ie, chunks)
         f = open(scanname,'w')
@@ -117,38 +118,41 @@ def cewl(depth,urlOrFile,scanname):
 
 #GENLISTLOOPPROC IN THEORY AND NOT IN USE YET
 def genlistLoopProc(tool_default_list):
-    print "INFO: generating custom wordlist"
-    getStatus200(tool_default_list)
-    jobs = []
-    count = 0
-    #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
-    if (os.path.getsize(STAT_200) != 0):
-        tmp = "stat200_%s_%s_chunk" % (name, port)
-        chunkWordlistGeneric(BASE,STAT_200,tmp,3)
-        for chunk in os.listdir(BASE):
-            if tmp in chunk:
-                path = "%s/%s" % (BASE,chunk) #path.abspath uses CWD so hard code path here
-                if os.path.getsize(path) > 0:
-                    scanname = "%s_results_chunk_%s" % (CEWL_OUT, str(count))
-                    p = multiprocessing.Process(target=cewl, args=(2,path,scanname))
-                    p.start()
-                    jobs.append(p)
-                    count += 1
-        for p in jobs:
-            p.join()
-        tmp = "cewl_%s_%s_results_chunk_" % (name,port)
-        comuni(tmp,CEWL_OUT) #comuni BASE/cewl_ip_port_results_chunk_*
-        time.sleep(1)
-        for resChunk in os.listdir(BASE):
-            if os.path.isfile("%s/%s" % (BASE,resChunk)):
-                if "_results_chunk_" in resChunk:
-                    resChunk = "%s/%s" % (BASE,resChunk)
-                    os.remove(resChunk)
-                if "stat200_chunk_" in resChunk:
-                    resChunk = "%s/%s" % (BASE,resChunk)
-                    os.remove(resChunk)
-    else: #shouldn't happen, but if there are no 'status 200' pages, just spider main page
-        cewl(5,url,CEWL_OUT)
+    if getStatus200(tool_default_list):
+        jobs = []
+        count = 0
+        #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
+        if (os.path.getsize(STAT_200) != 0):
+            tmp = "stat200_%s_%s_chunk" % (name, port)
+            chunkWordlistGeneric(BASE,STAT_200,tmp,PROCESSES)
+            for chunk in os.listdir(BASE):
+                if tmp in chunk:
+                    path = "%s/%s" % (BASE,chunk) #path.abspath uses CWD so hard code path here
+                    if os.path.getsize(path) > 0:
+                        scanname = "%s_results_chunk_%s" % (CEWL_OUT, str(count))
+                        p = multiprocessing.Process(target=cewl, args=(2,path,scanname))
+                        p.start()
+                        jobs.append(p)
+                        count += 1
+            for p in jobs:
+                p.join()
+            tmp = "cewl_%s_%s_results_chunk_" % (name,port)
+            comuni(tmp,CEWL_OUT) #comuni BASE/cewl_ip_port_results_chunk_*
+            #time.sleep(1)
+            for resChunk in os.listdir(BASE):
+                if os.path.isfile("%s/%s" % (BASE,resChunk)):
+                    resultFile = "%s_%s_results_chunk_" % (name, port)
+                    if resultFile in resChunk:
+                        resChunk = "%s/%s" % (BASE,resChunk)
+                        os.remove(resChunk)
+                    statFile = "stat200_%s_%s_chunk" % (name, port)
+                    if statFile in resChunk:
+                        resChunk = "%s/%s" % (BASE,resChunk)
+                        os.remove(resChunk)
+        else: #shouldn't happen, but if there are no 'status 200' pages, just spider main page
+            cewl(5,url,CEWL_OUT)
+    else:
+        return
 
 #Call getStatus200
 #Grab CEWL output each run and add into set for uniqueness
@@ -185,10 +189,15 @@ def getStatus200(tool_default_list): #like GOB_DEFAULT/DIRB_DEFAULT
         if ("(Status: 200)" in line) or ("(CODE:200" in line): #Status for Gob, Code for dirb
             status200.append(line)
     g.close()
-    g = open(STAT_200, 'w')
-    for line in status200:
-        g.write(line)
-    g.close()
+    if len(status200) > 0:
+        g = open(STAT_200, 'w')
+        for line in status200:
+            g.write(line)
+        g.close()
+        return True
+    else:
+        print "INFO: No accessible webpages detected (no status 200 responses) for %s:%s" % (ip_address, port)
+        return False
 
 def dirb(wordlist, scanname):
     #dirb documentation (not all options, just common ones)
@@ -262,6 +271,13 @@ def gobuster(wordlist, scanname):
     #-fw: Force continued operation when wildcard found
     GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > %s" % (user_agent, url, wordlist, scanname)
     results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
+    #print results
+    if "Wildcard response found" in results:
+        results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-fw','-o',scanname])
+    if "Unable to connect:" in results:
+        f = open(scanname,'w')
+        f.write(results)
+        f.close()
     #results = subprocess.check_call(GOBUSTERSCAN, shell=True)
 
 def sortBySize(nameAndPathOfResults):
@@ -279,6 +295,16 @@ def sortBySize(nameAndPathOfResults):
         GREP = "grep %s %s > %s/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, BASE, name, port, size)
         #can't redirect in subprocess, leaving shell=True
         GREPRESULTS = subprocess.call(GREP, shell=True)
+    directory = "%s/%s" % (BASE,name)
+    for resultFile in os.listdir(BASE):
+        if not os.path.isdir(directory):
+            mkdir_p(directory)
+        if os.path.isdir("%s/%s" % (BASE,resultFile)):
+            continue
+        if name in resultFile:
+            destination = "%s/%s" % (directory,resultFile)
+            resultFile = "%s/%s" % (BASE,resultFile)
+            os.rename(resultFile,destination)
     f.close()
 
 def whatWeb(path):
@@ -288,22 +314,29 @@ def whatWeb(path):
     #-a     Aggression level from 1 (quiet) to 3 (brute)
     #-u     User agent
     #-v     Verbose
-    dev_null = open(os.devnull, 'w')
-    f = open(path) #COMBINED file
-    g = open(WW_URLS,'w')
-    for line in f:
-        line = line.split(" ")[0]
-        if "(" in line or ")" in line:
-            pass
+    if os.path.getsize(path) == 0:
+        print "ERROR: %s was not generated" % (path)
+        return
+    else:
+        dev_null = open(os.devnull, 'w')
+        f = open(path) #COMBINED file
+        g = open(WW_URLS,'w')
+        for line in f:
+            line = line.split(" ")[0]
+            if "(" in line or ")" in line or line == "" or "Unable to connect:" in line or not "." in line:
+                pass
+            else:
+                g.write(line + "\n")
+        g.close()
+        if os.path.getsize(WW_URLS) > 0:
+            results = subprocess.check_output(['whatweb','-i',WW_URLS,'-u',user_agent,'-a 3','-v','--log-xml',WW_OUT],stderr=dev_null)
+            f = open(WW_OUT_VERBOSE,'w')
+            for res in results:
+                f.write(res)
+            f.close()
+            dev_null.close()
         else:
-            g.write(line)
-    g.close()
-    results = subprocess.check_output(['whatweb','-i',WW_URLS,'-u',user_agent,'-a 3','-v','--log-xml',WW_OUT],stderr=dev_null)
-    f = open(WW_OUT_VERBOSE,'w')
-    for res in results:
-        f.write(res)
-    f.close()
-    dev_null.close()
+            print "No URLs to whatweb fingerprint for %s:%s" % (ip_address,port)
 
 def chunkWordlistGeneric(dirToStoreChunks,absPathFileToChunk, chunkFileNames, numChunks):
     if not os.path.exists(dirToStoreChunks):
@@ -331,7 +364,7 @@ def chunkWordlistGeneric(dirToStoreChunks,absPathFileToChunk, chunkFileNames, nu
             chunkCount += 1
         f.close()
         g.close()
-        print "Number of chunks: %s" % (str(chunkFileCount+1))
+        #print "Number of chunks: %s" % (str(chunkFileCount+1))
 
 def comuni(tool,combined_name):
     COMUNI = "awk \'!a[$0]++\' %s/%s* > %s" % (BASE, tool, combined_name)
@@ -366,33 +399,37 @@ if (tool == "gobuster"):
     #########################################################
     print "INFO: Starting threaded gobust"
     #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
-    chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,"secProb_no_ext",2)
+    chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,"secProb_no_ext",PROCESSES)
     count = 0
     jobs = []
     for chunk in os.listdir(WORDLIST_CHUNK_DIR):
+        #print "Chunks %d" % len(os.listdir(WORDLIST_CHUNK_DIR))
         path = "%s/%s" % (WORDLIST_CHUNK_DIR,chunk) # path.abspath uses CWD so hard code path here
         if os.path.getsize(path) > 0:
-            scanname = "%s_%s_%s_%s" % (GOB_DEFAULT, name, port, str(count))
+            #print "Going to scan..."
+            scanname = "%s_%s_%s_default_chunk_%s" % (GOB_DEFAULT, name, port, str(count))
             p = multiprocessing.Process(target=gobuster, args=(path,scanname))
             p.start()
             jobs.append(p)
             count += 1
     for p in jobs:
         p.join()
-    print "Finished"
-    comuni("*default_%s_%s_*" % (name, port) ,GOB_DEFAULT)
-    for resChunk in os.listdir(WORDLIST_CHUNK_DIR):
+    #print "Finished"
+    scanChunkNames = "gobuster_%s_%s_default_%s_%s_default_chunk_" % (name, port, name, port)
+    #print "IN: %s, combining %s" % (name,scanChunkNames)
+    comuni(scanChunkNames,GOB_DEFAULT)
+    for resChunk in os.listdir(BASE):
         if os.path.isfile("%s/%s" % (BASE,resChunk)):
-            tmp = "_default_%s_%s_" % (name, port)
+            tmp = "_default_%s_%s_default_chunk" % (name, port)
             if tmp in resChunk:
                 resChunk = "%s/%s" % (BASE,resChunk)
                 os.remove(resChunk)
+    print "INFO: generating custom wordlist"
     genlistLoopProc(GOB_DEFAULT)
     gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
     comuni("gobuster",GOB_COMBINED)
-    sortBySize(GOB_COMBINED)
     print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
     print "INFO: Directory brute of %s completed" % (url)
     whatWeb(GOB_COMBINED)
+    sortBySize(GOB_COMBINED)
     print "INFO: WhatWeb identification of %s completed" % (url)
-

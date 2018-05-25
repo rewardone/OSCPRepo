@@ -233,32 +233,29 @@ def sortBySize(nameAndPathOfResults):
         GREPRESULTS = subprocess.call(GREP, shell=True)
     f.close()
 
-def whatWeb():
+def whatWeb(path):
     print "INFO: whatweb started on port %s" % (port)
     #
     #-i     input file
     #-a     Aggression level from 1 (quiet) to 3 (brute)
     #-u     User agent
     #-v     Verbose
-    #prepWhatWebFile = 'cat %s | grep -v "(" | grep -v ")" | cut -d" " -f1 > %s' % (GOB_COMBINED, WW_URLS)
-    #subprocess.check_call(prepWhatWebFile, shell=True)
-    f = open(STAT_200)
+    dev_null = open(os.devnull, 'w')
+    f = open(path) #COMBINED file
     g = open(WW_URLS,'w')
     for line in f:
         line = line.split(" ")[0]
         if "(" in line or ")" in line:
             pass
         else:
-            g.write(line)
+            g.write(line + "\n")
     g.close()
-    f.close()
-    results = subprocess.check_output(['whatweb','-i',WW_URLS,'-u',user_agent,'-a 3','-v','--log-xml',WW_OUT])
+    results = subprocess.check_output(['whatweb','-i',WW_URLS,'-u',user_agent,'-a 3','-v','--log-xml',WW_OUT],stderr=dev_null)
     f = open(WW_OUT_VERBOSE,'w')
     for res in results:
         f.write(res)
     f.close()
-    #WHATWEBFINGER = "whatweb -i %s -u '%s' -a 3 -v --log-xml=%s" % (WW_URLS, user_agent, WW_OUT)
-    #subprocess.call(WHATWEBFINGER, shell=True)
+    dev_null.close()
 
 def comuni(tool,combined_name):
     COMUNI = "awk \'!a[$0]++\' %s/%s* > %s" % (BASE, tool, combined_name)
@@ -273,6 +270,8 @@ if (tool == "dirb"):
     print "INFO: Finished cewl dirb scan for %s:%s" % (url, port)
     comuni("dirb",DIRB_COMBINED)
     sortBySize(DIRB_COMBINED)
+    print "INFO: Directory brute of %s completed" % (url)
+    whatWeb(DIRB_COMBINED)
 
 if (tool == "gobuster"):
     #Process:
@@ -286,8 +285,8 @@ if (tool == "gobuster"):
     print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
     comuni("gobuster",GOB_COMBINED)
     sortBySize(GOB_COMBINED)
+    print "INFO: Directory brute of %s completed" % (url)
+    whatWeb(GOB_COMBINED)
 
 
-print "INFO: Directory brute of %s completed" % (url)
-whatWeb()
 print "INFO: WhatWeb identification of %s completed" % (url)
