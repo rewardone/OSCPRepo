@@ -83,6 +83,8 @@ import shutil
 
 #PRIVATE VARS
 userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
+FAST_NMAP_MIN_RATE = "10000"
+SLOW_NMAP_MIN_RATE = "1000"
 
 def multProc(targetin, scanip, port):
     jobs = []
@@ -159,7 +161,7 @@ def httpEnum(ip_address, port):
     print "INFO: Detected http on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     #HTTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan --script-args http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1 -oA /root/scripts/recon_enum/results/exam/http/%s_%s_http.nmap %s" % (port, userAgent, ip_address, port, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args','--script-args', "http.useragent='%s',http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_http' % (port, ip_address),ip_address])
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_http' % (port, ip_address),ip_address])
     #results = subprocess.check_output(HTTPSCAN, shell=True)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
     #can opt to invoke dirbustEVERYTHING with <http://url:port> <output filename> <tool-to-use> ie dirb or gobuster (default)
@@ -172,7 +174,7 @@ def httpEnum(ip_address, port):
     #subprocess.check_output(NMAPHTTPVULNS, shell=True)
     print "INFO: nikto scan started on port %s:%s" % (ip_address, port)
     #NIKTOSCAN = "nikto -host %s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto" % (ip_address, port, ip_address, port, ip_address, port)
-    subprocess.check_output(['nikto','-host',ip_address,'-port',port,'-nolookup','-ask auto','-output',"/root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml" % (ip_address,port)])
+    subprocess.check_output(['nikto','-host',ip_address,'-port',port,'-nolookup','-ask','auto','-output',"/root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml" % (ip_address,port)])
     #subprocess.check_output(NIKTOSCAN, shell=True)
     return
 
@@ -182,7 +184,7 @@ def httpsEnum(ip_address, port):
     print "INFO: Detected https on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     #HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan --script-args http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1 -oA /root/scripts/recon_enum/results/exam/http/%s_%s_https.nmap %s" % (port, userAgent, ip_address, port, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args','--script-args', "http.useragent='%s',http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_https' % (port, ip_address),ip_address])
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_https' % (port, ip_address),ip_address])
     #results = subprocess.check_output(HTTPSCANS, shell=True)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
     #can opt to invoke dirbustEVERYTHING with <http://url:port> <output filename> <tool-to-use> ie dirb or gobuster (default)
@@ -195,7 +197,7 @@ def httpsEnum(ip_address, port):
     #subprocess.check_output(NMAPHTTPVULNS, shell=True)
     print "INFO: nikto scan started on %s:%s" % (ip_address, port)
     #NIKTOSCAN = "nikto -host %s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto" % (ip_address, port, ip_address, port, ip_address, port)
-    subprocess.check_output(['nikto','-host',ip_address,'-port',port,'-nolookup','-ask auto','-output',"/root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml" % (ip_address,port)])
+    subprocess.check_output(['nikto','-host',ip_address,'-port',port,'-nolookup','-ask','auto','-output',"/root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml" % (ip_address,port)])
     #subprocess.check_output(NIKTOSCAN, shell=True)
     return
 
@@ -224,7 +226,7 @@ def mysqlEnum(ip_address, port):
 def nfsEnum(ip_address, port):
     print "INFO: Detected NFS on %s:%s" % (ip_address, port)
     #NFSSCAN = "nmap -n -sV -Pn -vv -p %s --script=nfs-ls,nfs-showmount,nfs-statfs,vulners -oA /root/scripts/recon_enum/results/exam/nfs/%s_nfs.xml %s" % (port, ip_address, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA","/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfs" % (ip_address, port),%ip_address])
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA","/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfs" % (ip_address, port),ip_address])
     #subprocess.call(NFSSCAN, shell=True)
     return
 
@@ -244,11 +246,11 @@ def rpcbindEnum(ip_address, port):
     subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script rpc-grind','-oA',"/root/scripts/recon_enum/results/exam/rpc/%s_%s_rpc" % (ip_address,port),ip_address])
     #subprocess.call(NMAPRPCNSE, shell=True)
     RPCINFOSCAN1 = "rpcinfo %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
-    subprocess.call(RPCINFOSCAN1, shell=True)
+    subprocess.check_output(RPCINFOSCAN1, shell=True)
     RPCINFOSCAN2 = "rpcinfo -p %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
-    subprocess.call(RPCINFOSCAN2, shell=True)
+    subprocess.check_output(RPCINFOSCAN2, shell=True)
     RPCINFOSCAN3 = "rpcinfo -m %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
-    subprocess.call(RPCINFOSCAN3, shell=True)
+    subprocess.check_output(RPCINFOSCAN3, shell=True)
     return
 
 def rdpEnum(ip_address, port):
@@ -323,9 +325,9 @@ def nmapFullSlowScan(ip_address):
    print "INFO: Running full TCP/UDP nmap scans for %s" % (ip_address)
    print "INFO: Full UDP takes a LONG time"
    #TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 3 -p- --max-retries 1 --min-rate 1000 -oA '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
-   UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 3 -p- --max-retries 1 --min-rate 1000 -oA '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL' %s" % (ip_address, ip_address)
+   #UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 3 -p- --max-retries 1 --min-rate 1000 -oA '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL' %s" % (ip_address, ip_address)
    #tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
-   tcplines = subprocess.check_output(['nmap','-n','-vv','--stats-every 30s','-Pn','-sT','-T 3','-p-','--max-retries 1','--min-rate 1000','-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_FULL" % ip_address,ip_address]).split("\n")
+   tcplines = subprocess.check_output(['nmap','-n','-vv','--stats-every','30s','-Pn','-sT','-T','3','-p-','--max-retries','1','--min-rate',SLOW_NMAP_MIN_RATE,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_FULL" % ip_address,ip_address]).split("\n")
    for line in tcplines:
       line = line.strip()
       if ("tcp" in line) and ("open" in line) and not ("Discovered" in line):
@@ -336,7 +338,7 @@ def nmapFullSlowScan(ip_address):
          port = line.split(" ")[0] # grab the port/proto
          port = port.split("/")[0]
          print ("INFO: Full Nmap for %s found TCP: %s on %s") % (ip_address, service, port)
-   udplines = subprocess.check_output([['nmap','-n','-vv','--stats-every 30s','-Pn','-sU','-T 3','-p-','--max-retries 1','--min-rate 1000','-oA',"/root/scripts/recon_enum/results/exam/nmap/%sU_FULL" % ip_address,ip_address]).split("\n")
+   udplines = subprocess.check_output(['nmap','-n','-vv','--stats-every','30s','-Pn','-sU','-T','3','-p-','--max-retries','1','--min-rate',SLOW_NMAP_MIN_RATE,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%sU_FULL" % ip_address,ip_address]).split("\n")
    #udplines = subprocess.check_output(UDPSCAN, shell=True).split("\n")
    for line in udplines:
       line = line.strip()
@@ -356,10 +358,10 @@ def nmapFullSlowScan(ip_address):
 def nmapFullFastScan(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running general TCP/UDP nmap scans for " + ip_address
-   TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 4 -p- --max-retries 1 --min-rate 10000 -oA '/root/scripts/recon_enum/results/exam/nmap/%s_INITIAL' %s"  % (ip_address, ip_address)
-   UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 4 -p- --max-retries 1 --min-rate 10000 -oA '/root/scripts/recon_enum/results/exam/nmap/%sU_INITIAL' %s" % (ip_address, ip_address)
+   #TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 4 -p- --max-retries 1 --min-rate 2000 -oA '/root/scripts/recon_enum/results/exam/nmap/%s_INITIAL' %s"  % (ip_address, ip_address)
+   #UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 4 -p- --max-retries 1 --min-rate 2000 -oA '/root/scripts/recon_enum/results/exam/nmap/%sU_INITIAL' %s" % (ip_address, ip_address)
    #tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
-   tcplines = subprocess.check_output(['nmap','-n','-vv','--stats-every 30s','-Pn','-sT','-T 4','-p-','--max-retries 1','--min-rate 10000','-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_INITIAL" % ip_address,ip_address]).split("\n")
+   tcplines = subprocess.check_output(['nmap','-n','-vv','--stats-every','30s','-Pn','-sT','-T','4','-p-','--max-retries','1','--min-rate',FAST_NMAP_MIN_RATE,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_INITIAL" % ip_address,ip_address]).split("\n")
    tcpPorts = []
    udpPorts = []
    for line in tcplines:
@@ -377,7 +379,7 @@ def nmapFullFastScan(ip_address):
       if port != "":
          multProc(nmapVersionTCPAndPass, ip_address, port)
    #udplines = subprocess.check_output(UDPSCAN, shell=True).split("\n")
-   udplines = subprocess.check_output(['nmap','-n','-vv','--stats-every 30s','-Pn','-sU','-T 4','-p-','--max-retries 1','--min-rate 10000','-oA',"/root/scripts/recon_enum/results/exam/nmap/%sU_INITIAL" % ip_address,ip_address]).split("\n")
+   udplines = subprocess.check_output(['nmap','-n','-vv','--stats-every','30s','-Pn','-sU','-T','4','-p-','--max-retries','1','--min-rate',FAST_NMAP_MIN_RATE,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%sU_INITIAL" % ip_address,ip_address]).split("\n")
    for line in udplines:
       line = line.strip()
       if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
@@ -403,7 +405,7 @@ def nmapVersionTCPAndPass(ip_address, port):
    #need this to version ports and in case there is no recon module we'll have a scan for it. Runs default scripts.
    uniNmapTCP = "nmap -n -vv -Pn -A -sC -sT -T 4 -p %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_%s' %s"  % (port, ip_address, port, ip_address)
    #lines = subprocess.check_output(uniNmapTCP, shell=True).split("\n")
-   lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sT','-T 4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%s" % (ip_address,port),ip_address]).split("\n")
+   lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sT','-T','4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%s" % (ip_address,port),ip_address]).split("\n")
    print "INFO: nmap versioning for TCP %s:%s completed" % (ip_address, port)
    for line in lines:
       line = line.strip()
@@ -452,7 +454,7 @@ def nmapVersionTCPAndPass(ip_address, port):
 def nmapVersionUDPAndPass(ip_address, port):
    uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' %s"  % (port, ip_address, port, ip_address)
    #lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
-   lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sU','-T 4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%sU" % (ip_address,port),ip_address]).split("\n")
+   lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sU','-T','4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%sU" % (ip_address,port),ip_address]).split("\n")
    print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
    for line in lines:
       line = line.strip()

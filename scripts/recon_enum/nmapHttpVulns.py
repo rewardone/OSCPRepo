@@ -28,13 +28,15 @@ ip_address = sys.argv[1].strip()
 port = sys.argv[2].strip()
 
 #This is needed in case of odd ports. May not be only 80/443
-path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
-mkdir_p(path)
+#path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+path = "/root/scripts/recon_enum/results/exam/http"
+#mkdir_p(path)
 
-BASE = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
-STAT_200 = "%s/stat200_%s_%s" % (BASE, ip_address, port) #ip_address is typically used (by defaut), but a user can specify
-outfile = "/root/scripts/recon_enum/results/exam/dirb/%s/%s_%s_nmap_HttpVulns.txt" % (port, ip_address, port)
-
+BASE = "/root/scripts/recon_enum/results/exam/http"
+DIRB_BASE = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port) #WARNING THIS CHANGES AFTER dirbustEVERYTHING SORTS INTO FOLDER
+STAT_200 = "%s/stat200_%s_%s" % (DIRB_BASE, ip_address, port) #ip_address is typically used (by defaut), but a user can specify
+STAT_200_SORTED = "%s/%s/stat200_%s_%s" % (DIRB_BASE,ip_address,ip_address,port)
+outfile = "%s/%s_%s_nmap_HttpVulns.txt" % (BASE, ip_address, port)
 f = open(outfile, "a")
 
 #running
@@ -76,24 +78,27 @@ def standardNmapHTTP():
 def shellshockSQL():
     if os.path.isfile(STAT_200):
         g = open(STAT_200)
-        for item in g:
-            item = item.split(" ")[0] #line is url [status ] etc, need to split
-            if "\n" in item:
-                item = item[:-1]
-            nmapArg = item.split(port)[1]
-            if nmapArg[0] != "/":
-                nmapArg = "/" + nmapArg
-            results = subprocess.check_output(['nmap','-n','-sV','-Pn','-p',port,'--script=http-shellshock,http-sql-injection','--script-args',"http-sql-injection.url='%s',http-shellsock.uri='%s'" % (nmapArg,nmapArg),ip_address])
-            f.write("URL " + nmapArg + "\n")
-            f.write(results)
-        g.close()
+    elif os.path.isfile(STAT_200_SORTED):
+        g = open(STAT_200_SORTED)
     else:
         print "STATUS 200 URLS do not exist. Please create or run dirbEVERYTHING first"
+        return
+    for item in g:
+        item = item.split(" ")[0] #line is url [status ] etc, need to split
+        if "\n" in item:
+            item = item[:-1]
+        nmapArg = item.split(port)[1]
+        if nmapArg[0] != "/":
+            nmapArg = "/" + nmapArg
+        results = subprocess.check_output(['nmap','-n','-sV','-Pn','-p',port,'--script=http-shellshock,http-sql-injection','--script-args',"http-sql-injection.url='%s',http-shellsock.uri='%s'" % (nmapArg,nmapArg),ip_address])
+        f.write("URL " + nmapArg + "\n")
+        f.write(results)
+    g.close()
 
 standardNmapHTTP()
-if not os.isdir(STAT_200):
-    sleep(5)
+if not os.path.isfile(STAT_200) and not os.path.isfile(STAT_200_SORTED):
+    time.sleep(5)
 else:
     shellshockSQL()
-f.close()
-print "INFO: nmapHttpVulns complete"
+    f.close()
+    print "INFO: nmapHttpVulns complete"

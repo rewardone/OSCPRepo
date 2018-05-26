@@ -270,10 +270,10 @@ def gobuster(wordlist, scanname):
     #-U string: Username for basic auth
     #-fw: Force continued operation when wildcard found
     GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x .php,.html -l -w %s > %s" % (user_agent, url, wordlist, scanname)
-    results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
+    results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
     #print results
     if "Wildcard response found" in results:
-        results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-fw','-o',scanname])
+        results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-fw','-o',scanname])
     if "Unable to connect:" in results:
         f = open(scanname,'w')
         f.write(results)

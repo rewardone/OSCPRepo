@@ -22,27 +22,36 @@ port = sys.argv[2].strip()
 #ssh-publickey-acceptance: Brute-force with private keys, passphrases, and usernames and checks to see if the target accepts them
 #ssh-run: runs a remote command on the ssh server and returns the command output
 print "INFO: Performing nmap SSH script scan for %s:%s" % (ip_address, port)
-SSHSCAN = "nmap -n -sV -Pn -vv -p %s --script=banner,ssh-auth-methods,sshv1,ssh2-enum-algos,vulners -oN '/root/scripts/recon_enum/results/exam/ssh/%s_ssh.nmap' %s" % (port, ip_address, ip_address)
-results = subprocess.check_output(SSHSCAN, shell=True)
-outfile = "/root/scripts/recon_enum/results/exam/ssh/%s_sshrecon.txt" % (ip_address)
-f = open(outfile, "w")
-f.write(results)
-f.close
+#SSHSCAN = "nmap -n -sV -Pn -vv -p %s --script=banner,ssh-auth-methods,sshv1,ssh2-enum-algos,vulners -oA '/root/scripts/recon_enum/results/exam/ssh/%s_ssh' %s" % (port, ip_address, ip_address)
+#results = subprocess.check_output(SSHSCAN, shell=True)
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=banner,ssh-auth-methods,sshv1,ssh2-enum-algos,vulners','-oA','/root/scripts/recon_enum/results/exam/ssh/%s_%s_ssh' % (ip_address,port),ip_address])
+# outfile = "/root/scripts/recon_enum/results/exam/ssh/%s_sshrecon.txt" % (ip_address)
+# f = open(outfile, "w")
+# f.write(results)
+# f.close
 
 ##openssl s_client -connect server:port to attempt to fingerprint exact openssl version. opther options. works on 443, etc.
 OPENSSLGRAB = "openssl s_client -connect %s:%s > /root/scripts/recon_enum/results/exam/ssh/%s_openssl_connect 2>/root/scripts/recon_enum/results/exam/ssh/%s_openssl_connect_err" % (ip_address, port, ip_address, ip_address)
+outPath = "/root/scripts/recon_enum/results/exam/ssh/%s_%s_openssl_connect" % (ip_address,port)
+errPath = "/root/scripts/recon_enum/results/exam/ssh/%s_%s_openssl_connect_err" % (ip_address,port)
+outfile = open(outPath,'w')
+errfile = open(errPath,'w')
 try:
-    results = subprocess.check_output(OPENSSLGRAB, shell=True)
+    #results = subprocess.check_output(OPENSSLGRAB, shell=True)
+    subprocess.check_output(['openssl','s_client','-connect','%s:%s' % (ip_address,port)],stdout=outfile,stderr=errfile)
 except subprocess.CalledProcessError as e:
     pass
+outfile.close()
+errfile.close()
 
 #Hydra meant to do weak brute/spray, not extensive
 #run manually for extensive brute
 print "INFO: Performing hydra ssh scan against " + ip_address
-HYDRASSH = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/ssh/%s_sshhydra.txt -u %s -s %s ssh" % (ip_address, ip_address, port)
+#HYDRASSH = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/ssh/%s_sshhydra.txt -u %s -s %s ssh" % (ip_address, ip_address, port)
 try:
-    results = subprocess.check_output(HYDRASSH, shell=True)
-    resultarr = results.split("\n")
+    #results = subprocess.check_output(HYDRASSH, shell=True)
+    #resultarr = results.split("\n")
+    resultarr = subprocess.check_output(['hydra','-L','/root/lists/userlist.txt','-P','/root/lists/quick_password_spray.txt','-f','-o','/root/scripts/recon_enum/results/exam/ssh/%s_%s_sshhydra.txt' % (ip_address,port),'-u',ip_address,'-s',port,'ssh']).split("\n")
     for result in resultarr:
         if "login:" in result:
 	        print "[*] Valid ssh credentials found: " + result

