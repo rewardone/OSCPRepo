@@ -25,23 +25,26 @@ port = sys.argv[2].strip()
 #ftp-brute: perform brute force against FTP
 #ftp-libopie: check for CVE-2010-1938, WARNING will crash if vulnerable, better to manually check...
 print "INFO: Performing nmap FTP script scan for %s:%s" % (ip_address, port)
-FTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=banner,ftp-anon,ftp-bounce,ftp-syst,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum,vulners -oN '/root/scripts/recon_enum/results/exam/ftp/%s_ftp.nmap' %s" % (port, ip_address, ip_address)
-results = subprocess.check_output(FTPSCAN, shell=True)
-outfile = "/root/scripts/recon_enum/results/exam/ftp/%s_ftprecon.txt" % (ip_address)
-f = open(outfile, "w")
-f.write(results)
-f.close
+#FTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=banner,ftp-anon,ftp-bounce,ftp-syst,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum,vulners -oA '/root/scripts/recon_enum/results/exam/ftp/%s_ftp' %s" % (port, ip_address, ip_address)
+#results = subprocess.check_output(FTPSCAN, shell=True)
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'-script=banner,ftp-anon,ftp-bounce,ftp-syst,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum,vulners','-oA',"/root/scripts/recon_enum/results/exam/ftp/%s_%s_ftp",ip_address])
 
 #Default Hydra configuration with a small username and password list
 #This configuration is meant to spray, not to brute. Manually configure a
 #Brute scan if desired.
 print "INFO: Performing hydra ftp scan against %s" % (ip_address)
-HYDRAFTP = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/ftp/%s_ftphydra.txt -u %s -s %s ftp" % (ip_address, ip_address, port)
+#HYDRAFTP = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/ftp/%s_ftphydra.txt -u %s -s %s ftp" % (ip_address, ip_address, port)
 try:
-    results = subprocess.check_output(HYDRAFTP, shell=True)
-    resultarr = results.split("\n")
+    #results = subprocess.check_output(HYDRAFTP, shell=True)
+    #resultarr = results.split("\n")
+    results = subprocess.check_output(['hydra','-L','/usr/share/wordlists/lists/userlist.txt','-P','/usr/share/wordlists/lists/quick_password_spray.txt','-f','-o',"/root/scripts/recon_enum/results/exam/ftp/%s_%s_ftphydra.txt" % (ip_address,port),'-u',ip_address,'-s',port,'ftp']).split("\n")
     for result in resultarr:
         if "login:" in result:
 	        print "[*] Valid ftp credentials found: " + result
 except:
     print "INFO: No valid ftp credentials found"
+
+# outfile = "/root/scripts/recon_enum/results/exam/ftp/%s_ftprecon.txt" % (ip_address)
+# f = open(outfile, "w")
+# f.write(results)
+# f.close

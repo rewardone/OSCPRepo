@@ -25,12 +25,14 @@ ip_address = sys.argv[1].strip()
 #smtp-open-relay: attempt to relay mail by issuing combination of SMTP commands.
 #smtp-strageport: check if SMTP is running on non-standard port.
 print "INFO: Performing nmap SMTP script scan for %s:25,465,587" % (ip_address)
-SMTPSCAN = "nmap -n -sV -Pn -vv -p 25,465,587 --script=banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,vulners,smtp-vuln* -oN '/root/scripts/recon_enum/results/exam/smtp/%s_smtp.nmap' %s" % (ip_address, ip_address)
-results = subprocess.check_output(SMTPSCAN, shell=True)
-outfile = "/root/scripts/recon_enum/results/exam/smtp/%s_smtprecon.txt" % (ip_address)
-f = open(outfile, "w")
-f.write(results)
-f.close
+#SMTPSCAN = "nmap -n -sV -Pn -vv -p 25,465,587 --script=banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,vulners,smtp-vuln* -oA '/root/scripts/recon_enum/results/exam/smtp/%s_smtp' %s" % (ip_address, ip_address)
+#results = subprocess.check_output(SMTPSCAN, shell=True)
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'25,465,587','--script=banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,vulners,smtp-vuln*','-oA','/root/scripts/recon_enum/results/exam/smtp/%s_%s_smtp' % (ip_address,port),ip_address])
+
+# outfile = "/root/scripts/recon_enum/results/exam/smtp/%s_smtprecon.txt" % (ip_address)
+# f = open(outfile, "w")
+# f.write(results)
+# f.close
 
 #Below code subject to removal, replaced with nmap --script=smtp-enum-users above
 #smtp-user-enum by pentestmonkey is already included by default on Kali as well

@@ -20,8 +20,9 @@ def onesixtyone():
     communities_found = []
     SNMP_COMMUNITY_STRINGS = "/root/lists/snmp_all_communities.txt"
     print "INFO: Performing onesixtyone brute for %s:161" % (ip_address)
-    ONESIXONESCAN = "onesixtyone %s -c %s -o /root/scripts/recon_enum/results/exam/snmp/%s_onesixtyone" % (ip_address, SNMP_COMMUNITY_STRINGS)
-    results = subprocess.check_output(ONESIXONESCAN, shell=True).strip()
+    #ONESIXONESCAN = "onesixtyone %s -c %s -o /root/scripts/recon_enum/results/exam/snmp/%s_onesixtyone" % (ip_address, SNMP_COMMUNITY_STRINGS)
+    #results = subprocess.check_output(ONESIXONESCAN, shell=True).strip()
+    results = subprocess.check_output(['onesixtyone',ip_address,'-c',SNMP_COMMUNITY_STRINGS,'-o','/root/scripts/recon_enum/results/exam/snmp/%s_%s_onesixtyone' % (ip_address,port)])
     if results != "":
         for result in results:
             if "[" and "]" in result:
@@ -50,21 +51,23 @@ def onesixtyone():
 def nmap_communities(communities):
     for community in communities:
         print "INFO: Performing nmap SNMP script scan for %s:161 and community %s" % (ip_address, community)
-        SNMPSCAN = "nmap -n -vv -sV -sU -Pn -p 161,162 --script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners --script-args creds.snmp=:%s -oN '/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmp.nmap' %s" % (community, ip_address, community)
-        results = subprocess.check_output(SNMPSCAN, shell=True)
-        resultsfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmprecon.txt" % (ip_address, community)
-        f = open(resultsfile, "w")
-        f.write(results)
-        f.close
+        #SNMPSCAN = "nmap -n -vv -sV -sU -Pn -p 161,162 --script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners --script-args creds.snmp=:%s -oA '/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmp.nmap' %s" % (community, ip_address, community)
+        subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-sU','-p',port,'161,162','--script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners','--script-args',"creds.snmp=:%s" % community,'-oA','/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmp.nmap' % (ip_address,community),ip_address])
+        #results = subprocess.check_output(SNMPSCAN, shell=True)
+        # resultsfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmprecon.txt" % (ip_address, community)
+        # f = open(resultsfile, "w")
+        # f.write(results)
+        # f.close
 
 def nmap():
     print "INFO: Performing nmap SNMP script scan for %s:161,162 and NO COMMUNITY" % (ip_address)
-    SNMPSCAN = "nmap -n -vv -sV -sU -Pn -p 161,162 --script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners -oN '/root/scripts/recon_enum/results/exam/snmp/%s_snmp.nmap' %s" % (ip_address)
-    results = subprocess.check_output(SNMPSCAN, shell=True)
-    resultsfile = "/root/scripts/recon_enum/results/exam/snmp/%s_snmprecon.txt" % (ip_address)
-    f = open(resultsfile, "w")
-    f.write(results)
-    f.close
+    #SNMPSCAN = "nmap -n -vv -sV -sU -Pn -p 161,162 --script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners -oA '/root/scripts/recon_enum/results/exam/snmp/%s_snmp.nmap' %s" % (ip_address)
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-sU','-p',port,'161,162','--script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners','-oA','/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmp.nmap' % (ip_address,port),ip_address])
+    #results = subprocess.check_output(SNMPSCAN, shell=True)
+    # resultsfile = "/root/scripts/recon_enum/results/exam/snmp/%s_snmprecon.txt" % (ip_address)
+    # f = open(resultsfile, "w")
+    # f.write(results)
+    # f.close
 
 # script_version     = 'v1.8'; written in perl
 # Usage ./$name -t <IP address>\n
@@ -94,16 +97,31 @@ def snmp_check(communities):
     print "INFO: Performing nmap SNMP script scan for %s:161 and found communit(y|ies)" % (ip_address)
     #version check is in place just in case. 1.8 requires -t for target while 1.9 does not.
     #1.9 should be installed for default installations
-    versionInfo = "snmp-check -h"
-    version = subprocess.check_output(versionInfo, shell=True)
+    #versionInfo = "snmp-check -h"
+    #version = subprocess.check_output(versionInfo, shell=True)
+    version = subprocess.check_output(['snmp-check','-h'])
     if "v1.8" in version:
         for community in communities:
-            SNMPCHECK = "snmp-check -c %s -t %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
-            results = subprocess.check_output(SNMPSCAN, shell=True)
+            #SNMPCHECK = "snmp-check -c %s -t %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
+            #results = subprocess.check_output(SNMPSCAN, shell=True)
+            outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (ip_address,community)
+            results = subprocess.check_output(['snmp-check','-c',community,'-t',ip_address])
+            if results:
+                f = open(outfile,'w')
+                for res in results:
+                    f.write(res)
+                f.close()
     if "v1.9" in version:
         for community in communities:
-            SNMPCHECK = "snmp-check -c %s %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
-            results = subprocess.check_output(SNMPSCAN, shell=True)
+            #SNMPCHECK = "snmp-check -c %s %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
+            #results = subprocess.check_output(SNMPSCAN, shell=True)
+            outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (ip_address,community)
+            results = subprocess.check_output(['snmp-check','-c',community,ip_address])
+            if results:
+                f = open(outfile,'w')
+                for res in results:
+                    f.write(res)
+                f.close()
     return True
 
 communities = onesixtyone()

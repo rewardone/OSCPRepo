@@ -48,16 +48,19 @@ port = sys.argv[2].strip()
 #smb2-time: attempt to obtain the current system date and start date of a SMB2 server
 
 print "INFO: Performing nmap SMB script scan for %s:%s" % (ip_address, port)
-SMBSCAN = "nmap -n -sV -Pn -vv -p %s --script=smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-os-discovery,smb-protocols,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms17-010,smb-double-pulsar-backdoor,smb2-vuln-uptime,smb-ls,smb-security-mode,smb-vuln-ms10-061,smb2-security-mode,vulners -oN '/root/scripts/recon_enum/results/exam/smb/%s_%s_smb.nmap' %s" % (port, ip_address, port, ip_address)
-results = subprocess.check_output(SMBSCAN, shell=True)
-outfile = "/root/scripts/recon_enum/results/exam/smb/" + ip_address + "_" + port + "_smbrecon.txt"
-f = open(outfile, "w")
-f.write(results)
-f.close
+#SMBSCAN = "nmap -n -sV -Pn -vv -p %s --script=smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-os-discovery,smb-protocols,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms17-010,smb-double-pulsar-backdoor,smb2-vuln-uptime,smb-ls,smb-security-mode,smb-vuln-ms10-061,smb2-security-mode,vulners -oA '/root/scripts/recon_enum/results/exam/smb/%s_%s_smb' %s" % (port, ip_address, port, ip_address)
+#results = subprocess.check_output(SMBSCAN, shell=True)
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-os-discovery,smb-protocols,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms17-010,smb-double-pulsar-backdoor,smb2-vuln-uptime,smb-ls,smb-security-mode,smb-vuln-ms10-061,smb2-security-mode,vulners','-oA','/root/scripts/recon_enum/results/exam/smb/%s_%s_smb' % (ip_address,port),ip_address])
 
 print "INFO: Performing samrdump scan for %s:%s" % (ip_address, port)
-NBTSCAN = "samrdump.py %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_samrdump" % (ip_address, ip_address, port)
-nbtresults = subprocess.check_output(NBTSCAN, shell=True)
+#NBTSCAN = "samrdump.py %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_samrdump" % (ip_address, ip_address, port)
+#nbtresults = subprocess.check_output(NBTSCAN, shell=True)
+outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_samrdump" % (ip_address,port)
+results = subprocess.check_output(['samrdump.py',ip_address]).split("\n")
+f = open(outfile,'w')
+for res in results:
+    f.write(res)
+f.close()
 
 #-va:   run verbosely and try all commands
 #-U:    get userlist
@@ -76,7 +79,14 @@ nbtresults = subprocess.check_output(NBTSCAN, shell=True)
 print "INFO: Performing enum4linux scan for %s:%s" % (ip_address, port)
 ENUM4LINUXSCAN = "enum4linux -va %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address, ip_address, port)
 try:
-    enum4linuxresults = subprocess.check_call(ENUM4LINUXSCAN, shell=True)
+    #enum4linuxresults = subprocess.check_call(ENUM4LINUXSCAN, shell=True)
+    outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address,port)
+    results = subprocess.check_output(['enum4linux','-va',ip_address]).split("\n")
+    if results:
+        f = open(outfile,'w')
+        for res in results:
+            f.write(res)
+        f.close()
 except subprocess.CalledProcessError, e:
     print "WARN: SMBrecon non-0 exit for %s, but should still write output" % (ip_address)
 
@@ -97,4 +107,15 @@ except subprocess.CalledProcessError, e:
 # -P        generate results in perl hashref format
 print "INFO: Performing nbtscan-unixwiz scan for %s:%s" % (ip_address, port)
 NBTSCAN_UNIXWIZ = "nbtscan-unixwiz -f %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_nbtscan-unixwiz" % (ip_address, ip_address, port)
-unixwizresults = subprocess.check_output(NBTSCAN_UNIXWIZ, shell=True)
+#unixwizresults = subprocess.check_output(NBTSCAN_UNIXWIZ, shell=True)
+outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_nbtscan-unixwiz" % (ip_address,port)
+results = subprocess.check_output(['nbtscan-unixwiz','-f',ip_address]).split("\n")
+f = open(outfile,'w')
+for res in results:
+    f.write(res)
+f.close()
+
+# outfile = "/root/scripts/recon_enum/results/exam/smb/" + ip_address + "_" + port + "_smbrecon.txt"
+# f = open(outfile, "w")
+# f.write(results)
+# f.close

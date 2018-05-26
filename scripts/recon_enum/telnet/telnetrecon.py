@@ -17,22 +17,25 @@ port = sys.argv[2].strip()
 #Not Running
 #telnet-brute: brute-force password auditing
 print "INFO: Performing nmap Telnet script scan for %s:%s" % (ip_address, port)
-TELNETSCAN = "nmap -n -sV -Pn -vv -p %s --script=banner,telnet-encryption,telnet-ntlm-info,vulners -oN '/root/scripts/recon_enum/results/exam/telnet/%s_telnet.nmap' %s" % (port, ip_address, ip_address)
-results = subprocess.check_output(TELNETSCAN, shell=True)
-outfile = "/root/scripts/recon_enum/results/exam/telnet/%s_telnetrecon.txt" % (ip_address)
-f = open(outfile, "w")
-f.write(results)
-f.close
+#TELNETSCAN = "nmap -n -sV -Pn -vv -p %s --script=banner,telnet-encryption,telnet-ntlm-info,vulners -oA '/root/scripts/recon_enum/results/exam/telnet/%s_telnet.nmap' %s" % (port, ip_address, ip_address)
+#results = subprocess.check_output(TELNETSCAN, shell=True)
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=banner,telnet-encryption,telnet-ntlm-info,vulners','/root/scripts/recon_enum/results/exam/telnet/%s_%s_telnet' % (ip_address,port),ip_address])
 
 #Hydra meant to do weak brute/spray, not extensive
 #run manually for extensive brute
 print "INFO: Performing hydra telnet scan against %s" % (ip_address)
-HYDRA = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/telnet/%s_telnethydra.txt -u %s -s %s telnet" % (ip_address, ip_address, port)
+#HYDRA = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/telnet/%s_telnethydra.txt -u %s -s %s telnet" % (ip_address, ip_address, port)
 try:
-    results = subprocess.check_output(HYDRA, shell=True)
-    resultarr = results.split("\n")
+    #results = subprocess.check_output(HYDRA, shell=True)
+    #resultarr = results.split("\n")
+    results = subprocess.check_output(['hydra','-L','/root/lists/userlist.txt','-P','/root/lists/quick_password_spray.txt','-f','-o','/root/scripts/recon_enum/results/exam/telnet/%s_%s_telnethydra.txt' % (ip_address,port),'-u',ip_address,'-s',port,'telnet'])
     for result in resultarr:
         if "login:" in result:
-	    print "[*] Valid telnet credentials found: %s" % (result)
+            print "[*] Valid telnet credentials found: %s" % (result)
 except:
     print "INFO: No valid telnet credentials found"
+
+# outfile = "/root/scripts/recon_enum/results/exam/telnet/%s_telnetrecon.txt" % (ip_address)
+# f = open(outfile, "w")
+# f.write(results)
+# f.close

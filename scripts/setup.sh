@@ -78,7 +78,7 @@ direc=/root/lists/Password/passphrases
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/initstring/passphrase-wordlist.git $direc; fi
 
 echo "\nMake sure Metasploit is ready to go \n"
-service postgresql start
+systemctl start postgresql
 msfdb reinit
 
 echo "\nUpdating exploit-db, getsploit (vulners), and nmap scripts \n"

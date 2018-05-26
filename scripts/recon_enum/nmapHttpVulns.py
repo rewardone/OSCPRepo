@@ -91,6 +91,9 @@ def shellshockSQL():
         print "STATUS 200 URLS do not exist. Please create or run dirbEVERYTHING first"
 
 standardNmapHTTP()
-shellshockSQL()
+if not os.isdir(STAT_200):
+    sleep(5)
+else:
+    shellshockSQL()
 f.close()
 print "INFO: nmapHttpVulns complete"

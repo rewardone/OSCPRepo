@@ -4,14 +4,15 @@ import subprocess
 import multiprocessing
 from multiprocessing import Process, Queue
 import os
-import time 
+import time
 
 def lbd(domain):
    domain = domain.strip()
    print "INFO: Running general ldb scans for " + domain
-   lbdSCAN = "lbd %s"  % (domain)
-   results = subprocess.check_output(lbdSCAN, shell=True)
-   lines = results.split("\n")
+   # lbdSCAN = "lbd %s"  % (domain)
+   # results = subprocess.check_output(lbdSCAN, shell=True)
+   # lines = results.split("\n")
+   lines = subprocess.check_output(['ldb',domain]).split("\n")
    for line in lines:
       line = line.strip()
       if ("Load-balancing" in line) and not ("NOT" in line):

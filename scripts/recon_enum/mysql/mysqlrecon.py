@@ -24,22 +24,25 @@ port = sys.argv[2].strip()
 #mysql-audit: audit security config against parts of CIS MySQL 1.0.2 benchmark --script-args mysql-audit.username,password,filename
 #mysql-query: runs a query and returns the table args 'query''username''password'
 print "INFO: Performing nmap MySQL script scan for %s:%s" % (ip_address, port)
-MySQLSCAN = "nmap -n -sV -Pn -vv -p %s --script mysql-empty-password,mysql-vuln-cve2012-2122,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners -oN '/root/scripts/recon_enum/results/exam/mysql/%s_mysql.nmap' %s" % (port, ip_address, ip_address)
-results = subprocess.check_output(MySQLSCAN, shell=True)
-outfile = "/root/scripts/recon_enum/results/exam/mysql/%s_mysqlrecon.txt" % (ip_address)
-f = open(outfile, "w")
-f.write(results)
-f.close
+#MySQLSCAN = "nmap -n -sV -Pn -vv -p %s --script mysql-empty-password,mysql-vuln-cve2012-2122,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners -oA '/root/scripts/recon_enum/results/exam/mysql/%s_mysql' %s" % (port, ip_address, ip_address)
+#results = subprocess.check_output(MySQLSCAN, shell=True)
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script mysql-empty-password,mysql-vuln-cve2012-2122,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners','-oA','/root/scripts/recon_enum/results/exam/mysql/%s_%s_mysql' % (ip_address,port),ip_address])
 
 #Hydra meant to do weak brute/spray, not extensive
 #run manually for extensive brute
 print "INFO: Performing hydra mysql scan against %s" % (ip_address)
-HYDRA = "hydra -L /root/lists/userlist_sqlbrute.txt -P /root/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/mysql/%s_mysqlhydra.txt -u %s -s %s mysql" % (ip_address, ip_address, port)
+#HYDRA = "hydra -L /root/lists/userlist_sqlbrute.txt -P /root/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/mysql/%s_mysqlhydra.txt -u %s -s %s mysql" % (ip_address, ip_address, port)
 try:
-    results = subprocess.check_output(HYDRA, shell=True)
-    resultarr = results.split("\n")
+    #results = subprocess.check_output(HYDRA, shell=True)
+    #resultarr = results.split("\n")
+    results = subprocess.check_output(['hydra','-L','/root/lists/userlist_sqlbrute.txt','-P','/root/lists/quick_password_spray.txt','-f','-o','/root/scripts/recon_enum/results/exam/mysql/%s_%s_mysqlhydra.txt' % (ip_address,port),'-u',ip_address,'-s',port,'mysql']).split("\n")
     for result in resultarr:
         if "login:" in result:
-	    print "[*] Valid mysql credentials found: %s" % (result)
+            print "[*] Valid mysql credentials found: %s" % (result)
 except:
     print "INFO: No valid mysql credentials found"
+
+# outfile = "/root/scripts/recon_enum/results/exam/mysql/%s_mysqlrecon.txt" % (ip_address)
+# f = open(outfile, "w")
+# f.write(results)
+# f.close
