@@ -26,7 +26,7 @@ port = sys.argv[2].strip()
 print "INFO: Performing nmap MySQL script scan for %s:%s" % (ip_address, port)
 #MySQLSCAN = "nmap -n -sV -Pn -vv -p %s --script mysql-empty-password,mysql-vuln-cve2012-2122,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners -oA '/root/scripts/recon_enum/results/exam/mysql/%s_mysql' %s" % (port, ip_address, ip_address)
 #results = subprocess.check_output(MySQLSCAN, shell=True)
-subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script mysql-empty-password,mysql-vuln-cve2012-2122,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners','-oA','/root/scripts/recon_enum/results/exam/mysql/%s_%s_mysql' % (ip_address,port),ip_address])
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=mysql-empty-password,mysql-vuln-cve2012-2122,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners','-oA','/root/scripts/recon_enum/results/exam/mysql/%s_%s_mysql' % (ip_address,port),ip_address])
 
 #Hydra meant to do weak brute/spray, not extensive
 #run manually for extensive brute

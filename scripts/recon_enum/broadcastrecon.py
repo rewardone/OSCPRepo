@@ -31,8 +31,8 @@ interface = sys.argv[1]
 #broadcast-wpad-discover: Retrieve a list of proxy servers on lan using WPAD. Both DHCP and DNS methods.
 
 print "INFO: Performing nmap broadcast discovery using interface: %s" % (interface)
-DISCOVERYSCAN = "nmap -vv --script=broadcast-ataoe-discover,broadcast-db2-discover,broadcast-dhcp-discover,broadcast-dhcp6-discover,broadcast-dns-service-discovery,broadcast-listener,broadcast-ms-sql-discover,broadcast-netbios-master-browser,broadcast-ospf2-discover,broadcast-pc-anywhere,broadcast-rip-discover,broadcast-upnp-info,broadcast-wsdd-discover,broadcast-xdmcp-discover,targets-sniffer -oA '/root/scripts/recon_enum/results/exam/nmap/%s_broadcast.nmap' -e %s" % (interface, interface)
-results = subprocess.check_output(DISCOVERYSCAN, shell=True)
+#DISCOVERYSCAN = "nmap -vv --script=broadcast-ataoe-discover,broadcast-db2-discover,broadcast-dhcp-discover,broadcast-dhcp6-discover,broadcast-dns-service-discovery,broadcast-listener,broadcast-ms-sql-discover,broadcast-netbios-master-browser,broadcast-ospf2-discover,broadcast-pc-anywhere,broadcast-rip-discover,broadcast-upnp-info,broadcast-wsdd-discover,broadcast-xdmcp-discover,targets-sniffer -oA '/root/scripts/recon_enum/results/exam/nmap/%s_broadcast.nmap' -e %s" % (interface, interface)
+#results = subprocess.check_output(DISCOVERYSCAN, shell=True)
 subprocess.check_output(['nmap','-vv','--script=broadcast-ataoe-discover,broadcast-db2-discover,broadcast-dhcp-discover,broadcast-dhcp6-discover,broadcast-dns-service-discovery,broadcast-listener,broadcast-ms-sql-discover,broadcast-netbios-master-browser,broadcast-ospf2-discover,broadcast-pc-anywhere,broadcast-rip-discover,broadcast-upnp-info,broadcast-wsdd-discover,broadcast-xdmcp-discover,targets-sniffer','-oA','/root/scripts/recon_enum/results/exam/nmap/%s_broadcast' % interface,'-e',interface])
 # outfile = "/root/scripts/recon_enum/results/exam/nmap/%s_broadcastrecon.txt" % (interface)
 # f = open(outfile, "w")

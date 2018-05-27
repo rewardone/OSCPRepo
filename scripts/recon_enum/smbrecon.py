@@ -60,6 +60,8 @@ results = subprocess.check_output(['samrdump.py',ip_address]).split("\n")
 f = open(outfile,'w')
 for res in results:
     f.write(res)
+    if "\n" not in res:
+        f.write("\n")
 f.close()
 
 #-va:   run verbosely and try all commands
@@ -86,6 +88,8 @@ try:
         f = open(outfile,'w')
         for res in results:
             f.write(res)
+            if "\n" not in res:
+                f.write("\n")
         f.close()
 except subprocess.CalledProcessError, e:
     print "WARN: SMBrecon non-0 exit for %s, but should still write output" % (ip_address)
@@ -113,6 +117,8 @@ results = subprocess.check_output(['nbtscan-unixwiz','-f',ip_address]).split("\n
 f = open(outfile,'w')
 for res in results:
     f.write(res)
+    if "\n" not in res:
+        f.write("\n")
 f.close()
 
 # outfile = "/root/scripts/recon_enum/results/exam/smb/" + ip_address + "_" + port + "_smbrecon.txt"

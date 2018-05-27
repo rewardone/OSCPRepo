@@ -27,7 +27,7 @@ ip_address = sys.argv[1].strip()
 print "INFO: Performing nmap SMTP script scan for %s:25,465,587" % (ip_address)
 #SMTPSCAN = "nmap -n -sV -Pn -vv -p 25,465,587 --script=banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,vulners,smtp-vuln* -oA '/root/scripts/recon_enum/results/exam/smtp/%s_smtp' %s" % (ip_address, ip_address)
 #results = subprocess.check_output(SMTPSCAN, shell=True)
-subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'25,465,587','--script=banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,vulners,smtp-vuln*','-oA','/root/scripts/recon_enum/results/exam/smtp/%s_%s_smtp' % (ip_address,port),ip_address])
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p','25,465,587','--script=banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,vulners,smtp-vuln*','-oA','/root/scripts/recon_enum/results/exam/smtp/%s_smtp' % (ip_address),ip_address])
 
 # outfile = "/root/scripts/recon_enum/results/exam/smtp/%s_smtprecon.txt" % (ip_address)
 # f = open(outfile, "w")

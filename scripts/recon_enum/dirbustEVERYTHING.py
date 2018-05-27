@@ -49,9 +49,10 @@ if (name == ""):
     name = "TEMP_NO_NAME_PASSED"
 
 user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
-default_wordlist = "/root/lists/Web/secProb_no_ext.txt"
-WORDLIST_CHUNK_DIR="/root/lists/Web/secProbChunked"
-#default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
+#default_wordlist = "/root/lists/Web/secProb_no_ext.txt"
+#WORDLIST_CHUNK_DIR="/root/lists/Web/secProbChunked"
+default_wordlist = "/root/lists/Web/personal_with_vulns.txt"
+WORDLIST_CHUNK_DIR="/root/lists/Web/personalWVulnsChunked"
 
 PROCESSES = 10
 

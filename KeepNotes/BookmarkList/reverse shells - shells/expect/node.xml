@@ -6,7 +6,7 @@
   <key>duplicate_of</key><string>9375ae18-9529-4009-92c5-21fe7085cdf5</string>
   <key>nodeid</key><string>4952bf3e-97ad-4e75-a96f-5c4c918e5ff6</string>
   <key>modified_time</key><integer>1516897302</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516897289</integer>
   <key>info_sort_dir</key><integer>1</integer>
