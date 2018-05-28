@@ -5,6 +5,7 @@
   <key>title</key><string>MSFVenom Payloads</string>
   <key>nodeid</key><string>ec78ad13-451b-4b81-a1b7-01e6ee1b5bd7</string>
   <key>modified_time</key><integer>1522679046</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522678246</integer>
