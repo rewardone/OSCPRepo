@@ -38,7 +38,9 @@ outfile = open(outPath,'w')
 errfile = open(errPath,'w')
 try:
     #results = subprocess.check_output(OPENSSLGRAB, shell=True)
-    subprocess.check_output(['openssl','s_client','-connect','%s:%s' % (ip_address,port)],stdout=outfile,stderr=errfile)
+    results = subprocess.check_output(['openssl','s_client','-connect','%s:%s' % (ip_address,port)],stderr=errfile)
+    for res in results:
+        outfile.write(res)
 except subprocess.CalledProcessError as e:
     pass
 outfile.close()

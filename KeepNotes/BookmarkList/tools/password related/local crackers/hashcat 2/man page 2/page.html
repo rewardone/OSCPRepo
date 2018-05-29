@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>man page</title>
+<title>Man Page</title>
 </head><body>hashcat --help<br/>
 hashcat, advanced password recovery<br/>
 <br/>
@@ -278,4 +278,28 @@ References<br/>
 &nbsp;3711 = Mediawiki B type<br/>
 &nbsp;3721 = WebEdition CMS<br/>
 &nbsp;7600 = Redmine Project Management Web App<br/>
+<br/>
+- [ Workload Profiles ] -<br/>
+<br/>
+&nbsp; # | Performance | Runtime | Power Consumption | Desktop Impact<br/>
+&nbsp;===+=============+=========+===================+=================<br/>
+&nbsp; 1 | Low &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; 2 ms &nbsp;| Low &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Minimal<br/>
+&nbsp; 2 | Default &nbsp; &nbsp; | &nbsp;12 ms &nbsp;| Economic &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Noticeable<br/>
+&nbsp; 3 | High &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp;96 ms &nbsp;| High &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Unresponsive<br/>
+&nbsp; 4 | Nightmare &nbsp; | 480 ms &nbsp;| Insane &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Headless<br/>
+<br/>
+- [ Basic Examples ] -<br/>
+<br/>
+&nbsp; Attack- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Hash- |<br/>
+&nbsp; Mode &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type &nbsp;| Example command<br/>
+&nbsp;==================+=======+==================================================================<br/>
+&nbsp; Wordlist &nbsp; &nbsp; &nbsp; &nbsp; | $P$ &nbsp; | hashcat -a 0 -m 400 example400.hash example.dict<br/>
+&nbsp; Wordlist + Rules | MD5 &nbsp; | hashcat -a 0 -m 0 example0.hash example.dict -r rules/best64.rule<br/>
+&nbsp; Brute-Force &nbsp; &nbsp; &nbsp;| MD5 &nbsp; | hashcat -a 3 -m 0 example0.hash ?a?a?a?a?a?a<br/>
+&nbsp; Combinator &nbsp; &nbsp; &nbsp; | MD5 &nbsp; | hashcat -a 1 -m 0 example0.hash example.dict example.dict<br/>
+<br/>
+If you still have no idea what just happened, try the following pages:<br/>
+<br/>
+* https://hashcat.net/wiki/#howtos_videos_papers_articles_etc_in_the_wild<br/>
+* https://hashcat.net/faq/<br/>
 </body></html>

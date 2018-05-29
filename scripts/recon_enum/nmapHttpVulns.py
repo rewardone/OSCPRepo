@@ -90,13 +90,15 @@ def shellshockSQL():
         nmapArg = item.split(port)[1]
         if nmapArg[0] != "/":
             nmapArg = "/" + nmapArg
+        if '"' or "'" in nmapArg:
+            continue #arg will could break out and error script
         results = subprocess.check_output(['nmap','-n','-sV','-Pn','-p',port,'--script=http-shellshock,http-sql-injection','--script-args',"http-sql-injection.url='%s',http-shellsock.uri='%s'" % (nmapArg,nmapArg),ip_address])
         f.write("URL " + nmapArg + "\n")
         f.write(results)
     g.close()
 
 standardNmapHTTP()
-if not os.path.isfile(STAT_200) and not os.path.isfile(STAT_200_SORTED):
+while not os.path.isfile(STAT_200) and not os.path.isfile(STAT_200_SORTED):
     time.sleep(5)
 else:
     shellshockSQL()

