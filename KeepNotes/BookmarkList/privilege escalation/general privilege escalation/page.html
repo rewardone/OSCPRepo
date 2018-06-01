@@ -34,10 +34,44 @@ http://www.harmj0y.net/blog/activedirectory/targeted-kerberoasting/ | Targeted K
 https://conference.hitb.org/hitbsecconf2017ams/materials/D2T3%20-%20James%20Forshaw%20-%20Introduction%20to%20Logical%20Privilege%20Escalation%20on%20Windows.pdf | Very Technical<br/>
 https://blog.xpnsec.com/becoming-system/<br/>
 <br/>
-"In place" Movement:<br/>
-<br/>
-<br/>
-<br/>
+OS X <br/>
+Privilege Escalation - OS X<ul><li><b>Writeups</b></li>
+<li style="list-style-type: none"><ul><li><a href="https://truesecdev.wordpress.com/2015/04/09/hidden-backdoor-api-to-root-privileges-in-apple-os-x/">Hidden backdoor API to root privileges in Apple OS X</a></li>
+<li>Works on 10.7 -&gt; 10.10.2</li>
+<li><a href="http://randomthoughts.greyhats.it/2014/10/osx-local-privilege-escalation.html">Mac OS X local privilege escalation (IOBluetoothFamily)</a></li>
+<li><a href="https://code.google.com/p/google-security-research/issues/detail?id=121">Privilege Escalation on OS X below 10.0</a></li>
+<li><a href="http://www.disinfosec.com/2016/10/12/hacking-mac/">Hacking Mac With EmPyre</a></li>
+<li><a href="https://developer.apple.com/library/content/technotes/tn2206/_index.html">macOS Code Signing In Depth</a></li>
+<li><a href="https://www.n00py.io/2016/10/privilege-escalation-on-os-x-without-exploits/">Privilege escalation on OS X – without exploits - n00py.io</a></li>
+<li><a href="https://objective-see.com/blog/blog_0x24.html">Why &lt;blank&gt; Gets You Root</a></li>
+<li><a href="https://fuzzynop.blogspot.com/2014/10/osascript-for-local-phishing.html">osascript: for local phishing</a></li>
+<li><a href="https://objective-see.com/blog/blog_0x14.html">abusing the local upgrade process to bypass SIP - Objective-see</a></li>
+<li><a href="https://lockboxx.blogspot.com/2014/11/native-mac-os-x-application-mach-o.html">Native Mac OS X Application / Mach-O Backdoors for Pentesters</a></li>
+<li><a href="https://www.youtube.com/watch?v=9T_2KYox9Us">Attacking OSX for fun and profit tool set limiations frustration and table flipping Dan Tentler - ShowMeCon</a></li>
+<li><a href="https://siguza.github.io/IOHIDeous/">IOHIDeous</a></li>
+</ul>
+</li>
+<li><b>Tools</b></li>
+<li style="list-style-type: none"><ul><li><a href="https://github.com/Psychotrope37/bigphish">BigPhish</a></li>
+<li style="list-style-type: none"><ul><li>This issue has been resolved by Apple in MacOS Sierra by enabling tty_tickets by default. NOTE: All other MacOS operation system (El Capitan, Yosemite, Mavericks etc...) still remain vulnerable to this exploit.</li>
+</ul>
+</li>
+<li><a href="https://github.com/scen/osxinj">osxinj</a></li>
+<li style="list-style-type: none"><ul><li>Another dylib injector. Uses a bootstrapping module since mach_inject doesn't fully emulate library loading and crashes when loading complex modules.</li>
+</ul>
+</li>
+<li><a href="https://github.com/scriptjunkie/kcap">kcap</a></li>
+<li style="list-style-type: none"><ul><li>This program simply uses screen captures and programmatically generated key and mouse events to locally and graphically man-in-the-middle an OS X password prompt to escalate privileges.</li>
+</ul>
+</li>
+<li><a href="http://www.sveinbjorn.org/platypus">Platypus</a></li>
+<li style="list-style-type: none"><ul><li>Platypus is a Mac OS X developer tool that creates native Mac applications from interpreted scripts such as shell scripts or Perl, Ruby and Python programs. This is done by wrapping the script in an application bundle along with a native executable binary that runs the script.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp;<br/>
 <br/>
 Complete <br/>
 Linux<br/>
@@ -130,4 +164,5 @@ https://www.trustedsec.com/2014/12/ms14-068-full-compromise-step-step/ | ms14-06
 http://adsecurity.org/?p=525 | ms14-068<br/>
 http://adsecurity.org/?p=541 | ms14-068<br/>
 http://adsecurity.org/?p=763 | ms14-068<br/>
-</body></html>
+http://carnal0wnage.attackresearch.com/2012/10/group-policy-preferences-and-getting.html | GPP-Passwords<br/>
+https://web.archive.org/web/20160413141758/leonteale.co.uk/decrypting-windows-2008-gpp-user-passwords-using-gpprefdecrypt-py/ | Archive. GPP-Passwords</body></html>
