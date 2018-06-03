@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>DoubleAgent exploits a 15 years old legitimate feature of Windows and therefore cannot be patched. &nbsp;Code Injection DoubleAgent gives the attacker the ability to inject any DLL into any process. The code injection occurs extremely early during the victim’s process boot, giving the attacker full control over the process and no way for the process to protect itself. The code injection technique is so unique that it’s not detected or blocked by any antivirus.<br/>
+<br/>
+Persistency DoubleAgent can continue injecting code even after reboot making it a perfect persistence technique to “survive” reboots/updates/reinstalls/patches/etc. Once the attacker decides to inject a DLL into a process, they are forcefully bounded forever. Even if the victim would completely uninstall and reinstall its program, the attacker’s DLL would still be injected every time the process executes.<br/>
+<br/>
+<br/>
+<b>Attack Vectors</b><br/>
+&nbsp;<ul><li><span style="font-family: ProximaNova">Attacking Antivirus &amp; Next Generation Antivirus – Taking full control of any antivirus by injecting code into it while bypassing all of its self-protection mechanism. The attack has been verified and works on all the major antiviruses including but not limited to: Avast, AVG, Avira, Bitdefender, Comodo, ESET, F-Secure, Kaspersky, Malwarebytes, McAfee, Norton, Panda, Quick Heal and Trend Micro.</span></li>
+<li><span style="font-family: ProximaNova">Installing Persistent Malware – Installing malware that can “survive” reboots and are automatically executed once the operating system boots.</span></li>
+<li><span style="font-family: ProximaNova">Hijacking Permissions – Hijacking the permissions of an existing trusted process to perform malicious operations in disguise of the trusted process. e.g. Exfiltrating data, C&amp;C communication, lateral movement, stealing and encrypting sensitive data.</span></li>
+<li><span style="font-family: ProximaNova">Altering Process Behavior – Modifying the behavior of the process. e.g. Installing backdoors, weakening encryption algorithms, etc.</span></li>
+<li><span style="font-family: ProximaNova">Attacking Other Users/Sessions – Injecting code to processes of other users/sessions (SYSTEM/Admin/etc.).</span></li>
+</ul>
+<br/>
+<br/>
+<br/>
+<b>Summary </b><br/>
+&nbsp;<br/>
+Attackers are always evolving and finding new Zero-Day attacks. We need to make more efforts to detect and prevent these attacks, and stop blindly trusting traditional security solutions, that as shown here, are not only ineffective against Zero-Days but also open new opportunities for the attacker to create complicated and deadly attacks.<br/>
+<br/>
+<br/>
+<br/>
+<b>*Update </b> <br/>
+<br/>
+To clarify, of course we haven’t discovered the existence of Application Verifier, it’s part of the OS so users can use it. Application Verifier as a hooking technique was discussed long ago as early as <a href="http://kitrap08.blogspot.co.il/2011/04/application-verifier.html">2011</a>. What we discovered and focused about was that AVRF can be used for: <br/>
+&nbsp;<br/>
+1. Generic code injection technique that is undetected by AV. <br/>
+2. Generic persistence technique that is also undetected by AV. <br/>
+3. And most importantly, injecting code directly into the AV while bypassing its self-protection techniques. None of these points where discussed in previous articles. We believe these points are a significant tool that can be used by attackers to help bypass and abuse antivirus software. – You do need a privileged account to run DoubleAgent as DoubleAgent is designed as a post-breach attack. <br/>
+&nbsp;<br/>
+Even after a computer is breached, and attacker still needs to hide from the AV, spread its code, maintain persistence and find ways to exfiltrate/steal/encrypt data without being caught. DoubleAgent gives the attacker the ability to control the AV and perform all the operations above without being detected, while keeping the illusion that the AV is working normally. <br/>
+&nbsp;<br/>
+–ESET AV <a href="https://forum.eset.com/topic/11394-zero-day-exploit/">do implement</a>&nbsp;“Protected Processes”, however, not over all process so they are still vulnerable. <br/>
+&nbsp;<br/>
+–Trend Micro just released a hotfix for the vulnerability, you can find the official hotfix <a href="https://success.trendmicro.com/solution/1116957">here</a>.<br/>
+</body></html>

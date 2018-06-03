@@ -32,8 +32,15 @@ try:
     for result in resultarr:
         if "login:" in result:
             print "[*] Valid telnet credentials found: %s" % (result)
-except:
-    print "INFO: No valid telnet credentials found"
+except subprocess.CalledProcessError as hydrerr:
+    if hydrerr.returncode == 255:
+        print "Hydra broke early with status 255, it must have found something! Check telnethydra for output."
+    elif hydrerr.returncode != 0:
+        print "Hydra broke:"
+        print hydrerr.returncode
+        print hydrerr.output
+    else:
+        print "INFO: No valid telnet credentials found"
 
 # outfile = "/root/scripts/recon_enum/results/exam/telnet/%s_telnetrecon.txt" % (ip_address)
 # f = open(outfile, "w")

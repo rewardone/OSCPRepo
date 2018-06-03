@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NFS v3 and Older</title>
+</head><body>NFS before version 4 is reliant upon host trust relationships for authentication. The NFS server trusts any client machines to authenticate users and assign the same user IDs (UIDS) that the shared filesystem uses. This works in NIS, NIS+, and LDAP domains, for instance, but only if you know the client machine is not compromised, or faking its identity. This is because the only authentication in the NFS protocol is the passing of the UID and GID (group ID). There are a few things that can be done to enhance the security of NFS, but many of them are incomplete solutions, and even with all three listed here, it could still be possible to circumvent the security measures.<br/>
+<b><br/>
+</b><b>Squash root</b><br/>
+<br/>
+The server or the share ("export" in NFS lingo) can be configured root_squash, meaning that any requests that come in claiming to be UID or GID 0 (root) will be treated like the nobody user, or equivalent on the system. This does not prevent an attacker from spoofing any other UID/GID combo, but will protect the most sensitive info and configs on the export.<br/>
+<b><br/>
+</b><b>nfs_portmon</b><br/>
+<br/>
+Another setting that can be enabled is nfs_portmon, which denies requests coming from source ports outside of the 513-1024 range. Since only root can (usually) allocate these ports, this prevents a regular user on a trusted machine from writing and using their own NFS client that fakes UID/GID. It does nothing to stop a rogue host, a user with su permissions, or a root-level compromised machine from doing the same thing.<br/>
+<b><br/>
+</b><b>Export restrictions </b><br/>
+Shares/exports can be controlled so that only certain machines can access them. These Access Control Lists can consist of:<br/>
+&nbsp;<ul><li>IP addresses (e.g. 192.168.1.34)</li>
+<li>IP prefixes (e.g. @192.168.1)</li>
+<li>hostnames (e.g. server1.mydom.nis)</li>
+<li>host lists (e.g. @trusted_hosts)</li>
+<li>"everyone"</li>
+</ul>
+<br/>
+The best configuration would be to use a host list, since querying the nfs daemon will just give the name of the list, not which addresses or names it contains. Next in line would be IP addresses or hostnames, since those are more difficult to spoof. IP prefixes and "everyone" are indications of insecurity, since there is little or no restriction on what addresses can connect.<br/>
+<br/>
+NFSpy makes spoofing NFSv3 very easy. As simple as:<br/>
+&nbsp;$ sudo nfspy -o server=&lt;RHOST&gt;:/home,hide,allow_other,ro,intr /mnt <br/>
+<br/>
+Unmounting can be done with <br/>
+$ sudo fusermount -u /mnt</body></html>

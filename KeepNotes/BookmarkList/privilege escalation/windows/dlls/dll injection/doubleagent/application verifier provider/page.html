@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Application Verifier Provider</title>
+</head><body><b>Microsoft Application Verifier Provider</b>&nbsp;<br/>
+Microsoft offers a standard way to install runtime verification tools for native code via <a href="https://msdn.microsoft.com/en-us/library/ms220948(v=vs.90).aspx">Microsoft Application Verifier</a>&nbsp;Provider DLLs. A verifier provider DLL is simply a DLL that is loaded into the process and is responsible for performing runtime verifications for the application. In order to register a new Application Verifier Provider DLL one needs to create a verifier provider DLL and register it by creating a set of keys in the registry. Once a DLL has been registered as a verifier provider DLL for a process, it would permanently be injected by the Windows Loader into the process every time the process starts, even after reboots/updates/reinstalls/patches/etc.<br/>
+<br/>
+<br/>
+<b>Application Verifier</b><br/>
+Application Verifier is a runtime verification tool for unmanaged code<br/>
+<br/>
+<b>Purpose</b><br/>
+AV assists developers in quickly finding subtle programming errors that can be extremel difficult to identify with normal application testing. Using AV in Visual Studio makes it easier to create reliable applications by identifying errors caused by heap corruptioni, incorrect handle and critical section usage. <br/>
+<br/>
+<b>Where Applicable</b><br/>
+AV can be used with any project in the C++ language during runtime only. If you have selected to run AV on an application that is managed code or is a mix of managed and unmanaged and running the interop debugger, you will receive the following error:<br/>
+<br/>
+AV is not supported for the selected debug mode. Please see the supporting documentation for more information. Click OK to continue debugging without verifier.<br/>
+<br/>
+Selecting OK will not enable AV and you will continue debugging. <br/>
+<br/>
+<b>User Requirements</b><br/>
+If you are running WinXP or Server 2003+ you will need to be an administrator to run AV. Otherwise, you will receive &nbsp;the following error:<br/>
+Access denied. You need administrative credentials to use AV on image &lt;App_name.exe&gt; on machine &lt;Machine_Name&gt;. Contact your system administrator for assistance. <br/>
+If you are running Vista under Stadnard User Access, you will receive the following error message:<br/>
+Access denied. You need administrative credentials to use AV on image &lt;App_Name.exe&gt; on machine &lt;Machine_name&gt; or per user verifier settings should be enabled by the adminsitrator. Please refer to documentation for more information.<br/>
+<br/>
+Administrator: Per user verifier settings allow standard users to use AV on Windows Vista. To enable per user verifier settings, adminstrators wil have to create the HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\ImageExecutionOptions REG_DWORD value in the registry and set to 0x1. Once the change is made, you will need to reboot the machine and ask the standard user to try accessing AV again. <br/>
+<b><br/>
+</b><b>System Requirements</b><br/>
+AV runs on XP+ and above. As a result if you are running 200 you will receive the following error:<br/>
+AV is not supported on OS running on your machine &lt;machine_name&gt;. Please upgrade to XP or above.<br/>
+An installation of a Windows OS may be required depending on the service pack installed on your machine. If your machine does not have the updated file, you will receive the following dialog when you access Start with Application Verifier from the Debug menu:<br/>
+AV requires an updated system file that is not detected on your machine &lt;machine_name&gt;. "Do you want to go to Winodws download center to get the update?"<br/>
+Selecting OK will open a browser to the update on the Windows download center and continue the execution of the program in a normal debug session (i.e. Application Verifier will not be enabled). Instlaling the required update will enable AV when you try accessing it again. You may also get the update from the Microsoft download center.</body></html>

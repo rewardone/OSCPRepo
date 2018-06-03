@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bash</title>
+</head><body>dev/tcp can be used as a rudimentary web client<br/>
+<br/>
+exec 3&lt;&gt;/dev/tcp/www.google.com/80<br/>
+echo -e "GET / HTTP/1.1\r\nhost: http://www.google.com\r\nConnection: close\r\n\r\n" &gt;&amp;3<br/>
+cat &lt;&amp;3</body></html>

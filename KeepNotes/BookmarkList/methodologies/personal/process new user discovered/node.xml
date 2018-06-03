@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Process: New User Discovered</string>
+  <key>nodeid</key><string>e621934a-5d12-4e9c-89c4-b9f078c90d8b</string>
+  <key>modified_time</key><integer>1527964326</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1527964246</integer>
+  <key>order</key><integer>7</integer>
+</dict>
+</node>

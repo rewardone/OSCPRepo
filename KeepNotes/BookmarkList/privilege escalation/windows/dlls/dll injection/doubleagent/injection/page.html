@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Injection</title>
+</head><body><b>Injection </b>&nbsp;Every process starts when the operating system transfers control from kernel mode to user mode by calling ntdll!LdrInitializeThunk. From this moment ntdll is responsible for initializing the process (initializing globals, loading imports, etc.) and eventually transferring control to the executed program’s main function. <br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+The process is in such an infant stage that the only loaded modules are <a href="https://en.wikipedia.org/wiki/Microsoft_Windows_library_files#NTDLL.DLL">ntdll.dll</a>&nbsp;and the executable (NS.exe).<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+Ntdll doesn’t waste time and starts initializing the process, when most of the initialization happens in ntdll!LdrpInitializeProcess.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+Normally the first DLL that would be loaded would be <a href="https://en.wikipedia.org/wiki/Microsoft_Windows_library_files#KERNEL32.DLL">kernel32.dll</a>.<br/>
+<br/>
+<img src="image 4.png" /><br/>
+<img src="image 5.png" /><br/>
+<br/>
+But if Application Verifier is on, ntdll!LdrpInitializeProcess calls ntdll!AVrfInitializeVerifier which causes our <a href="https://github.com/Cybellum/DoubleAgent/tree/master/DoubleAgentDll">verifier provider DLL</a>&nbsp;to get loaded just before loading kernel32.<br/>
+<br/>
+<img src="image 6.png" /><br/>
+<img src="image 7.png" /><br/>
+Loading at such an early stage, before any other system dll, gives us absolute control over the process.<br/>
+<br/>
+<img src="image 8.png" /><br/>
+<br/>
+Once our DLL has been loaded by ntdll, our DllMain would be called and we are free to do as we wish inside the victim process. &nbsp;<br/>
+<br/>
+static BOOL main_DllMainProcessAttach(VOID)<br/>
+{<br/>
+&#09;DOUBLEAGENT_STATUS eStatus = DOUBLEAGENT_STATUS_INVALID_VALUE;<br/>
+<br/>
+&#09;/*<br/>
+&#09; **************************************************************************<br/>
+&#09; Enter Your Code Here<br/>
+&#09; **************************************************************************<br/>
+&#09; */<br/>
+<br/>
+&#09; /* Succeeded */<br/>
+&#09;DOUBLEAGENT_SET(eStatus, DOUBLEAGENT_STATUS_SUCCESS);<br/>
+<br/>
+&#09;/* Returns status */<br/>
+&#09;return FALSE != DOUBLEAGENT_SUCCESS(eStatus);<br/>
+}<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

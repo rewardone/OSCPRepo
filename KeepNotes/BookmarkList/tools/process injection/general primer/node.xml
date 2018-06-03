@@ -4,10 +4,12 @@
 <dict>
   <key>title</key><string>General Primer</string>
   <key>nodeid</key><string>a50c605e-2d80-4d7c-8a27-1b804d081022</string>
-  <key>modified_time</key><integer>1526827133</integer>
+  <key>modified_time</key><integer>1527946540</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1526827084</integer>
+  <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
 </dict>
 </node>

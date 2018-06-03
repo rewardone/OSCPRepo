@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Re-enable PSExec</string>
+  <key>nodeid</key><string>4253cd02-2498-4ec8-8bdb-93ca92e8e379</string>
+  <key>modified_time</key><integer>1527899240</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1527899125</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

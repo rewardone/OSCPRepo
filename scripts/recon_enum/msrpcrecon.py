@@ -17,7 +17,7 @@ port = sys.argv[2].strip()
 print "INFO: Performing nmap MSRPC script scan for %s:%s" % (ip_address, port)
 #MSRPCSCAN = "nmap -n -sV -Pn -vv -p %s --script=msrpc-enum,vulners -oA '/root/scripts/recon_enum/results/exam/msrpc/%s_msrpc.nmap' %s" % (port, ip_address, ip_address)
 #results = subprocess.check_output(MSRPCSCAN, shell=True)
-subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=msrpc-enum,vulners','-oA','/root/scripts/recon_enum/results/exam/msrpc/%s_%s_msrpc.nmap' % (ip_address,port),ip_address])
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','msrpc-enum,vulners','-oA','/root/scripts/recon_enum/results/exam/msrpc/%s_%s_msrpc.nmap' % (ip_address,port),ip_address])
 
 #For interfaces listening on msrpc (select ports), do an ifmap
 #IFMAPCMD = "ifmap.py %s %s" % (ip_address, port)

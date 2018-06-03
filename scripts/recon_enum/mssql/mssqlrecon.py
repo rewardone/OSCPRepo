@@ -40,8 +40,15 @@ try:
     for result in resultarr:
         if "login:" in result:
             print "[*] Valid mssql credentials found: %s" % (result)
-except:
-    print "INFO: No valid mssql credentials found"
+except subprocess.CalledProcessError as hydrerr:
+    if hydrerr.returncode == 255:
+        print "Hydra broke early with status 255, it must have found something! Check mssqlhydra for output."
+    elif hydrerr.returncode != 0:
+        print "Hydra broke:"
+        print hydrerr.returncode
+        print hydrerr.output
+    else:
+        print "INFO: No valid mssql credentials found"
 
 # outfile = "/root/scripts/recon_enum/results/exam/mssql/%s_mssqlrecon.txt" % (ip_address)
 # f = open(outfile, "w")

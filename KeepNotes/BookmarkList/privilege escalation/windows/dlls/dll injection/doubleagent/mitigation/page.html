@@ -1,0 +1,9 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigation</title>
+</head><body>Microsoft has provided a new design concept for antivirus vendors called Protected Processes. The new concept is specially designed for antivirus services. Antivirus processes can be created as “Protected Processes” and the protected process infrastructure only allows trusted, signed code to load and has built-in defense against code injection attacks. <br/>
+&nbsp;<br/>
+This means that even if an attacker found a new Zero-Day technique for injecting code, it could not be used against the antivirus as its code is not signed. Currently no antivirus (except Windows Defender) has implemented this design. Even though Microsoft made this design available more than 3 years ago. It’s important to note, that even when the antivirus vendors would block the registration attempts, the code injection technique and the persistency technique would live forever since it’s legitimate part of the OS. <br/>
+</body></html>

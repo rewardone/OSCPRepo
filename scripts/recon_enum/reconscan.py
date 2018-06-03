@@ -43,7 +43,11 @@
 ##       : no redirect scan, grab (Status: 301) pages and gobust just on those
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
 ## Expand SMTPrecon:
-##       : currently only scans 25. need: 25,110,143,587,465,993,995 (IMAP/POP/Exchange)
+##       : currently only scans 25. need: 25,110,143,465,587,993,995 (IMAP/POP/Exchange)
+##       : Change to ip_address, port. Pass specific ports only, currently hardcoded 25,465,587
+##       : Ruler for exchange (possibly)
+## Expand SMBRecon:
+##       : hydra or crackmapexec for spray/brute
 ## Expand dirTrav:
 ##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
@@ -59,11 +63,8 @@
 ##      Other tools to consider: WPscan, WPscanner, WPSeku, Droopescan, SSLScan, SSLyze A2SV
 ##      Separate CMSscannerrecon
 ## Need scripts for:
-##       LDAP, rlogin, rsh, vnc
+##       LDAP, rsh, vnc
 ## web page screenshots
-##
-## [Performance]
-## Instead of check_output(,shell=True), pass directly to cmd check_output(['','','']) etc etc
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...
@@ -113,8 +114,8 @@ def ftpEnum(ip_address, port):
 
 def fingerEnum(ip_address, port):
    print "INFO: Detected Finger on %s:%s" % (ip_address, port)
-   FINGERSCAN = "nmap -n -sV -Pn -vv -p %s --script=finger,vulners -oX /root/scripts/recon_enum/results/exam/finger/%s_finger.xml %s" % (port, ip_address, ip_address)
-   subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=finger,vulners','-oX /root/scripts/recon_enum/results/exam/finger%s_finger.xml' % ip_address,ip_address])
+   FINGERSCAN = "nmap -n -sV -Pn -vv -p %s --script finger,vulners -oA /root/scripts/recon_enum/results/exam/finger/%s_finger.xml %s" % (port, ip_address, ip_address)
+   subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','finger,vulners','-oA','/root/scripts/recon_enum/results/exam/finger/%s_%s_finger' % (ip_address,port),ip_address])
    #subprocess.call(FINGERSCAN, shell=True)
    return
 
@@ -161,7 +162,7 @@ def httpEnum(ip_address, port):
     print "INFO: Detected http on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     #HTTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan --script-args http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1 -oA /root/scripts/recon_enum/results/exam/http/%s_%s_http.nmap %s" % (port, userAgent, ip_address, port, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_http' % (port, ip_address),ip_address])
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_http' % (port, ip_address),ip_address])
     #results = subprocess.check_output(HTTPSCAN, shell=True)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
     #can opt to invoke dirbustEVERYTHING with <http://url:port> <output filename> <tool-to-use> ie dirb or gobuster (default)
@@ -184,7 +185,7 @@ def httpsEnum(ip_address, port):
     print "INFO: Detected https on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     #HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan --script-args http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1 -oA /root/scripts/recon_enum/results/exam/http/%s_%s_https.nmap %s" % (port, userAgent, ip_address, port, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_https' % (port, ip_address),ip_address])
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_https' % (port, ip_address),ip_address])
     #results = subprocess.check_output(HTTPSCANS, shell=True)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
     #can opt to invoke dirbustEVERYTHING with <http://url:port> <output filename> <tool-to-use> ie dirb or gobuster (default)
@@ -226,8 +227,35 @@ def mysqlEnum(ip_address, port):
 def nfsEnum(ip_address, port):
     print "INFO: Detected NFS on %s:%s" % (ip_address, port)
     #NFSSCAN = "nmap -n -sV -Pn -vv -p %s --script=nfs-ls,nfs-showmount,nfs-statfs,vulners -oA /root/scripts/recon_enum/results/exam/nfs/%s_nfs.xml %s" % (port, ip_address, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA","/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfs" % (ip_address, port),ip_address])
-    #subprocess.call(NFSSCAN, shell=True)
+    nfsPort = '111,%s' % port #need rpc for nmap scripts
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',nfsPort,'--script','nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA","/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfs" % (ip_address, port),ip_address])
+    outfile = "/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfsrecon.txt" % (ip_address, port)
+    f = open(outfile,'w')
+    results = subprocess.check_output(['showmount','-a',ip_address])
+    if results:
+        f.write("Showmount -a: " + "\n")
+        f.write(results)
+        f.write("\n")
+    results = subprocess.check_output(['showmount','-e',ip_address])
+    if results:
+        f.write("Showmount -e: " + "\n")
+        f.write(results)
+        f.write("\n")
+    results = results.split("\n")
+    for res in results:
+        if "/" in res:
+            try:
+                sharename = res.split(" ")[0] #grab just the mount/share
+                fqsharename = "%s:%s" % (ip_address, sharename)
+                dir = sharename.split("/")[-1] #grab last element so we can make a name for it
+                dir = "/mnt/%s" % dir
+                if not os.path.isdir(dir):
+                    mkdir_p(dir)
+                subprocess.check_output(['nfspy',dir,'-o','server=%s,getroot,hide,allow_root,rw' % (fqsharename)])
+                print "INFO: %s should be mounted at %s" % (sharename, dir)
+            except:
+                print "Something went wrong with nfspy or creation. Try manually for: %s" % res
+    f.close()
     return
 
 def msrpc(ip_address, port):
@@ -243,7 +271,7 @@ def msrpc(ip_address, port):
 def rpcbindEnum(ip_address, port):
     print "INFO: Detected RPCBind on %s:%s" % (ip_address, port)
     #NMAPRPCNSE = "nmap -n -sV -Pn -vv -p %s --script rpc-grind -oA /root/scripts/recon_enum/results/exam/rpc/%s_rpc.xml %s" % (port, ip_address, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script rpc-grind','-oA',"/root/scripts/recon_enum/results/exam/rpc/%s_%s_rpc" % (ip_address,port),ip_address])
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','rpc-grind','-oA',"/root/scripts/recon_enum/results/exam/rpc/%s_%s_rpc" % (ip_address,port),ip_address])
     #subprocess.call(NMAPRPCNSE, shell=True)
     RPCINFOSCAN1 = "rpcinfo %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
     subprocess.check_output(RPCINFOSCAN1, shell=True)
@@ -260,6 +288,28 @@ def rdpEnum(ip_address, port):
     subprocess.check_output(['rdp/./rdprecon.py',ip_address,port])
     #SCRIPT = "rdp/./rdprecon.py %s %s" % (ip_address, port)
     #subprocess.call(SCRIPT, shell=True)
+    return
+
+def rloginEnum(ip_address, port):
+    #Typically only 513, so we'll check
+    if port.strip() == "513":
+        print "INFO: RLogin detected on %s:%s" % (ip_address, port)
+        try:
+            results = subprocess.check_output(['hydra','-L','/root/lists/userlist.txt','-P','/root/lists/quick_password_spray.txt','-f','-o','/root/scripts/recon_enum/results/exam/%s_rloginhydra' % (ip_address),'-u',ip_address,'rlogin']).split("\n")
+            for res in results:
+                if "login:" in res:
+                    print "[*] Valid rlogin credentials found: " + res
+        except subprocess.CalledProcessError as hydrerr:
+            if hydrerr.returncode == 255:
+                print "Hydra broke early with status 255, it must have found something! Check rloginhydra for output."
+            elif hydrerr.returncode != 0:
+                print "Hydra broke:"
+                print hydrerr.returncode
+                print hydrerr.output
+            else:
+                print "INFO: No valid rlogin credentials found"
+    else:
+        print "Other rlogin services (exec/shell) detected. Recon manually: %s:%s" % (ip_address, port)
     return
 
 def sshEnum(ip_address, port):
@@ -316,7 +366,7 @@ def telnetEnum(ip_address, port):
 def tftpEnum(ip_address, port):
    print "INFO: Detected TFTP on %s:%s" % (ip_address, port)
    #TFTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=tftp-enum,vulners -oA /root/scripts/recon_enum/results/exam/tftp/%s_tftp.xml %s" % (port, ip_address, ip_address)
-   subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=tftp-enum,vulners','-oA',"/root/scripts/recon_enum/results/exam/tftp/%s_%s_tftp" % (ip_address,port),ip_address])
+   subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','tftp-enum,vulners','-oA',"/root/scripts/recon_enum/results/exam/tftp/%s_%s_tftp" % (ip_address,port),ip_address])
    #subprocess.call(TFTPSCAN, shell=True)
    return
 
@@ -420,6 +470,8 @@ def nmapVersionTCPAndPass(ip_address, port):
             multProc(httpEnum, ip_address, port)
          elif ("domain" in service):
             multProc(dnsEnum, ip_address, port)
+         elif ("login" in service or "exec" in service or "shell" in service):
+            multProc(rloginEnum, ip_address, port)
          elif ("finger" in service):
             multProc(fingerEnum, ip_address, port)
          elif ("ftp" in service):

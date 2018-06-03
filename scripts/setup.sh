@@ -13,11 +13,11 @@
 #
 
 echo "### Downloading things...### \n\n"
-echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz shutter"
+echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common shutter"
 curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
 apt-get update
-apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz shutter
+apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common shutter
 
 echo "\nCloning Impacket \n"
 direc=/root/Documents/Impacket

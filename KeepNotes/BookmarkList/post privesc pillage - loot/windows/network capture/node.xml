@@ -5,7 +5,7 @@
   <key>title</key><string>Network Capture</string>
   <key>nodeid</key><string>b17118a1-9a71-4c2d-b04a-4b389bcfa0d0</string>
   <key>modified_time</key><integer>1524578418</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524231595</integer>
