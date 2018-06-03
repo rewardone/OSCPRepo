@@ -13,6 +13,8 @@ If that succeeds then you can go to /tmp/share. There might be some interesting 
 <br/>
 If you have write privileges you can create files. Test if you can create files, then check with your low-priv shell what user has created that file. If it says that it is the root-user that has created the file it is good news. Then you can create a file and set it with suid-permission from your attacking machine. And then execute it with your low privilege shell.<br/>
 <br/>
+check /etc/exports. If the share specifically is served with the no_root_squash (or you can edit it to serve as such), you can perform the following SUID escalation. (I was unsuccessful performing it with just (rw) and nothing else, I needed to have (rw,no_root_squash)).<br/>
+<br/>
 This code can be compiled and added to the share. Before executing it by your low-priv user make sure to set the suid-bit on it, like this:<br/>
 <br/>
 chmod 4777 exploit<br/>

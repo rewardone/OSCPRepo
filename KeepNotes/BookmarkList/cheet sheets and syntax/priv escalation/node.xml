@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Priv Escalation</string>
   <key>nodeid</key><string>8d6cf4d5-96af-4f90-90a8-6122c41c35c5</string>
   <key>modified_time</key><integer>1523630531</integer>

@@ -1019,7 +1019,7 @@ fi
 #Only find files you are the owner of
 rootcheck=`id -u`
 if [ "$rootcheck" != "0" ]; then
-  mystuff=`find / \( -user \`whoami\` -a -type f \) -exec ls -alh {} \; 2>/dev/null`
+  mystuff=`find / \( -path /proc \) -prune \( -user \`whoami\` -a -type f \) -exec ls -alh {} \; 2>/dev/null`
 else
   echo -e "Files you are the owner of: You're running under UID 0, too many files to list...\n"
 fi
@@ -1039,7 +1039,7 @@ fi
 
 #Only find dirs you own
 if [ "$rootcheck" != "0" ]; then
-  mystuff2=`find / \( -user \`whoami\` -a -type d \) 2>/dev/null`
+  mystuff2=`find / \( -path /proc \) -prune \( -user \`whoami\` -a -type d \) 2>/dev/null`
 else
   echo -e "Dirs you are the owner of: You're running under UID 0, too many files to list...\n"
 fi
@@ -1091,7 +1091,7 @@ fi
 
 #list all world-writable files excluding /proc
 if [ "$thorough" = "1" ]; then
-wwfiles=`find / ! -path "*/proc/*" -perm -2 -type f -exec ls -la {} 2>/dev/null \;`
+wwfiles=`find / \( -path /proc \) -prune -perm -2 -type f -exec ls -la {} 2>/dev/null \;`
 	if [ "$wwfiles" ]; then
 		echo -e "\e[00;31mWorld-writable files (excluding /proc):\e[00m\n$wwfiles"
 		echo -e "\n"
@@ -1115,7 +1115,7 @@ fi
 
 #Group writable files
 if [ "$rootcheck" != "0" ]; then
-  groupwrite=`find / \( -perm -g=w -a -type f \) -exec ls -lah {} \; 2>/dev/null`
+  groupwrite=`find / \( -path /proc \) -prune \( -perm -g=w -a -type f \) -exec ls -lah {} \; 2>/dev/null`
 else
   echo -e "Group writable files: You're running under UID 0, too many files to list...\n"
 fi

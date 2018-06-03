@@ -302,6 +302,7 @@ def rloginEnum(ip_address, port):
         except subprocess.CalledProcessError as hydrerr:
             if hydrerr.returncode == 255:
                 print "Hydra broke early with status 255, it must have found something! Check rloginhydra for output."
+                print "Note you may need to download rsh-client."
             elif hydrerr.returncode != 0:
                 print "Hydra broke:"
                 print hydrerr.returncode
