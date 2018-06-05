@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Netcat Relays</title>
+</head><body>In order to set up a Netcat relay, the following commands must be run on the system hosting the Netcat relay:<br/>
+$mknod backpipe p<br/>
+$nc –l –p 80 0&lt;backpipe | nc 192.168.128.128 80 1&gt;backpipe<br/>
+<br/>
+This establishes a Netcat listener on port 80. The Necat listener pipes any traffic it receives to the Netcat client, which forwards the traffic to port 80 on the target web server, 192.168.128.128. Any responses returned to the Netcat client from the web server are sent via the backpipe to the Netcat listener, which forwards the response back to the attacker.<br/>
+<br/>
+<img src="image.png" /></body></html>

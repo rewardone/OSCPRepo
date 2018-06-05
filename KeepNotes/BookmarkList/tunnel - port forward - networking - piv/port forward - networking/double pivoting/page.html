@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Double Pivoting</title>
+</head><body>8.8.8.0/24 network was discovered in the information gathering process for the JC system. We already have a routing rule between 172.16.0.0/24 and 7.7.7.0/24 networks via the first compromised machine.<br/>
+<br/>
+In the present case, network packages that comes from &nbsp;172.16.0.20 &nbsp;to access the JC device (second compromised machine) first go to the RD device (first compromised machine), and the RD transmits those packages to the JC machine.<br/>
+<br/>
+If the attacker who is 172.16.0.20 wishes to access 8.8.8.0/24 -newly discovered second hidden network– network, a new routing rule must be defined. In the tools we will use outside the Metasploit Framework, we must run a new socks4 proxy server to connect these two pivots and define the new proxy server in the configuration file of the proxychains tool.<br/>
+<br/>
+Network packages attempting to reach the 8.8.8.9 destination from the attacker machine (172.16.0.20) will pass through two different points:<br/>
+<br/>
+RD: I do not know how to access the 8.8.8.9 IP address. But I know the system who knows how to access it. I can direct you to it.<br/>
+JC: I know how to forward packets from the 7.7.7.0/24 network to the 8.8.8.0/24 network.<br/>
+The final state of the compromised and discovered systems is as follows.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Holy Proxychains<br/>
+The ProxyChains tool connects the proxy servers and transmits the connection end to end. In the last phase, a new socks4 proxy server is run on the local 1081 port for the newly discovered 8.8.8.0/24 network.<br/>
+<br/>
+The information of the new proxy server will define in the /etc/proxychains.conf configuration file. By activating the Dynamic Chain setting, sequential switching between the defined proxy servers is ensured.<br/>
+<br/>
+root@kali:~# cat /etc/proxychains.conf | grep -v "#"<br/>
+dynamic_chain<br/>
+proxy_dns <br/>
+tcp_read_time_out 15000<br/>
+tcp_connect_time_out 8000<br/>
+socks4 &nbsp;172.16.0.20 1080 &nbsp;# First Pivot<br/>
+socks4 &nbsp;172.16.0.20 1081 &nbsp;# Second Pivot</body></html>
