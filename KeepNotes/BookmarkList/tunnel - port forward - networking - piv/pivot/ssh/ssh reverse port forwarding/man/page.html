@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Man</title>
+</head><body>-R [bind_address:]port:host:hostport<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Specifies that the given port on the remote (server) host is to be forwarded to the given host and port on the local side. &nbsp;This works by allocating a socket to listen to port on the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;remote side, and whenever a connection is made to this port, the connection is forwarded over the secure channel, and a connection is made to host port hostport from the local<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;machine.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Port forwardings can also be specified in the configuration file. &nbsp;Privileged ports can be forwarded only when logging in as root on the remote machine. &nbsp;IPv6 addresses can be speci‐<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;fied by enclosing the address in square braces.<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;By default, the listening socket on the server will be bound to the loopback interface only. &nbsp;This may be overridden by specifying a bind_address. &nbsp;An empty bind_address, or the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;address ‘*’, indicates that the remote socket should listen on all interfaces. &nbsp;Specifying a remote bind_address will only succeed if the server's GatewayPorts option is enabled (see<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;sshd_config(5)).<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;If the port argument is ‘0’, the listen port will be dynamically allocated on the server and reported to the client at run time. &nbsp;When used together with -O forward the allocated port<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;will be printed to the standard output.<br/>
+</body></html>

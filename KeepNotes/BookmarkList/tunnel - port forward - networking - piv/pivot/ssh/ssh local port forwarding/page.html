@@ -12,6 +12,12 @@ SSH local port forwarding is set up with the following command on the attackerâ€
 system:<br/>
 <br/>
 # ssh -L 80:192.168.128.128:80 user@192.168.112.132<br/>
+&nbsp;<br/>
+ssh -g -L 8001:localhost:8000 -f -N user@remote-server.com<ul><li style="list-style-type: none">This forwards the local port 8001 on your workstation to the localhost address on remote-server.com port 8000.</li>
+</ul>
+-g means allow other clients on my network to connect to port 8001 on my workstation. Otherwise only local clients on your workstation can connect to the forwarded port.<br/>
+-N means all I am doing is forwarding ports, don't start a shell.<br/>
+-f means fork into background after a successful SSH connection and log-in.<br/>
 <br/>
 The syntax of the command is<br/>
 ssh â€“L port:destination_host:destination_port username@pivot_host<br/>
