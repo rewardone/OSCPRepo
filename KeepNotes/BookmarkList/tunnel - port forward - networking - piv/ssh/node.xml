@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>duplicate_of</key><string>125d41a9-c61f-46fe-af0a-9526fbed81ba</string>
+  <key>nodeid</key><string>2e1443f6-162b-4e38-a9a9-2eedbf3ae9ce</string>
+  <key>modified_time</key><integer>1519052703</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1519052703</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>SSH</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>13</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

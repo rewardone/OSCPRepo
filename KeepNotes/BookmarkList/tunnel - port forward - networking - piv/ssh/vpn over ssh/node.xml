@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>VPN Over SSH</string>
+  <key>nodeid</key><string>45da384c-090f-4872-9a80-c0a8e79dbb3d</string>
+  <key>modified_time</key><integer>1528392126</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1528391993</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

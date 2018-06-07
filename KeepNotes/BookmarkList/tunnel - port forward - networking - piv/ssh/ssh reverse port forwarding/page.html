@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSH Reverse Port Forwarding</title>
+</head><body>Remote port forwarding: it forwards traffic coming to a remote port to a specified local port. For example, all traffic coming to port 1234 on the server (host) could be forwarded to port 23 on the client (localhost).<br/>
+<br/>
+Reverse/Remote SSH Portforwarding:<br/>
+Note that if you use OpenSSH sshd server, the server’s GatewayPorts option needs to be enabled (set to yes or clientspecified - GatewayPorts yes) for this to work (check file /etc/ssh/sshd_config on the server). Otherwise (default value for this option is no), the server will always force port bound on the loopback interface only.<br/>
+<br/>
+connect from local(attacker) to target:<br/>
+&nbsp; &nbsp; ssh -R &lt;targetip&gt;:&lt;targetport&gt;:&lt;localhost&gt;:&lt;localport&gt;<br/>
+<br/>
+on target:<br/>
+&nbsp; &nbsp; telnet &lt;targetip&gt; &lt;targetport&gt;<br/>
+&nbsp; &nbsp; -&gt; forwards to attacker machine on port <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+This is easy if you are on the target<br/>
+victim$ ssh -R &lt;random_high_port_to_grab&gt;:&lt;ip_where_port_you_want_is&gt;:&lt;port_you_want&gt; -f -N user@ip_you_have_access_to<br/>
+kali# nc localhost &lt;random_high_port_to_grab&gt;<br/>
+&nbsp;&#09;This will connect your nc localhost high port -&gt; ip_where_port_you_want_is:port_you_want<br/>
+<br/>
+</body></html>

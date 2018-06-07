@@ -5,13 +5,18 @@
 <title>Portfwd</title>
 </head><body>The portfwd command from within the Meterpreter shell is most commonly used as a pivoting technique, allowing direct access to machines otherwise inaccessible from the attacking system. Running this command on a compromised host with access to both the attacker and destination network (or system), we can essentially forward TCP connections through this machine, effectively making it a pivot point. Much like the port forwarding technique used with an ssh connection, portfwd will relay TCP connections to and from the connected machines.<br/>
 <br/>
+The advantage to portfwd over autoroute is that it gives the attacker freedom to use tools outside of the Metasploit framework (autoroute only works within Metasploit).<br/>
+<br/>
+The port forward rule exists through the meterpreter session; however, so just like the Metasploit SOCKs module, you need to have an established meterpreter session to run port forward through. <br/>
+<br/>
 Why:<br/>
 Direct access to certain services running on discovered systems on the hidden network may not be available (web servers, etc.). This is because there is no double sided routing. We know how to reach the target system and make a request, but our requests will fail because the target does not know how to reach us.<br/>
 <br/>
 Add<br/>
 From the Meterpreter shell, the command is used in the following manner:<br/>
-&nbsp;meterpreter &gt; portfwd add –l 3389 –p 3389 –r &nbsp;[target host]<br/>
+&nbsp;meterpreter &gt; portfwd add -L &lt;local_listening_ip&gt; –l 3389 –p 3389 –r &nbsp;[target host]<br/>
 add will add the port forwarding to the list and will essentially create a tunnel for us. Please note, this tunnel will also exist outside the Metasploit console, making it available to any terminal session.<br/>
+-L &lt;local_listening_ip&gt; (optional) specify the listening IP address<br/>
 -l 3389 is the local port that will be listening and forwarded to our target. This can be any port on your machine, as long as it’s not already being used.<br/>
 -p 3389 is the destination port on our targeting host.<br/>
 -r [target host] is the our targeted system’s IP or hostname.<br/>

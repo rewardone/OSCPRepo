@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Another Simple Example</title>
+</head><body>Remote port forwarding<br/>
+<br/>
+Giving access to a service (SSH port tcp/22) on your home machine (192.168.10.10) to people at work<br/>
+<br/>
+$ ssh user@work.example.org -R 10000:192.168.10.10:22<br/>
+We see on our server at work (on the loopback interface on port tcp/10000) that we have access to our SSH server at home :<br/>
+<br/>
+work.example.org$ netstat -tunelp | grep 10000<br/>
+tcp 0 0 127.0.0.1:10000 0.0.0.0:* LISTEN 0 73719534 3809/1<br/>
+<br/>
+People logged in on the machine work.example.org now should be able to SSH into your home machine by doing :<br/>
+<br/>
+work.example.org$ ssh user@localhost -p 10000</body></html>

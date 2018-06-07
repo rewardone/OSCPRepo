@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Quickstart</title>
+</head><body>QUICKSTART<br/>
+Try it out within your own LAN! Follow these simple steps:<br/>
+<ul><li>On your server, run: ./iodined -f 10.0.0.1 test.com. If you already use the 10.0.0.0 network, use another internal net like 172.16.0.0.</li>
+<li>Enter a password.</li>
+<li>On the client, run: ./iodine -f -r 192.168.0.1 test.com. Replace 192.168.0.1 with your server's ip address.</li>
+<li>Enter the same password.</li>
+<li>Now the client has the tunnel ip 10.0.0.2 and the server has 10.0.0.1.</li>
+<li>Try pinging each other through the tunnel.</li>
+<li>Done! :)</li>
+</ul>
+<br/>
+To actually use it through a relaying nameserver, see below.</body></html>

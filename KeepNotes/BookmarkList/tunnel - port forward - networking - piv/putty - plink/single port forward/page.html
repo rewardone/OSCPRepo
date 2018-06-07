@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Single Port Forward</title>
+</head><body><b>Standard single port forwarding</b><br/>
+On host A :<br/>
+plink.exe {host-B} -P 22 -C -L 127.0.0.1:444:{host-C}:3389 -l username -pw password<br/>
+<br/>
+Where:<br/>
+{host-b} -P 22 is IP and port of SSH on the host located at border of network .<br/>
+-C force compression . in most cases great performance increase , but if you only forward binary and already-compressed protocols , skip it .<br/>
+-L 127.0.0.1:444:{host-C}:3389 means , we want normal port-forwarding ( -L ) . First part tells that start point of tunnel will be binded on 127.0.0.1 interface on our host ( A ) and listen on port 444 . So everything is sent to 127.0.0.01:444 will be forwarded to end of tunnel . Second part represents end point of tunnel where our forwarded data will be sent to . Since we want to connect to terminal-service on host C. Mentioning '127.0.0.1' is optional and you can skip it , unless you wan to bind the socket to a specific interface on your system . In such case you should use IP of that interface.<br/>
+-l and -pw are obvious . and the main reason we use plink.exe and not putty.exe for example , or any other common client. plink.exe accepts user/pass as a switch but other clients do not ! In cases you should launch forwarder in background or you don`t have interactive shell access , this comes pretty useful . Cause other clients requre interactive shell to enter password , unless you use cert-based authentication which have it`s own problems.<br/>
+<br/>
+After successful negotiation , you can use same 'mstsc.exe 127.0.0.1:444' to connect to TS on host C . That`s it !<br/>
+<br/>
+<br/>
+To forward a local port (say 5110) to a remote destination (say popserver.example.com port 110), you can write something like one of these:<br/>
+<br/>
+putty -L 5110:popserver.example.com:110 -load mysession<br/>
+plink mysession -L 5110:popserver.example.com:110</body></html>

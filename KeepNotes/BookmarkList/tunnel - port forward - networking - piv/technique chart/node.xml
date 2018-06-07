@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><true/>
+  <key>duplicate_of</key><string>6d38a622-7a5f-46d5-ac36-1461ef6519c7</string>
+  <key>nodeid</key><string>c1a1cf00-e811-49ac-bd63-006f220ee725</string>
+  <key>modified_time</key><integer>1516372633</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1513625871</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>Technique Chart</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>1</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

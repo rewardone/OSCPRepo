@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SOCKs</title>
+</head><body>If your program doesn’t use raw sockets (nmap syn-scan, for example) then most probably you can use proxychains to force your program though the socks proxy. Edit proxy server in /etc/proxychains.conf:<br/>
+<br/>
+[ProxyList]<br/>
+# add proxy here ...<br/>
+# meanwile<br/>
+# defaults set to "tor"<br/>
+socks4 &nbsp;127.0.0.1 3128<br/>
+<br/>
+<br/>
+All ready. Just prepend proxychains to you favorite pwn tool:<br/>
+<br/>
+proxychains program_name</body></html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Rpivot</title>
+</head><body>This is my favorite method of traversing NAT connections. <a href="https://github.com/artkond/rpivot">Rpivot</a>&nbsp;is a reverse socks proxy tool that allows you to tunnel traffic via socks proxy. It connects back to your machine and binds a socks proxy on it. It works just like ssh -D but in opposite direction. Server side:<br/>
+<br/>
+python server.py --proxy-port 1080 --server-port 9999 --server-ip 0.0.0.0<br/>
+<br/>
+Client side:<br/>
+<br/>
+python client.py --server-ip &lt;ip&gt; --server-port 9999<br/>
+<br/>
+As a result, a socks4 proxy service will be bound server side on port 1080.</body></html>

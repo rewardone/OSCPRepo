@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>duplicate_of</key><string>b9b7a5f6-0965-4e3f-9c53-0219d9eb8ea1</string>
+  <key>nodeid</key><string>565c747e-c065-4d80-aa12-eba232965d3b</string>
+  <key>modified_time</key><integer>1524855910</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524855910</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>Rinetd</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>12</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

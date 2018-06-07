@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>05b7e767-bd02-4a42-b3af-153abd03cef2</string>
+  <key>title</key><string>Double Pivoting</string>
+  <key>nodeid</key><string>90a0c016-68ac-40b3-b403-0ffe9108c1ad</string>
+  <key>modified_time</key><integer>1513627474</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1513627351</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>4</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

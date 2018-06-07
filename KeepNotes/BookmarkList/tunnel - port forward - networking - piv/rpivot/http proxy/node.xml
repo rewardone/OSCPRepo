@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>HTTP Proxy</string>
+  <key>nodeid</key><string>97748191-4402-4e3e-9264-35510f55b412</string>
+  <key>modified_time</key><integer>1528395449</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1528395435</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

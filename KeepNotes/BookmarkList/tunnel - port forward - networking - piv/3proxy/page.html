@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>3Proxy</title>
+</head><body>Get it here - <a href="https://github.com/z3APA3A/3proxy/releases">https://github.com/z3APA3A/3proxy/releases</a>. This tools works for multiple platforms. There are pre-built binaries for Windows. As for Linux, you will need to build it yourself which is not a rocket science, just ./configure &amp;&amp; make :) This tool is a swiss army knife in the proxy world so it has a ton of functionality. I usually use it either as a socks proxy or as a port forwarder.<br/>
+<br/>
+This tool gets all of its options from config file. To run it:<br/>
+3proxy.exe config_file<br/>
+<br/>
+or if you are on a Linux system:<br/>
+./3proxy config_file<br/>
+<br/>
+To run 3proxy as a socks5 proxy at port 1080 put the following line in the config:<br/>
+socks -p1080<br/>
+<br/>
+Now it’s possible to tunnel most of your pentesting tools through this proxy to develop the attack in the internal network. This is just a basic setup which is not very secure. You can play with options to place authentication and/or ip-based access control rules. Go check the full manual here - https://3proxy.ru/howtoe.asp. To tunnel a specific port use the following syntax:<br/>
+<br/>
+tcppm &lt;localport&gt; &lt;targethost&gt; &lt;targetport&gt;</body></html>

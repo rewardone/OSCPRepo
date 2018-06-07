@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tcp_pty_shell_handler.py</title>
+</head><body>#!/usr/bin/env python2<br/>
+import termios<br/>
+import select<br/>
+import socket<br/>
+import os<br/>
+import fcntl<br/>
+import argparse<br/>
+<br/>
+class PTY:<br/>
+&nbsp; &nbsp; def __init__(self, slave=0, pid=os.getpid()):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # apparently python GC's modules before class instances so, here<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # we have some hax to ensure we can restore the terminal state.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.termios, self.fcntl = termios, fcntl<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # open our controlling PTY<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.pty &nbsp;= open(os.readlink("/proc/%d/fd/%d" % (pid, slave)), "rb+")<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # store our old termios settings so we can restore after<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # we are finished <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.oldtermios = termios.tcgetattr(self.pty)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # get the current settings se we can modify them<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; newattr = termios.tcgetattr(self.pty)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # set the terminal to uncanonical mode and turn off<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # input echo.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; newattr[3] &amp;= ~termios.ICANON &amp; ~termios.ECHO<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # don't handle ^C / ^Z / ^\<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; newattr[6][termios.VINTR] = '\x00'<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; newattr[6][termios.VQUIT] = '\x00'<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; newattr[6][termios.VSUSP] = '\x00'<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # set our new attributes<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; termios.tcsetattr(self.pty, termios.TCSADRAIN, newattr)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # store the old fcntl flags<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.oldflags = fcntl.fcntl(self.pty, fcntl.F_GETFL)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # fcntl.fcntl(self.pty, fcntl.F_SETFD, fcntl.FD_CLOEXEC)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # make the PTY non-blocking<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; fcntl.fcntl(self.pty, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)<br/>
+<br/>
+&nbsp; &nbsp; def read(self, size=8192):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return self.pty.read(size)<br/>
+<br/>
+&nbsp; &nbsp; def write(self, data):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ret = self.pty.write(data)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.pty.flush()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return ret<br/>
+<br/>
+&nbsp; &nbsp; def fileno(self):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return self.pty.fileno()<br/>
+<br/>
+&nbsp; &nbsp; def __del__(self):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # restore the terminal settings on deletion<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.termios.tcsetattr(self.pty, self.termios.TCSAFLUSH, self.oldtermios)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.fcntl.fcntl(self.pty, self.fcntl.F_SETFL, self.oldflags)<br/>
+<br/>
+class Shell:<br/>
+&nbsp; &nbsp; def __init__(self, addr, bind=True):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.bind = bind<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.addr = addr<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if self.bind:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.sock = socket.socket()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.sock.bind(self.addr)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.sock.listen(5)<br/>
+<br/>
+&nbsp; &nbsp; def handle(self, addr=None):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; addr = addr or self.addr<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if self.bind:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sock, addr = self.sock.accept()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; else:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sock = socket.socket()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sock.connect(addr)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # create our PTY<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; pty = PTY()<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # input buffers for the fd's<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; buffers = [ [ sock, [] ], [ pty, [] ] ]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; def buffer_index(fd):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for index, buffer in enumerate(buffers):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if buffer[0] == fd:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return index<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; readable_fds = [ sock, pty ]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; data = " "<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # keep going until something deds<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; while data:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # if any of the fd's need to be written to, add them to the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # writable_fds<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; writable_fds = []<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for buffer in buffers:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if buffer[1]:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; writable_fds.append(buffer[0])<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; r, w, x = select.select(readable_fds, writable_fds, [])<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # read from the fd's and store their input in the other fd's buffer<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for fd in r:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; buffer = buffers[buffer_index(fd) ^ 1][1]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if hasattr(fd, "read"):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; data = fd.read(8192)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; data = fd.recv(8192)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if data:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; buffer.append(data)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # send data from each buffer onto the proper FD<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for fd in w:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; buffer = buffers[buffer_index(fd)][1]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; data = buffer[0]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if hasattr(fd, "write"):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fd.write(data)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fd.send(data)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; buffer.remove(data)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # close the socket<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; sock.close()<br/>
+<br/>
+if __name__ == "__main__":<br/>
+&nbsp; &nbsp; # I could do this validation with regex.. but meh.<br/>
+&nbsp; &nbsp; def AddressString(value):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; address = value.split(":")<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if len(address) != 2:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; raise argparse.ArgumentTypeError("Address must be in format IP:Port.")<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if len(address[0].split(".")) != 4:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;raise argparse.ArgumentTypeError("Invalid IP length.")<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; for octet in address[0].split("."):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if int(octet) &gt; 255 or int(octet) &lt; 0:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; raise argparse.ArgumentTypeError("Invalid octet in address.")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; except ValueError:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; raise argparse.ArgumentTypeError("Invalid octet in address.")<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; try:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; address[1] = int(address[1])<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if address[1] &lt; 0 or address[1] &gt; 65535:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; raise argparse.ArgumentTypeError("Invalid port number")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; except ValueError:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; raise argparse.ArgumentTypeError("Invalid port number.")<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return tuple(address)<br/>
+<br/>
+&nbsp; &nbsp; parser = argparse.ArgumentParser()<br/>
+<br/>
+&nbsp; &nbsp; group = parser.add_mutually_exclusive_group(required=True)<br/>
+&nbsp; &nbsp; group.add_argument("-b", "--bind", help="Reverse shell handler.",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;action="store_true")<br/>
+&nbsp; &nbsp; group.add_argument("-c", "--connect", help="Bind shell handler.", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;action="store_true")<br/>
+&nbsp; &nbsp; parser.add_argument("address", type=AddressString, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; help="IP address/port to bind/connect to.")<br/>
+&nbsp; &nbsp; args = parser.parse_args()<br/>
+<br/>
+&nbsp; &nbsp; s = Shell(args.address, bind=args.bind)<br/>
+&nbsp; &nbsp; s.handle()</body></html>

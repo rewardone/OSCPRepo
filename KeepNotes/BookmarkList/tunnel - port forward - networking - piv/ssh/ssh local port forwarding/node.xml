@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>2a136407-cf9a-4e9d-bfe0-34db2f9c9765</string>
+  <key>nodeid</key><string>de8818e4-f435-4a24-8dbd-b2414e2e0d01</string>
+  <key>modified_time</key><integer>1528383560</integer>
+  <key>expanded2</key><false/>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1513624293</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>SSH Local Port Forwarding</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

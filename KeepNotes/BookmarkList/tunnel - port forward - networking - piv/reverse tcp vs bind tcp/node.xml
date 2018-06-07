@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>bfa8d092-6aa5-4de7-b734-90aa10f9b7b8</string>
+  <key>title</key><string>Reverse TCP vs Bind TCP</string>
+  <key>nodeid</key><string>b297a55d-dd7d-4c65-9aa5-1e60a15c9841</string>
+  <key>modified_time</key><integer>1513627054</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1513627003</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>3</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

