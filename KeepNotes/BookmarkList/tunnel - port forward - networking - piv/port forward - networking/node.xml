@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>Port Forward / Networking</string>
   <key>nodeid</key><string>fbd8a819-f95a-4d8f-a48e-dcdb4f3ca6d4</string>
   <key>modified_time</key><integer>1528226522</integer>

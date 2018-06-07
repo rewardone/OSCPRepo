@@ -9,4 +9,13 @@ $nc –l –p 80 0&lt;backpipe | nc 192.168.128.128 80 1&gt;backpipe<br/>
 <br/>
 This establishes a Netcat listener on port 80. The Necat listener pipes any traffic it receives to the Netcat client, which forwards the traffic to port 80 on the target web server, 192.168.128.128. Any responses returned to the Netcat client from the web server are sent via the backpipe to the Netcat listener, which forwards the response back to the attacker.<br/>
 <br/>
-<img src="image.png" /></body></html>
+<img src="image.png" /><br/>
+<br/>
+Another explanation:<br/>
+You are on the "pivot server". <br/>
+$mknod backpipe p<br/>
+Now: nc -l -p &lt;port_you_want&gt; 0&lt;backpipe | nc &lt;ip_of_target_has_what_you_want&gt; &lt;port_you_want&gt; 1&gt;backpipe<br/>
+<br/>
+Now you can connect to "pivot server" on that port.<br/>
+<br/>
+That being said....nc relays are NOT good for HTTP traffic</body></html>

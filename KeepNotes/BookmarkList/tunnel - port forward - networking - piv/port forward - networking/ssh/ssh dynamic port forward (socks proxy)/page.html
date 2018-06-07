@@ -4,11 +4,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>SSH Dynamic Port Forward (SOCKs Proxy)</title>
 </head><body>Anything sent to the local port is forwarded through the SSH tunnel. At the SSH server, the application protocol of the message being sent through the tunnel is used to determine where to send the traffic. SSH functions as a SOCKS4 or SOCKS5 proxy server.<br/>
+Dynamic forwarding requires that you have access to the pivot machine and ssh is enabled<br/>
 <br/>
 SSH dynamic port forwarding is set up on the attacker’s system by entering:<br/>
 <br/>
 # ssh -D 127.0.0.1:9150 -f -N user@192.168.112.132<br/>
 user@192.168.112.132's password:<br/>
+<br/>
+ssh -D &lt;local_attacker_IP&gt;:&lt;random_free_port_to_use&gt; -f -N pivotuser@&lt;host_that_has_access&gt;<br/>
 <br/>
 The syntax of the command is<br/>
 ssh –D address:port –f –N username@pivot_host<br/>
@@ -24,4 +27,6 @@ pivot_host is the IP address or hostname of the server being used as the pivot p
 The figure shows how, unlike SSH local port forwarding, SSH<br/>
 dynamic port forwarding can access multiple systems on different ports.<br/>
 <br/>
-<img src="image.png" /></body></html>
+<img src="image.png" /><br/>
+Note that this is a SOCKS proxy and applications should be configured to use it as such<br/>
+Proxychains can be used to enable applications that are not SOCKs proxy aware</body></html>

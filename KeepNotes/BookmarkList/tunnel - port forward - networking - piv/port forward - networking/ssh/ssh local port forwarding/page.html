@@ -8,6 +8,8 @@ SSH listens on a local port established when the connection was set up. Any conn
 made to this port is forwarded through the secure SSH tunnel and sent on to a predefined<br/>
 remote host and port.<br/>
 <br/>
+This requires that you have access to the pivot box and ssh is running<br/>
+<br/>
 SSH local port forwarding is set up with the following command on the attacker’s<br/>
 system:<br/>
 <br/>
@@ -37,6 +39,10 @@ penetration test.<br/>
 <br/>
 If you jump over multiple hosts, always use the listening IP aswell:<br/>
 ssh -L &lt;listenip&gt;:&lt;listenport&gt;:&lt;targetip&gt;:&lt;targetport&gt; &lt;user&gt;@&lt;remotehost&gt;<br/>
+<br/>
+Can also be read like<br/>
+ssh -g -L &lt;use_this_port_to_connect_to_on_my_localhost&gt;:&lt;ip_of_target_that_has_what_I_want&gt;:&lt;port_that_I_want&gt; remoteuser@pivotbox_machine_that_has_access<br/>
+<br/>
 <br/>
 <br/>
 WINDOWS Port Forwarding<br/>
