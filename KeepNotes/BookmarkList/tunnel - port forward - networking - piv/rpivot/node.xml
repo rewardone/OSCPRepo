@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Rpivot</string>
   <key>nodeid</key><string>9d7cf67e-193a-4558-8c40-4b881a77f766</string>
   <key>modified_time</key><integer>1528394493</integer>
