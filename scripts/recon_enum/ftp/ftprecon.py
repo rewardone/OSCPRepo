@@ -27,7 +27,7 @@ port = sys.argv[2].strip()
 print "INFO: Performing nmap FTP script scan for %s:%s" % (ip_address, port)
 #FTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=banner,ftp-anon,ftp-bounce,ftp-syst,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum,vulners -oA '/root/scripts/recon_enum/results/exam/ftp/%s_ftp' %s" % (port, ip_address, ip_address)
 #results = subprocess.check_output(FTPSCAN, shell=True)
-subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=banner,ftp-anon,ftp-bounce,ftp-syst,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum,vulners','-oA',"/root/scripts/recon_enum/results/exam/ftp/%s_%s_ftp",ip_address])
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=banner,ftp-anon,ftp-bounce,ftp-syst,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum,vulners','-oA',"/root/scripts/recon_enum/results/exam/ftp/%s_%s_ftp" % (ip_address,port),ip_address])
 
 #Default Hydra configuration with a small username and password list
 #This configuration is meant to spray, not to brute. Manually configure a
