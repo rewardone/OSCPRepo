@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Logon Access To DCs</title>
+</head><body>More groups can log onto Domain Controllers than just Domain Admins. By default, here is a list of groups that can logon to DCs. <br/>
+<ul><li>Enterprise Admins (member of the domain Administrators group in every domain in the forest)</li>
+<li>Domain Admins (member of the domain Administrators group)</li>
+<li>Administrators</li>
+<li>Backup Operators</li>
+<li><b>Account Operators</b></li>
+<li><b>Print Operators</b></li>
+</ul>
+<br/>
+This means that if an attacker can compromise an account in Account Operators or Print Operators, the Active Directory domain may be compromised since these groups have logon rights to Domain Controllers.<br/>
+</body></html>

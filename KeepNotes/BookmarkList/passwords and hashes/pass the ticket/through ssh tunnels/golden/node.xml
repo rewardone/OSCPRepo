@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Golden</string>
+  <key>nodeid</key><string>3ece7d9c-5071-4f84-818f-f0442f1039ed</string>
+  <key>modified_time</key><integer>1528828716</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1528828403</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

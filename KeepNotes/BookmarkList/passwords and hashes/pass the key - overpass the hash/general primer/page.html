@@ -29,4 +29,7 @@ Kerberos::Keys<ul><li>The <b>DC</b>&nbsp;long-term secret key (domain key)</li>
 </ul>
 &nbsp;<br/>
 <img src="image.png" /><br/>
+<br/>
+OverPass-the-Hash (aka Pass-the-Key) involves using an acquired password hash to get a Kerberos ticket. This technique clears all existing Kerberos keys (hashes) for the current user and injects the acquired hash into memory for the Kerberos ticket request. The next time a Kerberos ticket is required for resource access, the injected hash (which is now a Kerberos key in memory) is used to request the Kerberos ticket. <a href="https://adsecurity.org/?page_id=1821#SEKURLSAPth">Mimikatz provides the capability to perform OverPass-the-Hash</a>. This is a stealthier method than PtH since there are ways to detect PtH.<br/>
+Note: If the acquired hash is NTLM, the Kerberos ticket is RC4. If the hash is AES, then the Kerberos ticket uses AES.<br/>
 <img src="image 2.png" /></body></html>

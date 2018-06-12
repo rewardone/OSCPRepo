@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Silver</title>
+</head><body><b>Silver Tickets</b><br/>
+Silver Tickets (forged TGS tickets) authenticate a user to a service running on a host and provides attackers with stealth and persistence options not provided by Golden Tickets. For more information about Silver Tickets and their benefits, check out Sean Metcalf’s post How Attackers Use Kerberos Silver Tickets to Exploit Systems.<br/>
+<br/>
+This attack requires a Linux host with the <a href="https://github.com/CoreSecurity/impacket">Impacket Library</a>&nbsp;and proxychains installed and a Windows host with <a href="https://github.com/gentilkiwi/mimikatz">Mimikatz</a>&nbsp;and <a href="https://github.com/gentilkiwi/kekeo">Kekeo</a>&nbsp;installed. Neither host needs to be domain joined.<br/>
+<br/>
+<b>Forging the Ticket</b><br/>
+To generate a Silver Ticket, we’ll need the following information:<br/>
+<ul><li>target host machine account NTLM hash</li>
+<li>target host FQDN</li>
+<li>target service</li>
+<li>domain SID</li>
+<li>domain FQDN</li>
+<li>user to impersonate</li>
+</ul>
+&nbsp;<br/>
+In this example, we’ll be authenticating to the target host over SMB, so we will use the CIFS service. Sean Metcalf maintains a list of common SPNs, which can be used in Silver Tickets, <a href="https://adsecurity.org/?page_id=183">here</a>.<br/>
+<br/>
+At the time of writing, ticketer.py doesn’t support Silver Ticket generation. Instead, we’ll use Mimikatz on our Windows host to create a Silver Ticket .kirbi file and use Kekeo to convert the ticket to a ccache file.<br/>
+<br/>
+Update April 4, 2018: ticketer.py now supports Silver Ticket generation.<br/>
+<br/>
+Generate the Silver Ticket with Mimikatz’s <a href="https://github.com/gentilkiwi/mimikatz/wiki/module-~-kerberos">Kerberos module</a>&nbsp;using the following syntax:<br/>
+kerberos::golden /user:USERNAME /domain:DOMAIN.FQDN /sid:DOMAIN-SID /target:TARGET-HOST.DOMAIN.FQDN /rc4:TARGET-MACHINE-NT-HASH /service:SERVICE<br/>
+<br/>
+Here’s an example to create a ticket for user mbrody-da and the CIFS service:<br/>
+kerberos::golden /user:mbrody-da /domain:amity.local /sid:S-1-5-21-2972629792-1506071460-1188933728 /target:WIN-RMJBTDB7QTF.amity.local /rc4:9f5dc9080322414141c92ff51efb952d /service:cifs<br/>
+<br/>
+Exit Mimikatz and launch Kekeo. Convert the kirbi file to a ccache file with the following syntax:<br/>
+misc::convert ccache /path/to/ticket.kirbi<br/>
+<br/>
+You can convert multiple kirbi tickets with this syntax:<br/>
+misc::convert ccaches /path/to/ticket1.kirbi /path/to/ticket2.kirbi ...<br/>
+<br/>
+Copy the ccache file Kekeo output to the attacking Linux host. Make sure to note the file’s absolute path on the Linux host; we will need it to set the KRB5CCNAME variable. The rest of the attack uses our Linux host.<br/>
+<br/>
+<b>Attack Setup</b><br/>
+The remaining Silver Ticket attack setup is largely similar to that of the Golden Ticket attack, with two exceptions.<br/>
+<br/>
+First, we need to provide the FQDN of the target host in the /etc/hosts file, rather than the NetBIOS name. For our example, the /etc/hosts file should look like this:<br/>
+<br/>
+127.0.0.1&#09;localhost<br/>
+192.168.26.129&#09;amity.local<br/>
+192.168.26.128 &nbsp;WIN-RMJBTDB7QTF.amity.local<br/>
+<br/>
+The second difference is that we will need to sync our attacking machine’s time with the target host; Silver Tickets don’t communicate with the target’s domain controller.<br/>
+<br/>
+Follow the same steps as the Golden Ticket attack above to set the KRB5CCNAME variable, validate the proxychains configuration, establish the SSH tunnel with SOCKS proxy, and validate the tunnel with nmap (see the <a href="nbk:///3ece7d9c-5071-4f84-818f-f0442f1039ed">Golden</a>&nbsp;page above).<br/>
+<br/>
+<b>Launch the Attack</b><br/>
+We can now launch the attack with psexec.py against the FQDN of the target host:<br/>
+proxychains python psexec.py mbrody-da@WIN-RMJBTDB7QTF.amity.local -k -no-pass<br/>
+<br/>
+</body></html>

@@ -2,10 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Passing Hash</title>
+<title>Overpass the Key / Hash</title>
 </head><body><img src="image.png" /><br/>
 <br/>
 <br/>
 Not limited to RC4 hashes!<br/>
 <br/>
-The way that you get a TGT (ticket granting ticket) in Active Directory is via a process called 'pre-authentication'. &nbsp;Essentially the way this works is you take a timestamp (hence the requirement that the time be synced with domain controllers) and encrypt it with the user's shared secret (the password hash) and send it off to the Domain Controller. &nbsp;The DC will verify the blob by decrypting it with the copy of the key the DC has and seeing if the resulting timestamp fits in the window of time configured. Assuming that all is well, the DC will send the client a TGT.</body></html>
+The way that you get a TGT (ticket granting ticket) in Active Directory is via a process called 'pre-authentication'. &nbsp;Essentially the way this works is you take a timestamp (hence the requirement that the time be synced with domain controllers) and encrypt it with the user's shared secret (the password hash) and send it off to the Domain Controller. &nbsp;The DC will verify the blob by decrypting it with the copy of the key the DC has and seeing if the resulting timestamp fits in the window of time configured. Assuming that all is well, the DC will send the client a TGT.<br/>
+</body></html>

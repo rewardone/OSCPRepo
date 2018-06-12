@@ -5,7 +5,7 @@
   <key>title</key><string>File Overwrite</string>
   <key>nodeid</key><string>774f4291-320a-45f9-8702-4f175c005d93</string>
   <key>modified_time</key><integer>1524750848</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524750848</integer>
