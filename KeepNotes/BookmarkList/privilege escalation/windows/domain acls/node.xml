@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Domain ACLs</string>
   <key>nodeid</key><string>45f453f3-44f4-4d16-888b-1e419eeb40c4</string>
   <key>modified_time</key><integer>1524849693</integer>

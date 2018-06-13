@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>5651bca9-f138-434c-89ad-e175c6802699</string>
+  <key>title</key><string>AD-Control-Paths</string>
+  <key>nodeid</key><string>fc6e2203-dc02-485c-829c-8adec8c18f50</string>
+  <key>modified_time</key><integer>1528462880</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1528462825</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

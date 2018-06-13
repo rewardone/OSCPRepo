@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Graph Drawing Area</string>
+  <key>nodeid</key><string>d8b5cf0d-f158-47b3-ae80-a6e112d9c633</string>
+  <key>modified_time</key><integer>1528916893</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1528916842</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

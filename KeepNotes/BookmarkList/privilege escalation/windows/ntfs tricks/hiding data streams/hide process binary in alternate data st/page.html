@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Hide Process Binary In Alternate Data Stream</title>
+</head><body>As already discussed above: Windows automatically removes “. .” at the end of a file. What if we can somehow start a process with a name like “file1. .”? Well, then it can happen that checks (e.g.: signature checks from AntiVirus products) are maybe performed on “file1” instead. Let’s try this:<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+We created 3 files:<br/>
+<ul><li>“file” with the Microsoft signature from taskmgr</li>
+<li>“file. .” which is our “fake malware” which should be hidden but executed</li>
+<li>“filex x” which contains the signature from WinSCP. This file will become important later.</li>
+</ul>
+<br/>
+We now need a way to start a process from the “file. .” binary which is not a trivial task because all Microsoft Windows API calls automatically remove the “. .” from the filename and would start “file” (taskmgr) instead. To deal with this problem we use the following code:<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+The above code just calls CreateProcessA to create a process from “filex x” (WinSCP). If we compile this application and start it, WinSCP will be started. However, we are not going to start it normally. Instead, we start the application inside a debugger (e.g.: WinDbg). Now we set a breakpoint at the function which makes the associated system call: “bp ntdll!NtCreateUserProcess”. With “g” (go) we can start our program in the debugger and hit the breakpoint. At the breakpoint the current stack can be dumped (“dq rsp”). The 12th pointer on the stack is important and should be dumped. The 4th value at this address is the pointer to our file name.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+The filename (green box) is now normalized (it starts with \??\C:\…). Exactly this normalization would had also remove the “. .” from the end of the filename – that’s why the above C-code didn’t use “file. .” as process name. However, since normalization already happend, this value can now be modified. Let’s overwrite the “x” characters with “.” (command “eb” for edit bytes):<br/>
+<br/>
+<img src="image 4.png" /><br/>
+<br/>
+After that just continue execution with “g”. Guess what will happen?<br/>
+<br/>
+Correct, “file. .” (the malware) gets executed. However, if a user right clicks the process in the task manager and selects “properties” the properties of “file” (taskmgr) with the valid Microsoft signature will be shown.<br/>
+<br/>
+<img src="image 5.png" /><br/>
+<br/>
+But what is with “filex x” (WinSCP)? Yes, this file gets also shown as the running process namely in process explorer (because the path was set before NtCreateUserProcess was called):<br/>
+<br/>
+<img src="image 6.png" /><br/>
+<br/>
+Is this a problem? Well, it depends. First of all, an attacker can start a process (the malware), rename / remove it afterwards and then rename a valid file to the same name. Then the above effects in taskmanager and process explorer will also occur. However, the difference is that with the above mentioned trick this happens exactly at the same time when the process gets launched.<br/>
+<br/>
+For example, consider that the installed endpoint protection checks for every started process if the binary hash is already known in the cloud. With this trick the endpoint protection may use the wrong binary to verify if the hash is already known. Please also note that a debugger is not required to create such processes. An application can just hook the NtCreateUserProcess function and implement the modifications in the hook.<br/>
+<br/>
+</body></html>

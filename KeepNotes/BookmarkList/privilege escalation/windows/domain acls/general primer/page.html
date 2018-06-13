@@ -3,4 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>General Primer</title>
-</head><body>Enterprise domains can have a complex series of nested AD groups. These groups all have their own Access Control Entries, and subgroups inherit their parents ACEs by default. There are certain groups that have higher privileges than other by default. Through nesting and inheritance, there could exist a sequence of users or groups that could have privileges that would allow for privilege escalation by adding a user to a higher privileged group. </body></html>
+</head><body>Enterprise domains can have a complex series of nested AD groups. These groups all have their own Access Control Entries, and subgroups inherit their parents ACEs by default. There are certain groups that have higher privileges than other by default. Through nesting and inheritance, there could exist a sequence of users or groups that could have privileges that would allow for privilege escalation by adding a user to a higher privileged group. <br/>
+<br/>
+The hunt for nested groups is coined in the term "derivative local admin".<br/>
+<br/>
+ACLs can go beyond the current domain to include Forest trusts and relationships, read-only domain controllers, and more.</body></html>

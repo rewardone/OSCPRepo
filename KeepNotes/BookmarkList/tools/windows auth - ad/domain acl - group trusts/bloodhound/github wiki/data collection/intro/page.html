@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Intro</title>
+</head><body>BloodHound requires three sets of information from an Active Directory environment in order to function:<br/>
+<ul><li>Who is logged on where?</li>
+<li>Who has admin rights where?</li>
+<li>What users and groups belong to what groups?</li>
+<li>(Optionally) What principals have control over other user and group objects?</li>
+</ul>
+<br/>
+In most instances, collecting this information <b>does not require Administrator privileges</b>, and <b>does not require executing code on remote systems</b>. The PowerShell ingestor, based on PowerView, makes data collection fast and simple. The ingestor is located in the BloodHound repo at /PowerShell/BloodHound.ps1.<br/>
+<br/>
+<b>PowerShell execution policy</b><br/>
+PowerShell by default will not allow execution of PowerShell scripts; however, bypassing this restriction is very simple in most instances. Typically you will be able to enter a PowerShell runspace without this restriction by running:<br/>
+<br/>
+&nbsp;&#09;PS C:\&gt; PowerShell -Exec Bypass<br/>
+<br/>
+For more options, see <a href="https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/">this great blog post</a>&nbsp;from NetSPI on 15 different ways to bypass PowerShell execution policy.<br/>
+<br/>
+<b>Data Ingestion</b><br/>
+We currently have two methods of ingesting data into BloodHound:<br/>
+<br/>
+<a href="https://github.com/adaptivethreat/Bloodhound/wiki/PowerShell-Ingestor">The PowerShell ingestor</a><br/>
+<br/>
+<a href="https://github.com/adaptivethreat/Bloodhound/wiki/CSV-Ingestion">CSV ingestion via the BloodHound interface</a></body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Building From Source</string>
+  <key>nodeid</key><string>680aa402-55a7-4d43-aab6-600b585db514</string>
+  <key>modified_time</key><integer>1528915700</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1528915700</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

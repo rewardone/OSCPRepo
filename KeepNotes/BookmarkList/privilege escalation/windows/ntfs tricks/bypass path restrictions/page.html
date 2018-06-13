@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypass Path Restrictions</title>
+</head><body>First of all, ADS can be used to hide data (dir command without the /r switch will not display them; explorer.exe will also not show them; We will later see how we can even hide from the /r dir switch…). However, ADS has another great property – we can add an ADS to a folder. To be allowed to do this we must own the “create folders” permissions on the directory (and the folder name must not be a number). The important fact is that an ADS on a folder looks like a file from the parent folder!<br/>
+<br/>
+For example, on Windows a normal user can’t create files in C:\Windows\ (only admins can write to this folder). So it’s possible that applications assume that files in C:\Windows\ can be trusted because only admins can create such files. However, C:\Windows\Tracing is a folder in which normal users can create files and folders – a normal user can therefore create an ADS on this folder.<br/>
+<br/>
+Let’s say the user writes to the file C:\Windows\Tracing:test.dll. If this path is now passed to a Windows API which calculates the base folder, this API will start at the end of the path and go backward until the first “\” is found. Then everything left from “\” will be returned as the base folder. For C:\Windows\Tracing:test.dll this will return C:\Windows\ as base folder, however, as already mentioned, a normal user is not allowed to create files in this folder but using this trick we created a file which looks like it is stored in C:\Windows!<br/>
+<br/>
+This behavior can be used to bypass some application whitelisting solutions but can also bypass security checks in various situations where the programmer assumed that it’s enough to check if a file is stored in a specific base folder and assumes that only admins can write to this folder because of the set ACL.<br/>
+<br/>
+For example, consider that an application allows to upload data and that uploaded data is stored in applicationFolder\uploadedData\. Moreover, the application allows to start scripts / applications from applicationFolder\ but not from applicationFolder\uploadedData\ (with a blacklist approach). If the user uploads a file named “:foo.ps1″, the system will create an ADS like applicationFolder\uploadedData:foo.ps1 and this file appears to be stored inside applicationFolder\ and therefore bypassing the security checks.</body></html>

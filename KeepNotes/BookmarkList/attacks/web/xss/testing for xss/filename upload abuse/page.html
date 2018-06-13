@@ -7,6 +7,9 @@
 The filename itself may be being reflected in the page so it’s just a matter of naming the file with a XSS.<br/>
 "&gt;&lt;img src=x onerror=alert(document.domain)&gt;.gif<br/>
 <br/>
+On Windows, these characters are typically not allowed, but you can name them with these characters using Alternate Data Streams:<br/>
+<img src="image.png" /><br/>
+<br/>
 <b>Metadata</b><br/>
 Using the exiftool it’s possible to alter EXIF metadata which may lead to a reflection somewhere:<br/>
 <br/>

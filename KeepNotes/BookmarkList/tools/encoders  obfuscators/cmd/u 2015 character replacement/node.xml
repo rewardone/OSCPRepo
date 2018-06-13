@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>U 2015 Character Replacement</string>
+  <key>nodeid</key><string>36839928-d4d0-4e48-81e8-4000cee2d99c</string>
+  <key>modified_time</key><integer>1528908684</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1528908668</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

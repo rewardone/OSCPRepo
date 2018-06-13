@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Who Has Admin Where</title>
+</head><body>Who Can Admin What? <br/>
+•Did you know that Windows allows any domainauthenticated user to enumerate the members of a local group on a remote machine? <ul><li style="list-style-type: none">• Either through the NetLocalGroupGetMembers() Win32 API call or the WinNT service provider </li>
+</ul>
+<br/>
+PowerView: <br/>
+• Get-NetLocalGroup –ComputerName IP [-API] &nbsp;<br/>
+<br/>
+<br/>
+Who Can Admin What (GPO Edition)? <br/>
+Let’s correlate what GPOs set the local administrators group with with OUs/sits these GPOs are applied to <ul><li style="list-style-type: none">• Lets us determine who has admin rights where based on GPO settings </li>
+<li style="list-style-type: none">• This isn’t a super simple process… </li>
+</ul>
+<br/>
+PowerView’s Find-GPOLocation will enumerate this for a specific target or dump all relationships by default &nbsp;</body></html>

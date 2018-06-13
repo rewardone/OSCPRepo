@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>CVE2018-1036 Create Folder Without Permissions</string>
+  <key>nodeid</key><string>0ca6b34a-be2a-4f55-86bd-8d7c63cffef3</string>
+  <key>modified_time</key><integer>1528902938</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1528902834</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
