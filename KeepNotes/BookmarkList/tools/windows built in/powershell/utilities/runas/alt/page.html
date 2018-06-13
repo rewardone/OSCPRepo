@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Alt</title>
+</head><body>The below command is to be run in a powershell window:<br/>
+<br/>
+$pw= convertto-securestring "EnterPasswordHere" -asplaintext -force<br/>
+$pp = new-object -typename System.Management.Automation.PSCredential -argumentlist "EnterDomainName\EnterUserName",$pw<br/>
+$script = "C:\Users\EnterUserName\AppData\Local\Temp\test.bat"<br/>
+Start-Process powershell -Credential $pp -ArgumentList '-noprofile -command &amp;{Start-Process $script -verb Runas}'<br/>
+<br/>
+If however you want to run the powershell from a cmd prompt, you can run store the above command in a xyz.ps1 file and run it in cmd as below:<br/>
+powershell -ExecutionPolicy Bypass -File xyz.ps1</body></html>

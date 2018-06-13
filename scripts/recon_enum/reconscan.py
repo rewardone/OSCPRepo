@@ -48,6 +48,7 @@
 ##       : Ruler for exchange (possibly)
 ## Expand SMBRecon:
 ##       : hydra or crackmapexec for spray/brute
+##       : add nullinux for fun
 ## Expand dirTrav:
 ##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon

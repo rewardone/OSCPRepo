@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>nodeid</key><string>f3a56d52-5ef7-4fee-b4c6-8f39385539cd</string>
+  <key>modified_time</key><integer>1527955985</integer>
+  <key>expanded2</key><false/>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1521135391</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>CrackMapExec</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

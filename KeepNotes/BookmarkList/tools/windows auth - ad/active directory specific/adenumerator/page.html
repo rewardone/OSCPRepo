@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>AdEnumerator</title>
+</head><body>https://github.com/chango77747/AdEnumerator/blob/master/ADEnumerator.psm1<br/>
+<br/>
+<br/>
+Notes:<br/>
+This is only ever intended to be executed on your attacker system.<br/>
+It will run on any system though, but you will always have to provide creds.<br/>
+<br/>
+You will need a valid domain controller for this to work. <br/>
+How do you get a list of domain controllers without a domain system? <br/>
+<br/>
+Two ways:<br/>
+ipconfig -&gt; will get you a DNS suffix<br/>
+nltest /dclist:{domain} #will give you an error, but will also list one DC<br/>
+<br/>
+nslookup<br/>
+set type=any<br/>
+{domain} #will list name servers...generally those are DCs<br/>
+<br/>
+Use Cases:<br/>
+1. You harvest a domain credential from a printer, responder, etc. But don't have access<br/>
+to a domain system. You can use the credential to perform additional enumeration on the domain.<br/>
+2. Find out what you can do with the credential you harvested. What group membership, maybe a system with similiar <br/>
+naming convetion of the username which indicates the user may have local admin on the system.<br/>
+3. You are provided credentials to start an internal assessment, but not a domain system.<br/>
+4. You just want to do domain enumeration quickly<br/>
+<br/>
+Function Overview:<br/>
+New-LDAPSession - Creates an LDAP Session<br/>
+Invoke-SearchAD - Searches Active Directory for string<br/>
+Get-AllADUsers - Will get all user accounts from Active Directory<br/>
+Get-GroupMembership - Will get user accounts who are members of specified group<br/>
+Get-AllGroups - Gets a list of all groups<br/>
+Get-DomainControllers - Gets a list of domain controllers<br/>
+Get-Computers - Gets a list of computers or computer versions<br/>
+Get-UserMembership - Will get details about specified user</body></html>
