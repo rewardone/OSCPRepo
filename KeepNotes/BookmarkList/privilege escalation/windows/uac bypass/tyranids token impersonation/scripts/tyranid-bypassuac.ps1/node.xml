@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>title</key><string>BypassUAC.ps1</string>
+  <key>title</key><string>Tyranid-BypassUAC.ps1</string>
   <key>nodeid</key><string>60b8892b-c060-4708-84fd-56c60314f5da</string>
   <key>modified_time</key><integer>1524109153</integer>
   <key>version</key><integer>6</integer>
