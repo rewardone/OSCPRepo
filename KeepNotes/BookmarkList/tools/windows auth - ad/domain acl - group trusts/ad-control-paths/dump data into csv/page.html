@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Dump Data Into CSV</title>
+</head><body>Use the powershell module in Dump. You must be in the Dump folder (important). The simplest example is:<br/>
+<br/>
+Import-Module .\ADCP<br/>
+Get-ADCPDump<br/>
+&nbsp; &nbsp; -outputDir &nbsp; &nbsp; &nbsp; &nbsp;&lt;output directory&gt;<br/>
+&nbsp; &nbsp; -domainController &lt;DC ip or host&gt;<br/>
+&nbsp; &nbsp; -domainDnsName &nbsp; &nbsp;&lt;domain FQDN&gt;<br/>
+<ul><li>-domainController can be an real domain controller, or a machine exposing the LDAP directory from a re-mounted ntds.dit using dsamain.</li>
+</ul>
+<br/>
+This produces some .csv and .log files as follow:<br/>
+<br/>
+&lt;outputDir&gt;<br/>
+&nbsp; &nbsp; |- yyyymmdd_domainfqdn\Logs\*.log &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Log files<br/>
+&nbsp; &nbsp; |- yyyymmdd_domainfqdn\Ldap\*.csv &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Unfiltered dumped information<br/>
+&nbsp; &nbsp; \- yyyymmdd_domainfqdn\Relations\*.csv &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # "Control relations" files, which will be imported into the graph database<br/>
+<br/>
+<b>Other options</b><ul><li>-Credential : use explicit authentication (by default implicit authentication is used). Credential is a Powershell credential object, use Get-Credential to built it . If you don't want your password to appear in the command line but still use explicit authentication use the following runas command, then use the module without -Credential option:</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; C:\&gt; runas /netonly /user:DOM\username powershell.exe</li>
+</ul>
+</li>
+<li>-sysvolPath can be a network path (example \\192.168.25.123\sysvol\domain.local\Policies) or a path to a local robocopy of this folder. Defaults to \\domainController\sysvol\domainDnsName\Policies.</li>
+<li>-exchangeServer, -ExchangeCredential: explicit authentication for EWS on a CAS Exchange server. Use an Exchange Trusted Subsystem member account with an active mailbox, but NOT DA/EA/Org Mgmgt because of some Deny ACEs.</li>
+<li>-logLevel: change log and output verbosity (possible values are ALL, DBG, INFO (default), WARN, ERR, SUCC and NONE).</li>
+<li>-ldapOnly and -sysvolOnly: dump only data from the LDAP directory (respectively from the SYSVOL).</li>
+<li>-ldapPort: change ldap port (default is 389). This can be useful for a copied ntds.dit re-mounted with dsamain since it allows you to use a non standard ldap port.</li>
+<li>-useBackupPriv: use backup privilege to access -sysvolPath, which is needed when using a robocopy. You must use an administrator account to use this option.</li>
+<li>-forceOverwrite: overwrite any previous dump files from the same-day, same-target folder</li>
+</ul>
+<br/>
+<b>Warning</b>: Accessing the Sysvol share from a non-domain machine can be blocked by UNC Paths hardening, which is a client-side parameter enabled by default since Windows 10. Disable it like this: Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -Name "\*\SYSVOL" -Value "RequireMutualAuthentication=0"<br/>
+<br/>
+** Note:** The only binary needed in this step is DirectoryCrawler.exe.</body></html>

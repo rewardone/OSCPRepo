@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Things To Try</title>
+</head><body>A quite common way to bypass URL access rules is to abuse redirections (responses with code 3xx). I noticed that:<br/>
+chat.google.com redirects to https://chat.google.com/u/0/?hasBeenRedirected=true <br/>
+<br/>
+when navigating to a non-existent URL, like: <br/>
+https://chat.google.com/test123. <br/>
+<br/>
+So I defined a match/replace rule in Burp to rewrite the "hasBeenRedirected=true" URL-s to sekurak.pl to see what happens (and it works).</body></html>

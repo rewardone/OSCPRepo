@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Hardware Based</string>
   <key>nodeid</key><string>e642fd9f-edb1-4b75-91d4-3982a1670460</string>
   <key>modified_time</key><integer>1526302262</integer>
@@ -9,7 +10,7 @@
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1526302262</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>5</integer>
+  <key>order</key><integer>6</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

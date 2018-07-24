@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>GoFetch has two different versions:<br/>
+Chain reaction:<br/>
+Invoke-GoFetch (written in PowerShell to avoid Python installation prereq), implements a recursion that reads the full path, dumps the relevant credentials with Invoke-Mimikatz, and then copy and execute itself using Invoke-PsExec on the next relevant machine guided by the network path.<br/>
+<br/>
+One computer to rule them all:<br/>
+Python based code (a video of this version demonstrated at BlackHat Europe 2016), using a technique where one centralized computer is doing the job of connecting to each computer in the path, in the right order, to steal credentials (using Mimikatz), and use them to connect to the next machine in the path.<br/>
+<br/>
+</body></html>

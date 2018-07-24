@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Open Redirect In Google Accounts</title>
+</head><body>The search for open redirect in https://chat.google.com turned out to be much easier than I had initially thought. Any URL under https://chat.google.com/accounts is redirected to https://accounts.google.com. For example, check this out: https://chat.google.com/accounts/random-url. You should end up on https://accounts.google.com/random-url after clicking.<br/>
+<br/>
+The redirect to accounts.google.com is just a first step in the riddle. But in fact the most important one as there exists a well-known, publicly disclosed open redirect on accounts.google.com (credit: @teh_h3ck). Please refer to the original blog post to find out details but the idea is that basically I can redirect to my own domain, I just need to host stuff on /_ah/conflogin URL.<br/>
+<br/>
+So the final open redirect from chat.google.com is as follows:<br/>
+<br/>
+https://chat.google.com/accounts/ServiceLogin?continue=https://appengine.google.com/_ah/conflogin?continue=http://bentkowski.info/&amp;service=ah</body></html>

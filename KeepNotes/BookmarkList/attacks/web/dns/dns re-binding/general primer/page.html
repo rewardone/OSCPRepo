@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Put simply, DNS rebinding allows a remote attacker to bypass a victim’s network firewall and use their web browser as a proxy to communicate directly with devices on their private home network. By following the wrong link, or being served a malicious banner advertisement, you could inadvertently provide an attacker with access to the thermostat that controls the temperature in your home.<br/>
+<br/>
+What is DNS Rebinding?<br/>
+To better understand how DNS rebinding works it’s helpful to first understand the security mechanism that it evades; the web browser’s same-origin policy. Many moons ago, browser vendors decided it probably wouldn’t be a good idea for web pages served from one domain to be able to make arbitrary requests to another domain without explicit permission from that second domain. If you follow a malicious link on the web, the web page you arrive at shouldn’t be able to make an HTTP request to your bank website and leverage your logged in-session there to empty your account. Browsers restrict this behavior by limiting HTTP requests originating from a domain to access only other resources that are also located on that domain (or another domain that explicitly enables <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">cross-origin resource sharing</a>).<br/>
+<br/>
+What would happen if the IP address of malicious.website were to quickly changed from 34.192.228.43 to the IP address of 171.159.228.150? According to the browser, nothing would have changed. But now, instead of communicating with the server that originally hosted the website files at malicious.website, your browser would actually be talking to bank.com. See the problem? DNS can be abused to trick web browsers into communicating with servers they don’t intend to.<br/>
+<br/>
+DNS rebinding allows a remote attacker to bypass a victim’s network firewall and use their web browser as a proxy to communicate directly with devices on their private home network.<br/>
+<br/>
+<br/>
+<b>How DNS Rebinding works</b><ul><li>An attacker controls a malicious DNS server that answers queries for a domain, say rebind.network.</li>
+<li>The attacker tricks a user into loading http://rebind.network in their browser. There are many ways they could do this, from phishing to persistent XSS or by buying an HTML banner ad.</li>
+<li>Once the victim follows the link, their web browser makes a DNS request looking for the IP address of rebind.network. When it receives the victim’s DNS request, the attacker controlled DNS server responds with rebind.network’s real IP address, 34.192.228.43. It also sets the TTL value on the response the be 1 second so that the victim’s machine won’t cache it for long.</li>
+<li>The victim loads the web page from http://rebind.network which contains malicious JavaScript code that begins executing on the victim’s web browser. The page begins repeatedly making some strange looking POST requests to http://rebind.network/thermostatwith a JSON payload like {“tmode”: 1, “a_heat”: 95}.</li>
+<li>At first, these requests are sent to the attacker’s web server running on 34.192.228.43, but after a while (browser DNS caching is weird) the browser’s resolver observes that the DNS entry for rebind.network is stale and so it makes another DNS lookup.</li>
+<li>The attacker’s malicious DNS server receives the victim’s second DNS request, but this time it responds with the IP address 192.168.1.77, which happens to be an IP address of a smart thermostat on the victim’s local network.</li>
+<li>The victim’s machine receives this malicious DNS response and begins to point to HTTP requests intended for http://rebind.network to 192.168.1.77. As far as the browser is concerned nothing has changed and so it sends another POST to http://rebind.network/thermostat.</li>
+<li>This time, that POST request gets sent to the small unprotected web server running on the victim’s WiFi-connected thermostat. The thermostat processes the request and the temperature in the victim’s home is set to 95 degrees.</li>
+</ul>
+<br/>
+</body></html>

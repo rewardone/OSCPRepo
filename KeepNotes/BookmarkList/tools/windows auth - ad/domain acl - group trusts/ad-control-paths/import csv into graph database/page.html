@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Import CSV Into Graph Database</title>
+</head><body>You can now import the Relations CSV files along with the AD objects into your Neo4j graph database. This step can be done fully offline. Use the ADCP module:<br/>
+<br/>
+Import-Module .\ADCP<br/>
+$instance = Import-ADCPDump<br/>
+&nbsp; &nbsp; -inputDir &nbsp; &nbsp; &nbsp; &nbsp; &lt;input directory&gt;<br/>
+&nbsp; &nbsp; -domainDnsName &nbsp; &nbsp;&lt;domain FQDN&gt;<br/>
+# Launch Neo4J<br/>
+$instance | Start-ADCPInstance<br/>
+<br/>
+To perform these step manually (or in Linux): <br/>
+<br/>
+0. Stop the Neo4j server if it is started:<br/>
+&nbsp; &nbsp; .\bin\neo4j stop<br/>
+<br/>
+Import CSV files in a new graph database adcp.db:<br/>
+<br/>
+Set an environment variable to the dump folder for convenience:<br/>
+&nbsp; &nbsp; $env:DUMP = "PATH_TO\yyyymmdd_domainfqdn\" <br/>
+<br/>
+In neo4j folder (you can copy/paste this):<br/>
+&nbsp; &nbsp; .\bin\neo4j-import --into data/databases/adcp.db --id-type string &nbsp;`<br/>
+&nbsp; &nbsp; --nodes $env:DUMP\Ldap\all_nodes.csv &nbsp;`<br/>
+&nbsp; &nbsp; --relationships $((dir $env:DUMP\relations\*.csv -exclude *.deny.csv) -join ',') `<br/>
+&nbsp; &nbsp; --input-encoding UTF-16LE --multiline-fields=true --legacy-style-quoting=false<br/>
+<br/>
+Headers-related errors will be raised and can be ignored. It is still a good idea to have a look at the bad.log file.<br/>
+<br/>
+Restart the Neo4j server if it is stopped:<br/>
+&nbsp; &nbsp; .\bin\neo4j start<br/>
+<br/>
+Note: All the previous steps (2, 3, 4) can be piped in Powershell:<br/>
+<br/>
+Import-Module .\ADCP<br/>
+Get-ADCPDump<br/>
+&nbsp; &nbsp; -outputDir &nbsp; &nbsp; &nbsp; &nbsp;&lt;output directory&gt;<br/>
+&nbsp; &nbsp; -domainController &lt;DC ip or host&gt;<br/>
+&nbsp; &nbsp; -domainDnsName &nbsp; &nbsp;&lt;domain FQDN&gt; |<br/>
+Prepare-ADCPDump |<br/>
+Import-ADCPDump |<br/>
+Start-ADCPInstance</body></html>

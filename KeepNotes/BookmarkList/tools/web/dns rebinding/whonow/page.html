@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Whonow</title>
+</head><body>Whonow DNS Server<br/>
+<a href="https://github.com/brannondorsey/whonow">Whonow</a>&nbsp;is a custom DNS server that lets you specify DNS responses and rebind rules dynamically using domain requests themselves. Here’s an example of how it works:<br/>
+<br/>
+# respond to DNS queries for this domain with 34.192.228.43 the first<br/>
+# time it is requested and then 192.168.1.1 every time after that.<br/>
+A.34.192.228.43.1time.192.168.1.1.forever.rebind.network<br/>
+# respond first with 34.192.228.43, then 192.168.1.1 the next five<br/>
+# times, and then start all over again (1, then 5, forever…)<br/>
+A.34.192.228.43.1time.192.168.1.1.5times.repeat.rebind.network<br/>
+<br/>
+What’s great about dynamic DNS Rebinding rules is that you don’t have to spin up your own malicious DNS server to start exploiting the browser’s same-origin policy. Instead, everyone can share the same public whonow server running on port 53 of rebind.network.<br/>
+<br/>
+You can try it now if you’d like, just use dig to query the public whonow instance. It responds to requests for *rebind.network domain names.<br/>
+<br/>
+# dig is a unix command for making DNS requests<br/>
+dig A.10.10.10.50.forever.rebind.network<br/>
+;; QUESTION SECTION:<br/>
+;10.10.10.50.forever.rebind.network. IN A<br/>
+;; ANSWER SECTION:<br/>
+10.10.10.50.forever.rebind.network. 1 IN A 10.10.10.50<br/>
+Whonow always sets TTL values to one second so you can expect that it’s responses won’t stay in a DNS resolver’s cache for long.<br/>
+<br/>
+</body></html>

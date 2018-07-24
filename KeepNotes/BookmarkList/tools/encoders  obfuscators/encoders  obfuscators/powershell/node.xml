@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Powershell</string>
   <key>nodeid</key><string>618202d8-f12a-4ef2-ac41-40eb9548ca15</string>
   <key>modified_time</key><integer>1527955754</integer>
