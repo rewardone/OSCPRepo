@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get-GPOACLs</title>
+</head><body>GPOs have ACLs.<br/>
+Admins hand out excessive privilege.<br/>
+If you can edit a GPO, you own every user and computer it applies to.<br/>
+<br/>
+<br/>
+Slide Notes<br/>
+<br/>
+-So, like many other things in Windowsland, GPOs are “securable objects”, meaning that they have ACLs.<br/>
+-Like all things in all operating systems, Admins will happily hand out excessive permissions if it will make people leave them alone.<br/>
+<b>-If you get write permissions on a GPO, you can basically own every user or computer that it applies to.</b>&nbsp;The New-GPOImmediateTask cmdlet from PowerView is the easiest way - it just creates a scheduled task that runs and then deletes itself.<br/>
+-By the way, I saw RastaMouse mention on twitter the other day that he’s working on a PowerShell module to abuse a bunch of this stuff “in ways other than New-GPOImmediateTask”. I haven’t seen any more detail since then but should be fun.</body></html>

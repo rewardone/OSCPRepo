@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Start-ProcessAsUser</title>
+</head><body>function Start-ProcessAsUser {<br/>
+&lt;#<br/>
+.SYNOPSIS<br/>
+<br/>
+Executes a command using a specified set of credentials.<br/>
+<br/>
+Author: Matthew Graeber (@mattifestation) with modifications by Lee Christensen (@tifkin_)<br/>
+License: BSD 3-Clause<br/>
+Required Dependencies: None<br/>
+Optional Dependencies: None<br/>
+<br/>
+.DESCRIPTION<br/>
+<br/>
+A simple wrapper for advapi32!CreateProcessWithLogonW. &nbsp;The invoker can perform a normal <br/>
+logon or use the NetOnly flag create the process using the LOGON_NETCREDENTIALS_ONLY <br/>
+flag. Script is a modified version of Matt Graeber's New-HoneyHash cmdlet.<br/>
+<br/>
+.PARAMETER Domain<br/>
+<br/>
+Specifies the domain.<br/>
+<br/>
+.PARAMETER Username<br/>
+<br/>
+Specifies the user name.<br/>
+<br/>
+.PARAMETER Password<br/>
+<br/>
+Specifies the Password<br/>
+<br/>
+.PARAMETER Cmd<br/>
+<br/>
+Specifies the command to execute<br/>
+<br/>
+.PARAMETER NetOnly<br/>
+<br/>
+Start the process using the LOGON_NETCREDENTIALS_ONLY flag (equivalent of running "runas.exe /netonly")<br/>
+<br/>
+.EXAMPLE<br/>
+<br/>
+Start-ProcessAsUser -Domain corpwest.local -Username itadmin -Password MyPassword -Cmd "powershell.exe -noexit -C get-process"<br/>
+<br/>
+.EXAMPLE<br/>
+<br/>
+Start-ProcessAsUser -Domain linux.org -Username root -Password MyPassword -Cmd cmd.exe -NetOnly<br/>
+<br/>
+.LINK<br/>
+<br/>
+https://gist.github.com/mattifestation/9c342622f5e23c59fda9<br/>
+<br/>
+#&gt;<br/>
+&nbsp; &nbsp; [CmdletBinding()]<br/>
+&nbsp; &nbsp; Param (<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory = $True, Position = 0)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [ValidateNotNullOrEmpty()]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Domain,<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory = $True, Position = 1)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [ValidateNotNullOrEmpty()]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Username,<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory = $True, Position = 2)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Password,<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory = $True, Position = 3)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Cmd,<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory = $False)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Switch]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $NetOnly<br/>
+&nbsp; &nbsp; )<br/>
+<br/>
+&nbsp; &nbsp; $SystemModule = [Microsoft.Win32.IntranetZoneCredentialPolicy].Module<br/>
+&nbsp; &nbsp; $NativeMethods = $SystemModule.GetType('Microsoft.Win32.NativeMethods')<br/>
+&nbsp; &nbsp; $SafeNativeMethods = $SystemModule.GetType('Microsoft.Win32.SafeNativeMethods')<br/>
+&nbsp; &nbsp; $CreateProcessWithLogonW = $NativeMethods.GetMethod('CreateProcessWithLogonW', [Reflection.BindingFlags] 'NonPublic, Static')<br/>
+&nbsp; &nbsp; $LogonFlags = $NativeMethods.GetNestedType('LogonFlags', [Reflection.BindingFlags] 'NonPublic')<br/>
+&nbsp; &nbsp; $StartupInfo = $NativeMethods.GetNestedType('STARTUPINFO', [Reflection.BindingFlags] 'NonPublic')<br/>
+&nbsp; &nbsp; $ProcessInformation = $SafeNativeMethods.GetNestedType('PROCESS_INFORMATION', [Reflection.BindingFlags] 'NonPublic')<br/>
+<br/>
+&nbsp; &nbsp; $Flags = [Activator]::CreateInstance($LogonFlags)<br/>
+<br/>
+&nbsp; &nbsp; if($NetOnly) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Flags.value__ = 2 # LOGON_NETCREDENTIALS_ONLY<br/>
+&nbsp; &nbsp; } else {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $Flags.value__ = 0<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; $StartInfo = [Activator]::CreateInstance($StartupInfo)<br/>
+&nbsp; &nbsp; $ProcInfo = [Activator]::CreateInstance($ProcessInformation)<br/>
+<br/>
+&nbsp; &nbsp; $PasswordStr = ConvertTo-SecureString $Password -AsPlainText -Force<br/>
+&nbsp; &nbsp; $PasswordPtr = [System.Runtime.InteropServices.Marshal]::SecureStringToCoTaskMemUnicode($PasswordStr)<br/>
+&nbsp; &nbsp; $StrBuilder = New-Object System.Text.StringBuilder<br/>
+&nbsp; &nbsp; $null = $StrBuilder.Append($Cmd)<br/>
+<br/>
+&nbsp; &nbsp; $Result = $CreateProcessWithLogonW.Invoke($null, @([String] $UserName,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[String] $Domain,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[IntPtr] $PasswordPtr,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;($Flags -as $LogonFlags), &nbsp; &nbsp; # LOGON_NETCREDENTIALS_ONLY <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;$null,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[Text.StringBuilder] $StrBuilder,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;0x08000000, # Don't display a window<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;$null,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;$null,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;$StartInfo,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;$ProcInfo))<br/>
+<br/>
+&nbsp; &nbsp; if (-not $Result) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; throw 'Unable to create process as user.'<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; Write-Verbose 'Process created successfully!'<br/>
+}</body></html>

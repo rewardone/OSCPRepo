@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Invoke-Runas</title>
+</head><body>function Invoke-Runas {<br/>
+<br/>
+&lt;#<br/>
+.SYNOPSIS<br/>
+<br/>
+&nbsp; &nbsp; Overview:<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; Functionally equivalent to Windows "runas.exe", using Advapi32::CreateProcessWithLogonW (also used<br/>
+&#09;by runas under the hood).<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; Parameters:<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;-User &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Specifiy username.<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp;-Password &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Specify password.<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp;-Domain &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Specify domain. Defaults to localhost if not specified.<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp;-LogonType &nbsp; &nbsp; &nbsp; &nbsp; dwLogonFlags:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0x00000001 --&gt; LOGON_WITH_PROFILE<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Log on, then load the user profile in the HKEY_USERS registry<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;key. The function returns after the profile is loaded.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0x00000002 --&gt; LOGON_NETCREDENTIALS_ONLY (= /netonly)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Log on, but use the specified credentials on the network only.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;The new process uses the same token as the caller, but the<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;system creates a new logon session within LSA, and the process<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;uses the specified credentials as the default credentials.<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp;-Binary &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Full path of the module to be executed.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp;-Args &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Arguments to pass to the module, e.g. "/c calc.exe". Defaults<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; to $null if not specified.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+<br/>
+.DESCRIPTION<br/>
+&#09;Author: Ruben Boonen (@FuzzySec)<br/>
+&#09;License: BSD 3-Clause<br/>
+&#09;Required Dependencies: None<br/>
+&#09;Optional Dependencies: None<br/>
+.EXAMPLE<br/>
+&#09;Start cmd with a local account<br/>
+&#09;C:\PS&gt; Invoke-Runas -User SomeAccount -Password SomePass -Binary C:\Windows\System32\cmd.exe -LogonType 0x1<br/>
+&#09;<br/>
+.EXAMPLE<br/>
+&#09;Start cmd with remote credentials. Equivalent to "/netonly" in runas.<br/>
+&#09;C:\PS&gt; Invoke-Runas -User SomeAccount -Password SomePass -Domain SomeDomain -Binary C:\Windows\System32\cmd.exe -LogonType 0x2<br/>
+#&gt;<br/>
+<br/>
+&#09;param (<br/>
+&#09;&#09;[Parameter(Mandatory = $True)]<br/>
+&#09;&#09;[string]$User,<br/>
+&#09;&#09;[Parameter(Mandatory = $True)]<br/>
+&#09;&#09;[string]$Password,<br/>
+&#09;&#09;[Parameter(Mandatory = $False)]<br/>
+&#09;&#09;[string]$Domain=".",<br/>
+&#09;&#09;[Parameter(Mandatory = $True)]<br/>
+&#09;&#09;[string]$Binary,<br/>
+&#09;&#09;[Parameter(Mandatory = $False)]<br/>
+&#09;&#09;[string]$Args=$null,<br/>
+&#09;&#09;[Parameter(Mandatory = $True)]<br/>
+&#09;&#09;[int][ValidateSet(1,2)]<br/>
+&#09;&#09;[string]$LogonType<br/>
+&#09;) &nbsp;<br/>
+<br/>
+&#09;Add-Type -TypeDefinition @"<br/>
+&#09;using System;<br/>
+&#09;using System.Diagnostics;<br/>
+&#09;using System.Runtime.InteropServices;<br/>
+&#09;using System.Security.Principal;<br/>
+&#09;<br/>
+&#09;[StructLayout(LayoutKind.Sequential)]<br/>
+&#09;public struct PROCESS_INFORMATION<br/>
+&#09;{<br/>
+&#09;&#09;public IntPtr hProcess;<br/>
+&#09;&#09;public IntPtr hThread;<br/>
+&#09;&#09;public uint dwProcessId;<br/>
+&#09;&#09;public uint dwThreadId;<br/>
+&#09;}<br/>
+&#09;<br/>
+&#09;[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]<br/>
+&#09;public struct STARTUPINFO<br/>
+&#09;{<br/>
+&#09;&#09;public uint cb;<br/>
+&#09;&#09;public string lpReserved;<br/>
+&#09;&#09;public string lpDesktop;<br/>
+&#09;&#09;public string lpTitle;<br/>
+&#09;&#09;public uint dwX;<br/>
+&#09;&#09;public uint dwY;<br/>
+&#09;&#09;public uint dwXSize;<br/>
+&#09;&#09;public uint dwYSize;<br/>
+&#09;&#09;public uint dwXCountChars;<br/>
+&#09;&#09;public uint dwYCountChars;<br/>
+&#09;&#09;public uint dwFillAttribute;<br/>
+&#09;&#09;public uint dwFlags;<br/>
+&#09;&#09;public short wShowWindow;<br/>
+&#09;&#09;public short cbReserved2;<br/>
+&#09;&#09;public IntPtr lpReserved2;<br/>
+&#09;&#09;public IntPtr hStdInput;<br/>
+&#09;&#09;public IntPtr hStdOutput;<br/>
+&#09;&#09;public IntPtr hStdError;<br/>
+&#09;}<br/>
+&#09;<br/>
+&#09;public static class Advapi32<br/>
+&#09;{<br/>
+&#09;&#09;[DllImport("advapi32.dll", SetLastError=true, CharSet=CharSet.Unicode)]<br/>
+&#09;&#09;public static extern bool CreateProcessWithLogonW(<br/>
+&#09;&#09;&#09;String userName,<br/>
+&#09;&#09;&#09;String domain,<br/>
+&#09;&#09;&#09;String password,<br/>
+&#09;&#09;&#09;int logonFlags,<br/>
+&#09;&#09;&#09;String applicationName,<br/>
+&#09;&#09;&#09;String commandLine,<br/>
+&#09;&#09;&#09;int creationFlags,<br/>
+&#09;&#09;&#09;int environment,<br/>
+&#09;&#09;&#09;String currentDirectory,<br/>
+&#09;&#09;&#09;ref &nbsp;STARTUPINFO startupInfo,<br/>
+&#09;&#09;&#09;out PROCESS_INFORMATION processInformation);<br/>
+&#09;}<br/>
+&#09;<br/>
+&#09;public static class Kernel32<br/>
+&#09;{<br/>
+&#09;&#09;[DllImport("kernel32.dll")]<br/>
+&#09;&#09;public static extern uint GetLastError();<br/>
+&#09;}<br/>
+"@<br/>
+&#09;<br/>
+&#09;# StartupInfo Struct<br/>
+&#09;$StartupInfo = New-Object STARTUPINFO<br/>
+&#09;$StartupInfo.dwFlags = 0x00000001<br/>
+&#09;$StartupInfo.wShowWindow = 0x0001<br/>
+&#09;$StartupInfo.cb = [System.Runtime.InteropServices.Marshal]::SizeOf($StartupInfo)<br/>
+&#09;<br/>
+&#09;# ProcessInfo Struct<br/>
+&#09;$ProcessInfo = New-Object PROCESS_INFORMATION<br/>
+&#09;<br/>
+&#09;# CreateProcessWithLogonW --&gt; lpCurrentDirectory<br/>
+&#09;$GetCurrentPath = (Get-Item -Path ".\" -Verbose).FullName<br/>
+&#09;<br/>
+&#09;echo "`n[&gt;] Calling Advapi32::CreateProcessWithLogonW"<br/>
+&#09;$CallResult = [Advapi32]::CreateProcessWithLogonW(<br/>
+&#09;&#09;$User, $Domain, $Password, $LogonType, $Binary,<br/>
+&#09;&#09;$Args, 0x04000000, $null, $GetCurrentPath,<br/>
+&#09;&#09;[ref]$StartupInfo, [ref]$ProcessInfo)<br/>
+&#09;<br/>
+&#09;if (!$CallResult) {<br/>
+&#09;&#09;echo "`n[!] Mmm, something went wrong! GetLastError returned:"<br/>
+&#09;&#09;echo "==&gt; $((New-Object System.ComponentModel.Win32Exception([int][Kernel32]::GetLastError())).Message)`n"<br/>
+&#09;} else {<br/>
+&#09;&#09;echo "`n[+] Success, process details:"<br/>
+&#09;&#09;Get-Process -Id $ProcessInfo.dwProcessId<br/>
+&#09;}<br/>
+}</body></html>

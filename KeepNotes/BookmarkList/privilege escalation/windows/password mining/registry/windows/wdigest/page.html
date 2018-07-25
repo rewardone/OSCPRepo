@@ -8,7 +8,9 @@
 3. Run Mimikatz when a user logs in.<br/>
 <br/>
 Simple, isn't it? We can use PowerShell to easily achieve the above steps. <br/>
+Everything in one script: https://github.com/samratashok/nishang/blob/master/Gather/Invoke-MimikatzWDigestDowngrade.ps1<br/>
 <br/>
+Otherwise, manual invocations:<br/>
 Registry key property can be created with:<br/>
 <br/>
 PS C:\&gt; New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest -Name UseLogonCredential -Type DWORD -Value 1<br/>

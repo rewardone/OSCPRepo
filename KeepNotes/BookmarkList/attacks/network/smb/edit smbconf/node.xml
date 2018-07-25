@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Edit SMBConf</string>
+  <key>nodeid</key><string>fd1625b2-077b-4f4b-a450-ae81e8670300</string>
+  <key>modified_time</key><integer>1532540474</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1532540329</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

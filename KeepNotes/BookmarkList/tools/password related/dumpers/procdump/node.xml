@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>ProcDump</string>
   <key>nodeid</key><string>89ccf34a-4d04-4e2e-a4da-d5bae63ee409</string>
   <key>modified_time</key><integer>1524234580</integer>

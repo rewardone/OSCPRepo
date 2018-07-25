@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get-GPOScripts</title>
+</head><body>Startup and shutdown scripts.<br/>
+If you can edit them, you own the user/computer they apply to.<br/>
+Sometimes they have hard-coded creds in them. Delightful!<br/>
+<br/>
+<br/>
+Slide Notes<br/>
+<br/>
+-This is where you can find startup/shutdown/logon/logoff scripts.<br/>
+-If you're really lucky you'll find fun creds hard-coded in them.<br/>
+-Most of them will be stored in SYSVOL and their file permissions won’t let you change them, but some will be on a random file server where an admin granted "Full Control" to the "Everyone" group because they were hung over or something. Once again, Grouper in -Online mode will tell you if you can modify the script in question.<br/>
+<br/>
+- Once again, you’ll also sometimes find creds being passed as arguments in these entries, in the name of ‘security’.</body></html>

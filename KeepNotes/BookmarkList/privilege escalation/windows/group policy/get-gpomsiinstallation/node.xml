@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Get-GPOMSIInstallation</string>
+  <key>nodeid</key><string>5693d5fc-e769-4a54-ba3d-15ae21a08522</string>
+  <key>modified_time</key><integer>1532536824</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1532536659</integer>
+  <key>order</key><integer>7</integer>
+</dict>
+</node>

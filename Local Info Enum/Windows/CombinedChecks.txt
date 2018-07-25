@@ -1,4 +1,76 @@
-Recommend to use HoseEnum (either standalone or in Empire)
+Recommend to use SeatBelt.exe
+Secondary: HostEnum (either standalone or in Empire)
+Tertiary: Get-HostProfile
+
+###################
+SeatBelt.exe
+###################
+SeatBelt.exe system collects the following system data:
+
+BasicOSInfo – Basic OS info (i.e. architecture, OS version, etc.)
+RebootSchedule – Reboot schedule (last 15 days) based on event IDs 12 and 13
+TokenGroupPrivs – Current process/token privileges (e.g. SeDebugPrivilege/etc.)
+UACSystemPolicies – UAC system policies via the registry
+PowerShellSettings – PowerShell versions and security settings via the registry
+AuditSettings – Audit settings via the registry
+WEFSettings – Windows Event Forwarding (WEF) settings via the registry
+LSASettings – LSA settings (including auth packages)
+UserEnvVariables – Current user environment variables
+SystemEnvVariables – Current system environment variables
+UserFolders – Folders in C:\Users\
+NonstandardServices – Services with binary paths not in C:\Windows\
+InternetSettings – Internet settings, including proxy configs
+LapsSettings – LAPS settings, if installed
+LocalGroupMembers – Members of local admins, RDP, and remote DCOM groups
+MappedDrives – Currently mapped drives
+RDPSessions – Current incoming RDP sessions
+WMIMappedDrives – Mapped drives via WMI
+NetworkShares – Network shares
+FirewallRules – Deny firewall rules, “full” dumps all
+AntiVirusWMI – Registered antivirus (via WMI)
+InterestingProcesses – “Interesting” processes- defensive products and admin tools
+RegistryAutoLogon – Registry autologon information
+RegistryAutoRuns – Registry autoruns
+DNSCache – DNS cache entries (via WMI)
+ARPTable – Lists the current ARP table and adapter information (equivalent to arp -a)
+AllTcpConnections – Lists current TCP connections and associated processes
+AllUdpConnections – Lists current UDP connections and associated processes
+NonstandardProcesses – Processes with binary paths not in C:\Windows\
+If the user is in high integrity the following additional actions are run:
+
+SysmonConfig – Sysmon configuration from the registry
+SeatBelt.exe user collects the following user data:
+
+Checks if Firefox has history files
+Checks if Chrome has history files
+TriageIE – Internet Explorer bookmarks and history, last 7 days
+SavedRDPConnections – Saved RDP connections, including username hints
+RecentRunCommands – Recent “run” commands
+PuttySessions – Interesting settings from any saved Putty configurations
+PuttySSHHostKeys – Saved putty SSH host keys
+RecentFiles – Parsed “recent files” shortcuts, last 7 days
+If the user is in high integrity, these checks are run for ALL users instead of just the current user.
+
+Miscellaneous checks:
+
+CurrentDomainGroups – The current user’s local and domain groups
+Patches – Installed patches via WMI (takes a bit on some systems)
+LogonSessions – User logon session data
+KerberosTGTData – ALL TEH TGTZ!
+InterestingFiles – “Interesting” files matching various patterns in the user’s folder
+IETabs – Open Internet Explorer tabs
+TriageChrome – Chrome bookmarks and history
+TriageFirefox – Firefox history (no bookmarks)
+RecycleBin – Items in the Recycle Bin deleted in the last 30 days – only works from a user context!
+KerberosTickets – List Kerberos tickets. If elevated, list all grouped by all logon sessions.
+4624Events – 4624 logon events from the security event log
+4648Events – 4648 explicit logon events from the security event log
+SeatBelt.exe all will run ALL enumeration checks, can be combined with full.
+
+SeatBelt.exe [CheckName] [CheckName2] … will run one or more specified checks only (case-sensitive naming!)
+
+SeatBelt.exe [system/user/all/CheckName] full will prevent any filtering and will return complete results. By default, certain checks are filtered (e.g. services NOT in C:\Windows\, etc.)
+
 
 ###################
 WINENUM
@@ -826,3 +898,46 @@ Get-ApplicationHost
 Get-SiteListPassword
 Get-CachedGPPPasswords
 Invoke-AllChecks
+
+
+
+###################
+Get-HostProfile.ps1
+###################
+function Get-HPFileHash
+function Get-HPStreamHash
+function Get-HPCachedFileHash
+function ConvertTo-CompressedString {
+function ConvertFrom-CompressedString {
+function Get-NetworkConnection {
+function Get-ServiceNameFromTag($ProcessId, $ServiceTag)
+function Get-Tcp4Connections {
+function Get-Tcp6Connections {
+function Get-Udp4Connections {
+function Get-Udp6Connections {
+function Invoke-NetStat
+function Get-CurrentUserTokenGroupSid {
+function Get-Shortcut {
+function Get-RecentFiles {
+function Get-Drivers {
+function Get-RDPSharedDrives {
+function Get-RegRDPClientConnections {
+function Get-ProcessProfile {
+function Get-SystemEnvironmentVariables {
+function Get-UserEnvironmentVariables {
+function Get-WinEventForwardingSubscriptionManager {
+function Get-WinEventForwardingSubscription {
+function Get-WindowsEventForwarding {
+function Get-PuttyConfig {
+function Get-ProxySettings {
+function Test-RemoteSessionEnumeration {
+function Test-RemoteSamrEnumeration {
+function Get-OperatingSystem {
+function Get-SysmonConfig {
+function Get-SymantecEndpointProtectionConfiguration {
+function Get-VolumeInformation {
+function Get-HostProfile {
+function Get-RegistryGPOSecuritySettings {
+function Get-RegistryGPOAdministrativeTemplates {
+function Get-RegistrySecuritySettings {
+function ConvertTo-JsonV2 {

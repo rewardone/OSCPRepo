@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Seatbelt</title>
+</head><body>Seatbelt<br/>
+Seatbelt is by far the meatiest project being released. It’s a clearinghouse of situational awareness “safety checks”. That is, it manages the collection of host data that may be interesting from both offensive and defensive perspectives. Think everything from PowerShell security settings, to current user Kerberos tickets, to deleted Recycle Bin items, and more (40+ current checks!)<br/>
+<br/>
+Seatbelt draws on a TON of existing work, highlighted in the README.md, and has already proven itself to be pretty useful on our engagements. It was heavily influenced by @tifkin_‘s <a href="https://github.com/leechristensen/Random/blob/master/PowerShellScripts/Get-HostProfile.ps1">Get-HostProfile.ps</a>1 and @andrewchiles‘ <a href="https://github.com/threatexpress/red-team-scripts/blob/master/HostEnum.ps1">HostEnum.ps1</a>&nbsp;PowerShell scripts.<br/>
+<br/>
+SeatBelt.exe system collects the following system data:<br/>
+<br/>
+BasicOSInfo – Basic OS info (i.e. architecture, OS version, etc.)<br/>
+RebootSchedule – Reboot schedule (last 15 days) based on event IDs 12 and 13<br/>
+TokenGroupPrivs – Current process/token privileges (e.g. SeDebugPrivilege/etc.)<br/>
+UACSystemPolicies – UAC system policies via the registry<br/>
+PowerShellSettings – PowerShell versions and security settings via the registry<br/>
+AuditSettings – Audit settings via the registry<br/>
+WEFSettings – Windows Event Forwarding (WEF) settings via the registry<br/>
+LSASettings – LSA settings (including auth packages)<br/>
+UserEnvVariables – Current user environment variables<br/>
+SystemEnvVariables – Current system environment variables<br/>
+UserFolders – Folders in C:\Users\<br/>
+NonstandardServices – Services with binary paths not in C:\Windows\<br/>
+InternetSettings – Internet settings, including proxy configs<br/>
+LapsSettings – LAPS settings, if installed<br/>
+LocalGroupMembers – Members of local admins, RDP, and remote DCOM groups<br/>
+MappedDrives – Currently mapped drives<br/>
+RDPSessions – Current incoming RDP sessions<br/>
+WMIMappedDrives – Mapped drives via WMI<br/>
+NetworkShares – Network shares<br/>
+FirewallRules – Deny firewall rules, “full” dumps all<br/>
+AntiVirusWMI – Registered antivirus (via WMI)<br/>
+InterestingProcesses – “Interesting” processes- defensive products and admin tools<br/>
+RegistryAutoLogon – Registry autologon information<br/>
+RegistryAutoRuns – Registry autoruns<br/>
+DNSCache – DNS cache entries (via WMI)<br/>
+ARPTable – Lists the current ARP table and adapter information (equivalent to arp -a)<br/>
+AllTcpConnections – Lists current TCP connections and associated processes<br/>
+AllUdpConnections – Lists current UDP connections and associated processes<br/>
+NonstandardProcesses – Processes with binary paths not in C:\Windows\<br/>
+If the user is in high integrity the following additional actions are run:<br/>
+<br/>
+SysmonConfig – Sysmon configuration from the registry<br/>
+SeatBelt.exe user collects the following user data:<br/>
+<br/>
+Checks if Firefox has history files<br/>
+Checks if Chrome has history files<br/>
+TriageIE – Internet Explorer bookmarks and history, last 7 days<br/>
+SavedRDPConnections – Saved RDP connections, including username hints<br/>
+RecentRunCommands – Recent “run” commands<br/>
+PuttySessions – Interesting settings from any saved Putty configurations<br/>
+PuttySSHHostKeys – Saved putty SSH host keys<br/>
+RecentFiles – Parsed “recent files” shortcuts, last 7 days<br/>
+If the user is in high integrity, these checks are run for ALL users instead of just the current user.<br/>
+<br/>
+Miscellaneous checks:<br/>
+<br/>
+CurrentDomainGroups – The current user’s local and domain groups<br/>
+Patches – Installed patches via WMI (takes a bit on some systems)<br/>
+LogonSessions – User logon session data<br/>
+KerberosTGTData – ALL TEH TGTZ!<br/>
+InterestingFiles – “Interesting” files matching various patterns in the user’s folder<br/>
+IETabs – Open Internet Explorer tabs<br/>
+TriageChrome – Chrome bookmarks and history<br/>
+TriageFirefox – Firefox history (no bookmarks)<br/>
+RecycleBin – Items in the Recycle Bin deleted in the last 30 days – only works from a user context!<br/>
+KerberosTickets – List Kerberos tickets. If elevated, list all grouped by all logon sessions.<br/>
+4624Events – 4624 logon events from the security event log<br/>
+4648Events – 4648 explicit logon events from the security event log<br/>
+SeatBelt.exe all will run ALL enumeration checks, can be combined with full.<br/>
+<br/>
+SeatBelt.exe [CheckName] [CheckName2] … will run one or more specified checks only (case-sensitive naming!)<br/>
+<br/>
+SeatBelt.exe [system/user/all/CheckName] full will prevent any filtering and will return complete results. By default, certain checks are filtered (e.g. services NOT in C:\Windows\, etc.)<br/>
+<br/>
+Here’s an example of some of the system collection:</body></html>

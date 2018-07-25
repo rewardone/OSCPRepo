@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get-GPOUserRights</title>
+</head><body>Do all kinds of fun stuff:<br/>
+SeRemoteInteractiveLogonRight = RDP Access^<br/>
+SeTcbPrivilege = “Act as part of the operating system”^<br/>
+SeMachineAccountPrivilege = Add machines to domain^<br/>
+SeBackupPrivilege = Read any file via backup API^<br/>
+AND MANY MORE!!!<br/>
+Slide Notes<br/>
+<br/>
+Get-GPOUserRights<br/>
+- Windows separates out the concept of 'rights' from the concept of 'permissions' and it can be super confusing for people more familiar with Linux.<br/>
+- Some of these 'rights' are pretty mundane, but some are quite insanely powerful and let you do things like RDP to the host, take ownership of any file, or debug any process, or “act as part of the operating system”.<br/>
+- All the best ones boil down to ‘let you mimikatz’.<br/>
+- Anyway, Grouper sorts the wheat from the chaff for you in this category - it only shows you the rights that have meaningful security implications.<br/>
+- The most common one of these that you’ll see is “SeMachineAccountPrivilege” which will get you excited for a second until you realise what it does.</body></html>

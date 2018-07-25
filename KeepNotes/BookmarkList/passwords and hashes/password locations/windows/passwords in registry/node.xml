@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Passwords in Registry</string>
   <key>nodeid</key><string>eeaa2049-51ce-4610-9b08-1aef3ef73f24</string>
   <key>modified_time</key><integer>1524236215</integer>

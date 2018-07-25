@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>How do I know which policies apply to which users and computers?<br/>
+TL;DR use PowerView<br/>
+<br/>
+To see the policies:<br/>
+Get-DomainGPO<br/>
+<br/>
+To see the policies that apply to a given user/computer:<br/>
+Get-DomainGPO -ComputerName testserver<br/>
+Get-DomainGPO -UserName lowpriv<br/>
+<br/>
+To see the computers that a policy applies to:<br/>
+Get-DomainOU | WhereObject {$_.gplink.contains(“{PUT THE GPO UID<br/>
+HERE}”)} | %{Get-DomainComputer -ADSPath $_.distinguishedname}<br/>
+<br/>
+To figure out which settings from which policies actually apply and which get overwritten...<br/>
+1. Local GPOs are applied first.<br/>
+2. Then GPOs linked to a site.<br/>
+3. Then GPOs linked to the domain.<br/>
+4. Then GPOs linked to OUs, from the top down.<br/>
+5. If multiple GPOs are linked at the same level, they apply from the bottom-up.<br/>
+6. Last writer of a given setting wins.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Slide Notes<br/>
+- OK so you've found a policy which is gonna make computers super vulnerable but you can't tell which machines it's going to apply to. How do you figure it out?<ul><li style="list-style-type: none">The simple version is: Get PowerView, get the GPO's UID using Get-DomainGPO, and do like this:</li>
+</ul>
+- That'll tell you which OU(s) the policy is linked to. It's pretty rare in my experience to see people linking a GPO to multiple OUs but it can be done.<br/>
+- If you pipe the results from that into some more PowerView goodness, like this:<br/>
+- You should get a list of all computers to which a given policy applies. Same trick but with Get-DomainUser and you'll get the users it applies to. EZ.<br/>
+- Well, it would be, but then there's the whole issue of policies overwriting one another, etc etc. I don't have an easy way to address that issue for you, but I can give you some useful info to help figure it out yourself:<br/>
+- WMI filtering and read permissions on the policy itself can also affect whether a policy applies to a given user/computer. WMI filtering usually boils down to targeting policy based on OS version, but it can target a bunch of other attributes of a host too.</body></html>

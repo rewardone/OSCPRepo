@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get-GPOFileUpdate</title>
+</head><body>Usually used to copy a file from file share &gt; local FS<br/>
+If it’s an executable, and you can edit it...<br/>
+Config files often have creds, e.g. SQL conn. strings<br/>
+<br/>
+<br/>
+Slide Notes<br/>
+<br/>
+-This is for modifying, replacing, moving, adding files to a windows system. Commonly used for things like updating local config files with cleartext credentials in them, and it will often be used to "Install" simple in-house developed executables or scripts (from a network drive with weak file permissions no doubt) to paths on the local filesystem.<br/>
+-In -online mode, Grouper will return the file permissions for the source file and will also check if the current user can modify it.<br/>
+-Depending on the type of file being placed, you might need to get creative to do anything with this, but if it’s just a script or an exe, and it actually gets run, sub it out for something fun, have a real nice time.</body></html>

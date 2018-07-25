@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SharpWMI</title>
+</head><body>SharpWMI<br/>
+The last small tool (SharpWMI) is a simple C# wrapper for various WMI functionality. It allows for generic remote (or local) WMI querying, remote process execution through Win32_Process, and remote VBS execution through “temporarily” permanent WMI event subscriptions.<br/>
+<br/>
+Local system enumeration &nbsp;:<br/>
+&nbsp; &nbsp; SharpWMI.exe action=query query="select * from win32_service" [namespace=BLAH]<br/>
+&nbsp; &nbsp; Ex: SharpWMI.exe action=query query="select * from win32_process"<br/>
+&nbsp; &nbsp; Ex: SharpWMI.exe action=query query="SELECT * FROM AntiVirusProduct" namespace="root\SecurityCenter2"<br/>
+<br/>
+Remote system enumeration :<br/>
+&nbsp; &nbsp; SharpWMI.exe action=query computername=HOST1[,HOST2,...] query="select * from win32_service" [namespace=BLAH]<br/>
+&nbsp; &nbsp; Ex: SharpWMI.exe action=query computername=primary.testlab.local query="select * from win32_service"<br/>
+&nbsp; &nbsp; Ex: SharpWMI.exe action=query computername=primary,secondary query="select * from win32_process<br/>
+<br/>
+Remote process creation &nbsp; :<br/>
+&nbsp; &nbsp; SharpWMI.exe action=create computername=HOST[,HOST2,...] command="C:\temp\process.exe [args]"<br/>
+&nbsp; &nbsp; Ex: SharpWMI.exe action=create computername=primary.testlab.local command="powershell.exe -enc ZQBj..."<br/>
+<br/>
+Remote VBS execution &nbsp; &nbsp; &nbsp;:<br/>
+&nbsp; &nbsp; SharpWMI.exe action=executevbs computername=HOST[,HOST2,...]<br/>
+&nbsp; &nbsp; Ex: SharpWMI.exe action=executevbs computername=primary.testlab.local<br/>
+<br/>
+<br/>
+<br/>
+Nothing revolutionary here, but the WMI event subscription approach has served us well. A timer-based event subscription is created on the remote system with arbitrary VBS as the ActiveScriptEventConsumer payload. The event triggers, your VBS is executed, and everything is cleaned up:<br/>
+<br/>
+C:\Temp&gt;SharpWMI.exe action=executevbs computername=primary.testlab.local<br/>
+<br/>
+[*] Creating 'Timer' object on primary.testlab.local<br/>
+[*] Setting 'Debug' event filter on primary.testlab.local<br/>
+[*] Setting 'Debug' event consumer on primary.testlab.local<br/>
+[*] Binding 'Debug' event filter and consumer on primary.testlab.local<br/>
+<br/>
+[*] Waiting 45 seconds for event to trigger on primary.testlab.local ...<br/>
+<br/>
+[*] Removing 'Timer' internal timer from primary.testlab.local<br/>
+[*] Removing FilterToConsumerBindingr from primary.testlab.local<br/>
+[*] Removing 'Debug' event filter from primary.testlab.local<br/>
+[*] Removing 'Debug' event consumer from primary.testlab.local<br/>
+<br/>
+<br/>
+The filter/consumer name can be modified with the eventname=BLAH argument. If you want to change the VBS executed, modify the vbsPayload string at the top of the project before compiling. <a href="https://github.com/tyranid/DotNetToJScript">DotNetToJScript</a>&nbsp;works great here ;)</body></html>

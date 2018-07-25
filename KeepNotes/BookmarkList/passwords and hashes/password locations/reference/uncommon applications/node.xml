@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Uncommon Applications</string>
   <key>nodeid</key><string>f8211e98-34ff-4c60-b715-f299e355c34a</string>
   <key>modified_time</key><integer>1524105080</integer>

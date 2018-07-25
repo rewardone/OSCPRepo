@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Web Browsers</string>
   <key>nodeid</key><string>47ab1ca1-f528-4f2e-bd2c-e56aab20840c</string>
   <key>modified_time</key><integer>1524104751</integer>

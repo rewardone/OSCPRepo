@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Get-GPOScripts</string>
+  <key>nodeid</key><string>94fd9717-6ca9-4b3e-81a1-6ff45c935619</string>
+  <key>modified_time</key><integer>1532536873</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1532536847</integer>
+  <key>order</key><integer>10</integer>
+</dict>
+</node>

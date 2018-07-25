@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get-GPORegSettings</title>
+</head><body>All kinds of settings that are defined in the registry<br/>
+<br/>
+If you add extra policy templates (ADMX files) to Group Policy, this is where those policies show up, e.g. MS Office, Citrix, etc.<br/>
+<br/>
+<br/>
+<br/>
+Slide Notes<br/>
+<br/>
+-Despite the similar name, not the same thing - this category is full of Windows configuration options that are ALSO set in the registry, but group policy provides a nice<br/>
+-GUI interface for admins to set them rather than having to define the keys manually. There's some fun potentially abusable bits in here, and unfortunately an enormous amount of very tedious crud.<br/>
+-One less-tedious thing is AlwaysInstallElevated. This is a fun option that grants Push-button privesc. Basically this says ‘all WMI installers run as admin’. msfvenom will output a wmi to abuse it easily, as will PowerUp.<br/>
+-This section will also see which servers are used for windows updates, maybe try out that nifty WSUS attack those french guys presented at defcon last year?<br/>
+-All your MS office settings live in here too. Mostly boring, but if you can write to the path where the default office templates live, you can do something like put some fun macros in them.</body></html>

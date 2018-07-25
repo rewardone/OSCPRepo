@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>SharpDump</string>
+  <key>nodeid</key><string>7993daba-f2f1-429f-b056-cbece824e75c</string>
+  <key>modified_time</key><integer>1532525767</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1532525706</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>
