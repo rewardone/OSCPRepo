@@ -15,6 +15,10 @@ Other flags<br/>
 start= auto <br/>
 error= ignore<br/>
 <br/>
+sc description "Windows UDP Processor" "Manages Windows UDP Routing Traffic"<br/>
+*note: I always try to make things look as un-suspicious as possible hence the "sc description" command to add a description to the service. It's the little things kids.<br/>
+<br/>
+<br/>
 #The sc utility throws an error each time we start the service with one of our malicious commands in the binpath. &nbsp;This is because the net user and net localgroup commands do not point to the service binary and therefore the SCM cannot communicate with the service. &nbsp;Never fear, however, as the error is thrown only after issuing our malicious commands.<br/>
 <br/>
 Easy way around this is to have cmd.exe /k &lt;pathtoexe&gt;. The cmd.exe shell will close, but your second launched process will continue to run. <br/>
