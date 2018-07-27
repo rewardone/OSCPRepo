@@ -14,4 +14,7 @@
 <b>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa</b><ul><li style="list-style-type: none">Set the value of the registry key to: “RunAsPPL”=dword:00000001.</li>
 <li style="list-style-type: none">&nbsp;This key will enable LSA protection. It prevents non-protected processes from interacting with LSASS </li>
 </ul>
-</body></html>
+<br/>
+The keys involved for these operations (changing passwords, enable/disable, etc.) are mostly in the <br/>
+<b>HKLM\SAM\SAM\Domains\Account\Users </b><br/>
+key which requires SYSTEM access for write AND read access.</body></html>
