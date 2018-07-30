@@ -39,4 +39,11 @@ NOTE: In order for an application server to be configured with “Kerberos Uncon
 <br/>
 <img src="image.png" /><br/>
 <br/>
+<br/>
+Tl;dr: The TGT will be stuffed into memory where an attacker can extract and reuse it if:<br/>
+<ul><li>You are able to compromise a server that has unconstrained delegation set.</li>
+<li>You are able to trick a domain user that doesn’t have ‘Account is sensitive and cannot be delegated’ enabled (see Protections below) to connect to any service on the machine. This includes clicking on \\SERVER\Share.</li>
+</ul>
+<br/>
+<br/>
 </body></html>

@@ -11,4 +11,6 @@
 -version 2<br/>
 <br/>
 Some commands may need to accept an EULA<br/>
-</body></html>
+<br/>
+<br/>
+Also, due to some of the powershell.exe peculiarities <a href="http://www.harmj0y.net/blog/powershell/make-powerview-great-again/">I mentioned a bit ago</a>, if you are using PowerShell Version 2, you need to launch powershell.exe in single-thread apartment mode (with the “-sta” flag) in order for the token impersonation to work properly:</body></html>
