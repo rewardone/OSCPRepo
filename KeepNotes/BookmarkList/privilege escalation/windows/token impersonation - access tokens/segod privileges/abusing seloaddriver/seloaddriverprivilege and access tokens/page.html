@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SeLoadDriverPrivilege and Access Tokens</title>
+</head><body><b>0x02 – SeLoadDriverPrivilege and Access Tokens &nbsp;</b><br/>
+“Load and unload device drivers” policy is accessible from the local group policy editor (gpedit.msc) under the following path: “Computer configuration-&gt; Windows settings-&gt; Security Settings -&gt; User Rights Assignment”<br/>
+<br/>
+Given its implications, the default values of this policy include only the group of “administrators” and “print operators“.<br/>
+NOTE: The print operators group may seem quite innocuous to the naked eye, however it has the ability to load device drivers in domain controllers as well as manage printer-type objects in the active directory. Additionally, this group has the capabilities to authenticate itself in a domain controller, so it is of special interest to verify the membership of users in this group.<br/>
+<br/>
+The assignment of this policy allows the activation of “SeLoadDriverPrivilege” in the user access tokens, and consequently allowing the loading of device controllers.<br/>
+<br/>
+An access token is a type of object that describes the security context of a process or thread, and is assigned to all processes created in the system. Among other things, it specifies the SID (Security identifier) that identifies the user account, the SIDs linked to the different groups of which it is a member, as well as the list of privileges assigned to the user or to the groups to which he belongs to. This information is essential in the access control model of the operating system and this information is verified every time that you try to access any <a href="https://msdn.microsoft.com/es-es/library/windows/desktop/aa379557(v=vs.85).aspx">securizable object</a>&nbsp;in the system.<br/>
+<br/>
+To understand the exploitation procedure (which will be explained later), it is necessary to take into account that starting from Windows Vista, the operating system implements a privilege separation technique called “User Account Control”, better known as UAC. As a summary, this security measure is based on the “minimum privilege principle” limiting the privileges of certain processes of the user through the use of ‘<a href="https://blog.didierstevens.com/2008/05/26/quickpost-restricted-tokens-and-uac/">restricted access tokens</a>‘, which omit certain privileges assigned to the user.<br/>
+<br/>
+Taking into account this information, we will analyze the exploitation process of this privilege to load a driver from a user account without administration permissions</body></html>

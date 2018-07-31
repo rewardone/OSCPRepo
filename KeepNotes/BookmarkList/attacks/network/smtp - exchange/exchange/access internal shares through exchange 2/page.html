@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Internal Shares Through Exchange ActiveSync</title>
+</head><body>Bluf<br/>
+Exchange ActiveSync (EAS) is a protocol for synchronising emails, policies and other items between a messaging server and mobile devices.<br/>
+<br/>
+It was found that EAS could be used to remotely access Windows file shares and internal SharePoint sites needing only Exchange user mailbox credentials. This was confirmed against Exchange 2013 and 2016 with near-default configurations, despite file share access being <a href="https://technet.microsoft.com/en-us/library/aa998911%28EXCHG.140%29.aspx">removed</a>&nbsp;from Outlook Web App in Exchange 2010.<br/>
+<br/>
+MWR have <a href="https://labs.mwrinfosecurity.com/tools/peas-access-internal-fileshares-through-exchange-activesync/">released</a>&nbsp;a library (PEAS) with an accompanying tool based on this research to assist in accessing file shares and executing other EAS commands.<br/>
+<br/>
+<br/>
+File Share Access<br/>
+Two Windows file shares were created on the server. One was set to require administrator permissions and the other allowed access to the everyone group. Files were placed in both of the shared directories. The goal was to list the file share contents and download files from the shares using EAS.<br/>
+<br/>
+The EAS documentation indicated that file share contents could be listed with the Search command and files read with the ItemOperations command. The store type had to be set to DocumentLibrary for file share access.<br/>
+<br/>
+As Search was not one of the commands supported by pyActiveSync, the library was extended to implement it.<br/>
+<br/>
+A standard user mailbox account was used to authenticate to EAS for the first test. Supplying a UNC path to the permissive share, e.g. \\test-server\share, returned an error code 14 in the response meaning "Credentials required". Further examination of the documentation located a UserName and Password element in one of the <a href="https://msdn.microsoft.com/en-us/library/gg675461%28v=exchg.80%29.aspx">sub elements</a>&nbsp;of the Search command. Sending the same username and password used to authenticate granted access to the share and successfully returned a directory listing.<br/>
+<br/>
+Changing the request to target the share restricted to administrators, resulted in a status code 5: "Access denied". Trying again using the administrator credentials to both authenticate to the EAS server and in the search options, resulted in the error seen earlier: "UserDisabledForSync". However, authenticating to EAS with the standard user account and supplying the administrator credentials in the Search request successfully returned a directory listing for the share.<br/>
+<br/>
+Next, accessing files on the shares was attempted with the ItemOperations command and the Fetch operation. The permissions behaviour was found to be the same as with Search and the contents of each file specified was successfully returned as base64.<br/>
+<br/>
+A new Windows 7 virtual machine was added to the domain to check if shares on different machines could be accessed, not just those on the Exchange server or domain controller. A share was created on this machine. The share could be accessed using the computer name in the UNC path with the same method as used previously.<br/>
+<br/>
+Additionally it was found that all shares could be listed by providing the UNC path to a given host without a share name e.g. \\test-pc. However using the IP addresses or FQDN of the machines in place of the hostname was not successful.<br/>
+<br/>
+To further test whether permissions were being controlled effectively, detailed file share auditing was enabled. Observing events in the event log with ID 5145 showed that the account being used to access the shares was the one supplied in the Search options and not another with different privileges.<br/>
+<br/>
+</body></html>

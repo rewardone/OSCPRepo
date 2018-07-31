@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Abusing SeLoadDriver</title>
+</head><body><b>0x01 – Preamble &nbsp;</b><br/>
+Today, we will analyze the impact associated to the assignment of the “Load and unload device drivers” policy, which specifies the users who are allowed to dynamically load device drivers. The activation of this policy in the context of non-privileged users implies a significant risk due to the possibility of executing code in kernel space.<br/>
+<br/>
+Although this is a <a href="https://github.com/hatRiot/token-priv/blob/master/abusing_token_eop_1.0.txt">well known</a>&nbsp;technique, it can not be found in post-exploitation and privilege escalation tools, and there are no tools which carry out automatic exploitation neither.<br/>
+<br/>
+<br/>
+WARNING<br/>
+<i>As of Windows 10 Version 1803, NTLoadDriver seems to forbid references to registry keys under HKEY_CURRENT_USER.</i>&nbsp; <br/>
+<br/>
+&nbsp; <br/>
+<br/>
+</body></html>

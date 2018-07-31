@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ActiveSync Documentation</title>
+</head><body>The <a href="https://msdn.microsoft.com/en-us/library/cc425499%28EXCHG.80%29.aspx">EAS documentation</a>&nbsp;was reviewed to provide an understanding of the protocol. EAS was found to use XML, encoded as WAP Binary XML (WBXML), over HTTPS. This is what an example request looks like as XML:<br/>
+<br/>
+&lt;?xml version="1.0" encoding="utf-8"?&gt; <br/>
+&lt;Sync xmlns:airsyncbase="AirSyncBase" xmlns="AirSync"&gt; <br/>
+&nbsp; &lt;Collections&gt; <br/>
+&nbsp; &nbsp; &lt;Collection&gt; <br/>
+&nbsp; &nbsp; &nbsp; &lt;SyncKey&gt;1&lt;/SyncKey&gt; <br/>
+&nbsp; &nbsp; &nbsp; &lt;CollectionId&gt;7&lt;/CollectionId&gt; <br/>
+&nbsp; &nbsp; &lt;/Collection&gt; <br/>
+&nbsp; &lt;/Collections&gt; <br/>
+&lt;/Sync&gt;<br/>
+<br/>
+Whereas WBXML looks like the following when displayed by a hex editor:<br/>
+<br/>
+0000000: 0301 6a00 455c 4f4b 0331 0001 5203 3700 ..j.E\OK.1..R.7. <br/>
+0000010: 0101 0101 .... <br/>
+<br/>
+<br/>
+This data is sent via an HTTP POST request to the EAS web endpoint, e.g. /Microsoft-Server-ActiveSync for Exchange, along with the command, user and device info as GET parameters. Headers are used for authorisation, session management and specifying the EAS version.<br/>
+<br/>
+The server responds to the command similarly with WBXML in the HTTP response body.</body></html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Web Cookies</title>
+</head><body>http://pauldotcom.com/2012/07/post-exploitation-recon-with-e.html<br/>
+<br/>
+logman start LogCookies -p Microsoft-Winodws-WinInet -o logcookies.etl -ets<br/>
+<br/>
+wevtutil qe logcookies.etl /If:true /f:Text | find /i "cookie added"<br/>
+wevtutil qe logcookies.etl /If:true /f:Text | find /i "POST"<br/>
+<br/>
+logman stop LogCookies -ets</body></html>

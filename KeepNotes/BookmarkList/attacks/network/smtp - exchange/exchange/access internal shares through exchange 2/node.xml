@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Access Internal Shares Through Exchange ActiveSync</string>
+  <key>nodeid</key><string>048fa02d-66dc-460a-b9d3-01bf7e60d2e1</string>
+  <key>modified_time</key><integer>1532957019</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1532956569</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

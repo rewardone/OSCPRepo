@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>nodeid</key><string>ed9a772b-f73c-4b03-b5c2-d53716b29b79</string>
+  <key>modified_time</key><integer>1532973157</integer>
+  <key>expanded2</key><true/>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1532961595</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>S4U2Self Proxy</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>1</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>
