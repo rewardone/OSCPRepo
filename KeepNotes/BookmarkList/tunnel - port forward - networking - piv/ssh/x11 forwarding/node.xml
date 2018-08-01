@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>X11 Forwarding</string>
+  <key>nodeid</key><string>9dbdbc94-6068-4523-a2e1-f64c237bdaa2</string>
+  <key>modified_time</key><integer>1533151694</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1533151672</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

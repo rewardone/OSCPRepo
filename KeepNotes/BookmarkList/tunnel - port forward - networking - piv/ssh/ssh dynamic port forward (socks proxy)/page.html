@@ -3,7 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>SSH Dynamic Port Forward (SOCKs Proxy)</title>
-</head><body>Anything sent to the local port is forwarded through the SSH tunnel. At the SSH server, the application protocol of the message being sent through the tunnel is used to determine where to send the traffic. SSH functions as a SOCKS4 or SOCKS5 proxy server.<br/>
+</head><body><a href="https://www.openssh.com/txt/socks4.protocol">SOCKS Protocol</a>: A protocol for TCP proxy across firewalls<br/>
+<br/>
+Anything sent to the local port is forwarded through the SSH tunnel. At the SSH server, the application protocol of the message being sent through the tunnel is used to determine where to send the traffic. SSH functions as a SOCKS4 or SOCKS5 proxy server.<br/>
 Dynamic forwarding requires that you have access to the pivot machine and ssh is enabled<br/>
 <br/>
 SSH dynamic port forwarding is set up on the attacker’s system by entering:<br/>

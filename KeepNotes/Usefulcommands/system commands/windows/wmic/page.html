@@ -13,4 +13,14 @@
 </a>WMIC Reading References<br/>
 <a href="https://msdn.microsoft.com/en-us/library/aa389763(v=vs.85).aspx">Creating a WMI Script - msdn</a><br/>
 <a href="https://technet.microsoft.com/en-us/scriptcenter/dd742341.aspx">Learn About Scripting for Windows Management Instrumentation (WMI) - technet</a><br/>
-<a href="https://msdn.microsoft.com/en-us/library/aa823192(VS.85).aspx">Managed Object Format (MOF)</a></body></html>
+<a href="https://msdn.microsoft.com/en-us/library/aa823192(VS.85).aspx">Managed Object Format (MOF)</a><br/>
+https://isc.sans.edu/diary/The+Grammar+of+WMIC/2376<br/>
+<br/>
+<br/>
+For an intro and overview of WMIC, please read my earlier <a href="http://www.google.com/search?hl=en&rls=en&q=site%3Aisc.sans.org+skoudis+wmic&btnG=Search">articles</a>. &nbsp;I don’t want to regurgitate those here. &nbsp;For most of the way you’ll want to use WMIC, its practical syntax is as follows:<br/>
+<br/>
+C:\&gt; wmic [stuff to make it run against a remote system] [alias] [where with where clause] [verb with verb clause]<br/>
+<br/>
+/user:[admin_user] /password:[password] /node:[machine_name]<br/>
+<br/>
+If you don’t provide a /password on the WMIC line, it will prompt you for one after you hit ENTER.</body></html>

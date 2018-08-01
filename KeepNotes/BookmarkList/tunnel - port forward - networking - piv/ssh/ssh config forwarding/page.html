@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSH Config Forwarding</title>
+</head><body>~/.ssh/config<br/>
+It’s sometimes easier to configure options on your SSH client system in ~/.ssh/config for hosts you use a lot rather than having to type out long command lines.<br/>
+<br/>
+Using ~/.ssh/config also makes it easier to use other tools that use SSH (e.g. scp and rsync). &nbsp;It’s possible to tell other tools that SSH listens on a different port, but it’s a pain.<br/>
+<br/>
+Host 10.0.0.1<br/>
+Port 2222<br/>
+User ptm<br/>
+ForwardX11 yes<br/>
+DynamicForward 127.0.0.1:1080<br/>
+RemoteForward 80 127.0.0.1:8000<br/>
+LocalForward 1521 10.0.0.99:1521<br/>
+The above lines are explained more fully in the other subsection on this page.</body></html>

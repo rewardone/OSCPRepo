@@ -3,7 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>SSH Reverse Port Forwarding</title>
-</head><body>Remote port forwarding: it forwards traffic coming to a remote port to a specified local port. For example, all traffic coming to port 1234 on the server (host) could be forwarded to port 23 on the client (localhost).<br/>
+</head><body>Make services on your local system / local network accessible to the remote host via a remote listener. &nbsp;This sounds like an odd thing to want to do, but perhaps you want to expose a services that lets you download your tools.<br/>
+<br/>
+NB: Remember that you need to be root to bind to TCP port &lt;1024. &nbsp;Higher ports are used in the examples below<br/>
+<br/>
+Remote port forwarding: it forwards traffic coming to a remote port to a specified local port. For example, all traffic coming to port 1234 on the server (host) could be forwarded to port 23 on the client (localhost).<br/>
 <br/>
 Reverse/Remote SSH Portforwarding:<br/>
 Note that if you use OpenSSH sshd server, the server’s GatewayPorts option needs to be enabled (set to yes or clientspecified - GatewayPorts yes) for this to work (check file /etc/ssh/sshd_config on the server). Otherwise (default value for this option is no), the server will always force port bound on the loopback interface only.<br/>

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>https://www.n00py.io/2017/12/raining-shells-on-linux-environments-with-hwacha/<br/>
+https://github.com/n00py/Hwacha<br/>
+<br/>
+<br/>
+Prime functions include<br/>
+<br/>
+Credential Testing<br/>
+Data Collection<br/>
+Key-Based Authentication<br/>
+Meterpreter Execution<br/>
+Native Shellcode Execution<br/>
+Web Delivery (Pupy)<br/>
+Mimipenguin Execution (plaintext credentials in memory)<br/>
+MacOS Meterpreter<br/>
+Binaries with SUDO (Bella RAT)<br/>
+<br/>
+Current modules (1/Aug/18)<br/>
+Available Modules:<br/>
+[*] meterpreter &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use this to execute a meterpreter agent on the target(s).<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; REQURED ARGUMENTS: LHOST , LPORT<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OPTIONAL ARGUMENTS: TYPE {python, php, 32, 64, osx}<br/>
+[*] mimipenguin &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use this to execute a mimipenguin on the target(s) to recover credentials. &nbsp;(Requires root)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OPTIONAL ARGUMENTS: LHOST, LPORT<br/>
+[*] keys &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Use this to collect SSH private keys from the target(s).<br/>
+[*] history &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use this to collect shell history files from the target(s).<br/>
+[*] privs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use this to enumerate sudo privileges on the targets(s).<br/>
+[*] web_delivery &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use this to execute a python script on the target(s).<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; REQURED ARGUMENTS: PATH<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OPTIONAL ARGUMENTS: LISTEN<br/>
+[*] custom_bin &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use this to execute a custom binary on the target(s).<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; REQURED ARGUMENTS: PATH<br/>
+[*] sudo_exec &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use this to execute a custom binary (with sudo) on the target(s).<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; REQURED ARGUMENTS: PATH<br/>
+[*] shellcode &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Use this to execute custom shellcode on the target(s).<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; REQURED ARGUMENTS: PATH<br/>
+<br/>
+The most simple task it can be used for is testing credentials against targets. If we have a valid username and password, we can test it against a range of IPs.<br/>
+<br/>
+Collect data such as -m keys, or -m history<br/>
+<img src="image.png" /><br/>
+<br/>
+Once we find a private key, it will be stored in a “loot” folder on the system running Hwacha. &nbsp;We can also use this key to authenticate instead of using a password, and we can also use the “-x” flag to run a command on the system.<br/>
+<br/>
+We can also use Hwacha to execute a Meterpreter stager. &nbsp;by default, it will chose a python payload.<br/>
+While a python Meterpreter shell is nice, an x64 or x86 Meterpreter shell is better. &nbsp;Why? &nbsp;More functionality. &nbsp;With a native payload you can access the webcam and perform lower level functionality that isn’t possible with the python or PHP payloads.<br/>
+<br/>
+It is also very important to note that this payload does not touch disk! &nbsp;Python is used to execute native shellcode in memory. &nbsp;This greatly reduces our chances of being detected.<br/>
+<br/>
+While I’m a pretty big fan of Metasploit, it is not the only Remote Access/Administration Tool (RAT) on the market. &nbsp;In fact, Pupy is an extremely versatile cross-platform RAT written in python. One way to deploy a Pupy agent is by using the web delivery module in Hwacha. &nbsp;We can direct it to any python file and Hwacha will execute it on the target all within memory. Once you have the python file, use the web_delivery module with Hwacha and supply options for the path and a port for the web server. The target will pull down the file and execute it in memory.<br/>
+<br/>
+Another cool module you can use (which is also in CME) is mimipenguin. &nbsp;If you have root, you can scrape memory and dump plaintext passwords. &nbsp;This is particularly useful if the target system is running GNOME. &nbsp;This module works much like the web delivery module, though you don’t need to supply the path to the script. By default this will wait up to 5 minutes to receive results. &nbsp;The time to complete will vary depending on the system resources.<br/>
+<br/>
+Hwacha also includes modules for MacOS. &nbsp;Much like Linux, you can easily execute python and PHP Meterpreter shells on MacOS. &nbsp;It can also use a native payload as well. &nbsp;At the time of writing, no staged payload exists in Metasploit so to get an x64 Meterpreter shell so Hwacha will copy over a Macho binary and execute it on the target, and remove the payload after. &nbsp;While this is not as good as the diskless shellcode method, it does make the process simple.<br/>
+<br/>
+Executing Binaries with sudo (Bella RAT)<br/>
+While both Meterpreter and Pupy are both great RATs, on MacOS you also have the option of using Bella, which is an extremely powerful RAT for MacOS. &nbsp;We can use the privs module to check if we have sudo permissions on the target system. &nbsp;If we do, we can use the sudo_exec module which will copy a file over and execute it with sudo. &nbsp;Because Bella becomes most useful once root permissions are obtained, this is ideal.<br/>
+After Sending the payload we should see the incoming connection on our Bella Control Center.<br/>
+<br/>
+The functionality within Bella is nothing short of horrifying for the target, as Bella boasts the ability to download almost all sensitive data from the synced iCloud account. &nbsp;Here is a list of modules available in Bella:<br/>
+<br/>
+</body></html>

@@ -11,12 +11,11 @@ Password P@ssw0rd<br/>
 Domain CONTOSO.COM<br/>
 Proxy 10.0.0.10:8080<br/>
 Tunnel 2222:&lt;attackers_machine&gt;:443<br/>
-Run it:<br/>
 <br/>
+Run it:<br/>
 cntlm.exe -c config.conf<br/>
 <br/>
 Or if you’re on Linux:<br/>
-<br/>
 ./cntlm -c config.conf<br/>
 <br/>
 Now, given you have ssh running on the remote host on port 443, you can launch ssh client (openssh/putty) and connect to local port 2222 to get access to the external machine.</body></html>

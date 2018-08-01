@@ -3,7 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>SSH Local Port Forwarding</title>
-</head><body>Local port forwarding forwards traffic coming to a local port to a specified remote port. For example, all traffic coming to port 1234 on the client could be forwarded to port 23 on the server (host).<br/>
+</head><body>Make services on the remote network accessible to your host via a local listener.<br/>
+Remember that you need to be root to bind to TCP port &lt;1024. &nbsp;Higher ports are used in the examples below.<br/>
+<br/>
+Local port forwarding forwards traffic coming to a local port to a specified remote port. For example, all traffic coming to port 1234 on the client could be forwarded to port 23 on the server (host).<br/>
 <br/>
 Note: The value of localhost is resolved after the Secure Shell connection has been established -- so when defining local forwarding (outgoing tunnels), localhost refers to the server (remote host computer) you have connected to.<br/>
 <br/>
