@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Create A TAP</title>
+</head><body>#include &lt;linux/if.h&gt;<br/>
+#include &lt;linux/if_tun.h&gt;<br/>
+&nbsp;<br/>
+int tun_alloc(char *dev) {<br/>
+&nbsp; &nbsp; struct ifreq ifr;<br/>
+&nbsp; &nbsp; int fd, err;<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; if( (fd = open("/dev/net/tun", O_RDWR)) &lt; 0 )<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return tun_alloc_old(dev);<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; memset(&amp;ifr, 0, sizeof(ifr));<br/>
+&nbsp; &nbsp; ifr.ifr_flags = IFF_TAP | IFF_NO_PI; <br/>
+&nbsp;<br/>
+&nbsp; &nbsp; if( *dev )<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; strncpy(ifr.ifr_name, dev, IFNAMSIZ);<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; if( (err = ioctl(fd, TUNSETIFF, (void *) &amp;ifr)) &lt; 0 ) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; close(fd);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return err;<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp;<br/>
+&nbsp; &nbsp; strcpy(dev, ifr.ifr_name);<br/>
+&nbsp; &nbsp; return fd;<br/>
+}</body></html>

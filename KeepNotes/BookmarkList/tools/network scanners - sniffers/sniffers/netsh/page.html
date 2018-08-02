@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Netsh</title>
+</head><body>Sniffing with netsh trace<br/>
+Start it with:<br/>
+PS C:\&gt; netsh trace start capture=yes overwrite=no tracefile=&lt;FilePath.etl&gt;<br/>
+<br/>
+That’ll create a cab and etl file with events &amp; packets<br/>
+<br/>
+Stop the capture with:<br/>
+PS C:\&gt; netsh trace stop<br/>
+<br/>
+Move .etl and .cab back to your machine, and open .etl with NetMon or Microsoft Message Analyzer<br/>
+Only captures up to 250 MB max by default<br/>
+Add “MaxSize=&lt;N&gt;” to alter that<br/>
+<br/>
+Also supports fairly complex filters… View filter syntax with:<br/>
+PS C:\&gt; netsh trace show capturefilterhelp</body></html>

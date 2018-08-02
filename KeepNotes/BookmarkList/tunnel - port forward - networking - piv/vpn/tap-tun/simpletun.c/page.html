@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Simpletun.c</title>
+</head><body>/**************************************************************************<br/>
+&nbsp;* simpletun.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;* http://www.cis.syr.edu/~wedu/seed/Labs/VPN/files/simpletun.c &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *<br/>
+&nbsp;* A simplistic, simple-minded, naive tunnelling program using tun/tap &nbsp; &nbsp;*<br/>
+&nbsp;* interfaces and TCP. Handles (badly) IPv4 for tun, ARP and IPv4 for &nbsp; &nbsp; *<br/>
+&nbsp;* tap. DO NOT USE THIS PROGRAM FOR SERIOUS PURPOSES. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *<br/>
+&nbsp;* &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;* You have been warned. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;* &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;* (C) 2009 Davide Brini. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *<br/>
+&nbsp;* &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;* DISCLAIMER AND WARNING: this is all work in progress. The code is &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;* ugly, the algorithms are naive, error checking and input validation &nbsp; &nbsp;*<br/>
+&nbsp;* are very basic, and of course there can be bugs. If that's not enough, *<br/>
+&nbsp;* the program has not been thoroughly tested, so it might even fail at &nbsp; *<br/>
+&nbsp;* the few simple things it should be supposed to do right. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *<br/>
+&nbsp;* Needless to say, I take no responsibility whatsoever for what the &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;* program might do. The program has been written mostly for learning &nbsp; &nbsp; *<br/>
+&nbsp;* purposes, and can be used in the hope that is useful, but everything &nbsp; *<br/>
+&nbsp;* is to be taken "as is" and without any kind of warranty, implicit or &nbsp; *<br/>
+&nbsp;* explicit. See the file LICENSE for further details. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;*************************************************************************/ <br/>
+<br/>
+#include &lt;stdio.h&gt;<br/>
+#include &lt;stdlib.h&gt;<br/>
+#include &lt;string.h&gt;<br/>
+#include &lt;unistd.h&gt;<br/>
+#include &lt;sys/socket.h&gt;<br/>
+#include &lt;linux/if.h&gt;<br/>
+#include &lt;linux/if_tun.h&gt;<br/>
+#include &lt;sys/types.h&gt;<br/>
+#include &lt;sys/ioctl.h&gt;<br/>
+#include &lt;sys/stat.h&gt;<br/>
+#include &lt;fcntl.h&gt;<br/>
+#include &lt;arpa/inet.h&gt; <br/>
+#include &lt;sys/select.h&gt;<br/>
+#include &lt;sys/time.h&gt;<br/>
+#include &lt;errno.h&gt;<br/>
+#include &lt;stdarg.h&gt;<br/>
+<br/>
+/* buffer for reading from tun/tap interface, must be &gt;= 1500 */<br/>
+#define BUFSIZE 2000 &nbsp; <br/>
+#define CLIENT 0<br/>
+#define SERVER 1<br/>
+#define PORT 55555<br/>
+<br/>
+/* some common lengths */<br/>
+#define IP_HDR_LEN 20<br/>
+#define ETH_HDR_LEN 14<br/>
+#define ARP_PKT_LEN 28<br/>
+<br/>
+int debug;<br/>
+char *progname;<br/>
+<br/>
+/**************************************************************************<br/>
+&nbsp;* tun_alloc: allocates or reconnects to a tun/tap device. The caller &nbsp; &nbsp; *<br/>
+&nbsp;* &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;needs to reserve enough space in *dev. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;**************************************************************************/<br/>
+int tun_alloc(char *dev, int flags) {<br/>
+<br/>
+&nbsp; struct ifreq ifr;<br/>
+&nbsp; int fd, err;<br/>
+<br/>
+&nbsp; if( (fd = open("/dev/net/tun", O_RDWR)) &lt; 0 ) {<br/>
+&nbsp; &nbsp; perror("Opening /dev/net/tun");<br/>
+&nbsp; &nbsp; return fd;<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; memset(&amp;ifr, 0, sizeof(ifr));<br/>
+<br/>
+&nbsp; ifr.ifr_flags = flags;<br/>
+<br/>
+&nbsp; if (*dev) {<br/>
+&nbsp; &nbsp; strncpy(ifr.ifr_name, dev, IFNAMSIZ);<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; if( (err = ioctl(fd, TUNSETIFF, (void *)&amp;ifr)) &lt; 0 ) {<br/>
+&nbsp; &nbsp; perror("ioctl(TUNSETIFF)");<br/>
+&nbsp; &nbsp; close(fd);<br/>
+&nbsp; &nbsp; return err;<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; strcpy(dev, ifr.ifr_name);<br/>
+<br/>
+&nbsp; return fd;<br/>
+}<br/>
+<br/>
+/**************************************************************************<br/>
+&nbsp;* cread: read routine that checks for errors and exits if an error is &nbsp; &nbsp;*<br/>
+&nbsp;* &nbsp; &nbsp; &nbsp; &nbsp;returned. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *<br/>
+&nbsp;**************************************************************************/<br/>
+int cread(int fd, char *buf, int n){<br/>
+&nbsp; <br/>
+&nbsp; int nread;<br/>
+<br/>
+&nbsp; if((nread=read(fd, buf, n))&lt;0){<br/>
+&nbsp; &nbsp; perror("Reading data");<br/>
+&nbsp; &nbsp; exit(1);<br/>
+&nbsp; }<br/>
+&nbsp; return nread;<br/>
+}<br/>
+<br/>
+/**************************************************************************<br/>
+&nbsp;* cwrite: write routine that checks for errors and exits if an error is &nbsp;*<br/>
+&nbsp;* &nbsp; &nbsp; &nbsp; &nbsp; returned. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;**************************************************************************/<br/>
+int cwrite(int fd, char *buf, int n){<br/>
+&nbsp; <br/>
+&nbsp; int nwrite;<br/>
+<br/>
+&nbsp; if((nwrite=write(fd, buf, n))&lt;0){<br/>
+&nbsp; &nbsp; perror("Writing data");<br/>
+&nbsp; &nbsp; exit(1);<br/>
+&nbsp; }<br/>
+&nbsp; return nwrite;<br/>
+}<br/>
+<br/>
+/**************************************************************************<br/>
+&nbsp;* read_n: ensures we read exactly n bytes, and puts those into "buf". &nbsp; &nbsp;*<br/>
+&nbsp;* &nbsp; &nbsp; &nbsp; &nbsp; (unless EOF, of course) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;**************************************************************************/<br/>
+int read_n(int fd, char *buf, int n) {<br/>
+<br/>
+&nbsp; int nread, left = n;<br/>
+<br/>
+&nbsp; while(left &gt; 0) {<br/>
+&nbsp; &nbsp; if ((nread = cread(fd, buf, left))==0){<br/>
+&nbsp; &nbsp; &nbsp; return 0 ; &nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; }else {<br/>
+&nbsp; &nbsp; &nbsp; left -= nread;<br/>
+&nbsp; &nbsp; &nbsp; buf += nread;<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; }<br/>
+&nbsp; return n; &nbsp;<br/>
+}<br/>
+<br/>
+/**************************************************************************<br/>
+&nbsp;* do_debug: prints debugging stuff (doh!) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;**************************************************************************/<br/>
+void do_debug(char *msg, ...){<br/>
+&nbsp; <br/>
+&nbsp; va_list argp;<br/>
+&nbsp; <br/>
+&nbsp; if(debug){<br/>
+&#09;va_start(argp, msg);<br/>
+&#09;vfprintf(stderr, msg, argp);<br/>
+&#09;va_end(argp);<br/>
+&nbsp; }<br/>
+}<br/>
+<br/>
+/**************************************************************************<br/>
+&nbsp;* my_err: prints custom error messages on stderr. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp;**************************************************************************/<br/>
+void my_err(char *msg, ...) {<br/>
+<br/>
+&nbsp; va_list argp;<br/>
+&nbsp; <br/>
+&nbsp; va_start(argp, msg);<br/>
+&nbsp; vfprintf(stderr, msg, argp);<br/>
+&nbsp; va_end(argp);<br/>
+}<br/>
+<br/>
+/**************************************************************************<br/>
+&nbsp;* usage: prints usage and exits. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *<br/>
+&nbsp;**************************************************************************/<br/>
+void usage(void) {<br/>
+&nbsp; fprintf(stderr, "Usage:\n");<br/>
+&nbsp; fprintf(stderr, "%s -i &lt;ifacename&gt; [-s|-c &lt;serverIP&gt;] [-p &lt;port&gt;] [-u|-a] [-d]\n", progname);<br/>
+&nbsp; fprintf(stderr, "%s -h\n", progname);<br/>
+&nbsp; fprintf(stderr, "\n");<br/>
+&nbsp; fprintf(stderr, "-i &lt;ifacename&gt;: Name of interface to use (mandatory)\n");<br/>
+&nbsp; fprintf(stderr, "-s|-c &lt;serverIP&gt;: run in server mode (-s), or specify server address (-c &lt;serverIP&gt;) (mandatory)\n");<br/>
+&nbsp; fprintf(stderr, "-p &lt;port&gt;: port to listen on (if run in server mode) or to connect to (in client mode), default 55555\n");<br/>
+&nbsp; fprintf(stderr, "-u|-a: use TUN (-u, default) or TAP (-a)\n");<br/>
+&nbsp; fprintf(stderr, "-d: outputs debug information while running\n");<br/>
+&nbsp; fprintf(stderr, "-h: prints this help text\n");<br/>
+&nbsp; exit(1);<br/>
+}<br/>
+<br/>
+int main(int argc, char *argv[]) {<br/>
+&nbsp; <br/>
+&nbsp; int tap_fd, option;<br/>
+&nbsp; int flags = IFF_TUN;<br/>
+&nbsp; char if_name[IFNAMSIZ] = "";<br/>
+&nbsp; int header_len = IP_HDR_LEN;<br/>
+&nbsp; int maxfd;<br/>
+&nbsp; uint16_t nread, nwrite, plength;<br/>
+// &nbsp;uint16_t total_len, ethertype;<br/>
+&nbsp; char buffer[BUFSIZE];<br/>
+&nbsp; struct sockaddr_in local, remote;<br/>
+&nbsp; char remote_ip[16] = "";<br/>
+&nbsp; unsigned short int port = PORT;<br/>
+&nbsp; int sock_fd, net_fd, optval = 1;<br/>
+&nbsp; socklen_t remotelen;<br/>
+&nbsp; int cliserv = -1; &nbsp; &nbsp;/* must be specified on cmd line */<br/>
+&nbsp; unsigned long int tap2net = 0, net2tap = 0;<br/>
+<br/>
+&nbsp; progname = argv[0];<br/>
+&nbsp; <br/>
+&nbsp; /* Check command line options */<br/>
+&nbsp; while((option = getopt(argc, argv, "i:sc:p:uahd")) &gt; 0){<br/>
+&nbsp; &nbsp; switch(option) {<br/>
+&nbsp; &nbsp; &nbsp; case 'd':<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; debug = 1;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; case 'h':<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; usage();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; case 'i':<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; strncpy(if_name,optarg,IFNAMSIZ-1);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; case 's':<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; cliserv = SERVER;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; case 'c':<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; cliserv = CLIENT;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; strncpy(remote_ip,optarg,15);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; case 'p':<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; port = atoi(optarg);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; case 'u':<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; flags = IFF_TUN;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; case 'a':<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; flags = IFF_TAP;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; header_len = ETH_HDR_LEN;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; default:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; my_err("Unknown option %c\n", option);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; usage();<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; argv += optind;<br/>
+&nbsp; argc -= optind;<br/>
+<br/>
+&nbsp; if(argc &gt; 0){<br/>
+&nbsp; &nbsp; my_err("Too many options!\n");<br/>
+&nbsp; &nbsp; usage();<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; if(*if_name == '\0'){<br/>
+&nbsp; &nbsp; my_err("Must specify interface name!\n");<br/>
+&nbsp; &nbsp; usage();<br/>
+&nbsp; }else if(cliserv &lt; 0){<br/>
+&nbsp; &nbsp; my_err("Must specify client or server mode!\n");<br/>
+&nbsp; &nbsp; usage();<br/>
+&nbsp; }else if((cliserv == CLIENT)&amp;&amp;(*remote_ip == '\0')){<br/>
+&nbsp; &nbsp; my_err("Must specify server address!\n");<br/>
+&nbsp; &nbsp; usage();<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; /* initialize tun/tap interface */<br/>
+&nbsp; if ( (tap_fd = tun_alloc(if_name, flags | IFF_NO_PI)) &lt; 0 ) {<br/>
+&nbsp; &nbsp; my_err("Error connecting to tun/tap interface %s!\n", if_name);<br/>
+&nbsp; &nbsp; exit(1);<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; do_debug("Successfully connected to interface %s\n", if_name);<br/>
+<br/>
+&nbsp; if ( (sock_fd = socket(AF_INET, SOCK_STREAM, 0)) &lt; 0) {<br/>
+&nbsp; &nbsp; perror("socket()");<br/>
+&nbsp; &nbsp; exit(1);<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; if(cliserv==CLIENT){<br/>
+&nbsp; &nbsp; /* Client, try to connect to server */<br/>
+<br/>
+&nbsp; &nbsp; /* assign the destination address */<br/>
+&nbsp; &nbsp; memset(&amp;remote, 0, sizeof(remote));<br/>
+&nbsp; &nbsp; remote.sin_family = AF_INET;<br/>
+&nbsp; &nbsp; remote.sin_addr.s_addr = inet_addr(remote_ip);<br/>
+&nbsp; &nbsp; remote.sin_port = htons(port);<br/>
+<br/>
+&nbsp; &nbsp; /* connection request */<br/>
+&nbsp; &nbsp; if (connect(sock_fd, (struct sockaddr*) &amp;remote, sizeof(remote)) &lt; 0){<br/>
+&nbsp; &nbsp; &nbsp; perror("connect()");<br/>
+&nbsp; &nbsp; &nbsp; exit(1);<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; net_fd = sock_fd;<br/>
+&nbsp; &nbsp; do_debug("CLIENT: Connected to server %s\n", inet_ntoa(remote.sin_addr));<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; } else {<br/>
+&nbsp; &nbsp; /* Server, wait for connections */<br/>
+<br/>
+&nbsp; &nbsp; /* avoid EADDRINUSE error on bind() */<br/>
+&nbsp; &nbsp; if(setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (char *)&amp;optval, sizeof(optval)) &lt; 0){<br/>
+&nbsp; &nbsp; &nbsp; perror("setsockopt()");<br/>
+&nbsp; &nbsp; &nbsp; exit(1);<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; memset(&amp;local, 0, sizeof(local));<br/>
+&nbsp; &nbsp; local.sin_family = AF_INET;<br/>
+&nbsp; &nbsp; local.sin_addr.s_addr = htonl(INADDR_ANY);<br/>
+&nbsp; &nbsp; local.sin_port = htons(port);<br/>
+&nbsp; &nbsp; if (bind(sock_fd, (struct sockaddr*) &amp;local, sizeof(local)) &lt; 0){<br/>
+&nbsp; &nbsp; &nbsp; perror("bind()");<br/>
+&nbsp; &nbsp; &nbsp; exit(1);<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; if (listen(sock_fd, 5) &lt; 0){<br/>
+&nbsp; &nbsp; &nbsp; perror("listen()");<br/>
+&nbsp; &nbsp; &nbsp; exit(1);<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; /* wait for connection request */<br/>
+&nbsp; &nbsp; remotelen = sizeof(remote);<br/>
+&nbsp; &nbsp; memset(&amp;remote, 0, remotelen);<br/>
+&nbsp; &nbsp; if ((net_fd = accept(sock_fd, (struct sockaddr*)&amp;remote, &amp;remotelen)) &lt; 0){<br/>
+&nbsp; &nbsp; &nbsp; perror("accept()");<br/>
+&nbsp; &nbsp; &nbsp; exit(1);<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; do_debug("SERVER: Client connected from %s\n", inet_ntoa(remote.sin_addr));<br/>
+&nbsp; }<br/>
+&nbsp; <br/>
+&nbsp; /* use select() to handle two descriptors at once */<br/>
+&nbsp; maxfd = (tap_fd &gt; net_fd)?tap_fd:net_fd;<br/>
+<br/>
+&nbsp; while(1) {<br/>
+&nbsp; &nbsp; int ret;<br/>
+&nbsp; &nbsp; fd_set rd_set;<br/>
+<br/>
+&nbsp; &nbsp; FD_ZERO(&amp;rd_set);<br/>
+&nbsp; &nbsp; FD_SET(tap_fd, &amp;rd_set); FD_SET(net_fd, &amp;rd_set);<br/>
+<br/>
+&nbsp; &nbsp; ret = select(maxfd + 1, &amp;rd_set, NULL, NULL, NULL);<br/>
+<br/>
+&nbsp; &nbsp; if (ret &lt; 0 &amp;&amp; errno == EINTR){<br/>
+&nbsp; &nbsp; &nbsp; continue;<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; if (ret &lt; 0) {<br/>
+&nbsp; &nbsp; &nbsp; perror("select()");<br/>
+&nbsp; &nbsp; &nbsp; exit(1);<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; if(FD_ISSET(tap_fd, &amp;rd_set)){<br/>
+&nbsp; &nbsp; &nbsp; /* data from tun/tap: just read it and write it to the network */<br/>
+&nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; nread = cread(tap_fd, buffer, BUFSIZE);<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; tap2net++;<br/>
+&nbsp; &nbsp; &nbsp; do_debug("TAP2NET %lu: Read %d bytes from the tap interface\n", tap2net, nread);<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; /* write length + packet */<br/>
+&nbsp; &nbsp; &nbsp; plength = htons(nread);<br/>
+&nbsp; &nbsp; &nbsp; nwrite = cwrite(net_fd, (char *)&amp;plength, sizeof(plength));<br/>
+&nbsp; &nbsp; &nbsp; nwrite = cwrite(net_fd, buffer, nread);<br/>
+&nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; do_debug("TAP2NET %lu: Written %d bytes to the network\n", tap2net, nwrite);<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; if(FD_ISSET(net_fd, &amp;rd_set)){<br/>
+&nbsp; &nbsp; &nbsp; /* data from the network: read it, and write it to the tun/tap interface. <br/>
+&nbsp; &nbsp; &nbsp; &nbsp;* We need to read the length first, and then the packet */<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; /* Read length */ &nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; nread = read_n(net_fd, (char *)&amp;plength, sizeof(plength));<br/>
+&nbsp; &nbsp; &nbsp; if(nread == 0) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; /* ctrl-c at the other end */<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; net2tap++;<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; /* read packet */<br/>
+&nbsp; &nbsp; &nbsp; nread = read_n(net_fd, buffer, ntohs(plength));<br/>
+&nbsp; &nbsp; &nbsp; do_debug("NET2TAP %lu: Read %d bytes from the network\n", net2tap, nread);<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */ <br/>
+&nbsp; &nbsp; &nbsp; nwrite = cwrite(tap_fd, buffer, nread);<br/>
+&nbsp; &nbsp; &nbsp; do_debug("NET2TAP %lu: Written %d bytes to the tap interface\n", net2tap, nwrite);<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; }<br/>
+&nbsp; <br/>
+&nbsp; return(0);<br/>
+}</body></html>

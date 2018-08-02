@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSL</title>
+</head><body>Generate Cert<br/>
+openssl req -new -x509 -days 365 -nodes -out cert.pem -keyout cert.key<br/>
+<br/>
+SSL Server<br/>
+socat OPENSSL-LISTEN:443,cert=/cert.pem -<br/>
+<br/>
+SSL client<br/>
+socat - OPENSSL:localhost:443<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+You should also check out the options that you can apply, for example you can use fork to tell socat to listen and handle multiple clients.<br/>
+<br/>
+socat TCP4-LISTEN:5000,fork OPENSSL:localhost:443<br/>
+Finally if you are tunneling a connection between servers using socat you can use the -v option to print all the traffic to stdout.</body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Networking</title>
+</head><body>The netsh Command Is Your Friend<br/>
+<br/>
+You can use netsh to configure a ton of Windows network settings<br/>
+<br/>
+Use it all in one shot:<br/>
+PS C:\&gt; netsh interface ipv4 show addresses<br/>
+PS C:\&gt; netsh interface ipv6 show tcpstats<br/>
+PS C:\&gt; netsh interface ipv6 show icmpstats rr=1<br/>
+<br/>
+Or, use it interactively, kind of like a simple local shell, with “?” for help:<br/>
+PS C:\&gt; netsh<br/>
+netsh&gt; interface<br/>
+netsh interface&gt; ipv4<br/>
+netsh interface ipv4&gt; show ? </body></html>

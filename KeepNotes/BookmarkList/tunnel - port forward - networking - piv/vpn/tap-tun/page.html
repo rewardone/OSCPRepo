@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Layer2 And SimpleTun</title>
+</head><body>A basic "VPN" without encryption, but creates a direct connection via TUN/TAP interface.<br/>
+<br/>
+https://blog.cobaltstrike.com/2014/10/14/how-vpn-pivoting-works-with-source-code/<br/>
+<br/>
+Server: http://www.cis.syr.edu/~wedu/seed/Labs/VPN/files/simpletun.c<br/>
+Client: https://github.com/rsmudge/Layer2-Pivoting-Client<br/>
+Build instructions at the bottom<br/>
+<br/>
+&nbsp;The layer-2 pivoting client and server combination don’t have encryption, hence it’s not correct to refer to them as VPN pivoting. They’re close enough to VPN pivoting to benefit this discussion though.<br/>
+<br/>
+<b>The VPN Server &nbsp;</b><br/>
+The TAP driver makes this possible. According to its documentation, the TUN/TAP provides packet reception and transmission for user space programs. The TAP driver allows us to create a (virtual) network interface that we may interact with from our VPN server software.<br/>
+<br/>
+To read a frame from a TAP:<br/>
+int totalread = read(tap_fd, buffer, maxlength);<br/>
+<br/>
+To write a frame to a TAP:<br/>
+write(tap_fd, buffer, length);<br/>
+<br/>
+simpletun.c is an example of using a network TAP. It’s ~300 lines of code that demonstrates how to send and receive frames over a TCP connection. This GPL(!) example accompanies <a href="http://backreference.org/2010/03/26/tuntap-interface-tutorial/">Brini’s wonderful Tun/Tap Interface Tutorial</a>. I recommend that you read it.<br/>
+<br/>
+When simpletun.c sends a frame, it prefixes the frame with an unsigned short in big endian order. This 2-byte number, N, is the length of the frame in bytes. The next N bytes are the frame itself. simpletun.c expects to receive frames the same way.<br/>
+<br/>
+To build simpletun:<br/>
+gcc simpletun.c -o simpletun<br/>
+<br/>
+Note: simpletun.c allocates a small buffer to hold frame data. Change BUFSIZE on line 42 to a higher value, like 8192. If you don’t do this, simpletun.c will eventually crash. You don’t want that.<br/>
+<br/>
+To start simpletun as a server:<br/>
+./simpletun -i [interface] -s -p [port] -a<br/>
+<br/>
+<b>The VPN Client</b><br/>
+Now that we understand the VPN server, let’s discuss the VPN pivoting client. Cobalt Strike’s VPN pivoting client sniffs traffic on the target’s network. When it sees frames, it relays them to the VPN pivoting server, which writes them to the TAP interface. This causes the server’s operating system to process the frames as if they were read off of the wire.<br/>
+<br/>
+Let’s build a layer-2 pivoting client that implements similar logic. To do this, we will use the Windows Packet Capture API. <a href="http://www.winpcap.org/">WinPcap</a>&nbsp;is the Windows implementation of &nbsp;LibPCAP and <a href="http://www.riverbed.com/">RiverBed</a>&nbsp;Technology maintains it.<br/>
+<br/>
+First, we need to open up the target network device that we will pivot onto. We also need to put this device into promiscuous mode.<br/>
+<br/>
+Next, we need to connect to the layer-2 pivoting server and start a loop that reads frames and sends them to our server. I do this in raw.c. Here’s the code to ask WinPcap to call a function when a frame is read:<br/>
+<br/>
+The packet_handler function is my callback to respond to each frame read by WinPCAP. It writes frames to our layer-2 pivoting server. I define this function in tunnel.c.<br/>
+<br/>
+I define client_send_frame in client.c. This function writes the frame’s length and data to our layer-2 pivoting server connection. If you want to implement a new channel or add encryption to make this a true VPN client, client.c is the place to explore this.<br/>
+<br/>
+We now know how to read frames and send them to the layer-2 pivoting server.<br/>
+<br/>
+Next, we need logic to read frames from the server and inject these onto the target network. In tunnel.c, I create a thread that calls client_recv_frame in a loop. The client_recv_frame function reads a frame from our connection to the layer-2 server. The pcap_sendpacket function injects a frame onto the wire.<br/>
+<br/>
+This logic is the guts of our layer-2 pivoting client. The <a href="https://github.com/rsmudge/Layer2-Pivoting-Client">project</a>&nbsp;is ~315 lines of code and this includes headers. Half of this code is in client.c which is an abstraction of the Windows Socket API. I hope you find it navigable.<br/>
+<br/>
+To run the layer-2 pivoting client:<br/>
+client.exe [server ip] [server port] [local ip]<br/>
+<br/>
+Once the layer-2 client connects to the layer-2 server, use a DHCP client to request an IP address on your attack server’s network interface [or configure an IP address with ifconfig].<br/>
+<br/>
+<br/>
+BUILD<br/>
+<span style="font-size: 10pt"><span style="font-family: Lucida Grande"><div style="text-align: justify">I’ve made </div></span><a href="https://github.com/rsmudge/Layer2-Pivoting-Client">the source code</a><span style="font-family: Lucida Grande"><div style="text-align: justify"> for this simple Layer-2 client available under a BSD license. You will need to download the </div></span><a href="http://www.winpcap.org/devel.htm">Windows PCAP Developer Pack</a><span style="font-family: Lucida Grande"><div style="text-align: justify"> and extract it to the folder where the layer-2 client lives. You can build the layer-2 client on Kali Linux with the included </div></span><a href="http://www.mingw.org/">Minimal GNU for Windows Cross Compiler</a><span style="font-family: Lucida Grande"><div style="text-align: justify">. Just type ‘make’ in its folder.</div></span>&nbsp; </span><br/>
+<br/>
+<br/>
+DEPLOY<span style="font-size: 10pt"><br/>
+</span><span style="font-size: 10pt"><span style="font-family: Lucida Grande"><div style="text-align: justify">To <a href="https://github.com/rsmudge/Layer2-Pivoting-Client">try this Layer-2 client</a>, you will need to <a href="http://www.winpcap.org/install/default.htm">install WinPcap</a> on your target system. You can download <a href="http://www.winpcap.org/">WinPcap</a> from RiverBed Technology. And, that’s it. I hope you’ve enjoyed this deep dive into VPN pivoting and how it works.<br/>
+</div></span><br/>
+<span style="font-family: Lucida Grande"><div style="text-align: justify"><i>The layer-2 client is a stripped down version of Cobalt Strike’s <a href="http://www.advancedpentest.com/help-covert-vpn">Covert VPN</a> feature. Covert VPN compiles as a reflective DLL. This allows Cobalt Strike to inject it into memory. The Covert VPN client and server encrypt the VPN traffic [hence, VPN pivoting]. Covert VPN will also silently drop a minimal WinPcap install and clean it up for you. And, Covert VPN supports multiple data channels. It’ll tunnel frames over TCP, UDP, HTTP, or through Meterpreter.</i><br/>
+</div></span>&nbsp; </span></body></html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Universal TAP/TUN Driver</title>
+</head><body>https://mirrors.edge.kernel.org/pub/linux/kernel/people/marcelo/linux-2.4/Documentation/networking/tuntap.txt<br/>
+<br/>
+Universal TUN/TAP device driver.<br/>
+Copyright (C) 1999-2000 Maxim Krasnyansky &lt;max_mk@yahoo.com&gt;<br/>
+<br/>
+&nbsp; Linux, Solaris drivers <br/>
+&nbsp; Copyright (C) 1999-2000 Maxim Krasnyansky &lt;max_mk@yahoo.com&gt;<br/>
+<br/>
+&nbsp; FreeBSD TAP driver <br/>
+&nbsp; Copyright (c) 1999-2000 Maksim Yevmenkin &lt;m_evmenkin@yahoo.com&gt;<br/>
+<br/>
+1. Description<br/>
+&nbsp; TUN/TAP provides packet reception and transmission for user space programs. <br/>
+&nbsp; It can be viewed as a simple Point-to-Point or Ethernet device, which <br/>
+&nbsp; instead of receiving packets from a physical media, receives them from <br/>
+&nbsp; user space program and instead of sending packets via physical media <br/>
+&nbsp; writes them to the user space program. <br/>
+<br/>
+&nbsp; When a program opens /dev/net/tun, driver creates and registers corresponding<br/>
+&nbsp; net device tunX or tapX. After a program closed above devices, driver will <br/>
+&nbsp; automatically delete tunXX or tapXX device and all routes corresponding to it.<br/>
+<br/>
+&nbsp; This package(http://vtun.sourceforge.net/tun) contains two simple example <br/>
+&nbsp; programs how to use tun and tap devices. Both programs works like <br/>
+&nbsp; bridge between two network interfaces.<br/>
+&nbsp; br_select.c - bridge based on select system call.<br/>
+&nbsp; br_sigio.c &nbsp;- bridge based on async io and SIGIO signal.<br/>
+&nbsp; However the best example is VTun http://vtun.sourceforge.net :)) &nbsp;<br/>
+<br/>
+2. Configuration <br/>
+&nbsp; Create device node:<br/>
+&nbsp; &nbsp; &nbsp;mknod /dev/net/tun c 10 200<br/>
+<br/>
+&nbsp; Driver module autoloading<br/>
+&nbsp; &nbsp; &nbsp;Make sure that "Kernel module loader" - module auto-loading support is enabled <br/>
+&nbsp; &nbsp; &nbsp;in your kernel. <br/>
+<br/>
+&nbsp; &nbsp; &nbsp;Add following line to the /etc/modules.conf:<br/>
+&#09;alias char-major-10-200 tun<br/>
+&nbsp; &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp;Run:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; depmod -a <br/>
+<br/>
+&nbsp; &nbsp; &nbsp;Driver will be automatically loaded when application access /dev/net/tun.<br/>
+<br/>
+3. Program interface <br/>
+&nbsp; 3.1 Network device allocation:<br/>
+<br/>
+&nbsp; int tun_alloc(char *dev)<br/>
+&nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; struct ifreq ifr;<br/>
+&nbsp; &nbsp; &nbsp; int fd, err;<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; if( (fd = open("/dev/net/tun", O_RDWR)) &lt; 0 )<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return tun_alloc_old(dev);<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; memset(&amp;ifr, 0, sizeof(ifr));<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; /* Flags: IFF_TUN &nbsp; - TUN device (no Ethernet headers) <br/>
+&nbsp; &nbsp; &nbsp; &nbsp;* &nbsp; &nbsp; &nbsp; &nbsp;IFF_TAP &nbsp; - TAP device &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;*<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;* &nbsp; &nbsp; &nbsp; &nbsp;IFF_NO_PI - Do not provide packet information &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;*/ <br/>
+&nbsp; &nbsp; &nbsp; ifr.ifr_flags = IFF_TUN; <br/>
+&nbsp; &nbsp; &nbsp; if( *dev )<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;strncpy(ifr.ifr_name, dev, IFNAMSIZ);<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; if( (err = ioctl(fd, TUNSETIFF, (void *) &amp;ifr)) &lt; 0 ){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;close(fd);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return err;<br/>
+&nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; strcpy(dev, ifr.ifr_name);<br/>
+&nbsp; &nbsp; &nbsp; return fd;<br/>
+&nbsp; } &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+&nbsp;<br/>
+&nbsp; 3.2 Frame format:<br/>
+&nbsp; If flag IFF_NO_PI is not set each frame format is: <br/>
+&nbsp; &nbsp; &nbsp;Flags [2 bytes]<br/>
+&nbsp; &nbsp; &nbsp;Proto [2 bytes]<br/>
+&nbsp; &nbsp; &nbsp;Raw protocol(IP, IPv6, etc) frame.<br/>
+<br/>
+Universal TUN/TAP device driver Frequently Asked Question.<br/>
+&nbsp; &nbsp;<br/>
+1. What is the TUN ?<br/>
+The TUN is Virtual Point-to-Point network device.<br/>
+TUN driver was designed as low level kernel support for<br/>
+IP tunneling. It provides to userland application<br/>
+two interfaces:<br/>
+&nbsp; - /dev/tunX&#09;- character device;<br/>
+&nbsp; - tunX&#09;- virtual Point-to-Point interface.<br/>
+<br/>
+Userland application can write IP frame to /dev/tunX<br/>
+and kernel will receive this frame from tunX interface. <br/>
+In the same time every frame that kernel writes to tunX <br/>
+interface can be read by userland application from /dev/tunX<br/>
+device.<br/>
+<br/>
+2. What is the TAP ?<br/>
+The TAP is a Virtual Ethernet network device.<br/>
+TAP driver was designed as low level kernel support for<br/>
+Ethernet tunneling. It provides to userland application<br/>
+two interfaces:<br/>
+&nbsp; - /dev/tapX&#09;- character device;<br/>
+&nbsp; - tapX&#09;- virtual Ethernet interface.<br/>
+<br/>
+Userland application can write Ethernet frame to /dev/tapX<br/>
+and kernel will receive this frame from tapX interface. <br/>
+In the same time every frame that kernel writes to tapX <br/>
+interface can be read by userland application from /dev/tapX<br/>
+device.<br/>
+<br/>
+3. What platforms are supported by TUN/TAP driver ?<br/>
+Currently driver has been written for 3 Unices:<br/>
+&nbsp; &nbsp;Linux kernels 2.2.x, 2.4.x <br/>
+&nbsp; &nbsp;FreeBSD 3.x, 4.x, 5.x<br/>
+&nbsp; &nbsp;Solaris 2.6, 7.0, 8.0<br/>
+<br/>
+4. What is TUN/TAP driver used for?<br/>
+As mentioned above, main purpose of TUN/TAP driver is tunneling. <br/>
+It is used by VTun (http://vtun.sourceforge.net).<br/>
+<br/>
+5. How does Virtual network device actually work ? <br/>
+Virtual network device can be viewed as a simple Point-to-Point or<br/>
+Ethernet device, which instead of receiving packets from a physical <br/>
+media, receives them from user space program and instead of sending <br/>
+packets via physical media sends them to the user space program. <br/>
+<br/>
+Let's say that you configured IPX on the tap0, then whenever <br/>
+kernel sends any IPX packet to tap0, it is passed to the application<br/>
+(VTun for example). Application encrypts, compresses and sends it to <br/>
+the other side over TCP or UDP. Application on other side decompress <br/>
+and decrypts them and write packet to the TAP device, kernel handles <br/>
+the packet like it came from real physical device.<br/>
+<br/>
+6. What is the difference between TUN driver and TAP driver?<br/>
+TUN works with IP frames. TAP works with Ethernet frames.<br/>
+<br/>
+7. What is the difference between BPF and TUN/TAP driver?<br/>
+BFP is a advanced packet filter. It can be attached to existing<br/>
+network interface. It does not provide virtual network interface.<br/>
+TUN/TAP driver does provide virtual network interface and it is possible<br/>
+to attach BPF to this interface.<br/>
+<br/>
+8. Does TAP driver support kernel Ethernet bridging?<br/>
+Yes. Linux and FreeBSD drivers support Ethernet bridging. </body></html>

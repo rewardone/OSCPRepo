@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Enable Remote Netsh Access</title>
+</head><body>Steps to Get Remote netsh Access<br/>
+1. If it’s not already set, configure target’s Filter Policy to allow your access (might already be set for psexec by admins):<br/>
+<br/>
+PS C:\&gt; reg add \\&lt;TargetIP&gt;\HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1<br/>
+<br/>
+2. Start Remote Registry service and Remote Access Service:<br/>
+PS C:\&gt; sc \\&lt;targetIP&gt; start remoteregistry<br/>
+PS C:\&gt; sc \\&lt;targetIP&gt; start remoteaccess<br/>
+<br/>
+3. Use netsh to remote in:<br/>
+PS C:\&gt; netsh –r &lt;TargetIP&gt; or…<br/>
+PS C:\&gt; netsh<br/>
+netsh&gt; set machine &lt;TargetIP&gt;<br/>
+[TargetIP] netsh&gt; interface ipv6 show addresses</body></html>

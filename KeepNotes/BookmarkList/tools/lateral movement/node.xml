@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Lateral Movement</string>
   <key>nodeid</key><string>360a1293-0560-4fe0-b263-c690939b7a6b</string>
   <key>modified_time</key><integer>1527900946</integer>
