@@ -34,7 +34,9 @@
 ## worth anything anyway :)
 ##-------------------------------------------------------------------------------------------------------------
 ## [TODO]
-##
+## Expand: "Alive" script. Identify alive hosts using 'advanced' techniques. 
+##      Pre-Exploitation Enumeration > Active > Internal Infrastructure Mapping > Identify Alive IPs
+## Expand: RDPenum with rdp-sec-check
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
 ## Fix DNSRecon
 ## Expand: DirbustEverything
