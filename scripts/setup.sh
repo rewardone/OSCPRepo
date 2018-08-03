@@ -94,4 +94,4 @@ if [ ! -d "$direc" ]; then mkdir /usr/share/dotdotpwn/Reports; fi
 
 
 echo "\n ### Optional packages you might utilize in the future ### \n"
-echo "apt-get install automake remmina"
+echo "apt-get install automake remmina freerdpx11 alacarte"
