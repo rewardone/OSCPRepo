@@ -17,7 +17,7 @@ echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unix
 curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
 apt-get update
-apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common shutter
+apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common
 
 echo "\nCloning Impacket \n"
 direc=/root/Documents/Impacket
@@ -94,4 +94,6 @@ if [ ! -d "$direc" ]; then mkdir /usr/share/dotdotpwn/Reports; fi
 
 
 echo "\n ### Optional packages you might utilize in the future ### \n"
-echo "apt-get install automake remmina freerdpx11 alacarte"
+echo "apt-get install automake remmina freerdpx11 alacarte shutter"
+echo "Shutter has been removed from Kali due to dependencies, find an alternative"
+echo "Keepnote may be removed from latest Kali as well. Source: http://keepnote.org/download/keepnote_0.7.8-1_all.deb"

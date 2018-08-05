@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Parsing Apache Access Logs</title>
+</head><body>You can do pretty much anything with apache log files with awk alone. Apache log files are basically whitespace separated, and you can pretend the quotes don't exist, and access whatever information you are interested in by column number. The only time this breaks down is if you have the combined log format and are interested in user agents, at which point you have to use quotes (") as the separator and run a separate awk command. <br/>
+<br/>
+<b>The following will show you the IPs of every user who requests the index page sorted by the number of hits:</b><br/>
+$7 is the requested url. You can add whatever conditions you want at the beginning. Replace the '$7 == "/" with whatever information you want.<br/>
+<br/>
+awk -F'[ "]+' '$7 == "/" { ipcount[$1]++ }<br/>
+&nbsp; &nbsp; END { for (i in ipcount) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; printf "%15s - %d\n", i, ipcount[i] } }' logfile.log<br/>
+<br/>
+<br/>
+If you replace the $1 in (ipcount[$1]++), then you can group the results by other criteria. Using $7 would show what pages were accessed and how often. Of course then you would want to change the condition at the beginning. The following would show what pages were accessed by a user from a specific IP:<br/>
+<br/>
+awk -F'[ "]+' '$1 == "1.2.3.4" { pagecount[$7]++ }<br/>
+&nbsp; &nbsp; END { for (i in pagecount) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; printf "%15s - %d\n", i, pagecount[i] } }' logfile.log<br/>
+<br/>
+You can also pipe the output through sort to get the results in order, either as part of the shell command, or also in the awk script itself:<br/>
+<br/>
+awk -F'[ "]+' '$7 == "/" { ipcount[$1]++ }<br/>
+&nbsp; &nbsp; END { for (i in ipcount) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; printf "%15s - %d\n", i, ipcount[i] | sort } }' logfile.log<br/>
+<br/>
+The latter would be useful if you decided to expand the awk script to print out other information. It's all a matter of what you want to find out. These should serve as a starting point for whatever you are interested in<br/>
+<br/>
+<br/>
+<br/>
+<b>for IP counts in an access log:</b><br/>
+cat log | grep -o "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" | sort -n | uniq -c | sort -n<br/>
+<br/>
+<br/>
+<b>If I want to tail the logs on my server for only 404/500 status codes </b>I'd do this:<br/>
+# $6 is the status code in my log file<br/>
+tail -f ${APACHE_LOG} | &nbsp;awk &nbsp;'$8 ~ /(404|500)/ {print $6}'<br/>
+<br/>
+<br/>
+echo ""<br/>
+#echo &nbsp;"<b>Hits by source IP:"</b><br/>
+echo "======================================================================"<br/>
+<br/>
+awk '{print $2}' "$1" | grep -ivE "(127.0.0.1|192.168.100.)" | sort | uniq -c | sort -rn | head -25<br/>
+<br/>
+echo ""<br/>
+echo ""<br/>
+#echo "<b>The 25 most popular pages:</b>"<br/>
+echo "======================================================================"<br/>
+<br/>
+awk '{print $6}' "$1" | grep -ivE '(mod_status|favico|crossdomain|alive.txt)' | grep -ivE '(.gif|.jpg|.png)' | \<br/>
+&nbsp;sed 's/\/$//g' | sort | \<br/>
+&nbsp;uniq -c | sort -rn | head -25<br/>
+<br/>
+echo "" &nbsp; &nbsp;<br/>
+echo ""<br/>
+echo "<b>The 25 most popular pages (no js or css):</b>"<br/>
+echo "======================================================================"<br/>
+<br/>
+awk '{print $6}' "$1" | grep -ivE '(mod_status|favico|crossdomain|alive.txt)' | grep -ivE '(.gif|.jpg|.png|.js|.css)' | \<br/>
+&nbsp;sed 's/\/$//g' | sort | \<br/>
+&nbsp; &nbsp;uniq -c | sort -rn | head -25<br/>
+<br/>
+&nbsp; &nbsp;echo ""<br/>
+<br/>
+<br/>
+#echo "<b>The 25 most common referrer URLs:"</b><br/>
+echo "======================================================================"<br/>
+<br/>
+awk '{print $11}' "$1" | \<br/>
+&nbsp;grep -vE "(^"-"$|/www.$host|/$host)" | \<br/>
+&nbsp;sort | uniq -c | sort -rn | head -25<br/>
+<br/>
+echo ""<br/>
+<br/>
+#echo "<b>Longest running requests"</b><br/>
+echo "======================================================================"<br/>
+<br/>
+awk &nbsp;'{print $10,$6}' "$1" | grep -ivE '(.gif|.jpg|.png|.css|.js)' &nbsp;| awk '{secs=0.000001*$1;req=$2;printf("%.2f minutes req time for %s\n", secs / 60,req )}' | sort -rn | head -50<br/>
+<br/>
+exit 0<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

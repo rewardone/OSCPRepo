@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>seq</title>
+</head><body>Sequence. Prints a sequence of numbers from # to #<br/>
+<br/>
+seq 0 5 <br/>
+0<br/>
+1<br/>
+2<br/>
+3<br/>
+4<br/>
+5<br/>
+<br/>
+<br/>
+Use in ping sweep for example<br/>
+<br/>
+#!/bin/bash<br/>
+for ip in $(seq 231 250)<br/>
+&nbsp; ping -c 1 10.219.54.$ip<br/>
+</body></html>
