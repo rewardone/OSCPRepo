@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Missing Autoruns</string>
   <key>nodeid</key><string>98aaa82f-8aa5-4a07-8e64-f9d003bac4e2</string>
   <key>modified_time</key><integer>1533045018</integer>

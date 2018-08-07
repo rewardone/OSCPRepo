@@ -19,4 +19,29 @@ GET test.txt<br/>
 <br/>
 I usually put all files I want to make available in /srv/tftp<br/>
 If you want to make sure that the file was uploaded correct you can check in the syslog. Grep for the IP like this:<br/>
-grep 192.168.1.101 /var/log/syslog</body></html>
+grep 192.168.1.101 /var/log/syslog<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Starting the Server <br/>
+Kali comes with a TFTP server installed, atftpd, which can be started with a simple service atftpd start. I've always had a hell of a time getting it configured and working though, and I rarely need to start and keep running a TFTP server as a service, so I just use the simpler Metasploit module.<br/>
+&nbsp;<br/>
+Metasploit, like with FTP, has an auxiliary TFTP server module at auxiliary/server/tftp. Set the module options, including TFTPROOT, which determines which directory to serve up, and OUTPUTPATH if you want to capture TFTP uploads from Windows as well.<br/>
+&nbsp;<br/>
+<img src="https://blog.ropnop.com/content/images/2016/06/metasploit_tftp.png" /><br/>
+&nbsp;Downloading the Files <br/>
+Again, assuming the tftp utility is installed, you can grab a file with one line from the Windows prompt. It doesn't require any authentication. Just simply use the -i flag and the GET action. <br/>
+&nbsp;<br/>
+<img src="https://blog.ropnop.com/content/images/2016/06/windows_tftp_get.png" /><br/>
+&nbsp;<br/>
+Exfiltrating files via TFTP is simple as well with the PUT action. The Metasploit server saves them in /tmp by default<br/>
+&nbsp;<br/>
+<img src="https://blog.ropnop.com/content/images/2016/06/windows_tftp_put.png" /><br/>
+&nbsp;<br/>
+TFTP is a convenient, simple way to transfer files as it doesn't require authentication and you can do everything in a single command.<br/>
+&nbsp;<br/>
+<b>Sidenote: Installing TFTP</b>. As I mentioned, TFTP is not included by default on newer versions of Windows. If you really wanted to, you can actually enable TFTP from the command line:<br/>
+&nbsp;pkgmgr /iu:"TFTP" &nbsp;<br/>
+Might come in handy, but I'd always rather "live off the land" and use tools that are already available.<br/>
+</body></html>

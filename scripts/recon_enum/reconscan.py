@@ -34,10 +34,12 @@
 ## worth anything anyway :)
 ##-------------------------------------------------------------------------------------------------------------
 ## [TODO]
-## Expand: "Alive" script. Identify alive hosts using 'advanced' techniques. 
+## Expand: "Alive" script. Identify alive hosts using 'advanced' techniques.
 ##      Pre-Exploitation Enumeration > Active > Internal Infrastructure Mapping > Identify Alive IPs
 ## Expand: RDPenum with rdp-sec-check
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
+## nmapHttpVulns need better error handling for when STAT200 does not exist. Maybe move it somewhere else
+##          Before dirbustEVERYTHING sorts it away
 ## Fix DNSRecon
 ## Expand: DirbustEverything
 ##       : Photon, nice crawler. Can ensure things are not missed (currently using Cewl to crawl and wordlist)
@@ -493,7 +495,7 @@ def nmapVersionTCPAndPass(ip_address, port):
             multProc(mysqlEnum, ip_address, port)
          elif ("nfs" in service):
             multProc(nfsEnum, ip_address, port)
-         elif ("rdp" in service):
+         elif ("rdp" in service or "ms-wbt-server" in service):
             multProc(rdpEnum, ip_address, port)
          elif ("rpcbind" == service):
             multProc(rpcbindEnum, ip_address, port)
@@ -503,8 +505,6 @@ def nmapVersionTCPAndPass(ip_address, port):
             multProc(sshEnum, ip_address, port)
          elif ("smtp" in service):
             multProc(smtpEnum, ip_address, port)
-         elif ("snmp" in service):
-            multProc(snmpEnum, ip_address, port)
          elif ("telnet" in service):
             multProc(telnetEnum, ip_address, port)
          elif ("tftp" in service):
@@ -526,6 +526,8 @@ def nmapVersionUDPAndPass(ip_address, port):
          port = port.split("/")[0]
          if ("domain" in service):
             multProc(dnsEnum, ip_address, port)
+         elif ("snmp" in service):
+            multProc(snmpEnum, ip_address, port)
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5

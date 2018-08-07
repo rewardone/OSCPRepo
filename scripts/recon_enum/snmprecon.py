@@ -100,7 +100,7 @@ def snmp_check(community):
         #SNMPCHECK = "snmp-check -c %s -t %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
         #results = subprocess.check_output(SNMPSCAN, shell=True)
         outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (ip_address,community)
-        results = subprocess.check_output(['snmp-check','-c',community,'-t',ip_address])
+        results = subprocess.check_output(['snmp-check','-c',community,'-w','-t',ip_address])
         if results:
             f = open(outfile,'w')
             for res in results:
@@ -111,7 +111,7 @@ def snmp_check(community):
         #SNMPCHECK = "snmp-check -c %s %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
         #results = subprocess.check_output(SNMPSCAN, shell=True)
         outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (ip_address,community)
-        results = subprocess.check_output(['snmp-check','-c',community,ip_address])
+        results = subprocess.check_output(['snmp-check','-c',community,'-w',ip_address])
         if results:
             f = open(outfile,'w')
             for res in results:
