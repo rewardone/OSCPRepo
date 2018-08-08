@@ -24,7 +24,7 @@ echo -e "\e[00;33m# www.rebootuser.com | @rebootuser \e[00m"
 echo -e "\e[00;33m# www.github.com/rewardone         \e[00m"
 echo -e "\e[00;33m# $v\e[00m\n"
 echo -e "\e[00;33m# Example: ./LinEnum.sh -k keyword -r report -e /tmp/ -t \e[00m\n"
-echo -e "\e[00;33m# Recommended: ./LinEnum.sh -k 'pass\|password\|DB_PASS\|DB_USER' -r ReportName.txt -e /tmp/ -s -t \e[00m\n"
+echo -e "\e[00;33m# Recommended: ./LinEnum.sh -k 'pass\|password\|DB_PASS\|DB_USER' -r ReportName.txt -e /tmp/ -s 1 -t 1\e[00m\n"
 
 		echo "OPTIONS:"
 		echo "-k	Enter keyword"

@@ -69,6 +69,7 @@
 ##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti
 ##      Other tools to consider: WPscan, WPscanner, WPSeku, Droopescan, SSLScan, SSLyze A2SV
 ##      Separate CMSscannerrecon
+##      Apple File System. NSE scripts: brute, ls, path-vuln, servierinfo, showmount
 ##      Create "AutoADPwn": Invoke several modules, AD recon, bloodhound, Empire/Deathstar
 ## Need scripts for:
 ##       LDAP, rsh, vnc
