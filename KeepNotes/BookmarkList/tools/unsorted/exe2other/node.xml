@@ -6,6 +6,7 @@
   <key>title</key><string>EXE2Other</string>
   <key>nodeid</key><string>92e9f3ed-3d93-40a7-a710-8105295e8174</string>
   <key>modified_time</key><integer>1515614961</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1515614961</integer>

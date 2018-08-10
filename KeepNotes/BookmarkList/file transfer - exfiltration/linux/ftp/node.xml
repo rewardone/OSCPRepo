@@ -5,7 +5,7 @@
   <key>title</key><string>FTP</string>
   <key>nodeid</key><string>1a428950-a656-4cec-9f88-36f60ac9d5a3</string>
   <key>modified_time</key><integer>1528860440</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516810262</integer>
