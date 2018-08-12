@@ -13,11 +13,11 @@
 #
 
 echo "### Downloading things...### \n\n"
-echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common shutter"
+echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot"
 curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
 apt-get update
-apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common
+apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot
 
 echo "\nCloning Impacket \n"
 direc=/root/Documents/Impacket
@@ -43,6 +43,10 @@ echo "\nCloning PowerSploit\n"
 direc=/root/Documents/PowerSploit
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/PowerShellMafia/PowerSploit.git $direc; fi
 
+echo "\nCloning John Jumbo\n"
+direc=/root/Documents/JohnJumbo
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/magnumripper/JohnTheRipper.git $direc; fi
+
 echo "\n ### Processing actions...### \n\n"
 echo "Setup install Impacket"
 chmod +x /root/Documents/Impacket/setup.py && cd /root/Documents/Impacket && ./setup.py install
@@ -60,6 +64,9 @@ cp -r /root/Documents/OSCPRepo/lists /root/
 echo "\nSetup Empire\n"
 #Empire calls ./setup from ./install, so needs to be in its directory
 cd /root/Documents/Empire/setup && chmod +x setup_database.py && ./install.sh
+
+echo "\nBuilding John Jumbo\n"
+cd /root/Documents/JohnJumbo/src && ./configure && make
 
 echo "\nDownloading additional lists: secLists fuzzdb naughtystrings payloadallthethings probable-wordlists\n"
 webDirec=/root/lists/Web
@@ -95,5 +102,5 @@ if [ ! -d "$direc" ]; then mkdir /usr/share/dotdotpwn/Reports; fi
 
 echo "\n ### Optional packages you might utilize in the future ### \n"
 echo "apt-get install automake remmina freerdpx11 alacarte shutter"
-echo "Shutter has been removed from Kali due to dependencies, find an alternative"
+echo "Shutter has been removed from Kali due to dependencies, find an alternative (currently FlameShot)"
 echo "Keepnote may be removed from latest Kali as well. Source: http://keepnote.org/download/keepnote_0.7.8-1_all.deb"

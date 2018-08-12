@@ -76,7 +76,8 @@ DIRB_COMBINED="%s/dirb_%s_%s_combined" % (BASE, name, port)
 WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (name, port)
 WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (name, port)
 WW_OUT_VERBOSE="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb_verbose" % (name, port)
-FILE_EXT=".php,.html"
+FILE_EXT=".bak,.gz,.tar.gz"
+#FILE_EXT=".php,.html"
 
 
 #This is needed in case of odd ports. May not be only 80/443
@@ -399,8 +400,10 @@ if (tool == "gobuster"):
     # sortBySize(GOB_COMBINED)
     #########################################################
     print "INFO: Starting threaded gobust"
+    print "WARN: Gobuster is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
+    print "WARN: Gobuster is not using a full wordlist, do a comprehensive scan after completion! Wordlist: %s" % (default_wordlist) 
     #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
-    chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,"secProb_no_ext",PROCESSES)
+    chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,default_wordlist.split("/")[4].split(".")[0],PROCESSES)
     count = 0
     jobs = []
     for chunk in os.listdir(WORDLIST_CHUNK_DIR):
