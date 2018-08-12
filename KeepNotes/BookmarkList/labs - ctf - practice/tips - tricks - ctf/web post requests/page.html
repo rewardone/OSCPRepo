@@ -5,4 +5,12 @@
 <title>Web POST Requests</title>
 </head><body>Just replacing GET with POST sometimes isn't good enough. Make sure that the Content-Type header and other headers make sense for the data that you're posting:<br/>
 <br/>
-Content-Type: application/x-www-form-urlencoded</body></html>
+Content-Type: application/x-www-form-urlencoded<br/>
+<br/>
+<br/>
+<br/>
+Don't forget about your good friend curl!<br/>
+-X POST<br/>
+-x http://127.0.0.1:8080 (for seeing your request in a proxy)<br/>
+-d DATA TO POST<br/>
+&lt;target&gt;</body></html>

