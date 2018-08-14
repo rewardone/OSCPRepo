@@ -1,0 +1,4 @@
+cmd_injection payload list
+replace {IP} with your IP, start your webserver and tcpdump
+look carefully at responses and sizes and pingbacks
+Look at PayloadAllTheThings Command Injection list for more

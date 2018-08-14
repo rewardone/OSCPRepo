@@ -15,9 +15,8 @@ def alive_hosts(target_hosts):
     print "INFO: Performing ping sweep over %s" % (target_hosts)
     output_file = "/root/scripts/recon_enum/results/exam/targets.txt"
     f = open(output_file, 'w')
-    #pinghosts = "nmap -n -sn %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_HOST_DISCOVERY.nmap'" % (target_hosts, target_hosts)
-    #results = subprocess.check_output(pinghosts, shell=True)
-    #lines = results.split("\n")
+    if not os.path.isdir('/root/scripts/recon_enum/results/exam/nmap'):
+        os.makedirs('/root/scripts/recon_enum/results/exam/nmap')
     lines = subprocess.check_output(['nmap','-n','-sn',target_hosts,'-oA','/root/scripts/recon_enum/results/exam/nmap/%s_HOST_DISCOVERY' % target_hosts]).split("\n")
     live_hosts = 0
     for line in lines:

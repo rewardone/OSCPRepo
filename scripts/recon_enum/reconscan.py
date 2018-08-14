@@ -415,6 +415,17 @@ def nmapFullSlowScan(ip_address):
 
 #Be sure to change the interface if needed
 #-mT/-mU TCP/UDP respectively, full range of ports. -L timeout 3 seconds (7 default), 300 packets per second (default)
+# -n                    Do not do name service lookup
+# -vv                   be very verbose
+# --stats-every 30s     Give stats every 30 seconds
+# -Pn                   Treat hosts as online (skip host discovery)
+# -sT                   Full TCP connect, no syn machine guns
+# -T4                   Timing 4, faster scan
+# -p-                   Scan every port
+# --max-retires 1       Only retry a port once
+# --min-rate            Send packets at a minimum rate of defined
+# -oA                   Give output in all three output formats
+#
 def nmapFullFastScan(ip_address):
    ip_address = ip_address.strip()
    print "INFO: Running general TCP/UDP nmap scans for " + ip_address

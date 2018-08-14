@@ -76,8 +76,8 @@ DIRB_COMBINED="%s/dirb_%s_%s_combined" % (BASE, name, port)
 WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (name, port)
 WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (name, port)
 WW_OUT_VERBOSE="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb_verbose" % (name, port)
-FILE_EXT=".bak,.gz,.tar.gz"
-#FILE_EXT=".php,.html"
+#FILE_EXT=".bak,.gz,.tar.gz"
+FILE_EXT=".php,.html"
 
 
 #This is needed in case of odd ports. May not be only 80/443
