@@ -11,7 +11,6 @@ port = sys.argv[2].strip()
 
 #NSE Documentation
 #Running
-#ms-sql-brute: brute
 #ms-sql-dac: queries for the DAC (admin) port of an instance
 #ms-sql-dump-hashes: dump hashes in format for john. requires admin.
 #ms-sql-empty-password: attempts to auth using empty password for the 'sa' account.
@@ -19,6 +18,7 @@ port = sys.argv[2].strip()
 #ms-sql-ntlm-info: enum info from services with NTLM auth enabled
 
 #Not Running
+#ms-sql-brute: brute
 #ms-sql-config: queries for databases, linked servers, settings. auth required.
 #ms-sql-hasdbaccess: queries for list of databases a user has access to. auth required.
 #ms-sql-query: runs a query against server. auth required.

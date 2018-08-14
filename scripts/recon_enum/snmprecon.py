@@ -46,7 +46,7 @@ def onesixtyone():
 #snmp-brute: Attempt to find community string by brute force guessing. default wordlist: nselib/data/snmpcommunities.lst. provide own with snmp-brute.communitiesdb arg
 def nmap_communities(community):
     print "INFO: Performing nmap SNMP script scan for %s:161 and community %s" % (ip_address, community)
-    #SNMPSCAN = "nmap -n -vv -sV -sU -Pn -p 161,162 --script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners --script-args creds.snmp=:%s -oA '/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmp.nmap' %s" % (community, ip_address, community)
+    #SNMPSCAN = "nmap -n -sV -Pn -vv -sU -p 161,162 --script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners --script-args creds.snmp=:%s -oA '/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmp.nmap' %s" % (community, ip_address, community)
     subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-sU','-p','%s' % port,'--script=snmp-brute,snmp-hh3c-logins,snmp-info,snmp-ios-config,snmp-netstat,snmp-processes,snmp-sysdescr,snmp-win32-services,snmp-win32-shares,snmp-win32-software,snmp-win32-users,vulners','--script-args',"creds.snmp=:%s" % community,'-oA','/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmp.nmap' % (ip_address,community),ip_address])
     #results = subprocess.check_output(SNMPSCAN, shell=True)
     # resultsfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmprecon.txt" % (ip_address, community)
