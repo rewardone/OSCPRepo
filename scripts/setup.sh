@@ -27,6 +27,10 @@ echo "\nCloning Vulners.nse script \n"
 direc=/root/Documents/Vulners
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/vulnersCom/nmap-vulners.git $direc; fi
 
+echo "\nCloning Python PTY Shells \n"
+direc=/root/Documents/PythonPTYShells
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/infodox/python-pty-shells.git $direc; fi
+
 echo "\nCloning OSCPRepo \n"
 direc=/root/Documents/OSCPRepo
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/rewardone/OSCPRepo.git $direc; fi

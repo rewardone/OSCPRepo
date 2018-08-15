@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Use dev/shm instead of tmp</title>
+</head><body>https://www.cyberciti.biz/tips/what-is-devshm-and-its-practical-usage.html<br/>
+<br/>
+Use /dev/shm instead of tmp to avoid touching disk!<br/>
+<br/>
+<br/>
+<br/>
+shm / shmfs is also known as tmpfs, which is a common name for a temporary file storage facility on many Unix-like operating systems. It is intended to appear as a mounted file system, but one which uses virtual memory instead of a persistent storage device.<br/>
+<br/>
+If you type the mount command you will see /dev/shm as a tempfs file system. Therefore, it is a file system, which keeps all files in virtual memory. Everything in tmpfs is temporary in the sense that no files will be created on your hard drive. If you unmount a tmpfs instance, everything stored therein is lost. By default almost all Linux distros configured to use /dev/shm:<br/>
+<br/>
+Filesystem &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Size &nbsp;Used Avail Use% Mounted on<br/>
+/dev/mapper/wks01-root<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 444G &nbsp; 70G &nbsp;351G &nbsp;17% /<br/>
+tmpfs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3.9G &nbsp; &nbsp; 0 &nbsp;3.9G &nbsp; 0% /lib/init/rw<br/>
+udev &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;3.9G &nbsp;332K &nbsp;3.9G &nbsp; 1% /dev<br/>
+tmpfs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3.9G &nbsp;168K &nbsp;3.9G &nbsp; 1% /dev/shm<br/>
+/dev/sda1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 228M &nbsp; 32M &nbsp;184M &nbsp;15% /boot</body></html>

