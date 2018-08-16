@@ -555,7 +555,7 @@ def mkdir_p(path):
 #Create the directories that are currently hardcoded in the script
 #dotdotpwn directory for reports created automatically by dotdotpwn just in case user wants them
 def createDirectories():
-   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","msrpc","mssql","mysql","nfs","nikto","nmap","rdp","rpc","smb","smtp","snmp","ssh","telnet","tftp","whatweb"
+   scriptsToRun = "dirb","dirb/80","dirb/443","dotdotpwn","finger","ftp","http","ldap","msrpc","mssql","mysql","nfs","nikto","nmap","rdp","rpc","smb","smtp","snmp","ssh","telnet","tftp","whatweb"
    for path in scriptsToRun:
       mkdir_p("/root/scripts/recon_enum/results/exam/%s" % path)
    mkdir_p("/usr/share/dotdotpwn/Reports")

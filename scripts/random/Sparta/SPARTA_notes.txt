@@ -1,0 +1,5 @@
+Scripts that require commas should be encapsulated with double quotes. ie:
+nmap-stage2-tcp-fast=nmap S2 TCP 10k, "nmap -n -vv --stats-every 30s -Pn -sT -T4 -p 25,135,137,139,445,1433,3306,5432 --max-retries 1 --min-rate 10000 [IP] -oA \"[OUTPUT]\""
+
+/usr/share/sparta/controller/controller.py      updated for staged nmap
+/usr/share/sparta/app/settings.py               updated for recon_scan setup (allows us to tee output to recon_scan results directories)
