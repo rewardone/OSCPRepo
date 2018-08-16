@@ -4,7 +4,6 @@
 ## [Title]: reconscan.py -- a recon/enumeration script
 ## [Author]: Mike Czumak (T_v3rn1x) -- @SecuritySift
 ## [Edits]: Reward1
-## [Credit]: superkojiman -- OneTwoPunch
 ##-------------------------------------------------------------------------------------------------------------
 ## [Details]:
 ## This script is intended to be executed remotely against a list of IPs to enumerate discovered services such
@@ -59,6 +58,7 @@
 ##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
+##      Finish refactoring dirbustEVERYTHING and webRecon
 ##      POST SCAN COMPLETION:
 ##           Parse outputs and run through searchsploit and getsploit
 ##           If windows: give additional commands to run

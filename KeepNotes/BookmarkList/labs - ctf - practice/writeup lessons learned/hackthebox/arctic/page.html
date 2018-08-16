@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Arctic</title>
+</head><body>Web:<br/>
+When you see something, anything, starting with CF, it has a high chance of being Cold Fusion<br/>
+Look around for an administrator login page<br/>
+<br/>
+MSF: show advanced<br/>
+Set verbosity and other (potentially) useful variables<br/>
+<br/>
+BURP: need to help debug requests other tools are making and they don't have proxy support? <br/>
+Proxy &gt; Options &gt; add new listener<br/>
+&nbsp;&#09;Bind port and under request handling, redirect to host:port<br/>
+&nbsp;&#09;ie: bind localhost and auto redirect to the web server<br/>
+Now run your tools against "localhost:burp_port" and it will go through BURP and auto redirect to the web server<br/>
+<br/>
+Upgrade your simple Windows CMD reverse shell to something more powerful:<br/>
+&nbsp;&#09;python unicorn trustedsec<br/>
+&nbsp;&#09;Windows to Meterpreter for example<br/>
+&nbsp;&#09;Unicorn supports PowerShell commands, so be aware this may not work for older versions of windows<br/>
+<br/>
+Instead of copy/paste long powershell commands, think about hosting it and having powershell invoke web-request to grab and execute it natively.<br/>
+<br/>
+<br/>
+MSF: run local_exploit_suggester in both x86 and x64 because they return different things<br/>
+<br/>
+MSF: ps<br/>
+Displays processes. If it has a 1, it means the process is interactive and gives more options. Migrate to a process with a 1 if possible. <br/>
+<br/>
+Migrate into an x64 process to automatically change to x64 and vice-versa</body></html>
