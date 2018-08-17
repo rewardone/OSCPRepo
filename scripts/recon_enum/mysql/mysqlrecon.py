@@ -11,7 +11,6 @@ port = sys.argv[2].strip()
 
 #NSE Documentation
 #Running
-#mysql-brute: brute guess against mySQL, seems beneficial to let nmap brute instead of hydra for additional nmap scripts args 'userdb''passdb'
 #mysql-databases: attempts to list databases. args mysqluser,mysqlpass. will use empty password if none provided/brute/etc
 #mysql-dump-hashes: dumps hashes for John. requires root. args username,password
 #mysql-empty-password: checks for Mysql servers with an empty password for 'root' or 'anonymous'
@@ -22,6 +21,7 @@ port = sys.argv[2].strip()
 
 #Not Running
 #mysql-audit: audit security config against parts of CIS MySQL 1.0.2 benchmark --script-args mysql-audit.username,password,filename
+#mysql-brute: brute guess against mySQL, seems beneficial to let nmap brute instead of hydra for additional nmap scripts args 'userdb''passdb'
 #mysql-query: runs a query and returns the table args 'query''username''password'
 print "INFO: Performing nmap MySQL script scan for %s:%s" % (ip_address, port)
 #MySQLSCAN = "nmap -n -sV -Pn -vv -p %s --script mysql-empty-password,mysql-vuln-cve2012-2122,mysql-databases,mysql-dump-hashes,mysql-enum,mysql-info,mysql-variables,vulners -oA '/root/scripts/recon_enum/results/exam/mysql/%s_mysql' %s" % (port, ip_address, ip_address)

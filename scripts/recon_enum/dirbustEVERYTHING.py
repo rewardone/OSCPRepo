@@ -337,14 +337,22 @@ if __name__=='__main__':
     #print args
 
     #Fix URL if "http(s)" is not pased in
-    if len(args.url.split("//")) == 1:
-        if len(args.url.split(":")) == 1:
+    if len(args.url.split("//")) == 1: #1 means there is no http:// before URL
+        if len(args.url.split(":")) == 1: #1 means there is no port passed in
             print "Need to specify URL:PORT"
             sys.exit(1)
-        elif args.url.split(":")[1] == 443:
-            args.url = "https://" + args.url
-        else:
-            args.url = "http://" + args.url
+        elif len(args.url.split(":")) == 2:
+            #this happens after split("//") so this should mean URL is [0] and [PORT] is [1]
+            if args.url.split(":")[1] == 443: #hard code 443
+                tmp = args.url.split(":")
+                ip_address = tmp[0]
+                port = 443
+                args.url = "https://" + args.url
+            else:
+                tmp = args.url.split(":")
+                ip_address = tmp[0]
+                port = tmp[1]
+                args.url = "http://" + args.url
     url = args.url
 
 
@@ -434,10 +442,10 @@ if __name__=='__main__':
             print "INFO: Starting whatweb of %s" % (url)
             whatWeb(DIRB_COMBINED)
             print "INFO: WhatWeb identification of %s completed" % (url)
-            cleanup()
             print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
-            subprocess.check_output(['./nmapHttpVulns.py',ip_address,port])
+            subprocess.check_output(['./nmapHttpVulns.py',STAT_200,url])
             print "INFO: nmapHttpVulns of %s complete" % (url)
+            cleanup()
         else:
             comuni("dirb",DIRB_COMBINED)
             sortBySize(DIRB_COMBINED)
@@ -476,22 +484,22 @@ if __name__=='__main__':
                     os.remove(resChunk)
         if args.intensity in [3,4,7,8,11,12]:
             print "INFO: Generating custom wordlist for %s" % (url)
-            # genlistLoopProc(GOB_DEFAULT)
-            # print "INFO: cewl gobuster scan for %s:%s starting" % (url,port)
-            # gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
-            # comuni("gobuster",GOB_COMBINED)
-            # print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
-            # print "INFO: Directory brute of %s completed" % (url)
-            # sortBySize(GOB_COMBINED)
-            # print "INFO: Starting whatweb of %s" % (url)
-            # whatWeb(GOB_COMBINED)
-            # print "INFO: WhatWeb identification of %s completed" % (url)
-            # cleanup()
-            # print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
-            # subprocess.check_output(['./nmapHttpVulns.py',ip_address,port])
-            # print "INFO: nmapHttpVulns of %s complete" % (url)
+            genlistLoopProc(GOB_DEFAULT)
+            print "INFO: cewl gobuster scan for %s:%s starting" % (url,port)
+            gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
+            comuni("gobuster",GOB_COMBINED)
+            print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
+            print "INFO: Directory brute of %s completed" % (url)
+            sortBySize(GOB_COMBINED)
+            print "INFO: Starting whatweb of %s" % (url)
+            whatWeb(GOB_COMBINED)
+            print "INFO: WhatWeb identification of %s completed" % (url)
+            print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
+            subprocess.check_output(['./nmapHttpVulns.py',STAT_200,url])
+            print "INFO: nmapHttpVulns of %s complete" % (url)
+            cleanup()
         else:
-            # comuni("gobuster",GOB_COMBINED)
-            # sortBySize(GOB_COMBINED)
-            # cleanup()
+            comuni("gobuster",GOB_COMBINED)
+            sortBySize(GOB_COMBINED)
+            cleanup()
             print "INFO: Gobuster completed on %s" % (url)

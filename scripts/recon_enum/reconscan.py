@@ -3,7 +3,7 @@
 ###############################################################################################################
 ## [Title]: reconscan.py -- a recon/enumeration script
 ## [Author]: Mike Czumak (T_v3rn1x) -- @SecuritySift
-## [Edits]: Reward1
+## [Updates]: Reward1
 ##-------------------------------------------------------------------------------------------------------------
 ## [Details]:
 ## This script is intended to be executed remotely against a list of IPs to enumerate discovered services such
@@ -12,7 +12,7 @@
 ## This script really likes when you put a targets.txt file containing targets (one per line) at
 ## /root/scripts/recon_enum/results/exam/targets.txt
 ##
-## The script will run Unicornscan against all ports, pass open ports to Nmap, and then run an nmap scan
+## The script will run nmap (very fast min rate) against all ports, pass open ports to Nmap, and then run an nmap scan
 ## against all ports.
 ##-------------------------------------------------------------------------------------------------------------
 ## [Run]:
@@ -37,8 +37,6 @@
 ##      Pre-Exploitation Enumeration > Active > Internal Infrastructure Mapping > Identify Alive IPs
 ## Expand: RDPenum with rdp-sec-check
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
-## nmapHttpVulns need better error handling for when STAT200 does not exist. Maybe move it somewhere else
-##          Before dirbustEVERYTHING sorts it away
 ## Fix DNSRecon
 ## Expand: DirbustEverything
 ##       : more tools! WFUZZ, DirBuster, Dirsearch
@@ -59,7 +57,6 @@
 ##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
-##      Finish refactoring dirbustEVERYTHING and webRecon
 ##      POST SCAN COMPLETION:
 ##           Parse outputs and run through searchsploit and getsploit
 ##           If windows: give additional commands to run
@@ -129,64 +126,16 @@ def fingerEnum(ip_address, port):
    #subprocess.call(FINGERSCAN, shell=True)
    return
 
-#NSE Documentation
-#http-apache-negotiation: check for mod_negotiation. If GET index, does site return index or index.html,etc
-#http-apache-server-status: attempt to retrieve server-status if mod_status is enabled  /server-status
-#http-backup-finder: attempt to identify backup copies of discovered files (.bak, ~ files, 'copy of index.html', etc)
-#http-comments-displayer: Extract and output HTML and JavaScript comments from responses
-#http-config-backup: checks for backups and swap files of common CMS and web config files
-#http-cors: tests for CORS by sending Access-Control-Request-Method headers
-#http-cross-domain-policy: checks for /crossdomain.xml and /clientaccesspolicy.xml for information
-#http-default-accounts: test for access with default creds used by a variety of web applications and devices
-#http-git: check for .git and retrieve as much repo information as possible
-#http-grep: spider and attempt to match pages/urls against a given string. Search for email/ip by default. Configure more!
-#http-ls: shows content of an "index" page
-#http-method-tamper: attempt verb tamper to access password protected pages
-#http-methods: find what options are supported by a server by sending OPTIONS request
-#http-mobileversion-checker: check to see if a mobile UA will redirect to a mobile specific website
-#http-passwd: check if vuln to dir traversal
-#http-robots.txt: checks for disallowed entries in robots.txt
-#http-useragent-tester: test for various tool UA headers to see if they are allowed or not (also see robots.txt)
-#http-userdir-enum: attempt to enum valid usernames on servers running mod_userdir module or similar enabled
-#http-vhosts: search for web virtual hostnames by sending HEAD requests
-#http-waf-detect: attempt to detect IPS/IDS/WAF. args: aggro,uri,detectBodyChanges
-#http-waf-fingerprint: attempt to fingerprint WAF if exists. args: intensive=1
-#http-webdav-scan: detect WebDAV installations using OPTIONS and PROPFIND methods
-
-#not run
-#http-apache-server-status: check for mod_status and get information
-#http-devframework: attempt to spider and identify devframeworks
-#http-enum: Enumerates directories used by popular web applications and servers
-#http-fileupload-exploiter: tries 3 methods to exploit upload forms
-#http-internal-ip-disclosure: send HTTP/1.0 request without host header to see if website will disclose IP
-#http-ntlm-info: sends HTTP NTLM auth request with null domain and user, obtain NetBIOS, DNS, and OS build if available
-#http-rfi-spider: crawls for RFI vulns. tests every form field and every param in URL
-#http-security-headers: checks headers for security related headers
-#http-shellshock: check for shellshock vulnerability
-#http-sitemap-generator: spider site and display dir structure with number and types of files in each folder
-#http-sql-injection: spider server looking for URLs containing queries vuln to SQLi. Extracts forms and tries to identify fields that are vuln
-#http-unsafe-output-escaping: fuzz parameters and checks to see if they are reflected
 def httpEnum(ip_address, port):
     path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
     mkdir_p(path)
     print "INFO: Detected http on %s:%s" % (ip_address, port)
-    print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
-    #HTTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan --script-args http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1 -oA /root/scripts/recon_enum/results/exam/http/%s_%s_http.nmap %s" % (port, userAgent, ip_address, port, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_http' % (port, ip_address),ip_address])
-    #results = subprocess.check_output(HTTPSCAN, shell=True)
+    print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port) 
+    subprocess.check_output(['./webRecon.py','http://%s:%s' % (ip_address, port)])
+    print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
-    #can opt to invoke dirbustEVERYTHING with <http://url:port> <output filename> <tool-to-use> ie dirb or gobuster (default)
-    #DIRBUST = "./dirbustEVERYTHING.py http://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
-    subprocess.check_output(['./dirbustEVERYTHING.py','http://%s:%s' % (ip_address,port),ip_address])
-    #subprocess.check_call(DIRBUST, shell=True)
-    print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
-    #NMAPHTTPVULNS = "./nmapHttpVulns.py %s %s" % (ip_address, port)
-    subprocess.check_output(['./nmapHttpVulns.py',ip_address,port])
-    #subprocess.check_output(NMAPHTTPVULNS, shell=True)
-    print "INFO: nikto scan started on port %s:%s" % (ip_address, port)
-    #NIKTOSCAN = "nikto -host %s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto" % (ip_address, port, ip_address, port, ip_address, port)
-    subprocess.check_output(['nikto','-host',ip_address,'-port',port,'-nolookup','-ask','auto','-output',"/root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml" % (ip_address,port)])
-    #subprocess.check_output(NIKTOSCAN, shell=True)
+    subprocess.check_output(['./dirbustEVERYTHING.py','-p',1,'-i',4,'http://%s:%s' % (ip_address,port),ip_address])
+    print "INFO: dirbust scan completed for %s:%s" % (ip_address, port)
     return
 
 def httpsEnum(ip_address, port):
@@ -194,95 +143,49 @@ def httpsEnum(ip_address, port):
     mkdir_p(path)
     print "INFO: Detected https on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
-    #HTTPSCANS = "nmap -n -sV -Pn -vv -p %s --script=http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan --script-args http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1 -oA /root/scripts/recon_enum/results/exam/http/%s_%s_https.nmap %s" % (port, userAgent, ip_address, port, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','http-apache-negotiation,http-apache-server-status,http-backup-finder,http-comments-displayer,http-config-backup,http-cors,http-cross-domain-policy,http-default-accounts,http-git,http-grep,http-ls,http-methods,http-method-tamper,http-mobileversion-checker,http-passwd,http-robots.txt,http-useragent-tester,http-userdir-enum,http-vhosts,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_https' % (port, ip_address),ip_address])
-    #results = subprocess.check_output(HTTPSCANS, shell=True)
+    subprocess.check_output(['./webRecon.py','https://%s:%s' % (ip_address, port)])
+    print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
-    #can opt to invoke dirbustEVERYTHING with <http://url:port> <output filename> <tool-to-use> ie dirb or gobuster (default)
-    #DIRBUST = "./dirbustEVERYTHING.py https://%s:%s %s" % (ip_address, port, ip_address) # execute the python script
-    subprocess.check_output(['./dirbustEVERYTHING.py','http://%s:%s' % (ip_address,port),ip_address])
-    #subprocess.check_call(DIRBUST, shell=True)
-    print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
-    #NMAPHTTPVULNS = "./nmapHttpVulns.py %s %s" % (ip_address, port)
-    subprocess.check_output(['./nmapHttpVulns.py',ip_address,port])
-    #subprocess.check_output(NMAPHTTPVULNS, shell=True)
-    print "INFO: nikto scan started on %s:%s" % (ip_address, port)
-    #NIKTOSCAN = "nikto -host %s -port %s -nolookup -ask auto -output /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto.xml > /root/scripts/recon_enum/results/exam/nikto/%s_%s_S_nikto" % (ip_address, port, ip_address, port, ip_address, port)
-    subprocess.check_output(['nikto','-host',ip_address,'-port',port,'-nolookup','-ask','auto','-output',"/root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml" % (ip_address,port)])
-    #subprocess.check_output(NIKTOSCAN, shell=True)
+    subprocess.check_output(['./dirbustEVERYTHING.py','-p',1,'-i',4,'https://%s:%s' % (ip_address,port),ip_address])
+    print "INFO: dirbust scan completed for %s:%s" % (ip_address, port)
     return
 
 def mssqlEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
-	  #MYSQLRECON in subdirectory in case multiple Hydra.restore files. default, nmap performs brute.
+	#MYSQLRECON in subdirectory in case multiple Hydra.restore files. default, nmap performs brute.
     print "INFO: Detected MS-SQL on %s:%s" % (ip_address, port)
-    #SCRIPT = "mssql/./mssqlrecon.py %s %s" % (ip_address, port)
     subprocess.check_output(['mssql/./mssqlrecon.py',ip_address,port])
-    #results = subprocess.check_output(SCRIPT, shell=True)
     return
 
 def mysqlEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
-	  #MYSQLRECON in subdirectory in case ftp/ssh/telnet are present, hydra will have
-    #separate hydra.restore files. default, nmap performs the brute, but just in case
+	#MYSQLRECON in subdirectory in case ftp/ssh/telnet are present, hydra will have
     print "INFO: Detected MySQL on %s:%s" % (ip_address, port)
-    #SCRIPT = "mysql/./mysqlrecon.py %s %s" % (ip_address, port)
     subprocess.check_output(['mysql/./mysqlrecon.py',ip_address,port])
-    #subprocess.call(SCRIPT, shell=True)
     return
 
-#nfs-ls: attempts to get useful information about files from NFS exports.
-#nfs-showmount: shows NFS exports like the 'showmount -e' command
-#nfs-statfs: retrieves disk space statistics
 def nfsEnum(ip_address, port):
     print "INFO: Detected NFS on %s:%s" % (ip_address, port)
-    #NFSSCAN = "nmap -n -sV -Pn -vv -p %s --script=nfs-ls,nfs-showmount,nfs-statfs,vulners -oA /root/scripts/recon_enum/results/exam/nfs/%s_nfs.xml %s" % (port, ip_address, ip_address)
-    nfsPort = '111,%s' % port #need rpc for nmap scripts
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',nfsPort,'--script','nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA","/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfs" % (ip_address, port),ip_address])
-    outfile = "/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfsrecon.txt" % (ip_address, port)
-    f = open(outfile,'w')
-    results = subprocess.check_output(['showmount','-a',ip_address])
-    if results:
-        f.write("Showmount -a: " + "\n")
-        f.write(results)
-        f.write("\n")
-    results = subprocess.check_output(['showmount','-e',ip_address])
-    if results:
-        f.write("Showmount -e: " + "\n")
-        f.write(results)
-        f.write("\n")
-    results = results.split("\n")
-    for res in results:
-        if "/" in res:
-            try:
-                sharename = res.split(" ")[0] #grab just the mount/share
-                fqsharename = "%s:%s" % (ip_address, sharename)
-                dir = sharename.split("/")[-1] #grab last element so we can make a name for it
-                dir = "/mnt/%s" % dir
-                if not os.path.isdir(dir):
-                    mkdir_p(dir)
-                subprocess.check_output(['nfspy',dir,'-o','server=%s,getroot,hide,allow_root,rw' % (fqsharename)])
-                print "INFO: %s should be mounted at %s" % (sharename, dir)
-            except:
-                print "Something went wrong with nfspy or creation. Try manually for: %s" % res
-    f.close()
+    subprocess.check_output(['./nfsRecon.py',ip_address,port])
     return
 
 def msrpc(ip_address, port):
     print "INFO: Detected MSRPC on %s:%s" % (ip_address, port)
     #Impacket RPC packages
-    #SCRIPT = "msrpcrecon.py %s %s" % (ip_address, port)
     subprocess.check_output(['./msrpcrecon.py',ip_address,port])
-    #subprocess.call(SCRIPT, shell=True)
     return
 
-#port 111
-#apt-get install, nfs-common
+#port 111 #apt-get install, nfs-common
+#Running
+#rpc-grind: Fingerprints target RPC port to extract service, rpc number, and version
+#rpcinfo: Connects to portmapper and fetches a list of all registered programs
+
+#Not Running
+#rpcap-brute: Brute against WinPcap Remote Capture
+#rpcap-info: Retrieve interface information through rpcap service
 def rpcbindEnum(ip_address, port):
     print "INFO: Detected RPCBind on %s:%s" % (ip_address, port)
-    #NMAPRPCNSE = "nmap -n -sV -Pn -vv -p %s --script rpc-grind -oA /root/scripts/recon_enum/results/exam/rpc/%s_rpc.xml %s" % (port, ip_address, ip_address)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','rpc-grind','-oA',"/root/scripts/recon_enum/results/exam/rpc/%s_%s_rpc" % (ip_address,port),ip_address])
-    #subprocess.call(NMAPRPCNSE, shell=True)
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','rpc-grind,rpcinfo','-oA',"/root/scripts/recon_enum/results/exam/rpc/%s_%s_rpc" % (ip_address,port),ip_address])
     RPCINFOSCAN1 = "rpcinfo %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
     subprocess.check_output(RPCINFOSCAN1, shell=True)
     RPCINFOSCAN2 = "rpcinfo -p %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
@@ -296,8 +199,6 @@ def rdpEnum(ip_address, port):
 	#RDPRECON in subdir in case multiple hydra.restore files
     print "INFO: Detected RDP on %s:%s" % (ip_address, port)
     subprocess.check_output(['rdp/./rdprecon.py',ip_address,port])
-    #SCRIPT = "rdp/./rdprecon.py %s %s" % (ip_address, port)
-    #subprocess.call(SCRIPT, shell=True)
     return
 
 def rloginEnum(ip_address, port):
