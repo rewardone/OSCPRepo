@@ -207,7 +207,7 @@ def gobuster(wordlist, scanname):
     #-P string: Password for basic auth
     #-U string: Username for basic auth
     #-fw: Force continued operation when wildcard found
-    GOBUSTERSCAN = "gobuster -a '%s' -e -q -u %s -x %s -l -w %s > %s" % (user_agent, url, FILE_EXT, wordlist, scanname)
+    GOBUSTERSCAN = "gobuster -a '%s' -t 30 -e -q -u %s -x %s -l -w %s > %s" % (user_agent, url, FILE_EXT, wordlist, scanname)
     results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
     #print results
     if "Wildcard response found" in results:
@@ -232,6 +232,9 @@ def sortBySize(nameAndPathOfResults):
         GREP = "grep %s %s > %s/gobuster_%s_%s_size_%s_only" % (size, nameAndPathOfResults, BASE, name, port, size)
         #can't redirect in subprocess, leaving shell=True
         GREPRESULTS = subprocess.call(GREP, shell=True)
+    f.close()
+
+def cleanup():
     directory = "%s/%s" % (BASE,name)
     for resultFile in os.listdir(BASE):
         if not os.path.isdir(directory):
@@ -242,7 +245,6 @@ def sortBySize(nameAndPathOfResults):
             destination = "%s/%s" % (directory,resultFile)
             resultFile = "%s/%s" % (BASE,resultFile)
             os.rename(resultFile,destination)
-    f.close()
 
 def whatWeb(path):
     print "INFO: whatweb started on port %s" % (port)
@@ -309,43 +311,43 @@ def comuni(tool,combined_name):
     comuniresults = subprocess.check_call(COMUNI, shell=True)
 
 if __name__=='__main__':
-
+    #recommended usage: ./dirbustEVERYTHING.py -p 1 -i 4 URL:PORT, probably followed by a -i 8 scan
     parser = argparse.ArgumentParser(description='Rough script to handle bruteforcing of web directories. Usage: dirbust.py {-t [gobuster|dirb] -x ".html" -a <UA> -w <wordlist> -p <#> -i <#>} <http(s)://target url:port>')
-    parser = add_argument('-t', '--tool', default="gobuster", choices=["gobuster", "dirb"], help="Use a specific tool with dirbustEVERYTHING: -t gobuster. Default gobuster")
-    parser = add_argument('-x', '--extensions', dest="FILE_EXT", default=".html", help="File extensions to test for. Comma delimited with no spaces eg .php,.html") 
-    parser = add_argument('-a', '--user-agent', dest="user_agent", default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", help="User-agent")
-    parser = add_argument('-w', '--wordlist', dest="default_wordlist", default="/root/lists/Web/secProb_no_ext.txt", help="Wordlist to use")
-    parser = add_argument('-p', '--processes', dest="PROCESSES", type=int, default=10, help="Number of chunks to split wordlist into. A separate tool invocation will be used for each chunk")
-    parser = add_argument('-i', '--intensity', type=int, choices=range(1, 12), default=3, help="Intensity level."
-                            "Small wordlist is secProb. Larger is Personal_w_vulns. "
-                            "1: scan no extensions. "
-                            "2: scan with extensions, but no other tools. "
-                            "3: scan with extensions, cewl, and whatweb. "
-                            "4: scan with more extensions, cewl, and whatweb. "
-                            "5: scan with larger wordlist, no extensions. "
-                            "6: scan with larger wordlist and extensions, but no other tools. "
-                            "7: scan with larger wordlist and extensions, cewl, nmapHttpVulns, and whatweb. "
-                            "8: scan with larger wordlist more extensions, cewl, nmapHttpVulns, and whatweb. "
-                            "9: scan with user wordlist and no extensions. "
-                            "10: scan with user wordlist and extensions, but no other tools. "
-                            "11: scan with user wordlist and extensions, cewl, nmapHttpVulns, and whatweb. "
-                            "12: scan with user wordlist, more extensions, cewl, nmapHttpVulns, and whatweb. ")
-    parser = add_argument('url', help="Run all (safe) nmap scripts regarding HTTP scanning")
-
-    
+    parser.add_argument('-t', '--tool', default="gobuster", choices=["gobuster", "dirb"], help="Use a specific tool with dirbustEVERYTHING: -t gobuster. Default gobuster")
+    parser.add_argument('-x', '--extensions', dest="FILE_EXT", default=".html", help="File extensions to test for. Comma delimited with no spaces eg .php,.html")
+    parser.add_argument('-a', '--user-agent', dest="user_agent", default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", help="User-agent")
+    parser.add_argument('-w', '--wordlist', dest="default_wordlist", default="/root/lists/Web/secProb_no_ext.txt", help="Wordlist to use")
+    parser.add_argument('-p', '--processes', dest="PROCESSES", type=int, default=10, help="Number of chunks to split wordlist into. A separate tool invocation will be used for each chunk. This is NOT gobuster -t threads.")
+    parser.add_argument('-i', '--intensity', type=int, choices=range(1, 12), default=3, help="Intensity level."
+                            "Small wordlist is secProb. Larger is Personal_w_vulns.-------------------------------------"
+                            "1: scan no extensions. ------------------------------- "
+                            "2: scan with extensions, but no other tools. --------- "
+                            "3: scan with extensions, cewl, nmapHttpVulns, and whatweb. ---------- "
+                            "4: scan with more extensions, cewl, nmapHttpVulns, and whatweb. ----- "
+                            "5: scan with larger wordlist, no extensions. --------- "
+                            "6: scan with larger wordlist and extensions, but no other tools. ----------------------------------------- "
+                            "7: scan with larger wordlist and extensions, cewl, nmapHttpVulns, and whatweb. -------------------------- "
+                            "8: scan with larger wordlist more extensions, cewl, nmapHttpVulns, and whatweb. -------------------------- "
+                            "9: scan with user wordlist and no extensions. -------- "
+                            "10: scan with user wordlist and extensions, but no other tools. ----------------------------------------- "
+                            "11: scan with user wordlist and extensions, cewl, nmapHttpVulns, and whatweb. -------------------------- "
+                            "12: scan with user wordlist, more extensions, cewl, nmapHttpVulns, and whatweb. -------------------------- ")
+    parser.add_argument('url', help="Run all (safe) nmap scripts regarding HTTP scanning")
     args = parser.parse_args()
     #print args
-    
+
     #Fix URL if "http(s)" is not pased in
-    if len(args.url.split("//") == 1:
-        if len(args.url.split(":") == 1:
-            print "Need to specify URL:PORT
+    if len(args.url.split("//")) == 1:
+        if len(args.url.split(":")) == 1:
+            print "Need to specify URL:PORT"
             sys.exit(1)
         elif args.url.split(":")[1] == 443:
             args.url = "https://" + args.url
         else:
             args.url = "http://" + args.url
-    
+    url = args.url
+
+
     #Assign IP and PORT variables. Assigning them here
     #prevents certain edge cases from being missed above
     if ("http" in args.url):
@@ -353,18 +355,18 @@ if __name__=='__main__':
     elif ("https" in args.url):
         ip_address = args.url.strip("https://")
     port = args.url.split(":")[2]
-    
+
     #This is needed in case of odd ports. May not be only 80/443
     path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
     mkdir_p(path)
-    
+
     #This is a bad 'patch' for output scanname. Reconscan passes IP
     #so this will be forced for now
     name = "%s_%s" % (ip_address, args.intensity)
-    
+
     #This is a bad 'patch' until user_agent is refactored to args.user_agent
     user_agent = args.user_agent
-    
+
     #Set intensity for file extensions
     if args.intensity in [2,3,6,7,10,11]:
         if args.FILE_EXT != ".php":
@@ -374,11 +376,11 @@ if __name__=='__main__':
     elif args.intensity in [4,8,12]:
         FILE_EXT=".php,.html,.cgi,.txt,.log,.gz,.tar.gz,.bak,.php.bak,.html.bak"
     else:
-        if args.FILE_EXT = "":
+        if args.FILE_EXT == "":
             FILE_EXT=".html"
         else:
             FILE_EXT=args.FILE_EXT
-        
+
     #Set intensity for wordlists
     if args.intensity in [1,2,3,4]:
         default_wordlist = "/root/lists/Web/secProb_no_ext.txt"
@@ -386,10 +388,10 @@ if __name__=='__main__':
         default_wordlist = "/root/lists/Web/personal_with_vulns_no_ext.txt"
     else:
         default_wordlist = args.default_wordlist
-    
+
     #WORDLIST_CHUNK_DIR="/root/lists/Web/secProbChunked"
-    wordlistLastItem=args.default_wordlist.split("/")[len(string.split("/"))-1]
-    if len(wordlistLastItem.split(".")) = 1:
+    wordlistLastItem=args.default_wordlist.split("/")[len(args.default_wordlist.split("/"))-1]
+    if len(wordlistLastItem.split(".")) == 1:
         WORDLIST_CHUNK_DIR="/root/lists/Web/%sChunked" % wordlistLastItem
     else:
         wordlistLastItem = wordlistLastItem.split(".")[0]
@@ -422,7 +424,7 @@ if __name__=='__main__':
         dirb(default_wordlist, DIRB_DEFAULT)
         print "INFO: Finished initial dirb scan for %s:%s" % (url, port)
         if args.intensity in [3,4,7,8,11,12]:
-            print "INFO: cewl dirb scan for %s:%s starting" % (url, port) 
+            print "INFO: cewl dirb scan for %s:%s starting" % (url, port)
             genlistLoop(DIRB_DEFAULT)
             dirb(CEWL_OUT, DIRB_CEWL_OUTPUT)
             print "INFO: Finished cewl dirb scan for %s:%s" % (url, port)
@@ -432,18 +434,20 @@ if __name__=='__main__':
             print "INFO: Starting whatweb of %s" % (url)
             whatWeb(DIRB_COMBINED)
             print "INFO: WhatWeb identification of %s completed" % (url)
+            cleanup()
             print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
             subprocess.check_output(['./nmapHttpVulns.py',ip_address,port])
             print "INFO: nmapHttpVulns of %s complete" % (url)
         else:
             comuni("dirb",DIRB_COMBINED)
             sortBySize(DIRB_COMBINED)
+            cleanup()
             print "INFO: Dirb completed on %s" % (url)
-    
+
     if (args.tool == "gobuster"):
         print "INFO: Starting threaded gobust"
         print "WARN: Gobuster is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
-        print "WARN: Gobuster is not using a full wordlist, do a comprehensive scan after completion! Wordlist: %s" % (default_wordlist) 
+        print "WARN: Gobuster is not using a full wordlist, do a comprehensive scan after completion! Wordlist: %s" % (default_wordlist)
         #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
         chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,wordlistLastItem,PROCESSES)
         count = 0
@@ -472,20 +476,22 @@ if __name__=='__main__':
                     os.remove(resChunk)
         if args.intensity in [3,4,7,8,11,12]:
             print "INFO: Generating custom wordlist for %s" % (url)
-            genlistLoopProc(GOB_DEFAULT)
-            print "INFO: cewl gobuster scan for %s:%s starting" % (url,port)
-            gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
-            comuni("gobuster",GOB_COMBINED)
-            print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
-            print "INFO: Directory brute of %s completed" % (url)
-            sortBySize(GOB_COMBINED)
-            print "INFO: Starting whatweb of %s" % (url)
-            whatWeb(GOB_COMBINED)
-            print "INFO: WhatWeb identification of %s completed" % (url)
-            print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
-            subprocess.check_output(['./nmapHttpVulns.py',ip_address,port])
-            print "INFO: nmapHttpVulns of %s complete" % (url)
+            # genlistLoopProc(GOB_DEFAULT)
+            # print "INFO: cewl gobuster scan for %s:%s starting" % (url,port)
+            # gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
+            # comuni("gobuster",GOB_COMBINED)
+            # print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
+            # print "INFO: Directory brute of %s completed" % (url)
+            # sortBySize(GOB_COMBINED)
+            # print "INFO: Starting whatweb of %s" % (url)
+            # whatWeb(GOB_COMBINED)
+            # print "INFO: WhatWeb identification of %s completed" % (url)
+            # cleanup()
+            # print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
+            # subprocess.check_output(['./nmapHttpVulns.py',ip_address,port])
+            # print "INFO: nmapHttpVulns of %s complete" % (url)
         else:
-            comuni("gobuster",GOB_COMBINED)
-            sortBySize(GOB_COMBINED)
+            # comuni("gobuster",GOB_COMBINED)
+            # sortBySize(GOB_COMBINED)
+            # cleanup()
             print "INFO: Gobuster completed on %s" % (url)

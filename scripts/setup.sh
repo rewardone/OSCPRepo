@@ -70,7 +70,7 @@ echo "\nSetup Empire\n"
 cd /root/Documents/Empire/setup && chmod +x setup_database.py && ./install.sh
 
 echo "\nBuilding John Jumbo\n"
-cd /root/Documents/JohnJumbo/src && ./configure && make
+if [ ! -f ~/Documents/JohnJumbo/run/john ]; then cd /root/Documents/JohnJumbo/src && ./configure && make; fi
 
 echo "\nDownloading additional lists: secLists fuzzdb naughtystrings payloadallthethings probable-wordlists\n"
 webDirec=/root/lists/Web
@@ -103,6 +103,13 @@ chmod +x /usr/share/dotdotpwn/dotdotpwn.pl
 direc=/usr/share/dotdotpwn/Reports
 if [ ! -d "$direc" ]; then mkdir /usr/share/dotdotpwn/Reports; fi
 
+echo "\nSetup Sparta for use with reconscan \n"
+mv /usr/share/sparta/app/settings.py /usr/share/sparta/app/settings_orig.py
+mv /usr/share/sparta/controller/controller.py /usr/share/sparta/controller/controller_orig.py
+mv /etc/sparta.conf /etc/sparta_orig.conf
+cp /root/Documents/OSCPRepo/scripts/random/Sparta/settings.py /usr/share/sparta/app/settings.py
+cp /root/Documents/OSCPRepo/scripts/random/Sparta/controller.py /usr/share/sparta/controller/controller.py
+mv /root/Documents/OSCPRepo/scripts/random/Sparta/sparta.conf /etc/sparta.conf
 
 echo "\n ### Optional packages you might utilize in the future ### \n"
 echo "apt-get install automake remmina freerdpx11 alacarte shutter"

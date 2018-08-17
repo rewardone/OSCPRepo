@@ -20,7 +20,7 @@ if len(sys.argv) < 3:
     help()
 
 #See more: https://github.com/nmap/nmap/tree/master/scripts
-    
+
 #NSE Documentation
 #http-apache-negotiation: check for mod_negotiation. If GET index, does site return index or index.html,etc
 #http-apache-server-status: attempt to retrieve server-status if mod_status is enabled  /server-status
@@ -46,7 +46,6 @@ if len(sys.argv) < 3:
 #http-webdav-scan: detect WebDAV installations using OPTIONS and PROPFIND methods
 
 #not run
-#http-apache-server-status: check for mod_status and get information
 #http-devframework: attempt to spider and identify devframeworks
 #http-enum: Enumerates directories used by popular web applications and servers
 #http-fileupload-exploiter: tries 3 methods to exploit upload forms
@@ -81,22 +80,22 @@ def mkdir_p(path):
 if __name__=='__main__':
 
     parser = argparse.ArgumentParser(description='Rough script to handle Web enumeration, fingerprinting, and other less intensive scans. Usage: webRecon.py {} <http(s)://target url:port>')
-    parser = add_argument('-n', '--nmap', default='true', help="Run all (safe) nmap scripts regarding HTTP scanning")
-    parser = add_argument('-k', '--nikto', default='true', help="Run nikto against site")
-    parser = add_argument('-a', '--user-agent', dest="userAgent", default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", help="User-agent")
-    parser = add_argument('url', help="Run all (safe) nmap scripts regarding HTTP scanning")
+    parser.add_argument('-n', '--nmap', default='true', help="Run all (safe) nmap scripts regarding HTTP scanning")
+    parser.add_argument('-k', '--nikto', default='true', help="Run nikto against site")
+    parser.add_argument('-a', '--user-agent', dest="userAgent", default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", help="User-agent")
+    parser.add_argument('url', help="Run all (safe) nmap scripts regarding HTTP scanning")
 
     #whatweb is run after gobuster (to whatweb every page)
     #cewl is run after gobuster (to cewl more pages)
     #nmapHttpVulns is run after gobuster (to check more pages and possibly inection points)
-    
+
     #nmap can be run here
     #nikto can be run here
     #other scripts likely to be run here
 
     args = parser.parse_args()
     #print args
-    
+
     #Fix URL if "http(s)" is not pased in
     if len(args.url.split("//") == 1:
         if len(args.url.split(":") == 1:
@@ -106,7 +105,7 @@ if __name__=='__main__':
             args.url = "https://" + args.url
         else:
             args.url = "http://" + args.url
-    
+
     #Assign IP and PORT variables. Assigning them here
     #prevents certain edge cases from being missed above
     if ("http" in args.url):
@@ -114,11 +113,11 @@ if __name__=='__main__':
     elif ("https" in args.url):
         ip_address = args.url.strip("https://")
     port = args.url.split(":")[2]
-    
+
     #make sure path is created
     path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
     mkdir_p(path)
-    
+
     print "INFO: Starting nmap webRecon for %s:%s) % (ip_address, port)
     doNmap(ip_address, port, args.userAgent)
     print "INFO: Finished nmap webRecon for %s:%s) % (ip_address, port)

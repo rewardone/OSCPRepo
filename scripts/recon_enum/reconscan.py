@@ -41,6 +41,7 @@
 ##          Before dirbustEVERYTHING sorts it away
 ## Fix DNSRecon
 ## Expand: DirbustEverything
+##       : more tools! WFUZZ, DirBuster, Dirsearch
 ##       : Photon, nice crawler. Can ensure things are not missed (currently using Cewl to crawl and wordlist)
 ## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
 ##       : But benefit of having less 301 / false negatives
