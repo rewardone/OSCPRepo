@@ -30,7 +30,7 @@ import argparse
 #http-default-accounts: test for access with default creds used by a variety of web applications and devices
 #http-drupal-enum: Enum installed Drupal modules/themes by using a list of known modules and themes
 #http-favicon: Gets the favicon, hashes it, and checks against known applications for fingerprinting
-#http-generator: Displays contents of the “generator” meta tag of a web page if it exists
+#http-gen: Display contents of generator meta tag
 #http-git: check for .git and retrieve as much repo information as possible
 #http-grep: spider and attempt to match pages/urls against a given string. Search for email/ip by default. Configure more!
 #http-headers: Performs a HEAD request and displays headers
@@ -64,18 +64,18 @@ import argparse
 #http-devframework: attempt to spider and identify devframeworks (better tools to more accurately detect)
 #http-enum: Enumerates directories used by popular web applications and servers (args to make it better, complex, but could be worth it)
 #http-errors: Crawls and reports on error pages
-#http-exif-spider: Spider images looking for ‘interesting’ exif data
+#http-exif-spider: spider images for exif data
 #http-feed: Crawls for RSS or atom feeds
 #http-fetch: used to fetch files from servers
 #http-fileupload-exploiter: tries 3 methods to exploit upload forms
 #http-form-brute: Brute force pass against http form-based auth
 #http-form-fuzzer: Fuzz fields in forms it detects (requires specific args/setup)
 #http-gitweb-projects-enum: Retrieves a list of Git projects, owners, and descriptions from a gitweb
-#http-google-malware: Checks if hosts are on Google’s blacklist
-#http-icloud-findmyiphone: Retrieves locations of all “find my iphone” enabled iOS devices by querying MobleMe (auth required)
+#http-google-malware: Checks if hosts are on Google blacklist
+#http-icloud-findmyiphone: Retreives locations of all "find my iphone" enabled iOS devices (auth required)
 #http-icloud-sendmsg: Sennds message to iOS through MobleMe
 #http-internal-ip-disclosure: send HTTP/1.0 request without host header to see if website will disclose IP
-#http-joomla-brute: Joomla auth brute 
+#http-joomla-brute: Joomla auth brute
 #http-malware-host: Looks for signature of known server compromises (attempts to detect servers that always return 302)
 #http-open-proxy: Attempt to connect to google through the proxy
 #http-proxy-brute: Brute against HTTP proxy servers
@@ -139,38 +139,40 @@ if __name__=='__main__':
     #print args
 
     #Fix URL if "http(s)" is not pased in
-    if len(args.url.split("//")) == 1: #1 means there is no http:// before URL
-        if len(args.url.split(":")) == 1: #1 means there is no port passed in
-            print "Need to specify URL:PORT"
-            sys.exit(1)
-        elif len(args.url.split(":")) == 2:
-            #this happens after split("//") so this should mean URL is [0] and [PORT] is [1]
-            if args.url.split(":")[1] == 443: #hard code 443
-                tmp = args.url.split(":")
-                ip_address = tmp[0]
-                port = 443
-                args.url = "https://" + args.url
-            else:
-                tmp = args.url.split(":")
-                ip_address = tmp[0]
-                port = tmp[1]
-                args.url = "http://" + args.url
-
-    #Assign IP and PORT variables. Assigning them here
-    #prevents certain edge cases from being missed above
-    if ("http" in args.url):
-        ip_address = args.url.strip("http://")
+    if len(args.url.split(":")) == 0 or len(args.url.split(":")) == 1:
+        print "Need to specify URL:PORT"
+        sys.exit(1)
     elif ("https" in args.url):
-        ip_address = args.url.strip("https://")
-    port = args.url.split(":")[2]
+        tmp = args.url.split("https://")
+        if len(tmp) == 2: #https:// and IP:port
+            if len(tmp[1].split(":")) == 2:
+                ip_address = tmp[1].split(":")[0]
+                port = tmp[1].split(":")[1]
+            else:
+                print "Need to specify URL:PORT"
+                sys.exit(1)
+    elif ("http" in args.url):
+        tmp = args.url.split("http://")
+        if len(tmp) == 2:
+            if len(tmp[1].split(":")) == 2:
+                ip_address = tmp[1].split(":")[0]
+                port = tmp[1].split(":")[1]
+            else:
+                print "Need to specify URL:PORT"
+                sys.exit(1)
+    else:
+        tmp = args.url.split(":")
+        if len(tmp) == 2:
+            ip_address = tmp[0]
+            port = tmp[1]
 
     #make sure path is created
     path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
     mkdir_p(path)
 
-    print "INFO: Starting nmap webRecon for %s:%s) % (ip_address, port)
+    print "INFO: Starting nmap webRecon for %s:%s" % (ip_address, port)
     doNmap(ip_address, port, args.userAgent)
-    print "INFO: Finished nmap webRecon for %s:%s) % (ip_address, port)
-    print "INFO: Starting nikto webRecon for %s:%s) % (ip_address, port)
+    print "INFO: Finished nmap webRecon for %s:%s" % (ip_address, port)
+    print "INFO: Starting nikto webRecon for %s:%s" % (ip_address, port)
     doNikto(ip_address, port)
-    print "INFO: Finished nikto webRecon for %s:%s) % (ip_address, port)
+    print "INFO: Finished nikto webRecon for %s:%s" % (ip_address, port)

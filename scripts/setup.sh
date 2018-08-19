@@ -109,7 +109,7 @@ mv /usr/share/sparta/controller/controller.py /usr/share/sparta/controller/contr
 mv /etc/sparta.conf /etc/sparta_orig.conf
 cp /root/Documents/OSCPRepo/scripts/random/Sparta/settings.py /usr/share/sparta/app/settings.py
 cp /root/Documents/OSCPRepo/scripts/random/Sparta/controller.py /usr/share/sparta/controller/controller.py
-mv /root/Documents/OSCPRepo/scripts/random/Sparta/sparta.conf /etc/sparta.conf
+cp /root/Documents/OSCPRepo/scripts/random/Sparta/sparta.conf /etc/sparta.conf
 
 echo "\n ### Optional packages you might utilize in the future ### \n"
 echo "apt-get install automake remmina freerdpx11 alacarte shutter"

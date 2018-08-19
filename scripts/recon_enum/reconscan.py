@@ -39,7 +39,7 @@
 ## Running each script individually does not ensure their output directory paths exist...QoL feature...
 ## Fix DNSRecon
 ## Expand: DirbustEverything
-##       : more tools! WFUZZ, DirBuster, Dirsearch
+##       : more tools! DirBuster, Dirsearch
 ##       : Photon, nice crawler. Can ensure things are not missed (currently using Cewl to crawl and wordlist)
 ## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
 ##       : But benefit of having less 301 / false negatives
@@ -69,6 +69,7 @@
 ##      Separate CMSscannerrecon
 ##      Apple File System. NSE scripts: brute, ls, path-vuln, servierinfo, showmount
 ##      Create "AutoADPwn": Invoke several modules, AD recon, bloodhound, Empire/Deathstar
+##      PHPFilter scan (LFI/source/etc)
 ## Need scripts for:
 ##       LDAP, rsh, vnc
 ## web page screenshots
@@ -130,7 +131,7 @@ def httpEnum(ip_address, port):
     path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
     mkdir_p(path)
     print "INFO: Detected http on %s:%s" % (ip_address, port)
-    print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port) 
+    print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
     subprocess.check_output(['./webRecon.py','http://%s:%s' % (ip_address, port)])
     print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)

@@ -54,7 +54,6 @@ def cewl(depth,urlOrFile,scanname):
     else: #else we just scan a single line
         results = subprocess.check_output(['cewl','-d %d' % depth,'-k','-a','-m 5','-u',user_agent,urlOrFile,'-w',scanname],stderr=dev_null)
 
-#GENLISTLOOPPROC IN THEORY AND NOT IN USE YET
 def genlistLoopProc(tool_default_list):
     if getStatus200(tool_default_list):
         jobs = []
@@ -123,19 +122,36 @@ def genlistLoop(tool_default_list):
 def getStatus200(tool_default_list): #like GOB_DEFAULT/DIRB_DEFAULT
     g = open(tool_default_list, 'r')
     status200=[]
-    for line in g:
-        if ("(Status: 200)" in line) or ("(CODE:200" in line): #Status for Gob, Code for dirb
-            status200.append(line)
-    g.close()
-    if len(status200) > 0:
-        g = open(STAT_200, 'w')
-        for line in status200:
-            g.write(line)
+    if args.tool == "gobuster" or args.tool == "dirb":
+        for line in g:
+            if ("(Status: 200)" in line) or ("(CODE:200" in line): #Status for Gob, Code for dirb
+                status200.append(line)
         g.close()
-        return True
-    else:
-        print "INFO: No accessible webpages detected (no status 200 responses) for %s:%s" % (ip_address, port)
-        return False
+        if len(status200) > 0:
+            g = open(STAT_200, 'w')
+            for line in status200:
+                g.write(line)
+            g.close()
+            return True
+        else:
+            print "INFO: No accessible webpages detected (no status 200 responses) for %s:%s" % (ip_address, port)
+            return False
+    g.close()
+    if args.tool == "wfuzz":
+        tmp = "/tmp/wfuzz_%s_%s_tmp" % (ip_address, port)
+        FIX_STAT_200="cat %s | grep C=200 | cut -d'\"' -f2 > %s" % (tool_default_list,tmp)
+        subprocess.call(FIX_STAT_200, shell=True)
+        if os.path.getsize(tmp) != 0:
+            f = open(tmp, 'r')
+            g = open (STAT_200, 'w')
+            for line in f:
+                line2 = url + "/" + line
+                g.write(line2[:-1])
+            f.close()
+            g.close()
+            return True
+        else:
+            print "INFO: No accessible webpages detected (no status 200 responses) for %s:%s" % (ip_address, port)
 
 def dirb(wordlist, scanname):
     #dirb documentation (not all options, just common ones)
@@ -188,6 +204,21 @@ def dirb(wordlist, scanname):
             pass
         f.close()
 
+#wfuzz [options] -z payload,params <url>
+#-v verbose
+#-p addr        (proxy)
+#-t N           number of concurrent connections
+#-s N           delay between requests
+#-R depth       Recursion level
+#-L             follow HTTP redirections
+#-u url         URL for request
+#-z payload     Payload for each FUZZ keyword used
+#-w wordlist    specify a wordlist file (alias for -z file,payload)
+#-V alltype     All parameters bruteforcing (no need for FUZZ keyword)
+#-x method      HTTP method for request
+def wfuzz(wordlist, scanname):
+    results = subprocess.check_output(['wfuzz','-v','-t',threads,'-L','--hc','404','-w',wordlist,'-u',url,'-f',scanname])
+
 def gobuster(wordlist, scanname):
     #gobuster documentation (not all options, just common ones)
     #-a string: Set the User-Agent string (dir mode only)
@@ -207,8 +238,8 @@ def gobuster(wordlist, scanname):
     #-P string: Password for basic auth
     #-U string: Username for basic auth
     #-fw: Force continued operation when wildcard found
-    GOBUSTERSCAN = "gobuster -a '%s' -t 30 -e -q -u %s -x %s -l -w %s > %s" % (user_agent, url, FILE_EXT, wordlist, scanname)
-    results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
+    #GOBUSTERSCAN = "gobuster -a '%s' -t 30 -e -q -u %s -x %s -l -w %s > %s" % (user_agent, url, FILE_EXT, wordlist, scanname)
+    results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
     #print results
     if "Wildcard response found" in results:
         results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-fw','-o',scanname])
@@ -313,7 +344,8 @@ def comuni(tool,combined_name):
 if __name__=='__main__':
     #recommended usage: ./dirbustEVERYTHING.py -p 1 -i 4 URL:PORT, probably followed by a -i 8 scan
     parser = argparse.ArgumentParser(description='Rough script to handle bruteforcing of web directories. Usage: dirbust.py {-t [gobuster|dirb] -x ".html" -a <UA> -w <wordlist> -p <#> -i <#>} <http(s)://target url:port>')
-    parser.add_argument('-t', '--tool', default="gobuster", choices=["gobuster", "dirb"], help="Use a specific tool with dirbustEVERYTHING: -t gobuster. Default gobuster")
+    parser.add_argument('-t', '--tool', default="gobuster", choices=["gobuster", "dirb", "wfuzz"], help="Use a specific tool with dirbustEVERYTHING: -t gobuster. Default gobuster")
+    parser.add_argument('-m', '--more-threads', dest="more_threads", default='10', help="Threads to be passed to tools")
     parser.add_argument('-x', '--extensions', dest="FILE_EXT", default=".html", help="File extensions to test for. Comma delimited with no spaces eg .php,.html")
     parser.add_argument('-a', '--user-agent', dest="user_agent", default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", help="User-agent")
     parser.add_argument('-w', '--wordlist', dest="default_wordlist", default="/root/lists/Web/secProb_no_ext.txt", help="Wordlist to use")
@@ -337,32 +369,65 @@ if __name__=='__main__':
     #print args
 
     #Fix URL if "http(s)" is not pased in
-    if len(args.url.split("//")) == 1: #1 means there is no http:// before URL
-        if len(args.url.split(":")) == 1: #1 means there is no port passed in
-            print "Need to specify URL:PORT"
-            sys.exit(1)
-        elif len(args.url.split(":")) == 2:
-            #this happens after split("//") so this should mean URL is [0] and [PORT] is [1]
-            if args.url.split(":")[1] == 443: #hard code 443
-                tmp = args.url.split(":")
-                ip_address = tmp[0]
-                port = 443
-                args.url = "https://" + args.url
+    # if len(args.url.split("//")) == 1: #1 means there is no http:// before URL
+    #     if len(args.url.split(":")) == 1: #1 means there is no port passed in
+    #         print "Need to specify URL:PORT"
+    #         sys.exit(1)
+    #     elif len(args.url.split(":")) == 2:
+    #         #this happens after split("//") so this should mean URL is [0] and [PORT] is [1]
+    #         if args.url.split(":")[1] == 443: #hard code 443
+    #             tmp = args.url.split(":")
+    #             ip_address = tmp[0]
+    #             port = 443
+    #             args.url = "https://" + args.url
+    #         else:
+    #             tmp = args.url.split(":")
+    #             ip_address = tmp[0]
+    #             port = tmp[1]
+    #             args.url = "http://" + args.url
+    #Fix URL if "http(s)" is not pased in
+    if len(args.url.split(":")) == 0 or len(args.url.split(":")) == 1:
+        print "Need to specify URL:PORT"
+        sys.exit(1)
+    elif ("https" in args.url):
+        tmp = args.url.split("https://")
+        if len(tmp) == 2: #https:// and IP:port
+            if len(tmp[1].split(":")) == 2:
+                ip_address = tmp[1].split(":")[0]
+                port = tmp[1].split(":")[1]
+                url = "https://" + ip_address + ":" + port
             else:
-                tmp = args.url.split(":")
-                ip_address = tmp[0]
-                port = tmp[1]
-                args.url = "http://" + args.url
-    url = args.url
+                print "Need to specify URL:PORT"
+                sys.exit(1)
+    elif ("http" in args.url):
+        tmp = args.url.split("http://")
+        if len(tmp) == 2:
+            if len(tmp[1].split(":")) == 2:
+                ip_address = tmp[1].split(":")[0]
+                port = tmp[1].split(":")[1]
+                url = "http://" + ip_address + ":" + port
+            else:
+                print "Need to specify URL:PORT"
+                sys.exit(1)
+    else:
+        tmp = args.url.split(":")
+        if len(tmp) == 2:
+            ip_address = tmp[0]
+            port = tmp[1]
+            if port == 443:
+                url = "https://" + ip_address + ":" + port
+            else:
+                url = "http://" + ip_address + ":" + port
+    # url = args.url
 
 
     #Assign IP and PORT variables. Assigning them here
     #prevents certain edge cases from being missed above
-    if ("http" in args.url):
-        ip_address = args.url.strip("http://")
-    elif ("https" in args.url):
-        ip_address = args.url.strip("https://")
-    port = args.url.split(":")[2]
+    # if ("http" in args.url):
+    #     ip_address = args.url.strip("http://")
+    # elif ("https" in args.url):
+    #     ip_address = args.url.strip("https://")
+    # port = args.url.split(":")[2]
 
     #This is needed in case of odd ports. May not be only 80/443
     path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
@@ -374,6 +439,9 @@ if __name__=='__main__':
 
     #This is a bad 'patch' until user_agent is refactored to args.user_agent
     user_agent = args.user_agent
+
+    #This is a bad 'patch' until apps use args.more-threads instead
+    threads = args.more_threads
 
     #Set intensity for file extensions
     if args.intensity in [2,3,6,7,10,11]:
@@ -419,6 +487,9 @@ if __name__=='__main__':
     DIRB_DEFAULT="%s/dirb_%s_%s_default" % (BASE, name, port)
     DIRB_CEWL_OUTPUT="%s/dirb_%s_%s_cewld" % (BASE, name, port)
     DIRB_COMBINED="%s/dirb_%s_%s_combined" % (BASE, name, port)
+    WFUZZ_DEFAULT="%s/wfuzz_%s_%s_default" % (BASE, name, port)
+    WFUZZ_CEWL_OUTPUT="%s/wfuzz_%s_%s_cewld" % (BASE, name, port)
+    WFUZZ_COMBINED="%s/wfuzz_%s_%s_combined" % (BASE, name, port)
     WW_URLS="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatwebURLs" % (name, port)
     WW_OUT="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb.xml" % (name, port)
     WW_OUT_VERBOSE="/root/scripts/recon_enum/results/exam/whatweb/%s_%s_whatweb_verbose" % (name, port)
@@ -466,7 +537,7 @@ if __name__=='__main__':
             if os.path.getsize(path) > 0:
                 #print "Going to scan..."
                 scanname = "%s_%s_%s_default_chunk_%s" % (GOB_DEFAULT, name, port, str(count))
-                p = multiprocessing.Process(target=gobuster, args=(path,scanname))
+                p = multiprocessing.Process(target=gobuster, args=(path,scanname)) #path is just passing the full path of the wordlist
                 p.start()
                 jobs.append(p)
                 count += 1
@@ -485,17 +556,17 @@ if __name__=='__main__':
         if args.intensity in [3,4,7,8,11,12]:
             print "INFO: Generating custom wordlist for %s" % (url)
             genlistLoopProc(GOB_DEFAULT)
-            print "INFO: cewl gobuster scan for %s:%s starting" % (url,port)
+            print "INFO: cewl gobuster scan for %s starting" % (url)
             gobuster(CEWL_OUT, GOB_CEWL_OUTPUT)
             comuni("gobuster",GOB_COMBINED)
-            print "INFO: Finished cewl gobuster scan for %s:%s" % (url, port)
+            print "INFO: Finished cewl gobuster scan for %s" % (url)
             print "INFO: Directory brute of %s completed" % (url)
             sortBySize(GOB_COMBINED)
             print "INFO: Starting whatweb of %s" % (url)
             whatWeb(GOB_COMBINED)
             print "INFO: WhatWeb identification of %s completed" % (url)
             print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
-            subprocess.check_output(['./nmapHttpVulns.py',STAT_200,url])
+            subprocess.check_output(['/root/scripts/recon_enum/./nmapHttpVulns.py',STAT_200,url])
             print "INFO: nmapHttpVulns of %s complete" % (url)
             cleanup()
         else:
@@ -503,3 +574,58 @@ if __name__=='__main__':
             sortBySize(GOB_COMBINED)
             cleanup()
             print "INFO: Gobuster completed on %s" % (url)
+
+    if (args.tool == "wfuzz"):
+        print "INFO: Starting threaded wfuzz"
+        print "WARN: wfuzz is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
+        #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
+        if url[-1] != "/":
+            url = url + "/"
+        url = url + "FUZZ"
+        chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,wordlistLastItem,PROCESSES)
+        count = 0
+        jobs = []
+        for chunk in os.listdir(WORDLIST_CHUNK_DIR):
+            #print "Chunks %d" % len(os.listdir(WORDLIST_CHUNK_DIR))
+            path = "%s/%s" % (WORDLIST_CHUNK_DIR,chunk) # path.abspath uses CWD so hard code path here
+            if os.path.getsize(path) > 0:
+                #print "Going to scan..."
+                scanname = "%s_%s_%s_default_chunk_%s" % (WFUZZ_DEFAULT, name, port, str(count))
+                p = multiprocessing.Process(target=wfuzz, args=(path,scanname)) #path is just passing the full path of the wordlist
+                p.start()
+                jobs.append(p)
+                count += 1
+        for p in jobs:
+            p.join()
+        #Combine finished first scan
+        scanChunkNames = "wfuzz_%s_%s_default_%s_%s_default_chunk_" % (name, port, name, port)
+        #print "IN: %s, combining %s" % (name,scanChunkNames)
+        comuni(scanChunkNames,WFUZZ_DEFAULT)
+        for resChunk in os.listdir(BASE):
+            if os.path.isfile("%s/%s" % (BASE,resChunk)):
+                tmp = "_default_%s_%s_default_chunk" % (name, port)
+                if tmp in resChunk:
+                    resChunk = "%s/%s" % (BASE,resChunk)
+                    os.remove(resChunk)
+        if args.intensity in [3,4,7,8,11,12]:
+            url = url[:-5] #remove FUZZ from url for other tools
+            print "INFO: Generating custom wordlist for %s" % (url)
+            genlistLoopProc(WFUZZ_DEFAULT)
+            print "INFO: cewl wfuzz scan for %s:%s starting" % (url,port)
+            wfuzz(CEWL_OUT, WFUZZ_CEWL_OUTPUT)
+            comuni("wfuzz",WFUZZ_COMBINED)
+            print "INFO: Finished cewl wfuzz scan for %s:%s" % (url, port)
+            print "INFO: Directory brute of %s completed" % (url)
+            sortBySize(WFUZZ_COMBINED)
+            print "INFO: Starting whatweb of %s" % (url)
+            whatWeb(WFUZZ_COMBINED)
+            print "INFO: WhatWeb identification of %s completed" % (url)
+            print "INFO: nmapHttpVulns scan started on %s:%s" % (url, port)
+            subprocess.check_output(['./nmapHttpVulns.py',STAT_200,url])
+            print "INFO: nmapHttpVulns of %s complete" % (url)
+            cleanup()
+        else:
+            comuni("wfuzz",WFUZZ_COMBINED)
+            sortBySize(WFUZZ_COMBINED)
+            cleanup()
+            print "INFO: wfuzz completed on %s" % (url)

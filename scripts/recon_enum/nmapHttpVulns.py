@@ -35,7 +35,7 @@ def mkdir_p(path):
 #http-open-redirect: Spiders and attempts to identify open redirects
 #http-phpmyadmin-dir-traversal: Exploits dirTrav in phpMyAdmin 2.6.4
 #http-shellshock: Attempt to exploit CVE-2014-6271 and CVE-2014-7169 Shellshock vulnerability in web applications http-shellshock.uri=/
-#http-sql-injection: Very basic attempt to show SQL errors in forms. 
+#http-sql-injection: Very basic attempt to show SQL errors in forms.
 #http-vmware-path-vuln: Checks for dirTrav in VMWare ESX, ESXi, and Server (2009)
 #http-vuln-cve2006-3392: Webmin before 1.290 and Usermin before 1.220 file disclosure using %01
 #http-vuln-cve2009-3960: Adobe XML External Entity Injection. Read local files in BlazeDS <3.2, LiveCycle 8.0.1 8.2.1 and 9, LiveCycleData Services 2.5.1 2.6.1 and 3, Flex Data Service 2.0.1 and ColdFusion 7.0.2 8.0 8.0.1 and 9.0
@@ -65,10 +65,10 @@ def mkdir_p(path):
 #http-domino-enum-passwords: Enum hashed Domino Internet Passwords (authenticated only)
 #http-huawei-hg5xx-vuln: Detects Huawei modem models vulnerable to information disclosure vulnerabilities
 #http-iis-short-name-brute: (DoS) brute force short names of files and dirs in the root folder of vulnerable IIS servers
-#http-phpself-xss: Crawls for php and texts XSS via $_SERVER[“PHP_SELF”]
+#http-phpself-xss: Crawls for php and texts XSS via
 #http-slowloris-check: (DoS) Checks if vulnerable to Slowloris
 #http-slowloris: (DoS) Execute a slowloris attack
-#http-stored-xss: Spiders forms, posts, and searches for stored XSS 
+#http-stored-xss: Spiders forms, posts, and searches for stored XSS
 #http-tplink-dir-traversal: Exploit dirTrav in TP-Link wireless routers
 #http-vuln-cve2011-3192: Denial of service against Apache handling multiple overlapping/simple ranges of a page
 #http-vuln-cve2013-6786: URL redirection and reflected XSS vuln in Allegro RomPager
@@ -107,30 +107,42 @@ def shellshockSQL(ip_address, port):
     g.close()
     return
 
-    
+
 if __name__=='__main__':
-    
+
     parser = argparse.ArgumentParser(description='Rough script to handle enumeration of specific web vulnerabilities. A list of (valid) URLs should be used. Usage: webRecon.py URL_List <http(s)://target_url:port>')
     parser.add_argument('URL_List',help='This should be a file of valid (preferably status 200) URLs')
-    parser.add_argument('URL',help='This should be the target URL in http(s)://URL:PORT format')
+    parser.add_argument('url', help='This should be the target URL in http(s)://URL:PORT format')
+
+    args=parser.parse_args()
 
     #Fix URL if "http(s)" is not pased in
-    if len(args.url.split("//")) == 1: #1 means there is no http:// before URL
-        if len(args.url.split(":")) == 1: #1 means there is no port passed in
-            print "Need to specify URL:PORT"
-            sys.exit(1)
-        elif len(args.url.split(":")) == 2:
-            #this happens after split("//") so this should mean URL is [0] and [PORT] is [1]
-            if args.url.split(":")[1] == 443: #hard code 443
-                tmp = args.url.split(":")
-                ip_address = tmp[0]
-                port = 443
-                args.url = "https://" + args.url
+    if len(args.url.split(":")) == 0 or len(args.url.split(":")) == 1:
+        print "Need to specify URL:PORT"
+        sys.exit(1)
+    elif ("https" in args.url):
+        tmp = args.url.split("https://")
+        if len(tmp) == 2: #https:// and IP:port
+            if len(tmp[1].split(":")) == 2:
+                ip_address = tmp[1].split(":")[0]
+                port = tmp[1].split(":")[1]
             else:
-                tmp = args.url.split(":")
-                ip_address = tmp[0]
-                port = tmp[1]
-                args.url = "http://" + args.url
+                print "Need to specify URL:PORT"
+                sys.exit(1)
+    elif ("http" in args.url):
+        tmp = args.url.split("http://")
+        if len(tmp) == 2:
+            if len(tmp[1].split(":")) == 2:
+                ip_address = tmp[1].split(":")[0]
+                port = tmp[1].split(":")[1]
+            else:
+                print "Need to specify URL:PORT"
+                sys.exit(1)
+    else:
+        tmp = args.url.split(":")
+        if len(tmp) == 2:
+            ip_address = tmp[0]
+            port = tmp[1]
 
     BASE = "/root/scripts/recon_enum/results/exam/http"
     DIRB_BASE = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port) #WARNING THIS CHANGES AFTER dirbustEVERYTHING SORTS INTO FOLDER
@@ -139,8 +151,8 @@ if __name__=='__main__':
     #STAT_200_SORTED = "%s/%s/stat200_%s_%s" % (DIRB_BASE,ip_address,ip_address,port)
     outfile = "%s/%s_%s_nmap_HttpVulns.txt" % (BASE, ip_address, port)
     outfile2 = "%s/%s_%s_nmap_HttpVulns_SS_SQL.txt" % (BASE, ip_address, port)
-    
-        
+
+
     standardNmapHTTP(ip_address, port)
     shellshockSQL(ip_address, port)
     # while not os.path.isfile(STAT_200) and not os.path.isfile(STAT_200_SORTED):
