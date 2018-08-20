@@ -1,12 +1,4 @@
 #!/bin/sh
-#This script will do basic setup to make sure everything is in place
-#This should would on default Kali installation
-#
-# Other notes
-# shutter preferences: hide on first launch
-# terminal preferences: Dark theme
-# latest version of firefox, firefox bookmarks and extensions (foxyproxy)
-# favorites menu (atom, firefox, keepnote, shutter)
 #
 # If in a VM and Copy/Paste is NOT working: apt-get install open-vm-tools open-vm-desktop
 # and then reboot!!
@@ -54,6 +46,22 @@ if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.co
 echo "\nCloning Parameth\n"
 direc=/root/Documents/Parameth
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/maK-/parameth.git $direc; fi
+
+echo "\nCloning ADLdapEnum\n"
+direc=/root/Documents/ADLdapEnum
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/CroweCybersecurity/ad-ldap-enum.git $direc; fi
+
+echo "\nCloning LdapDD\n"
+direc=/root/Documents/LdapDD
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/dirkjanm/ldapdomaindump.git $direc; fi
+
+echo "\nCloning Nullinux\n"
+direc=/root/Documents/Nullinux
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/m8r0wn/nullinux.git $direc; fi
+
+echo "\nCloning VHostScan\n"
+direc=/root/Documents/VHostScan
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/codingo/VHostScan.git $direc; fi
 
 echo "\n ### Processing actions...### \n\n"
 echo "Setup install Impacket"

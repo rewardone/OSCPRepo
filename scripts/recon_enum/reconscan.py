@@ -44,27 +44,26 @@
 ##       : Eyewitness: web page screenshots
 ##       : Photon, nice crawler. Can ensure things are not missed (currently using Cewl to crawl and wordlist)
 ##       : grab (Status: 301) pages (generalize STAT200 function) and gobust just on those
+## Expand: nmapHTTPVuln
+##       : snallygaster https://github.com/hannob/snallygaster
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
-## Expand SMTPrecon:
+## Expand SMTPrecon
 ##       : currently only scans 25. need: 25,110,143,465,587,993,995 (IMAP/POP/Exchange)
 ##       : Change to ip_address, port. Pass specific ports only, currently hardcoded 25,465,587
 ##       : Ruler for exchange (possibly)
-## Expand SMBRecon:
-##       : hydra or crackmapexec for spray/brute
-##       : add nullinux for fun
+## Expand SMBRecon
+##       : hydra or crackmapexec for spray/brute #need to specify Domain, also worry about lockout
 ## Expand dirTrav:
 ##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
-##      Other tools to consider: WHOIS, TheHarvester, Metagoofil, DNSRecon, Sublist3r
-##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti
-##      Other tools to consider: WPscan, WPscanner, WPSeku, Droopescan, SSLScan, SSLyze A2SV
-##      Other tools to consider: VHostScan
-##      Separate CMSscannerrecon
-##      NSE scripts: see recon_scan mapping
+##      Other tools to consider: WHOIS, DNSRecon, Sublist3r
+##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti, TheHarvester, Metagoofil, 
+##      Other tools to consider: SSLScan, SSLyze A2SV
+##      Separate CMSscannerrecon: WPscan, WPscanner, WPSeku, Droopescan, 
 ##      Create "AutoADPwn": Invoke several modules, AD recon, bloodhound, Empire/Deathstar
 ## Need scripts for:
-##       LDAP, rsh, vnc
+##       rsh, vnc
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...
@@ -124,7 +123,7 @@ def httpEnum(ip_address, port):
     mkdir_p(path)
     print "INFO: Detected http on %s:%s" % (ip_address, port)
     print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
-    subprocess.check_output(['./webRecon.py','http://%s:%s' % (ip_address, port)])
+    subprocess.check_output(['./webrecon.py','http://%s:%s' % (ip_address, port)])
     print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
     subprocess.check_output(['./dirbustEVERYTHING.py','-p',1,'-i',4,'http://%s:%s' % (ip_address,port),ip_address])
@@ -150,6 +149,11 @@ def mssqlEnum(ip_address, port):
     subprocess.check_output(['mssql/./mssqlrecon.py',ip_address,port])
     return
 
+def ldapEnum(ip_address, port):
+    print "INFO: Detected LDAP on %s:%s" % (ip_address, port)
+    subprocess.check_output(['./ldaprecon.py',ip_address,port])
+    return
+
 def mysqlEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
 	#MYSQLRECON in subdirectory in case ftp/ssh/telnet are present, hydra will have
@@ -159,7 +163,7 @@ def mysqlEnum(ip_address, port):
 
 def nfsEnum(ip_address, port):
     print "INFO: Detected NFS on %s:%s" % (ip_address, port)
-    subprocess.check_output(['./nfsRecon.py',ip_address,port])
+    subprocess.check_output(['./nfsrecon.py',ip_address,port])
     return
 
 def msrpc(ip_address, port):
@@ -392,6 +396,8 @@ def nmapVersionTCPAndPass(ip_address, port):
             multProc(fingerEnum, ip_address, port)
          elif ("ftp" in service):
             multProc(ftpEnum, ip_address, port)
+         elif ("ldap" in service):
+            multProc(ldapEnum, ip_address, port)
          elif ("netbios-ssn" in service):
             multProc(smbEnum, ip_address,port)
          elif ("microsoft-ds" in service):

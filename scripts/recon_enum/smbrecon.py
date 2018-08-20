@@ -47,7 +47,6 @@ port = sys.argv[2].strip()
 #smb-vuln-regsvc-dos: check if vuln to null pointer dereference in regsvc. Will crash service if vuln.
 #smb2-capabilities: attempt to list supported cabilities in a SMBv2 server for each enabled dialect.
 #smb2-time: attempt to obtain the current system date and start date of a SMB2 server
-
 print "INFO: Performing nmap SMB script scan for %s:%s" % (ip_address, port)
 subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=smb-double-pulsar-backdoor,smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-ls,smb-os-discovery,smb-protocols,smb-security-mode,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms10-061,smb-vuln-ms17-010,smb2-security-mode,smb2-vuln-uptime,samba-vuln-cve-2012-1182,vulners','-oA','/root/scripts/recon_enum/results/exam/smb/%s_%s_smb' % (ip_address,port),ip_address])
 
@@ -76,9 +75,7 @@ f.close()
 #-n:    do an nmblookup
 #-v:    Be verbose
 print "INFO: Performing enum4linux scan for %s:%s" % (ip_address, port)
-ENUM4LINUXSCAN = "enum4linux -va %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address, ip_address, port)
 try:
-    #enum4linuxresults = subprocess.check_call(ENUM4LINUXSCAN, shell=True)
     outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_enum4linux" % (ip_address,port)
     results = subprocess.check_output(['enum4linux','-va',ip_address]).split("\n")
     if results:
@@ -107,8 +104,6 @@ except subprocess.CalledProcessError, e:
 # -t <n>    Try each address <n> tries (default=1)
 # -P        generate results in perl hashref format
 print "INFO: Performing nbtscan-unixwiz scan for %s:%s" % (ip_address, port)
-NBTSCAN_UNIXWIZ = "nbtscan-unixwiz -f %s > /root/scripts/recon_enum/results/exam/smb/%s_%s_nbtscan-unixwiz" % (ip_address, ip_address, port)
-#unixwizresults = subprocess.check_output(NBTSCAN_UNIXWIZ, shell=True)
 outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_nbtscan-unixwiz" % (ip_address,port)
 results = subprocess.check_output(['nbtscan-unixwiz','-f',ip_address]).split("\n")
 f = open(outfile,'w')
@@ -118,7 +113,20 @@ for res in results:
         f.write("\n")
 f.close()
 
-# outfile = "/root/scripts/recon_enum/results/exam/smb/" + ip_address + "_" + port + "_smbrecon.txt"
-# f = open(outfile, "w")
-# f.write(results)
-# f.close
+# -shares             Dynamically Enumerate all possible shares. (formally: --enumshares)
+# -users              Enumerate users through a variety of techniques. (formally: --enumusers)
+# -quick              Quickly enumerate users, leaving out brute (used with: -users, or -all)
+# -all                Enumerate both users and shares (formally: --all)
+# -U                  Set username (optional)
+# -P                  Set password (optional)
+# -v                  Verbose Output
+# -h                  Help menu
+#https://github.com/m8r0wn/nullinux
+print "INFO: Performing nullinux scan for %s:%s" % (ip_addres, port)
+outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_nullinux" % (ip_address,port)
+results = subprocess.check_output(['./nullinux','-v','-a',ip_address]).split("\n")
+f = open(outfile,'w')
+for res in results:
+    f.write(res)
+    f.write("\n")
+f.close()

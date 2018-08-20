@@ -60,7 +60,7 @@ def doSysCommands(ip_address, port):
 
 if __name__='__main__':
 
-    parser = argparse.ArgumentParser(description='Rough script to handle nfs enumeration. Usage: nfsRecon.py ip {port}')
+    parser = argparse.ArgumentParser(description='Rough script to handle nfs enumeration. Usage: nfsrecon.py ip {port}')
     parser.add_argument('ip', help="IP address of target")
     parser.add_argument('port', default='111,2049', help="Port. Default is 111,2049")
     

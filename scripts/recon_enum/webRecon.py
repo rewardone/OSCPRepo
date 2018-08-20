@@ -98,13 +98,46 @@ import argparse
 #http-wordpress-users: Enum wordpress users
 #http-xssed: Searches xssed.com database and outputs results
 #https-redirect: Checks for HTTP redirects to HTTPS on same port
-
 def doNmap(ip_address, port, userAgent):
+    print "INFO: Starting nmap webRecon for %s:%s" % (ip_address, port)
     subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','banner,http-apache-negotiation,http-apache-server-status,http-aspnet-debug,http-auth-finder,http-auth,http-backup-finder,http-bigip-cookie,http-cakephp-version,http-cisco-anyconnect,http-comments-displayer,http-config-backup,http-cookie-flags,http-cors,http-cross-domain-policy,http-default-accounts,http-drupal-enum,http-favicon,http-generator,http-git,http-grep,http-headers,http-jsonp-detection,http-ls,http-mcmp,http-method-tamper,http-methods,http-mobileversion-checker,http-ntlm-info,http-passwd,http-php-version,http-robots.txt,http-title,http-traceroute,http-unsafe-output-escaping,http-useragent-tester,http-userdir-enum,http-vhosts,http-vlcstreamer-ls,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_http' % (port, ip_address),ip_address])
+    print "INFO: Finished nmap webRecon for %s:%s" % (ip_address, port)
     return
 
 def doNikto(ip_address, port):
+    print "INFO: Starting nikto webRecon for %s:%s" % (ip_address, port)
     subprocess.check_output(['nikto','-host',ip_address,'-port',port,'-nolookup','-ask','auto','-output',"/root/scripts/recon_enum/results/exam/nikto/%s_%s_nikto.xml" % (ip_address,port)])
+    print "INFO: Finished nikto webRecon for %s:%s" % (ip_address, port)
+    return
+
+# -h, --help	    Display help message and exit
+# -t TARGET_HOSTS	Set the target host.
+# -b BASE_HOST	    Set host to be used during substitution in wordlist (default to TARGET).
+# -w WORDLISTS	    Set the wordlist(s) to use. You may specify multiple wordlists in comma delimited format (e.g. -w "./wordlists/simple.txt, ./wordlists/hackthebox.txt" (default ./wordlists/virtual-host-scanning.txt).
+# -p PORT	        Set the port to use (default 80).
+# -r REAL_PORT	    The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT).
+# --ignore-http-codes IGNORE_HTTP_CODES	Comma separated list of http codes to ignore with virtual host scans (default 404).
+# --ignore-content-length IGNORE_CONTENT_LENGTH	Ignore content lengths of specificed amount.
+# --prefix PREFIX	Add a prefix to each item in the wordlist, to add dev-<word>, test-<word> etc
+# --suffix SUFFIX	Add a suffix to each item in the wordlist, to add <word>dev, <word>dev
+# --first-hit	    Return first successful result. Only use in scenarios where you are sure no catch-all is configured (such as a CTF).
+# --unique-depth UNIQUE_DEPTH	Show likely matches of page content that is found x times (default 1).
+# --ssl	            If set then connections will be made over HTTPS instead of HTTP.
+# --fuzzy-logic	    If set then all unique content replies are compared and a similarity ratio is given for each pair. This helps to isolate vhosts in situations where a default page isn't static (such as having the time on it).
+# --no-lookups	    Disbale reverse lookups (identifies new targets and append to wordlist, on by default).
+# --rate-limit	    Amount of time in seconds to delay between each scan (default 0).
+# --random-agent	If set, each scan will use a random user-agent from a predefined list.
+# --user-agent	    Specify a user agent to use for scans.
+# --waf	            If set then simple WAF bypass headers will be sent.
+# -oN OUTPUT_NORMAL	Normal output printed to a file when the -oN option is specified with a filename argument.
+# -oG OUTPUT_GREPABLE	Grepable output printed to a file when the -oG is specified with a filename argument.
+# -oJ OUTPUT_JSON	JSON output printed to a file when the -oJ option is specified with a filename argument.
+# -v VERBOSE	    Increase the output of the tool to show progress
+def doVHostScan(ip_address, port):
+    #https://github.com/codingo/VHostScan
+    print "INFO: Starting VHostScan webRecon for %s:%s" % (ip_address, port)
+    subprocess.check_output(['/root/Documents/VHostScan/./VHostScan','-v','-t',ip_adddress,'-p',port,'-w','/root/lists/Web/virtual_host_scanning.txt','--no-lookups','--user-agent',args.userAgent,'-oN',VHOST_OUT])
+    print "INFO: Finished VHostScan webRecon for %s:%s" % (ip_address, port)
     return
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
@@ -121,19 +154,11 @@ def mkdir_p(path):
 
 if __name__=='__main__':
 
-    parser = argparse.ArgumentParser(description='Rough script to handle Web enumeration, fingerprinting, and other less intensive scans. Usage: webRecon.py {} <http(s)://target url:port>')
+    parser = argparse.ArgumentParser(description='Rough script to handle Web enumeration, fingerprinting, and other less intensive scans. Usage: webrecon.py {} <http(s)://target url:port>')
     parser.add_argument('-n', '--nmap', default='true', help="Run all (safe) nmap scripts regarding HTTP scanning")
     parser.add_argument('-k', '--nikto', default='true', help="Run nikto against site")
     parser.add_argument('-a', '--user-agent', dest="userAgent", default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", help="User-agent")
     parser.add_argument('url', help="Run all (safe) nmap scripts regarding HTTP scanning")
-
-    #whatweb is run after gobuster (to whatweb every page)
-    #cewl is run after gobuster (to cewl more pages)
-    #nmapHttpVulns is run after gobuster (to check more pages and possibly inection points)
-
-    #nmap can be run here
-    #nikto can be run here
-    #other scripts likely to be run here
 
     args = parser.parse_args()
     #print args
@@ -166,13 +191,12 @@ if __name__=='__main__':
             ip_address = tmp[0]
             port = tmp[1]
 
-    #make sure path is created
-    path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
-    mkdir_p(path)
+    BASE = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
+    VHOST_OUT = "%s/%s_%s_vhost" % (BASE, ip_address, port)
 
-    print "INFO: Starting nmap webRecon for %s:%s" % (ip_address, port)
+    #make sure path is created
+    mkdir_p(BASE)
+    
     doNmap(ip_address, port, args.userAgent)
-    print "INFO: Finished nmap webRecon for %s:%s" % (ip_address, port)
-    print "INFO: Starting nikto webRecon for %s:%s" % (ip_address, port)
     doNikto(ip_address, port)
-    print "INFO: Finished nikto webRecon for %s:%s" % (ip_address, port)
+    
