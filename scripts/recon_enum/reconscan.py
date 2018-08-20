@@ -40,12 +40,10 @@
 ## Fix DNSRecon
 ## Expand: DirbustEverything
 ##       : more tools! DirBuster, Dirsearch...WFUZZ still needs extensions
-##       : Parameth: finding parameters
+##       : PHP Filters
+##       : Eyewitness: web page screenshots
 ##       : Photon, nice crawler. Can ensure things are not missed (currently using Cewl to crawl and wordlist)
-## Expand: option to follow redirects in gobuster or default to follow? redirect comes at the cost of time (long time)
-##       : But benefit of having less 301 / false negatives
-##       : Initial testing: times are same. -r scan has more false negatives. Looks like best option will be
-##       : no redirect scan, grab (Status: 301) pages and gobust just on those
+##       : grab (Status: 301) pages (generalize STAT200 function) and gobust just on those
 ## Expand FTP/TFTP: Utilize anonymous and credentialed DotDotPwn scan
 ## Expand SMTPrecon:
 ##       : currently only scans 25. need: 25,110,143,465,587,993,995 (IMAP/POP/Exchange)
@@ -58,21 +56,15 @@
 ##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
-##      POST SCAN COMPLETION:
-##           Parse outputs and run through searchsploit and getsploit
-##           If windows: give additional commands to run
-##                (if Windows AND SMB: github/enternal_check) #not mandatory because of additional dependencies
-##                                                            #unless they are already in Kali...
-## Expand ReconScan:
 ##      Other tools to consider: WHOIS, TheHarvester, Metagoofil, DNSRecon, Sublist3r
 ##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti
 ##      Other tools to consider: WPscan, WPscanner, WPSeku, Droopescan, SSLScan, SSLyze A2SV
+##      Other tools to consider: VHostScan
 ##      Separate CMSscannerrecon
-##      Apple File System. NSE scripts: brute, ls, path-vuln, servierinfo, showmount
+##      NSE scripts: see recon_scan mapping
 ##      Create "AutoADPwn": Invoke several modules, AD recon, bloodhound, Empire/Deathstar
 ## Need scripts for:
 ##       LDAP, rsh, vnc
-## web page screenshots
 ##
 ## [THOUGHTS]
 ## Organizing everything by IP address would probably be a lot better, but it seems like a lot of work to go through everything to make that change...

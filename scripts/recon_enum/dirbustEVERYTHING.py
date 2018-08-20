@@ -41,7 +41,7 @@ def cewl(depth,urlOrFile,scanname):
     # --proxy_username: username
     # --proxy_password: password
     # -v: verbose
-    print "INFO: cewl %s scan for %s:%s starting" % (args.tool, url, port)
+    print "INFO: cewl %s scan for %s starting" % (args.tool, url)
     dev_null = open(os.devnull, 'w')
     if os.path.isfile(urlOrFile): #if we're passed a file (ie, chunks)
         f = open(scanname,'w')
@@ -56,7 +56,7 @@ def cewl(depth,urlOrFile,scanname):
         g.close()
     else: #else we just scan a single line
         results = subprocess.check_output(['cewl','-d %d' % depth,'-k','-a','-m 5','-u',user_agent,urlOrFile,'-w',scanname],stderr=dev_null)
-    print "INFO: Finished cewl %s scan for %s:%s" % (args.tool, url, port)
+    print "INFO: Finished cewl %s scan for %s" % (args.tool, url)
 
 def genlistLoopProc(tool_default_list):
     if getStatus200(tool_default_list):
@@ -380,23 +380,35 @@ def comuni(tool,combined_name):
 #-T TIMEOUT         specify timeout
 def parameth(STAT_200_URLS,scanname):
     print "INFO: Starting parameth on %s" % (url)
-    #need to massage the STAT_200 list from GOB
+    tmpScanname = "/tmp/%s_%s_%s_%s_paramethtmp" % (args.tool, ip_address, port, args.intensity)
     f = open(STAT_200_URLS, 'r')
     g = open(scanname, "w+")
+    paramethRunCount = 0
+    urlSet = set()
     for url200 in f:
         urlOnly = url200.split(" ")[0]
         if "?" in urlOnly:
             urlOnly = urlOnly.split("?")[0]
-        results = subprocess.check_output(['/root/Documents/Parameth/./parameth.py','-u',url,'-p',args.parameth_wordlist,'-a',user_agent,'-t',threads]).split("\n")
+        urlSet.add(urlOnly)
+    for uniqURL in urlSet:
+        if paramethRunCount == 0:
+            results = subprocess.check_output(['/root/Documents/Parameth/./parameth.py','-u',url,'-p',args.parameth_wordlist,'-a',user_agent,'-t',threads]).split("\n")
+            paramethRunCount += 1
+        if paramethRunCount > 0:
+            results = subprocess.check_output(['/root/Documents/Parameth/./parameth.py','-u',uniqURL,'-p',args.parameth_wordlist,'-a',user_agent,'-t',threads]).split("\n")
         for res in results:
-            if "->" in res:
+            if "->" and "http" in res:
                 g.write(res)
                 g.write("\n")
             else:
                 continue
-    print "INFO: Completed parameth on %s" % (url)
     f.close()
     g.close()
+    os.rename(scanname, tmpScanname)
+    GREPV_AUTHOR = "cat %s | grep -iv 'Author' > %s" % (tmpScanname, scanname)
+    subprocess.call(GREPV_AUTHOR, shell=True)
+    print "INFO: Completed parameth on %s" % (url)
+
 
 if __name__=='__main__':
     #recommended usage: ./dirbustEVERYTHING.py -p 1 -i 4 URL:PORT, probably followed by a -i 8 scan
@@ -412,16 +424,16 @@ if __name__=='__main__':
                             "Small wordlist is secProb. Larger is Personal_w_vulns.-------------------------------------"
                             "1: scan no extensions. ------------------------------- "
                             "2: scan with extensions, but no other tools. --------- "
-                            "3: scan with extensions, cewl, nmapHttpVulns, and whatweb. ---------- "
-                            "4: scan with more extensions, cewl, nmapHttpVulns, and whatweb. ----- "
+                            "3: scan with extensions, cewl, nmapHttpVulns, parameth, and whatweb. ---------- "
+                            "4: scan with more extensions, cewl, nmapHttpVulns, parameth, and whatweb. ----- "
                             "5: scan with larger wordlist, no extensions. --------- "
                             "6: scan with larger wordlist and extensions, but no other tools. ----------------------------------------- "
-                            "7: scan with larger wordlist and extensions, cewl, nmapHttpVulns, and whatweb. -------------------------- "
-                            "8: scan with larger wordlist more extensions, cewl, nmapHttpVulns, and whatweb. -------------------------- "
+                            "7: scan with larger wordlist and extensions, cewl, nmapHttpVulns, parameth, and whatweb. -------------------------- "
+                            "8: scan with larger wordlist more extensions, cewl, nmapHttpVulns, parameth, and whatweb. -------------------------- "
                             "9: scan with user wordlist and no extensions. -------- "
                             "10: scan with user wordlist and extensions, but no other tools. ----------------------------------------- "
-                            "11: scan with user wordlist and extensions, cewl, nmapHttpVulns, and whatweb. -------------------------- "
-                            "12: scan with user wordlist, more extensions, cewl, nmapHttpVulns, and whatweb. -------------------------- ")
+                            "11: scan with user wordlist and extensions, cewl, nmapHttpVulns, parameth, and whatweb. -------------------------- "
+                            "12: scan with user wordlist, more extensions, cewl, nmapHttpVulns, parameth, and whatweb. -------------------------- ")
     parser.add_argument('url', help="Run all (safe) nmap scripts regarding HTTP scanning")
     args = parser.parse_args()
     #print args
@@ -591,9 +603,9 @@ if __name__=='__main__':
             comuni("gobuster",GOB_COMBINED)
             print "INFO: Directory brute of %s completed" % (url)
             sortBySize(GOB_COMBINED)
-            whatWeb(GOB_COMBINED)
+            #whatWeb(GOB_COMBINED)
             print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
-            subprocess.check_output(['/root/scripts/recon_enum/./nmapHttpVulns.py',STAT_200,url])
+            #subprocess.check_output(['/root/scripts/recon_enum/./nmapHttpVulns.py',STAT_200,url])
             print "INFO: nmapHttpVulns of %s complete" % (url)
             parameth(GOB_COMBINED, GOB_PARAMETH)
             cleanup()
