@@ -5,7 +5,7 @@
   <key>title</key><string>phpinfo() + PoC Code</string>
   <key>nodeid</key><string>715057ad-bcd0-47f1-bb50-57d3565a5bfd</string>
   <key>modified_time</key><integer>1516894438</integer>
-  <key>expanded2</key><false/>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516893742</integer>

@@ -51,6 +51,10 @@ echo "\nCloning John Jumbo\n"
 direc=/root/Documents/JohnJumbo
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/magnumripper/JohnTheRipper.git $direc; fi
 
+echo "\nCloning Parameth\n"
+direc=/root/Documents/Parameth
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/maK-/parameth.git $direc; fi
+
 echo "\n ### Processing actions...### \n\n"
 echo "Setup install Impacket"
 chmod +x /root/Documents/Impacket/setup.py && cd /root/Documents/Impacket && ./setup.py install
@@ -71,6 +75,9 @@ cd /root/Documents/Empire/setup && chmod +x setup_database.py && ./install.sh
 
 echo "\nBuilding John Jumbo\n"
 if [ ! -f ~/Documents/JohnJumbo/run/john ]; then cd /root/Documents/JohnJumbo/src && ./configure && make; fi
+
+echo "\nSetup Parameth\n"
+cd /root/Documents/Parameth && pip install -U -r requirements.txt
 
 echo "\nDownloading additional lists: secLists fuzzdb naughtystrings payloadallthethings probable-wordlists\n"
 webDirec=/root/lists/Web
