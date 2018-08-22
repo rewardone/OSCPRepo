@@ -4,6 +4,7 @@ import sys
 import os
 import subprocess
 import argparse
+import errno
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5
@@ -25,7 +26,7 @@ def doNmap(ip_address, port):
     subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',nfsPort,'--script','nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA",outfileNmap,ip_address])
     print "INFO: Nfs nmap completed on %s:%s" % (ip_address, port)
     return
-    
+
 def doSysCommands(ip_address, port):
     print "INFO: Starting nfs sysCommands on %s:%s" % (ip_address, port)
     f = open(outfile,'w')
@@ -63,16 +64,16 @@ if __name__='__main__':
     parser = argparse.ArgumentParser(description='Rough script to handle nfs enumeration. Usage: nfsrecon.py ip {port}')
     parser.add_argument('ip', help="IP address of target")
     parser.add_argument('port', default='111,2049', help="Port. Default is 111,2049")
-    
+
     args = parser.parse_args()
-    
+
     BASE = "/root/scripts/recon_enum/results/exam/nfs"
     mkdir_p(BASE)
     outfile = "/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfsrecon.txt" % (ip_address, port)
     outfileNmap = "/root/sripts/recon_enum/results/exam/nfs/%s_%s_nfsnmap" % (ip_address, port)
-    
+
     ip_address = args.ip
-    
+
     if args.port != '111,2049':
         port = '111,2049,%s' % args.port #need rpc for nmap scripts
     else:
@@ -81,4 +82,3 @@ if __name__='__main__':
     doNmap(ip_address, port)
     doSysCommands(ip_address, port)
     print "INFO: nfsRecon completed for %s:%s" % (ip_address, port)
-    

@@ -5,11 +5,11 @@
 #
 
 echo "### Downloading things...### \n\n"
-echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot"
+echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libldap2-dev libsasl2-dev"
 curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
 apt-get update
-apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot
+apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libldap2-dev libsasl2-dev
 
 echo "\nCloning Impacket \n"
 direc=/root/Documents/Impacket
@@ -86,6 +86,12 @@ if [ ! -f ~/Documents/JohnJumbo/run/john ]; then cd /root/Documents/JohnJumbo/sr
 
 echo "\nSetup Parameth\n"
 cd /root/Documents/Parameth && pip install -U -r requirements.txt
+
+echo "\nSetup ADLDAP\n"
+cd /root/Documents/ADLdapEnum && pip install python-ldap && chmod +x ad-ldap-enum.py
+
+echo "\nSetup LdapDD\n"
+cd /root/Documents/LdapDD && chmod +x setup.py && chmod +x ldapdomaindump.py && python setup.py install
 
 echo "\nDownloading additional lists: secLists fuzzdb naughtystrings payloadallthethings probable-wordlists\n"
 webDirec=/root/lists/Web

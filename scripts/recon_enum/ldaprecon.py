@@ -4,6 +4,8 @@ import sys
 import os
 import subprocess
 import argparse
+import errno
+import getpass
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5
@@ -42,14 +44,17 @@ def doNmap():
 # -s, --secure                                      Connect to LDAP over SSL
 # -u USERNAME, --username USERNAME                  Authentication account's username.
 # -p PASSWORD, --password PASSWORD                  Authentication account's password.
-#Requires python-ldap module as well (pip install python-ldap
+#Requires python-ldap module as well (pip install python-ldap)
 def doADLdapEnum():
 #https://github.com/CroweCybersecurity/ad-ldap-enum
     print "INFO: Starting ADLdapEnum on %s:%s" % (ip_address, port)
-    f = open(outfileADLdapEnum,'w+')
-    if args.username == "" and args.password == "" and args.domain != "":
-        results = subprocess.check_output(['/root/Documents/ADLdapEnum/./ad-ldap-enum','-v','-l'
-        , '%s' % (ip_address),'-n']).split("\n")
+    if "," in args.port:
+        ports = args.port.split(",")
+        outfileADLdapEnum = "%s/%s_%s_ADLdapEnum" % (BASE, ip_address, port[0])
+        outfileADLdapEnum1 = "%s/%s_%s_ADLdapEnum" % (BASE, ip_address, port[1])
+    f = open(outfileADLdapEnum,'w')
+    if args.username == "" and args.password == "" and args.domain == "":
+        results = subprocess.check_output(['python /root/Documents/ADLdapEnum/ad-ldap-enum.py','-v','-l', ip_address,'-n']).split("\n")
         if results:
             for res in results:
                 f.write(res)
@@ -57,14 +62,23 @@ def doADLdapEnum():
         else:
             print "INFO: ADLdapEnum completed with no results on %s:%s" % (ip_address, port)
     else:
-        results = subprocess.check_output(['/root/Documents/ADLdapEnum/./ad-ldap-enum','-v','-l'
-        , '%s' % (ip_address),'-d',args.domain,'-u',args.username,'-p',args.password]).split("\n")
-        if results:
-            for res in results:
-                f.write(res)
-                f.write("\n")
-        else:
-            print "INFO: ADLdapEnum completed with no results on %s:%s" % (ip_address, port)
+        try:
+            print "IP: %s" % ip_address
+            print "Domain: %s" % args.domain
+            print "User: %s" % args.username
+            dir = "%s" % BASE
+            #os.chdir("/root/scripts/recon_enum/results/exam/ldap/389")
+            #results = subprocess.check_output(['python /root/Documents/ADLdapEnum/ad-ldap-enum.py','-l', ip_address,'-d',args.domain,'-u',args.username,'-p',args.password,'-v'])
+            ADLDAPENUM = "cd %s && python /root/Documents/ADLdapEnum/ad-ldap-enum.py -l %s -d %s -u %s -p %s -v" % (dir, ip_address, args.domain, args.username, args.password)
+            results = subprocess.call(ADLDAPENUM, shell=True)
+            if results:
+                for res in results:
+                    f.write(res)
+                    f.write("\n")
+            else:
+                print "INFO: ADLdapEnum completed with no results on %s:%s" % (ip_address, port)
+        except subprocess.CalledProcessError as e:
+            print "Error " + e
     f.close()
     print "INFO: Completed ADLdapEnum on %s:%s" % (ip_address, port)
     return
@@ -99,39 +113,87 @@ def doADLdapEnum():
                         # cause high traffic on large networks)
 # -n DNS_SERVER, --dns-server DNS_SERVER
                         # Use custom DNS resolver instead of system DNS (try a
-                        # domain controller IP)    
+                        # domain controller IP)
 def doLdapDD():
 #https://github.com/dirkjanm/ldapdomaindump
-    print "INFO: Starting LdapDD on %s:%s" % (ip_address, port)
+    print "INFO: Starting LdapDD on %s:%s" % (ip_address, args.port)
+    outfileLDD = "%s/%s_%s_ldd" % (BASE, ip_address, args.port)
+    DEVNULL = open(os.devnull, 'w') #because errors can be very noisy
     if args.username == "" and args.password == "":
-        subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump','ldap://%s:%s' % (ip_address, port),'-o',outfileLDD])
+        if "," in args.port:
+            ports = args.port.split(",")
+            for port in ports:
+                outfileLDD = "%s/%s_%s_ldd" % (BASE, ip_address, port)
+                outfileDir = "%s/%s" % (BASE, port)
+                mkdir_p(outfileDir)
+                try:
+                    subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump.py','ldap://%s:%s' % (ip_address, port),'-o',outfileDir], stderr=DEVNULL)
+                except subprocess.CalledProcessError as e:
+                    f = open(outfileLDD, 'w')
+                    f.write("Error code: " + str(e.returncode) + "\n")
+                    f.write("Tool output: " + e.output)
+                    f.close()
+        else:
+            try:
+                outfileDir = "%s/%s" % (BASE, args.port)
+                mkdir_p(outfileDir)
+                subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump.py','ldap://%s:%s' % (ip_address, port),'-o',outfileDir], stderr=DEVNULL)
+            except subprocess.CalledProcessError as e:
+                f = open(outfileLDD, 'w')
+                f.write("Error code: " + str(e.returncode) + "\n")
+                f.write("Tool output: " + e.output)
+                f.close()
     else:
-        subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump','-u',args.username,'-p',args.password,'ldap://%s:%s' % (ip_address, port),'-o',outfileLDD])
+        if "," in args.port:
+            ports = args.port.split(",")
+            for port in ports:
+                outfileLDD = "%s/%s_%s_ldd" % (BASE, ip_address, port)
+                outfileDir = "%s/%s" % (BASE, port)
+                mkdir_p(outfileDir)
+                try:
+                    subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump.py','-u',args.username,'-p',args.password,'ldap://%s:%s' % (ip_address, port),'-o',outfileDir], stderr=DEVNULL)
+                except subprocess.CalledProcessError as e:
+                    f = open(outfileLDD, 'w')
+                    f.write("Error code: " + str(e.returncode) + "\n")
+                    f.write("Tool output: " + e.output)
+                    f.close()
+        else:
+            try:
+                outfileDir = "%s/%s" % (BASE, args.port)
+                mkdir_p(outfileDir)
+                subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump.py','-u',args.username,'-p',args.password,'ldap://%s:%s' % (ip_address, port),'-o',outfileDir], stderr=DEVNULL)
+            except subprocess.CalledProcessError as e:
+                f = open(outfileLDD, 'w')
+                f.write("Error code: " + str(e.returncode) + "\n")
+                f.write("Tool output: " + e.output)
+                f.close()
     print "INFO: Completed LdapDD on %s:%s" % (ip_address, port)
+    DEVNULL.close()
     return
-    
-         
-if __name__='__main__':
+
+
+if __name__=='__main__':
 
     parser = argparse.ArgumentParser(description='Rough script to handle ldap enumeration. Usage: ldaprecon.py {-u username -p password -d FQDN} IP {port}')
-    parser.add_argument('-u', '--username', default = "", help="Username to connect as. Anonymous if not specified")
-    parser.add_argument('-p', '--password', default = "", help="Password to authentication. Anonymous if not specified")
+    parser.add_argument('-u', '--username', default = "", help="Username to connect as. Anonymous if not specified. Must use Domain\\\\Username")
+    parser.add_argument('-p', '--password', nargs='?', default = "", help="Password to authentication. Anonymous if not specified. Will prompt if -p")
     parser.add_argument('-d', '--domain', default = "", help="FQDN")
     parser.add_argument('ip', help="IP address of target")
-    parser.add_argument('port', default='389,636', help="Port. Default is 389,636")
+    parser.add_argument('--port', default='389,636', help="Port. Default is 389,636")
 
     args = parser.parse_args()
-    
+
     ip_address = args.ip
     port = args.port
-    
+
+    if args.username != "":
+        args.password = getpass.getpass('Password: ')
+
     BASE = "/root/scripts/recon_enum/results/exam/ldap"
     mkdir_p(BASE)
     outfile = "%s/%s_%s_ldaprecon.txt" % (BASE, ip_address, port)
     outfileNmap = "%s/%s_%s_ldapnmap" % (BASE, ip_address, port)
-    outfileADLdapEnum = "%s/%s_%s_ADLdapEnum" % (BASE, ip_address, port)
-    outfileLDD = "%s/%s_%s_ldd" % (BASE, ip_address, port)
-    
+
     doNmap()
     if args.domain != "":
         doADLdapEnum()
