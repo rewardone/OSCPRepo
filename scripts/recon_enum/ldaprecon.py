@@ -48,38 +48,47 @@ def doNmap():
 def doADLdapEnum():
 #https://github.com/CroweCybersecurity/ad-ldap-enum
     print "INFO: Starting ADLdapEnum on %s:%s" % (ip_address, port)
-    if "," in args.port:
-        ports = args.port.split(",")
-        outfileADLdapEnum = "%s/%s_%s_ADLdapEnum" % (BASE, ip_address, port[0])
-        outfileADLdapEnum1 = "%s/%s_%s_ADLdapEnum" % (BASE, ip_address, port[1])
-    f = open(outfileADLdapEnum,'w')
     if args.username == "" and args.password == "" and args.domain == "":
-        results = subprocess.check_output(['python /root/Documents/ADLdapEnum/ad-ldap-enum.py','-v','-l', ip_address,'-n']).split("\n")
-        if results:
-            for res in results:
-                f.write(res)
-                f.write("\n")
-        else:
-            print "INFO: ADLdapEnum completed with no results on %s:%s" % (ip_address, port)
+        try: 
+            if "," in args.port:
+                ports = args.port.split(",")
+                for port in ports:
+                    outdirADLdapEnum = "%s/%s" % (BASE, port)
+                    mkdir_p(outdirADLdapEnum)
+                    ADLDAPENUM = "cd %s && python /root/Documents/ADLdapEnum/ad-ldap-enum.py -l %s -n -v" % (outdirADLdapEnum, ip_address)
+                    subprocess.call(ADLDAPENUM, shell=True)
+            else:
+                outdirADLdapEnum = "%s/%s" % (BASE, args.port)
+                mkdir_p(outdirADLdapEnum)
+                ADLDAPENUM = "cd %s && python /root/Documents/ADLdapEnum/ad-ldap-enum.py -l %s -n -v" %(outdirADLdapEnum, ip_address)
+                subprocess.call(ADLDAPENUM, shell=True)
+        except subprocess.CalledProcessError as e:
+            print "ADLdapEnum errorcode: " + str(e.returncode) + "\n"
     else:
         try:
-            print "IP: %s" % ip_address
-            print "Domain: %s" % args.domain
-            print "User: %s" % args.username
-            dir = "%s" % BASE
-            #os.chdir("/root/scripts/recon_enum/results/exam/ldap/389")
-            #results = subprocess.check_output(['python /root/Documents/ADLdapEnum/ad-ldap-enum.py','-l', ip_address,'-d',args.domain,'-u',args.username,'-p',args.password,'-v'])
-            ADLDAPENUM = "cd %s && python /root/Documents/ADLdapEnum/ad-ldap-enum.py -l %s -d %s -u %s -p %s -v" % (dir, ip_address, args.domain, args.username, args.password)
-            results = subprocess.call(ADLDAPENUM, shell=True)
-            if results:
-                for res in results:
-                    f.write(res)
-                    f.write("\n")
-            else:
-                print "INFO: ADLdapEnum completed with no results on %s:%s" % (ip_address, port)
+            if "," in args.port:
+                ports = args.port.split(",")
+                for port in ports:
+                    outdirADLdapEnum = "%s/%s" % (BASE, port)
+                    mkdir_p(outdirADLdapEnum)
+                    if port == 636:
+                        ADLDAPENUM = "cd %s && python /root/Documents/ADLdapEnum/ad-ldap-enum.py -l %s -d %s -u %s -p %s -s -v" % (outdirADLdapEnum, ip_address, args.domain, args.username, args.password)
+                        results = subprocess.call(ADLDAPENUM, shell=True)
+                        continue
+                    else:
+                        ADLDAPENUM = "cd %s && python /root/Documents/ADLdapEnum/ad-ldap-enum.py -l %s -d %s -u %s -p %s -v" % (outdirADLdapEnum, ip_address, args.domain, args.username, args.password)
+                        results = subprocess.call(ADLDAPENUM, shell=True)
+            else: 
+                outdirADLdapEnum = "%s/%s" % (BASE, args.port)
+                mkdir_p(outdirADLdapEnum)
+                if args.port == 636:
+                    ADLDAPENUM = "cd %s && python /root/Documents/ADLdapEnum/ad-ldap-enum.py -l %s -d %s -u %s -p %s -s -v" % (outdirADLdapEnum, ip_address, args.domain, args.username, args.password)
+                    results = subprocess.call(ADLDAPENUM, shell=True)
+                else:
+                    ADLDAPENUM = "cd %s && python /root/Documents/ADLdapEnum/ad-ldap-enum.py -l %s -d %s -u %s -p %s -v" % (outdirADLdapEnum, ip_address, args.domain, args.username, args.password)
+                    results = subprocess.call(ADLDAPENUM, shell=True)
         except subprocess.CalledProcessError as e:
-            print "Error " + e
-    f.close()
+            print "ADLdapEnum errorcode: " + str(e.returncode) + "\n"
     print "INFO: Completed ADLdapEnum on %s:%s" % (ip_address, port)
     return
 
@@ -170,16 +179,26 @@ def doLdapDD():
     print "INFO: Completed LdapDD on %s:%s" % (ip_address, port)
     DEVNULL.close()
     return
+    
+def cleanHistory():
+    print "Cleaning history"
+    bash_history = "/root/.bash_history"
+    zsh_history = "/root/.zsh_history"
+    if os.path.isfile(bash_history)
+        os.remove(bash_history)
+    if os.path.isfile(zsh_history)
+        os.remove(zsh_history)
 
 
 if __name__=='__main__':
 
     parser = argparse.ArgumentParser(description='Rough script to handle ldap enumeration. Usage: ldaprecon.py {-u username -p password -d FQDN} IP {port}')
     parser.add_argument('-u', '--username', default = "", help="Username to connect as. Anonymous if not specified. Must use Domain\\\\Username")
-    parser.add_argument('-p', '--password', nargs='?', default = "", help="Password to authentication. Anonymous if not specified. Will prompt if -p")
+    parser.add_argument('-p', '--password', nargs='?', default = "", help="Password to authentication. Anonymous if not specified. Will prompt if -p. Caution as subprocess may leave passwords in history file")
     parser.add_argument('-d', '--domain', default = "", help="FQDN")
     parser.add_argument('ip', help="IP address of target")
     parser.add_argument('--port', default='389,636', help="Port. Default is 389,636")
+    parser.add_argument('--not-safe', dest='not_safe', default=False, store_const=True, help="Disable removing of bash/zsh history files. If a password is used, it will be visible in your history file. By default, ldaprecon will remove history. This flag will preserve your history file, but leave passwords in clear text")
 
     args = parser.parse_args()
 
@@ -198,4 +217,7 @@ if __name__=='__main__':
     if args.domain != "":
         doADLdapEnum()
     doLdapDD()
+    if not args.not_safe:
+        cleanHistory()
     print "INFO: ldaprecon completed on %s:%s" % (ip_address, port)
+    print "Also remember PowerView and other more powerfull tools can be used with authentication"

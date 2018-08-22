@@ -23,26 +23,22 @@ List after list of compiled bookmarks, github pages, blogs, OSCP reviews, tools,
 
 Recon_Scan.py
 
-A popular script, it's goal is to run nmap, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). This functionality could probably be imported into Sparta (a cool gui tool). It's also probably worse than Vanquish. For now, it get's the job done with a single ./reconscan.py. It is designed to run multithreaded against multiple targets simultaneously if network bandwidth allows.
-
-Reconscan.py has the ability to run nmap, tens of nmap scripts, gobuster/dirb, nikto, whatweb, hydra, and so much more. Written in python (2.7), it is easy to change, configure (if wanted), and even run modules separately against a target.  
+A popular script, it's goal is to run nmap, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). Partial Sparta integration is complete, and setup.sh will move those files for you. Also check out Vanquish. From the CLI, reconscan get's the job done with a single ./reconscan.py. It is designed to run multithreaded against multiple targets simultaneously if network bandwidth allows. You can adjust the min-rate in the scripts.
 
 There is now a setup.sh script in /scripts folder that will clone some required repositories, move folders into place, and should make reconscan ready to go.
-
-LinEnum.sh
-
-I've tagged it as v0.81. I believe RebootUser is still updating the script every once in a while. This is essentially my fork of it. I still have some TODOs, but it has been expanded significantly. Too much info? Maybe. As a pentester, you will need to tailor how much information you gather to your own liking. Please submit bugs/issues through Github.
 
 
 # Other Stuff
 
-Folders mostly speak for themselves. Lists contains a bunch of wordlists (setup.sh will download more). Some methodologies and cheat sheets are downloaded. Some tools and scripts are kept local until they become integrated. ListOfSoftwareToAptGet.txt contains some information on setup that a user might want to consider when this repo is cloned from a default Kali installation, though this functionality is essentially replaced with setup.sh in the scripts folder.
+Folders mostly speak for themselves. Lists contains a bunch of wordlists (setup.sh will download more). Some methodologies and cheat sheets are downloaded. Some tools and scripts are kept local until they become integrated. You can find local enumeration checkers and privesc checkers in their respective folders (note that these are snapshots and not necessarily the most up-to-date versions of these scripts).
 
 GetGitHubStars
 
 A quick powershell script that can grab a user's starred repositories and output them to a csv. I wanted to combine them with my own personal comments for a list of all my stars for easier sorting, tagging, etc. Edit commentsToJSON and they will be added to output.csv. Additionally, the script can go and get trending repositories. TODO: add function to star repos in the script; add function to 'blacklist' popular repositories that you no longer want to see.
 
 # Latest Changes
+22 Aug 18: BlackHat and Defcon were a blast. There was a lot of bugfixing going on. Scripts are becoming more modular and nicer to work with (say hello to nfs and ldap recon). dirbustEVERYTHING has received a lot of attention including the integration of wfuzz and parameth. You can check which nmap scripts are run and which script they are in with the 'nmap to recon scan mapping' sheet (partially complete because I overwrote the master, but I will finish it again later). Some lists/payloads have been tweaked. 
+
 21 May 18: Unicornscan and python mutliprocessing don't go well together. Changed everything to Nmap. It's advisable to adjust --min-rate as needed. Some modules added. Banners. dirbEverything logic and wordlists all updated. Nmap has also been changed to run full connect scans sT. Syn scans are too identifiable (though the speed probably doesn't help this script).
 
 10 Apr 18: Updated LinEnum. Most enumeration scripts are not bad even if they haven't been updated in a few years. I was partial to linuxprivchecker.py for a long time; however, I wanted something just in case a machine didn't have python installed. I really like the idea behind pentestmonkey's linux-privesc-check master branch. I even thought about putting work into Lynis or creating a 'pentest' profile. Eventually I chose to update LinEnum due to it being a single file, relatively updated, and already has features like reporting and verbosity level (thorough). Many additional checks, updated version number, etc. Please let me know if you want additional checks included or find bugs. Enjoy.

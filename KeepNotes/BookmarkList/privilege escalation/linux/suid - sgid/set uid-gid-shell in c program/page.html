@@ -8,6 +8,7 @@ Maybe you have a program that allows you to edit files with root permissions<br/
 Maybe you can edit a file that a program with root permissions will run<br/>
 Also assuming root group/id is 0<br/>
 <br/>
+Please make sure the file system you are running suid on is NOT MOUNTED nosuid. Such as on /dev or /tmp sometimes.<br/>
 <br/>
 #include &lt;stdio.h&gt;<br/>
 #include &lt;sys/types.h&gt;<br/>
