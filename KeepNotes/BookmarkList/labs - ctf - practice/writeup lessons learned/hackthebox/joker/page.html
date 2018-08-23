@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Joker</title>
+</head><body>Squid http-proxy is identified<br/>
+Configure browser to use said proxy (foxyproxy or other)<br/>
+<br/>
+UDP 69&#09;tftp<br/>
+UDP 5355&#09;llmnr<br/>
+<br/>
+/etc/squid/squid.conf<br/>
+<br/>
+grep . &#09;&#09;&#09;#only show lines with content<br/>
+<br/>
+When using a squid or proxy, try 127.0.0.1 in browser just because you may be served something you shouldn't be served potential SSRF.<br/>
+<br/>
+In Burp, you can add an "upsteam proxy" in User Options &gt; Connections &gt; Upstream Proxy Servers and configure proxy, port, auth, etc<br/>
+<br/>
+python<br/>
+import os<br/>
+os.popen("").read()&#09;&#09;#can honestly use anything here, even subprocess[("",shell=True)] and grab stdin/out/err<br/>
+/bin -h 2&gt;&amp;1&#09;&#09;&#09;#if you need to direct stderr to stdout. Help apparently goes to stderr<br/>
+<br/>
+base64 -w 0&#09;&#09;&#09;#change wrapping to 0, otherwise base64 will wrap multiple lines and makes it harder to work with<br/>
+<br/>
+nc -u&#09;&#09;&#09;&#09;#change to a UDP connection<br/>
+nc -u -lvvnp&#09;&#09;&#09;#listen for UDP connection<br/>
+<br/>
+Also scrutinize the flags being used with sudo/sudoedit when you do a sudo -l<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Wildcard injection, see pages in linux priv esc<br/>
+<br/>
+if you see<br/>
+tar cf /home/FILE *<br/>
+<br/>
+and you can force the dir that tar is in, you can get a backup of everything wherever tar lands<br/>
+In the case of joker, the command was:<br/>
+&nbsp;&#09;cd /home/alekos/development;<br/>
+&nbsp;&#09;tar cf /home/alekos/backup/$FILENAME *;<br/>
+<br/>
+By deleting the /home/alekos/development folder, the cd could not happen and tar archived everything in it's current directory: /root/<br/>
+</body></html>

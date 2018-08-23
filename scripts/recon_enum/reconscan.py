@@ -94,80 +94,77 @@ def multProc(targetin, scanip, port):
     return
 
 def dnsEnum(ip_address, port):
-    print "INFO: Detected DNS on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating DNS on %s:%s" % (ip_address, port)
     if port.strip() == "53":
        SCRIPT = "./dnsrecon.py %s" % (ip_address)# execute the python script
        subprocess.check_output(['./dnsrecon.py',ip_address])
-       #subprocess.call(SCRIPT, shell=True)
     return
 
 def ftpEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
-    print "INFO: Detected ftp on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating ftp on %s:%s" % (ip_address, port)
     #FTPRECON in subdirectory in case ssh/telnet/mysql are present, hydra will have
     #separate hydra.restore files
     SCRIPT = "ftp/./ftprecon.py %s %s" % (ip_address, port)
     subprocess.check_output(['ftp/./ftprecon.py',ip_address,port])
-    #subprocess.call(SCRIPT, shell=True)
     return
 
 def fingerEnum(ip_address, port):
-   print "INFO: Detected Finger on %s:%s" % (ip_address, port)
+   print "INFO: Enumerating Finger on %s:%s" % (ip_address, port)
    FINGERSCAN = "nmap -n -sV -Pn -vv -p %s --script finger,vulners -oA /root/scripts/recon_enum/results/exam/finger/%s_finger.xml %s" % (port, ip_address, ip_address)
    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','finger,vulners','-oA','/root/scripts/recon_enum/results/exam/finger/%s_%s_finger' % (ip_address,port),ip_address])
-   #subprocess.call(FINGERSCAN, shell=True)
    return
 
 def httpEnum(ip_address, port):
     path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
     mkdir_p(path)
-    print "INFO: Detected http on %s:%s" % (ip_address, port)
-    print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
-    subprocess.check_output(['./webrecon.py','http://%s:%s' % (ip_address, port)])
-    print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
-    print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
-    subprocess.check_output(['./dirbustEVERYTHING.py','-p','1','-i','4','http://%s:%s' % (ip_address,port)])
-    print "INFO: dirbust scan completed for %s:%s" % (ip_address, port)
+    print "INFO: Enumerating http on %s:%s" % (ip_address, port)
+    #print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
+    subprocess.check_output(['./webrecon.py','-a',userAgent,'http://%s:%s' % (ip_address, port)])
+    #print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
+    #print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
+    subprocess.check_output(['./dirbustEVERYTHING.py','-a',userAgent,'-p','1','-i','4','http://%s:%s' % (ip_address,port)])
+    #print "INFO: dirbust scan completed for %s:%s" % (ip_address, port)
     return
 
 def httpsEnum(ip_address, port):
     path = "/root/scripts/recon_enum/results/exam/dirb/%s" % (port)
     mkdir_p(path)
-    print "INFO: Detected https on %s:%s" % (ip_address, port)
-    print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
-    subprocess.check_output(['./webRecon.py','https://%s:%s' % (ip_address, port)])
-    print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
-    print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
-    subprocess.check_output(['./dirbustEVERYTHING.py','-p','1','-i','4','https://%s:%s' % (ip_address,port)])
-    print "INFO: dirbust scan completed for %s:%s" % (ip_address, port)
+    print "INFO: Enumerating https on %s:%s" % (ip_address, port)
+    #print "INFO: Performing nmap web script scan for %s:%s" % (ip_address, port)
+    subprocess.check_output(['./webRecon.py','-a',userAgent,'https://%s:%s' % (ip_address, port)])
+    #print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
+    #print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
+    subprocess.check_output(['./dirbustEVERYTHING.py','-a',userAgent,'-p','1','-i','4','https://%s:%s' % (ip_address,port)])
+    #print "INFO: dirbust scan completed for %s:%s" % (ip_address, port)
     return
 
 def mssqlEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
 	#MYSQLRECON in subdirectory in case multiple Hydra.restore files. default, nmap performs brute.
-    print "INFO: Detected MS-SQL on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating MS-SQL on %s:%s" % (ip_address, port)
     subprocess.check_output(['mssql/./mssqlrecon.py',ip_address,port])
     return
 
 def ldapEnum(ip_address, port):
-    print "INFO: Detected LDAP on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating LDAP on %s:%s" % (ip_address, port)
     subprocess.check_output(['./ldaprecon.py',ip_address,port])
     return
 
 def mysqlEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
 	#MYSQLRECON in subdirectory in case ftp/ssh/telnet are present, hydra will have
-    print "INFO: Detected MySQL on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating MySQL on %s:%s" % (ip_address, port)
     subprocess.check_output(['mysql/./mysqlrecon.py',ip_address,port])
     return
 
 def nfsEnum(ip_address, port):
-    print "INFO: Detected NFS on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating NFS on %s:%s" % (ip_address, port)
     subprocess.check_output(['./nfsrecon.py',ip_address,port])
     return
 
 def msrpc(ip_address, port):
-    print "INFO: Detected MSRPC on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating MSRPC on %s:%s" % (ip_address, port)
     #Impacket RPC packages
     subprocess.check_output(['./msrpcrecon.py',ip_address,port])
     return
@@ -181,7 +178,7 @@ def msrpc(ip_address, port):
 #rpcap-brute: Brute against WinPcap Remote Capture
 #rpcap-info: Retrieve interface information through rpcap service
 def rpcbindEnum(ip_address, port):
-    print "INFO: Detected RPCBind on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating RPCBind on %s:%s" % (ip_address, port)
     subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','rpc-grind,rpcinfo','-oA',"/root/scripts/recon_enum/results/exam/rpc/%s_%s_rpc" % (ip_address,port),ip_address])
     RPCINFOSCAN1 = "rpcinfo %s > /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt && echo -e '\n' >> /root/scripts/recon_enum/results/exam/rpc/%s_rpcinfo.txt" % (ip_address, ip_address, ip_address)
     subprocess.check_output(RPCINFOSCAN1, shell=True)
@@ -194,14 +191,14 @@ def rpcbindEnum(ip_address, port):
 def rdpEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
 	#RDPRECON in subdir in case multiple hydra.restore files
-    print "INFO: Detected RDP on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating RDP on %s:%s" % (ip_address, port)
     subprocess.check_output(['rdp/./rdprecon.py',ip_address,port])
     return
 
 def rloginEnum(ip_address, port):
     #Typically only 513, so we'll check
     if port.strip() == "513":
-        print "INFO: RLogin detected on %s:%s" % (ip_address, port)
+        print "INFO: Enumerating RLogin on %s:%s" % (ip_address, port)
         try:
             results = subprocess.check_output(['hydra','-L','/root/lists/userlist.txt','-P','/root/lists/quick_password_spray.txt','-f','-o','/root/scripts/recon_enum/results/exam/%s_rloginhydra' % (ip_address),'-u',ip_address,'rlogin']).split("\n")
             for res in results:
@@ -223,42 +220,30 @@ def rloginEnum(ip_address, port):
 
 def sshEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
-    print "INFO: Detected SSH on %s:%s" % (ip_address, port)
-    #SCRIPT = "./sshrecon.py %s %s" % (ip_address, port)
+    print "INFO: Enumerating SSH on %s:%s" % (ip_address, port)
     subprocess.check_output(['./sshrecon.py',ip_address,port])
-    #subprocess.call(SCRIPT, shell=True)
     return
 
 def snmpEnum(ip_address, port):
-    print "INFO: Detected snmp on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating snmp on %s:%s" % (ip_address, port)
     subprocess.check_output(['./snmprecon.py',ip_address])
-    #SCRIPT = "./snmprecon.py %s" % (ip_address)
-    #subprocess.call(SCRIPT, shell=True)
     return
 
 def smtpEnum(ip_address, port):
-    print "INFO: Detected smtp on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating smtp on %s:%s" % (ip_address, port)
     if port.strip() == "25":
-       #SCRIPT = "./smtprecon.py %s" % (ip_address)
        subprocess.check_output(['./smtprecon.py',ip_address])
-       #subprocess.call(SCRIPT, shell=True)
     else:
        print "WARNING: SMTP detected on non-standard port, smtprecon skipped (must run manually)"
     return
 
 def smbEnum(ip_address, port):
-    print "INFO: Detected SMB on %s:%s" % (ip_address, port)
+    print "INFO: Enumerating SMB on %s:%s" % (ip_address, port)
     if port.strip() == "139":
-       #SCRIPT = "./smbrecon.py %s %s" % (ip_address, port)
        subprocess.check_output(['./smbrecon.py',ip_address,port])
-       #subprocess.call(SCRIPT, shell=True)
     if port.strip() == "445":
-       #SCRIPT = "./smbrecon.py %s %s" % (ip_address, port)
-       #subprocess.call(SCRIPT, shell=True)
        subprocess.check_output(['./smbrecon.py',ip_address,port])
     if port.strip() == "137":
-       #SCRIPT = "./smbrecon.py %s %s" % (ip_address, port)
-       #subprocess.call(SCRIPT, shell=True)
        subprocess.check_output(['./smbrecon.py',ip_address,port])
     return
 
@@ -266,26 +251,18 @@ def telnetEnum(ip_address, port):
     #EDIT WITH USERNAME/PASSWORD LISTS
     #TELNETRECON in subdirectory in case ftp/ssh/mysql are present, hydra will have
     #separate hydra.restore files
-    print "INFO: Detected Telnet on %s:%s" % (ip_address, port)
-    #SCRIPT = "telnet/./telnetrecon.py %s %s" % (ip_address, port)
+    print "INFO: Enumerating Telnet on %s:%s" % (ip_address, port)
     subprocess.check_output(['telnet/./telnetrecon.py',ip_address,port])
-    #subprocess.call(SCRIPT, shell=True)
     return
 
 def tftpEnum(ip_address, port):
-   print "INFO: Detected TFTP on %s:%s" % (ip_address, port)
-   #TFTPSCAN = "nmap -n -sV -Pn -vv -p %s --script=tftp-enum,vulners -oA /root/scripts/recon_enum/results/exam/tftp/%s_tftp.xml %s" % (port, ip_address, ip_address)
+   print "INFO: Enumerating TFTP on %s:%s" % (ip_address, port)
    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','tftp-enum,vulners','-oA',"/root/scripts/recon_enum/results/exam/tftp/%s_%s_tftp" % (ip_address,port),ip_address])
-   #subprocess.call(TFTPSCAN, shell=True)
    return
 
 def nmapFullSlowScan(ip_address):
    ip_address = ip_address.strip()
-   print "INFO: Running full TCP/UDP nmap scans for %s" % (ip_address)
-   print "INFO: Full UDP takes a LONG time"
-   #TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 3 -p- --max-retries 1 --min-rate 1000 -oA '/root/scripts/recon_enum/results/exam/nmap/%s_FULL.nmap' -oX '/root/scripts/recon_enum/results/exam/nmap/%s_FULL_nmap_scan_import.xml' %s"  % (ip_address, ip_address, ip_address)
-   #UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 3 -p- --max-retries 1 --min-rate 1000 -oA '/root/scripts/recon_enum/results/exam/nmap/%sU_FULL' %s" % (ip_address, ip_address)
-   #tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
+   print "INFO: Running Full Slow TCP/UDP nmap scans for %s" % (ip_address)
    tcplines = subprocess.check_output(['nmap','-n','-vv','--stats-every','30s','-Pn','-sT','-T','3','-p-','--max-retries','1','--min-rate',SLOW_NMAP_MIN_RATE,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_FULL" % ip_address,ip_address]).split("\n")
    for line in tcplines:
       line = line.strip()
@@ -296,9 +273,8 @@ def nmapFullSlowScan(ip_address):
          service = linesplit[2] # grab the service name
          port = line.split(" ")[0] # grab the port/proto
          port = port.split("/")[0]
-         print ("INFO: Full Nmap for %s found TCP: %s on %s") % (ip_address, service, port)
+         print ("INFO: Full Slow Nmap for %s found TCP: %s on %s") % (ip_address, service, port)
    udplines = subprocess.check_output(['nmap','-n','-vv','--stats-every','30s','-Pn','-sU','-T','3','-p-','--max-retries','1','--min-rate',SLOW_NMAP_MIN_RATE,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%sU_FULL" % ip_address,ip_address]).split("\n")
-   #udplines = subprocess.check_output(UDPSCAN, shell=True).split("\n")
    for line in udplines:
       line = line.strip()
       if ("udp" in line) and ("open" in line) and not ("Discovered" in line):
@@ -308,8 +284,8 @@ def nmapFullSlowScan(ip_address):
          service = linesplit[2] # grab the service name
          port = line.split(" ")[0] # grab the port/proto
          port = port.split("/")[0]
-         print ("INFO: Full Nmap for %s found UDP: %s on %s") % (ip_address, service, port)
-   print "INFO: TCP/UDP Nmap scans completed for %s" % (ip_address)
+         print ("INFO: Full Slow Nmap for %s found UDP: %s on %s") % (ip_address, service, port)
+   print "INFO: Full Slow TCP/UDP Nmap scans completed for %s" % (ip_address)
    return
 
 #Be sure to change the interface if needed
@@ -327,10 +303,7 @@ def nmapFullSlowScan(ip_address):
 #
 def nmapFullFastScan(ip_address):
    ip_address = ip_address.strip()
-   print "INFO: Running general TCP/UDP nmap scans for " + ip_address
-   #TCPSCAN = "nmap -n -vv --stats-every 30s -Pn -sT -T 4 -p- --max-retries 1 --min-rate 2000 -oA '/root/scripts/recon_enum/results/exam/nmap/%s_INITIAL' %s"  % (ip_address, ip_address)
-   #UDPSCAN = "nmap -n -vv --stats-every 30s -Pn -sU -T 4 -p- --max-retries 1 --min-rate 2000 -oA '/root/scripts/recon_enum/results/exam/nmap/%sU_INITIAL' %s" % (ip_address, ip_address)
-   #tcplines = subprocess.check_output(TCPSCAN, shell=True).split("\n")
+   print "INFO: Running Full Fast TCP/UDP nmap scans for " + ip_address
    tcplines = subprocess.check_output(['nmap','-n','-vv','--stats-every','30s','-Pn','-sT','-T','4','-p-','--max-retries','1','--min-rate',FAST_NMAP_MIN_RATE,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_INITIAL" % ip_address,ip_address]).split("\n")
    tcpPorts = []
    udpPorts = []
@@ -344,11 +317,10 @@ def nmapFullFastScan(ip_address):
          port = line.split(" ")[0] # grab the port/proto
          port = port.split("/")[0]
          tcpPorts.append(port)
-         print ("INFO: Quick Nmap for %s found TCP: %s on %s") % (ip_address, service, port)
+         print ("INFO: Full Fast Nmap for %s found TCP: %s on %s") % (ip_address, service, port)
    for port in tcpPorts: #the last element in the list is blank
       if port != "":
          multProc(nmapVersionTCPAndPass, ip_address, port)
-   #udplines = subprocess.check_output(UDPSCAN, shell=True).split("\n")
    udplines = subprocess.check_output(['nmap','-n','-vv','--stats-every','30s','-Pn','-sU','-T','4','-p-','--max-retries','1','--min-rate',FAST_NMAP_MIN_RATE,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%sU_INITIAL" % ip_address,ip_address]).split("\n")
    for line in udplines:
       line = line.strip()
@@ -360,11 +332,11 @@ def nmapFullFastScan(ip_address):
          port = line.split(" ")[0] # grab the port/proto
          port = port.split("/")[0]
          udpPorts.append(port)
-         print ("INFO: Quick Nmap for %s found UDP: %s on %s") % (ip_address, service, port)
+         print ("INFO: Full Fast for %s found UDP: %s on %s") % (ip_address, service, port)
    for port in udpPorts: #the last element in the list is blank
       if port != "":
          multProc(nmapVersionUDPAndPass, ip_address, port)
-   print "INFO: General TCP/UDP nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
+   print "INFO: Full Fast TCP/UDP nmap finished for %s. Tasks passed to designated scripts" % (ip_address)
    jobs = []
    q = multiprocessing.Process(target=nmapFullSlowScan, args=(scanip,)) #comma needed
    jobs.append(q)
@@ -374,9 +346,8 @@ def nmapFullFastScan(ip_address):
 def nmapVersionTCPAndPass(ip_address, port):
    #need this to version ports and in case there is no recon module we'll have a scan for it. Runs default scripts.
    uniNmapTCP = "nmap -n -vv -Pn -A -sC -sT -T 4 -p %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_%s' %s"  % (port, ip_address, port, ip_address)
-   #lines = subprocess.check_output(uniNmapTCP, shell=True).split("\n")
    lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sT','-T','4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%s" % (ip_address,port),ip_address]).split("\n")
-   print "INFO: nmap versioning for TCP %s:%s completed" % (ip_address, port)
+   print "INFO: nmap version and pass for TCP %s:%s completed" % (ip_address, port)
    for line in lines:
       line = line.strip()
       if ("tcp" in line) and ("open" in line) and not ("Discovered" in line):
@@ -388,7 +359,7 @@ def nmapVersionTCPAndPass(ip_address, port):
          port = port.split("/")[0]
          if ("http" in service):
             multProc(httpEnum, ip_address, port)
-         elif ("domain" in service):
+         elif ("domain" in service): #don't want to miss if DNS is on TCP
             multProc(dnsEnum, ip_address, port)
          elif ("login" in service or "exec" in service or "shell" in service):
             multProc(rloginEnum, ip_address, port)
@@ -425,9 +396,8 @@ def nmapVersionTCPAndPass(ip_address, port):
 
 def nmapVersionUDPAndPass(ip_address, port):
    uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' %s"  % (port, ip_address, port, ip_address)
-   #lines = subprocess.check_output(uniNmapUDP, shell=True).split("\n")
    lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sU','-T','4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%sU" % (ip_address,port),ip_address]).split("\n")
-   print "INFO: nmap versioning for UDP %s:%s completed" % (ip_address, port)
+   print "INFO: nmap version and pass for UDP %s:%s completed" % (ip_address, port)
    for line in lines:
       line = line.strip()
       if ("udp" in line) and ("open" in line) and not ("Discovered" in line):

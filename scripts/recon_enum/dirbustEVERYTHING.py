@@ -579,9 +579,9 @@ if __name__=='__main__':
             print "INFO: Dirb completed on %s" % (url)
 
     if (args.tool == "gobuster"):
-        print "INFO: Starting threaded gobust"
-        print "WARN: Gobuster is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
-        print "WARN: Gobuster is not using a full wordlist, do a comprehensive scan after completion! Wordlist: %s" % (default_wordlist)
+        print "INFO: Starting gobuster scan for %s:%s" % (url, port)
+        p#rint "WARN: Gobuster is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
+        #print "WARN: Gobuster is not using a full wordlist, do a comprehensive scan after completion! Wordlist: %s" % (default_wordlist)
         #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
         chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,wordlistLastItem,PROCESSES)
         count = 0
@@ -627,8 +627,8 @@ if __name__=='__main__':
             print "INFO: Gobuster completed on %s" % (url)
 
     if (args.tool == "wfuzz"):
-        print "INFO: Starting threaded wfuzz"
-        print "WARN: wfuzz is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
+        print "INFO: Starting wfuzz scan for %s:%s" % (url, port)
+        #print "WARN: wfuzz is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
         #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
         if url[-1] != "/":
             url = url + "/"

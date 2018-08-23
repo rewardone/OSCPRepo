@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Many times you know the IP of a webserver and you attempt to go to &lt;IP&gt;:80 in a browser. Virtual Host routing may be preventing you from seeing all the applications/data on that web server.<br/>
+<br/>
+You can check some of the following places to build a list of 'names' to try to access:<br/>
+Certificates (see which domains the cert is valid for)<br/>
+NSlookup / dig nameservers (to see which domains / sites are in the zone (root or otherwise))<br/>
+Virtual Host scanning (brute force to see which subdomains are valid)<br/>
+Domain Name of the machine (ie if the ip is 10.10.10.10, but its name is bank, try bank.&lt;domain&gt;:80 in your browser)<br/>
+Append full protocol (ie http:// http://www. etc)<br/>
+<br/>
+You can add these values in your /etc/hosts file in order to access them more easily<br/>
+If there is a nameserver resolving these names, you can add it into your /etc/resolv.conf file to access them more easily</body></html>

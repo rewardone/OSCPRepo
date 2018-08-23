@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sudoedit</title>
+</head><body>Taken from the Joker HTB machine. <br/>
+Versions of sudoedit are vulnerable to /*/* double wildcard vulnerability where the paths are not correctly checked<br/>
+<br/>
+Follow through with IppSec: https://www.youtube.com/watch?v=5wyvpJa9LdU <br/>
+<br/>
+Two ways:<br/>
+<br/>
+symlink<br/>
+sudoedit was allowed for /var/www/*/*/layout.html<br/>
+so in /var/www, create a nested dir, say testing/ippsec<br/>
+now, symlink to a file you want to chage and name it layout.html<ul><li style="list-style-type: none">&nbsp;&#09;ln /home/arekos/.ssh/authorized_keys layout.html</li>
+</ul>
+Now, you can edit layout.html as it fulfills all requirements by sudoedit, and place your public key in authorized_keys<br/>
+&nbsp;&#09;$ /var/www/testing/ippsec: sudoedit -u arekos layout.html<br/>
+<br/>
+<br/>
+abusing spacing<br/>
+wildcards are awesome because they accept...well...anything!<br/>
+Nano has the ability to create multiple files separated by space on the command line<br/>
+take advantage of sudoedit directly:<br/>
+$ cd /home/arekos<br/>
+$ sudoedit -u arekos /var/www/ .ssh/authorized_keys /layout.html<br/>
+<br/>
+sudoedit requirements /var/www/*/*/layout.html were fulfilled and nano obliged and created /home/arekos/.ssh/authorized_keys AND layout.html. Simply save authorized_keys, exit out of layout.html and you're good to go!</body></html>

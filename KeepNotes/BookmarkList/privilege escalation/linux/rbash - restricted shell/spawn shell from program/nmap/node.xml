@@ -5,9 +5,10 @@
   <key>title</key><string>Nmap</string>
   <key>nodeid</key><string>e14f4c83-3600-4722-aa36-21d04e5b3d32</string>
   <key>modified_time</key><integer>1524749513</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1523473380</integer>
-  <key>order</key><integer>2</integer>
+  <key>order</key><integer>3</integer>
 </dict>
 </node>

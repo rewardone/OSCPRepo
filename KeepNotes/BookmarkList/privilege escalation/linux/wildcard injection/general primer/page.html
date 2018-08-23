@@ -3,7 +3,20 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>General Primer</title>
-</head><body>This works anywhere in linux that may be using wildcards. Novel idea but still useful. <br/>
+</head><body>www.defensecode.com/public/DefenseCode_Unix_WildCards_Gone_Wild.txt<br/>
+<br/>
+This works anywhere in linux that may be using wildcards. Novel idea but still useful. <br/>
+Example below, but tl;dr is that: there is a command being run like: ls *<br/>
+When you use *, it's not passed as * to ls. It does an ls and passes every file to ls. So if you create a file like '-la', then when ls is reading every file in the directory....ls -la is passed and executed!<br/>
+<br/>
+Necessary: touch -- -la <br/>
+the '--' argument to touch tells touch that there are no further arguments. This allows you to actually create a file named "-la"<br/>
+Another example: touch -- --checkpoint=1 &#09;creates a file called "--checkpoint=1" <br/>
+<br/>
+Any flag for any binary should be possible. A few are listed in the subpages under Wildcard Injection, but the idea is the same. <br/>
+<br/>
+<br/>
+<br/>
 <br/>
 Let's check one very basic wildcard argument injection example.<br/>
 <br/>

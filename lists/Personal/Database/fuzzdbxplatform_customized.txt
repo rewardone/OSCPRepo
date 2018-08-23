@@ -216,6 +216,7 @@ x' OR full_name LIKE '%Bob%
 a' OR 1=1 --
 1' OR 1=1 –
 '='
+=
 'LIKE'
 '=0--+
 ' OR true--
