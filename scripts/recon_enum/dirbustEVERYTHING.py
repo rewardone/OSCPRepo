@@ -409,6 +409,15 @@ def parameth(STAT_200_URLS,scanname):
     subprocess.call(GREPV_AUTHOR, shell=True)
     print "INFO: Completed parameth on %s" % (url)
 
+def check_intensity():
+    intensity = args.intensity
+    if int(intensity) >= 13 or int(intensity) <= 0:
+        raise argparse.ArgumentTypeError("Intensity needs to be between 1-12")
+    else:
+        args.intensity = int(args.intensity)
+
+def check_processes():
+    args.PROCESSES = int(args.PROCESSES)
 
 if __name__=='__main__':
     #recommended usage: ./dirbustEVERYTHING.py -p 1 -i 4 URL:PORT, probably followed by a -i 8 scan
@@ -419,8 +428,8 @@ if __name__=='__main__':
     parser.add_argument('-a', '--user-agent', dest="user_agent", default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", help="User-agent")
     parser.add_argument('-w', '--wordlist', dest="default_wordlist", default="/root/lists/Web/secProb_no_ext.txt", help="Wordlist to use for directory brute force")
     parser.add_argument('-q', '--pwordlist', dest="parameth_wordlist", default="/root/lists/Web/all_url_params.txt", help="Wordlist to use for parameter brute force")
-    parser.add_argument('-p', '--processes', dest="PROCESSES", type=int, default=10, help="Number of chunks to split wordlist into. A separate tool invocation will be used for each chunk. This is NOT gobuster -t threads.")
-    parser.add_argument('-i', '--intensity', type=int, choices=range(1, 12), default=3, help="Intensity level."
+    parser.add_argument('-p', '--processes', dest="PROCESSES", default='10', help="Number of chunks to split wordlist into. A separate tool invocation will be used for each chunk. This is NOT gobuster -t threads.")
+    parser.add_argument('-i', '--intensity', default="3", help="Intensity level."
                             "Small wordlist is secProb. Larger is Personal_w_vulns.-------------------------------------"
                             "1: scan no extensions. ------------------------------- "
                             "2: scan with extensions, but no other tools. --------- "
@@ -436,7 +445,9 @@ if __name__=='__main__':
                             "12: scan with user wordlist, more extensions, cewl, nmapHttpVulns, parameth, and whatweb. -------------------------- ")
     parser.add_argument('url', help="Run all (safe) nmap scripts regarding HTTP scanning")
     args = parser.parse_args()
-    #print args
+
+    check_intensity()
+    check_processes()
 
     #Fix URL if "http(s)" is not passed in
     if len(args.url.split(":")) == 0 or len(args.url.split(":")) == 1:
@@ -603,9 +614,9 @@ if __name__=='__main__':
             comuni("gobuster",GOB_COMBINED)
             print "INFO: Directory brute of %s completed" % (url)
             sortBySize(GOB_COMBINED)
-            #whatWeb(GOB_COMBINED)
+            whatWeb(GOB_COMBINED)
             print "INFO: nmapHttpVulns scan started on %s:%s" % (ip_address, port)
-            #subprocess.check_output(['/root/scripts/recon_enum/./nmapHttpVulns.py',STAT_200,url])
+            subprocess.check_output(['/root/scripts/recon_enum/./nmapHttpVulns.py',STAT_200,url])
             print "INFO: nmapHttpVulns of %s complete" % (url)
             parameth(GOB_COMBINED, GOB_PARAMETH)
             cleanup()
@@ -658,7 +669,7 @@ if __name__=='__main__':
             sortBySize(WFUZZ_COMBINED)
             whatWeb(WFUZZ_COMBINED)
             print "INFO: nmapHttpVulns scan started on %s:%s" % (url, port)
-            #subprocess.check_output(['./nmapHttpVulns.py',STAT_200,url])
+            subprocess.check_output(['./nmapHttpVulns.py',STAT_200,url])
             print "INFO: nmapHttpVulns of %s complete" % (url)
             parameth(WFUZZ_COMBINED, WFUZZ_PARAMETH)
             cleanup()

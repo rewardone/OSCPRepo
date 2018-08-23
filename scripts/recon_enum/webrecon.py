@@ -136,7 +136,7 @@ def doNikto(ip_address, port):
 def doVHostScan(ip_address, port):
     #https://github.com/codingo/VHostScan
     print "INFO: Starting VHostScan webRecon for %s:%s" % (ip_address, port)
-    subprocess.check_output(['/root/Documents/VHostScan/./VHostScan','-v','-t',ip_adddress,'-p',port,'-w','/root/lists/Web/virtual_host_scanning.txt','--no-lookups','--user-agent',args.userAgent,'-oN',VHOST_OUT])
+    subprocess.check_output(['VHostScan','-v','-t',ip_address,'-p',port,'-w','/root/lists/Web/virtual_host_scanning.txt','--no-lookups','--user-agent',args.userAgent,'-oN',VHOST_OUT])
     print "INFO: Finished VHostScan webRecon for %s:%s" % (ip_address, port)
     return
 
@@ -196,7 +196,7 @@ if __name__=='__main__':
 
     #make sure path is created
     mkdir_p(BASE)
-    
+
     doNmap(ip_address, port, args.userAgent)
     doNikto(ip_address, port)
-    
+    doVHostScan(ip_address, port)

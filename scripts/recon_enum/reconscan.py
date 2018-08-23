@@ -58,9 +58,9 @@
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
 ##      Other tools to consider: WHOIS, DNSRecon, Sublist3r
-##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti, TheHarvester, Metagoofil, 
+##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti, TheHarvester, Metagoofil,
 ##      Other tools to consider: SSLScan, SSLyze A2SV
-##      Separate CMSscannerrecon: WPscan, WPscanner, WPSeku, Droopescan, 
+##      Separate CMSscannerrecon: WPscan, WPscanner, WPSeku, Droopescan,
 ##      Create "AutoADPwn": Invoke several modules, AD recon, bloodhound, Empire/Deathstar
 ## Need scripts for:
 ##       rsh, vnc
@@ -126,7 +126,7 @@ def httpEnum(ip_address, port):
     subprocess.check_output(['./webrecon.py','http://%s:%s' % (ip_address, port)])
     print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
-    subprocess.check_output(['./dirbustEVERYTHING.py','-p',1,'-i',4,'http://%s:%s' % (ip_address,port),ip_address])
+    subprocess.check_output(['./dirbustEVERYTHING.py','-p','1','-i','4','http://%s:%s' % (ip_address,port)])
     print "INFO: dirbust scan completed for %s:%s" % (ip_address, port)
     return
 
@@ -138,7 +138,7 @@ def httpsEnum(ip_address, port):
     subprocess.check_output(['./webRecon.py','https://%s:%s' % (ip_address, port)])
     print "INFO: webRecon scan completed for %s:%s" % (ip_address, port)
     print "INFO: dirbust scan started on %s:%s" % (ip_address, port)
-    subprocess.check_output(['./dirbustEVERYTHING.py','-p',1,'-i',4,'https://%s:%s' % (ip_address,port),ip_address])
+    subprocess.check_output(['./dirbustEVERYTHING.py','-p','1','-i','4','https://%s:%s' % (ip_address,port)])
     print "INFO: dirbust scan completed for %s:%s" % (ip_address, port)
     return
 
