@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Charon</title>
+</head><body>Tons of rabbit holes....always have something going on in the background. Know when to 'move on'.<br/>
+<br/>
+While searching for version confirmation, see if you can find source code as well. Analyzing the source can be useful, but also confirm more about what you are seeing and what the developer has hidden, etc. <br/>
+<br/>
+Saves time if you can correctly identify what is actually running with something either A) actually on the internet or B) it is a closed-source or custom solution<br/>
+<br/>
+sqlmap --batch&#09;&#09;&#09;#--batch will tell sqlmap to use defaults, accept prompts, don't ask us<br/>
+<br/>
+UNION SELECT 1,2,3,CONCAT(TABLE_SCHEMA, ":", TABLE_NAME, ":", COLUMN_NAME) &nbsp;FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCEMA != 'information_schema' LIMIT 1 OFFSET 4-- -<br/>
+<br/>
+the WHERE TABLE_SCHEMA != "information_schema"<br/>
+helps limit output to only user tables (ie, no informaiton schema tables, only user created tables)<br/>
+<br/>
+As opposed to using an advanced LIMIT, you can just specify OFFSET and step through<br/>
+<br/>
+GIF8&#09;&#09;&#09;#MAGIC Bytes to make php look like image...should be all you need<br/>
+&lt;?php ...<br/>
+<br/>
+Look at source for hidden/commented fields etc<br/>
+Burp should also be able to remove hidden fields, javascript filtering, etc<br/>
+<br/>
+Trouble with crypto? Maybe try the RSActfTool and see if anything can help you<br/>
+If you have a private key, you can use openssl rsautl to decrypt:<ul><li style="list-style-type: none">&nbsp;&#09;openssl rsautl -decrypt -inkey decover.priv &lt; pass.crypt</li>
+<li style="list-style-type: none"></li>
+</ul>
+BinaryNinja (paid decompiler)<br/>
+Radare2 (free decompiler)<br/>
+&nbsp;&#09;r2 &lt;binary&gt;<br/>
+&nbsp;&#09;aaa&#09;&#09;&#09;#analyze all<br/>
+&nbsp;&#09;afl &#09;&#09;&#09;#analyze function list<ul><li style="list-style-type: none">v&#09;&#09;&#09;#visualization mode</li>
+<li style="list-style-type: none">p&#09;&#09;&#09;#cycle panes</li>
+<li style="list-style-type: none">V&#09;&#09;&#09;#graph of each function</li>
+<li style="list-style-type: none">g&#09;&#09;&#09;#go</li>
+<li style="list-style-type: none">:s &lt;search&gt;&#09;#search for function like :s sym.main</li>
+<li style="list-style-type: none"></li>
+</ul>
+Append commands not only with ; or &amp;&amp; but inject commands with $() or `&lt;cmd&gt;`<ul><li style="list-style-type: none"></li>
+</ul>
+</body></html>

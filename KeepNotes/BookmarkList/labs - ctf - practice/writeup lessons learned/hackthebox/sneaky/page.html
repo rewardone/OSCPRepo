@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sneaky</title>
+</head><body>IPv6: Special addresses<br/>
+fe80::/10&#09;&#09;Unique Link Local is NOT Loopback (similar to 169.254.x.x link local on IPv4 when you can't get an IP)<br/>
+<br/>
+fc00::/7&#09;&#09;Unique Local-Unicast (similar to subnets 10.x.x.x 172.16.x.x, 192.168.x.x)<br/>
+<br/>
+2000::/3&#09;&#09;Global Unicast<br/>
+<br/>
+Subnetting /# is that many bits are 1s, followed by 0s<br/>
+fe80::/10 translates to this mask: 1111 1111 1100 0000 0000 0000 0000 0000<br/>
+fe80:0000:0000:0000:0000:0000:0000:0000<br/>
+1111:1111:1100:0000:0000:0000:0000:0000<br/>
+febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff<br/>
+<br/>
+<br/>
+fc00::/7 translates to this mask: 1111111000000000000000000000<br/>
+fc00:0000:0000:0000:0000:0000:0000:0000<br/>
+1111:1110:0000:0000:0000:0000:0000:0000<br/>
+fc11:<br/>
+</body></html>

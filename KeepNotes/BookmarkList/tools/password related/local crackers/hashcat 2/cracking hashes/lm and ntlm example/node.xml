@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>LM and NTLM Example</string>
+  <key>nodeid</key><string>4fe247fe-b596-4598-bdb2-4ff7e9d04675</string>
+  <key>modified_time</key><integer>1535121695</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1535121681</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

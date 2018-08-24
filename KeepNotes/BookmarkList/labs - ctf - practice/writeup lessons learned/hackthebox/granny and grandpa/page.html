@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Granny and Grandpa</title>
+</head><body>Granny first:<br/>
+Force a challenge: must hack grandpa (14) through granny (15)<br/>
+iptables -A OUTPUT -d 10.10.10.14 -j DROP &#09;&#09;#block our direct access to grandpa <br/>
+<br/>
+davtest:<br/>
+basic webdav type enumeration. PUTS and EXECs. <br/>
+<br/>
+If you can upload certain files (.html) and not others (.aspx) but have the option for the MOVE http command, you can do so to rename your file. <br/>
+<br/>
+MOVE /shell.txt<br/>
+Destination: /shell.aspx<br/>
+<br/>
+Meterpreter set macro/script to migrate as soon as you have a session<br/>
+<br/>
+Hashcat cracking LM, brute both sides of the hash. start with 7 and decrement until you have both sides<br/>
+?u?u?u?u?u?u?u<br/>
+?u?u?u?u?u?u<br/>
+?u?u?u?u?u<br/>
+etc<br/>
+<br/>
+?u is hashcat for bruteforcing a capital letter (which LM is all caps)<br/>
+<br/>
+Take cracked LM hash in both upper and lower, put them in a dictionary, now crack the NTLM:<br/>
+hashcat -m 1000 ntlm.hash lm.dict -r rules/toggles5.rule <br/>
+<br/>
+the rule will toggle casing. since LM is all upper, it is usually NOT the actual password, but NTLM will have actual password with casing <br/>
+<br/>
+CTRL + R: start typing command and it will autofill. Basically universal. <br/>
+<br/>
+<br/>
+Sometimes if you get an error executing a meterpreter command (even though you have a session) try migrating to a different process<br/>
+<br/>
+<br/>
+Pivoting with MSF / PLink walkthrough: https://www.youtube.com/watch?v=HQkDL-xh7es &nbsp;</body></html>

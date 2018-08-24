@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LM and NTLM Example</title>
+</head><body>Hashcat cracking LM, brute both sides of the hash. start with 7 and decrement until you have both sides<br/>
+?u?u?u?u?u?u?u<br/>
+?u?u?u?u?u?u<br/>
+?u?u?u?u?u<br/>
+etc<br/>
+<br/>
+?u is hashcat for bruteforcing a capital letter (which LM is all caps)<br/>
+<br/>
+Take cracked LM hash in both upper and lower, put them in a dictionary, now crack the NTLM:<br/>
+hashcat -m 1000 ntlm.hash lm.dict -r rules/toggles5.rule <br/>
+<br/>
+the rule will toggle casing. since LM is all upper, it is usually NOT the actual password, but NTLM will have actual password with casing </body></html>
