@@ -73,6 +73,7 @@ def mkdir_p(path):
 #http-vuln-cve2011-3192: Denial of service against Apache handling multiple overlapping/simple ranges of a page
 #http-vuln-cve2013-6786: URL redirection and reflected XSS vuln in Allegro RomPager
 #http-vuln-cve2014-2129: Cisco ASA DoS
+#tls-ticketbleed: Detects vulnerable to F5 Ticketbleed (CVE-2016-9244)
 
 def standardNmapHTTP(ip_address, port):
     print "INFO: Performing nmapHttpVulns script scans for %s:%s" % (ip_address, port)

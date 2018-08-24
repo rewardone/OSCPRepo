@@ -580,7 +580,7 @@ if __name__=='__main__':
 
     if (args.tool == "gobuster"):
         print "INFO: Starting gobuster scan for %s:%s" % (url, port)
-        p#rint "WARN: Gobuster is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
+        #print "WARN: Gobuster is only scanning for certain file extensions. Currently configured for: %s" % (FILE_EXT)
         #print "WARN: Gobuster is not using a full wordlist, do a comprehensive scan after completion! Wordlist: %s" % (default_wordlist)
         #dirToStoreChunks, absPathFileToChunk,chunkFileNames,numChunks
         chunkWordlistGeneric(WORDLIST_CHUNK_DIR,default_wordlist,wordlistLastItem,PROCESSES)

@@ -29,6 +29,7 @@ port = sys.argv[2].strip()
 #smb2-security-mode: determines mesage signing config in SMBv2 servers for all supported dialects.
 #smb2-vuln-uptime: attempt to detect missing patches in windows sytems by checking the uptime returned during the SMB2 protocol negotiation
 #samba-vuln-cve-2012-1182: RCE as root from anonymous connection
+#nbstat: retrieve target's NetBIOS names and MAC
 
 #Not running
 #smb-brute: Attempt to guess login over SMB
@@ -48,7 +49,7 @@ port = sys.argv[2].strip()
 #smb2-capabilities: attempt to list supported cabilities in a SMBv2 server for each enabled dialect.
 #smb2-time: attempt to obtain the current system date and start date of a SMB2 server
 print "INFO: Performing nmap SMB script scan for %s:%s" % (ip_address, port)
-subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=smb-double-pulsar-backdoor,smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-ls,smb-os-discovery,smb-protocols,smb-security-mode,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms10-061,smb-vuln-ms17-010,smb2-security-mode,smb2-vuln-uptime,samba-vuln-cve-2012-1182,vulners','-oA','/root/scripts/recon_enum/results/exam/smb/%s_%s_smb' % (ip_address,port),ip_address])
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=smb-double-pulsar-backdoor,smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-ls,smb-os-discovery,smb-protocols,smb-security-mode,smb-system-info,smb-vuln-cve-2017-7494,smb-vuln-ms10-061,smb-vuln-ms17-010,smb2-security-mode,smb2-vuln-uptime,samba-vuln-cve-2012-1182,nbstat,vulners','-oA','/root/scripts/recon_enum/results/exam/smb/%s_%s_smb' % (ip_address,port),ip_address])
 
 print "INFO: Performing samrdump scan for %s:%s" % (ip_address, port)
 outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_samrdump" % (ip_address,port)

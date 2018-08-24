@@ -99,9 +99,15 @@ import argparse
 #http-xssed: Searches xssed.com database and outputs results
 #https-redirect: Checks for HTTP redirects to HTTPS on same port
 def doNmap(ip_address, port, userAgent):
-    print "INFO: Starting nmap webRecon for %s:%s" % (ip_address, port)
+    print "INFO: Starting nmap webrecon for %s:%s" % (ip_address, port)
     subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','banner,http-apache-negotiation,http-apache-server-status,http-aspnet-debug,http-auth-finder,http-auth,http-backup-finder,http-bigip-cookie,http-cakephp-version,http-cisco-anyconnect,http-comments-displayer,http-config-backup,http-cookie-flags,http-cors,http-cross-domain-policy,http-default-accounts,http-drupal-enum,http-favicon,http-generator,http-git,http-grep,http-headers,http-jsonp-detection,http-ls,http-mcmp,http-method-tamper,http-methods,http-mobileversion-checker,http-ntlm-info,http-passwd,http-php-version,http-robots.txt,http-title,http-traceroute,http-unsafe-output-escaping,http-useragent-tester,http-userdir-enum,http-vhosts,http-vlcstreamer-ls,http-waf-detect,http-waf-fingerprint,http-webdav-scan','--script-args', "http.useragent=%s,http-waf-detect.aggro,http-waf-detect.detectBodyChanges,http-waf-fingerprint.intensive=1" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_http' % (port, ip_address),ip_address])
-    print "INFO: Finished nmap webRecon for %s:%s" % (ip_address, port)
+    print "INFO: Finished nmap webrecon for %s:%s" % (ip_address, port)
+    return
+
+def doSSLRecon(ip_address, port):
+    print "INFO: Starting nmap sslrecon for %s:%s" % (ip_address, port)
+    subprocess.check_output(['./sslrecon.py', ip_address, port])
+    print "INFO: Finished nmap sslrecon for %s:%s" % (ip_address, port)
     return
 
 def doNikto(ip_address, port):
@@ -157,6 +163,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Rough script to handle Web enumeration, fingerprinting, and other less intensive scans. Usage: webrecon.py {} <http(s)://target url:port>')
     parser.add_argument('-n', '--nmap', default='true', help="Run all (safe) nmap scripts regarding HTTP scanning")
     parser.add_argument('-k', '--nikto', default='true', help="Run nikto against site")
+    parser.add_argument('-v', '--vhost', default='true', help="Run VHostScan against site")
     parser.add_argument('-a', '--user-agent', dest="userAgent", default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1", help="User-agent")
     parser.add_argument('url', help="Run all (safe) nmap scripts regarding HTTP scanning")
 
@@ -197,6 +204,10 @@ if __name__=='__main__':
     #make sure path is created
     mkdir_p(BASE)
 
-    doNmap(ip_address, port, args.userAgent)
-    doNikto(ip_address, port)
-    doVHostScan(ip_address, port)
+    if args.nmap:
+        doNmap(ip_address, port, args.userAgent)
+        doSSLRecon(ip_address, port)
+    if args.nikto:
+        doNikto(ip_address, port)
+    if args.vhost:
+        doVHostScan(ip_address, port)

@@ -87,8 +87,7 @@ if [ ! -f ~/Documents/JohnJumbo/run/john ]; then cd /root/Documents/JohnJumbo/sr
 echo "\nSetup VHostScan\n"
 cd /root/Documents/VHostScan && python3 -m pip install -r requirements.txt 2&>/dev/null
 python3 -m pip install python-levenshtein 2&>/dev/null
-cat setup.py | sed -e 's/NUM_INSTALLED/num_installed/g'
-python3 setup.py install
+cd /root/Documents/VHostScan && cat setup.py | sed -e 's/NUM_INSTALLED/num_installed/g' && python3 setup.py install
 
 echo "\nSetup Parameth\n"
 cd /root/Documents/Parameth && pip install -U -r requirements.txt
