@@ -198,9 +198,9 @@ else
 fi
 
 #last with wx args
-lastcmd=`last -wx 2>/dev/null`
+lastcmd=`last -wx 2>/dev/null | head -n 10`
 if [ "$lastcmd" ]; then
-  echo -e "\e[00;31mLast with system and fullnames info:\e[00m\n$lastcmd"
+  echo -e "\e[00;31mLast with system and fullnames info (head 10):\e[00m\n$lastcmd"
   echo -e "\n"
 else
   :
@@ -771,22 +771,28 @@ mountcmd=`mount 2>/dev/null | column -t`
 if [ "$mountcmd" ]; then
   echo -e "\e[00;31mFull mount command output:\e[00m\n$mountcmd"
   echo -e "\n"
-  grepvnoexec=`cat "$mountcmd" 2>/dev/null | grep "noexec" | awk '{print $1 " " $2 " " $3 " " $6}'`
-  grepvnosuid=`cat "$mountcmd" 2>/dev/null | grep "noexec" | awk '{print $1 " " $2 " " $3 " " $6}'`
-  grepvnodev=`cat "$mountcmd" 2>/dev/null | grep "noexec" | awk '{print $1 " " $2 " " $3 " " $6}'`
+  grepnoexec=`mount 2>/dev/null | grep -i "noexec" | awk '{print $1 " " $2 " " $3 " " $6}' | column -t`
+  grepvnoexec=`mount 2>/dev/null | grep -iv "noexec" | awk '{print $1 " " $2 " " $3 " " $6}' | column -t`
+  grepvnosuid=`mount 2>/dev/null | grep -iv "nosuid" | awk '{print $1 " " $2 " " $3 " " $6}' | column -t`
+  grepvnodev=`mount 2>/dev/null | grep -iv "nodev" | awk '{print $1 " " $2 " " $3 " " $6}' | column -t`
   unamecmd=`uname -r 2>/dev/null`
-  if [ "$grepvnoexec" ]; then
+  if [ "$grepnoexec" ]; then
     echo -e "\e[00;31mMounts with 'noexec' detcted. If $unamecmd < 2.4.25 / 2.6.0, then /lib/ld*.so execution bypass may work.\e[00m\n"
   else
     :
   fi
+  if [ "$grepvnoexec" ]; then
+    echo -e "\e[00;31mMounts without 'noexec' detcted!\e[00m\n"
+  else
+    :
+  fi
   if [ "$grepvnosuid" ]; then
-    echo -e "\e[00;31mMounts with 'nosuid' detected.\e[00m\n"
+    echo -e "\e[00;31mMounts without 'nosuid' detected!\e[00m\n"
   else
     :
   fi
   if [ "$grepvnodev" ]; then
-    echo -e "\e[00;31mMounts with 'nodev' detected.\e[00m\n"
+    echo -e "\e[00;31mMounts without 'nodev' detected!\e[00m\n"
   else
     :
   fi
@@ -838,11 +844,11 @@ else
 	:
 fi
 
-#Find all SUID dirs, only on thorough
+#Find certain SUID files, only on thorough
 if [ "$thorough" = "1" ]; then
-  suidcmd2=`find / \( -perm -4000 -a -type d \) 2>/dev/null`
-  if [ "$suidcmd2" ]; then
-    echo -e "\e[00;31mAll SUID drs. These exec as the file owner!:\e[00m\n$suidcmd2"
+  certainsuidcmd=`find / \( -perm -4000 -a -type f \) -exec ls -lah {} \; 2>/dev/null | grep -iw 'ash\|awk\|base64\|bash\|busybox\|cat\|csh\|curl\|cut\|dash\|dd\|diff\|docker\|ed\|emacs\|env\|expand\|expect\|find\|flock\|fmt\|fold\|git\|head\|ionice\|jq\|ksh\|ld.so\|less\|lua\|make\|man\|more\|nano\|nc\|nice\|nl\|nmap\|node\|od\|perl\|pg\|php\|pico\|python2\|python3\|rlwrap\|rpm\|rpmquery\|rsync\|scp\|sed\|setarch\|shuf\|socat\|sort\|sqlite3\|stdbuf\|strace\|tail\|tar\|taskset\|tclsh\|tee\|telnet\|tftp\|time\|timeout\|ul\|unexpand\|uniq\|unshare\|vi\|vim\|watch\|wget\|xargs\|xxd\|zip\|zsh'`
+  if [ "$certainsuidcmd" ]; then
+    echo -e "\e[00;31mCertain SUID files. These exec as the file owner and are abusable!:\e[00m\n$certainsuidcmd"
     echo -e "\n"
   else
     :
@@ -851,16 +857,29 @@ else
   :
 fi
 
-if [ "$thorough" = "1" ]; then
-	if [ "$export" ] && [ "$suidcmd2" ]; then
-		mkdir $format/suid-files/ 2>/dev/null
-		for i in $suidcmd2; do cp --parents $i $format/suid-files/ ; done 2>/dev/null
-	else
-		:
-	fi
-else
-	:
-fi
+#Find all SUID dirs, only on thorough
+# if [ "$thorough" = "1" ]; then
+#   suidcmd2=`find / \( -perm -4000 -a -type d \) 2>/dev/null`
+#   if [ "$suidcmd2" ]; then
+#     echo -e "\e[00;31mAll SUID drs. These exec as the file owner!:\e[00m\n$suidcmd2"
+#     echo -e "\n"
+#   else
+#     :
+#   fi
+# else
+#   :
+# fi
+#
+# if [ "$thorough" = "1" ]; then
+# 	if [ "$export" ] && [ "$suidcmd2" ]; then
+# 		mkdir $format/suid-files/ 2>/dev/null
+# 		for i in $suidcmd2; do cp --parents $i $format/suid-files/ ; done 2>/dev/null
+# 	else
+# 		:
+# 	fi
+# else
+# 	:
+# fi
 
 #lists world-writable suid files owned by root
 if [ "$thorough" = "1" ]; then
@@ -913,32 +932,32 @@ else
 fi
 
 #Find all GUID dirs, only on thorough
-if [ "$thorough" = "1" ]; then
-  if [ "$rootcheck" != "0" ]; then
-    guidcmd2=`find / \( -perm -2000 -a -type d \) 2>/dev/null`
-  else
-    echo -e "All GUID Dirs: You're running under UID 0, too many files to list...\n"
-  fi
-  if [ "$guidcmd2" ]; then
-    echo -e "\e[00;31mAll GUID dirs. These exec as the group!:\e[00m\n$guidcmd2"
-    echo -e "\n"
-  else
-    :
-  fi
-else
-  :
-fi
-
-if [ "$thorough" = "1" ]; then
-	if [ "$export" ] && [ "$guidcmd2" ]; then
-		mkdir $format/guid-files/ 2>/dev/null
-		for i in $guidcmd2; do cp --parents $i $format/guid-files/ ; done 2>/dev/null
-	else
-		:
-	fi
-else
-	:
-fi
+# if [ "$thorough" = "1" ]; then
+#   if [ "$rootcheck" != "0" ]; then
+#     guidcmd2=`find / \( -perm -2000 -a -type d \) 2>/dev/null`
+#   else
+#     echo -e "All GUID Dirs: You're running under UID 0, too many files to list...\n"
+#   fi
+#   if [ "$guidcmd2" ]; then
+#     echo -e "\e[00;31mAll GUID dirs. These exec as the group!:\e[00m\n$guidcmd2"
+#     echo -e "\n"
+#   else
+#     :
+#   fi
+# else
+#   :
+# fi
+#
+# if [ "$thorough" = "1" ]; then
+# 	if [ "$export" ] && [ "$guidcmd2" ]; then
+# 		mkdir $format/guid-files/ 2>/dev/null
+# 		for i in $guidcmd2; do cp --parents $i $format/guid-files/ ; done 2>/dev/null
+# 	else
+# 		:
+# 	fi
+# else
+# 	:
+# fi
 
 #lists world-writable guid files
 if [ "$thorough" = "1" ]; then
@@ -967,25 +986,25 @@ wwguidrt=`find / -uid 0 -perm -2007 -type f -exec ls -la {} 2>/dev/null \;`
 fi
 
 #Only find files in the bin dirs with perm 4000 or 2000
-suidguid=`for i in \`locate -r "bin$"\`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
-if [ "$suidguid" ]; then
-  echo -e "\e[00;31mSUID and GUID files from bin directories. These exec as group or owner!:\e[00m\n$suidguid"
-  echo -e "\n"
-else
-  :
-fi
-
-if [ "$export" ] && [ "$suidguid" ]; then
-	mkdir $format/suidguid-files/ 2>/dev/null
-	for i in $suidguid; do cp --parents $i $format/suidguid-files/ ; done 2>/dev/null
-else
-	:
-fi
+# suidguid=`for i in \`locate -r "bin$"\`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
+# if [ "$suidguid" ]; then
+#   echo -e "\e[00;31mSUID and GUID files from bin directories. These exec as group or owner!:\e[00m\n$suidguid"
+#   echo -e "\n"
+# else
+#   :
+# fi
+#
+# if [ "$export" ] && [ "$suidguid" ]; then
+# 	mkdir $format/suidguid-files/ 2>/dev/null
+# 	for i in $suidguid; do cp --parents $i $format/suidguid-files/ ; done 2>/dev/null
+# else
+# 	:
+# fi
 
 #Find dirs with sticky bit set
 stickydirs=`find / \( -perm -1000 -a -type d \) 2>/dev/null`
 if [ "$stickydirs" ]; then
-  echo -e "\e[00;31mThese dirs have the sticky bit set (no deletions unless you're the owner:\e[00m\n$stickydirs"
+  echo -e "\e[00;31mThese dirs have the sticky bit set (no deletions unless you're the owner):\e[00m\n$stickydirs"
   echo -e "\n"
 else
   :
@@ -994,27 +1013,27 @@ fi
 #Find files with sticky bit set
 stickyfiles=`find / \( -perm -1000 -a -type f \) -exec ls -lah {} \; 2>/dev/null`
 if [ "$stickyfiles" ]; then
-  echo -e "\e[00;31mThese files have the sticky bit set (no deletions unless you're the owner:\e[00m\n$stickyfiles"
+  echo -e "\e[00;31mThese files have the sticky bit set (no deletions unless you're the owner):\e[00m\n$stickyfiles"
   echo -e "\n"
 else
   :
 fi
 
 #Only find files in the home dirs with perm 4000 or 2000
-suidguid2=`for i in \`locate -r "home$"\`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
-if [ "$suidguid2" ]; then
-  echo -e "\e[00;31mSUID and GUID files from home. These exec as group or owner!:\e[00m\n$suidguid2"
-  echo -e "\n"
-else
-  :
-fi
-
-if [ "$export" ] && [ "$suidguid2" ]; then
-	mkdir $format/suidguid2-files/ 2>/dev/null
-	for i in $suidguid2; do cp --parents $i $format/suidguid2-files/ ; done 2>/dev/null
-else
-	:
-fi
+# suidguid2=`for i in \`locate -r "home$"\`; do find $i \( -perm -4000 -o -perm -2000 \) -type f -exec ls -lah {} \; 2>/dev/null; done`
+# if [ "$suidguid2" ]; then
+#   echo -e "\e[00;31mSUID and GUID files from home. These exec as group or owner!:\e[00m\n$suidguid2"
+#   echo -e "\n"
+# else
+#   :
+# fi
+#
+# if [ "$export" ] && [ "$suidguid2" ]; then
+# 	mkdir $format/suidguid2-files/ 2>/dev/null
+# 	for i in $suidguid2; do cp --parents $i $format/suidguid2-files/ ; done 2>/dev/null
+# else
+# 	:
+# fi
 
 #Only find files you are the owner of
 rootcheck=`id -u`
@@ -1134,7 +1153,7 @@ if [ "$thorough" = "1" ]; then
     echo -e "Files you can write that you don't own: You're running under UID 0, too many files to list...\n"
   fi
   if [ "$grfilesall" ]; then
-    echo -e "\e[00;31mFiles not owned by user but writable by group:\e[00m\n$grfilesall"
+    echo -e "\e[00;31mFiles not owned by user but writable:\e[00m\n$grfilesall"
     echo -e "\n"
   else
     :
@@ -1142,14 +1161,14 @@ if [ "$thorough" = "1" ]; then
 fi
 
 #Odd files with no owner or group
-noownergroup=`find / \( -nouser -o -nogroup -type f -a -not -name "." -a -not -name ".." \) -exec ls -lah {} \; 2>/dev/null`
-if [ "$noownergroup" ]; then
-  echo -e "\e[00;31mFiles that have no owner and no group:\e[00m\n$noownergroup"
-  echo -e "\n"
-else
-  :
-fi
-}
+# noownergroup=`find / \( -nouser -o -nogroup -type f -a -not -name "." -a -not -name ".." \) -exec ls -lah {} \; 2>/dev/null`
+# if [ "$noownergroup" ]; then
+#   echo -e "\e[00;31mFiles that have no owner and no group:\e[00m\n$noownergroup"
+#   echo -e "\n"
+# else
+#   :
+# fi
+# }
 
 # find /etc/ -readable -type f 2>/dev/null               				# Anyone - read
 # find /etc/ -readable -type f -maxdepth 1 2>/dev/null   				# Anyone - read
@@ -1159,29 +1178,29 @@ readable_files_folders()
 echo -e "\e[00;33m### Readable Files ####################################\e[00m"
 
 #looks for world-reabable files within /home - depending on number of /home dirs & files, this can take some time so is only 'activated' with thorough scanning switch
-if [ "$thorough" = "1" ]; then
-wrfileshm=`find /home/ -perm -4 -type f -exec ls -al {} \; 2>/dev/null`
-	if [ "$wrfileshm" ]; then
-		echo -e "\e[00;31mWorld-readable files within /home:\e[00m\n$wrfileshm"
-		echo -e "\n"
-	else
-		:
-	fi
-  else
-	:
-fi
-
-if [ "$thorough" = "1" ]; then
-	if [ "$export" ] && [ "$wrfileshm" ]; then
-		mkdir $format/wr-files/ 2>/dev/null
-		for i in $wrfileshm; do cp --parents $i $format/wr-files/ ; done 2>/dev/null
-	else
-		:
-	fi
-  else
-	:
-fi
-}
+# if [ "$thorough" = "1" ]; then
+# wrfileshm=`find /home/ -perm -4 -type f -exec ls -al {} \; 2>/dev/null`
+# 	if [ "$wrfileshm" ]; then
+# 		echo -e "\e[00;31mWorld-readable files within /home:\e[00m\n$wrfileshm"
+# 		echo -e "\n"
+# 	else
+# 		:
+# 	fi
+#   else
+# 	:
+# fi
+#
+# if [ "$thorough" = "1" ]; then
+# 	if [ "$export" ] && [ "$wrfileshm" ]; then
+# 		mkdir $format/wr-files/ 2>/dev/null
+# 		for i in $wrfileshm; do cp --parents $i $format/wr-files/ ; done 2>/dev/null
+# 	else
+# 		:
+# 	fi
+#   else
+# 	:
+# fi
+# }
 
 # ls -al /etc/cron* 2>/dev/null											#scheduled cron jobs
 # ls -aRl /etc/cron* 2>/dev/null | awk '$1 ~ /w.$/' 2>/dev/null			#writable cron directories
@@ -1423,12 +1442,20 @@ fi
 # aux, inetd.conf, xinetd.conf, init.d, rc.d/init.d,
 services_info()
 {
-echo -e "\e[00;33m### SERVICES #############################################\e[00m"
+echo -e "\e[00;33m### PROCESSES #############################################\e[00m"
 
 #processes running as NOT root
-psaux=`ps aux 2>/dev/null | grep -v root | awk '{print $1 " " $2 " " $5 " " $6 " " $9 " " $10 " " $11}' | column -t`
+psaux=`ps axo user:10,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm 2>/dev/null | grep -v root | awk '{print $1 " " $2 " " $5 " " $6 " " $9 " " $10 " " $11}' | column -t`
 if [ "$psaux" ]; then
   echo -e "\e[00;31mProcesses that are NOT running as root:\e[00m\n$psaux"
+  echo -e "\n"
+else
+  :
+fi
+
+psauxnotus=`ps axo user:10,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm 2>/dev/null | grep -iv root | grep -iv \`whoami\` | awk '{print $1 " " $2 " " $5 " " $6 " " $9 " " $10 " " $11}' | column -t`
+if [ "$psauxnotus" ]; then
+  echo -e "\e[00;31mProcesses that are NOT running as root or `whoami`:\e[00m\n$psauxnotus"
   echo -e "\n"
 else
   :
@@ -1443,22 +1470,30 @@ else
   :
 fi
 
-#lookup process binary path and permissisons
-procperm=`ps aux 2>/dev/null | awk '{print $11}'|xargs -r ls -la 2>/dev/null |awk '!x[$0]++' 2>/dev/null`
-if [ "$procperm" ]; then
-  echo -e "\e[00;31mProcess binaries & associated permissions (from above list):\e[00m\n$procperm"
+pstree=`pstree -au 2>/dev/null`
+if [ "$pstree" ]; then
+  echo -e "\e[00;33mPretty tree formatting curtesy of pstree -au:\e[00m\n$pstree"
   echo -e "\n"
 else
   :
 fi
 
-if [ "$export" ] && [ "$procperm" ]; then
-  procpermbase=`ps aux 2>/dev/null | awk '{print $11}' | xargs -r ls 2>/dev/null | awk '!x[$0]++' 2>/dev/null`
-  mkdir $format/ps-export/ 2>/dev/null
-  for i in $procpermbase; do cp --parents $i $format/ps-export/; done 2>/dev/null
-else
-  :
-fi
+#lookup process binary path and permissisons
+# procperm=`ps aux 2>/dev/null | awk '{print $11}'|xargs -r ls -la 2>/dev/null |awk '!x[$0]++' 2>/dev/null`
+# if [ "$procperm" ]; then
+#   echo -e "\e[00;31mProcess binaries & associated permissions (from above list):\e[00m\n$procperm"
+#   echo -e "\n"
+# else
+#   :
+# fi
+#
+# if [ "$export" ] && [ "$procperm" ]; then
+#   procpermbase=`ps aux 2>/dev/null | awk '{print $11}' | xargs -r ls 2>/dev/null | awk '!x[$0]++' 2>/dev/null`
+#   mkdir $format/ps-export/ 2>/dev/null
+#   for i in $procpermbase; do cp --parents $i $format/ps-export/; done 2>/dev/null
+# else
+#   :
+# fi
 
 #RHEL/Cent OS Services
 rhservices=`chkconfig --list 2>/dev/null | grep $(runlevel | awk '{ print $2 }'):on	2>/dev/null` ##RHEL/CentOS services that start at Boot
@@ -1604,10 +1639,26 @@ if [ "$compiler" ]; then
   :
 fi
 
+whattosudo=`echo '' | sudo -l 2>/dev/null`
+if [ "$whattosudo" ]; then
+  echo -e "\e[00;33mCan we run anything with sudo without a password? (sudo -l)\e[00m\n$whattosudo"
+  echo -e "\n"
+else
+  :
+fi
+
 #known 'good' breakout binaries
-sudopwnage=`echo '' | sudo -S -l 2>/dev/null | grep -w 'nmap\|perl\|'awk'\|'find'\|'bash'\|'sh'\|'man'\|'more'\|'less'\|'vi'\|'emacs'\|'vim'\|'nc'\|'netcat'\|python\|ruby\|lua\|irb' | xargs -r ls -la 2>/dev/null`
+sudopwnage=`echo '' | sudo -S -l 2>/dev/null | grep -iw 'ash\|awk\|bash\|busybox\|cpulimit\|crontab\|csh\|dash\|ed\|emacs\|env\|expect\|find\|flock\|ftp\|gdb\|git\|ionice\|ksh\|ld.so\|less\|ltrace\|lua\|mail\|make\|man\|more\|nano\|nice\|nmap\|node\|perl\|pg\|php\|pico\|puppet\|python2\|python3\|rlwrap\|rpm\|rpmquery\|rsync\|ruby\|scp\|sed\|setarch\|sftp\|sqlite3\|ssh\|stdbuf\|strace\|tar\|taskset\|tclsh\|tcpdump\|telnet\|time\|timeout\|unshare\|vi\|vim\|watch\|wish\|xargs\|zip\|zsh' | xargs -r ls -la 2>/dev/null`
 if [ "$sudopwnage" ]; then
-  echo -e "\e[00;33m***Possible Sudo PWNAGE!\e[00m\n$sudopwnage"
+  echo -e "\e[00;33m***Possible Sudo PWNAGE! (interactive shell)\e[00m\n$sudopwnage"
+  echo -e "\n"
+else
+  :
+fi
+
+sudopwnagemore=`echo '' | sudo -S -l 2>/dev/null | grep -iw 'ash\|awk\|base64\|bash\|busybox\|cat\|cpulimit\|crontab\|csh\|curl\|cut\|dash\|dd\|diff\|docker\|ed\|emacs\|env\|expand\|expect\|find\|flock\|fmt\|fold\|ftp\|gdb\|git\|head\|ionice\|jq\|ksh\|ld.so\|ltrace\|lua\|mail\|make\|man\|more\|mount\|nano\|nc\|nice\|nl\|nmap\|node\|od\|perl\|pg\|php\|pico\|puppet\|python2\|python3\|rlwrap\|rpm\|rpmquery\|rsync\|ruby\|scp\|sed\|setarch\|sftp\|socat\|sort\|sqlite3\|ssh\|stdbuf\|strace\|tail\|tar\|taskset\|tclsh\|tcpdump\|tee\|telnet\|tftp\|time\|timeout\|ul\|unexpand\|uniq\|unshare\|vi\|vim\|watch\|wget\|wish\|xargs\|xdd\|zip\|zsh' | xargs -r ls -la 2>/dev/null`
+if [ "$sudopwnagemore" ]; then
+  echo -e "\e[00;33m***Known abusable sudo binaries!\e[00m\n$sudopwnagemore"
   echo -e "\n"
 else
   :
@@ -1735,13 +1786,13 @@ else
 fi
 
 #list all debian packages
-if [ "$thorough" = "1" ]; then
-  echo -e "\e[00;31mListing all installed packages: dpkg -l:\e[00m\n"
+if [ "$verinfo" = "1" ]; then
+  echo -e "\e[00;31mWriting all installed packages: dpkg -l:\e[00m\n"
   cmd=`dpkg --list 2>/dev/null | grep "^ii" | awk '{print $2 " " $3 " " $5}'`
   cmd2=`dpkg --list 2>/dev/null | grep "^ii" | awk '{print $2 " " $3}'`
   if [ "$cmd" ]; then
-    echo -e "Name                                        Version                          Description\n"
-    echo -e "$cmd"
+    # echo -e "Name                                        Version                          Description\n"
+    # echo -e "$cmd"
     echo -e "\n"
     if [ "$verinfo" = "1" ]; then
       echo -e "$cmd2" >> verinfo.txt 2>/dev/null
@@ -1755,11 +1806,11 @@ fi
 
 #list all RH/rpm packages
 #rpm -qa #RHEL dpkg --list
-if [ "$thorough" = "1" ]; then
-  echo -e "\e[00;31mListing all installed packages: rpm -qa:\e[00m\n"
+if [ "$verinfo" = "1" ]; then
+  echo -e "\e[00;31mWriting all installed packages: rpm -qa:\e[00m\n"
   rpmcmd=`rpm -qa 2>/dev/null`
   if [ "$rpmcmd" ]; then
-    echo -e "$rpmcmd"
+    # echo -e "$rpmcmd"
     echo -e "\n"
     if [ "$verinfo" = "1" ]; then
       echo -e $rpmcmd >> verinfo.txt 2>/dev/null
@@ -1793,7 +1844,7 @@ fi
 #Solaris NX
 nxcmd=`grep noexec_user_stack /etc/system 2>/dev/null | grep -v _log | grep 1`
 if [ -z "$nxcmd" ]; then
-  echo -e "\e[00;31mEtc System No NX\e[00m"
+  echo -e "\e[00;31mEtc System No NX\e[00m\n$nxcmd"
   echo -e "\n"
 else
   :
@@ -1802,7 +1853,7 @@ fi
 #Solaris NXlog
 nxlog=`grep noexec_user_stack_log /etc/system 2>/dev/null | grep 1`
 if [ -z "$nxlog" ]; then
-  echo -e "\e[00;31mEtc System No NX Logging\e[00m"
+  echo -e "\e[00;31mEtc System No NX Logging\e[00m\n$nxlog"
   echo -e "\n"
 else
   :
@@ -1811,7 +1862,7 @@ fi
 #Solaris Auditing
 nxaudit=`grep c2audit:audit_load /etc/system 2>/dev/null |  grep 1`
 if [ -z "$nsaudit" ]; then
-  echo -e "\e[00;31mEtc System No Auditing\e[00m"
+  echo -e "\e[00;31mEtc System No Auditing\e[00m\n$nxaudit"
   echo -e "\n"
 else
   :
@@ -1820,10 +1871,10 @@ fi
 #hpux NX
 nxcmd2=`kmtune -q executable_stack 2>/dev/null | grep executable_stack | awk '{print $2}'`
 if [ "$nxcmd2" = "1" ]; then
-  echo -e "\e[00;31mkmtune -q executable_stack No NX!\e[00m"
+  echo -e "\e[00;31mkmtune -q executable_stack No NX!\e[00m\n$nxcmd2"
   echo -e "\n"
 elif [ "$nxcmd2" = "2" ]; then
-  echo -e "\e[00;31mkmtune -q executable_stack NX set to logging only!\e[00m"
+  echo -e "\e[00;31mkmtune -q executable_stack NX set to logging only!\e[00m\n$nxcmd2"
   echo -e "\n"
 else
   :
@@ -1832,10 +1883,10 @@ fi
 #linux ASLR
 aslrcmd=`sysctl kernel.randomize_va_space 2>/dev/null | awk '{print $3}'`
 if [ "$aslrcmd" = "0" ]; then
-  echo -e "\e[00;31msysctl kernel.randomize_va_space No NX\e[00m"
+  echo -e "\e[00;31msysctl kernel.randomize_va_space No NX\e[00m\n$aslrcmd"
   echo -e "\n"
 elif [ "$aslrcmd" = "1" ]; then
-  echo -e "\e[00;31msysctl kernel.randomize_va_space Conservative ASLR\e[00m"
+  echo -e "\e[00;31msysctl kernel.randomize_va_space Conservative ASLR\e[00m\n$aslrcmd"
   echo -e "\n"
 else
   :
@@ -1844,7 +1895,7 @@ fi
 #linux mmap
 mmapcmd=`cat /proc/sys/vm/mmap_min_addr 2>/dev/null`
 if [ "$mmapcmd" = "0" -o "$mmapcmd" = "" ]; then
-  echo -e "\e[00;31mCat Proc/sys/vm/mmap_min_addr allows map to 0\e[00m"
+  echo -e "\e[00;31mCat Proc/sys/vm/mmap_min_addr allows map to 0\e[00m\n$mmapcmd"
   echo -e "\n"
 else
   :
@@ -1870,7 +1921,7 @@ for PROCDIR in /proc/[0-9]*; do
       PROGPATH=`ls -l "$PROCDIR/exe" 2>&1 | sed 's/ (deleted)//' | awk '{print $NF}'`
     else
       if [ -r "$PROCDIR/cmdline" ]; then
-	    P=`cat $PROCDIR/cmdline | tr "\0" = | cut -f 1 -d = | grep '^/'`
+	      P=`cat $PROCDIR/cmdline | tr "\0" = | cut -f 1 -d = | grep '^/'`
         if [ -z "$P" ]; then
           echo "ERROR: Can't find full path of running program: "`cat $PROCDIR/cmdline`
         else
@@ -1887,14 +1938,14 @@ for PROCDIR in /proc/[0-9]*; do
   fi
   if [ -n "$PROGPATH" ]; then
     echo "Program path: $PROGPATH"
-    NX=`grep stack $PROCDIR/maps | grep -v "rw-"`
+    NX=`grep stack $PROCDIR/maps 2>/dev/null | grep -v "rw-"`
     if [ -n "$NX" ]; then
       echo "[UPC040] WARNING: NX not enabled"
     fi
 
-    SSP=`objdump -D $PROCDIR/exe | grep stack_chk`
+    SSP=`objdump -D $PROCDIR/exe 2>/dev/null | grep stack_chk`
     if [ -z "$SSP" ]; then
-      echo "[UPC041] WARNING: SSP not enabled"
+      echo "[UPC041] WARNING: SSP not enabled or objdump not installed"
     fi
   fi
 done
@@ -2392,7 +2443,7 @@ else
 fi
 
 #is there any mail accessible
-readmail=`ls -la /var/mail 2>/dev/null`
+readmail=`ls -la /var/mail/ 2>/dev/null`
 if [ "$readmail" ]; then
   echo -e "\e[00;31mAny interesting mail in /var/mail:\e[00m\n$readmail"
   echo -e "\n"

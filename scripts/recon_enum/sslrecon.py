@@ -32,7 +32,7 @@ import argparse
 
 def doNmap(ip_address, port):
     print "INFO: Starting nmap sslrecon for %s:%s" % (ip_address, port)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','banner,ssl-cert-intaddr,ssl-cert,ssl-heartbleed,ssl-poodle,sslv2-drown,tls-nextprotoneg,tls-alpn','-oA','%s/%s_%s_http' % (BASE, ip_address, port),ip_address])
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','banner,ssl-cert-intaddr,ssl-cert,ssl-heartbleed,ssl-poodle,sslv2-drown,tls-nextprotoneg,tls-alpn','-oA','%s/%s_%s_ssl' % (BASE, ip_address, port),ip_address])
     print "INFO: Finished nmap sslecon for %s:%s" % (ip_address, port)
     return
 
