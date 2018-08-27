@@ -1,6 +1,11 @@
 #!/usr/bin/python
 import sys
 import subprocess
+import os
+import errno
+import multiprocessing
+from multiprocessing import Process
+import argparse
 
 if len(sys.argv) != 3:
     print "Usage: smbrecon.py <ip address> <port>"
@@ -8,6 +13,20 @@ if len(sys.argv) != 3:
 
 ip_address = sys.argv[1]
 port = sys.argv[2].strip()
+
+#makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+#Compatible with Python >2.5, but there is a more advanced function for python 3.5
+def mkdir_p(path):
+   try:
+      os.makedirs(path)
+   except OSError as exc: #Python >2.5
+      if exc.errno == errno.EEXIST and os.path.isdir(path):
+         pass
+      else:
+         raise
+
+BASE = "/root/scripts/recon_enum/results/exam/smb"
+mkdir_p(BASE)
 
 #NSE Documentation
 #Running
@@ -123,10 +142,10 @@ f.close()
 # -v                  Verbose Output
 # -h                  Help menu
 #https://github.com/m8r0wn/nullinux
-print "INFO: Performing nullinux scan for %s:%s" % (ip_addres, port)
+print "INFO: Performing nullinux scan for %s:%s" % (ip_address, port)
 outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_nullinux" % (ip_address,port)
-results = subprocess.check_output(['./nullinux','-v','-a',ip_address]).split("\n")
-f = open(outfile,'w')
+results = subprocess.check_output(['nullinux.py','-v','-a',ip_address]).split("\n")
+f = open(outfile,'w+')
 for res in results:
     f.write(res)
     f.write("\n")

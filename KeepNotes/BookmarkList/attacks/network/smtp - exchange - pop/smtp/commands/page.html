@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Commands</title>
+</head><body>Command&#09;Comment<br/>
+ATRN&#09;&#09;Authenticated TURN<br/>
+AUTH&#09;&#09;Authentication<br/>
+BDAT&#09;&#09;Binary data<br/>
+BURL&#09;&#09;Remote content<br/>
+DATA&#09;&#09;The actual email message to be sent<ul><li style="list-style-type: none">&nbsp;&#09;&#09;This command is terminated with a line that contains only a &nbsp;"."</li>
+</ul>
+EHLO&#09;&#09;Extended HELO<br/>
+ETRN&#09;&#09;Extended turn<br/>
+EXPN&#09;&#09;Expand<br/>
+HELO&#09;&#09;Identify yourself to the SMTP server.<br/>
+HELP&#09;&#09;Show available commands<br/>
+MAIL&#09;&#09;Send mail from email account<br/>
+MAIL FROM: &#09;me@mydomain.com<br/>
+NOOP&#09;&#09;No-op. Keeps you connection open.<br/>
+ONEX&#09;&#09;One message transaction only<br/>
+QUIT&#09;&#09;End session<br/>
+RCPT&#09;&#09;Send email to recipient<br/>
+RCPT TO: &#09;you@yourdomain.com<br/>
+RSET&#09;&#09;Reset<br/>
+SAML&#09;&#09;Send and mail<br/>
+SEND&#09;&#09;Send<br/>
+SOML&#09;&#09;Send or mail<br/>
+STARTTLS&#09;<br/>
+SUBMITTER&#09;SMTP responsible submitter<br/>
+TURN&#09;&#09;Turn<br/>
+VERB&#09;&#09;Verbose<br/>
+VRFY&#09;&#09;Verify<br/>
+<br/>
+The following is an actual SMTP session. All sessions must start with HELO and end with QUIT.<br/>
+<br/>
+HELO my.server.com<br/>
+MAIL FROM:<br/>
+RCPT TO:<br/>
+DATA<br/>
+From: Danny Dolittle<br/>
+To: Sarah Smith<br/>
+Subject: Email sample<br/>
+Mime-Version: 1.0<br/>
+Content-Type: text/plain; charset=us-ascii<br/>
+<br/>
+This is a test email for you to read.<br/>
+.<br/>
+QUIT</body></html>

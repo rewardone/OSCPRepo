@@ -74,6 +74,7 @@ echo "\nSetup Getsploit\n"
 cd /root/Documents/Getsploit && chmod +x setup.py && ./setup.py install
 
 echo "\nSetup OSCPRepo \n"
+pip install colorama
 cp -r /root/Documents/OSCPRepo/scripts /root/
 cp -r /root/Documents/OSCPRepo/lists /root/
 
@@ -97,6 +98,9 @@ cd /root/Documents/ADLdapEnum && pip install python-ldap && chmod +x ad-ldap-enu
 
 echo "\nSetup LdapDD\n"
 cd /root/Documents/LdapDD && chmod +x setup.py && chmod +x ldapdomaindump.py && python setup.py install
+
+echo "\nSetup Nullinux\n"
+cp -p /root/Documents/Nullinux /usr/local/bin
 
 echo "\nDownloading additional lists: secLists fuzzdb naughtystrings payloadallthethings probable-wordlists\n"
 webDirec=/root/lists/Web

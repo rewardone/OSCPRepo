@@ -80,6 +80,11 @@ import os
 import time
 import errno
 import shutil
+from colorama import init, Fore, Style
+init()
+# Fore: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
+# Back: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
+# Style: DIM, NORMAL, BRIGHT, RESET_ALL
 
 #PRIVATE VARS
 userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
@@ -91,6 +96,12 @@ def multProc(targetin, scanip, port):
     p = multiprocessing.Process(target=targetin, args=(scanip,port))
     jobs.append(p)
     p.start()
+    return
+
+def jserveEnum(ip_address, port):
+    print Fore.GREEN + "INFO: Enumerating Apache Jserve on %s:%s" % (ip_address, port) + Style.RESET_ALL
+    print "INFO: Enumerating Apache Jserve on %s:%s" % (ip_address, port)
+    subprocess.check_output(['auxiliary/./jserverecon.py',ip_address,port])
     return
 
 def dnsEnum(ip_address, port):
@@ -359,6 +370,8 @@ def nmapVersionTCPAndPass(ip_address, port):
          port = port.split("/")[0]
          if ("http" in service):
             multProc(httpEnum, ip_address, port)
+         elif ("ajp13" in service):
+            multProc(jserveEnum, ip_address, port)
          elif ("domain" in service): #don't want to miss if DNS is on TCP
             multProc(dnsEnum, ip_address, port)
          elif ("login" in service or "exec" in service or "shell" in service):
