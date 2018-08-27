@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-import subprocess
 import sys
-
-if len(sys.argv) != 2:
-    print "Usage: broadcastrecon.py <interface>"
-    sys.exit(0)
-
-interface = sys.argv[1]
+import os
+import subprocess
+import errno
+import multiprocessing
+from multiprocessing import Process
+import argparse
 
 #NSE Documentation
 #Running
@@ -50,12 +49,34 @@ interface = sys.argv[1]
 #broadcast-jenkins-discover:  #### DOES NOT EXIST ON KALI #### Discovers Jenkins on a LAN by sending a discovery broadcast probe
 #broadcast-hid-discoveryd:  #### DOES NOT EXIST ON KALI #### Discovers HID devices by sending a discoveryd network broadcast probe
 #llmnr-resolve: Resolve a hostname using LLMNR. Requires -script-arg llmnr-resolve.hostname=examplename
+def doNmap(interface):
+    print "INFO: Performing nmap broadcast discovery using interface: %s" % (interface)
+    subprocess.check_output(['nmap','-vv','--script=broadcast-ataoe-discover,broadcast-bjnp-discover,broadcast-db2-discover,broadcast-dhcp-discover,broadcast-dhcp6-discover,broadcast-dns-service-discovery,broadcast-dropbox-listener,broadcast-eigrp-discovery,broadcast-igmp-discovery,broadcast-listener,broadcast-ms-sql-discover,broadcast-netbios-master-browser,broadcast-networker-discover,broadcast-novell-locate,broadcast-ospf2-discover,broadcast-pc-anywhere,broadcast-pc-duo,broadcast-pim-discovery,broadcast-ping,broadcast-pppoe-discover,broadcast-rip-discover,broadcast-ripng-discover,broadcast-sonicwall-discover,broadcast-sybase-asa-discover,broadcast-tellstick-discover,broadcast-upnp-info,broadcast-versant-locate,broadcast-wake-on-lan,broadcast-wpad-discover,broadcast-wsdd-discover,broadcast-xdmcp-discover,url-snarf,targets-sniffer,lltd-discovery','-oA','%s/%s_broadcast' % (BASE,interface),'-e',interface])
+    print "INFO: Completed nmap broadcast discovery using interface: %s" % (interface)
+    return
 
-print "INFO: Performing nmap broadcast discovery using interface: %s" % (interface)
-#DISCOVERYSCAN = "nmap -vv --script=broadcast-ataoe-discover,broadcast-db2-discover,broadcast-dhcp-discover,broadcast-dhcp6-discover,broadcast-dns-service-discovery,broadcast-listener,broadcast-ms-sql-discover,broadcast-netbios-master-browser,broadcast-ospf2-discover,broadcast-pc-anywhere,broadcast-rip-discover,broadcast-upnp-info,broadcast-wsdd-discover,broadcast-xdmcp-discover,targets-sniffer -oA '/root/scripts/recon_enum/results/exam/nmap/%s_broadcast.nmap' -e %s" % (interface, interface)
-#results = subprocess.check_output(DISCOVERYSCAN, shell=True)
-subprocess.check_output(['nmap','-vv','--script=broadcast-ataoe-discover,broadcast-bjnp-discover,broadcast-db2-discover,broadcast-dhcp-discover,broadcast-dhcp6-discover,broadcast-dns-service-discovery,broadcast-dropbox-listener,broadcast-eigrp-discovery,broadcast-igmp-discovery,broadcast-listener,broadcast-ms-sql-discover,broadcast-netbios-master-browser,broadcast-networker-discover,broadcast-novell-locate,broadcast-ospf2-discover,broadcast-pc-anywhere,broadcast-pc-duo,broadcast-pim-discovery,broadcast-ping,broadcast-pppoe-discover,broadcast-rip-discover,broadcast-ripng-discover,broadcast-sonicwall-discover,broadcast-sybase-asa-discover,broadcast-tellstick-discover,broadcast-upnp-info,broadcast-versant-locate,broadcast-wake-on-lan,broadcast-wpad-discover,broadcast-wsdd-discover,broadcast-xdmcp-discover,url-snarf,targets-sniffer,lltd-discovery','-oA','/root/scripts/recon_enum/results/exam/nmap/%s_broadcast' % interface,'-e',interface])
-# outfile = "/root/scripts/recon_enum/results/exam/nmap/%s_broadcastrecon.txt" % (interface)
-# f = open(outfile, "w")
-# f.write(results)
-# f.close
+#makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+#Compatible with Python >2.5, but there is a more advanced function for python 3.5
+def mkdir_p(path):
+   try:
+      os.makedirs(path)
+   except OSError as exc: #Python >2.5
+      if exc.errno == errno.EEXIST and os.path.isdir(path):
+         pass
+      else:
+         raise
+         
+if __name__=='__main__':
+
+    parser = argparse.ArgumentParser(description='Rough script to handle nmap broadcast recon scripts. Usage: broadcastrecon.py interface')
+    parser.add_argument('interface', help="Interface to enumate/listen on")
+
+    args = parser.parse_args()
+    #print args
+    
+    interface = args.interface
+    
+    BASE = '/root/scripts/recon_enum/results/exam/nmap'
+    mkdir_p(BASE)
+
+    doNmap(interface)

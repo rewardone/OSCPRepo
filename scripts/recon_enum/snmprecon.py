@@ -6,6 +6,9 @@ if len(sys.argv) != 2:
     print "Usage: snmprecon.py <ip address>"
     sys.exit(0)
 
+#if "#mib" not in /etc/snmp/snmp.conf
+#print: You can 'apt install snmp-mibs-downloader', comment /etc/snmp/snmp.conf, and get human readble SNMP output
+
 snmpdetect = 0
 ip_address = sys.argv[1]
 port = 161

