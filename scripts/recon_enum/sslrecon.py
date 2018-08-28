@@ -36,6 +36,28 @@ def doNmap(ip_address, port):
     print "INFO: Finished nmap sslecon for %s:%s" % (ip_address, port)
     return
 
+# --xml_out=XML_FILE        writes results to XML document
+# --targets_in=TARGETS_IN   reals a list of targets. host:port per line
+# --https_tunnel            tunnel through proxy. http://USER:PW@HOST:PORT
+# --starttls                performs StartTLS. should be smtp, xmpp, xmpp_server, pop3, ftp, imap, ldap, rdp, postgres, auto
+# --quiet                   hide standard outputs
+# --regular                 shortcut for --slv2 --sslv3 --tlsv1 --tlsv1_1 --tlsv1_2 --regen --resum --certinfo=basic --http_get --hide_rejected_ciphers --compression -heartbleed
+# --certinfo                should be basic or full
+def doSslyze(ip_address, port):
+    print "INFO: Starting sslyze for %s:%s" % (ip_address, port)
+    SSLYZE = "sslyze --regular --certinfo=full %s:%s > %s/%s_%s_sslyze" % (ip_address, port, BASE, ip_address, port)
+    subprocess.check_output(SSLYZE, shell=True)
+    print "INFO: Finished sslyze for %s:%s" % (ip_address, port)
+    return
+
+# --targets=<file>
+#--show-certificate
+def doSslscan(ip_address, port):
+    print "INFO: Starting sslcan for %s:%s" % (ip_address, port)
+    SSLSCAN = "sslscan --show-certificate --no-colour %s:%s > %s/%s_%s_sslscan" % (ip_address, port, BASE, ip_address, port)
+    subprocess.check_output(SSLSCAN, shell=True)
+    print "INFO: Finished sslscan for %s:%s" % (ip_address, port)
+    return
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5
@@ -51,9 +73,11 @@ def mkdir_p(path):
 
 if __name__=='__main__':
 
-    parser = argparse.ArgumentParser(description='Rough script to handle ssl enumeration, cert grab, cipher enum, etc. Usage: sslrecon.py {} target port')
+    parser = argparse.ArgumentParser(description='Rough script to handle ssl enumeration, cert grab, cipher enum, etc. Usage: sslrecon.py {--nosslyze} target port')
     parser.add_argument('target', help="Target IP")
     parser.add_argument('port', help="Port to run scripts against")
+    parser.add_argument('--nosslyze', default=False, help="Pass --nosslyze True to NOT run sslyze. It will run by default")
+    parser.add_argument('--nosslscan', default=False, help="Pass --nosslscan True to NOT run sslscan. It will run by default")
 
     args = parser.parse_args()
     ip_address = args.target
@@ -66,3 +90,7 @@ if __name__=='__main__':
     mkdir_p(BASE)
 
     doNmap(ip_address, port)
+    if not args.nosslyze:
+        doSslyze(ip_address, port)
+    if not args.nosslscan:
+        doSslscan(ip_address, port)

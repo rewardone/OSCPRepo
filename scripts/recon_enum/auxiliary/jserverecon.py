@@ -22,7 +22,7 @@ import argparse
 
 def doNmap(ip_address, port, userAgent):
     print "INFO: Starting nmap jserverecon for %s:%s" % (ip_address, port)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','banner,ajp-auth,ajp-headers,ajp-methods,ajp-request,vulners','--script-args', "http.useragent=%s" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_jserve' % (port, ip_address),ip_address])
+    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','banner,ajp-auth,ajp-headers,ajp-methods,ajp-request,vulners','--script-args', "http.useragent=%s" % userAgent,'-oA','/root/scripts/recon_enum/results/exam/http/%s_%s_jserve' % (ip_address, port),ip_address])
     print "INFO: Finished nmap jserverecon for %s:%s" % (ip_address, port)
     return
 
@@ -51,7 +51,7 @@ if __name__=='__main__':
     ip_address = args.ip
     port = args.port
 
-    BASE = "/root/scripts/recon_enum/results/exam/http/%s" % (port)
+    BASE = "/root/scripts/recon_enum/results/exam/http"
     #make sure path is created
     mkdir_p(BASE)
 
