@@ -5,4 +5,15 @@
 <title>Port Knocking</title>
 </head><body>Knock on ports in a specific order in order to open up a new port<br/>
 <br/>
+/etc/init.d look for knockd (port-knock daemon)<br/>
+Default config usually<br/>
+&nbsp;/etc/default/knockd <br/>
+or <br/>
+&nbsp;/etc/knockd.conf<br/>
+<br/>
+<br/>
+for i in knock port numbers; do nmap -Pn -p $i --host_timeout 201 --max-retries 0 ip_address; done<br/>
+<br/>
+<br/>
+<br/>
 See Enumeration &gt; Port Knocking</body></html>

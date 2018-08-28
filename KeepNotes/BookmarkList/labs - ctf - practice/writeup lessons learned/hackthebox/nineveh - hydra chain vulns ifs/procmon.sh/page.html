@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>procmon.sh</title>
+</head><body>#!/bin/bash<br/>
+<br/>
+#grab a list of every process running, <br/>
+#grab list of every new process running, <br/>
+#give us the diff<br/>
+#repeat<br/>
+<br/>
+# Loop by line, not space<br/>
+IFS=$'\n'<br/>
+<br/>
+old_process=$(ps -eo command)<br/>
+while true; do<br/>
+&nbsp; new_process=$(ps -eo command)<br/>
+&nbsp; deff &lt;(echo "$old_process") &lt;(echo "$new_process") | grep [\&lt;\&lt;]<br/>
+&nbsp; sleep 1<br/>
+&nbsp; old_process=$new_process<br/>
+done</body></html>

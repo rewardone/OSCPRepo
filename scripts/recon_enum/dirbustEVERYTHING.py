@@ -259,11 +259,13 @@ def gobuster(wordlist, scanname):
     #-P string: Password for basic auth
     #-U string: Username for basic auth
     #-fw: Force continued operation when wildcard found
-    #GOBUSTERSCAN = "gobuster -a '%s' -t 30 -e -q -u %s -x %s -l -w %s > %s" % (user_agent, url, FILE_EXT, wordlist, scanname)
+    #-k: skip SSL certificate verification
     results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
     #print results
     if "Wildcard response found" in results:
-        results = subprocess.check_output(['gobuster','-a',user_agent,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-fw','-o',scanname])
+        results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-fw','-o',scanname])
+    if "Invalid certificate" in results:
+        results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname,'-k'])
     if "Unable to connect:" in results:
         f = open(scanname,'w')
         f.write(results)
