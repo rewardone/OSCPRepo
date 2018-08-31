@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Start-Process</title>
+</head><body>Note: One thing to call out is that our lab machines have their Execution Policy set for Unrestricted.<br/>
+Note: When using -Credential, a window prompt always pops up<br/>
+<br/>
+The script:<br/>
+Start-Process powershell.exe -Credential "TestDomain\Me" -NoNewWindow -ArgumentList "Start-Process powershell.exe -Verb runAs"<br/>
+<br/>
+The following section starts the PowerShell command-line process with Start-Process prompting for user credentials. You may not need this dependent on UAC settings, as you might already get an over-the-shoulder prompt for creds during elevation. &nbsp;<br/>
+<br/>
+Start-Process powershell.exe -Credential "TestDomain\Me"<br/>
+<br/>
+The -NoNewWindow parameter re-uses the same PowerShell command window.<br/>
+Here I’m using -ArgumentList parameter to pass in the second Start-Process leveraging –Verb runAs to force the elevation prompt.</body></html>

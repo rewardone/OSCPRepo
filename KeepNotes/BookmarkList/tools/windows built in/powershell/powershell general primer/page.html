@@ -26,6 +26,10 @@ get-command | select-string blabla<br/>
 <b>General commands that can be used on objects</b><br/>
 get-content fil.txt | measure-object words<br/>
 <br/>
+<b>Head or tail a file</b><br/>
+get-content test.txt | select -first 10<br/>
+get-content test.txt | select -last 10<br/>
+<br/>
 <b>get-childitem</b>&nbsp;display items in directory<br/>
 gci&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;alias<br/>
 gci -Force&#09;&#09;&#09;&#09;&#09;&#09;&#09;list hidden files too<br/>
@@ -65,6 +69,7 @@ Set-ExecutionPolicy unrestricted<br/>
 <br/>
 <b>Drives</b><br/>
 Get-PsDrive -psprovider filesystem<br/>
+New-PSDrive -Name "random" -Root \\1.1.1.1.\share -PsProvider filesystem -Credential<br/>
 <br/>
 <b>Import Modules</b><br/>
 Import-Module module_name.psm1</body></html>

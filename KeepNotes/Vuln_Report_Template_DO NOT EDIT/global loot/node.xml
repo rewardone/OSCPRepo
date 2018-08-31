@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><false/>
+  <key>expanded</key><true/>
   <key>title</key><string>Global Loot</string>
   <key>nodeid</key><string>bcd40787-00a6-4313-9cd8-718caa213f17</string>
   <key>modified_time</key><integer>1526494726</integer>

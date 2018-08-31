@@ -3,14 +3,14 @@
 <version>6</version>
 <dict>
   <key>expanded</key><false/>
-  <key>title</key><string>CMD</string>
   <key>nodeid</key><string>d0e5fd7f-99b1-41a0-bafa-3b4599d135ac</string>
   <key>modified_time</key><integer>1516808440</integer>
   <key>expanded2</key><false/>
-  <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1516808440</integer>
   <key>info_sort_dir</key><integer>1</integer>
+  <key>title</key><string>CMD</string>
+  <key>version</key><integer>6</integer>
   <key>order</key><integer>0</integer>
   <key>info_sort</key><string>order</string>
 </dict>

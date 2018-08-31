@@ -5,31 +5,49 @@
 #
 
 echo "### Downloading things...### \n\n"
-echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libldap2-dev libsasl2-dev"
+echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libldap2-dev libsasl2-dev powershell-preview"
 curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
+sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" > /etc/apt/sources.list.d/microsoft.list'
+sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/debian/stretch/prod stretch main" >> /etc/apt/sources.list.d/microsoft.list'
 apt-get update
-apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libldap2-dev libsasl2-dev
+apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libldap2-dev libsasl2-dev powershell-preview
+
+echo "\nCloning ADLdapEnum\n"
+direc=/root/Documents/ADLdapEnum
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/CroweCybersecurity/ad-ldap-enum.git $direc; fi
 
 echo "\nCloning Impacket \n"
 direc=/root/Documents/Impacket
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/CoreSecurity/impacket.git $direc; fi
 
-echo "\nCloning Vulners.nse script \n"
-direc=/root/Documents/Vulners
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/vulnersCom/nmap-vulners.git $direc; fi
+echo "\nCloning John Jumbo\n"
+direc=/root/Documents/JohnJumbo
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/magnumripper/JohnTheRipper.git $direc; fi
 
-echo "\nCloning Python PTY Shells \n"
-direc=/root/Documents/PythonPTYShells
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/infodox/python-pty-shells.git $direc; fi
+echo "\nCloning LdapDD\n"
+direc=/root/Documents/LdapDD
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/dirkjanm/ldapdomaindump.git $direc; fi
+
+echo "\nCloning Nishang\n"
+direc=/root/Documents/Nishang
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/samratashok/nishang.git $direc; fi
+
+echo "\nCloning Nullinux\n"
+direc=/root/Documents/Nullinux
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/m8r0wn/nullinux.git $direc; fi
 
 echo "\nCloning OSCPRepo \n"
 direc=/root/Documents/OSCPRepo
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/rewardone/OSCPRepo.git $direc; fi
 
-echo "\nCloning Vulners exploit database/search tool \n"
-direc=/root/Documents/Getsploit
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/vulnersCom/getsploit.git $direc; fi
+echo "\nCloning Parameth\n"
+direc=/root/Documents/Parameth
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/maK-/parameth.git $direc; fi
+
+echo "\nCloning PowerCat\n"
+direc=/root/Documents/PowerCat
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/besimorhino/powercat.git $direc; fi
 
 echo "\nCloning PowershellEmpire\n"
 direc=/root/Documents/Empire
@@ -39,29 +57,21 @@ echo "\nCloning PowerSploit\n"
 direc=/root/Documents/PowerSploit
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/PowerShellMafia/PowerSploit.git $direc; fi
 
-echo "\nCloning John Jumbo\n"
-direc=/root/Documents/JohnJumbo
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/magnumripper/JohnTheRipper.git $direc; fi
-
-echo "\nCloning Parameth\n"
-direc=/root/Documents/Parameth
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/maK-/parameth.git $direc; fi
-
-echo "\nCloning ADLdapEnum\n"
-direc=/root/Documents/ADLdapEnum
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/CroweCybersecurity/ad-ldap-enum.git $direc; fi
-
-echo "\nCloning LdapDD\n"
-direc=/root/Documents/LdapDD
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/dirkjanm/ldapdomaindump.git $direc; fi
-
-echo "\nCloning Nullinux\n"
-direc=/root/Documents/Nullinux
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/m8r0wn/nullinux.git $direc; fi
+echo "\nCloning Python PTY Shells \n"
+direc=/root/Documents/PythonPTYShells
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/infodox/python-pty-shells.git $direc; fi
 
 echo "\nCloning VHostScan\n"
 direc=/root/Documents/VHostScan
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/codingo/VHostScan.git $direc; fi
+
+echo "\nCloning Vulners.nse script \n"
+direc=/root/Documents/Vulners
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/vulnersCom/nmap-vulners.git $direc; fi
+
+echo "\nCloning Vulners exploit database/search tool \n"
+direc=/root/Documents/Getsploit
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/vulnersCom/getsploit.git $direc; fi
 
 echo "\n ### Processing actions...### \n\n"
 echo "Setup install Impacket"
@@ -75,6 +85,7 @@ cd /root/Documents/Getsploit && chmod +x setup.py && ./setup.py install
 
 echo "\nSetup OSCPRepo \n"
 pip install colorama
+rm -rf /root/scripts/*
 cp -r /root/Documents/OSCPRepo/scripts /root/
 cp -r /root/Documents/OSCPRepo/lists /root/
 

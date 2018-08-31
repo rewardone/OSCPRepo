@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Useful Flags</title>
+</head><body>Useful flags to keep things hidden<br/>
+<br/>
+-NonInteractive<br/>
+-WindowStyle Hidden<br/>
+&nbsp;&#09;-win Hidden<br/>
+&nbsp;&#09;-w hidden<ul><li style="list-style-type: none">-w 0 (normal)</li>
+</ul>
+&nbsp;&#09;-w 1 (hidden)<br/>
+&nbsp;&#09;-w 2 (minimized)<br/>
+&nbsp;&#09;-w 3 (maximized)<br/>
+-ExecutionPolicy &lt;Policy&gt;<br/>
+&nbsp;&#09;-exec &lt;policy&gt;<br/>
+&nbsp;&#09;-ep &lt;policy&gt;<br/>
+&nbsp;&#09;Set-Execution-Policy &lt;policy&gt;<br/>
+-version 2<br/>
+<br/>
+Some commands may need to accept an EULA<br/>
+<br/>
+<br/>
+Also, due to some of the powershell.exe peculiarities <a href="http://www.harmj0y.net/blog/powershell/make-powerview-great-again/">I mentioned a bit ago</a>, if you are using PowerShell Version 2, you need to launch powershell.exe in single-thread apartment mode (with the “-sta” flag) in order for the token impersonation to work properly:<br/>
+-sta &#09;&#09;#single threaded apartment mode<br/>
+<br/>
+<br/>
+-nop&#09;&#09;#no profile<br/>
+-noni &#09;&#09;#non interactive<br/>
+-enc &#09;&#09;#encrypt]<br/>
+&nbsp;&#09;-EncodedCommand<br/>
+</body></html>

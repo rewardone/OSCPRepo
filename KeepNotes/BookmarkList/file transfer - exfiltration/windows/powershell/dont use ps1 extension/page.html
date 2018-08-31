@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Dont Use ps1 Extension</title>
+</head><body>While you may have blocked execution of an extension such as .ps1, an attacker can bypass it by using anther extension. For example, PowerShell’s Get-Content can access the content of a .ps2 malware script and pass it to Invoke-Expression (iex) for execution:<br/>
+<br/>
+powershell.exe –ep Bypass “&amp; {Get-Content .\malware.ps2 | iex}<br/>
+<br/>
+This is a security issue since the iex cmdlet opens up the script to injection attacks.</body></html>
