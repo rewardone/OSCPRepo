@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Calamity - BP PS Blacklist Audio Stego Multiple BOs LXD Priv</title>
+</head><body>Audio inversion for steganography in audio files<br/>
+Python library to diff two wav files<br/>
+<br/>
+Potential code execution even delimited by spaces, ie<br/>
+pkill random_process_name $(my_command)<br/>
+<br/>
+my_command still has a chance to be executed (evaluated before passed into pkill as an argument)<br/>
+<br/>
+<br/>
+Multiple BOs of the binary to be found in another walkthrough! Ippsec did not do it. <br/>
+<br/>
+<br/>
+LXD is the Linux container hypervisor. Good writeup of privesc <a href="https://www.youtube.com/redirect?v=EloOaaGg3nA&redir_token=dM1W5ekyECqtSPpm_iCZkLCS-yt8MTUzNjE2MDUyM0AxNTM2MDc0MTIz&event=video_description&q=https%3A%2F%2Freboare.github.io%2Flxd%2Flxd-escape.html">here</a>&nbsp;<br/>
+<br/>
+Being a member of any hypervisor group could be a way to privesc (whether its qemu, vmware, docker, lxd, etc)<br/>
+In the case of LXD:<br/>
+<br/>
+lxc init ubuntu:1604 blah -c security.privileged=true<br/>
+lxc config device add blah root disk source=/ path=/.nt/root recursive=true<br/>
+<br/>
+Essentially, the lxc group has the ability to mount the harddrive to the container and view it's files regardless of security permissions (assuming because of setting security.privileged=true)<br/>
+<br/>
+LXD post install adds any current members of the "sudo" group also to the "lxd" group</body></html>

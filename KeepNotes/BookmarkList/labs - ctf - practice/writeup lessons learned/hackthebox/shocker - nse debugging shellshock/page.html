@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Shocker - NSE Debugging Shellshock</title>
+</head><body>Versioning based on package versions (ie when did ubuntu use apache 2.4.x? and get a general idea of when the last patch date might be)<br/>
+<br/>
+Burp intercepting server responses, debugging NSE through Burp, shellshock<br/>
+<br/>
+in the shellshock NSE script, it sets 4 headers, <br/>
+Cookie<br/>
+Referer<br/>
+User-Agent<br/>
+Shellshock<br/>
+<br/>
+Shellshock: Shellshock is not liked by some webservers and so it will cause servers to error instead of returning vulnerable results. <br/>
+<br/>
+Edit shellshock NSE to comment out or remove the offending line:<br/>
+options["header"][cmd] = cmd<br/>
+<br/>
+Also know that the http RFC requires a newline between Content-Type and the output, so you may need an additional echo;<br/>
+<br/>
+() { :;}; echo; /bin/bash<br/>
+<br/>
+<br/>
+If python pty line fails, try to cd to / and attempt again (via following advice): to over come it go to the base directory cd ../(many times) and then type the code there and it worked- seen this issue on a couple machines﻿</body></html>

@@ -260,12 +260,12 @@ def gobuster(wordlist, scanname):
     #-U string: Username for basic auth
     #-fw: Force continued operation when wildcard found
     #-k: skip SSL certificate verification
-    results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
+    results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-s',dirStatusCodes,'-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname])
     #print results
     if "Wildcard response found" in results:
-        results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-fw','-o',scanname])
+        results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-s',dirStatusCodes,'-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-fw','-o',scanname])
     if "Invalid certificate" in results:
-        results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname,'-k'])
+        results = subprocess.check_output(['gobuster','-a',user_agent,'-t',threads,'-e','-q','-r','-s',dirStatusCodes,'-u',url,'-x',FILE_EXT,'-l','-w',wordlist,'-o',scanname,'-k'])
     if "Unable to connect:" in results:
         f = open(scanname,'w')
         f.write(results)
@@ -498,6 +498,10 @@ if __name__=='__main__':
 
     #This is a bad 'patch' until apps use args.more-threads instead
     threads = args.more_threads
+    
+    #Default status codes that tools check for in addition to 403
+    #defaultdirStatusCodes = '200,204,301,302,307'  #default here if desired
+    dirStatusCodes = '200,204,301,302,307,403'
 
     #Set intensity for file extensions
     if args.intensity in [2,3,6,7,10,11]:

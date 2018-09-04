@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Shocker - NSE Debugging Shellshock</string>
+  <key>nodeid</key><string>38fb5d6f-2ff5-4a7b-9551-a7e286ad3dcf</string>
+  <key>modified_time</key><integer>1536087112</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1536085303</integer>
+  <key>order</key><integer>27</integer>
+</dict>
+</node>

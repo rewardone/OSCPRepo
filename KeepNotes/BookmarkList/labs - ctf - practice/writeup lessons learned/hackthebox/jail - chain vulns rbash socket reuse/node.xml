@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>title</key><string>Jail - Chain Vulns RBash</string>
+  <key>title</key><string>Jail - Chain Vulns RBash Socket Reuse</string>
   <key>nodeid</key><string>28596cfa-5f7b-4b80-9d00-e08dcbf09dc6</string>
   <key>modified_time</key><integer>1535485537</integer>
   <key>expanded2</key><true/>

