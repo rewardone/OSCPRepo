@@ -5,6 +5,7 @@
   <key>title</key><string>Radare2</string>
   <key>nodeid</key><string>4dfd736a-bf3f-4bfd-91e8-e65085d24a2e</string>
   <key>modified_time</key><integer>1524499433</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524499415</integer>

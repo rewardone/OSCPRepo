@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mantis - DC MSSQL Kerberos PSExec</title>
+</head><body>grep -oP &#09;&#09;&#09;#it's OP and only shows what is matched<br/>
+Regex:<br/>
+&nbsp;&#09;[\d]&#09;&#09;&#09;digit<br/>
+&nbsp;&#09;{1,5}&#09;&#09;&#09;between 1 and 5 digits long<br/>
+<br/>
+echo -n&#09;&#09;&#09;# echo without a newline<br/>
+xxd&#09;&#09;&#09;&#09;# convert to hex<br/>
+xxd -ps -r&#09;&#09;&#09;# convert hex to ascii, -p is output in postscript continuous hexdump (plain hexdump style)<br/>
+&nbsp;&#09;&#09;&#09;&#09;# -s seek +- seek bytes. Don't think it's needed in this case<br/>
+&nbsp;&#09;&#09;&#09;&#09;# -r revert from hexdump<br/>
+<br/>
+sqsh &#09;&#09;&#09;#cli tool for mssql<br/>
+dbeaver&#09;&#09;&#09;#database gui program<br/>
+<br/>
+PSExec may unintentially give a system shell when psexec is unable to write to shares<br/>
+<br/>
+If you're lazy, enable RDP and disable firewall with metasploit<br/>
+use post windows/manage/enable_rdp<br/>
+<br/>
+set resolution with rdesktop -g<br/>
+<br/>
+Enhance windows logging with sysmon<br/>
+Grab a nice config at https://github.com/SwiftOnSecurity/sysmon-config <br/>
+<br/>
+Another psexec possibility: winexe<br/>
+winexe -U DOMAIN/user //&lt;RHOST&gt; cmd.exe<br/>
+<br/>
+Kerberos exploit (MS14-068):<br/>
+<a href="http://blog.liatsisfotis.com/knock-and-pass-kerberos-exploitation.html">http://blog.liatsisfotis.com/knock-and-pass-kerberos-exploitation.html</a>&nbsp;<br/>
+<br/>
+Nmap: can specify specific UDP and TCP ports with U: or T:.<br/>
+-p U:139,T:139<br/>
+<br/>
+Interesting interactions with Impacket tools...seems like if a computer has been exploited with an Impacket tool (such as goldenPac or psexec) and the cleanup isn't done properly (like if a user isn't admin with psexec) then future invocations of those tools will work. This is because impacket will find it's old service and reuse it. Very interesting. </body></html>

@@ -6,6 +6,7 @@
   <key>title</key><string>Database</string>
   <key>nodeid</key><string>bd69674d-efb7-4567-93f2-c7da925daf06</string>
   <key>modified_time</key><integer>1516817821</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1516817821</integer>

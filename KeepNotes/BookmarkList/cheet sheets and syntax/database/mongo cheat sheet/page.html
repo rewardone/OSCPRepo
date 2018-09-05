@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mongo Cheat Sheet</title>
+</head><body><span style="font-family: sans"><span style="font-size: 10pt">see also: <a href="https://blog.codecentric.de/files/2012/12/MongoDB-CheatSheet-v1_0.pdf">reference</a><b><br/>
+</b><b>mongo Shell Command History</b><br/>
+You can retrieve previous commands issued in the <a href="https://docs.mongodb.com/manual/reference/program/mongo/#bin.mongo">mongo</a> shell with the up and down arrow keys. Command history is stored in ~/.dbshell file. See <a href="https://docs.mongodb.com/manual/reference/program/mongo/#mongo-dbshell-file">.dbshell</a> for more information<br/>
+<br/>
+<br/>
+<b>Mongo CLI</b><br/>
+--help<br/>
+--nodb&#09;&#09;&#09;#start without connecting to a database. Connect to a db later with <a href="https://docs.mongodb.com/manual/tutorial/write-scripts-for-the-mongo-shell/#mongo-shell-new-connections">Opening New Connections</a>&nbsp;<br/>
+--shell&#09;&#09;&#09;#used in conjunction with JS files to continue in the mongo shell after running js file<br/>
+<br/>
+<b>Command helpers</b><br/>
+help&#09;&#09;&#09;&#09;&#09;&#09;Show help.<br/>
+db.help()&#09;&#09;&#09;&#09;&#09;Show help for database methods.<br/>
+db.&lt;collection&gt;.help()&#09;&#09;Show help on collection methods. The &lt;collection&gt; can be the name of an existing &#09;&#09;&#09;&#09;&#09;&#09;collection or a non-existing collection.<br/>
+show dbs&#09;&#09;&#09;&#09;&#09;Print a list of all databases on the server.<br/>
+use &lt;db&gt;&#09;&#09;&#09;&#09;&#09;Switch current database to &lt;db&gt;. The mongo shell variable db is set to the current &#09;&#09;&#09;&#09;&#09;&#09;database.<br/>
+show collections&#09;&#09;&#09;Print a list of all collections for current database. SEE ALSO <a href="https://docs.mongodb.com/manual/release-notes/4.0-compatibility/#compat-show-collections">show collections</a><br/>
+show users&#09;&#09;&#09;&#09;Print a list of users for current database.<br/>
+show roles&#09;&#09;&#09;&#09;Print a list of all roles, both user-defined and built-in, for the current database.<br/>
+show profile&#09;&#09;&#09;&#09;Print the five most recent operations that took 1 millisecond or more. See &#09;&#09;&#09;&#09;&#09;&#09;&#09;documentation on the database profiler for more information.<br/>
+show databases&#09;&#09;&#09;Print a list of all available databases.<br/>
+load()&#09;&#09;&#09;&#09;&#09;Execute a JavaScript file. See Write Scripts for the mongo Shell for more information.<br/>
+<br/>
+<b>Basic Shell JavaScript Operations</b><br/>
+The mongo shell provides a JavaScript API for database operations.<br/>
+In the mongo shell, db is the variable that references the current database. The variable is automatically set to the default database test or is set when you use the use &lt;db&gt; to switch current database.<br/>
+<br/>
+The following table displays some common JavaScript operations:<br/>
+<br/>
+db.auth()&#09;&#09;&#09;&#09;&#09;If running in secure mode, authenticate the user.<br/>
+coll = db.&lt;collection&gt;&#09;&#09;Set a specific collection in the current database to a variable coll, as in the &#09;&#09;&#09;&#09;&#09;&#09;&#09;following example:<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">coll = db.myCollection;</li>
+</ul>
+</li>
+<li style="list-style-type: none">You can perform operations on the myCollection using the variable, as in the following example:</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">coll.find();</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+db.collection.find()&#09;&#09;&#09;Find all documents in the collection and returns a cursor.<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">See the db.collection.find() and Query Documents for more information and examples.</li>
+<li style="list-style-type: none">See Iterate a Cursor in the mongo Shell for information on cursor handling in the mongo shell.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+db.collection.insertOne()&#09;&#09;Insert a new document into the collection.<br/>
+db.collection.insertMany()&#09;&#09;Insert multiple new documents into the collection.<br/>
+db.collection.updateOne()&#09;&#09;Update a single existing document in the collection.<br/>
+db.collection.updateMany()&#09;&#09;Update multiple existing documents in the collection.<br/>
+db.collection.save()&#09;&#09;&#09;Insert either a new document or update an existing document in the collection.<br/>
+db.collection.deleteOne()&#09;&#09;Delete a single document from the collection.<br/>
+db.collection.deleteMany()&#09;&#09;Delete documents from the collection.<br/>
+db.collection.drop()&#09;&#09;&#09;Drops or removes completely the collection.<br/>
+db.collection.createIndex()&#09;&#09;Create a new index on the collection if the index does not exist; otherwise, the operation has no effect.<br/>
+db.getSiblingDB()&#09;&#09;&#09;Return a reference to another database using this same connection without explicitly switching the current database. This allows for cross database queries.<br/>
+<br/>
+<br/>
+<br/>
+db.collection.insert({name:'value'})<br/>
+db.collection.findOne()<br/>
+db.collection.find().prettyPrint()<br/>
+db.collection.fine({}, {name:value, name:value})<br/>
+db.collection.update({},{})<br/>
+db.collection.remove({})<br/>
+<br/>
+<br/>
+</span></span></body></html>
