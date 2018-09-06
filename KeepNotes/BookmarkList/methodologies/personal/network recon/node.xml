@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>title</key><string>Network</string>
+  <key>title</key><string>Network Recon</string>
   <key>nodeid</key><string>ff8da7e4-1fca-4e3b-8945-2554db6c42f7</string>
   <key>modified_time</key><integer>1535382304</integer>
   <key>expanded2</key><true/>

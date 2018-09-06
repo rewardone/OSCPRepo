@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Mona</title>
-</head><body>Arguments<br/>
+</head><body><b>Arguments</b><br/>
 pc [size] - generate cyclic pattern<br/>
 po [address] - find offset<br/>
 findmsp - find register overwritten with pattern<br/>
@@ -15,7 +15,7 @@ jmp -r [register] - find a jump point<br/>
 -cm - module property<br/>
 -cpd - filter bad chars<br/>
 <br/>
-Examples<br/>
+<b>Examples</b><br/>
 !mona config -set workingfolder path<br/>
 !mona pc 2400<br/>
 !mona po d34db33f<br/>
@@ -23,4 +23,14 @@ Examples<br/>
 !mona find -s "\xff\xe4" -m comctl32.dll<br/>
 !mona jmp -r esp<br/>
 !mona seh -cm aslr=false<br/>
-!mona seh -cpb "\x00\x0a\x0d"</body></html>
+!mona seh -cpb "\x00\x0a\x0d"<br/>
+<br/>
+<br/>
+<b>JMP ESP</b><br/>
+Find an address that has JMP ESP:<br/>
+!mona modules<br/>
+Find a module that has FALSE for all columns<br/>
+!mona find -s "\xff\xe4" -m &lt;module.DLL&gt; #vulnserver.exe<br/>
+pick an address with no bad chars<br/>
+View that address contents, should be JMP ESP.<br/>
+Once confirmed, this address will be your EIP value</body></html>

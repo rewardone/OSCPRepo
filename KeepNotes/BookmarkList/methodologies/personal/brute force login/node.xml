@@ -4,7 +4,8 @@
 <dict>
   <key>title</key><string>Brute Force Login</string>
   <key>nodeid</key><string>49f65cce-3471-460a-9540-30df4e658d68</string>
-  <key>modified_time</key><integer>1535252020</integer>
+  <key>modified_time</key><integer>1536256920</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1527965583</integer>

@@ -6,6 +6,7 @@
   <key>title</key><string>CMD param in image</string>
   <key>nodeid</key><string>877aac9a-38a7-40e3-9b06-2356d58499d8</string>
   <key>modified_time</key><integer>1512495261</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1505681865</integer>

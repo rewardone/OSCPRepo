@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>checker.py</title>
+</head><body>#https://github.com/worawit/MS17-010/blob/master/checker.py<br/>
+from mysmb import MYSMB<br/>
+from impacket import smb, smbconnection, nt_errors<br/>
+from impacket.uuid import uuidtup_to_bin<br/>
+from impacket.dcerpc.v5.rpcrt import DCERPCException<br/>
+from struct import pack<br/>
+import sys<br/>
+<br/>
+'''<br/>
+Script for<br/>
+- check target if MS17-010 is patched or not.<br/>
+- find accessible named pipe<br/>
+'''<br/>
+<br/>
+USERNAME = ''<br/>
+PASSWORD = ''<br/>
+<br/>
+NDR64Syntax = ('71710533-BEBA-4937-8319-B5DBEF9CCC36', '1.0')<br/>
+<br/>
+MSRPC_UUID_BROWSER &nbsp;= uuidtup_to_bin(('6BFFD098-A112-3610-9833-012892020162','0.0'))<br/>
+MSRPC_UUID_SPOOLSS &nbsp;= uuidtup_to_bin(('12345678-1234-ABCD-EF00-0123456789AB','1.0'))<br/>
+MSRPC_UUID_NETLOGON = uuidtup_to_bin(('12345678-1234-ABCD-EF00-01234567CFFB','1.0'))<br/>
+MSRPC_UUID_LSARPC &nbsp; = uuidtup_to_bin(('12345778-1234-ABCD-EF00-0123456789AB','0.0'))<br/>
+MSRPC_UUID_SAMR &nbsp; &nbsp; = uuidtup_to_bin(('12345778-1234-ABCD-EF00-0123456789AC','1.0'))<br/>
+<br/>
+pipes = {<br/>
+&#09;'browser' &nbsp;: MSRPC_UUID_BROWSER,<br/>
+&#09;'spoolss' &nbsp;: MSRPC_UUID_SPOOLSS,<br/>
+&#09;'netlogon' : MSRPC_UUID_NETLOGON,<br/>
+&#09;'lsarpc' &nbsp; : MSRPC_UUID_LSARPC,<br/>
+&#09;'samr' &nbsp; &nbsp; : MSRPC_UUID_SAMR,<br/>
+}<br/>
+<br/>
+<br/>
+if len(sys.argv) != 2:<br/>
+&#09;print("{} &lt;ip&gt;".format(sys.argv[0]))<br/>
+&#09;sys.exit(1)<br/>
+<br/>
+target = sys.argv[1]<br/>
+<br/>
+conn = MYSMB(target)<br/>
+try:<br/>
+&#09;conn.login(USERNAME, PASSWORD)<br/>
+except smb.SessionError as e:<br/>
+&#09;print('Login failed: ' + nt_errors.ERROR_MESSAGES[e.error_code][0])<br/>
+&#09;sys.exit()<br/>
+finally:<br/>
+&#09;print('Target OS: ' + conn.get_server_os())<br/>
+<br/>
+tid = conn.tree_connect_andx('\\\\'+target+'\\'+'IPC$')<br/>
+conn.set_default_tid(tid)<br/>
+<br/>
+<br/>
+# test if target is vulnerable<br/>
+TRANS_PEEK_NMPIPE = 0x23<br/>
+recvPkt = conn.send_trans(pack('&lt;H', TRANS_PEEK_NMPIPE), maxParameterCount=0xffff, maxDataCount=0x800)<br/>
+status = recvPkt.getNTStatus()<br/>
+if status == 0xC0000205: &nbsp;# STATUS_INSUFF_SERVER_RESOURCES<br/>
+&#09;print('The target is not patched')<br/>
+else:<br/>
+&#09;print('The target is patched')<br/>
+&#09;sys.exit()<br/>
+<br/>
+<br/>
+print('')<br/>
+print('=== Testing named pipes ===')<br/>
+for pipe_name, pipe_uuid in pipes.items():<br/>
+&#09;try:<br/>
+&#09;&#09;dce = conn.get_dce_rpc(pipe_name)<br/>
+&#09;&#09;dce.connect()<br/>
+&#09;&#09;try:<br/>
+&#09;&#09;&#09;dce.bind(pipe_uuid, transfer_syntax=NDR64Syntax)<br/>
+&#09;&#09;&#09;print('{}: Ok (64 bit)'.format(pipe_name))<br/>
+&#09;&#09;except DCERPCException as e:<br/>
+&#09;&#09;&#09;if 'transfer_syntaxes_not_supported' in str(e):<br/>
+&#09;&#09;&#09;&#09;print('{}: Ok (32 bit)'.format(pipe_name))<br/>
+&#09;&#09;&#09;else:<br/>
+&#09;&#09;&#09;&#09;print('{}: Ok ({})'.format(pipe_name, str(e)))<br/>
+&#09;&#09;dce.disconnect()<br/>
+&#09;except smb.SessionError as e:<br/>
+&#09;&#09;print('{}: {}'.format(pipe_name, nt_errors.ERROR_MESSAGES[e.error_code][0]))<br/>
+&#09;except smbconnection.SessionError as e:<br/>
+&#09;&#09;print('{}: {}'.format(pipe_name, nt_errors.ERROR_MESSAGES[e.error][0]))<br/>
+<br/>
+<br/>
+conn.disconnect_tree(tid)<br/>
+conn.logoff()<br/>
+conn.get_socket().close()</body></html>
