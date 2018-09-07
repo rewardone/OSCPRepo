@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>bo_pwntool_socket_reuse_ret2libc_template.py</string>
+  <key>nodeid</key><string>f2f4a76a-493b-4012-9d5a-dd26d8d4bc9c</string>
+  <key>modified_time</key><integer>1536343595</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1536340125</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

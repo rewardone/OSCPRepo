@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ip</title>
+</head><body>ip queries<br/>
+<br/>
+addr&#09;&#09;&#09;&#09;&#09;IP address and property information<br/>
+addr&#09;&#09;&#09;&#09;&#09;show all<br/>
+addr show dev em1&#09;&#09;show only em1<br/>
+<br/>
+link&#09;&#09;&#09;&#09;&#09;manage and display state of interfaces<br/>
+link&#09;&#09;&#09;&#09;&#09;show all<br/>
+link show dev em1&#09;&#09;show only em1<br/>
+-s link&#09;&#09;&#09;&#09;statistics<br/>
+<br/>
+route&#09;&#09;&#09;&#09;display and later routing table<br/>
+route&#09;&#09;&#09;&#09;list all route entries in the kernel<br/>
+<br/>
+maddr&#09;&#09;&#09;&#09;manage and display multicast IP addresses<br/>
+maddr&#09;&#09;&#09;&#09;all devices<br/>
+maddr show dev em1&#09;&#09;multicast for em1<br/>
+<br/>
+neigh&#09;&#09;&#09;&#09;show neighbour objects, known as ARP table for IPv4<br/>
+neigh&#09;&#09;&#09;&#09;all neighbour objects<br/>
+neigh show dev em1&#09;&#09;ARP cache for dev em1<br/>
+<br/>
+<br/>
+MODIFICATION<br/>
+addr add&#09;&#09;&#09;&#09;add an address<br/>
+ip addr add 192.168.1.1/24 dev em1<br/>
+<br/>
+addr del&#09;&#09;&#09;&#09;delete an address<br/>
+ip addr del 192.168.1.1/24 dev em1<br/>
+<br/>
+link set&#09;&#09;&#09;&#09;alter status of interface<br/>
+ip link set em1 up&#09;&#09;bring online<br/>
+ip link set em1 down&#09;&#09;bring offline<br/>
+ip link set em1 mtu 9000&#09;set mtu on em1 to 9000<br/>
+ip link set em1 promisc on&#09;set em1 to promisc<br/>
+<br/>
+route add&#09;&#09;&#09;&#09;adding entries to routing table<br/>
+ip route add default via 192.168.1.1 dev em1&#09;&#09;add default via local gateway reached via em1<br/>
+ip route add 192.168.1.0/24 via 192.168.1.1&#09;&#09;&#09;route to 192.168.1.0/24 via gateway 192.168.1.1<br/>
+ip route add 192.168.1.0/24 dev em1&#09;&#09;&#09;&#09;route to 192.168.1.0/24 via dev em1<br/>
+<br/>
+route delete&#09;&#09;&#09;deleting routes<br/>
+ip route delete 192.168.1.0/24 via 192.168.1.1<br/>
+<br/>
+route replace&#09;&#09;&#09;replace or add if not defined<br/>
+ip route replace 192.168.1.0/24 dev em1<br/>
+<br/>
+route get&#09;&#09;&#09;&#09;display route an address will take<br/>
+ip route get 192.168.1.5&#09;<br/>
+<br/>
+<br/>
+MANAGE ARP<br/>
+neigh add&#09;&#09;&#09;&#09;add entry to arp table<br/>
+ip niegh add 192.168.1.1 lladdr 1:2:3:4:5:6 dev em1&#09;add 192.168.1.1 with MAC 1:2:3:4:5:6 to em1<br/>
+neigh del&#09;&#09;&#09;&#09;invalidate an entry<br/>
+ip neigh del 192.168.1.1 dev em1<br/>
+niegh replace&#09;&#09;&#09;replace or add if not defined<br/>
+<br/>
+<br/>
+IP vs Net-tools<br/>
+<img src="image.png" /><br/>
+</body></html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Binaries</title>
+</head><body>Thinking about attempting to exploit a binary, do some recon first:<br/>
+<ul><li style="list-style-type: none"></li>
+</ul>
+strace &lt;binary&gt;<br/>
+ltrace &lt;binary&gt;<br/>
+<br/>
+Identify target OS and target machine architecture!<br/>
+CLONE IT BEFORE DEBUGGING<br/>
+<br/>
+debugger &lt;binary&gt;<br/>
+&nbsp;&#09;FUZZ FOR VULNS<br/>
+&nbsp;&#09;STATIC CODE CHECK FOR VULNS<ul><li style="list-style-type: none"></li>
+<li style="list-style-type: none"></li>
+</ul>
+<b>DEVELOP</b><br/>
+checksec &lt;binary&gt; &#09;&#09;&#09;#check security protections<ul><li style="list-style-type: none">&#09;&#09;&#09;&#09;&#09;#can also check protections on machine</li>
+</ul>
+Check ASLR on host (if able)<br/>
+&nbsp;&#09;/proc/sys/kernel/randomize_va_space<br/>
+&nbsp;&#09;ldd &lt;binary&gt; | grep libc&#09;#repeatably to check memory address changing</body></html>

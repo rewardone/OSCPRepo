@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Identifying Docker</string>
+  <key>nodeid</key><string>e018a13a-234f-4a14-a3a5-c1ffe175b78e</string>
+  <key>modified_time</key><integer>1536333129</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1536333093</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
