@@ -6,28 +6,28 @@
 </head><body>Usage: /usr/bin/msfvenom [options] &lt;var=val&gt;<br/>
 <br/>
 Options:<br/>
-&nbsp; &nbsp; -p, --payload &nbsp; &nbsp; &nbsp; &lt;payload&gt; &nbsp; &nbsp;Payload to use. Specify a '-' or stdin to use custom payloads<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; --payload-options &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;List the payload's standard options<br/>
-&nbsp; &nbsp; -l, --list &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[type] &nbsp; &nbsp; &nbsp; List a module type. Options are: payloads, encoders, nops, all<br/>
-&nbsp; &nbsp; -n, --nopsled &nbsp; &nbsp; &nbsp; &lt;length&gt; &nbsp; &nbsp; Prepend a nopsled of [length] size on to the payload<br/>
-&nbsp; &nbsp; -f, --format &nbsp; &nbsp; &nbsp; &nbsp;&lt;format&gt; &nbsp; &nbsp; Output format (use --help-formats for a list)<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; --help-formats &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; List available formats<br/>
-&nbsp; &nbsp; -e, --encoder &nbsp; &nbsp; &nbsp; &lt;encoder&gt; &nbsp; &nbsp;The encoder to use<br/>
-&nbsp; &nbsp; -a, --arch &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;arch&gt; &nbsp; &nbsp; &nbsp; The architecture to use<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; --platform &nbsp; &nbsp; &nbsp;&lt;platform&gt; &nbsp; The platform of the payload<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; --help-platforms &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; List available platforms<br/>
-&nbsp; &nbsp; -s, --space &nbsp; &nbsp; &nbsp; &nbsp; &lt;length&gt; &nbsp; &nbsp; The maximum size of the resulting payload<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; --encoder-space &lt;length&gt; &nbsp; &nbsp; The maximum size of the encoded payload (defaults to the -s value)<br/>
-&nbsp; &nbsp; -b, --bad-chars &nbsp; &nbsp; &lt;list&gt; &nbsp; &nbsp; &nbsp; The list of characters to avoid example: '\x00\xff'<br/>
-&nbsp; &nbsp; -i, --iterations &nbsp; &nbsp;&lt;count&gt; &nbsp; &nbsp; &nbsp;The number of times to encode the payload<br/>
-&nbsp; &nbsp; -c, --add-code &nbsp; &nbsp; &nbsp;&lt;path&gt; &nbsp; &nbsp; &nbsp; Specify an additional win32 shellcode file to include<br/>
-&nbsp; &nbsp; -x, --template &nbsp; &nbsp; &nbsp;&lt;path&gt; &nbsp; &nbsp; &nbsp; Specify a custom executable file to use as a template<br/>
-&nbsp; &nbsp; -k, --keep &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Preserve the template behavior and inject the payload as a new thread<br/>
-&nbsp; &nbsp; -o, --out &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;path&gt; &nbsp; &nbsp; &nbsp; Save the payload<br/>
-&nbsp; &nbsp; -v, --var-name &nbsp; &nbsp; &nbsp;&lt;name&gt; &nbsp; &nbsp; &nbsp; Specify a custom variable name to use for certain output formats<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; --smallest &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Generate the smallest possible payload<br/>
-&nbsp; &nbsp; -t, --timeout &nbsp; &nbsp; &nbsp; &lt;second&gt; &nbsp; &nbsp; The number of seconds to wait when reading the payload from STDIN (default 30, 0 to disable).<br/>
+Options:<br/>
+&nbsp; &nbsp; -l, --list &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;type&gt; &nbsp; &nbsp; List all modules for [type]. Types are: payloads, encoders, nops, platforms, formats, all<br/>
+&nbsp; &nbsp; -p, --payload &nbsp; &nbsp; &nbsp; &nbsp; &lt;payload&gt; &nbsp;Payload to use (--list payloads to list, --list-options for arguments). Specify '-' or STDIN for custom<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; --list-options &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; List --payload &lt;value&gt;'s standard, advanced and evasion options<br/>
+&nbsp; &nbsp; -f, --format &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;format&gt; &nbsp; Output format (use --list formats to list)<br/>
+&nbsp; &nbsp; -e, --encoder &nbsp; &nbsp; &nbsp; &nbsp; &lt;encoder&gt; &nbsp;The encoder to use (use --list encoders to list)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; --smallest &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Generate the smallest possible payload using all available encoders<br/>
+&nbsp; &nbsp; -a, --arch &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;arch&gt; &nbsp; &nbsp; The architecture to use for --payload and --encoders<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; --platform &nbsp; &nbsp; &nbsp; &nbsp;&lt;platform&gt; The platform for --payload (use --list platforms to list)<br/>
+&nbsp; &nbsp; -o, --out &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;path&gt; &nbsp; &nbsp; Save the payload to a file<br/>
+&nbsp; &nbsp; -b, --bad-chars &nbsp; &nbsp; &nbsp; &lt;list&gt; &nbsp; &nbsp; Characters to avoid example: '\x00\xff'<br/>
+&nbsp; &nbsp; -n, --nopsled &nbsp; &nbsp; &nbsp; &nbsp; &lt;length&gt; &nbsp; Prepend a nopsled of [length] size on to the payload<br/>
+&nbsp; &nbsp; -s, --space &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;length&gt; &nbsp; The maximum size of the resulting payload<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; --encoder-space &nbsp; &lt;length&gt; &nbsp; The maximum size of the encoded payload (defaults to the -s value)<br/>
+&nbsp; &nbsp; -i, --iterations &nbsp; &nbsp; &nbsp;&lt;count&gt; &nbsp; &nbsp;The number of times to encode the payload<br/>
+&nbsp; &nbsp; -c, --add-code &nbsp; &nbsp; &nbsp; &nbsp;&lt;path&gt; &nbsp; &nbsp; Specify an additional win32 shellcode file to include<br/>
+&nbsp; &nbsp; -x, --template &nbsp; &nbsp; &nbsp; &nbsp;&lt;path&gt; &nbsp; &nbsp; Specify a custom executable file to use as a template<br/>
+&nbsp; &nbsp; -k, --keep &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Preserve the --template behaviour and inject the payload as a new thread<br/>
+&nbsp; &nbsp; -v, --var-name &nbsp; &nbsp; &nbsp; &nbsp;&lt;value&gt; &nbsp; &nbsp;Specify a custom variable name to use for certain output formats<br/>
+&nbsp; &nbsp; -t, --timeout &nbsp; &nbsp; &nbsp; &nbsp; &lt;second&gt; &nbsp; The number of seconds to wait when reading the payload from STDIN (default 30, 0 to disable)<br/>
 &nbsp; &nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Show this message<br/>
+<br/>
 <br/>
 <br/>
 badchars:'\x00\xff\x0a\x0d\x20'</body></html>
