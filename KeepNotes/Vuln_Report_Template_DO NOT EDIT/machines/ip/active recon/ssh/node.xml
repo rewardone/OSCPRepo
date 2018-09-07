@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>duplicate_of</key><string>02b8d326-e990-4de6-9c39-03c6542b2e45</string>
+  <key>title</key><string>SSH</string>
+  <key>nodeid</key><string>79185a9e-66fe-4f92-a03a-bc493ddf440e</string>
+  <key>modified_time</key><integer>1515372710</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1515372710</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>12</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

@@ -5,7 +5,7 @@
   <key>title</key><string>XSS</string>
   <key>nodeid</key><string>5cb3050e-932b-4d21-b004-db78de408740</string>
   <key>modified_time</key><integer>1525462257</integer>
-  <key>expanded2</key><false/>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516295946</integer>
