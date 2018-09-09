@@ -5,6 +5,8 @@
 <title>Recon</title>
 </head><body>Reconnaissance<br/>
 <br/>
+compgen -c&#09;&#09;&#09;#list all commands that the current shell knows about<br/>
+<br/>
 The first step should be to gather a little information. You'll need to know your environment. Run the 'env' command to understand how your profile is configured. You'll see which shell you're running and where your PATH is pointing to. Once you know what your PATH is, list the contents of the directory (i.e. 'ls /usr/local/rbin') to see which commands are present. It is possible you may not be able to run the 'ls' command. If not, you can use the 'echo' command with an asterisk to 'glob' directory contents if it's available:<br/>
 <br/>
 echo /usr/local/rbin/*<br/>

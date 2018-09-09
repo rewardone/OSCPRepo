@@ -31,7 +31,7 @@ import argparse
 #broadcast-pppoe-discover: Discovers PPPoE servers using PPPoE Discovery protocol
 #broadcast-rip-discover: discover hosts and routing using RIPv2. Send RIPv2 Request and collects responses
 #broadcast-ripng-discover: Discovers hosts and routing information from devices running RIPng
-#broadcast-sonicwall-discover: Discovers Sonicwall firewalls using same method as manufacturers own SetupTool
+#broadcast-sonicwall-discover: Discovers Sonicwall firewalls using same method as manufacturers SetupTool
 #broadcast-sybase-asa-discover: Discovers Sybase Anywhere Servers on LAN
 #broadcast-tellstick-discover: Discovers Telldus Technologies TellStickNet
 #broadcast-upnp-info: attempt to extract system information from UPnP service by sending multicast and collecting
@@ -65,7 +65,7 @@ def mkdir_p(path):
          pass
       else:
          raise
-         
+
 if __name__=='__main__':
 
     parser = argparse.ArgumentParser(description='Rough script to handle nmap broadcast recon scripts. Usage: broadcastrecon.py interface')
@@ -73,9 +73,9 @@ if __name__=='__main__':
 
     args = parser.parse_args()
     #print args
-    
+
     interface = args.interface
-    
+
     BASE = '/root/scripts/recon_enum/results/exam/nmap'
     mkdir_p(BASE)
 

@@ -82,7 +82,7 @@ fi
 if [ "$thorough" ]; then
 	echo "[+] Thorough tests = enabled"
 else
-	echo  -e "\e[00;33m[+] Thorough tests = Disabled (SUID/GUID checks will not be perfomed!)\e[00m" 
+	echo  -e "\e[00;33m[+] Thorough tests = Disabled (SUID/GUID checks will not be perfomed!)\e[00m"
 fi
 
 sleep 2
@@ -95,11 +95,11 @@ else
   :
 fi
 
-if [ "$sudopass" ]; then 
+if [ "$sudopass" ]; then
   echo -e "\e[00;35m[+] Please enter password - INSECURE - really only for CTF use!\e[00m"
   read -s userpassword
-  echo 
-else 
+  echo
+else
   :
 fi
 
@@ -348,16 +348,16 @@ echo -e "\e[00;33m### User and Group Information ###############################
 #contents of /etc/passwd
 readpasswd=`cat /etc/passwd 2>/dev/null`
 if [ "$readpasswd" ]; then
-  echo -e "\e[00;31m[-] Contents of /etc/passwd:\e[00m\n$readpasswd" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m[-] Contents of /etc/passwd:\e[00m\n$readpasswd"
+  echo -e "\n"
+else
   :
 fi
 
 if [ "$export" ] && [ "$readpasswd" ]; then
   mkdir $format/etc-export/ 2>/dev/null
   cp /etc/passwd $format/etc-export/passwd 2>/dev/null
-else 
+else
   :
 fi
 
@@ -381,7 +381,7 @@ fi
 superman=`grep -v -E "^#" /etc/passwd 2>/dev/null| awk -F: '$3 == 0 { print $1}' 2>/dev/null`
 if [ "$superman" ]; then
   echo -e "\e[00;31m[-] Super user account(s):\e[00m\n$superman"
-  echo -e "\n" 
+  echo -e "\n"
 else
   :
 fi
@@ -538,9 +538,9 @@ if [ "$sudopass" ]; then
     else
       sudoauth=`echo $userpassword | sudo -S -l -k 2>/dev/null`
       if [ "$sudoauth" ]; then
-        echo -e "\e[00;33m[+] We can sudo when supplying a password!\e[00m\n$sudoauth" 
-        echo -e "\n" 
-      else 
+        echo -e "\e[00;33m[+] We can sudo when supplying a password!\e[00m\n$sudoauth"
+        echo -e "\n"
+      else
         :
       fi
     fi
@@ -551,7 +551,7 @@ fi
 #who has sudoed in the past
 whohasbeensudo=`find /home -name .sudo_as_admin_successful 2>/dev/null`
 if [ "$whohasbeensudo" ]; then
-  echo -e "\e[00;31m[-] Accounts that have recently used sudo:\e[00m\n$whohasbeensudo" 
+  echo -e "\e[00;31m[-] Accounts that have recently used sudo:\e[00m\n$whohasbeensudo"
   echo -e "\n"
 else
   :
@@ -691,6 +691,19 @@ if [ "$thorough" = "1" ]; then
 	fi
   else
 	:
+fi
+
+#specifically calling out known_hosts for pivoting purposes
+if [ "$thorough" = "1" ]; then
+sshknownhosts=`find / -name "known_hosts" -exec cat {} 2>/dev/null \;`
+  if [ "$sshknownhosts" ]; then
+    echo -e "\e[00;31m[-] Look at where this user has SSHd to (pivot/escalation opportunities even if local!):\e[00m\n$sshknownhosts"
+    echo -e "\n"
+  else
+    :
+  fi
+else
+  :
 fi
 
 #is root permitted to login via ssh
@@ -848,22 +861,22 @@ if [ "$mountcmd" ]; then
   grepvnodev=`mount 2>/dev/null | grep -iv "nodev" | awk '{print $1 " " $2 " " $3 " " $6}' | column -t`
   unamecmd=`uname -r 2>/dev/null`
   if [ "$grepnoexec" ]; then
-    echo -e "\e[00;31m[-] Mounts with 'noexec' detcted. If $unamecmd < 2.4.25 / 2.6.0, then /lib/ld*.so execution bypass may work.\e[00m\n"
+    echo -e "\e[00;31m[-] Mounts with 'noexec' detcted. If $unamecmd < 2.4.25 / 2.6.0, then /lib/ld*.so execution bypass may work.\e[00m\n$grepnoexec"
   else
     :
   fi
   if [ "$grepvnoexec" ]; then
-    echo -e "\e[00;31m[-] Mounts without 'noexec' detcted!\e[00m\n"
+    echo -e "\e[00;31m[-] Mounts without 'noexec' detcted!\e[00m\n$grepvnoexec"
   else
     :
   fi
   if [ "$grepvnosuid" ]; then
-    echo -e "\e[00;31m[-] Mounts without 'nosuid' detected!\e[00m\n"
+    echo -e "\e[00;31m[-] Mounts without 'nosuid' detected!\e[00m\n$grepvnosuid"
   else
     :
   fi
   if [ "$grepvnodev" ]; then
-    echo -e "\e[00;31m[-] Mounts without 'nodev' detected!\e[00m\n"
+    echo -e "\e[00;31m[-] Mounts without 'nodev' detected!\e[00m\n$grepvnodev"
   else
     :
   fi
@@ -1034,9 +1047,9 @@ fi
 if [ "$thorough" = "1" ]; then
 intguid=`find / -perm -2000 -type f  -exec ls -la {} \; 2>/dev/null | grep -w $binarylist 2>/dev/null`
 	if [ "$intguid" ]; then
-		echo -e "\e[00;33m[+] Possibly interesting GUID files:\e[00m\n$intguid" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;33m[+] Possibly interesting GUID files:\e[00m\n$intguid"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -1087,7 +1100,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$fileswithcaps" ]; then
 		mkdir $format/files_with_capabilities/ 2>/dev/null
 		for i in $fileswithcaps; do cp $i $format/files_with_capabilities/; done 2>/dev/null
-	else 
+	else
 		:
 	fi
   else
@@ -1272,9 +1285,9 @@ fi
 if [ "$thorough" = "1" ]; then
 wwfiles=`find / ! -path "*/proc/*" ! -path "/sys/*" -perm -2 -type f -exec ls -la {} 2>/dev/null \;`
 	if [ "$wwfiles" ]; then
-		echo -e "\e[00;31m[-] World-writable files (excluding /proc and /sys):\e[00m\n$wwfiles" 
-		echo -e "\n" 
-	else 
+		echo -e "\e[00;31m[-] World-writable files (excluding /proc and /sys):\e[00m\n$wwfiles"
+		echo -e "\n"
+	else
 		:
 	fi
   else
@@ -1285,7 +1298,7 @@ if [ "$thorough" = "1" ]; then
 	if [ "$export" ] && [ "$wwfiles" ]; then
 		mkdir $format/ww-files/ 2>/dev/null
 		for i in $wwfiles; do cp --parents $i $format/ww-files/; done 2>/dev/null
-	else 
+	else
 		:
 	fi
   else
@@ -1313,6 +1326,7 @@ if [ "$thorough" = "1" ]; then
     echo -e "[-] Files you can write that you don't own: You're running under UID 0, too many files to list...\n"
   fi
   if [ "$grfilesall" ]; then
+    #may want to exclude /sys/ here as well
     echo -e "\e[00;31m[-] Files not owned by user but writable:\e[00m\n$grfilesall"
     echo -e "\n"
   else
@@ -1328,7 +1342,7 @@ fi
 # else
 #   :
 # fi
-# }
+}
 
 # find /etc/ -readable -type f 2>/dev/null               				# Anyone - read
 # find /etc/ -readable -type f -maxdepth 1 2>/dev/null   				# Anyone - read
@@ -1517,9 +1531,9 @@ fi
 
 nsinfosysd=`systemd-resolve --status 2>/dev/null`
 if [ "$nsinfosysd" ]; then
-  echo -e "\e[00;31m[-] Nameserver(s):\e[00m\n$nsinfosysd" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m[-] Nameserver(s):\e[00m\n$nsinfosysd"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1535,9 +1549,9 @@ fi
 #default route configuration
 defrouteip=`ip r 2>/dev/null | grep default`
 if [ ! "$defroute" ] && [ "$defrouteip" ]; then
-  echo -e "\e[00;31m[-] Default route:\e[00m\n$defrouteip" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m[-] Default route:\e[00m\n$defrouteip"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1631,9 +1645,9 @@ fi
 
 tcpservsip=`ss -t 2>/dev/null`
 if [ ! "$tcpservs" ] && [ "$tcpservsip" ]; then
-  echo -e "\e[00;31m[-] Listening TCP:\e[00m\n$tcpservsip" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m[-] Listening TCP:\e[00m\n$tcpservsip"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1648,9 +1662,9 @@ fi
 
 udpservsip=`ip -u 2>/dev/null`
 if [ ! "$udpservs" ] && [ "$udpservsip" ]; then
-  echo -e "\e[00;31m[-] Listening UDP:\e[00m\n$udpservsip" 
-  echo -e "\n" 
-else 
+  echo -e "\e[00;31m[-] Listening UDP:\e[00m\n$udpservsip"
+  echo -e "\n"
+else
   :
 fi
 
@@ -1844,7 +1858,7 @@ fi
 initperms=`find /etc/init \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null`
 if [ "$initperms" ]; then
    echo -e "\e[00;31m[-] /etc/init/ config files not belonging to root:\e[00m\n$initperms"
-   echo -e "\n" 
+   echo -e "\n"
 else
   :
 fi
@@ -1852,7 +1866,7 @@ fi
 systemdread=`ls -lthR /lib/systemd/ 2>/dev/null`
 if [ "$systemdread" ]; then
   echo -e "\e[00;31m[-] /lib/systemd/* config file permissions:\e[00m\n$systemdread"
-  echo -e "\n" 
+  echo -e "\n"
 else
   :
 fi
@@ -1861,7 +1875,7 @@ fi
 systemdperms=`find /lib/systemd/ \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null`
 if [ "$systemdperms" ]; then
    echo -e "\e[00;31m[-] /lib/systemd/* config files not belonging to root:\e[00m\n$systemdperms"
-   echo -e "\n" 
+   echo -e "\n"
 else
   :
 fi
@@ -1928,9 +1942,9 @@ if [ "$sudopass" ]; then
     else
       sudopermscheck=`echo $userpassword | sudo -S -l -k 2>/dev/null | xargs -n 1 2>/dev/null|sed 's/,*$//g' 2>/dev/null | grep -w $binarylist 2>/dev/null`
       if [ "$sudopermscheck" ]; then
-        echo -e "\e[00;33m[-] Possible sudo pwnage!\e[00m\n$sudopermscheck" 
-        echo -e "\n" 
-     else 
+        echo -e "\e[00;33m[-] Possible sudo pwnage!\e[00m\n$sudopermscheck"
+        echo -e "\n"
+     else
         :
       fi
     fi
@@ -2278,9 +2292,9 @@ fi
 if [ "$thorough" = "1" ]; then
   apachehomedirs=`ls -alhR /var/www/ 2>/dev/null; ls -alhR /srv/www/htdocs/ 2>/dev/null; ls -alhR /usr/local/www/apache2/data/ 2>/dev/null; ls -alhR /opt/lampp/htdocs/ 2>/dev/null`
   if [ "$apachehomedirs" ]; then
-    echo -e "\e[00;31m[-] www home dir contents:\e[00m\n$apachehomedirs" 
-    echo -e "\n" 
-else 
+    echo -e "\e[00;31m[-] www home dir contents:\e[00m\n$apachehomedirs"
+    echo -e "\n"
+else
     :
   fi
 fi
@@ -2290,7 +2304,7 @@ htpasswd=`find / -name .htpasswd -print -exec cat {} \; 2>/dev/null`
 if [ "$htpasswd" ]; then
     echo -e "\e[00;33m[+] htpasswd found - could contain passwords:\e[00m\n$htpasswd"
     echo -e "\n"
-else 
+else
     :
 fi
 }
@@ -2559,16 +2573,16 @@ fi
 
 #use supplied keyword and cat *.php files for potential matches - output will show line number within relevant file path where a match has been located
 if [ "$keyword" = "" ]; then
-  echo -e "[-] Can't search *.php files as no keyword was entered\n" 
+  echo -e "[-] Can't search *.php files as no keyword was entered\n"
   else
     phpkey=`find / -maxdepth 10 -name *.php -type f -exec grep -Hn $keyword {} \; 2>/dev/null`
     if [ "$phpkey" ]; then
-      echo -e "\e[00;31m[-] Find keyword ($keyword) in .php files (recursive 10 levels - output format filepath:identified line number where keyword appears):\e[00m\n$phpkey" 
-      echo -e "\n" 
-     else 
-  echo -e "\e[00;31m[-] Find keyword ($keyword) in .php files (recursive 10 levels):\e[00m" 
-  echo -e "'$keyword' not found in any .php files" 
-  echo -e "\n" 
+      echo -e "\e[00;31m[-] Find keyword ($keyword) in .php files (recursive 10 levels - output format filepath:identified line number where keyword appears):\e[00m\n$phpkey"
+      echo -e "\n"
+     else
+  echo -e "\e[00;31m[-] Find keyword ($keyword) in .php files (recursive 10 levels):\e[00m"
+  echo -e "'$keyword' not found in any .php files"
+  echo -e "\n"
     fi
 fi
 
@@ -2579,7 +2593,7 @@ if [ "$keyword" = "" ]; then
     phpkeyfile=`find / -maxdepth 10 -name *.php -type f -exec grep -lHn $keyword {} \; 2>/dev/null`
       mkdir --parents $format/keyword_file_matches/php_files/ 2>/dev/null
       for i in $phpkeyfile; do cp --parents $i $format/keyword_file_matches/php_files/ ; done 2>/dev/null
-    else 
+    else
       :
   fi
 fi
@@ -2886,7 +2900,6 @@ echo -e "\e[00;33m### LXC Container Checks ####################################\
     echo -e "\e[00;33m[+] We're a member of the (lxd) group - could possibly misuse these rights!:\e[00m\n$lxdgroup"
     echo -e "\n"
   fi
-
 }
 
 footer()
@@ -2928,7 +2941,7 @@ call_each()
   footer
 }
 
-while getopts "h:k:r:e:ist" option; do
+while getopts "h:v:k:r:e:i:s:t" option; do
  case "${option}" in
     k) keyword=${OPTARG};;
     r) report=${OPTARG}"-"`date +"%d-%m-%y"`;;
@@ -2941,7 +2954,6 @@ while getopts "h:k:r:e:ist" option; do
     *) usage; exit;;
  esac
 done
-
 
 call_each | tee -a $report 2> /dev/null
 #EndOfScript

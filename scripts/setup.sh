@@ -101,6 +101,8 @@ if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.co
 mkdir /root/Documents/Local\ Info\ Enum 2>/dev/null
 mkdir /root/Documents/Local\ Info\ Enum/Linux 2>/dev/null
 mkdir /root/Documents/Local\ Info\ Enum/Windows 2>/dev/null
+#ensure directories are created before pulling into them
+sleep 1
 
 echo "\nCloning LinEnum\n"
 direc=/root/Documents/Local\ Info\ Enum/Linux/RebootLinEnum
@@ -128,6 +130,8 @@ if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.co
 mkdir /root/Documents/Priv\ Esc\ Checks 2>/dev/null
 mkdir /root/Documents/Priv\ Esc\ Checks/Linux 2>/dev/null
 mkdir /root/Documents/Priv\ Esc\ Checks/Windows 2>/dev/null
+#ensure directories are created before pulling into them
+sleep 1
 
 echo "\nCloning Linux-Exploit-Suggester\n"
 direc=/root/Documents/Priv\ Esc\ Checks/Linux/linux-exploit-suggester
@@ -168,7 +172,7 @@ echo "\nSetup LdapDD\n"
 cd /root/Documents/LdapDD && chmod +x setup.py && chmod +x ldapdomaindump.py && python setup.py install
 
 echo "\nSetup Nullinux\n"
-cp -p /root/Documents/Nullinux /usr/local/bin
+cp -p /root/Documents/Nullinux/nullinux.py /usr/local/bin
 
 echo "\nSetup OSCPRepo \n"
 pip install colorama
@@ -185,7 +189,7 @@ cd /root/Documents/ShellPop && pip install -r requirements.txt && chmod +x setup
 echo "\nSetup VHostScan\n"
 cd /root/Documents/VHostScan && python3 -m pip install -r requirements.txt 2&>/dev/null
 python3 -m pip install python-levenshtein 2&>/dev/null
-cd /root/Documents/VHostScan && cat setup.py | sed -e 's/NUM_INSTALLED/num_installed/g' && python3 setup.py install
+cd /root/Documents/VHostScan && cat setup.py | sed -e 's/NUM_INSTALLED/num_installed/g' 1>/dev/null 2>/dev/null && python3 setup.py install
 
 echo "\nCopy vulners to nmap scripts location \n"
 cp /root/Documents/Vulners/vulners.nse /usr/share/nmap/scripts/vulners.nse

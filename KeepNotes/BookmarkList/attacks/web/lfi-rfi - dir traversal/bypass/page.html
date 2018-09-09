@@ -47,4 +47,31 @@ Encoded Traversal Strings<br/>
 <br/>
 <b>Don’t do /etc/passwd.</b><br/>
 Do /foo/../etc/bar/../passwd.<br/>
-</body></html>
+<br/>
+<br/>
+<b>Odd encodings</b><br/>
+URL encoding<br/>
+16-bit Unicode:<br/>
+dot &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %u002e<br/>
+forward slash &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;%u2215<br/>
+backslash &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;%u2216<br/>
+<br/>
+Double URL:<br/>
+dot                        &#09;%252e<br/>
+forward slash         &#09;%252f<br/>
+backslash                %255c<br/>
+<br/>
+Overlong UTF-8 Unicode<br/>
+dot &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;%c0%2e &nbsp; &nbsp; &nbsp; %e0%40%ae &nbsp; &nbsp;%c0ae etc.<br/>
+forward slash &nbsp; &nbsp; &nbsp; &nbsp;%c0%af &nbsp; &nbsp; &nbsp; %e0%80%af &nbsp; &nbsp; &nbsp;%c0%2f etc.<br/>
+backslash &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;%c0%5c &nbsp; &nbsp; &nbsp; %c0%80%5c &nbsp; &nbsp; &nbsp;etc.<br/>
+<br/>
+You can use illegal Unicode payload type within Burp Intruder.<br/>
+<br/>
+<b>Test recursive filtering<br/>
+</b>If the application is attempting to sanitize user input by removing traversal sequences, and does not apply this filter recursively, then it may be possible to bypass the filter by placing one sequence within another. For example:<br/>
+....//<br/>
+....\/<br/>
+..../\<br/>
+....\\<br/>
+..././ &#09;&#09;&#09;recent example that worked because it filtered "../" to "" and the payload became .""./ or ../</body></html>
