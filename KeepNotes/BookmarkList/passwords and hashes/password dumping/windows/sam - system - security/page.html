@@ -3,10 +3,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>SAM / SYSTEM / SECURITY</title>
-</head><body>1 – Dumping the SAM file &nbsp;<br/>
+</head><body>Microsoft Windows OS store hashed user passwords in the Security Accounts Manager (SAM). To deter offline password attacks, Microsoft introduced the SYSKEY feature (Windows NT 4.0 SP3), which partially encrypts the SAM file.<br/>
+<br/>
+Windows NT &gt;= Windows 2003 store two different hashes: LM (based on DES) and NT Lan Manager NTLM based on MD4<br/>
+Windows Vista +: Disabled LM by default and uses NTLM. NTLM hashes stored in the SAM are still not salted.<br/>
+<br/>
+The SAM cannot be copied while the OS is running, however, it can be dumped in-memory.<br/>
+<br/>
+1 – Dumping the SAM file &nbsp;<br/>
 This is probably the most common way to escalate privileges. Often, it is possible to retrieve the LM hashes from a system thatmay include some domain credentials. <br/>
 &nbsp;<br/>
-Depending on the penetration test, this can be done repeatedly, onmany servers, until you find a domain administrator's hash. It is also possible to utilize theshadow copy feature from Microsoft Systems to get the "SYSKEY" and "SAM" files. One of thepossible tools that could be used for this is hobocopy.<br/>
+Depending on the penetration test, this can be done repeatedly, on many servers, until you find a domain administrator's hash. It is also possible to utilize theshadow copy feature from Microsoft Systems to get the "SYSKEY" and "SAM" files. One of thepossible tools that could be used for this is hobocopy.<br/>
 <br/>
 Once you have the SAM and SYSTEM, many other tools can extract the hashes<br/>
 &nbsp;&#09;Cain &amp; Abel<br/>

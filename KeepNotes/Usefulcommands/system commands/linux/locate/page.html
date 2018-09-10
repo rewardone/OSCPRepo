@@ -3,7 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>locate</title>
-</head><body><span style="font-family: sans"><span style="font-size: 10pt"><div style="text-align: left">If it is desired to perform a more sophisticated search, including searching by attributes other than name (e.g., by size, creation date or location), the <i>find</i> command should be used.</div><br/>
+</head><body><div style="text-align: left"><span style="font-size: 10pt"><span style="font-family: sans">Before locate can be used, you MUST run: updatedb<br/>
+<br/>
+</span></span></div><span style="font-size: 10pt"><span style="font-family: sans"><div style="text-align: left">Note: If it is desired to perform a more sophisticated search, including searching by attributes other than name (e.g., by size, creation date or location), the <i>find</i> command should be used.</div><br/>
 <br/>
 <div style="text-align: left">The <i>locate</i> <a href="http://www.linfo.org/command.html">command</a> is often the simplest and quickest way to find the locations of files and directories on <a href="http://www.linfo.org/linuxdef.html">Linux</a>and other <a href="http://www.linfo.org/unix-like.html">Unix-like</a> <a href="http://www.linfo.org/operating_systems_list.html">operating systems</a>.<br/>
 </div><br/>
@@ -11,9 +13,9 @@
 </div><br/>
 <div style="text-align: left">locate [options] name(s)<br/>
 </div><br/>
-<div style="text-align: left">When used without any <a href="http://www.linfo.org/option.html">options</a>, locate displays every <i><a href="http://www.linfo.org/absolute_pathname.html">absolute pathname</a></i> for which the user has access permission that contains any of the names of files and/or directories that are provided to it as <a href="http://www.linfo.org/argument.html">arguments</a> (i.e., input data).<br/>
+<div style="text-align: left">When used without any <a href="http://www.linfo.org/option.html">options</a>, locate displays every <a href="http://www.linfo.org/absolute_pathname.html"><i>absolute pathname</i></a> for which the user has access permission that contains any of the names of files and/or directories that are provided to it as <a href="http://www.linfo.org/argument.html">arguments</a> (i.e., input data).<br/>
 </div><br/>
-<div style="text-align: left">The absolute pathname, also referred to as the <i>absolute path</i> or the <i>full path</i>, is the hierarchy of directories from the <i><a href="http://www.linfo.org/root_directory.html">root directory</a></i> to the designated file or directory. The root directory is the directory at the very top of the <a href="http://www.linfo.org/filesystem.html">filesystem</a> (i.e., hierarchy of files) that contains all other directories and files on the system and which is designated by a forward slash ( / ). It is important that the absolute pathname is returned both because it tells the exact locations on the system and because it makes it possible to indicate the locations of files or directories that have the same name but different absolute paths.<br/>
+<div style="text-align: left">The absolute pathname, also referred to as the <i>absolute path</i> or the <i>full path</i>, is the hierarchy of directories from the <a href="http://www.linfo.org/root_directory.html"><i>root directory</i></a> to the designated file or directory. The root directory is the directory at the very top of the <a href="http://www.linfo.org/filesystem.html">filesystem</a> (i.e., hierarchy of files) that contains all other directories and files on the system and which is designated by a forward slash ( / ). It is important that the absolute pathname is returned both because it tells the exact locations on the system and because it makes it possible to indicate the locations of files or directories that have the same name but different absolute paths.<br/>
 </div><br/>
 <div style="text-align: left">Thus, for example, the following would list the absolute paths of all files named <i>file1</i> and all directories named <i>dir1</i> for which the user had access permission:<br/>
 </div><br/>
@@ -33,7 +35,7 @@
 </div><br/>
 <div style="text-align: left">locate -n 15 "*.html"<br/>
 </div><br/>
-<div style="text-align: left">An alternative is to use a <i><a href="http://www.linfo.org/pipe.html">pipe</a></i> (represented by the vertical bar character) to <a href="http://www.linfo.org/redirection.html">redirect</a> the output of locate from the display screen to a <i>pager</i> such as <i>more</i> or <i>less</i>, which presents only one screenful of output at a time, for example,<br/>
+<div style="text-align: left">An alternative is to use a <a href="http://www.linfo.org/pipe.html"><i>pipe</i></a> (represented by the vertical bar character) to <a href="http://www.linfo.org/redirection.html">redirect</a> the output of locate from the display screen to a <i>pager</i> such as <i>more</i> or <i>less</i>, which presents only one screenful of output at a time, for example,<br/>
 </div><br/>
 <div style="text-align: left">locate "*.html" | less<br/>
 </div><br/>
@@ -49,7 +51,7 @@
 </div><br/>
 <div style="text-align: left">locate and slocate actually search a built-in database, named <i>locate.db</i> or <i>slocate.db</i>, respectively, rather than the entire hard disk drive itself, in order to provide a much shorter searching time. This database is automatically updated on a regular basis by <i>cron</i>, a small program that runs in the background, performing various tasks at regularly scheduled intervals. The updating is performed each night if the computer is on continuously.<br/>
 </div><br/>
-<div style="text-align: left">Because the database is not updated immediately, recently created files and directories might not show up when searching for them with locate or slocate. Fortunately, however, it is a simple matter to update the database manually, although it might take a few minutes. Manual updating can be accomplished by logging in as the <a href="http://www.linfo.org/root.html">root user</a> (i.e., administrative user), such as by using the <i><a href="http://www.linfo.org/su.html">su</a></i> (i.e., <i>substitute user</i>) command, and then issuing the following command:<br/>
+<div style="text-align: left">Because the database is not updated immediately, recently created files and directories might not show up when searching for them with locate or slocate. Fortunately, however, it is a simple matter to update the database manually, although it might take a few minutes. Manual updating can be accomplished by logging in as the <a href="http://www.linfo.org/root.html">root user</a> (i.e., administrative user), such as by using the <a href="http://www.linfo.org/su.html"><i>su</i></a> (i.e., <i>substitute user</i>) command, and then issuing the following command:<br/>
 </div><br/>
 <div style="text-align: left">updatedb<br/>
 </div><br/>

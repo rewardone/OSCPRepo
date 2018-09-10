@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Example</title>
+</head><body>If we have a /export/home/dave directory that we have gone into, we will see a number of files belonging to dave, some or all of which you may be able to read. &nbsp;The one thing the system will give you is the owners UID on the remote system after issuing an ls -al command i.e. &nbsp;<br/>
+-rwxr----- 517 wheel 898 daves_secret_doc <br/>
+<br/>
+The permissions at the moment do not let you do anything with the file as you are not the owner (yet) and not a member of the group wheel.<br/>
+<br/>
+Move away from the mount point and unmount the share<br/>
+umount /local_dir<br/>
+<br/>
+create a user called dave<br/>
+useradd dave<br/>
+passwd dave<br/>
+<br/>
+Edit /etc/passwd and change the UID to 517<br/>
+<br/>
+Remount the share as local root<br/>
+<br/>
+As the UID for your local account dave matches the username and UID of the remote, the remote system now thinks your his dave, hey presto you can now do whatever you want with daves_secret_doc.</body></html>

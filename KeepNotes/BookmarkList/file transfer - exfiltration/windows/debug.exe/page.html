@@ -7,8 +7,10 @@
 <br/>
 Debug.exe can only assemble 64 kb. So we need to use files smaller than that. We can use upx to compress it even more. So let's do that:<br/>
 upx -9 nc.exe<br/>
+<br/>
 Now it only weights 29 kb. Perfect. So now let's disassemble it:<br/>
 wine exe2bat.exe nc.exe nc.txt<br/>
+<br/>
 Now we just copy-past the text into our windows-shell. And it will automatically create a file called nc.exe<br/>
 <br/>
 nc.exe and exe2bat.exe are provided in Kali </body></html>

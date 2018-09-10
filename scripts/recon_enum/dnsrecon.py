@@ -63,6 +63,13 @@ def doDNSNmapUDP():
 #         dnsf.write(ztresults)
 #         dnsf.close
 
+# another approach using 'host' command:
+# for server in $(host -t ns $1 |cut -d" " -f4);do
+# # ForEach: attempt zone transfer
+# host -l $1 $server | grep "has address"
+
+#simplest approac is probably just calling /usr/bin/dnsrecon -d <domain> -t axfr
+
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5
 def mkdir_p(path):

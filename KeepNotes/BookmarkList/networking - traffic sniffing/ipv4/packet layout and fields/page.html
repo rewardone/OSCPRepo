@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Packet Layout and Fields</title>
+</head><body><br/>
+<br/>
+0 &#09;&#09;&#09; &nbsp; &nbsp; &nbsp;1 &#09;&#09;&#09; &nbsp; &nbsp;2 &#09;&#09;&#09; &nbsp; &#09; &nbsp; 3<br/>
+0 1 2 3 &nbsp;4 5 6 &nbsp;7 8 9 &nbsp;0 1 2 3 &nbsp;4 5 6 &nbsp;7 8 9 0 1 2 3 &nbsp;4 5 6 &nbsp;7 8 9 &nbsp;0 1<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09; &nbsp; &nbsp;Source Port&#09;&#09; &nbsp; &nbsp;| &#09;&#09;Destination Port &#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09;&#09;&#09;&#09; Sequence Number &#09;&#09;&#09;&#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+|&#09;&#09;&#09; &nbsp; &nbsp;Acknowledgment Number &#09;&#09;&#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &nbsp;Data | &#09;&#09;|C|E|U|A|P|R|S|F| &#09;&#09;&#09;&#09;&#09;&#09; |<br/>
+| Offset | Res. &#09;|W|C|R|C|S|S|Y|I| &#09;&#09; &nbsp; Window &#09;&#09; |<br/>
+| &#09; &nbsp; | &#09;&#09;|R|E|G|K|H|T|N|N| &#09;&#09;&#09;&#09;&#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09; &nbsp;Checksum &#09;&#09; &nbsp; &nbsp;| &#09;&#09;&#09;Urgent Pointer &#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09;&#09;&#09;Options &#09;&#09;&#09;&#09;&#09;|&#09; Padding &#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09;&#09;&#09;&#09;&#09;data&#09;&#09;&#09;&#09;&#09;&#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+<br/>
+TCP Flags: CEUAPRSF and occur in the 14th byte of the TCP header<br/>
+&nbsp;&#09;A:&#09;ACK<br/>
+&nbsp;&#09;P:&#09;PSH</body></html>

