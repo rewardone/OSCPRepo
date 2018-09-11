@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>python_get_session</title>
+</head><body>#!/usr/bin/env python<br/>
+#<br/>
+# Template was used to login to PFSense. Required use of CSRF <br/>
+# token and session id. Need to get those to "setup" session before <br/>
+# working with it.<br/>
+#<br/>
+# Set website to BURP redirector for better troubleshooting<br/>
+#<br/>
+import requests<br/>
+from requests.packages.urllib3.exceptions import InsecureRequestWarning<br/>
+import re<br/>
+<br/>
+re_csrf = 'csrfMagicToken = "(.*?)"'&#09;#Replace as needed to grab needed HTTP Headers<ul><li style="list-style-type: none">&nbsp;&#09;&#09;&#09;&#09;&#09;&#09;#in this case, PFSense needs a csrfMagicToken</li>
+</ul>
+<br/>
+s = requests.session()&#09;&#09;&#09;#supposed to set the PHPSESSID<br/>
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)&#09;#does what it says<br/>
+<br/>
+# f = open('passwords.txt','r')<br/>
+# for pass in f:<br/>
+# Do the below, indent, etc. Turn it into a bruteforcer or anything else!<br/>
+<br/>
+r = s.post('http://website", verify=false)&#09;#verify=false to ignore SSL Cert<br/>
+csrf = re.findall(re_csrf, r.text)[0] &#09;&#09;#re. is for regular expression<br/>
+<br/>
+login = { '__csrf_magic': csrf, 'usernamefld': username, 'passwordfld' : password, 'login': 'Login' }<br/>
+r = s.post('http://website/index.php', data=login)<br/>
+<br/>
+# have access to r.status_code or r.text for filtering on correct/incorrect responses as need<br/>
+# if "correct" in r.text:<br/>
+# &nbsp; &nbsp;print "valid'<br/>
+# else:<br/>
+# &nbsp; &nbsp;print "fail"<br/>
+# &nbsp; &nbsp;s.cookies.clear()</body></html>

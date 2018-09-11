@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Sense - PFSense Env Var Substitute MSF</string>
+  <key>nodeid</key><string>fbd729cd-16d4-4c78-b9b7-abdd4b4e815f</string>
+  <key>modified_time</key><integer>1536679904</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1536676397</integer>
+  <key>order</key><integer>33</integer>
+</dict>
+</node>

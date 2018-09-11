@@ -14,4 +14,14 @@ The following section starts the PowerShell command-line process with Start-Proc
 Start-Process powershell.exe -Credential "TestDomain\Me"<br/>
 <br/>
 The -NoNewWindow parameter re-uses the same PowerShell command window.<br/>
-Here I’m using -ArgumentList parameter to pass in the second Start-Process leveraging –Verb runAs to force the elevation prompt.</body></html>
+Here I’m using -ArgumentList parameter to pass in the second Start-Process leveraging –Verb runAs to force the elevation prompt.<br/>
+<br/>
+<br/>
+<br/>
+An alternate way is to call [System.Diagnostics.Process]::Start directly<br/>
+$secpasswd = ConvertTo-SecureString "sup3r53cr3tGP0pa55" -AsPlainText -Force<br/>
+$mycreds = New-Object System.Management.Automation.PSCredential ("Administrator",<br/>
+$secpasswd)<br/>
+$computer = "DEV01"<br/>
+[System.Diagnostics.Process]::Start("C:\Windows\temp\evil.exe","",<br/>
+$mycreds.Username, $mycreds.Password, $computer)</body></html>

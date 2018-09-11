@@ -8,6 +8,10 @@ Remember that you need to be root to bind to TCP port &lt;1024. &nbsp;Higher por
 <br/>
 Local port forwarding forwards traffic coming to a local port to a specified remote port. For example, all traffic coming to port 1234 on the client could be forwarded to port 23 on the server (host).<br/>
 <br/>
+Local port forwarding will open a port on the machine you are issuing the command.<br/>
+Machine 1: ssh &lt;attacker_ip&gt; -L 8080:web_server:80 will listen on port 8080 on Machine 1. <br/>
+Machine 1 can connect to the webserver by going to 127.0.0.1:8080 which will be forwarded through the ssh connection (through the attacker_ip) to the web_server on port 80<br/>
+<br/>
 Note: The value of localhost is resolved after the Secure Shell connection has been established -- so when defining local forwarding (outgoing tunnels), localhost refers to the server (remote host computer) you have connected to.<br/>
 <br/>
 This requires that you have access to the pivot box and ssh is running<br/>

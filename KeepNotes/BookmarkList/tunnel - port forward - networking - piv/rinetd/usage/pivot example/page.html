@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pivot Example</title>
+</head><body>Internal nework 1.2.3.4 only allows outbount TCP 53 and want to connect to a web server on 80.<br/>
+Setup the following in rinetd.conf on the attacker machine:<br/>
+<br/>
+# bindaddress&#09;bindport&#09;connectaddress&#09;&#09;connectport<br/>
+&lt;attacker ip&gt;&#09;53&#09;&#09;&lt;web server&gt;&#09;&#09;80<br/>
+<br/>
+The internal network can now issue http://&lt;attacker ip&gt; and be forwarded to the web server on port 80</body></html>

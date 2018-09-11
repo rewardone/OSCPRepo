@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>TheFatRat</string>
+  <key>nodeid</key><string>873619aa-ef63-4ece-8fd4-7ca6d8a45b70</string>
+  <key>modified_time</key><integer>1524492175</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1524492136</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

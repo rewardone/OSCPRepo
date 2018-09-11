@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sense - PFSense Env Var Substitute MSF</title>
+</head><body>Pivot and check if you actually crashed the box OR if you actually got banned<br/>
+<br/>
+SSH, when inside of a connection, can specify "C" hotkey to enable pivoting/tunneling<br/>
+<br/>
+when testing command injection, if pings are being filtered, maybe use nc/ncat instead<br/>
+<br/>
+If you have a badchar, try using something that evaluates to it instead. ie: can't use '/' in command injection, but HOME env variable is HOME=/. So you can use $(HOME) in place of /<br/>
+find $(HOME) 2&gt;$(HOME)dev$(HOME)null<br/>
+<br/>
+Same trick, bash can use ${variable:&lt;len&gt;:&lt;how many}<br/>
+so if LANG=en_US.ISO8859-1<br/>
+${LANG:13:1} will give us '1'<br/>
+${LANG:13:2} will give us '-1'<br/>
+etc<br/>
+<br/>
+an alternate way is just to hex encode and print with printf<br/>
+printf"\x41" &#09;Will print 'A'<br/>
+<br/>
+Issue when working with other OSs is that not everything is standard<br/>
+BSD printf"\x41" prints '\x41'<br/>
+BSD needs: printf"\55" to print a '-'&#09;&#09;BSD man page shows \num and octal num ASCII<br/>
+<br/>
+man ascii &#09;&#09;#will print a nice ascii table quickly<br/>
+<br/>
+x=($printf"\55")<br/>
+wc+${x}c+${HOME}home${HOME}user${HOME}user.txt<br/>
+<br/>
+ipython &#09;&#09;&#09;#interactive python<br/>
+Is actually really amazing<br/>
+Allows for object.&lt;tab&gt; &#09;auto completion and working with variables cleaner if you don't have an IDE</body></html>
