@@ -88,8 +88,8 @@ init()
 
 #PRIVATE VARS
 userAgent = "'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'" #This will replace the default nmap http agent string
-FAST_NMAP_MIN_RATE = "10000"
-SLOW_NMAP_MIN_RATE = "1000"
+FAST_NMAP_MIN_RATE = "1000"
+SLOW_NMAP_MIN_RATE = "100"
 
 def multProc(targetin, scanip, port):
     jobs = []
@@ -159,7 +159,7 @@ def mssqlEnum(ip_address, port):
 
 def ldapEnum(ip_address, port):
     print "INFO: Enumerating LDAP on %s:%s" % (ip_address, port)
-    subprocess.check_output(['./ldaprecon.py',ip_address,port])
+    subprocess.check_output(['./ldaprecon.py',ip_address,'--port',port])
     return
 
 def mysqlEnum(ip_address, port):

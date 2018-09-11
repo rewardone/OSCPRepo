@@ -184,9 +184,9 @@ def cleanHistory():
     print "Cleaning history"
     bash_history = "/root/.bash_history"
     zsh_history = "/root/.zsh_history"
-    if os.path.isfile(bash_history)
+    if os.path.isfile(bash_history):
         os.remove(bash_history)
-    if os.path.isfile(zsh_history)
+    if os.path.isfile(zsh_history):
         os.remove(zsh_history)
 
 
@@ -198,7 +198,7 @@ if __name__=='__main__':
     parser.add_argument('-d', '--domain', default = "", help="FQDN")
     parser.add_argument('ip', help="IP address of target")
     parser.add_argument('--port', default='389,636', help="Port. Default is 389,636")
-    parser.add_argument('--not-safe', dest='not_safe', default=False, store_const=True, help="Disable removing of bash/zsh history files. If a password is used, it will be visible in your history file. By default, ldaprecon will remove history. This flag will preserve your history file, but leave passwords in clear text")
+    parser.add_argument('--not-safe', dest='not_safe', default=False, action='store_const', const=True, help="Disable removing of bash/zsh history files. If a password is used, it will be visible in your history file. By default, ldaprecon will remove history. This flag will preserve your history file, but leave passwords in clear text")
 
     args = parser.parse_args()
 

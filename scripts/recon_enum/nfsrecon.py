@@ -19,11 +19,17 @@ def mkdir_p(path):
 
 #Running
 #nfs-ls: Attempts to get useful info about files from NFS Exports
-#nfs-showmount: Show NFS explorts like ‘showmount -e’
-#nfs-statfs: Retrieves disk space from NFS like ‘df’
+#nfs-showmount: Show NFS explorts like 'showmount -e'
+#nfs-statfs: Retrieves disk space from NFS like 'df'
 def doNmap(ip_address, port):
     print "INFO: Starting nfs nmap on %s:%s" % (ip_address, port)
-    subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',nfsPort,'--script','nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA",outfileNmap,ip_address])
+    if len(port.split(",")) > 1:
+        for ports in port.split(","):
+            outfileNmap = "/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfsnmap" % (ip_address, ports)  
+            subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',ports,'--script','nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA",outfileNmap,ip_address])
+    else:
+        outfileNmap = "/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfsnmap" % (ip_address, port)
+        subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script','nfs-ls,nfs-showmount,nfs-statfs,vulners',"-oA",outfileNmap,ip_address])
     print "INFO: Nfs nmap completed on %s:%s" % (ip_address, port)
     return
 
@@ -59,25 +65,24 @@ def doSysCommands(ip_address, port):
     return
 
 
-if __name__='__main__':
+if __name__=='__main__':
 
     parser = argparse.ArgumentParser(description='Rough script to handle nfs enumeration. Usage: nfsrecon.py ip {port}')
     parser.add_argument('ip', help="IP address of target")
-    parser.add_argument('port', default='111,2049', help="Port. Default is 111,2049")
+    parser.add_argument('--port', default='111,2049', help="Port. Default is 111,2049")
 
     args = parser.parse_args()
-
-    BASE = "/root/scripts/recon_enum/results/exam/nfs"
-    mkdir_p(BASE)
-    outfile = "/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfsrecon.txt" % (ip_address, port)
-    outfileNmap = "/root/sripts/recon_enum/results/exam/nfs/%s_%s_nfsnmap" % (ip_address, port)
-
     ip_address = args.ip
-
+    
     if args.port != '111,2049':
         port = '111,2049,%s' % args.port #need rpc for nmap scripts
     else:
         port = '111,2049'
+
+    BASE = "/root/scripts/recon_enum/results/exam/nfs"
+    mkdir_p(BASE)
+    outfile = "/root/scripts/recon_enum/results/exam/nfs/%s_%s_nfsrecon.txt" % (ip_address, port)
+      
 
     doNmap(ip_address, port)
     doSysCommands(ip_address, port)
