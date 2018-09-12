@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Testing For ShellShock</title>
+</head><body>The template starts out with the magic string:<br/>
+() { :; }; <br/>
+<br/>
+Note that spaces are required. When not sanitized, the string essentially creates a function and passes it to bash. Execution is obtained by placing your commands at the end of the string. <br/>
+() { :; }; /bin/sleep 10<br/>
+<br/>
+It is recommended to use full paths when testing due to edge cases. Also make sure to test for blind execution. <br/>
+<br/>
+Typically, anything being passed to the server should be tested for this string. Web application-specific testing can usually be started by injecting EVERY header. At minimum, make sure to test for injection in the following:<br/>
+Hhost:<br/>
+User-Agent:<br/>
+Accept-Language:<br/>
+Cookie:<br/>
+Referer:<br/>
+<br/>
+And feel free to add more. Nmap's shellshock nse will also generate a header like:<br/>
+() { :; }; /bin/sleep 10: () { :; }; /bin/sleep 10<br/>
+<br/>
+but this can error out some webservers and return false positives (ie 403 errors or such)</body></html>
