@@ -5,7 +5,7 @@
   <key>title</key><string>Tips / Tricks / CTF</string>
   <key>nodeid</key><string>5f974c2e-1b74-4e72-8981-edde3f706125</string>
   <key>modified_time</key><integer>1534046692</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1534046692</integer>

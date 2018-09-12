@@ -4,10 +4,12 @@
 <dict>
   <key>title</key><string>Useful Tools</string>
   <key>nodeid</key><string>dd9db502-e50b-45ec-8bf8-42cb3eb676e7</string>
-  <key>modified_time</key><integer>1536261774</integer>
+  <key>modified_time</key><integer>1536772102</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1536261631</integer>
+  <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>0</integer>
+  <key>info_sort</key><string>order</string>
 </dict>
 </node>

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Lazy</title>
+</head><body>Burp: <br/>
+If you want to analyze cookies from an auth request, capture the login request and send to sequencer<br/>
+<br/>
+Try = for sql statement injection. If you know a key exists (like admin for username) try to make something close enough to admin to be recognized as admin<br/>
+admin &nbsp; &nbsp;(with spaces)<br/>
+admin=<br/>
+cdmin<br/>
+bdmin<br/>
+etc<br/>
+<br/>
+Another thing to try is bit flipping in Burp with the auth cookie<br/>
+Say you register cdmin. If you can manage to 'flip a bit' maybe the application can recognize you as admin. "close enough" right?<br/>
+&nbsp;Burp sniper &gt; Payload: Bit Flipper<br/>
+<br/>
+<br/>
+Encryption and Padding....Try oracle padding issues<br/>
+Allows brute forcing one byte at a time: padbuster.pl<br/>
+8 or 16 for BlockSize<br/>
+<br/>
+GDB disassemble binary to find out what's going on, what calls are being made<br/>
+In this case, it is cat /etc/shadow<br/>
+cat is not bad itself, but there is not a full path here...can you take over the path to cat?<br/>
+&nbsp;&#09;/usr/local/sbin:/usr/local/bin:/usr/sbin:usr/bin<br/>
+how about editing your path? <ul><li style="list-style-type: none">export PATH=`pwd`:$PATH</li>
+</ul>
+</body></html>

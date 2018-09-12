@@ -8,7 +8,9 @@
 /etc/apache2/conf/httpd.conf
 /etc/apache2/httpd.conf
 /etc/apache2/sites-available/default
+/etc/apache2/sites-available/default.conf
 /etc/apache2/sites-enabled/000-default
+/etc/apache2/sites-enabled/000-default.conf
 /etc/apache/conf/httpd.conf
 /etc/at.allow
 /etc/at.deny

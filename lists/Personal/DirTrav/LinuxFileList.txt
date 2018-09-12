@@ -2214,6 +2214,7 @@
 /etc/apache2/mods-available/proxy_scgi.load
 /etc/apache2/sites-enabled
 /etc/apache2/sites-enabled/000-default
+/etc/apache2/sites-enabled/000-default.conf
 /etc/apache2/sites-available
 /etc/apache2/sites-available/default
 /etc/apache2/sites-available/default-ssl
