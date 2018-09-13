@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Apt-get PATH Hijack</title>
+</head><body>Alternatively, a potential path hijack with apt or apt-get<br/>
+First determine where is apt-get using whereis apt-get or which apt-get; <br/>
+I will assume it's in /usr/bin/apt-get<br/>
+Then create a file in /usr/local/bin/apt-get with this content:<br/>
+<br/>
+#!/bin/bash<br/>
+# (commands to run before apt-get)<br/>
+/usr/bin/apt-get "$@"<br/>
+<br/>
+now chmod +x /usr/local/bin/apt-get.<br/>
+<br/>
+This should survive all upgrades of the distribution but it should not change the behavior of apt-get (aside from running the command before doing anything else). As bonus, it could parse the command line arguments to only run the command when it is truly needed.</body></html>
