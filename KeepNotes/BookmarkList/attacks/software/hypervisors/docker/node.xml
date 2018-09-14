@@ -5,7 +5,7 @@
   <key>title</key><string>Docker</string>
   <key>nodeid</key><string>552d7a9f-8e8d-48e8-9357-bb37f96ec563</string>
   <key>modified_time</key><integer>1536077715</integer>
-  <key>expanded2</key><false/>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1536077602</integer>
