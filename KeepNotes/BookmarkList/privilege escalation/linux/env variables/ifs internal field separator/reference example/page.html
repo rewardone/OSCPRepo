@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reference Example</title>
+</head><body>IFS = Internal Field Separator<br/>
+IFS is 'space' by default, so certain commands will split based on IFS <br/>
+<br/>
+Example: ps -eo command &#09;&#09;#list commands of processes<br/>
+when used in a loop, will print each command separated by spaces<br/>
+<br/>
+for i in $(ps -eo command); do echo $i; done<br/>
+start<br/>
+/usr/sbin/apache2<br/>
+-k<br/>
+etc etc etc<br/>
+<br/>
+Now define IFS as something else, like "\n": IFS=$'\n'<br/>
+run the same loop:<br/>
+for i in $(ps -eo command); do echo $i; done<br/>
+/usr/sbin/apache2 -k start<br/>
+etc <br/>
+etc<br/>
+yay!<br/>
+</body></html>

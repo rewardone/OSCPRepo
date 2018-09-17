@@ -6,6 +6,7 @@
   <key>title</key><string>Web</string>
   <key>nodeid</key><string>52811ad5-7da6-4587-9f8d-117cc001cda5</string>
   <key>modified_time</key><integer>1516376702</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1516376702</integer>

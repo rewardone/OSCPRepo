@@ -1,0 +1,9 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SUID On Bash Dash Sh</title>
+</head><body>If you SUID a dash/bash/sh binary, you may also need to invoke it with -p. <br/>
+<br/>
+See below from the ksh man page:<br/>
+A shell is privileged if the -p option is used or <b>if the real user-id or group-id does not match the effective user-id or group-id</b>&nbsp;(see getuid(2), getgid(2)). A privileged shell does not process $HOME/.profile nor the ENV parameter (see below), instead the file /etc/suid_profile is processed. Clearing the privileged option causes the shell to set its effective user-id (group-id) to its real user-id (group-id).</body></html>

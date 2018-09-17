@@ -6,6 +6,7 @@
   <key>title</key><string>Network Scanners / Sniffers</string>
   <key>nodeid</key><string>49c2ffc3-17e4-4edf-944c-a36d47b6529c</string>
   <key>modified_time</key><integer>1516295354</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1516295354</integer>

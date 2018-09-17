@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tunnel Through Current Connection</title>
+</head><body>SSH, when inside of a connection, can specify "C" hotkey to enable pivoting/tunneling<br/>
+<br/>
+normally you can issue: ssh -L yada yada<br/>
+If you're in an ssh session, you have access to easy peasy ssh tunneling<br/>
+on a NEW LINE if the VERY FIRST characters you enter are ~C<br/>
+you drop into an ssh&gt; prompt<br/>
+ssh&gt;<br/>
+ssh&gt; help<br/>
+etc, and you can add a port forward from here<br/>
+<br/>
+so if you are 127.0.0.1 and you are SSHd into 192.168.1.2 . . . press "enter" and then ~C and then:<br/>
+ssh&gt; -L 8001:192.168.1.3:80<br/>
+your Kali box 127.0.0.1 is now listening on 8001 and it's being forwarded through the ssh target 192.168.1.2 to 192.168.1.3:80 <br/>
+<br/>
+Now, let's set up another port forward to get requests back from another port<br/>
+so if you are 127.0.0.1 and you are SSHd into 192.168.1.2<br/>
+ssh&gt; -R 8002:127.0.0.1:8003<br/>
+(this is slightly confusing, but)<br/>
+The box you are SSHd into (192.168.1.2) will listen on ITS local host on 8002 and will take everything from ITS 8002 and forward it through the SSH connection TO kali local (127.0.0.1) 8003. <br/>
+<br/>
+With the two commands above, we will be able to command inject a shell through the SSH connection on a third host back to Kali:<br/>
+kali:8001 -&gt; 192.168.1.2:80 -&gt; victim:80<br/>
+victim:80 -&gt; 192.168.1.2:8002 -&gt; kali:8003 shell<br/>
+<br/>
+Make sure you adjust your reverse_shell accordingly. In this case, you want to call back to 192.168.1.2:8002. And then listen on your Kali box on 8003. <br/>
+</body></html>

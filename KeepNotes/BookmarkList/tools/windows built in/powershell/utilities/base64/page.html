@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Base64</title>
+</head><body>Manually convert to Base64<br/>
+Linux powershell:<br/>
+&nbsp;ps&gt; $RevShell = Get-Content -Raw ./Invoke-PowerShellIcmp.ps1 &nbsp;&#09;#Raw is needed for line breaks<br/>
+&nbsp;ps&gt; $Bytes = [System.Text.Encoding]::Unicode.GetBytes($RevShell)<br/>
+&nbsp;ps&gt; $Encoded = [Convert]::ToBase64String($bytes)<br/>
+&nbsp;ps&gt; $Encoded | Out-File icmp.ps2.b64<br/>
+<br/>
+Target<br/>
+$Decode = [System.Text.Encoding]::Unicode.GetString([System.Conver}::FromBase64String($Encoded))<br/>
+<br/>
+if you don't want to struggle iwth UTF-16 just create a standard b64 file and use certutil.exe on windows to decode the file<br/>
+</body></html>

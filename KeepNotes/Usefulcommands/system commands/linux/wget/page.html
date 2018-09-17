@@ -16,4 +16,8 @@ Other useful options:<br/>
 -e robots.off: ignore robots.txt files, don't download robots.txt files<br/>
 -A png,jpg: accept only files with the extensions png or jpg<br/>
 -m (mirror): -r --timestamping --level inf --no-remove-listing (functions suitable for mirroring site)<br/>
--nc, --no-clobber: Skip download if files exist</body></html>
+-nc, --no-clobber: Skip download if files exist<br/>
+<br/>
+<br/>
+Useful getting all js links: <br/>
+wget -nd -rH -A js --spider domain/page 2&gt;&amp;1 | grep '^--.*\.js' | awk '{print $3}'</body></html>

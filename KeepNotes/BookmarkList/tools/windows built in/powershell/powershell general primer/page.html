@@ -10,8 +10,11 @@ With get-member you can list all the properties and methods of the object that t
 Get-Command | Get-Member<br/>
 Get-Process | Get-Member<br/>
 <br/>
-Execution Policy<br/>
+<b>Execution Policy</b><br/>
 powershell -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile<br/>
+<b>Script Execution Policy</b><br/>
+Get-ExecutionPolicy &nbsp;<br/>
+Set-ExecutionPolicy unrestricted<br/>
 <br/>
 <b>Variables</b><br/>
 $testVar = "blabla"<br/>
@@ -19,6 +22,13 @@ $testVar = "blabla"<br/>
 <b>Wget / Download a file</b><br/>
 Invoke-WebRequest &lt;uri&gt;<br/>
 wget &lt;uri&gt;<br/>
+<br/>
+<b>Permissions</b><br/>
+Get-ACL<br/>
+<br/>
+<b>Firewall Rules</b><br/>
+New-NetFirewallRule -DisplayName &lt;name&gt; -RemoteAddress &lt;ip_address&gt; -Direction inbound -Action allow <br/>
+New<br/>
 <br/>
 <b>Grep: Select string can be used like grep</b><br/>
 get-command | select-string blabla<br/>
@@ -62,10 +72,6 @@ Get-ADGroup -filter *<br/>
 <br/>
 Resolve DNS<br/>
 Resolve-DNSname 10.10.10.10<br/>
-<br/>
-Script Execution Policy<br/>
-Get-ExecutionPolicy &nbsp;<br/>
-Set-ExecutionPolicy unrestricted<br/>
 <br/>
 <b>Drives</b><br/>
 Get-PsDrive -psprovider filesystem<br/>
