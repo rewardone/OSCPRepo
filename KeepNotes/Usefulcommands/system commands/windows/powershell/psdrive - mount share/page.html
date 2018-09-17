@@ -3,5 +3,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>PSDrive / Mount Share</title>
-</head><body>New-PSDrive -Name &lt;&gt; -Type &lt;&gt;<br/>
-Remove-PSDrive</body></html>
+</head><body>New-PSDrive -Name &lt;&gt; -Root &lt;&gt; -PSProvider &lt;&gt;<br/>
+Remove-PSDrive<br/>
+<br/>
+New-PSDrive [-Name] &lt;String&gt; [-PSProvider] &lt;String&gt; [-Root] &lt;String&gt; [-Description &lt;String&gt;] [-Scope &lt;String&gt;] [-Persist] [-Credential &lt;PSCredential&gt;] [-WhatIf] [-Confirm] [&lt;CommonParameters&gt;]<br/>
+<br/>
+<br/>
+New-PSDrive -Name "P" -PSProvider "FileSystem" -Root "\\Server01\Public"<br/>
+New-PSDrive -Name MyDocs -PSProvider FileSystem -Root "C:\Documents and Settings\User01\My Documents" -Description "Maps to my My Documents folder."<br/>
+<br/>
+</body></html>

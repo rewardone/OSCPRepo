@@ -72,4 +72,20 @@ Get-PsDrive -psprovider filesystem<br/>
 New-PSDrive -Name "random" -Root \\1.1.1.1.\share -PsProvider filesystem -Credential<br/>
 <br/>
 <b>Import Modules</b><br/>
-Import-Module module_name.psm1</body></html>
+Import-Module module_name.psm1<br/>
+<br/>
+<b>String escapes</b><br/>
+You can use formatting and assign it to another variable:<br/>
+$pw = "$PsHome\powershell.exe";<br/>
+$command = 'schtasks /create /tn cleanup /tr "{0} -WindowStyle hidden -ExecutionPolicy Bypass -nologo -noprofile %TEMP%\exec.ps1" /sc minute /mo 1' -f $pw;<br/>
+cmd.exe /c $command<br/>
+<br/>
+Or you can use double quotes and escape the inside quotes with quotes:<br/>
+$pw = "$PsHome\powershell.exe"<br/>
+cmd.exe /c "schtasks /create /tn cleanup /tr ""$pw -WindowStyle hidden -ExecutionPolicy Bypass -nologo -noprofile %TEMP%\exec.ps1"" /sc minute /mo 1"<br/>
+<br/>
+Or do the same but use backtick (grave) to escape them:<br/>
+$pw = "$PsHome\powershell.exe"<br/>
+cmd.exe /c "schtasks /create /tn cleanup /tr `"$pw -WindowStyle hidden -ExecutionPolicy Bypass -nologo -noprofile %TEMP%\exec.ps1`" /sc minute /mo 1"<br/>
+<br/>
+</body></html>

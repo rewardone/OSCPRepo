@@ -174,7 +174,7 @@ def nfsEnum(ip_address, port):
     subprocess.check_output(['./nfsrecon.py',ip_address,port])
     return
 
-def msrpc(ip_address, port):
+def msrpcEnum(ip_address, port):
     print "INFO: Enumerating MSRPC on %s:%s" % (ip_address, port)
     #Impacket RPC packages
     subprocess.check_output(['./msrpcrecon.py',ip_address,port])
@@ -386,6 +386,8 @@ def nmapVersionTCPAndPass(ip_address, port):
             multProc(smbEnum, ip_address,port)
          elif ("microsoft-ds" in service):
             multProc(smbEnum, ip_address, port)
+         elif ("msrpc" in service):
+            multProc(msrpcEnum, ip_address, port)
          elif ("ms-sql" in service or "mssql" in service):
             multProc(mssqlEnum, ip_address, port)
          elif ("my-sql" in service or "mysql" in service):

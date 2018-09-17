@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Start-Process</title>
+</head><body>Start-Process [-FilePath] &lt;String&gt; [[-ArgumentList] &lt;String[]&gt;] [-Credential &lt;PSCredential&gt;] [-WorkingDirectory &lt;String&gt;] [-LoadUserProfile] [-NoNewWindow] [-PassThru] [-RedirectStandardError &lt;String&gt;] [-RedirectStandardInput &lt;String&gt;] [-RedirectStandardOutput &lt;String&gt;] [-WindowStyle &lt;ProcessWindowStyle&gt;] [-Wait] [-UseNewEnvironment] [&lt;CommonParameters&gt;]<br/>
+<br/>
+<br/>
+Start-Process [-FilePath] &lt;String&gt; [[-ArgumentList] &lt;String[]&gt;] [-WorkingDirectory &lt;String&gt;] [-PassThru] [-Verb &lt;String&gt;] [-WindowStyle &lt;ProcessWindowStyle&gt;] [-Wait] [&lt;CommonParameters&gt;]<br/>
+<br/>
+<br/>
+Start-Process -FilePath "sort.exe"<br/>
+Start-Process -FilePath "myfile.txt" -WorkingDirectory "C:\PS-Test" -Verb Print &#09;&#09;&#09;#prints the text file<br/>
+Start-Process -FilePath "notepad" -Wait -WindowStyle Maximized<br/>
+Start-Process -FilePath "powershell" -Verb runAs &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#start as admin</body></html>

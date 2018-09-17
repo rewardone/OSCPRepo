@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Unzip VBScript</title>
+</head><body>' Use it like this: cscript //B j_unzip.vbs zip_file_name_goes_here.zip<br/>
+' j_unzip.vbs<br/>
+'<br/>
+' UnZip a file script<br/>
+'<br/>
+' By Justin Godden 2010<br/>
+'<br/>
+' It's a mess, I know!!!<br/>
+'<br/>
+<br/>
+' Dim ArgObj, var1, var2<br/>
+Set ArgObj = WScript.Arguments<br/>
+<br/>
+If (Wscript.Arguments.Count &gt; 0) Then<br/>
+&nbsp;var1 = ArgObj(0)<br/>
+Else<br/>
+&nbsp;var1 = ""<br/>
+End if<br/>
+<br/>
+If var1 = "" then<br/>
+&nbsp;strFileZIP = "example.zip"<br/>
+Else<br/>
+&nbsp;strFileZIP = var1<br/>
+End if<br/>
+<br/>
+'The location of the zip file.<br/>
+REM Set WshShell = CreateObject("Wscript.Shell")<br/>
+REM CurDir = WshShell.ExpandEnvironmentStrings("%%cd%%")<br/>
+Dim sCurPath<br/>
+sCurPath = CreateObject("Scripting.FileSystemObject").GetAbsolutePathName(".")<br/>
+strZipFile = sCurPath &amp; "\" &amp; strFileZIP<br/>
+'The folder the contents should be extracted to.<br/>
+outFolder = sCurPath &amp; "\"<br/>
+<br/>
+&nbsp;WScript.Echo ( "Extracting file " &amp; strFileZIP)<br/>
+<br/>
+Set objShell = CreateObject( "Shell.Application" )<br/>
+Set objSource = objShell.NameSpace(strZipFile).Items()<br/>
+Set objTarget = objShell.NameSpace(outFolder)<br/>
+intOptions = 256<br/>
+objTarget.CopyHere objSource, intOptions<br/>
+<br/>
+&nbsp;WScript.Echo ( "Extracted." )<br/>
+<br/>
+' This bit is for testing purposes<br/>
+REM Dim MyVar<br/>
+REM MyVar = MsgBox ( strZipFile, 65, "MsgBox Example"<br/>
+<br/>
+</body></html>

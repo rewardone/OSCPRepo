@@ -5,7 +5,7 @@
   <key>expanded</key><false/>
   <key>nodeid</key><string>482c1757-5460-4055-8f0b-dd79590806cd</string>
   <key>modified_time</key><integer>1516295266</integer>
-  <key>expanded2</key><false/>
+  <key>expanded2</key><true/>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1516295266</integer>
   <key>info_sort_dir</key><integer>1</integer>

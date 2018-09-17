@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Self Elevating Scripts</title>
+</head><body>Benjamin Armstrong posted an <a href="http://blogs.msdn.com/b/virtual_pc_guy/archive/2010/09/23/a-self-elevating-powershell-script.aspx">excellent article about self-elevating PowerShell scripts.</a>&nbsp;There a few minor issue with his code; a modified version based on fixes suggested in the comment is below.<br/>
+Basically it gets the identity associated with the current process, checks whether it is an administrator, and if it isn't, creates a new PowerShell process with administrator privileges and terminates the old process.<br/>
+<br/>
+# Get the ID and security principal of the current user account<br/>
+$myWindowsID = [System.Security.Principal.WindowsIdentity]::GetCurrent();<br/>
+$myWindowsPrincipal = New-Object System.Security.Principal.WindowsPrincipal($myWindowsID);<br/>
+<br/>
+# Get the security principal for the administrator role<br/>
+$adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator;<br/>
+<br/>
+# Check to see if we are currently running as an administrator<br/>
+if ($myWindowsPrincipal.IsInRole($adminRole))<br/>
+{<br/>
+&nbsp; &nbsp; # We are running as an administrator, so change the title and background colour to indicate this<br/>
+&nbsp; &nbsp; $Host.UI.RawUI.WindowTitle = $myInvocation.MyCommand.Definition + "(Elevated)";<br/>
+&nbsp; &nbsp; $Host.UI.RawUI.BackgroundColor = "DarkBlue";<br/>
+&nbsp; &nbsp; Clear-Host;<br/>
+}<br/>
+else {<br/>
+&nbsp; &nbsp; # We are not running as an administrator, so relaunch as administrator<br/>
+<br/>
+&nbsp; &nbsp; # Create a new process object that starts PowerShell<br/>
+&nbsp; &nbsp; $newProcess = New-Object System.Diagnostics.ProcessStartInfo "PowerShell";<br/>
+<br/>
+&nbsp; &nbsp; # Specify the current script path and name as a parameter with added scope and support for scripts with spaces in it's path<br/>
+&nbsp; &nbsp; $newProcess.Arguments = "&amp; '" + $script:MyInvocation.MyCommand.Path + "'"<br/>
+<br/>
+&nbsp; &nbsp; # Indicate that the process should be elevated<br/>
+&nbsp; &nbsp; $newProcess.Verb = "runas";<br/>
+<br/>
+&nbsp; &nbsp; # Start the new process<br/>
+&nbsp; &nbsp; [System.Diagnostics.Process]::Start($newProcess);<br/>
+<br/>
+&nbsp; &nbsp; # Exit from the current, unelevated, process<br/>
+&nbsp; &nbsp; Exit;<br/>
+}<br/>
+<br/>
+# Run your code that needs to be elevated here...<br/>
+<br/>
+Write-Host -NoNewLine "Press any key to continue...";<br/>
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown");</body></html>

