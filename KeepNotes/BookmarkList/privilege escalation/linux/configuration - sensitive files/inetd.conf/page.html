@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>inetd.conf</title>
+</head><body>Using inetd To Run Interactive Shells:<br/>
+<br/>
+This attack is pretty easy, but is easy for an admin to spot also. The basic idea of the attack is to modify /etc/inetd.conf so that it will run an interactive shell, instead of a service it thinks it is. For example, lets say that one line of inetd.conf looks like this:<br/>
+<br/>
+identd ...stream... tcp ...nowait... nobody .../usr/libexec/identd ...identd -el<br/>
+<br/>
+We could change that line very easily so that instead of running a legitimate service it will run a shell instead, so you can change the line to look something like this:<br/>
+<br/>
+identd ...stream ...tcp... nowait ...root .../bin/bash -i<br/>
+<br/>
+Now the attacker can telnet to port 113 (identd's port) and execute commands with the privileges of root. If the admin is running some kind of file integrity checker, this will be spotted immediately. <br/>
+So one slight countermeasure for the attacker is to copy the inetd.conf file to another directory, make the changes they need to the copy, and then tell inetd to use the modified copy as its configuration file. Even now it is easy for the admin to notice that you have modified inetd, because they will see extra ports open, or if you have replaced an existing service they will realise that their service is not working as it should. So this is really not a clever backdoor by any means.<br/>
+<br/>
+************<br/>
+Countermeasures:<br/>
+1) Use the command grep -v "^#" /etc/inetd.conf to show any lines that are not commented out with a hash (#) in /etc/inetd.conf. Make sure you read the output, so you can spot if anyone has tried this method.<br/>
+2) If you do not need to run any services that are organised by inetd, then don't install it! I manage OpenSSH, and Apache on my boxes - without the use of inetd.<br/>
+************</body></html>

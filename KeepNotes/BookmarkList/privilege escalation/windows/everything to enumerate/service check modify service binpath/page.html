@@ -2,12 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Service Checks</title>
+<title>Service Check: Modify Service Binpath</title>
 </head><body>Service Controller: sc.exe sdshow &lt;service_name&gt;<br/>
-AccessChk (sysinternals): accesschk.exe -uvwc &lt;service_name&gt;<br/>
+AccessChk (sysinternals): accesschk.exe -wuvc &lt;service_name&gt;<br/>
 PowerSploit: <br/>
 &nbsp;&#09;Get-ModifiableService<br/>
 &nbsp;&#09;Test-ServiceDaclPermission (to check for specific permissions)<br/>
+&nbsp;&#09;Get-ServiceDetail<br/>
+&nbsp;&#09;Invoke-ServiceAbuse<br/>
 Microsoft Management Console (mmc.exe):<br/>
 &nbsp;&#09;Add/Remove Snap-In &gt; Security Templates<br/>
 </body></html>

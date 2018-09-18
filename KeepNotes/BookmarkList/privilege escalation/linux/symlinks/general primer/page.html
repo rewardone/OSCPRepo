@@ -7,4 +7,32 @@
 There exists the potential for SUID symlink privesc<br/>
 and much more<br/>
 <br/>
-</body></html>
+Symlinks:<br/>
+Symlinks or symbolic links are a very useful tool in Linux. They allow us to make a "shortcut" (in windows terms) to a file or folder. For example<br/>
+<br/>
+ln -s /etc/passwd /tmp/passwd_file<br/>
+<br/>
+This creates a link called /tmp/passwd_file to /etc/passwd, so now whenever /tmp/passwd_file is opened it will open /etc/passwd. Although symlinks can be infinately useful, they are quite easily exploitable. Lets say for example Joe attacker is feeling particularly sneaky, Joe knows root uses '.' in his path, and that all users can post technical problems to the admin into a directory /usr/problems/. The attack is below, and the full description will follow:<br/>
+<br/>
+1)&#09;$ ln -s /root/.rhosts /tmp/root-rhost<br/>
+2)&#09;$ stat /tmp/root-rhost<br/>
+3)&#09;...stat: cannot stat /tmp/root-rhost<br/>
+4)&#09;$ cat /usr/problems/ls<br/>
+5)&#09;...#!/bin/bash<br/>
+6)&#09;...if [ ! -e /tmp/root-rhost ] ; then<br/>
+7)&#09;......echo "+ +" &gt;&gt;/tmp/root-rhost<br/>
+8)&#09;...fi<br/>
+<br/>
+I will explain the above attack in detail:<br/>
+Lines 1, 2 &amp; 3: The attacker creates symbolic link from /tmp/root-rhost to /root/.rhosts, and uses stat to see if the file existed, the output on line three indicates that /root/.rhosts does not exist (the admin removed /root/.rhosts because he saw this file as a security threat - this is what Joe wants)<br/>
+Line 4 to 8: He then creates a bash script called ls (which will be run instead of /bin/ls, because '.' is in his path first, when he wants to list the contents of /usr/problems/). This program tests if /tmp/root-rhost exists, because it is a symbolic link pointing to /root/.rhosts (which does not exist) it will return that /root/.rhosts does not exist, so it will then echo "+ +" into /tmp/root-rhost, which will be forwarded into the file /root/.rhosts! This will mean that root will have a passwordless login over any login that supports and allows rhosts authentication (e.g. rlogin and ssh). The trap is now set, he just has to wait!<br/>
+<br/>
+Cron jobs with symlinks can also be used to an attackers advantage, for example:<br/>
+<br/>
+The 'sales' group in businesscorp.com have a folder to post their documents for the whole group to read and write to, unfortunately the users keep forgetting to add group write permissions to their documents, so the admin developed a script that will change the files in the sales folder to the group sales, and set group writeable permissions, this script is run periodically through a cron job, the script looks like the below.<br/>
+<br/>
+1)&#09;#!/bin/bash<br/>
+2)&#09;chgrp -R sales /usr/export/sales<br/>
+3)&#09;chmod -R g+w /usr/export/sales<br/>
+<br/>
+If someone sneaky in sales decided to make two symlinks to /etc/passwd and /etc/shadow, the cron job would follow the symlinks and set write permissions for the group sales on /etc/passwd and /etc/shadow. From here the attacker can change any password s/he wants.</body></html>

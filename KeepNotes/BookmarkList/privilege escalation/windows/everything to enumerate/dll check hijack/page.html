@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>DLL Checks</title>
+<title>DLL Check: Hijack</title>
 </head><body>These checks relate to DLL Hijacking<br/>
 Implicit Linking<br/>
-Dependency Walker<br/>
+Dependency Walker (depends.exe)<br/>
 Dumpbin<br/>
 &nbsp;&#09;dumpbin.exe /dependents &lt;executable_file&gt;<br/>
 <br/>
@@ -18,4 +18,16 @@ PowerSploit: <ul><li style="list-style-type: none">Find-PathDLLHijack</li>
 <li style="list-style-type: none">Find-ProcessDLLHijack</li>
 </ul>
 &nbsp;&#09;Write-HijackDLL<br/>
-<a href="https://github.com/adamkramer/dll_hijack_detect">DLL_Hijack_Detect</a>&nbsp;(adamkramer)</body></html>
+<br/>
+<br/>
+Others:<br/>
+<a href="https://github.com/adamkramer/dll_hijack_detect">DLL_Hijack_Detect</a>&nbsp;(adamkramer)<br/>
+<a href="https://github.com/Cybereason/siofra">Siofra</a><br/>
+HDMoore's DLL Hijack Audit Kit<br/>
+SecurityXPloded DLL Hijack Auditor<br/>
+Sxstrace.exe (builtin)<br/>
+&nbsp;&#09;sxstrace trace -logfile:tracefile.etl<br/>
+&nbsp;&#09;sxstrace parse -logfile:tracefile.etc -outfile:tracefile.txt<br/>
+Gflags + Windbg<br/>
+<br/>
+Use built-in icacls to enumerate permissions of directories</body></html>

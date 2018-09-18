@@ -6,6 +6,16 @@
 </head><body>findstr /si password *.txt | *.xml | *.ini<br/>
 findstr /si pass *.txt | *.xml | *.ini<br/>
 <br/>
+or<br/>
+<br/>
+dir /b /s unattend.xml<br/>
+dir /b /s web.config<br/>
+dir /b /s sysprep.inf<br/>
+dir /b /s sysprep.xml<br/>
+dir /b /s *pass*<br/>
+dir /b /s vnc.ini<br/>
+dir /b /s SiteList.xml<br/>
+<br/>
 Groups.xml &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Stored in <a href="https://technet.microsoft.com/en-us/library/cc816833(v=ws.10).aspx">SYSVOL</a>&nbsp;<br/>
 #PowerSploit module PowerSploit/Exfiltration/<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-GPPPassword.ps1">Get-GPPPassword.ps1</a>&nbsp;<br/>
 #MSF module <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/post/windows/gather/credentials/gpp.rb">gpp.rb</a>&nbsp; <br/>
@@ -38,21 +48,6 @@ c:\Windows\System32\Unattended.xml<br/>
 c:\Windows\System32\sysprep\Unattended.xml<br/>
 C:\unattend.xml<br/>
 <br/>
-# Windows autologin<br/>
-reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon"<br/>
-<br/>
-# VNC<br/>
-reg query "HKCU\Software\ORL\WinVNC3\Password"<br/>
-<br/>
-# SNMP Parameters<br/>
-reg query "HKLM\SYSTEM\Current\ControlSet\Services\SNMP"<br/>
-<br/>
-# Putty<br/>
-reg query "HKCU\Software\SimonTatham\PuTTY\Sessions"<br/>
-<br/>
-# Similarly the two commands below can be used to grep the registry for keywords, in this case "password".<br/>
-&nbsp;reg query HKLM /f password /t REG_SZ /s<br/>
-&nbsp;reg query HKCU /f password /t REG_SZ /s<br/>
 <br/>
 # The command below will search the file system for file names containing certain keywords. You can specify as many keywords as you wish.<br/>
 &nbsp;dir /s *pass* == *cred* == *vnc* == *.config*<br/>
@@ -62,4 +57,8 @@ reg query "HKCU\Software\SimonTatham\PuTTY\Sessions"<br/>
 <br/>
 # Additional<br/>
 &nbsp;reg query HKLM /s | findstr /i password &gt; temp.txt<br/>
-&nbsp;reg query HKCU /s | findstr /i password &gt; temp.txt</body></html>
+&nbsp;reg query HKCU /s | findstr /i password &gt; temp.txt<br/>
+<br/>
+#McAfee password encrypted in SiteList.xml<br/>
+%AllUsersProfile%Application Data\McAfee\Common Framework\SiteList.xml<br/>
+</body></html>

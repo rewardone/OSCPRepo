@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Service Check: Modify Service Executable</title>
 </head><body>Icalcs / cacls: icacls.exe &lt;directory_or_file&gt;<br/>
-AccessChk (sysinternals): accesschk.exe -wvu &lt;directory_or_file&gt;<br/>
+AccessChk (sysinternals): accesschk.exe -wuv &lt;directory_or_file&gt;<br/>
 AccessEnum (sysinternals)<br/>
 PowerShell: Get-ChildItem &lt;path_of_directory&gt; -Recurse | Get-Acl | select Path,Owner,AccessToString,Group | Format-List<br/>
 PowerSploit: Get-ModifiableServiceFile</body></html>
