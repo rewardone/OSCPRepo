@@ -20,4 +20,7 @@ Other useful options:<br/>
 <br/>
 <br/>
 Useful getting all js links: <br/>
-wget -nd -rH -A js --spider domain/page 2&gt;&amp;1 | grep '^--.*\.js' | awk '{print $3}'</body></html>
+wget -nd -rH -A js --spider domain/page 2&gt;&amp;1 | grep '^--.*\.js' | awk '{print $3}'<br/>
+<br/>
+Get every file from FTP server<br/>
+wget --mirror 'ftp://&lt;USER&gt;:&lt;PASS&gt;@host'&#09;&#09;#download every file from the FTP server</body></html>
