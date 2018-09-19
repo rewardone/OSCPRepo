@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Oracle</string>
   <key>nodeid</key><string>d25fab33-7a95-4fef-bb9d-5f50304f5f26</string>
   <key>modified_time</key><integer>1532547783</integer>

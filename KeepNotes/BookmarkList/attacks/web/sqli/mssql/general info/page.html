@@ -5,6 +5,13 @@
 <title>General Info</title>
 </head><body>Password Cracker &#09;<br/>
 MSSQL 2000 and 2005 Hashes are both SHA1-based. &nbsp;<a href="https://labs.portcullis.co.uk/application/phrasen-drescher/">phrasen|drescher</a>&nbsp;can crack these.<br/>
+also hashcat and john...<br/>
+<br/>
+<b>xp_cmdshell in SQL Server 2000</b>&nbsp;<br/>
+It's already there for you! :)<br/>
+xp_cmdshell is available in SQL 2000. You don't have to enabled it as in 2005.<br/>
+&nbsp;<br/>
+exec master..xp_cmdshell 'DIR C:\'<br/>
 <br/>
 <b>Enabling xp_cmdshell in SQL Server 2005</b><br/>
 By default xp_cmdshell and couple of other potentially dangerous stored procedures are disabled in SQL Server 2005. If you have admin access then you can enable these.<br/>

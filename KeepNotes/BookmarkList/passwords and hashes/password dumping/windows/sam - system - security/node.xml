@@ -5,7 +5,7 @@
   <key>title</key><string>SAM / SYSTEM / SECURITY</string>
   <key>nodeid</key><string>73193e3b-e935-4956-90c3-20ee666fe3d3</string>
   <key>modified_time</key><integer>1536607668</integer>
-  <key>expanded2</key><false/>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524021599</integer>
