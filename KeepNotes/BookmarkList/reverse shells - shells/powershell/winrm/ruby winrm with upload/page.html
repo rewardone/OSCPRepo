@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ruby WinRM With Upload</title>
+</head><body>require 'winrm-fs'<br/>
+<br/>
+# Author: Alamot<br/>
+# if any missing packages, just run: gem install &lt;missing package&gt;<br/>
+# To upload a file type: UPLOAD local_path remote_path<br/>
+# e.g.: PS&gt; UPLOAD myfile.txt C:\temp\myfile.txt<br/>
+<br/>
+conn = WinRM::Connection.new( <br/>
+&nbsp; endpoint: 'https://IP:PORT/wsman',<br/>
+&nbsp; transport: :ssl,<br/>
+&nbsp; user: 'username',<br/>
+&nbsp; password: 'password',<br/>
+&nbsp; :no_ssl_peer_verification =&gt; true<br/>
+)<br/>
+<br/>
+file_manager = WinRM::FS::FileManager.new(conn) <br/>
+<br/>
+<br/>
+class String<br/>
+&nbsp; def tokenize<br/>
+&nbsp; &nbsp; self.<br/>
+&nbsp; &nbsp; &nbsp; split(/\s(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/).<br/>
+&nbsp; &nbsp; &nbsp; select {|s| not s.empty? }.<br/>
+&nbsp; &nbsp; &nbsp; map {|s| s.gsub(/(^ +)|( +$)|(^["']+)|(["']+$)/,'')}<br/>
+&nbsp; end<br/>
+end<br/>
+<br/>
+<br/>
+command=""<br/>
+<br/>
+conn.shell(:powershell) do |shell|<br/>
+&nbsp; &nbsp; until command == "exit\n" do<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; output = shell.run("-join($id,'PS ',$(whoami),'@',$env:computername,' ',$((gi $pwd).Name),'&gt; ')")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; print(output.output.chomp)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; command = gets<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if command.start_with?('UPLOAD') then<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; upload_command = command.tokenize<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print("Uploading " + upload_command[1] + " to " + upload_command[2])<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; file_manager.upload(upload_command[1], upload_command[2]) do |bytes_copied, total_bytes, local_path, remote_path|<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; puts("#{bytes_copied} bytes of #{total_bytes} bytes copied")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; end<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; command = "echo `nOK`n"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; end<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; output = shell.run(command) do |stdout, stderr|<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; STDOUT.print(stdout)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; STDERR.print(stderr)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; end<br/>
+&nbsp; &nbsp; end &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; puts("Exiting with code #{output.exitcode}")<br/>
+end<br/>
+</body></html>

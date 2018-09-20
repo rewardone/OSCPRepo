@@ -426,6 +426,8 @@ def nmapVersionUDPAndPass(ip_address, port):
             multProc(dnsEnum, ip_address, port)
          elif ("snmp" in service):
             multProc(snmpEnum, ip_address, port)
+         elif ("tftp" in service):
+            multProc(tftpEnum, ip_address, port)
 
 #makedir function from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 #Compatible with Python >2.5, but there is a more advanced function for python 3.5
