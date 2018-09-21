@@ -3,14 +3,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Special Conf Bindings</title>
-</head><body>Prefix: Ctrl + C<br/>
-Prefix: Ctrl + A<br/>
-<br/>
+</head><body>Prefix: Ctrl + C &#09;New Pane<br/>
+Prefix: Ctrl + A &#09;<br/>
 Prefix + Ctrl + c: &nbsp;&#09;New session<br/>
 Prefix + Ctrl + f: &nbsp;&#09;Find session<br/>
-Prefix + |: &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;Split vertical<br/>
+Prefix + |: &nbsp; &nbsp; &nbsp; &nbsp; &#09;Split vertical<br/>
 Prefix + -: &nbsp; &nbsp; &nbsp; &nbsp; &#09;Split horizontal<br/>
-ALT + Arrow Keys: &nbsp;&#09;Navigation<br/>
+ALT + Arrow Keys: &nbsp;Navigation<br/>
 Prefix + hjkl: &nbsp; &nbsp; &nbsp;&#09;Navigation<br/>
 Prefix + HJKL: &nbsp; &nbsp; &#09;Resize<br/>
 Prefix + &lt;: &nbsp; &nbsp; &nbsp; &nbsp; &#09;Swap pane previous<br/>
@@ -30,4 +29,13 @@ Prefix + ENTER: &nbsp; &nbsp; &#09;Enter copy-mode<br/>
 &nbsp; &nbsp; L: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;Jump to end of line<br/>
 Prefix + b: &nbsp; &nbsp; &nbsp; &nbsp; &#09;List paste buffers<br/>
 Prefix + p: &nbsp; &nbsp; &nbsp; &nbsp; &#09;Paste from top paste buffer<br/>
-Prefix + P: &nbsp; &nbsp; &nbsp; &nbsp; &#09;Choose which buffer to paste from</body></html>
+Prefix + P: &nbsp; &nbsp; &nbsp; &nbsp; &#09;Choose which buffer to paste from<br/>
+<br/>
+Prefix + s: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Send pane to" window #<br/>
+Prefix + j: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Get pane from" window #<br/>
+<br/>
+Sessions<br/>
+tmux list-sessions &#09;List all current tmux sessions<br/>
+tmux kill-session -t #&#09;Kill a speicfic session<br/>
+tmux kill-server &#09;Kill all sessions<br/>
+</body></html>

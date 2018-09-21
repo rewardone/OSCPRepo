@@ -3,58 +3,63 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Special Conf</title>
-</head><body># # Obtained from github.com/gpakosz/.tmux<br/>
-# # (‑●‑●)&gt; dual licensed under the WTFPL v2 license and the MIT license without any warranty<br/>
-# # The original config applies overrides from ~.tmux.conf.local, but I've included it all<br/>
-# # here in one ~.tmux.conf file. The local file sets environment variables and then checks<br/>
-# # for any changes, so everything should still work.<br/>
-# <br/>
+</head><body>cut -c3- ~/.tmux_scripts# Obtained from github.com/gpakosz/.tmux<br/>
+# (‑●‑●)&gt; dual licensed under the WTFPL v2 license and the MIT license without any warranty<br/>
+# The original config applies overrides from ~.tmux.conf.local, but I've included it all<br/>
+# here in one ~.tmux.conf file. The local file sets environment variables and then checks<br/>
+# for any changes, so everything should still work.<br/>
+#<br/>
 <br/>
 # -- general -------------------------------------------------------------------<br/>
-# # set &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# tmux?<br/>
-# # setw &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # set window<br/>
+# set &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# set is the alias of set-option<br/>
+# setw &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # set window set-window-option (alias setw) is used to configure window options<br/>
 <br/>
 set -g default-terminal "screen-256color" # colors!<br/>
-set-option -ga terminal-overrides ",xterm-256color:Tc" &nbsp; &nbsp;#force override True Color<br/>
+# set -ga terminal-overrides ",xterm-256color:Tc" &nbsp; &nbsp;#force override True Color, already set below<br/>
 setw -g xterm-keys on &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # enable shift+arrows and ctrl+arrows<br/>
 set -s escape-time 10 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # faster command sequences, default 20? increase for remote connections<br/>
 set -sg repeat-time 600 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # increase repeat timeout<br/>
 set -s focus-events on &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# request focus evens from terminal if supported<br/>
 <br/>
 set -g prefix2 C-a &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# GNU-Screen compatible prefix<br/>
-bind C-a send-prefix -2<br/>
+bind C-a send-prefix -2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Second prefix key Ctrl + a<br/>
 <br/>
-set -q -g status-utf8 on &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# expect UTF-8 (tmux &lt; 2.2)<br/>
+# #set -q -g status-utf8 on &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# expect UTF-8 (tmux &lt; 2.2)<br/>
 setw -q -g utf8 on<br/>
 <br/>
 set -g history-limit 10000 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# boost history<br/>
 <br/>
-# # edit configuration. prefix + e to open ~/.tmux.conf.local <br/>
-bind e new-window -n '~/.tmux.conf.local' "sh -c '\${EDITOR:-vim} ~/.tmux.conf.local &amp;&amp; tmux source ~/.tmux.conf &amp;&amp; tmux display \"~/.tmux.conf sourced\"'"<br/>
+set-window-option -g mode-keys vi&#09; &#09; &nbsp; &nbsp; &nbsp;#emulate vi in "copy" mode<br/>
 <br/>
-# # reload configuration. prefix + r to reload ~/.tmux.conf<br/>
+# edit configuration. prefix + e to open ~/.tmux.conf<br/>
+bind e new-window -n '~/.tmux.conf' "sh -c '\${EDITOR:-vim} ~/.tmux.conf.local &amp;&amp; tmux source ~/.tmux.conf &amp;&amp; tmux display \"~/.tmux.conf sourced\"'"<br/>
+<br/>
+# edit script configuration. prefix + E to open ~/.tmux_scripts<br/>
+bind E new-window -n '~/.tmux_scripts' "sh -c '\${EDITOR:-vim} ~/.tmux_scripts &amp;&amp; tmux source ~/.tmux.conf &amp;&amp; tmux display \"~/.tmux.conf sourced\"'"<br/>
+<br/>
+# reload configuration. prefix + r to reload ~/.tmux.conf<br/>
 bind r source-file ~/.tmux.conf \; display '~/.tmux.conf sourced'<br/>
 <br/>
 # -- windows &amp; pane creation ---------------------------------------------------<br/>
 <br/>
-# # new window retains current path, possible values are:<br/>
-# # &nbsp; - true<br/>
-# # &nbsp; - false (default)<br/>
+# new window retains current path, possible values are:<br/>
+# &nbsp; - true<br/>
+# &nbsp; - false (default)<br/>
 tmux_conf_new_window_retain_current_path=false<br/>
 <br/>
-# # new pane retains current path, possible values are:<br/>
-# # &nbsp; - true (default)<br/>
-# # &nbsp; - false<br/>
+# new pane retains current path, possible values are:<br/>
+# &nbsp; - true (default)<br/>
+# &nbsp; - false<br/>
 tmux_conf_new_pane_retain_current_path=true<br/>
 <br/>
-# # new pane tries to reconnect ssh sessions (experimental), possible values are:<br/>
-# # &nbsp; - true<br/>
-# # &nbsp; - false (default)<br/>
+# new pane tries to reconnect ssh sessions (experimental), possible values are:<br/>
+# &nbsp; - true<br/>
+# &nbsp; - false (default)<br/>
 tmux_conf_new_pane_reconnect_ssh=false<br/>
 <br/>
-# # prompt for session name when creating a new session, possible values are:<br/>
-# # &nbsp; - true<br/>
-# # &nbsp; - false (default)<br/>
+# prompt for session name when creating a new session, possible values are:<br/>
+# &nbsp; - true<br/>
+# &nbsp; - false (default)<br/>
 tmux_conf_new_session_prompt=false<br/>
 <br/>
 # -- display -------------------------------------------------------------------<br/>
@@ -72,40 +77,40 @@ set -g display-time 1000 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 <br/>
 set -g status-interval 10 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # redraw status line every 10 seconds, default 15<br/>
 <br/>
-# # clear both screen and history<br/>
-# # bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history<br/>
+# clear both screen and history<br/>
+# bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history<br/>
 <br/>
-# # activity<br/>
+# activity<br/>
 set -g monitor-activity on &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Monitor for activity. Windows with activity are highlighted in the status line<br/>
 set -g visual-activity off &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# On: display message instead of bell. Both: message and bell<br/>
 <br/>
 <br/>
 # -- navigation ----------------------------------------------------------------<br/>
 <br/>
-# # create session. Note this is &lt;prefix&gt; + ctrl + c<br/>
+# create session. Note this is &lt;prefix&gt; + ctrl + c<br/>
 bind C-c new-session<br/>
 <br/>
-# # find session. Note this is &lt;prefix&gt; + ctrl + f<br/>
+# find session. Note this is &lt;prefix&gt; + ctrl + f<br/>
 bind C-f command-prompt -p find-session 'switch-client -t %%'<br/>
 <br/>
-# # split current window vertically with &lt;prefix&gt; + |<br/>
-bind | split-window -v<br/>
-# # split current window horizontally with &lt;prefix&gt; + -<br/>
-bind - split-window -h<br/>
+# split current window vertically with &lt;prefix&gt; + |<br/>
+bind | split-window -h<br/>
+# split current window horizontally with &lt;prefix&gt; + -<br/>
+bind - split-window -v<br/>
 <br/>
-# # pane navigation using VIM keys (hjkl) (REPEAT) bind -r vs bind -n<br/>
+# pane navigation using VIM keys (hjkl) (REPEAT) bind -r vs bind -n<br/>
 bind -r h select-pane -L &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# move left<br/>
 bind -r j select-pane -D &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# move down<br/>
 bind -r k select-pane -U &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# move up<br/>
 bind -r l select-pane -R &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# move right<br/>
 <br/>
-# # pane navigation using META (alt) + arrow keys (NO REPEAT) bind -n vs bind -r<br/>
+# pane navigation using META (alt) + arrow keys (NO REPEAT) bind -n vs bind -r<br/>
 bind -n M-Left select-pane -L &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # move left<br/>
 bind -n M-Down select-pane -D &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # move down<br/>
 bind -n M-Up select-pane -U &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # move up<br/>
 bind -n M-Right select-pane -R &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# move right<br/>
 <br/>
-# # pane resizing using VIM keys (HJKL)<br/>
+# pane resizing using VIM keys (HJKL)<br/>
 bind -r H resize-pane -L 2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# resize pane left<br/>
 bind -r J resize-pane -D 2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# resize pane down<br/>
 bind -r K resize-pane -U 2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# resize pane up<br/>
@@ -114,71 +119,75 @@ bind -r L resize-pane -R 2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbs
 bind &gt; swap-pane -D &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # swap current pane with the next one<br/>
 bind &lt; swap-pane -U &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # swap current pane with the previous one<br/>
 <br/>
-# # maximize current pane to a new window with &lt;prefix&gt; + +<br/>
-bind + run 'cut -c3- ~/.tmux.conf | sh -s _maximize_pane "#{session_name}" #D'<br/>
+# maximize current pane to a new window with &lt;prefix&gt; + +<br/>
+bind + run 'cut -c3- ~/.tmux_scripts | sh -s _maximize_pane "#{session_name}" #D'<br/>
 <br/>
-# # window navigation<br/>
-# # unbind n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# unbind default &lt;prefix&gt; + n (next pane)<br/>
-# # unbind p &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# unbind default &lt;prefix&gt; + p (previous pane)<br/>
+# window navigation<br/>
+# unbind n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# unbind default &lt;prefix&gt; + n (next pane)<br/>
+# unbind p &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# unbind default &lt;prefix&gt; + p (previous pane)<br/>
 bind -r C-h previous-window &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # select previous window &lt;prefix&gt; + ctrl + h<br/>
 bind -r C-l next-window &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # select next window &lt;prefix&gt; + ctrl + l<br/>
 bind Tab last-window &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# move to last active window<br/>
 <br/>
-# # toggle mouse mode with &lt;prefix&gt; + m<br/>
-bind m run "cut -c3- ~/.tmux.conf | sh -s _toggle_mouse"<br/>
+#join windows<br/>
+bind-key j command-prompt -p "join pane from:" " join-pane -s :'%%'"<br/>
+bind-key s command-prompt -p "send pane to:" " join-pane -t :'%%'"<br/>
+<br/>
+# toggle mouse mode with &lt;prefix&gt; + m<br/>
+bind m run "cut -c3- ~/.tmux_scripts | sh -s _toggle_mouse"<br/>
 <br/>
 # -- urlview -------------------------------------------------------------------<br/>
 <br/>
-# # bind U run "cut -c3- ~/.tmux.conf | sh -s _urlview #{pane_id}"<br/>
+# bind U run "cut -c3- ~/.tmux_scripts | sh -s _urlview #{pane_id}"<br/>
 <br/>
 # -- facebook pathpicker -------------------------------------------------------<br/>
 <br/>
-# # bind F run "cut -c3- ~/.tmux.conf | sh -s _fpp #{pane_id}"<br/>
+# bind F run "cut -c3- ~/.tmux_scripts | sh -s _fpp #{pane_id}"<br/>
 <br/>
 # -- list choice ---------------------------------------------------------------<br/>
 <br/>
-# # vi-choice is gone in tmux &gt;= 2.4<br/>
+# vi-choice is gone in tmux &gt;= 2.4<br/>
 <br/>
 # -- edit mode -----------------------------------------------------------------<br/>
 <br/>
-# # vi-edit is gone in tmux &gt;= 2.4<br/>
+# vi-edit is gone in tmux &gt;= 2.4<br/>
 <br/>
 # -- copy mode (vi) ------------------------------------------------------------<br/>
 <br/>
 bind Enter copy-mode &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# enter copy mode with &lt;prefix&gt; + enter ([ by default)<br/>
 <br/>
-# # v: begin selection / visual mode<br/>
+# v: begin selection / visual mode<br/>
 run -b 'tmux bind -t vi-copy v begin-selection 2&gt; /dev/null || true'<br/>
 run -b 'tmux bind -T copy-mode-vi v send -X begin-selection 2&gt; /dev/null || true'<br/>
 <br/>
-# # ctrl + v: toggle between blockwise visual mode and visual mode<br/>
+# ctrl + v: toggle between blockwise visual mode and visual mode<br/>
 run -b 'tmux bind -t vi-copy C-v rectangle-toggle 2&gt; /dev/null || true'<br/>
 run -b 'tmux bind -T copy-mode-vi C-v send -X rectangle-toggle 2&gt; /dev/null || true'<br/>
 <br/>
-# # y copies selection to the top paste-buffer<br/>
+# y copies selection to the top paste-buffer<br/>
 run -b 'tmux bind -t vi-copy y copy-selection 2&gt; /dev/null || true'<br/>
 run -b 'tmux bind -T copy-mode-vi y send -X copy-selection-and-cancel 2&gt; /dev/null || true'<br/>
 <br/>
-# # ESC: cancels current operation<br/>
+# ESC: cancels current operation<br/>
 run -b 'tmux bind -t vi-copy Escape cancel 2&gt; /dev/null || true'<br/>
 run -b 'tmux bind -T copy-mode-vi Escape send -X cancel 2&gt; /dev/null || true'<br/>
 <br/>
-# # H: jump to start of line<br/>
+# H: jump to start of line<br/>
 run -b 'tmux bind -t vi-copy H start-of-line 2&gt; /dev/null || true'<br/>
 run -b 'tmux bind -T copy-mode-vi H send -X start-of-line 2&gt; /dev/null || true'<br/>
 <br/>
-# # L: jump to end of the line<br/>
+# L: jump to end of the line<br/>
 run -b 'tmux bind -t vi-copy L end-of-line 2&gt; /dev/null || true'<br/>
 run -b 'tmux bind -T copy-mode-vi L send -X end-of-line 2&gt; /dev/null || true'<br/>
 <br/>
-# # copy to Mac OSX clipboard<br/>
-# # if -b 'command -v reattach-to-user-namespace &gt; /dev/null 2&gt;&amp;1' 'bind y run -b "tmux save-buffer - | reattach-to-user-namespace pbcopy"'<br/>
-# # copy to X11 clipboard<br/>
-# # if -b 'command -v xsel &gt; /dev/null 2&gt;&amp;1' 'bind y run -b "tmux save-buffer - | xsel -i -b"'<br/>
-# # if -b '! command -v xsel &gt; /dev/null 2&gt;&amp;1 &amp;&amp; command -v xclip &gt; /dev/null 2&gt;&amp;1' 'bind y run -b "tmux save-buffer - | xclip -i -selection clipboard &gt;/dev/null 2&gt;&amp;1"'<br/>
-# # copy to Windows clipboard<br/>
-# # if -b 'command -v clip.exe &gt; /dev/null 2&gt;&amp;1' 'bind y run -b "tmux save-buffer - | clip.exe"'<br/>
-# # if -b '[ -c /dev/clipboard ]' 'bind y run -b "tmux save-buffer - &gt; /dev/clipboard"'<br/>
+# copy to Mac OSX clipboard<br/>
+# if -b 'command -v reattach-to-user-namespace &gt; /dev/null 2&gt;&amp;1' 'bind y run -b "tmux save-buffer - | reattach-to-user-namespace pbcopy"'<br/>
+# copy to X11 clipboard<br/>
+# if -b 'command -v xsel &gt; /dev/null 2&gt;&amp;1' 'bind y run -b "tmux save-buffer - | xsel -i -b"'<br/>
+# if -b '! command -v xsel &gt; /dev/null 2&gt;&amp;1 &amp;&amp; command -v xclip &gt; /dev/null 2&gt;&amp;1' 'bind y run -b "tmux save-buffer - | xclip -i -selection clipboard &gt;/dev/null 2&gt;&amp;1"'<br/>
+# copy to Windows clipboard<br/>
+# if -b 'command -v clip.exe &gt; /dev/null 2&gt;&amp;1' 'bind y run -b "tmux save-buffer - | clip.exe"'<br/>
+# if -b '[ -c /dev/clipboard ]' 'bind y run -b "tmux save-buffer - &gt; /dev/clipboard"'<br/>
 <br/>
 # -- buffers -------------------------------------------------------------------<br/>
 <br/>
@@ -189,50 +198,51 @@ bind P choose-buffer &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nb
 # -- clipboard -----------------------------------------------------------------<br/>
 <br/>
 # #in copy mode, copying selection also copies to the OS clipboard<br/>
-# # &nbsp;- true<br/>
-# # &nbsp;- false (default)<br/>
+# &nbsp;- true<br/>
+# &nbsp;- false (default)<br/>
 # #on macOS, this requires installing reattach-to-user-namespace, see README.md<br/>
 # #on Linux, this requires xsel or xclip<br/>
 tmux_conf_copy_to_os_clipboard=true<br/>
 <br/>
 # -- user defined overrides ----------------------------------------------------<br/>
 <br/>
-# # Override any of these options with ~/.tmux.conf.local (if it exists)<br/>
+# Override any of these options with ~/.tmux.conf.local (if it exists)<br/>
 if '[ -f ~/.tmux.conf.local ]' 'source ~/.tmux.conf.local'<br/>
 <br/>
 # -- display -------------------------------------------------------------------<br/>
-# # Powerline stuff here if desired<br/>
+# Powerline stuff here if desired<br/>
 <br/>
 # #RGB 24-bit colour support (tmux &gt;= 2.2), possible values are:<br/>
-# # - true<br/>
-# # - false (default)<br/>
+# - true<br/>
+# - false (default)<br/>
 tmux_conf_theme_24b_colour=true<br/>
 <br/>
 # #window style<br/>
 tmux_conf_theme_window_fg='default'<br/>
 tmux_conf_theme_window_bg='default'<br/>
 <br/>
-# #highlight focused pane (tmux &gt;= 2.1), possible values are:<br/>
-# # &nbsp;- true<br/>
-# # &nbsp;- false (default)<br/>
-tmux_conf_theme_highlight_focused_pane=true<br/>
+# #highlight focused pane (tmux &gt;= 2.1), possible values are: does not work with terminal Opacity<br/>
+# &nbsp;- true<br/>
+# &nbsp;- false (default)<br/>
+tmux_conf_theme_highlight_focused_pane=false<br/>
 <br/>
 # #focused pane colours:<br/>
-tmux_conf_theme_focused_pane_fg='default'<br/>
-tmux_conf_theme_focused_pane_bg='#0087d7' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # light blue<br/>
+#tmux_conf_theme_focused_pane_fg='default'<br/>
+#tmux_conf_theme_focused_pane_bg='#0087d7' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # light blue<br/>
 <br/>
 # #pane border style, possible values are:<br/>
-# # &nbsp;- thin (default)<br/>
-# # &nbsp;- fat<br/>
+# &nbsp;- thin (default)<br/>
+# &nbsp;- fat<br/>
 tmux_conf_theme_pane_border_style=thin<br/>
 <br/>
 # #pane borders colours:<br/>
 tmux_conf_theme_pane_border='#444444' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # gray<br/>
-tmux_conf_theme_pane_active_border='#00afff' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# light blue<br/>
+#tmux_conf_theme_pane_active_border='#00afff' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# light blue<br/>
+tmux_conf_theme_pane_active_border='#006dff' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# darker blue<br/>
 <br/>
 # #pane indicator colours<br/>
-tmux_conf_theme_pane_indicator='#00afff' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# light blue<br/>
-tmux_conf_theme_pane_active_indicator='#00afff' &nbsp; &nbsp; &nbsp; &nbsp; # light blue<br/>
+#tmux_conf_theme_pane_indicator='#00a025' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# light blue 00afff<br/>
+#tmux_conf_theme_pane_active_indicator='#00a025' &nbsp; &nbsp; &nbsp; &nbsp; # light blue 00afff<br/>
 <br/>
 # #status line style<br/>
 tmux_conf_theme_message_fg='#000000' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# black<br/>
@@ -245,54 +255,59 @@ tmux_conf_theme_message_command_bg='#000000' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
 tmux_conf_theme_message_command_attr='bold'<br/>
 <br/>
 # #window modes style<br/>
-tmux_conf_theme_mode_fg='#000000' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # black<br/>
-tmux_conf_theme_mode_bg='#ffff00' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # yellow<br/>
-tmux_conf_theme_mode_attr='bold'<br/>
+#tmux_conf_theme_mode_fg='#000000' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # black<br/>
+#tmux_conf_theme_mode_bg='#ffff00' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # yellow<br/>
+#tmux_conf_theme_mode_attr='bold'<br/>
 <br/>
 # #status line style<br/>
 tmux_conf_theme_status_fg='#8a8a8a' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # light gray<br/>
 tmux_conf_theme_status_bg='#080808' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # dark gray<br/>
 tmux_conf_theme_status_attr='none'<br/>
 <br/>
-# #terminal title<br/>
-# # &nbsp;- built-in variables are:<br/>
-# # &nbsp; &nbsp;- #{circled_window_index}<br/>
-# # &nbsp; &nbsp;- #{circled_session_name}<br/>
-# # &nbsp; &nbsp;- #{hostname}<br/>
-# # &nbsp; &nbsp;- #{hostname_ssh}<br/>
-# # &nbsp; &nbsp;- #{username}<br/>
-# # &nbsp; &nbsp;- #{username_ssh}<br/>
-tmux_conf_theme_terminal_title='#h ❐ #S ● #I #W'<br/>
+# #terminal title (very top of terminal window)<br/>
+# &nbsp;- built-in variables are:<br/>
+# &nbsp; &nbsp;- #{circled_window_index} &nbsp; &nbsp; &nbsp;#<br/>
+# &nbsp; &nbsp;- #{circled_session_name} &nbsp; &nbsp; &nbsp;#<br/>
+# &nbsp; &nbsp;- #{hostname} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;#<br/>
+# &nbsp; &nbsp;- #{hostname_ssh} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;#<br/>
+# &nbsp; &nbsp;- #{username} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;#<br/>
+# &nbsp; &nbsp;- #{username_ssh} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;#<br/>
+#tmux_conf_theme_terminal_title='#h ❐ #S ● #I #W'<br/>
+tmux_conf_theme_terminal_title='#{username}@#{hostname}'<br/>
 <br/>
-# #window status style<br/>
-# # &nbsp;- built-in variables are:<br/>
-# # &nbsp; &nbsp;- #{circled_window_index}<br/>
-# # &nbsp; &nbsp;- #{circled_session_name}<br/>
-# # &nbsp; &nbsp;- #{hostname}<br/>
-# # &nbsp; &nbsp;- #{hostname_ssh}<br/>
-# # &nbsp; &nbsp;- #{username}<br/>
-# # &nbsp; &nbsp;- #{username_ssh}<br/>
-tmux_conf_theme_window_status_fg='#8a8a8a' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# light gray<br/>
+# #window status style Pane status (when not selected or not last viewed/active)<br/>
+# &nbsp;- built-in variables are:<br/>
+# &nbsp; &nbsp;- #{circled_window_index}<br/>
+# &nbsp; &nbsp;- #{circled_session_name}<br/>
+# &nbsp; &nbsp;- #{hostname}<br/>
+# &nbsp; &nbsp;- #{hostname_ssh}<br/>
+# &nbsp; &nbsp;- #{username}<br/>
+# &nbsp; &nbsp;- #{username_ssh}<br/>
+#tmux_conf_theme_window_status_fg='#8a8a8a' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# light gray<br/>
+#tmux_conf_theme_window_status_bg='#080808' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# dark gray<br/>
+tmux_conf_theme_window_status_fg='#0091ff' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# light gray<br/>
 tmux_conf_theme_window_status_bg='#080808' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# dark gray<br/>
-tmux_conf_theme_window_status_attr='none'<br/>
-tmux_conf_theme_window_status_format='#I #W'<br/>
+#tmux_conf_theme_window_status_attr='none'<br/>
+#tmux_conf_theme_window_status_format='#I #W'<br/>
 # #tmux_conf_theme_window_status_format='#{circled_window_index} #W'<br/>
-# #tmux_conf_theme_window_status_format='#I #W#{?window_bell_flag,🔔,}#{?window_zoomed_flag,🔍,}'<br/>
+tmux_conf_theme_window_status_format='#I #W#{?window_bell_flag,🔔,}#{?window_zoomed_flag,🔍,}'<br/>
 <br/>
-# #window current status style<br/>
-# # &nbsp;- built-in variables are:<br/>
-# # &nbsp; &nbsp;- #{circled_window_index}<br/>
-# # &nbsp; &nbsp;- #{circled_session_name}<br/>
-# # &nbsp; &nbsp;- #{hostname}<br/>
-# # &nbsp; &nbsp;- #{hostname_ssh}<br/>
-# # &nbsp; &nbsp;- #{username}<br/>
-# # &nbsp; &nbsp;- #{username_ssh}<br/>
+# #window current status style (current pane)<br/>
+# &nbsp;- built-in variables are:<br/>
+# &nbsp; &nbsp;- #{circled_window_index}<br/>
+# &nbsp; &nbsp;- #{circled_session_name}<br/>
+# &nbsp; &nbsp;- #{hostname}<br/>
+# &nbsp; &nbsp;- #{hostname_ssh}<br/>
+# &nbsp; &nbsp;- #{username}<br/>
+# &nbsp; &nbsp;- #{username_ssh}<br/>
+#tmux_conf_theme_window_status_current_fg='#000000' &nbsp; &nbsp; &nbsp;# black<br/>
+#tmux_conf_theme_window_status_current_bg='#00afff' &nbsp; &nbsp; &nbsp;# light blue<br/>
 tmux_conf_theme_window_status_current_fg='#000000' &nbsp; &nbsp; &nbsp;# black<br/>
-tmux_conf_theme_window_status_current_bg='#00afff' &nbsp; &nbsp; &nbsp;# light blue<br/>
-tmux_conf_theme_window_status_current_attr='bold'<br/>
-tmux_conf_theme_window_status_current_format='#I #W'<br/>
+tmux_conf_theme_window_status_current_bg='#0091ff' &nbsp; &nbsp; &nbsp;# darker blue<br/>
+#tmux_conf_theme_window_status_current_attr='bold'<br/>
+#tmux_conf_theme_window_status_current_format='#I #W'<br/>
 # #tmux_conf_theme_window_status_current_format='#{circled_window_index} #W'<br/>
-# #tmux_conf_theme_window_status_current_format='#I #W#{?window_zoomed_flag,🔍,}'<br/>
+tmux_conf_theme_window_status_current_format='#I #W#{?window_zoomed_flag,🔍,}'<br/>
 <br/>
 # #window activity status style<br/>
 tmux_conf_theme_window_status_activity_fg='default'<br/>
@@ -304,75 +319,84 @@ tmux_conf_theme_window_status_bell_fg='#ffff00' &nbsp; &nbsp; &nbsp; &nbsp; # ye
 tmux_conf_theme_window_status_bell_bg='default'<br/>
 tmux_conf_theme_window_status_bell_attr='blink,bold'<br/>
 <br/>
-# #window last status style<br/>
-tmux_conf_theme_window_status_last_fg='#00afff' &nbsp; &nbsp; &nbsp; &nbsp; # light blue<br/>
+# #window last status style (last pane you were on)<br/>
+tmux_conf_theme_window_status_last_fg='#0091ff' &nbsp; &nbsp; &nbsp; &nbsp; # darker blue<br/>
 tmux_conf_theme_window_status_last_bg='default'<br/>
 tmux_conf_theme_window_status_last_attr='none'<br/>
 <br/>
 # #status left/right sections separators<br/>
-tmux_conf_theme_left_separator_main=''<br/>
-tmux_conf_theme_left_separator_sub='|'<br/>
-tmux_conf_theme_right_separator_main=''<br/>
-tmux_conf_theme_right_separator_sub='|'<br/>
+#tmux_conf_theme_left_separator_main=''<br/>
+#tmux_conf_theme_left_separator_sub='|'<br/>
+#tmux_conf_theme_right_separator_main=''<br/>
+#tmux_conf_theme_right_separator_sub='|'<br/>
 # #tmux_conf_theme_left_separator_main='' &nbsp;# /!\ you don't need to install Powerline<br/>
 # #tmux_conf_theme_left_separator_sub='' &nbsp; # &nbsp; you only need fonts patched with<br/>
 # #tmux_conf_theme_right_separator_main='' # &nbsp; Powerline symbols or the standalone<br/>
 # #tmux_conf_theme_right_separator_sub='' &nbsp;# &nbsp; PowerlineSymbols.otf font<br/>
 <br/>
 # #status left/right content:<br/>
-# # &nbsp;- separate main sections with '|'<br/>
-# # &nbsp;- separate subsections with ','<br/>
-# # &nbsp;- built-in variables are:<br/>
-# # &nbsp; &nbsp;- #{battery_bar}<br/>
-# # &nbsp; &nbsp;- #{battery_hbar}<br/>
-# # &nbsp; &nbsp;- #{battery_percentage}<br/>
-# # &nbsp; &nbsp;- #{battery_status}<br/>
-# # &nbsp; &nbsp;- #{battery_vbar}<br/>
-# # &nbsp; &nbsp;- #{circled_session_name}<br/>
-# # &nbsp; &nbsp;- #{hostname_ssh}<br/>
-# # &nbsp; &nbsp;- #{hostname}<br/>
-# # &nbsp; &nbsp;- #{loadavg}<br/>
-# # &nbsp; &nbsp;- #{pairing}<br/>
-# # &nbsp; &nbsp;- #{prefix}<br/>
-# # &nbsp; &nbsp;- #{root}<br/>
-# # &nbsp; &nbsp;- #{synchronized}<br/>
-# # &nbsp; &nbsp;- #{uptime_d}<br/>
-# # &nbsp; &nbsp;- #{uptime_h}<br/>
-# # &nbsp; &nbsp;- #{uptime_m}<br/>
-# # &nbsp; &nbsp;- #{uptime_s}<br/>
-# # &nbsp; &nbsp;- #{username}<br/>
-# # &nbsp; &nbsp;- #{username_ssh}<br/>
-tmux_conf_theme_status_left=' ❐ #S | ↑#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} '<br/>
-tmux_conf_theme_status_right='#{prefix}#{pairing}#{synchronized} #{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} '<br/>
+# &nbsp;- separate main sections with '|'<br/>
+# &nbsp;- separate subsections with ','<br/>
+# &nbsp;- built-in variables are:<br/>
+# &nbsp; &nbsp;- #{battery_bar}<br/>
+# &nbsp; &nbsp;- #{battery_hbar}<br/>
+# &nbsp; &nbsp;- #{battery_percentage}<br/>
+# &nbsp; &nbsp;- #{battery_status}<br/>
+# &nbsp; &nbsp;- #{battery_vbar}<br/>
+# &nbsp; &nbsp;- #{circled_session_name}<br/>
+# &nbsp; &nbsp;- #{hostname_ssh}<br/>
+# &nbsp; &nbsp;- #{hostname}<br/>
+# &nbsp; &nbsp;- #{loadavg}<br/>
+# &nbsp; &nbsp;- #{pairing}<br/>
+# &nbsp; &nbsp;- #{prefix}<br/>
+# &nbsp; &nbsp;- #{root}<br/>
+# &nbsp; &nbsp;- #{synchronized}<br/>
+# &nbsp; &nbsp;- #{uptime_d}<br/>
+# &nbsp; &nbsp;- #{uptime_h}<br/>
+# &nbsp; &nbsp;- #{uptime_m}<br/>
+# &nbsp; &nbsp;- #{uptime_s}<br/>
+# &nbsp; &nbsp;- #{username}<br/>
+# &nbsp; &nbsp;- #{username_ssh}<br/>
+#theme status left is bottom left most status bar (where pane numbers go)<br/>
+#tmux_conf_theme_status_left=' ❐ #S | ↑#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} '<br/>
+tmux_conf_theme_status_left=' ❐ #S | #{loadavg} '<br/>
+#theme status right is bottom right most stauts bar<br/>
+#tmux_conf_theme_status_right='#{prefix}#{?synchronized, #{synchronized},}#{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} '<br/>
+tmux_conf_theme_status_right='#{prefix}, %R , %d %b | #{username}#{root} | #{hostname} '<br/>
 # #tmux_conf_theme_status_left='#[fg=green](#S) #(whoami)'<br/>
 # #tmux_conf_theme_status_right='#[fg=yellow]#(cut -d " " -f 1-3 /proc/loadavg)#[default] #[fg=white]%H:%M#[default]'<br/>
 <br/>
 # #status left style<br/>
-tmux_conf_theme_status_left_fg='#000000,#e4e4e4,#e4e4e4' &nbsp;# black, white , white<br/>
-tmux_conf_theme_status_left_bg='#ffff00,#ff00af,#00afff' &nbsp;# yellow, pink, white blue<br/>
-tmux_conf_theme_status_left_attr='bold,none,none'<br/>
+#tmux_conf_theme_status_left_fg='#000000,#e4e4e4,#e4e4e4' &nbsp;# black, white , white &nbsp; &nbsp; &nbsp;FG is text color<br/>
+tmux_conf_theme_status_left_fg='#000000,#000000,#000000' &nbsp;# black, black , black &nbsp; &nbsp; &nbsp;FG is text color<br/>
+#tmux_conf_theme_status_left_bg='#ffff00,#ff00af,#00afff' &nbsp;# yellow, pink, white blue &nbsp;BG is background color<br/>
+tmux_conf_theme_status_left_bg='#0091ff,#0091ff,#0091ff' &nbsp;# darker blue &nbsp;BG is background color<br/>
+#tmux_conf_theme_status_left_attr='bold,none,none'<br/>
+tmux_conf_theme_status_left_attr='none,none,none'<br/>
 <br/>
 # #status right style<br/>
-tmux_conf_theme_status_right_fg='#8a8a8a,#e4e4e4,#000000' # light gray, white, black<br/>
-tmux_conf_theme_status_right_bg='#080808,#d70000,#e4e4e4' # dark gray, red, white<br/>
+#tmux_conf_theme_status_right_fg='#8a8a8a,#e4e4e4,#000000' # light gray, white, black<br/>
+tmux_conf_theme_status_right_fg='#000000,#000000,#000000' # black, black, black &nbsp; &nbsp; &nbsp; &nbsp; FG text color<br/>
+#tmux_conf_theme_status_right_bg='#080808,#d70000,#e4e4e4' # dark gray, red, white<br/>
+tmux_conf_theme_status_right_bg='#0091ff,#0091ff,#0091ff' # darker blue, red, darker blue GB is background color<br/>
 tmux_conf_theme_status_right_attr='none,none,bold'<br/>
 <br/>
 # #pairing indicator<br/>
-tmux_conf_theme_pairing='👓 ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# U+1F453<br/>
-tmux_conf_theme_pairing_fg='none'<br/>
-tmux_conf_theme_pairing_bg='none'<br/>
-tmux_conf_theme_pairing_attr='none'<br/>
+#tmux_conf_theme_pairing='👓 ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# U+1F453<br/>
+#tmux_conf_theme_pairing_fg='none'<br/>
+#tmux_conf_theme_pairing_bg='none'<br/>
+#tmux_conf_theme_pairing_attr='none'<br/>
 <br/>
-# #prefix indicator<br/>
-tmux_conf_theme_prefix='⌨ ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# U+2328<br/>
-tmux_conf_theme_prefix_fg='none'<br/>
+# #prefix indicator #orig, none, none, non<br/>
+tmux_conf_theme_prefix='PREFIX' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# U+2328<br/>
+tmux_conf_theme_prefix_fg='#d70000'<br/>
 tmux_conf_theme_prefix_bg='none'<br/>
-tmux_conf_theme_prefix_attr='none'<br/>
+tmux_conf_theme_prefix_attr='bold'<br/>
 <br/>
-# #root indicator<br/>
+# #root indicator #takes a few seconds to update<br/>
 tmux_conf_theme_root='!'<br/>
 tmux_conf_theme_root_fg='none'<br/>
-tmux_conf_theme_root_bg='none'<br/>
+tmux_conf_theme_root_bg='#840000'<br/>
 tmux_conf_theme_root_attr='bold,blink'<br/>
 <br/>
 # #synchronized indicator<br/>
@@ -388,28 +412,28 @@ tmux_conf_theme_synchronized_attr='none'<br/>
 # #tmux_conf_battery_bar_symbol_empty='·'<br/>
 <br/>
 # #battery bar length (in number of symbols), possible values are:<br/>
-# # &nbsp;- auto<br/>
-# # &nbsp;- a number, e.g. 5<br/>
+# &nbsp;- auto<br/>
+# &nbsp;- a number, e.g. 5<br/>
 # #tmux_conf_battery_bar_length='auto'<br/>
 <br/>
 # #battery bar palette, possible values are:<br/>
-# # &nbsp;- gradient (default)<br/>
-# # &nbsp;- heat<br/>
-# # &nbsp;- 'colour_full_fg,colour_empty_fg,colour_bg'<br/>
+# &nbsp;- gradient (default)<br/>
+# &nbsp;- heat<br/>
+# &nbsp;- 'colour_full_fg,colour_empty_fg,colour_bg'<br/>
 # #tmux_conf_battery_bar_palette='gradient'<br/>
 # #tmux_conf_battery_bar_palette='#d70000,#e4e4e4,#000000' &nbsp; # red, white, black<br/>
 <br/>
 # #battery hbar palette, possible values are:<br/>
-# # &nbsp;- gradient (default)<br/>
-# # &nbsp;- heat<br/>
-# # &nbsp;- 'colour_low,colour_half,colour_full'<br/>
+# &nbsp;- gradient (default)<br/>
+# &nbsp;- heat<br/>
+# &nbsp;- 'colour_low,colour_half,colour_full'<br/>
 # #tmux_conf_battery_hbar_palette='gradient'<br/>
 # #tmux_conf_battery_hbar_palette='#d70000,#ff5f00,#5fff00' &nbsp;# red, orange, green<br/>
 <br/>
 # #battery vbar palette, possible values are:<br/>
-# # &nbsp;- gradient (default)<br/>
-# # &nbsp;- heat<br/>
-# # &nbsp;- 'colour_low,colour_half,colour_full'<br/>
+# &nbsp;- gradient (default)<br/>
+# &nbsp;- heat<br/>
+# &nbsp;- 'colour_low,colour_half,colour_full'<br/>
 # #tmux_conf_battery_vbar_palette='gradient'<br/>
 # #tmux_conf_battery_vbar_palette='#d70000,#ff5f00,#5fff00' &nbsp;# red, orange, green<br/>
 <br/>
@@ -420,994 +444,12 @@ tmux_conf_theme_synchronized_attr='none'<br/>
 # #tmux_conf_battery_status_charging='🔌 ' &nbsp; &nbsp;# U+1F50C<br/>
 # #tmux_conf_battery_status_discharging='🔋 ' # U+1F50B<br/>
 <br/>
-# # clock style<br/>
-tmux_conf_theme_clock_colour='#00afff' &nbsp;# light blue<br/>
+# clock style<br/>
+#tmux_conf_theme_clock_colour='#00a025' &nbsp;# light blue 00afff<br/>
 tmux_conf_theme_clock_style='24'<br/>
 <br/>
 <br/>
 # -- 8&lt; ------------------------------------------------------------------------<br/>
 <br/>
-run 'cut -c3- ~/.tmux.conf | sh -s _apply_configuration'<br/>
-<br/>
-<br/>
-# EOF<br/>
-#<br/>
-# # exit the script if any statement returns a non-true return value<br/>
-# set -e<br/>
-#<br/>
-# export LC_NUMERIC=C<br/>
-#<br/>
-# __newline='<br/>
-# '<br/>
-#<br/>
-# _is_enabled() {<br/>
-# &nbsp; ( ([ x"$1" = x"enabled" ] || [ x"$1" = x"true" ] || [ x"$1" = x"yes" ] || [ x"$1" = x"1" ]) &amp;&amp; return 0 ) || return 1<br/>
-# }<br/>
-#<br/>
-# _circled_digit() {<br/>
-# &nbsp; circled_digits='⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳'<br/>
-# &nbsp; if [ "$1" -le 20 ] 2&gt;/dev/null; then<br/>
-# &nbsp; &nbsp; i=$(( $1 + 1 ))<br/>
-# &nbsp; &nbsp; eval set -- "$circled_digits"<br/>
-# &nbsp; &nbsp; eval echo "\${$i}"<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; echo "$1"<br/>
-# &nbsp; fi<br/>
-# }<br/>
-#<br/>
-# _maximize_pane() {<br/>
-# &nbsp; current_session=${1:-$(tmux display -p '#{session_name}')}<br/>
-# &nbsp; current_pane=${2:-$(tmux display -p '#{pane_id}')}<br/>
-#<br/>
-# &nbsp; dead_panes=$(tmux list-panes -s -t "$current_session" -F '#{pane_dead} #{pane_id} #{pane_start_command}' | grep -o '^1 %.\+maximized.\+$' || true)<br/>
-# &nbsp; restore=$(echo "$dead_panes" | sed -n -E -e "s/^1 $current_pane .+maximized.+'(%[0-9]+)'$/tmux swap-pane -s \1 -t $current_pane \; kill-pane -t $current_pane/p" -e "s/^1 (%[0-9]+) .+maximized.+'$current_pane'$/tmux swap-pane -s \1 -t $current_pane \; kill-pane -t \1/p" )<br/>
-#<br/>
-# &nbsp; if [ -z "$restore" ]; then<br/>
-# &nbsp; &nbsp; [ "$(tmux list-panes -t "$current_session:" | wc -l | sed 's/^ *//g')" -eq 1 ] &amp;&amp; tmux display "Can't maximize with only one pane" &amp;&amp; return<br/>
-# &nbsp; &nbsp; window=$(tmux new-window -t "$current_session:" -P "exec maximized... 2&gt; /dev/null &amp; tmux setw -t \"$current_session:\" remain-on-exit on; printf \"Pane has been maximized, press &lt;prefix&gt;+ to restore. %s\" '$current_pane'")<br/>
-# &nbsp; &nbsp; window=${window%.*}<br/>
-#<br/>
-# &nbsp; &nbsp; retry=10<br/>
-# &nbsp; &nbsp; while [ x"$(tmux list-panes -t "$window" -F '#{session_name}:#{window_index} #{pane_dead}' 2&gt;/dev/null)" != x"$window 1" ] &amp;&amp; [ "$retry" -ne 0 ]; do<br/>
-# &nbsp; &nbsp; &nbsp; sleep 0.05<br/>
-# &nbsp; &nbsp; &nbsp; retry=$((retry - 1))<br/>
-# &nbsp; &nbsp; done<br/>
-# &nbsp; &nbsp; if [ "$retry" -eq 0 ]; then<br/>
-# &nbsp; &nbsp; &nbsp; tmux display 'Unable to maximize pane'<br/>
-# &nbsp; &nbsp; fi<br/>
-#<br/>
-# &nbsp; &nbsp; new_pane=$(tmux display -t "$window" -p '#{pane_id}')<br/>
-# &nbsp; &nbsp; tmux setw -t "$window" remain-on-exit off \; swap-pane -s "$current_pane" -t "$new_pane"<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; $restore || tmux kill-pane<br/>
-# &nbsp; fi<br/>
-# }<br/>
-#<br/>
-# _toggle_mouse() {<br/>
-# &nbsp; old=$(tmux show -gv mouse)<br/>
-# &nbsp; new=""<br/>
-#<br/>
-# &nbsp; if [ "$old" = "on" ]; then<br/>
-# &nbsp; &nbsp; new="off"<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; new="on"<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; tmux set -g mouse $new \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp;display "mouse: $new"<br/>
-# }<br/>
-#<br/>
-# _battery() {<br/>
-# &nbsp; charge=0<br/>
-# &nbsp; uname_s=$(uname -s)<br/>
-# &nbsp; case "$uname_s" in<br/>
-# &nbsp; &nbsp; *Darwin*)<br/>
-# &nbsp; &nbsp; &nbsp; while IFS= read -r line; do<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; if [ x"$discharging" != x"true" ]; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; discharging=$(printf '%s' "$line" | grep -qi "discharging" &amp;&amp; echo "true" || echo "false")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; percentage=$(printf '%s' "$line" | grep -E -o '[0-9]+%')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; charge=$(awk -v charge="$charge" -v percentage="${percentage%%%}" 'BEGIN { print charge + percentage / 100 }')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; count=$((count + 1))<br/>
-# &nbsp; &nbsp; &nbsp; done &nbsp;&lt;&lt; EOF<br/>
-# $(pmset -g batt | grep 'InternalBattery')<br/>
-# EOF<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; *Linux*)<br/>
-# &nbsp; &nbsp; &nbsp; while IFS= read -r batpath; do<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; grep -i -q device "$batpath/scope" 2&gt; /dev/null &amp;&amp; continue<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; if [ x"$discharging" != x"true" ]; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; discharging=$(grep -qi "discharging" "$batpath/status" &amp;&amp; echo "true" || echo "false")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; bat_capacity="$batpath/capacity"<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; if [ -r "$bat_capacity" ]; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; charge=$(awk -v charge="$charge" -v capacity="$(cat "$bat_capacity")" 'BEGIN { print charge + capacity / 100 }')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bat_energy_full="$batpath/energy_full"<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bat_energy_now="$batpath/energy_now"<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if [ -r "$bat_energy_full" ] &amp;&amp; [ -r "$bat_energy_now" ]; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; charge=$(awk -v charge="$charge" -v energy_now="$(cat "$bat_energy_now")" -v energy_full="$(cat "$bat_energy_full")" 'BEGIN { print charge + energy_now / energy_full }')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; count=$((count + 1))<br/>
-# &nbsp; &nbsp; &nbsp; done &nbsp;&lt;&lt; EOF<br/>
-# $(find /sys/class/power_supply -maxdepth 1 -iname '*bat*')<br/>
-# EOF<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; *CYGWIN*|*MSYS*|*MINGW*)<br/>
-# &nbsp; &nbsp; &nbsp; while IFS= read -r line; do<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; [ -z "$line" ] &amp;&amp; continue<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; if [ x"$discharging" != x"true" ]; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; discharging=$(printf '%s' "$line" | awk '{ s = ($1 == 1) ? "true" : "false"; print s }')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; charge=$(printf '%s' "$line" | awk -v charge="$charge" '{ print charge + $2 / 100 }')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; count=$((count + 1))<br/>
-# &nbsp; &nbsp; &nbsp; done &nbsp;&lt;&lt; EOF<br/>
-# $(wmic path Win32_Battery get BatteryStatus, EstimatedChargeRemaining | tr -d '\r' | tail -n +2)<br/>
-# EOF<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; *OpenBSD*)<br/>
-# &nbsp; &nbsp; &nbsp; for batid in 0 1 2; do<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; sysctl -n "hw.sensors.acpibat$batid.raw0" 2&gt;&amp;1 | grep -q 'not found' &amp;&amp; continue<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; if [ x"$discharging" != x"true" ]; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; discharging=$(sysctl -n "hw.sensors.acpibat$batid.raw0" | grep -q 1 &amp;&amp; echo "true" || echo "false")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; if sysctl -n "hw.sensors.acpibat$batid" | grep -q amphour; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; charge=$(awk -v charge="$charge" -v remaining="$(sysctl -n hw.sensors.acpibat$batid.amphour3 | cut -d' ' -f1)" -v full="$(sysctl -n hw.sensors.acpibat$batid.amphour0 | cut -d' ' -f1)" 'BEGIN { print charge + remaining / full }')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; charge=$(awk -v charge="$charge" -v remaining="$(sysctl -n hw.sensors.acpibat$batid.watthour3 | cut -d' ' -f1)" -v full="$(sysctl -n hw.sensors.acpibat$batid.watthour0 | cut -d' ' -f1)" 'BEGIN { print charge + remaining / full }')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; count=$((count + 1))<br/>
-# &nbsp; &nbsp; &nbsp; done<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; esac<br/>
-# &nbsp; charge=$(awk -v charge="$charge" -v count="$count" 'BEGIN { print charge / count }')<br/>
-# &nbsp; if [ "$charge" -eq 0 ]; then<br/>
-# &nbsp; &nbsp; tmux &nbsp;set -ug '@battery_status' &nbsp;\;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -ug '@battery_bar' &nbsp; &nbsp; \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -ug '@battery_hbar' &nbsp; &nbsp;\;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -ug '@battery_vbar' &nbsp; &nbsp;\;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -ug '@battery_percentage'<br/>
-# &nbsp; &nbsp; return<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; variables=$(tmux &nbsp;show -gqv '@battery_bar_symbol_full' \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; show -gqv '@battery_bar_symbol_empty' \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; show -gqv '@battery_bar_length' \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; show -gqv '@battery_bar_palette' \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; show -gqv '@battery_hbar_palette' \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; show -gqv '@battery_vbar_palette' \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; show -gqv '@battery_status_charging' \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; show -gqv '@battery_status_discharging')<br/>
-# &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; { set -f; IFS="$__newline"; set -- $variables; unset IFS; set +f; }<br/>
-#<br/>
-# &nbsp; battery_bar_symbol_full=$1<br/>
-# &nbsp; battery_bar_symbol_empty=$2<br/>
-# &nbsp; battery_bar_length=$3<br/>
-# &nbsp; battery_bar_palette=$4<br/>
-# &nbsp; battery_hbar_palette=$5<br/>
-# &nbsp; battery_vbar_palette=$6<br/>
-# &nbsp; battery_status_charging=$7<br/>
-# &nbsp; battery_status_discharging=$8<br/>
-#<br/>
-# &nbsp; if [ x"$battery_bar_length" = x"auto" ]; then<br/>
-# &nbsp; &nbsp; columns=$(tmux -q display -p '#{client_width}' 2&gt; /dev/null || echo 80)<br/>
-# &nbsp; &nbsp; if [ "$columns" -ge 80 ]; then<br/>
-# &nbsp; &nbsp; &nbsp; battery_bar_length=10<br/>
-# &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; battery_bar_length=5<br/>
-# &nbsp; &nbsp; fi<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; if [ x"$discharging" = x"true" ]; then<br/>
-# &nbsp; &nbsp; battery_status="$battery_status_discharging"<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; battery_status="$battery_status_charging"<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; if echo "$battery_bar_palette" | grep -q -E '^heat|gradient(,[#a-z0-9]{7,9})?$'; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; { set -f; IFS=,; set -- $battery_bar_palette; unset IFS; set +f; }<br/>
-# &nbsp; &nbsp; palette_style=$1<br/>
-# &nbsp; &nbsp; battery_bg=${2:-none}<br/>
-# &nbsp; &nbsp; [ x"$palette_style" = x"gradient" ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; palette="196 202 208 214 220 226 190 154 118 82 46"<br/>
-# &nbsp; &nbsp; [ x"$palette_style" = x"heat" ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; palette="243 245 247 144 143 142 184 214 208 202 196"<br/>
-#<br/>
-# &nbsp; &nbsp; palette=$(echo "$palette" | awk -v n="$battery_bar_length" '{ for (i = 0; i &lt; n; ++i) printf $(1 + (i * NF / n))" " }')<br/>
-# &nbsp; &nbsp; eval set -- "$palette"<br/>
-#<br/>
-# &nbsp; &nbsp; full=$(awk "BEGIN { printf \"%.0f\", ($charge) * $battery_bar_length }")<br/>
-# &nbsp; &nbsp; battery_bar="#[bg=$battery_bg]"<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2046<br/>
-# &nbsp; &nbsp; [ "$full" -gt 0 ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; battery_bar="$battery_bar$(printf "#[fg=colour%s]$battery_bar_symbol_full" $(echo "$palette" | cut -d' ' -f1-"$full"))"<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2046<br/>
-# &nbsp; &nbsp; empty=$((battery_bar_length - full))<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2046<br/>
-# &nbsp; &nbsp; [ "$empty" -gt 0 ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; battery_bar="$battery_bar$(printf "#[fg=colour%s]$battery_bar_symbol_empty" $(echo "$palette" | cut -d' ' -f$((full + 1))-$((full + empty))))"<br/>
-# &nbsp; &nbsp; &nbsp; eval battery_bar="$battery_bar#[fg=colour\${$((full == 0 ? 1 : full))}]"<br/>
-# &nbsp; elif echo "$battery_bar_palette" | grep -q -E '^(([#a-z0-9]{7,9}|none),?){3}$'; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; { set -f; IFS=,; set -- $battery_bar_palette; unset IFS; set +f; }<br/>
-# &nbsp; &nbsp; battery_full_fg=$1<br/>
-# &nbsp; &nbsp; battery_empty_fg=$2<br/>
-# &nbsp; &nbsp; battery_bg=$3<br/>
-#<br/>
-# &nbsp; &nbsp; full=$(awk "BEGIN { printf \"%.0f\", ($charge) * $battery_bar_length }")<br/>
-# &nbsp; &nbsp; [ x"$battery_bg" != x"none" ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; battery_bar="#[bg=$battery_bg]"<br/>
-# &nbsp; &nbsp; #shellcheck disable=SC2046<br/>
-# &nbsp; &nbsp; [ "$full" -gt 0 ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; battery_bar="$battery_bar#[fg=$battery_full_fg]$(printf "%0.s$battery_bar_symbol_full" $(seq 1 "$full"))"<br/>
-# &nbsp; &nbsp; empty=$((battery_bar_length - full))<br/>
-# &nbsp; &nbsp; #shellcheck disable=SC2046<br/>
-# &nbsp; &nbsp; [ "$empty" -gt 0 ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; battery_bar="$battery_bar#[fg=$battery_empty_fg]$(printf "%0.s$battery_bar_symbol_empty" $(seq 1 "$empty"))" &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; battery_bar="$battery_bar#[fg=$battery_empty_fg]"<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; if echo "$battery_hbar_palette" | grep -q -E '^heat|gradient(,[#a-z0-9]{7,9})?$'; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; { set -f; IFS=,; set -- $battery_hbar_palette; unset IFS; set +f; }<br/>
-# &nbsp; &nbsp; palette_style=$1<br/>
-# &nbsp; &nbsp; [ x"$palette_style" = x"gradient" ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; palette="196 202 208 214 220 226 190 154 118 82 46"<br/>
-# &nbsp; &nbsp; [ x"$palette_style" = x"heat" ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; palette="233 234 235 237 239 241 243 245 247 144 143 142 184 214 208 202 196"<br/>
-#<br/>
-# &nbsp; &nbsp; palette=$(echo "$palette" | awk -v n="$battery_bar_length" '{ for (i = 0; i &lt; n; ++i) printf $(1 + (i * NF / n))" " }')<br/>
-# &nbsp; &nbsp; eval set -- "$palette"<br/>
-#<br/>
-# &nbsp; &nbsp; full=$(awk "BEGIN { printf \"%.0f\", ($charge) * $battery_bar_length }")<br/>
-# &nbsp; &nbsp; eval battery_hbar_fg="colour\${$((full == 0 ? 1 : full))}"<br/>
-# &nbsp; elif echo "$battery_hbar_palette" | grep -q -E '^([#a-z0-9]{7,9},?){3}$'; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; { set -f; IFS=,; set -- $battery_hbar_palette; unset IFS; set +f; }<br/>
-#<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2046<br/>
-# &nbsp; &nbsp; eval $(awk "BEGIN { printf \"battery_hbar_fg=$%d\", (($charge) - 0.001) * $# + 1 }")<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; eval set -- "▏ ▎ ▍ ▌ ▋ ▊ ▉ █"<br/>
-# &nbsp; # shellcheck disable=SC2046<br/>
-# &nbsp; eval $(awk "BEGIN { printf \"battery_hbar_symbol=$%d\", ($charge) * ($# - 1) + 1 }")<br/>
-# &nbsp; battery_hbar="#[fg=${battery_hbar_fg?}]${battery_hbar_symbol?}"<br/>
-#<br/>
-# &nbsp; if echo "$battery_vbar_palette" | grep -q -E '^heat|gradient(,[#a-z0-9]{7,9})?$'; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; { set -f; IFS=,; set -- $battery_vbar_palette; unset IFS; set +f; }<br/>
-# &nbsp; &nbsp; palette_style=$1<br/>
-# &nbsp; &nbsp; [ x"$palette_style" = x"gradient" ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; palette="196 202 208 214 220 226 190 154 118 82 46"<br/>
-# &nbsp; &nbsp; [ x"$palette_style" = x"heat" ] &amp;&amp; \<br/>
-# &nbsp; &nbsp; &nbsp; palette="233 234 235 237 239 241 243 245 247 144 143 142 184 214 208 202 196"<br/>
-#<br/>
-# &nbsp; &nbsp; palette=$(echo "$palette" | awk -v n="$battery_bar_length" '{ for (i = 0; i &lt; n; ++i) printf $(1 + (i * NF / n))" " }')<br/>
-# &nbsp; &nbsp; eval set -- "$palette"<br/>
-#<br/>
-# &nbsp; &nbsp; full=$(awk "BEGIN { printf \"%.0f\", ($charge) * $battery_bar_length }")<br/>
-# &nbsp; &nbsp; eval battery_vbar_fg="colour\${$((full == 0 ? 1 : full))}"<br/>
-# &nbsp; elif echo "$battery_vbar_palette" | grep -q -E '^([#a-z0-9]{7,9},?){3}$'; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; { set -f; IFS=,; set -- $battery_vbar_palette; unset IFS; set +f; }<br/>
-#<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2046<br/>
-# &nbsp; &nbsp; eval $(awk "BEGIN { printf \"battery_vbar_fg=$%d\", (($charge) - 0.001) * $# + 1 }")<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; eval set -- "▁ ▂ ▃ ▄ ▅ ▆ ▇ █"<br/>
-# &nbsp; # shellcheck disable=SC2046<br/>
-# &nbsp; eval $(awk "BEGIN { printf \"battery_vbar_symbol=$%d\", ($charge) * ($# - 1) + 1 }")<br/>
-# &nbsp; battery_vbar="#[fg=${battery_vbar_fg?}]${battery_vbar_symbol?}"<br/>
-#<br/>
-# &nbsp; battery_percentage="$(awk "BEGIN { printf \"%.0f%%\", ($charge) * 100 }")"<br/>
-#<br/>
-# &nbsp; tmux &nbsp;set -g '@battery_status' "$battery_status" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_bar' "$battery_bar" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_hbar' "$battery_hbar" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_vbar' "$battery_vbar" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_percentage' "$battery_percentage"<br/>
-# }<br/>
-#<br/>
-# _username() {<br/>
-# &nbsp; tty=${1:-$(tmux display -p '#{pane_tty}')}<br/>
-# &nbsp; ssh_only=$2<br/>
-# &nbsp; # shellcheck disable=SC2039<br/>
-# &nbsp; if [ x"$OSTYPE" = x"cygwin" ]; then<br/>
-# &nbsp; &nbsp; pid=$(ps -a | awk -v tty="${tty##/dev/}" '$5 == tty &amp;&amp; /ssh/ &amp;&amp; !/vagrant ssh/ &amp;&amp; !/autossh/ &amp;&amp; !/-W/ { print $1 }')<br/>
-# &nbsp; &nbsp; [ -n "$pid" ] &amp;&amp; ssh_parameters=$(tr '\0' ' ' &lt; "/proc/$pid/cmdline" | sed 's/^ssh //')<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; ssh_parameters=$(ps -t "$tty" -o command= | awk '/ssh/ &amp;&amp; !/vagrant ssh/ &amp;&amp; !/autossh/ &amp;&amp; !/-W/ { $1=""; print $0; exit }')<br/>
-# &nbsp; fi<br/>
-# &nbsp; if [ -n "$ssh_parameters" ]; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; username=$(ssh -G $ssh_parameters 2&gt;/dev/null | awk 'NR &gt; 2 { exit } ; /^user / { print $2 }')<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; [ -z "$username" ] &amp;&amp; username=$(ssh -T -o ControlPath=none -o ProxyCommand="sh -c 'echo %%username%% %r &gt;&amp;2'" $ssh_parameters 2&gt;&amp;1 | awk '/^%username% / { print $2; exit }')<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; if ! _is_enabled "$ssh_only"; then<br/>
-# &nbsp; &nbsp; &nbsp; # shellcheck disable=SC2039<br/>
-# &nbsp; &nbsp; &nbsp; if [ x"$OSTYPE" = x"cygwin" ]; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; username=$(whoami)<br/>
-# &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; username=$(ps -t "$tty" -o user= -o pid= -o ppid= -o command= | awk '<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; !/ssh/ { user[$2] = $1; ppid[$3] = 1 }<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; END {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for (i in user)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!(i in ppid))<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print user[i]<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exit<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; ')<br/>
-# &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; fi<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; echo "$username"<br/>
-# }<br/>
-#<br/>
-# _hostname() {<br/>
-# &nbsp; tty=${1:-$(tmux display -p '#{pane_tty}')}<br/>
-# &nbsp; ssh_only=$2<br/>
-# &nbsp; # shellcheck disable=SC2039<br/>
-# &nbsp; if [ x"$OSTYPE" = x"cygwin" ]; then<br/>
-# &nbsp; &nbsp; pid=$(ps -a | awk -v tty="${tty##/dev/}" '$5 == tty &amp;&amp; /ssh/ &amp;&amp; !/vagrant ssh/ &amp;&amp; !/autossh/ &amp;&amp; !/-W/ { print $1 }')<br/>
-# &nbsp; &nbsp; [ -n "$pid" ] &amp;&amp; ssh_parameters=$(tr '\0' ' ' &lt; "/proc/$pid/cmdline" | sed 's/^ssh //')<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; ssh_parameters=$(ps -t "$tty" -o command= | awk '/ssh/ &amp;&amp; !/vagrant ssh/ &amp;&amp; !/autossh/ &amp;&amp; !/-W/ { $1=""; print $0; exit }')<br/>
-# &nbsp; fi<br/>
-# &nbsp; if [ -n "$ssh_parameters" ]; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; hostname=$(ssh -G $ssh_parameters 2&gt;/dev/null | awk 'NR &gt; 2 { exit } ; /^hostname / { print $2 }')<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; [ -z "$hostname" ] &amp;&amp; hostname=$(ssh -T -o ControlPath=none -o ProxyCommand="sh -c 'echo %%hostname%% %h &gt;&amp;2'" $ssh_parameters 2&gt;&amp;1 | awk '/^%hostname% / { print $2; exit }')<br/>
-# &nbsp; &nbsp; #shellcheck disable=SC1004<br/>
-# &nbsp; &nbsp; hostname=$(echo "$hostname" | awk '\<br/>
-# &nbsp; &nbsp; { \<br/>
-# &nbsp; &nbsp; &nbsp; if ($1~/^[0-9.:]+$/) \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; print $1; \<br/>
-# &nbsp; &nbsp; &nbsp; else \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; split($1, a, ".") ; print a[1] \<br/>
-# &nbsp; &nbsp; }')<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; if ! _is_enabled "$ssh_only"; then<br/>
-# &nbsp; &nbsp; &nbsp; hostname=$(command hostname -s)<br/>
-# &nbsp; &nbsp; fi<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; echo "$hostname"<br/>
-# }<br/>
-#<br/>
-# _root() {<br/>
-# &nbsp; tty=${1:-$(tmux display -p '#{pane_tty}')}<br/>
-# &nbsp; username=$(_username "$tty" false)<br/>
-#<br/>
-# &nbsp; if [ x"$username" = x"root" ]; then<br/>
-# &nbsp; &nbsp; tmux show -gqv '@root'<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; echo ""<br/>
-# &nbsp; fi<br/>
-# }<br/>
-#<br/>
-# _uptime() {<br/>
-# &nbsp; case $(uname -s) in<br/>
-# &nbsp; &nbsp; *Darwin*)<br/>
-# &nbsp; &nbsp; &nbsp; boot=$(sysctl -q -n kern.boottime | awk -F'[ ,:]+' '{ print $4 }')<br/>
-# &nbsp; &nbsp; &nbsp; now=$(date +%s)<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; *Linux*|*CYGWIN*|*MSYS*|*MINGW*)<br/>
-# &nbsp; &nbsp; &nbsp; now=$(cut -d' ' -f1 &lt; /proc/uptime)<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; *OpenBSD*)<br/>
-# &nbsp; &nbsp; &nbsp; boot=$(sysctl -n kern.boottime)<br/>
-# &nbsp; &nbsp; &nbsp; now=$(date +%s)<br/>
-# &nbsp; esac<br/>
-# &nbsp; # shellcheck disable=SC1004<br/>
-# &nbsp; awk -v boot="$boot" -v now="$now" '<br/>
-# &nbsp; &nbsp; BEGIN {<br/>
-# &nbsp; &nbsp; &nbsp; uptime = now - boot<br/>
-# &nbsp; &nbsp; &nbsp; d = int(uptime / 86400)<br/>
-# &nbsp; &nbsp; &nbsp; h = int(uptime / 3600) % 24<br/>
-# &nbsp; &nbsp; &nbsp; m = int(uptime / 60) % 60<br/>
-# &nbsp; &nbsp; &nbsp; s = int(uptime) % 60<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; system("tmux &nbsp;set -g @uptime_d " d + 0 " \\; " \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"set -g @uptime_h " h + 0 " \\; " \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"set -g @uptime_m " m + 0 " \\; " \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"set -g @uptime_s " s + 0)<br/>
-# &nbsp; &nbsp; }'<br/>
-# }<br/>
-#<br/>
-# _loadavg() {<br/>
-# &nbsp; case $(uname -s) in<br/>
-# &nbsp; &nbsp; *Darwin*)<br/>
-# &nbsp; &nbsp; &nbsp; tmux set -g @loadavg "$(sysctl -q -n vm.loadavg | cut -d' ' -f2)"<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; *Linux*)<br/>
-# &nbsp; &nbsp; &nbsp; tmux set -g @loadavg "$(cut -d' ' -f1 &lt; /proc/loadavg)"<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; *OpenBSD*)<br/>
-# &nbsp; &nbsp; &nbsp; tmux set -g @loadavg "$(sysctl -q -n vm.loadavg | cut -d' ' -f1)"<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; esac<br/>
-# }<br/>
-#<br/>
-# _split_window() {<br/>
-# &nbsp; tty=${1:-$(tmux display -p '#{pane_tty}')}<br/>
-# &nbsp; shift<br/>
-# &nbsp; # shellcheck disable=SC2039<br/>
-# &nbsp; if [ x"$OSTYPE" = x"cygwin" ]; then<br/>
-# &nbsp; &nbsp; pid=$(ps -a | sort -d | awk -v tty="${tty##/dev/}" '$5 == tty &amp;&amp; /ssh/ &amp;&amp; !/-W/ { print $1; exit 0 }')<br/>
-# &nbsp; &nbsp; [ -n "$pid" ] &amp;&amp; ssh=$(tr '\0' ' ' &lt; "/proc/$pid/cmdline")<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; ssh=$(ps -t "$tty" -o command= | sort -d | awk '/ssh/ &amp;&amp; !/-W/ { print $0; exit 0 }')<br/>
-# &nbsp; fi<br/>
-# &nbsp; if [ -n "$ssh" ]; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2046<br/>
-# &nbsp; &nbsp; tmux split-window "$@" $(echo "$ssh" | sed -e "s/;/\\\\;/g")<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; tmux split-window "$@"<br/>
-# &nbsp; fi<br/>
-# }<br/>
-#<br/>
-# _apply_overrides() {<br/>
-# &nbsp; tmux_conf_theme_24b_colour=${tmux_conf_theme_24b_colour:-false}<br/>
-# &nbsp; if _is_enabled "$tmux_conf_theme_24b_colour"; then<br/>
-# &nbsp; case "$TERM" in<br/>
-# &nbsp; &nbsp; screen-*|tmux-*)<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; *)<br/>
-# &nbsp; &nbsp; &nbsp; tmux set-option -ga terminal-overrides ",*256col*:Tc"<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; esac<br/>
-# &nbsp; fi<br/>
-# }<br/>
-#<br/>
-# _apply_bindings() {<br/>
-# &nbsp; line=$(tmux list-keys | grep new-window | head -1)<br/>
-# &nbsp; prefix=${line%new-window*}<br/>
-# &nbsp; column=${#prefix}<br/>
-#<br/>
-# &nbsp; tmux_conf_new_window_retain_current_path=${tmux_conf_new_window_retain_current_path:-false}<br/>
-# &nbsp; while IFS= read -r line; do<br/>
-# &nbsp; &nbsp; [ -z "$line" ] &amp;&amp; continue<br/>
-# &nbsp; &nbsp; left=$(printf '%s' "$line" | cut -c-"$column" | sed -E -e 's/[^ \ta-zA-Z0-9,._+@%/-]/\\&amp;/g')<br/>
-# &nbsp; &nbsp; if _is_enabled "$tmux_conf_new_window_retain_current_path"; then<br/>
-# &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column-" | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e 's/new-window$/new-window -c "#{pane_current_path}"/g')<br/>
-# &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column"- | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e 's/-c[ \t]+"#\{pane_current_path\}"$//g')<br/>
-# &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; eval "tmux $left $right" 2&gt;/dev/null || true<br/>
-# &nbsp; done &nbsp;&lt;&lt; EOF<br/>
-# $(tmux list-keys 2&gt;/dev/null | grep -e 'new-window\(\s\+-c\s\+"#{pane_current_path}\|$\)')<br/>
-# EOF<br/>
-#<br/>
-# &nbsp; tmux_conf_new_pane_retain_current_path=${tmux_conf_new_pane_retain_current_path:-true}<br/>
-# &nbsp; while IFS= read -r line; do<br/>
-# &nbsp; &nbsp; [ -z "$line" ] &amp;&amp; continue<br/>
-# &nbsp; &nbsp; left=$(printf '%s' "$line" | cut -c-"$column" | sed -E -e 's/[^ \ta-zA-Z0-9,._+@%/-]/\\&amp;/g')<br/>
-# &nbsp; &nbsp; if _is_enabled "$tmux_conf_new_pane_retain_current_path"; then<br/>
-# &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column-" | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e 's/split-window([ \t]+-(h|v))?$/&amp; -c "#{pane_current_path}"/g')<br/>
-# &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column"- | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e 's/-c[ \t]+"#\{pane_current_path\}"$//g')<br/>
-# &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; eval "tmux $left $right" 2&gt;/dev/null || true<br/>
-# &nbsp; done &nbsp;&lt;&lt; EOF<br/>
-# $(tmux list-keys 2&gt;/dev/null | grep -e 'split\(-\|_\)window')<br/>
-# EOF<br/>
-#<br/>
-# &nbsp; tmux_conf_new_pane_reconnect_ssh=${tmux_conf_new_pane_reconnect_ssh:-false}<br/>
-# &nbsp; while IFS= read -r line; do<br/>
-# &nbsp; &nbsp; [ -z "$line" ] &amp;&amp; continue<br/>
-# &nbsp; &nbsp; left=$(printf '%s' "$line" | cut -c-"$column" | sed -E -e 's/[^ \ta-zA-Z0-9,._+@%/-]/\\&amp;/g')<br/>
-# &nbsp; &nbsp; if _is_enabled "$tmux_conf_new_pane_reconnect_ssh"; then<br/>
-# &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column"- | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e 's/"/\\"/g' -e 's/split-window([^;]+)/run-shell "cut -c3- ~\/\.tmux\.conf | sh -s _split_window #{pane_tty}\1"/g')<br/>
-# &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column"- | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e 's/\\"/"/g' -e 's/run-shell "cut -c3- ~\/\.tmux\.conf \| sh -s _split_window #\{pane_tty\}([^;]+)"/split-window\1/g' -e 's/#\{.+\}/\"&amp;\"/g')<br/>
-# &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; eval "tmux $left $right" 2&gt;/dev/null || true<br/>
-# &nbsp; done &nbsp;&lt;&lt; EOF<br/>
-# $(tmux list-keys 2&gt;/dev/null | grep -e 'split\(-\|_\)window')<br/>
-# EOF<br/>
-#<br/>
-# &nbsp; tmux_conf_new_session_prompt=${tmux_conf_new_session_prompt:-false}<br/>
-# &nbsp; while IFS= read -r line; do<br/>
-# &nbsp; &nbsp; [ -z "$line" ] &amp;&amp; continue<br/>
-# &nbsp; &nbsp; left=$(printf '%s' "$line" | cut -c-"$column" | sed -E -e 's/[^ \ta-zA-Z0-9,._+@%/-]/\\&amp;/g')<br/>
-# &nbsp; &nbsp; if _is_enabled "$tmux_conf_new_session_prompt"; then<br/>
-# &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column"- | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e 's/new-session$/command-prompt -p new-session \"new-session -s '"'"'%%'"'"'\"/g')<br/>
-# &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column"- | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }'| sed -E -e 's/command-prompt -p new-session[^;]+/new-session/g')<br/>
-# &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; eval "tmux $left $right" 2&gt;/dev/null || true<br/>
-# &nbsp; done &nbsp;&lt;&lt; EOF<br/>
-# $(tmux list-keys 2&gt;/dev/null | grep -e 'new-session')<br/>
-# EOF<br/>
-#<br/>
-# &nbsp; tmux_conf_copy_to_os_clipboard=${tmux_conf_copy_to_os_clipboard:-false}<br/>
-# &nbsp; command -v pbcopy &gt; /dev/null 2&gt;&amp;1 &amp;&amp; command='pbcopy'<br/>
-# &nbsp; command -v reattach-to-user-namespace &gt; /dev/null 2&gt;&amp;1 &amp;&amp; command='reattach-to-user-namespace pbcopy'<br/>
-# &nbsp; command -v xsel &gt; /dev/null 2&gt;&amp;1 &amp;&amp; command='xsel -i -b'<br/>
-# &nbsp; ! command -v xsel &gt; /dev/null 2&gt;&amp;1 &amp;&amp; command -v xclip &gt; /dev/null 2&gt;&amp;1 &amp;&amp; command='xclip -i -selection clipboard &gt; \/dev\/null 2&gt;\&amp;1'<br/>
-# &nbsp; command -v clip.exe &gt; /dev/null 2&gt;&amp;1 &amp;&amp; command='clip\.exe'<br/>
-# &nbsp; [ -c /dev/clipboard ] &amp;&amp; command='cat &gt; \/dev\/clipboard'<br/>
-#<br/>
-# &nbsp; if [ -n "$command" ]; then<br/>
-# &nbsp; &nbsp; # shellcheck disable=SC2086<br/>
-# &nbsp; &nbsp; for table in "" "-t emacs-copy" "-t vi-copy"; do<br/>
-# &nbsp; &nbsp; &nbsp; line=$(tmux list-keys $table 2&gt;/dev/null | grep -e 'copy-selection\|copy-pipe' | head -1)<br/>
-# &nbsp; &nbsp; &nbsp; prefix=${line%copy-*}<br/>
-# &nbsp; &nbsp; &nbsp; column=${#prefix}<br/>
-# &nbsp; &nbsp; &nbsp; [ -z "$line" ] &amp;&amp; continue<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; while IFS= read -r line; do<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; [ -z "$line" ] &amp;&amp; continue<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; left=$(printf '%s' "$line" | cut -c-"$column" | sed -E -e 's/[^ \ta-zA-Z0-9,._+@%/-]/\\&amp;/g')<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; if _is_enabled "$tmux_conf_copy_to_os_clipboard"; then<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column"- | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e "s/copy-selection(-and-cancel)?$/copy-pipe\1 \"$command\"/g")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; right=$(printf '%s' "$line" | cut -c"$column"- | awk -F'\"' 'BEGIN { OFS = FS } { for (i = 1; i &lt;= NF; i+=2) { gsub(/#{.+}/, "\"&amp;\"", $i) } print }' | sed -E -e "s/copy-pipe(-and-cancel)? \"$command\"$/copy-selection\1/g")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; fi<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; eval "tmux $left $right" 2&gt;/dev/null || true<br/>
-# &nbsp; &nbsp; &nbsp; done &nbsp;&lt;&lt; EOF<br/>
-# $(tmux list-keys $table 2&gt;/dev/null | grep -e 'copy-selection\|copy-pipe')<br/>
-# EOF<br/>
-# &nbsp; &nbsp; done<br/>
-# &nbsp;fi<br/>
-# }<br/>
-#<br/>
-# _apply_theme() {<br/>
-#<br/>
-# &nbsp; # -- panes -------------------------------------------------------------<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_window_fg=${tmux_conf_theme_window_fg:-default}<br/>
-# &nbsp; tmux_conf_theme_window_bg=${tmux_conf_theme_window_bg:-default}<br/>
-# &nbsp; tmux_conf_theme_highlight_focused_pane=${tmux_conf_theme_highlight_focused_pane:-false}<br/>
-# &nbsp; tmux_conf_theme_focused_pane_fg=${tmux_conf_theme_focused_pane_fg:-'default'} # default<br/>
-# &nbsp; tmux_conf_theme_focused_pane_bg=${tmux_conf_theme_focused_pane_bg:-'#0087d7'} # light blue<br/>
-#<br/>
-# &nbsp; # tmux 1.9 doesn't really like set -q<br/>
-# &nbsp; if tmux show -g -w | grep -q window-style; then<br/>
-# &nbsp; &nbsp; tmux setw -g window-style "fg=$tmux_conf_theme_window_fg,bg=$tmux_conf_theme_window_bg"<br/>
-#<br/>
-# &nbsp; &nbsp; if _is_enabled "$tmux_conf_theme_highlight_focused_pane"; then<br/>
-# &nbsp; &nbsp; &nbsp; tmux setw -g window-active-style "fg=$tmux_conf_theme_focused_pane_fg,bg=$tmux_conf_theme_focused_pane_bg"<br/>
-# &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; tmux setw -g window-active-style default<br/>
-# &nbsp; &nbsp; fi<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_pane_border_style=${tmux_conf_theme_pane_border_style:-thin}<br/>
-# &nbsp; tmux_conf_theme_pane_border=${tmux_conf_theme_pane_border:-'#444444'} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # light gray<br/>
-# &nbsp; tmux_conf_theme_pane_active_border=${tmux_conf_theme_pane_active_border:-'#00afff'} # light blue<br/>
-# &nbsp; tmux_conf_theme_pane_border_fg=${tmux_conf_theme_pane_border_fg:-$tmux_conf_theme_pane_border}<br/>
-# &nbsp; tmux_conf_theme_pane_active_border_fg=${tmux_conf_theme_pane_active_border_fg:-$tmux_conf_theme_pane_active_border}<br/>
-# &nbsp; case "$tmux_conf_theme_pane_border_style" in<br/>
-# &nbsp; &nbsp; fat)<br/>
-# &nbsp; &nbsp; &nbsp; tmux_conf_theme_pane_border_bg=${tmux_conf_theme_pane_border_bg:-$tmux_conf_theme_pane_border_fg}<br/>
-# &nbsp; &nbsp; &nbsp; tmux_conf_theme_pane_active_border_bg=${tmux_conf_theme_pane_active_border_bg:-$tmux_conf_theme_pane_active_border_fg}<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; thin|*)<br/>
-# &nbsp; &nbsp; &nbsp; tmux_conf_theme_pane_border_bg=${tmux_conf_theme_pane_border_bg:-'default'}<br/>
-# &nbsp; &nbsp; &nbsp; tmux_conf_theme_pane_active_border_bg=${tmux_conf_theme_pane_active_border_bg:-'default'}<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; esac<br/>
-# &nbsp; tmux setw -g pane-border-style "fg=$tmux_conf_theme_pane_border_fg,bg=$tmux_conf_theme_pane_border_bg" \; set -g pane-active-border-style "fg=$tmux_conf_theme_pane_active_border_fg,bg=$tmux_conf_theme_pane_active_border_bg"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_pane_indicator=${tmux_conf_theme_pane_indicator:-'#00afff'} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # light blue<br/>
-# &nbsp; tmux_conf_theme_pane_active_indicator=${tmux_conf_theme_pane_active_indicator:-'#00afff'} # light blue<br/>
-#<br/>
-# &nbsp; tmux set -g display-panes-colour "$tmux_conf_theme_pane_indicator" \; set -g display-panes-active-colour "$tmux_conf_theme_pane_active_indicator"<br/>
-#<br/>
-# &nbsp; # -- status line -------------------------------------------------------<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_left_separator_main=${tmux_conf_theme_left_separator_main-''}<br/>
-# &nbsp; tmux_conf_theme_left_separator_sub=${tmux_conf_theme_left_separator_sub-'|'}<br/>
-# &nbsp; tmux_conf_theme_right_separator_main=${tmux_conf_theme_right_separator_main-''}<br/>
-# &nbsp; tmux_conf_theme_right_separator_sub=${tmux_conf_theme_right_separator_sub-'|'}<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_message_fg=${tmux_conf_theme_message_fg:-'#000000'} &nbsp; # black<br/>
-# &nbsp; tmux_conf_theme_message_bg=${tmux_conf_theme_message_bg:-'#ffff00'} &nbsp; # yellow<br/>
-# &nbsp; tmux_conf_theme_message_attr=${tmux_conf_theme_message_attr:-'bold'}<br/>
-# &nbsp; tmux set -g message-style "fg=$tmux_conf_theme_message_fg,bg=$tmux_conf_theme_message_bg,$tmux_conf_theme_message_attr"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_message_command_fg=${tmux_conf_theme_message_command_fg:-'#ffff00'} # yellow<br/>
-# &nbsp; tmux_conf_theme_message_command_bg=${tmux_conf_theme_message_command_bg:-'#000000'} # black<br/>
-# &nbsp; tmux_conf_theme_message_command_attr=${tmux_conf_theme_message_command_attr:-'bold'}<br/>
-# &nbsp; tmux set -g message-command-style "fg=$tmux_conf_theme_message_command_fg,bg=$tmux_conf_theme_message_command_bg,$tmux_conf_theme_message_command_attr"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_mode_fg=${tmux_conf_theme_mode_fg:-'#000000'} # black<br/>
-# &nbsp; tmux_conf_theme_mode_bg=${tmux_conf_theme_mode_bg:-'#ffff00'} # yellow<br/>
-# &nbsp; tmux_conf_theme_mode_attr=${tmux_conf_theme_mode_attr:-'bold'}<br/>
-# &nbsp; tmux setw -g mode-style "fg=$tmux_conf_theme_mode_fg,bg=$tmux_conf_theme_mode_bg,$tmux_conf_theme_mode_attr"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_fg=${tmux_conf_theme_status_fg:-'#8a8a8a'} # white<br/>
-# &nbsp; tmux_conf_theme_status_bg=${tmux_conf_theme_status_bg:-'#080808'} # dark gray<br/>
-# &nbsp; tmux_conf_theme_status_attr=${tmux_conf_theme_status_attr:-'none'}<br/>
-# &nbsp; tmux &nbsp;set -g status-style "fg=$tmux_conf_theme_status_fg,bg=$tmux_conf_theme_status_bg,$tmux_conf_theme_status_attr" &nbsp; &nbsp; &nbsp; &nbsp;\;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; set -g status-left-style "fg=$tmux_conf_theme_status_fg,bg=$tmux_conf_theme_status_bg,$tmux_conf_theme_status_attr" &nbsp; \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; set -g status-right-style "fg=$tmux_conf_theme_status_fg,bg=$tmux_conf_theme_status_bg,$tmux_conf_theme_status_attr"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_terminal_title=${tmux_conf_theme_terminal_title:-'#h ❐ #S ● #I #W'}<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_terminal_title=$(echo "$tmux_conf_theme_terminal_title" | sed \<br/>
-# &nbsp; &nbsp; -e 's%#{circled_window_index}%#(cut -c3- ~/.tmux.conf | sh -s _circled_digit #I)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{circled_session_name}%#(cut -c3- ~/.tmux.conf | sh -s _circled_digit #S)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{username}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{hostname}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{username_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} true #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{hostname_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} true #D)%g')<br/>
-# &nbsp; tmux set -g set-titles-string "$tmux_conf_theme_terminal_title"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_window_status_fg=${tmux_conf_theme_window_status_fg:-'#8a8a8a'} # white<br/>
-# &nbsp; tmux_conf_theme_window_status_bg=${tmux_conf_theme_window_status_bg:-'#080808'} # dark gray<br/>
-# &nbsp; tmux_conf_theme_window_status_attr=${tmux_conf_theme_window_status_attr:-'none'}<br/>
-# &nbsp; tmux_conf_theme_window_status_format=${tmux_conf_theme_window_status_format:-'#I #W'}<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_window_status_current_fg=${tmux_conf_theme_window_status_current_fg:-'#000000'} # black<br/>
-# &nbsp; tmux_conf_theme_window_status_current_bg=${tmux_conf_theme_window_status_current_bg:-'#00afff'} # light blue<br/>
-# &nbsp; tmux_conf_theme_window_status_current_attr=${tmux_conf_theme_window_status_current_attr:-'bold'}<br/>
-# &nbsp; tmux_conf_theme_window_status_current_format=${tmux_conf_theme_window_status_current_format:-'#I #W'}<br/>
-# &nbsp; if [ x"$(tmux show -g -v status-justify)" = x"right" ]; then<br/>
-# &nbsp; &nbsp; tmux_conf_theme_window_status_current_format="#[fg=$tmux_conf_theme_window_status_current_bg,bg=$tmux_conf_theme_window_status_bg]$tmux_conf_theme_right_separator_main#[fg=default,bg=default,default] $tmux_conf_theme_window_status_current_format #[fg=$tmux_conf_theme_window_status_bg,bg=$tmux_conf_theme_window_status_current_bg,none]$tmux_conf_theme_right_separator_main"<br/>
-# &nbsp; else<br/>
-# &nbsp; &nbsp; tmux_conf_theme_window_status_current_format="#[fg=$tmux_conf_theme_window_status_bg,bg=$tmux_conf_theme_window_status_current_bg]$tmux_conf_theme_left_separator_main#[fg=default,bg=default,default] $tmux_conf_theme_window_status_current_format #[fg=$tmux_conf_theme_window_status_current_bg,bg=$tmux_conf_theme_status_bg,none]$tmux_conf_theme_left_separator_main"<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_window_status_format=$(echo "$tmux_conf_theme_window_status_format" | sed \<br/>
-# &nbsp; &nbsp; -e 's%#{circled_window_index}%#(cut -c3- ~/.tmux.conf | sh -s _circled_digit #I)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{circled_session_name}%#(cut -c3- ~/.tmux.conf | sh -s _circled_digit #S)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{username}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{hostname}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{username_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} true #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{hostname_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} true #D)%g')<br/>
-# &nbsp; tmux_conf_theme_window_status_current_format=$(echo "$tmux_conf_theme_window_status_current_format" | sed \<br/>
-# &nbsp; &nbsp; -e 's%#{circled_window_index}%#(cut -c3- ~/.tmux.conf | sh -s _circled_digit #I)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{circled_session_name}%#(cut -c3- ~/.tmux.conf | sh -s _circled_digit #S)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{username}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{hostname}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{username_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} true #D)%g' \<br/>
-# &nbsp; &nbsp; -e 's%#{hostname_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} true #D)%g')<br/>
-#<br/>
-# &nbsp; tmux &nbsp;setw -g window-status-style "fg=$tmux_conf_theme_window_status_fg,bg=$tmux_conf_theme_window_status_bg,$tmux_conf_theme_window_status_attr" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; setw -g window-status-format "$tmux_conf_theme_window_status_format" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; setw -g window-status-current-style "fg=$tmux_conf_theme_window_status_current_fg,bg=$tmux_conf_theme_window_status_current_bg,$tmux_conf_theme_window_status_current_attr" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; setw -g window-status-current-format "$tmux_conf_theme_window_status_current_format"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_window_status_activity_fg=${tmux_conf_theme_window_status_activity_fg:-'default'}<br/>
-# &nbsp; tmux_conf_theme_window_status_activity_bg=${tmux_conf_theme_window_status_activity_bg:-'default'}<br/>
-# &nbsp; tmux_conf_theme_window_status_activity_attr=${tmux_conf_theme_window_status_activity_attr:-'underscore'}<br/>
-# &nbsp; tmux setw -g window-status-activity-style "fg=$tmux_conf_theme_window_status_activity_fg,bg=$tmux_conf_theme_window_status_activity_bg,$tmux_conf_theme_window_status_activity_attr"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_window_status_bell_fg=${tmux_conf_theme_window_status_bell_fg:-'#ffff00'} # yellow<br/>
-# &nbsp; tmux_conf_theme_window_status_bell_bg=${tmux_conf_theme_window_status_bell_bg:-'default'}<br/>
-# &nbsp; tmux_conf_theme_window_status_bell_attr=${tmux_conf_theme_window_status_bell_attr:-'blink,bold'}<br/>
-# &nbsp; tmux setw -g window-status-bell-style "fg=$tmux_conf_theme_window_status_bell_fg,bg=$tmux_conf_theme_window_status_bell_bg,$tmux_conf_theme_window_status_bell_attr"<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_window_status_last_fg=${tmux_conf_theme_window_status_last_fg:-'#00afff'} # light blue<br/>
-# &nbsp; tmux_conf_theme_window_status_last_bg=${tmux_conf_theme_window_status_last_bg:-'default'}<br/>
-# &nbsp; tmux_conf_theme_window_status_last_attr=${tmux_conf_theme_window_status_last_attr:-'none'}<br/>
-# &nbsp; tmux setw -g window-status-last-style "fg=$tmux_conf_theme_window_status_last_fg,bg=$tmux_conf_theme_window_status_last_bg,$tmux_conf_theme_window_status_last_attr"<br/>
-#<br/>
-# &nbsp; # -- indicators<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_pairing=${tmux_conf_theme_pairing:-'👓'} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# U+1F453<br/>
-# &nbsp; tmux_conf_theme_pairing_fg=${tmux_conf_theme_pairing_fg:-'#e4e4e4'} # white<br/>
-# &nbsp; tmux_conf_theme_pairing_bg=${tmux_conf_theme_pairing_bg:-'none'}<br/>
-# &nbsp; tmux_conf_theme_pairing_attr=${tmux_conf_theme_pairing_attr:-'none'}<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_prefix=${tmux_conf_theme_prefix:-'⌨'} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # U+2328<br/>
-# &nbsp; tmux_conf_theme_prefix_fg=${tmux_conf_theme_prefix_fg:-'#e4e4e4'} # white<br/>
-# &nbsp; tmux_conf_theme_prefix_bg=${tmux_conf_theme_prefix_bg:-'none'}<br/>
-# &nbsp; tmux_conf_theme_prefix_attr=${tmux_conf_theme_prefix_attr:-'none'}<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_root=${tmux_conf_theme_root:-'!'}<br/>
-# &nbsp; tmux_conf_theme_root_fg=${tmux_conf_theme_root_fg:-'none'}<br/>
-# &nbsp; tmux_conf_theme_root_bg=${tmux_conf_theme_root_bg:-'none'}<br/>
-# &nbsp; tmux_conf_theme_root_attr=${tmux_conf_theme_root_attr:-'bold,blink'}<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_synchronized=${tmux_conf_theme_synchronized:-'🔒'} &nbsp;# U+1F512<br/>
-# &nbsp; tmux_conf_theme_synchronized_fg=${tmux_conf_theme_synchronized_fg:-'none'}<br/>
-# &nbsp; tmux_conf_theme_synchronized_bg=${tmux_conf_theme_synchronized_bg:-'none'}<br/>
-# &nbsp; tmux_conf_theme_synchronized_attr=${tmux_conf_theme_synchronized_attr:-'none'}<br/>
-#<br/>
-# &nbsp; # -- status left style<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_left=${tmux_conf_theme_status_left-' ❐ #S '}<br/>
-# &nbsp; tmux_conf_theme_status_left_fg=${tmux_conf_theme_status_left_fg:-'#000000,#e4e4e4,#e4e4e4'} &nbsp;# black, white , white<br/>
-# &nbsp; tmux_conf_theme_status_left_bg=${tmux_conf_theme_status_left_bg:-'#ffff00,#ff00af,#00afff'} &nbsp;# yellow, pink, white blue<br/>
-# &nbsp; tmux_conf_theme_status_left_attr=${tmux_conf_theme_status_left_attr:-'bold,none,none'}<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_left=$(echo "$tmux_conf_theme_status_left" | sed \<br/>
-# &nbsp; &nbsp; -e "s/#{pairing}/#[fg=$tmux_conf_theme_pairing_fg]#[bg=$tmux_conf_theme_pairing_bg]#[$tmux_conf_theme_pairing_attr]#{?session_many_attached,$tmux_conf_theme_pairing,}/g")<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_left=$(echo "$tmux_conf_theme_status_left" | sed \<br/>
-# &nbsp; &nbsp; -e "s/#{prefix}/#[fg=$tmux_conf_theme_prefix_fg]#[bg=$tmux_conf_theme_prefix_bg]#[$tmux_conf_theme_prefix_attr]#{?client_prefix,$tmux_conf_theme_prefix,}/g")<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_left=$(echo "$tmux_conf_theme_status_left" | sed \<br/>
-# &nbsp; &nbsp; -e "s%#{root}%#[fg=$tmux_conf_theme_root_fg]#[bg=$tmux_conf_theme_root_bg]#[$tmux_conf_theme_root_attr]#(cut -c3- ~/.tmux.conf | sh -s _root #{pane_tty} #D)#[inherit]%g")<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_left=$(echo "$tmux_conf_theme_status_left" | sed \<br/>
-# &nbsp; &nbsp; -e "s%#{synchronized}%#[fg=$tmux_conf_theme_synchronized_fg]#[bg=$tmux_conf_theme_synchronized_bg]#[$tmux_conf_theme_synchronized_attr]#{?pane_synchronized,$tmux_conf_theme_synchronized,}%g")<br/>
-#<br/>
-# &nbsp; if [ -n "$tmux_conf_theme_status_left" ]; then<br/>
-# &nbsp; &nbsp; status_left=$(awk \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v fg_="$tmux_conf_theme_status_left_fg" \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v bg_="$tmux_conf_theme_status_left_bg" \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v attr_="$tmux_conf_theme_status_left_attr" \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v mainsep="$tmux_conf_theme_left_separator_main" \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v subsep="$tmux_conf_theme_left_separator_sub" '<br/>
-# &nbsp; &nbsp; &nbsp; function subsplit(s, &nbsp; l, i, a, r)<br/>
-# &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l = split(s, a, ",")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; for (i = 1; i &lt;= l; ++i)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o = split(a[i], _, "(") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; c = split(a[i], _, ")") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; open += o - c<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o_ = split(a[i], _, "{") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; c_ = split(a[i], _, "}") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; open_ += o_ - c_<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o__ = split(a[i], _, "[") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; c__ = split(a[i], _, "]") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; open__ += o__ - c__<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (i == l)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; r = sprintf("%s%s", r, a[i])<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else if (open || open_ || open__)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; r = sprintf("%s%s,", r, a[i])<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; r = sprintf("%s%s#[fg=%s,bg=%s,%s]%s", r, a[i], fg[j], bg[j], attr[j], subsep)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; gsub(/#\[inherit\]/, sprintf("#[default]#[fg=%s,bg=%s,%s]", fg[j], bg[j], attr[j]), r)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; return r<br/>
-# &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; BEGIN {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; FS = "|"<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l1 = split(fg_, fg, ",")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l2 = split(bg_, bg, ",")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l3 = split(attr_, attr, ",")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l = l1 &lt; l2 ? (l1 &lt; l3 ? l1 : l3) : (l2 &lt; l3 ? l2 : l3)<br/>
-# &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; for (i = j = 1; i &lt;= NF; ++i)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (open || open_ || open__)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; printf "|%s", subsplit($i)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (i &gt; 1)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; printf "#[fg=%s,bg=%s,none]%s#[fg=%s,bg=%s,%s]%s", bg[j_], bg[j], mainsep, fg[j], bg[j], attr[j], subsplit($i)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; printf "#[fg=%s,bg=%s,%s]%s", fg[j], bg[j], attr[j], subsplit($i)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!open &amp;&amp; !open_ &amp;&amp; !open__)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; j_ = j<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; j = j % l + 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; printf "#[fg=%s,bg=%s,none]%s", bg[j_], "default", mainsep<br/>
-# &nbsp; &nbsp; &nbsp; }' &lt;&lt; EOF<br/>
-# $tmux_conf_theme_status_left<br/>
-# EOF<br/>
-# &nbsp; &nbsp; )<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; status_left="$status_left "<br/>
-#<br/>
-# &nbsp; # -- status right style<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_right=${tmux_conf_theme_status_right-'#{pairing}#{prefix} #{battery_status} #{battery_bar} #{battery_percentage} , %R , %d %b | #{username} | #{hostname} '}<br/>
-# &nbsp; tmux_conf_theme_status_right_fg=${tmux_conf_theme_status_right_fg:-'#8a8a8a,#e4e4e4,#000000'} # light gray, white, black<br/>
-# &nbsp; tmux_conf_theme_status_right_bg=${tmux_conf_theme_status_right_bg:-'#080808,#d70000,#e4e4e4'} # dark gray, red, white<br/>
-# &nbsp; tmux_conf_theme_status_right_attr=${tmux_conf_theme_status_right_attr:-'none,none,bold'}<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_right=$(echo "$tmux_conf_theme_status_right" | sed \<br/>
-# &nbsp; &nbsp; -e "s/#{pairing}/#[fg=$tmux_conf_theme_pairing_fg]#[bg=$tmux_conf_theme_pairing_bg]#[$tmux_conf_theme_pairing_attr]#{?session_many_attached,$tmux_conf_theme_pairing,}/g")<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_right=$(echo "$tmux_conf_theme_status_right" | sed \<br/>
-# &nbsp; &nbsp; -e "s/#{prefix}/#[fg=$tmux_conf_theme_prefix_fg]#[bg=$tmux_conf_theme_prefix_bg]#[$tmux_conf_theme_prefix_attr]#{?client_prefix,$tmux_conf_theme_prefix,}/g")<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_right=$(echo "$tmux_conf_theme_status_right" | sed \<br/>
-# &nbsp; &nbsp; -e "s%#{root}%#[fg=$tmux_conf_theme_root_fg]#[bg=$tmux_conf_theme_root_bg]#[$tmux_conf_theme_root_attr]#(cut -c3- ~/.tmux.conf | sh -s _root #{pane_tty} #D)#[inherit]%g")<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_status_right=$(echo "$tmux_conf_theme_status_right" | sed \<br/>
-# &nbsp; &nbsp; -e "s%#{synchronized}%#[fg=$tmux_conf_theme_synchronized_fg]#[bg=$tmux_conf_theme_synchronized_bg]#[$tmux_conf_theme_synchronized_attr]#{?pane_synchronized,$tmux_conf_theme_synchronized,}%g")<br/>
-#<br/>
-# &nbsp; if [ -n "$tmux_conf_theme_status_right" ]; then<br/>
-# &nbsp; &nbsp; status_right=$(awk \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v fg_="$tmux_conf_theme_status_right_fg" \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v bg_="$tmux_conf_theme_status_right_bg" \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v attr_="$tmux_conf_theme_status_right_attr" \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v mainsep="$tmux_conf_theme_right_separator_main" \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -v subsep="$tmux_conf_theme_right_separator_sub" '<br/>
-# &nbsp; &nbsp; &nbsp; function subsplit(s, &nbsp; l, i, a, r)<br/>
-# &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l = split(s, a, ",")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; for (i = 1; i &lt;= l; ++i)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o = split(a[i], _, "(") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; c = split(a[i], _, ")") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; open += o - c<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o_ = split(a[i], _, "{") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; c_ = split(a[i], _, "}") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; open_ += o_ - c_<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o__ = split(a[i], _, "[") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; c__ = split(a[i], _, "]") - 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; open__ += o__ - c__<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (i == l)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; r = sprintf("%s%s", r, a[i])<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else if (open || open_ || open__)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; r = sprintf("%s%s,", r, a[i])<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; r = sprintf("%s%s#[fg=%s,bg=%s,%s]%s", r, a[i], fg[j], bg[j], attr[j], subsep)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; gsub(/#\[inherit\]/, sprintf("#[default]#[fg=%s,bg=%s,%s]", fg[j], bg[j], attr[j]), r)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; return r<br/>
-# &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; BEGIN {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; FS = "|"<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l1 = split(fg_, fg, ",")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l2 = split(bg_, bg, ",")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l3 = split(attr_, attr, ",")<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; l = l1 &lt; l2 ? (l1 &lt; l3 ? l1 : l3) : (l2 &lt; l3 ? l2 : l3)<br/>
-# &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; for (i = j = 1; i &lt;= NF; ++i)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (open_ || open || open__)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; printf "|%s", subsplit($i)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; printf "#[fg=%s,bg=%s,none]%s#[fg=%s,bg=%s,%s]%s", bg[j], (i == 1) ? "default" : bg[j_], mainsep, fg[j], bg[j], attr[j], subsplit($i)<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!open &amp;&amp; !open_ &amp;&amp; !open__)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; j_ = j<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; j = j % l + 1<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
-# &nbsp; &nbsp; &nbsp; }' &lt;&lt; EOF<br/>
-# $tmux_conf_theme_status_right<br/>
-# EOF<br/>
-# &nbsp; &nbsp; )<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; # -- variables<br/>
-#<br/>
-# &nbsp; tmux set -g '@root' "$tmux_conf_theme_root"<br/>
-#<br/>
-# &nbsp; tmux_conf_battery_bar_symbol_full=${tmux_conf_battery_bar_symbol_full:-'◼'}<br/>
-# &nbsp; tmux_conf_battery_bar_symbol_empty=${tmux_conf_battery_bar_symbol_empty:-'◻'}<br/>
-# &nbsp; tmux_conf_battery_bar_length=${tmux_conf_battery_bar_length:-'auto'}<br/>
-# &nbsp; tmux_conf_battery_bar_palette=${tmux_conf_battery_bar_palette:-'gradient'}<br/>
-# &nbsp; tmux_conf_battery_hbar_palette=${tmux_conf_battery_hbar_palette:-'gradient'} # red, orange, green<br/>
-# &nbsp; tmux_conf_battery_vbar_palette=${tmux_conf_battery_vbar_palette:-'gradient'} # red, orange, green<br/>
-# &nbsp; tmux_conf_battery_status_charging=${tmux_conf_battery_status_charging:-'↑'} &nbsp; &nbsp; &nbsp; # U+2191<br/>
-# &nbsp; tmux_conf_battery_status_discharging=${tmux_conf_battery_status_discharging:-'↓'} # U+2193<br/>
-#<br/>
-# &nbsp; case "$status_left $status_right" in<br/>
-# &nbsp; &nbsp; *'#{battery_status}'*|*'#{battery_bar}'*|*'#{battery_hbar}'*|*'#{battery_vbar}'*|*'#{battery_percentage}'*)<br/>
-# &nbsp; &nbsp; &nbsp; status_left=$(echo "$status_left" | sed -E \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_bar/#\{\1@battery_bar/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_hbar/#\{\1@battery_hbar/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_vbar/#\{\1@battery_vbar/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_status/#\{\1@battery_status/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_percentage/#\{\1@battery_percentage/g')<br/>
-# &nbsp; &nbsp; &nbsp; status_right=$(echo "$status_right" | sed -E \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_bar/#\{\1@battery_bar/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_hbar/#\{\1@battery_hbar/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_vbar/#\{\1@battery_vbar/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_status/#\{\1@battery_status/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?battery_percentage/#\{\1@battery_percentage/g')<br/>
-#<br/>
-# &nbsp; &nbsp; &nbsp; tmux &nbsp;set -g '@battery_bar_symbol_full' "$tmux_conf_battery_bar_symbol_full" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_bar_symbol_empty' "$tmux_conf_battery_bar_symbol_empty" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_bar_length' "$tmux_conf_battery_bar_length" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_bar_palette' "$tmux_conf_battery_bar_palette" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_hbar_palette' "$tmux_conf_battery_hbar_palette" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_vbar_palette' "$tmux_conf_battery_vbar_palette" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_status_charging' "$tmux_conf_battery_status_charging" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set -g '@battery_status_discharging' "$tmux_conf_battery_status_discharging"<br/>
-# &nbsp; &nbsp; &nbsp; status_right="#(cut -c3- ~/.tmux.conf | sh -s _battery)$status_right"<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; esac<br/>
-#<br/>
-# &nbsp; case "$status_left $status_right" in<br/>
-# &nbsp; &nbsp; *'#{username}'*|*'#{hostname}'*|*'#{username_ssh}'*|*'#{hostname_ssh}'*)<br/>
-# &nbsp; &nbsp; &nbsp; status_left=$(echo "$status_left" | sed \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's%#{username}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's%#{hostname}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's%#{username_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} true #D)%g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's%#{hostname_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} true #D)%g')<br/>
-# &nbsp; &nbsp; &nbsp; status_right=$(echo "$status_right" | sed \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's%#{username}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's%#{hostname}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} false #D)%g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's%#{username_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _username #{pane_tty} true #D)%g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's%#{hostname_ssh}%#(cut -c3- ~/.tmux.conf | sh -s _hostname #{pane_tty} true #D)%g')<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; esac<br/>
-#<br/>
-# &nbsp; case "$status_left $status_right" in<br/>
-# &nbsp; &nbsp; *'#{uptime_d}'*|*'#{uptime_h}'*|*'#{uptime_m}'*)<br/>
-# &nbsp; &nbsp; &nbsp; status_left=$(echo "$status_left" | sed -E \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?uptime_d/#\{\1@uptime_d/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?uptime_h/#\{\1@uptime_h/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?uptime_m/#\{\1@uptime_m/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?uptime_s/#\{\1@uptime_s/g')<br/>
-# &nbsp; &nbsp; &nbsp; status_right=$(echo "$status_right" | sed -E \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?uptime_d/#\{\1@uptime_d/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?uptime_h/#\{\1@uptime_h/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?uptime_m/#\{\1@uptime_m/g' \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?uptime_s/#\{\1@uptime_s/g')<br/>
-# &nbsp; &nbsp; &nbsp; status_right="#(cut -c3- ~/.tmux.conf | sh -s _uptime)$status_right"<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; esac<br/>
-#<br/>
-# &nbsp; case "$status_left $status_right" in<br/>
-# &nbsp; &nbsp; *'#{loadavg}'*)<br/>
-# &nbsp; &nbsp; &nbsp; status_left=$(echo "$status_left" | sed -E \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?loadavg/#\{\1@loadavg/g')<br/>
-# &nbsp; &nbsp; &nbsp; status_right=$(echo "$status_right" | sed -E \<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; -e 's/#\{(\?)?loadavg/#\{\1@loadavg/g')<br/>
-# &nbsp; &nbsp; &nbsp; status_right="#(cut -c3- ~/.tmux.conf | sh -s _loadavg)$status_right"<br/>
-# &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; esac<br/>
-#<br/>
-# &nbsp; status_left=$(echo "$status_left" | sed 's%#{circled_session_name}%#(cut -c3- ~/.tmux.conf | sh -s _circled_digit #S)%g')<br/>
-# &nbsp; status_right=$(echo "$status_right" | sed 's%#{circled_session_name}%#(cut -c3- ~/.tmux.conf | sh -s _circled_digit #S)%g')<br/>
-#<br/>
-# &nbsp; tmux &nbsp;set -g status-left-length 1000 \; set -g status-left "$status_left" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; set -g status-right-length 1000 \; set -g status-right "$status_right"<br/>
-#<br/>
-# &nbsp; # -- clock -------------------------------------------------------------<br/>
-#<br/>
-# &nbsp; tmux_conf_theme_clock_colour=${tmux_conf_theme_clock_colour:-'#00afff'} # light blue<br/>
-# &nbsp; tmux_conf_theme_clock_style=${tmux_conf_theme_clock_style:-'24'}<br/>
-# &nbsp; tmux &nbsp;setw -g clock-mode-colour "$tmux_conf_theme_clock_colour" \;\<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; setw -g clock-mode-style "$tmux_conf_theme_clock_style"<br/>
-# }<br/>
-#<br/>
-# _apply_configuration() {<br/>
-#<br/>
-# &nbsp; # see https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard<br/>
-# &nbsp; if command -v reattach-to-user-namespace &gt; /dev/null 2&gt;&amp;1; then<br/>
-# &nbsp; &nbsp; default_shell="$(tmux show -gv default-shell)"<br/>
-# &nbsp; &nbsp; case "$default_shell" in<br/>
-# &nbsp; &nbsp; &nbsp; *fish)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; tmux set -g default-command "reattach-to-user-namespace -l $default_shell"<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; &nbsp; *sh)<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; tmux set -g default-command "exec $default_shell... 2&gt; /dev/null &amp; reattach-to-user-namespace -l $default_shell"<br/>
-# &nbsp; &nbsp; &nbsp; &nbsp; ;;<br/>
-# &nbsp; &nbsp; esac<br/>
-# &nbsp; fi<br/>
-#<br/>
-# &nbsp; _apply_overrides<br/>
-# &nbsp; _apply_bindings<br/>
-# &nbsp; _apply_theme<br/>
-# &nbsp; for name in $(printenv | grep -Eo '^tmux_conf_[^=]+'); do tmux setenv -gu "$name"; done;<br/>
-# }<br/>
-#<br/>
-# _urlview() {<br/>
-# &nbsp; tmux capture-pane -J -S - -E - -b "urlview-$1" -t "$1"<br/>
-# &nbsp; tmux split-window "tmux show-buffer -b urlview-$1 | urlview || true; tmux delete-buffer -b urlview-$1"<br/>
-# }<br/>
-#<br/>
-# _fpp() {<br/>
-# &nbsp; tmux capture-pane -J -S - -E - -b "fpp-$1" -t "$1"<br/>
-# &nbsp; tmux split-window "tmux show-buffer -b fpp-$1 | fpp || true; tmux delete-buffer -b fpp-$1"<br/>
-# }<br/>
-#<br/>
-# "$@"</body></html>
+run 'cut -c3- ~/.tmux_scripts | sh -s _apply_configuration'<br/>
+</body></html>
