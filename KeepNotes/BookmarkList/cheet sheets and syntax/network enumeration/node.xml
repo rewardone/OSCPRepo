@@ -5,6 +5,7 @@
   <key>title</key><string>Network Enumeration</string>
   <key>nodeid</key><string>3f141e8e-d63b-494e-8534-22181fd4d0d9</string>
   <key>modified_time</key><integer>1527968341</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1527968341</integer>

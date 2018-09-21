@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Create In Linux</title>
+</head><body>we will have to make use of the “unzipsfx” command. Eg: archive "test" containing "test.txt"<br/>
+You may need unzipsfx.exe as noted in the top example:<br/>
+<br/>
+1. Get necessary pre-requisites <br/>
+wget http://kolmoskone.homelinux.org/~kaja/kamaa/unzipsfx-552_win32.tar.gz<br/>
+tar zxf unzipsfx-552_win32.tar.gz<br/>
+sudo apt-get install zip<br/>
+<br/>
+2. Create zip file of contents normally<br/>
+<br/>
+3. Make self-extracting:<br/>
+cat unzipsfx-552_win32/unzipsfx.exe MYZIPFILE.zip &gt; mysfxfile.exe<br/>
+zip -A mysfxfile.exe<br/>
+<br/>
+mysfxfile.exe can now be opened in any Win32 compatible system (including for example Windows XP/2000/Vista and even Wine in Linux) or ANY ZIP COMPATIBLE archive program such as file-roller in Ubuntu.<br/>
+<br/>
+<br/>
+-----------------------------------------------------------------------------------------------------------<br/>
+<br/>
+<br/>
+1. First, compress the “test.txt” to zip format (using the Archive Manager). You should now have a “test.zip” file that contains “text.txt”.<br/>
+<br/>
+2. Open a terminal and type:<br/>
+cat /usr/bin/unzipsfx /path/to/test.zip &gt; /path/to/test<br/>
+What this command does is to prepend “unzipsfx” to the beginning of “test.zip” and save it as a new file “test”.<br/>
+<br/>
+3. Next, we are going to change the permission of the file and do adjustment to the self-extracting archive:<br/>
+chmod 755 /path/to/test<br/>
+zip -A /path/to/test<br/>
+<br/>
+That’s it. Whenever you double-click “test”, it will automatically extract the files contained within itself.</body></html>
