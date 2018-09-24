@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Chatterbox - Start-Process Get-ACL Cacls Unicorn</title>
+</head><body>Ensure you scan all ports<br/>
+<br/>
+MSFVenom advanced option<br/>
+BufferRegister=EAX &#09;&#09;#Essentially jump to EAX and not to ESP or otherwise<br/>
+<br/>
+whoami /all&#09;&#09;&#09;#will list all current privileges including Se privileges and their states (enabled/disabled)<br/>
+<br/>
+Get-ACL &lt;thing&gt; | fl *&#09;&#09;#pipe to FL for "format list" * for getting everything<br/>
+<br/>
+We see a file that we OWN but we do not have 'AccessToString' to read it. Change permissions in Powershell with cacls. <br/>
+cacls root.txt /e /p ALFRED:F&#09;&#09;&#09;&#09;&#09;#/e edit, /p permission &lt;user&gt;:full<br/>
+Check the <a href="https://ss64.com/nt/cacls.html">cacls</a>&nbsp;manual for options <br/>
+<br/>
+icacls also able to be used.<br/>
+<br/>
+Unicorn can generate meterpreter payloads and give you a metasploit autostart file to listen with</body></html>

