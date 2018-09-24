@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>HotPotato</string>
+  <key>nodeid</key><string>4a9f3fa6-8259-4b82-8621-57d16fbf4f53</string>
+  <key>modified_time</key><integer>1537642194</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1537642194</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

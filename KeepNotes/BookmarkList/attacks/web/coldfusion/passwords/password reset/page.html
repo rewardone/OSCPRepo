@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Password Reset</title>
+</head><body>Open up the password.properties file which lies in &lt;coldfusion install directory&gt;\lib<br/>
+<br/>
+You can see some encrypted string like<br/>
+<br/>
+password=5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8<br/>
+encrypted=true<br/>
+<br/>
+Change it to clear text with encrypted=false<br/>
+<br/>
+password=newPassword<br/>
+encrypted=false<br/>
+<br/>
+After that you can log in using newPassword and reset to a proper password in the CF Administrator.<br/>
+</body></html>

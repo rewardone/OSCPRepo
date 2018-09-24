@@ -55,7 +55,7 @@ if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.co
 
 echo "\nCloning PowerSploit\n"
 direc=/root/Documents/PowerSploit
-if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/PowerShellMafia/PowerSploit.git $direc; fi
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/PowerShellMafia/PowerSploit.git -b dev $direc; fi
 
 echo "\nCloning Python PTY Shells\n"
 direc=/root/Documents/PythonPTYShells

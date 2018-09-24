@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Get DB Creds</string>
+  <key>nodeid</key><string>66e5f4f2-a63e-4e9b-b29e-f45884b9438d</string>
+  <key>modified_time</key><integer>1537667502</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1537662920</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

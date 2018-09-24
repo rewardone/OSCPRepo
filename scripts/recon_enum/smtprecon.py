@@ -16,6 +16,8 @@ outfile = "/root/scripts/recon_enum/results/exam/smtp/%s_smtprecon.txt" % (ip_ad
 #smtp-enum-users: attempt to enumerate users by using VRFY, EXPN, or RCPT TO commands. Will stop if auth is enforced.
 #smtp-ntlm-info: enumerate servers that allow NTLM auth. Sending NULL NTLM will cause a response of NetBIOS, DNS, and OS build version
 #smtp-vuln-cve2011-1764: check for format string vuln in Exim 4.70-4.75 with DKIM support (CVE-2011-1764). RCE with EXIM priv levels
+#pop3-capabilities: Retrieves POP3 email server capabilities
+#pop3-ntlm-info: Enum info from POP3 with NTLM auth enabled
 
 #Not running
 #smtp-brute: Brute force login/plain/cram-md5/digest-md5/NTLM
@@ -25,8 +27,8 @@ outfile = "/root/scripts/recon_enum/results/exam/smtp/%s_smtprecon.txt" % (ip_ad
  #Warning ^ potential to crash if failed (heap corruption)
 #smtp-vuln-cve2011-1720: check for memory corruption in Postfix server when using Cyrus SASL library auth (CVE-2011-1720).
  #Warning ^ potential denial of service and possibly RCE
-print "INFO: Performing nmap SMTP script scan for %s:25,465,587" % (ip_address)
-subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p','25,465,587','--script','banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,smtp-vuln-cve2011-1764,vulners','-oA','/root/scripts/recon_enum/results/exam/smtp/%s_smtp' % (ip_address),ip_address])
+print "INFO: Performing nmap SMTP script scan for %s:25,110,143,465,587,993,995" % (ip_address)
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p','25,110,143,465,587,993,995','--script','banner,smtp-commands,smtp-enum-users,smtp-ntlm-info,smtp-vuln-cve2011-1764,pop3-capabilities,pop3-ntlm-info,vulners','-oA','/root/scripts/recon_enum/results/exam/smtp/%s_smtp' % (ip_address),ip_address])
 
 #nmap --script=smtp-enum-users sometimes errors (unhandled status codes) even
 #if information is obtainable. Adding second method for user-enum

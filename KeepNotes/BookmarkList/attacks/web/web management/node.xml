@@ -5,6 +5,7 @@
   <key>title</key><string>Web Management</string>
   <key>nodeid</key><string>7d5b4ded-a6c4-43a8-bb82-9aa328b9936a</string>
   <key>modified_time</key><integer>1526479020</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1526479020</integer>

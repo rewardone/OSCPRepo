@@ -7,4 +7,37 @@
 <br/>
 https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed<br/>
 <br/>
-</body></html>
+To find .NET Framework versions by viewing the registry (.NET Framework 1-4)<br/>
+reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP"<br/>
+<br/>
+<br/>
+<br/>
+To find .NET Framework versions by viewing the registry (.NET Framework 4.5 and later)<br/>
+reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"<br/>
+<br/>
+&nbsp; &nbsp; Note that the path to the Full subkey includes the subkey Net Framework rather than .NET Framework.<br/>
+&nbsp; &nbsp; Note If the Full subkey is not present, then you do not have the .NET Framework 4.5 or later installed.<br/>
+<br/>
+Check for a DWORD value named Release. The existence of the Release DWORD indicates that the .NET Framework 4.5 or newer has been installed on that computer.<br/>
+The value of the Release DWORD indicates which version of the .NET Framework is installed.<br/>
+<br/>
+<br/>
+The following table lists the keys of released versions of the .NET Framework only. It doesn't list the keys of preview or pre-release versions.<br/>
+Value of the Release DWORD &#09;Version<br/>
+378389 &#09;&#09;&#09;&#09;&#09;&#09;.NET Framework 4.5<br/>
+378675 &#09;&#09;&#09;&#09;&#09;&#09;.NET Framework 4.5.1 installed with Windows 8.1 or Windows Server 2012 R2<br/>
+378758 &#09;&#09;&#09;&#09;&#09;&#09;.NET Framework 4.5.1 installed on Windows 8, Windows 7 SP1, or Windows Vista SP2<br/>
+379893 &#09;&#09;&#09;&#09;&#09;&#09;.NET Framework 4.5.2<br/>
+Win 10 only: 393295&#09;&#09;&#09;.NET Framework 4.6<br/>
+all other OS versions: 393297 &#09;.NET Framework 4.6<br/>
+Win 10 Nov Update: 394254&#09;&#09;.NET Framework 4.6.1<br/>
+all other OS versions: 394271 &#09;.NET Framework 4.6.1<br/>
+Win10 Anniversary: 394802&#09;&#09;.NET Framework 4.6.2<br/>
+Windows Server 2016: 394802&#09;.NET Framework 4.6.2<br/>
+all other OS versions: 394806 &#09;.NET Framework 4.6.2<br/>
+Win10 Creators Update &nbsp;460798&#09;.NET Framework 4.7<br/>
+all other OS versions: 460805 &#09;.NET Framework 4.7<br/>
+Win 10 Fall Creators: 461308&#09;&#09;.NET Framework 4.7.1<br/>
+all other OS versions: 461310 &#09;.NET Framework 4.7.1<br/>
+Win 10 April 2018: 461808&#09;&#09;.NET Framework 4.7.2<br/>
+all other OS versions: 461814 &#09;.NET Framework 4.7.2</body></html>

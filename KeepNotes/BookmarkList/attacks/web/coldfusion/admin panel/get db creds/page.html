@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get DB Creds</title>
+</head><body>ColdFusion version, the credentials are stored in different places, but you might be able to retrieve the passwords from the administrative panel as well! :)<br/>
+&nbsp;&#09;Data &amp; Services &gt; Datasources <br/>
+<br/>
+For ColdFusion 6 and 7 the passwords for DataSources encrypted in the following XML files:<br/>
+[ColdFusion_Install_Dir]\lib\neo-query.xml<br/>
+<br/>
+For ColdFusion 8, 9 and 10:<br/>
+[ColdFusion_Install_Dir]\lib\neo-datasource.xml<br/>
+<br/>
+<br/>
+Hernan Ochoa (Hexale) wrote <a href="http://hexale.blogspot.be/2008/07/how-to-decrypt-coldfusion-datasource.html">a great blogpost</a> [6] on how the passwords for the data stores are being encrypted, so I will not go into details. The most important thing is that by decompiling \lib\cfusion.jar and looking at the \coldfusion\sql\DataSourceDef.class, you can find the seed for the key ("0yJ!@1$r8p0L@r1$6yJ!@1rj") and algorithm (3DES and then Base64 encoding) used.<br/>
+<br/>
+In case of ColdFusion 6, 7 and 8, the encrypted passwords can be found just by looking at the page source of the individual data sources on the administrative panel (on ColdFusion 9 and 10 this was fixed and you will only see ******** in the page source for the passwords).<br/>
+<br/>
+No matter how you obtain the encrypted passwords, you can decrypt them with openSSL like this:<br/>
+echo [encrypted_and_base64_encoded_password] | openssl des-ede3 -a -d -K 30794A21403124723870304C4072312436794A214031726A -iv 30794A2140312472; echo <br/>
+<br/>
+or, with the python script of Hernan Ochoa (I had to do a small fix in it, oh and you will need pyDes for it):<br/>
+or, you can just use a CFML like <a href="http://www.ipaul.com/2009/08/01/decrypt-coldfusion-datasource-passwords/">this one</a> from Paul Hassinger:</body></html>

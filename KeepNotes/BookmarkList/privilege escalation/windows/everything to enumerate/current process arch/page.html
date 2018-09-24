@@ -9,6 +9,8 @@
 &nbsp;If %PROCESSOR_ARCHITEW6432% == AMD64 ECHO 32 bit process<br/>
 Or in PowerShell:<br/>
 &nbsp;if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {"32 bit process"}<br/>
+If it's not set!: you're either in a 32-bit proces on a 32-bit windows. OR you're in a 64-bit process on a 64-bit windows. <br/>
+Check methods for determining Windows Arch.<br/>
 <br/>
 <b>System Folders</b><br/>
 &nbsp; &nbsp; 64 bit versions of Windows have dynamic system folders C:\Windows\sys* to support both 64 and 32 bit programs.<br/>

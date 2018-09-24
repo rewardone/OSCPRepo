@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pass The Hash With 8</title>
+</head><body><b>Using the password hash to login</b><br/>
+<br/>
+<div style="text-align: justify">&nbsp;As pointed out by <a href="http://blog.teusink.net/">Niels Teusink</a> few years ago (I have found it on <a href="http://www.gnucitizen.org/blog/coldfusion-directory-traversal-faq-cve-2010-2861/">this blog</a>&nbsp;[4]), an attacker does not need to crack the SHA1-hash, as the ColdFusion login screen does the following when you submit your password (actually, you can see with your own eyes that some javascript magic is happening in the password field when you submit the login credentials):</div>&nbsp;<br/>
+onSubmit="cfadminPassword.value = hex_hmac_sha1(salt.value, hex_sha1(cfadminPassword.value));" <br/>
+<div style="text-align: justify">&nbsp;Focus on the last part please... yep, that is right. Once you have the password hash, you can just put the hash value instead of hex_sha1(cfadminPassword.value) and this allows you to login into ColdFusion using only the hash... lame isn't it?</div>&nbsp;<br/>
+Here are the steps you need to take in order to login as administrator:<br/>
+<ul><li>Start capturing traffic using Burp (or whatever attack proxy you like).</li>
+<li>Enter the password hash into the password field of the login form.</li>
+<li>If you are using Firefox hit Ctrl+Shift+K, for Chrome, hit Ctrl+Shift+J to get the JavaScript console and if you are using Internet Explorer; stop using it and start using a real browser! :)</li>
+<li>Enter the following JavaScript code in the console:</li>
+<li>javascript:alert(hex_hmac_sha1(document.loginform.salt.value, document.loginform.cfadminPassword.value)) Here is a screenshot of the JavaScript code in action (yes, it is from the PWB course, I was lazy to take new screenshots):</li>
+<li><div style="text-align: center">&nbsp;<a href="https://4.bp.blogspot.com/-hwmF2CTaenc/Uv38dzyEx2I/AAAAAAAAApw/3IoRtwnZufM/s1600/BYPASS_LOGIN.png"><img src="https://4.bp.blogspot.com/-hwmF2CTaenc/Uv38dzyEx2I/AAAAAAAAApw/3IoRtwnZufM/s1600/BYPASS_LOGIN.png" width="640" height="268" /></a></div>&nbsp;</li>
+<li>Record value that you got, and go back with your browser back button.</li>
+<li>Set Burp to intercept, click on the Login button at ClodFusion and catch the login request in Burp.</li>
+<li>Replace the value of the cfadminPassword parameter with the value you have recorded above.</li>
+<li>Forward the modified request and do your happy dance.</li>
+</ul>
+</body></html>

