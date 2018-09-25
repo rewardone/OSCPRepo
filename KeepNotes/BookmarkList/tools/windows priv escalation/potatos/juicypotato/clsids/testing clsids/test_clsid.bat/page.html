@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>test_clsid.bat</title>
+</head><body>@echo off<br/>
+:: Starting port, you can change it<br/>
+:: Requires juicypotato.exe in path/cwd<br/>
+set /a port=10000<br/>
+SETLOCAL ENABLEDELAYEDEXPANSION<br/>
+<br/>
+FOR /F %%i IN (CLSID.list) DO (<br/>
+&nbsp; &nbsp;echo %%i !port!<br/>
+&nbsp; &nbsp;juicypotato.exe -z -l !port! -c %%i &gt;&gt; result.log<br/>
+&nbsp; &nbsp;set RET=!ERRORLEVEL!<br/>
+&nbsp; &nbsp;:: echo !RET!<br/>
+&nbsp; &nbsp;if "!RET!" == "1" &nbsp;set /a port=port+1<br/>
+)<br/>
+</body></html>

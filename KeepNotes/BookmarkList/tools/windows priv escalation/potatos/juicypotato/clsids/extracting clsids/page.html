@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Extracting CLSIDs</title>
+</head><body>#### GetCLIDs.ps1 ####<br/>
+&lt;#<br/>
+This script extracts CLSIDs and AppIDs related to LocalService.DESCRIPTION<br/>
+Then exports to CSV<br/>
+#&gt;<br/>
+<br/>
+$ErrorActionPreference = "Stop"<br/>
+<br/>
+# Importing some requirements<br/>
+. .\utils\Join-Object.ps1<br/>
+<br/>
+New-PSDrive -Name HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT<br/>
+<br/>
+$CLSID = Get-ItemProperty HKCR:\clsid\* | select-object AppID,@{N='CLSID'; E={$_.pschildname}} | where-object {$_.appid -ne $null}<br/>
+<br/>
+$APPID = Get-ItemProperty HKCR:\appid\* | select-object localservice,@{N='AppID'; E={$_.pschildname}} | where-object {$_.LocalService -ne $null}<br/>
+<br/>
+$RESULT = Join-Object -Left $APPID -Right $CLSID -LeftJoinProperty AppID -RightJoinProperty AppID -Type AllInRight &nbsp;| Sort-Object LocalService<br/>
+<br/>
+# Preparing to Output<br/>
+$OS = (Get-WmiObject -Class Win32_OperatingSystem | ForEach-Object -MemberName Caption).Trim() -Replace "Microsoft ", ""<br/>
+$TARGET = $OS -Replace " ","_"<br/>
+<br/>
+# Make target folder<br/>
+New-Item -ItemType Directory -Force -Path .\$TARGET<br/>
+<br/>
+# Output in a CSV<br/>
+$RESULT | Export-Csv -Path ".\$TARGET\CLSIDs.csv" -Encoding ascii -NoTypeInformation<br/>
+<br/>
+# Export CLSIDs list<br/>
+$RESULT | Select CLSID -ExpandProperty CLSID | Out-File -FilePath ".\$TARGET\CLSID.list" -Encoding ascii<br/>
+<br/>
+# Visual Table<br/>
+$RESULT | ogv<br/>
+</body></html>

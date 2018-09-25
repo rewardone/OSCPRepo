@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>TLDR SeImpersonate SeAssignPrimaryToken</title>
+</head><body>Final thoughts<br/>
+If the user has SeImpersonate or SeAssignPrimaryToken privileges then you are SYSTEM.<br/>
+<br/>
+It’s nearly impossible to prevent the abuse of all these COM Servers. You could think to modify the permissions of these objects via DCOMCNFG but good luck, this is gonna be challenging.<br/>
+<br/>
+The actual solution is to protect sensitive accounts and applications which run under the * SERVICE accounts. Stopping DCOM would certainly inhibit this exploit but could have a serious impact on the underlying OS.<br/>
+<br/>
+<br/>
+Binaries Build status<br/>
+An automatic build is available. Binaries can be downloaded from the Artifacts section <a href="https://ci.appveyor.com/project/ohpe/juicy-potato/build/artifacts">here</a>.<br/>
+<br/>
+Also available in <a href="https://blackarch.org/">BlackArch</a>.</body></html>

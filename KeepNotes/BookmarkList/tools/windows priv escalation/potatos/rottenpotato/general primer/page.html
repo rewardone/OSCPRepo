@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>https://github.com/foxglovesec/RottenPotato<br/>
+<br/>
+The idea behind this vulnerability is simple to describe at a high level:<br/>
+<br/>
+1: Trick the “NT AUTHORITY\SYSTEM” account into authenticating via NTLM to a TCP endpoint we control.<br/>
+2: Man-in-the-middle this authentication attempt (NTLM relay) to locally negotiate a security token for the “NT AUTHORITY\SYSTEM” account. This is done through a series of Windows API calls.<br/>
+3: Impersonate the token we have just negotiated. This can only be done if the attackers current account has the privilege to impersonate security tokens. This is usually true of most service accounts and not true of most user-level accounts.<br/>
+<br/>
+In the original Hot Potato exploit, we did some complex magic with NBNS spoofing, WPAD, and Windows Update services to trick it into authenticating to us over HTTP. For more information, see the original blog post.<br/>
+<br/>
+Today, we’ll be discussing another method to accomplish the same end goal which James Forshaw discussed here. We’ll basically be tricking DCOM/RPC into NTLM authenticating to us. The advantage of this more complex method is that it is 100% reliable, consistent across Windows versions, and fires instantly rather than sometimes having to wait for Windows Update.</body></html>

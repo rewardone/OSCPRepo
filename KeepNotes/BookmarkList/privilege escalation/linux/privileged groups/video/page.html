@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Video</title>
+</head><body>Access to the pysical screen<br/>
+<br/>
+Video linux group can dump the contents of the monitor (physical screen).<br/>
+ls /dev/ | grep fb<br/>
+fb0<br/>
+<br/>
+Grab resolution of screen <br/>
+/sys/class/graphics/fb0:<br/>
+bits_per_pixel<br/>
+virtual_size<br/>
+<br/>
+<br/>
+Grab fb0 and start analysis on it<br/>
+File says it's a Targa image data, so open it with GIMP or other as "raw image data". Set resolution (virtual_size) according to those found above</body></html>

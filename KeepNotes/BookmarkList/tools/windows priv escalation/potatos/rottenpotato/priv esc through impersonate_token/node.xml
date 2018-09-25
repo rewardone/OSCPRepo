@@ -6,9 +6,10 @@
   <key>title</key><string>Priv Esc through Impersonate_Token</string>
   <key>nodeid</key><string>43aec380-2b68-474f-bf84-4311ceab34fa</string>
   <key>modified_time</key><integer>1513268027</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1513195241</integer>
-  <key>order</key><integer>0</integer>
+  <key>order</key><integer>1</integer>
 </dict>
 </node>

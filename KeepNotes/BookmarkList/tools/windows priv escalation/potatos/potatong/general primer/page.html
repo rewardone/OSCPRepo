@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>https://github.com/breenmachine/RottenPotatoNG <br/>
+<br/>
+RottenPotato as a C++ DLL and a standalone C++ binary, no need for meterpreter or other tools!<br/>
+<br/>
+RottenPotatoDLL<br/>
+This project generates a DLL and EXE file. The DLL contains all the code necessary to perform the RottenPotato attack and get a handle to a privileged token. The MSFRottenPotatoTestHarness project simply shows example usage for the DLL. For more examples, see https://github.com/hatRiot/token-priv/tree/master/poptoke/poptoke, specifically the SeAssignPrimaryTokenPrivilege.cpp and SeImpersonatePrivilege.cpp files.<br/>
+<br/>
+RottenPotatoEXE<br/>
+This project is identical to the above, except the code is all wrapped into a single project/binary. This may be more useful for some penetration testing scenarios.<br/>
+<br/>
+Modify the "main" method in MSFRottenPotato.cpp to change what command will be run. By default it just runs cmd.exe to pop a command shell.</body></html>
