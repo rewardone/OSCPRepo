@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Killing Connections</title>
+</head><body>https://unix.stackexchange.com/questions/83806/how-to-kill-ssh-session-that-was-started-with-the-f-option-run-in-background<br/>
+<br/>
+Two main ways:<br/>
+&nbsp;&#09;Sleep &lt;time&gt;&#09;&#09;&#09;#this is good for single processes. The tunnel will auto close after the process you are using closes<br/>
+&nbsp;&#09;Master socket&#09;&#09;&#09;#gives a solid path to kill the process when you want to as opposed to ps and grep<br/>
+<br/>
+Master Socket:<br/>
+ssh -f -N -M -S &lt;path-to-socket&gt; -D &lt;host&gt;:&lt;port&gt; &lt;server&gt;<br/>
+&nbsp;&#09;-M &#09;&#09;#put SSH into Master mode for connection sharing<br/>
+&nbsp;&#09;-S&#09;&#09;#specifies location of a control socket<br/>
+<br/>
+and to close it:<br/>
+ssh -S &lt;path-to-socket&gt; -O exit &lt;server<br/>
+<br/>
+<br/>
+<br/>
+Sleep:<br/>
+ssh -f -D &lt;host&gt;:&lt;port&gt; &lt;server&gt; sleep 10; vncviewer &lt;host&gt;:&lt;port&gt;<br/>
+<br/>
+ssh will try to close the connection after sleep 10, but it will be unable to because vncviewer is using it. <br/>
+Once you close vncviewer, the socket will close</body></html>

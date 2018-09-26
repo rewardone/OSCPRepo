@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>UDP Through SSH Tunnel</title>
+</head><body>Performing UDP tunneling through an SSH connection<br/>
+<br/>
+Step by step<br/>
+Open a TCP forward port with your SSH connection<br/>
+<br/>
+On your local machine (local), connect to the distant machine (server) by SSH, with the additional -L option so that SSH with TCP port-forward:<br/>
+<br/>
+&nbsp; &nbsp; local# ssh -L 6667:localhost:6667 server.foo.com<br/>
+&nbsp; <br/>
+<br/>
+This will allow TCP connections on the port number 6667 of your local machine to be forwarded to the port number 6667 on server.foo.com through the secure channel.<br/>
+Setup the TCP to UDP forward on the server<br/>
+<br/>
+On the server, we open a listener on the TCP port 6667 which will forward data to UDP port 53 of a specified IP. If you want to do DNS forwarding like me, you can take the first nameserver's IP you will find in /etc/resolv.conf. But first, we need to create a fifo. The fifo is necessary to have two-way communications between the two channels. A simple shell pipe would only communicate left process' standard output to right process' standard input.<br/>
+<br/>
+&nbsp; &nbsp; server# mkfifo /tmp/fifo<br/>
+&nbsp; &nbsp; server# nc -l -p 6667 &lt; /tmp/fifo | nc -u 192.168.1.1 53 &gt; /tmp/fifo<br/>
+&nbsp; <br/>
+<br/>
+This will allow TCP traffic on server's port 6667 to be forwarded to UDP traffic on 192.168.1.1's port 53, and responses to come back.<br/>
+Setup the UDP to TCP forward on your machine<br/>
+<br/>
+Now, we need to do the opposite of what was done upper on the local machine. You need priviledged access to bind the UDP port 53.<br/>
+<br/>
+&nbsp; &nbsp; local# mkfifo /tmp/fifo<br/>
+&nbsp; &nbsp; local# sudo nc -l -u -p 53 &lt; /tmp/fifo | nc localhost 6667 &gt; /tmp/fifo<br/>
+&nbsp; <br/>
+<br/>
+This will allow UDP traffic on local machine's port 53 to be forwarded to TCP traffic on local machine's port 6667.<br/>
+Enjoy your local DNS server :)<br/>
+<br/>
+As you've probably guessed it now, when a DNS query will be performed on the local machine, e.g. on local UDP port 53, it will be forwarded to local TCP port 6667, then to server's TCP port 6667, then to server's DNS server, UDP port 53 of 192.168.1.1. To enjoy DNS services on your local machine, put the following line as first nameserver in your /etc/resolv.conf:<br/>
+<br/>
+&nbsp; &nbsp; nameserver 127.0.0.1</body></html>
