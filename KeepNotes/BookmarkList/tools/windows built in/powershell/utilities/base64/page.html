@@ -14,4 +14,13 @@ Target<br/>
 $Decode = [System.Text.Encoding]::Unicode.GetString([System.Conver}::FromBase64String($Encoded))<br/>
 <br/>
 if you don't want to struggle iwth UTF-16 just create a standard b64 file and use certutil.exe on windows to decode the file<br/>
+<br/>
+<br/>
+UTF8 encoding<br/>
+$fc = Get-Content "File.txt"<br/>
+$fe = [System.Text.Encoding]::UTF8.GetBytes($fc)<br/>
+[System.Convert]::ToBase64String($fe)<br/>
+<br/>
+<br/>
+<br/>
 </body></html>

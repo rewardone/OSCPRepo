@@ -6,6 +6,7 @@
   <key>title</key><string>Invoke-ACLPwn</string>
   <key>nodeid</key><string>0f9dac95-9b0f-40aa-a56b-d93f55565ada</string>
   <key>modified_time</key><integer>1528914012</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1524850136</integer>

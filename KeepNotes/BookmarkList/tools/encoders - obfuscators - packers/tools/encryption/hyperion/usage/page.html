@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Usage</title>
+</head><body>Follow the correct build instructions as these may be outdated:<br/>
+<br/>
+cd Hyperion/<br/>
+i686-w64-mingw32-g++ Src/Crypter/*.cpp -o hyperion.exe<br/>
+cp -p /usr/lib/gcc/i686-w64-mingw32/6.1-win32/libgcc_s_sjlj-1.dll .<br/>
+cp -p /usr/lib/gcc/i686-w64-mingw32/6.1-win32/libstdc++-6.dll .<br/>
+<br/>
+Now execute hyperion through wine<br/>
+wine hyperion.exe &lt;my_evil_exe&gt; &lt;encrypted_my_evil_exe&gt;<br/>
+<br/>
+<br/>
+In Kali you should have hyperion 1 included. However for it to work you have to run it from it's correct path. So go to /usr/share/veil-evasion/tools/hyperion<br/>
+</body></html>

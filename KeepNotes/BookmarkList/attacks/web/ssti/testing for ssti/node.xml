@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Testing For SSTI</string>
+  <key>nodeid</key><string>a9c7963c-168a-4a31-b425-9f2c1aa73fc9</string>
+  <key>modified_time</key><integer>1537985583</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1537985519</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>
