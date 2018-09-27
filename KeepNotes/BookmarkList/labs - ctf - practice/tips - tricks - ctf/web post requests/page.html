@@ -13,4 +13,16 @@ Don't forget about your good friend curl!<br/>
 -X POST<br/>
 -x http://127.0.0.1:8080 (for seeing your request in a proxy)<br/>
 -d DATA TO POST<br/>
-&lt;target&gt;</body></html>
+&lt;target&gt;<br/>
+<br/>
+<br/>
+<br/>
+Changing to a post request:<br/>
+Content-Type: multipart/form-data; boundary=--PleaseSubscribe<br/>
+<br/>
+----PleaseSubscribe<br/>
+Content-Disposition: form-data; name=*anything*; filename="LaveAComment"<br/>
+Content-Type: text/plain<br/>
+<br/>
+Please Share my videos<br/>
+----PleaseSubscribe</body></html>
