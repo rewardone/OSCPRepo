@@ -6,5 +6,7 @@
 </head><body>PtH toolkit modifies several programs to be able to pass the hash (winexe, etc)<br/>
 Impackets tools generally allow it (psexec, wmiexec, etc)<br/>
 CrackMapExec&#09;You can pass the hash in CME with the -H flag<br/>
-xfreerpd&#09;for RDP pass the hash against Windows 7+ (https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)<br/>
-</body></html>
+xfreerpd&#09;keep in mind that this only works on Windows 2012 R2 and Windows 8.1. To the best of our knowledge, the “Restricted Admin” feature has not been backported yet and considering this, it may never be. (https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)<br/>
+<br/>
+Note: you MAY need the full LM:NTLM hash. If you only have NTLM, try a blank LM or 0s for LM:<br/>
+aad3b435b51404eeaad3b435b51404ee or 00000000000000000000000000000000</body></html>
