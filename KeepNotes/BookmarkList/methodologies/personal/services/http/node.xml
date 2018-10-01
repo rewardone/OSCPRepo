@@ -5,7 +5,8 @@
   <key>expanded</key><true/>
   <key>title</key><string>HTTP</string>
   <key>nodeid</key><string>293269ba-8b96-4fd6-8f53-84cff5fe1fc9</string>
-  <key>modified_time</key><integer>1536691382</integer>
+  <key>modified_time</key><integer>1538333365</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1536257673</integer>
