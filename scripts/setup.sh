@@ -5,7 +5,8 @@
 #
 
 echo "### Downloading things...### \n\n"
-echo "Install new software: atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libldap2-dev libsasl2-dev powershell-preview python-argcomplete"
+#Packages for crackmapexec: libssl-dev libffi-dev python-dev build-essential
+echo "Install new software: atom build-essential bloodhound crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libffi-dev libldap2-dev libsasl2-dev libssl-dev powershell-preview python-argcomplete python-dev"
 curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
 sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" > /etc/apt/sources.list.d/microsoft.list'
@@ -16,6 +17,10 @@ apt-get install -y atom crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-c
 echo "\nCloning ADLdapEnum\n"
 direc=/root/Documents/ADLdapEnum
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/CroweCybersecurity/ad-ldap-enum.git $direc; fi
+
+echo "\nCloning CrackMapExec (master branch (v4 +))\n"
+direc=/root/Documents/CrackMapExec
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec $direc; fi
 
 echo "\nCloning Impacket \n"
 direc=/root/Documents/Impacket
@@ -36,6 +41,10 @@ if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.co
 echo "\nCloning Nullinux\n"
 direc=/root/Documents/Nullinux
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/m8r0wn/nullinux.git $direc; fi
+
+echo "\nDownloading latest Oracle Database Attack Tool\n"
+odat=`curl https://github.com/quentinhardy/odat/releases/latest -L --max-redirs 1 | grep -i "quentinhardy/odat/releases/download" | grep "x86_64" | cut -d '"' -f 2`
+wget http://github.com$odat -O ~/Downloads/odat.zip
 
 echo "\nCloning OSCPRepo \n"
 direc=/root/Documents/OSCPRepo
@@ -143,6 +152,7 @@ echo "\nCloning Linux-Exploit-Suggester\n"
 direc="/root/Documents/Priv Esc Checks/Linux/linux-exploit-suggester"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/mzet-/linux-exploit-suggester.git $direc; fi
 
+
 echo "\nCloning Perl Linux-Exploit-Suggester\n"
 direc="/root/Documents/Priv Esc Checks/Linux/perl-linux-exploit-suggester"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/jondonas/linux-exploit-suggester-2.git $direc; fi
@@ -157,9 +167,21 @@ echo "\nCloning Sherlock\n"
 direc="/root/Documents/Priv Esc Checks/Windows/Sherlock"
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/rasta-mouse/Sherlock.git $direc; fi
 
+
+
 echo "\n ### Processing actions...### \n\n"
+
+
+
 echo "\nSetup ADLDAP\n"
 cd /root/Documents/ADLdapEnum && pip install python-ldap && chmod +x ad-ldap-enum.py
+
+echo "\nSetup CrackMapExec\n"
+pip install --user pipenv
+cd /root/Documents/CrackMapExec && pipenv install
+pipenv shell
+python setup.py install
+exit
 
 echo "\nSetup Empire\n"
 #Empire calls ./setup from ./install, so needs to be in its directory
@@ -179,6 +201,11 @@ cd /root/Documents/LdapDD && chmod +x setup.py && chmod +x ldapdomaindump.py && 
 
 echo "\nSetup Nullinux\n"
 cp -p /root/Documents/Nullinux/nullinux.py /usr/local/bin
+
+echo "\nSetup ODAT\n"
+mkdir /root/Documents/ODAT
+unzip ~/Downloads/odat.zip -d /root/Documents/ODAT && rm ~/Downloads/odat.zip
+cd /root/Documents/ODAT && mv odat*/* .
 
 echo "\nSetup OSCPRepo \n"
 pip install colorama

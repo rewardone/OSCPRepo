@@ -6,6 +6,7 @@
   <key>title</key><string>Registry</string>
   <key>nodeid</key><string>4d7f4f25-45c5-4708-b52e-9a12dafa1848</string>
   <key>modified_time</key><integer>1524669314</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1523843229</integer>

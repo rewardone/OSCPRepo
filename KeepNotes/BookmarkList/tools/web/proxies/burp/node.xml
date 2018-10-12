@@ -6,6 +6,7 @@
   <key>title</key><string>Burp</string>
   <key>nodeid</key><string>2f98deb0-3cb7-47bb-8b77-e5202349fb08</string>
   <key>modified_time</key><integer>1519524929</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516295199</integer>

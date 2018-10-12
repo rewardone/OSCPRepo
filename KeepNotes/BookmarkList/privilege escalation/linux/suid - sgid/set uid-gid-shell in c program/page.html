@@ -20,7 +20,7 @@ Also note the execution differences between system, execl, and execve! system dr
 #include &lt;unistd.h&gt;<br/>
 int main( int argc, char *argv[] )<br/>
 {<br/>
-&nbsp; &nbsp; setreuid(0, 0);<br/>
+&nbsp; &nbsp; setresuid(0, 0);<br/>
 &nbsp; &nbsp; execve("/bin/sh", NULL, NULL);<br/>
 }<br/>
 ---------------------------------------------------------------------------------------------------------------<br/>

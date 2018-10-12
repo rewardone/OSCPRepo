@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>NoSQLi</string>
   <key>nodeid</key><string>f455b04f-b5a5-4283-9486-8bc555b63606</string>
   <key>modified_time</key><integer>1519845314</integer>

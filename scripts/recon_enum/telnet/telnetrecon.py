@@ -19,7 +19,7 @@ port = sys.argv[2].strip()
 print "INFO: Performing nmap Telnet script scan for %s:%s" % (ip_address, port)
 #TELNETSCAN = "nmap -n -sV -Pn -vv -p %s --script=banner,telnet-encryption,telnet-ntlm-info,vulners -oA '/root/scripts/recon_enum/results/exam/telnet/%s_telnet.nmap' %s" % (port, ip_address, ip_address)
 #results = subprocess.check_output(TELNETSCAN, shell=True)
-subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=banner,telnet-encryption,telnet-ntlm-info,vulners','/root/scripts/recon_enum/results/exam/telnet/%s_%s_telnet' % (ip_address,port),ip_address])
+subprocess.check_output(['nmap','-n','-sV','-Pn','-vv','-p',port,'--script=banner,telnet-encryption,telnet-ntlm-info,vulners','-oA','/root/scripts/recon_enum/results/exam/telnet/%s_%s_telnet' % (ip_address,port),ip_address])
 
 #Hydra meant to do weak brute/spray, not extensive
 #run manually for extensive brute
