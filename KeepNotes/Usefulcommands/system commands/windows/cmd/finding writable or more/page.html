@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Finding Writable Or More</title>
+</head><body>http://justinsboringpage.blogspot.com/2009/01/finding-writable-files-in-directory-in.html<br/>
+The syntax is slightly different for oldest operating systems. Check here: https://www.computerhope.com/dirhlp.htm<br/>
+<br/>
+dir /a-r-d /s /b<br/>
+<br/>
+/a is to search attributes<br/>
+- negates thos attributes, so we're looking for writable &nbsp;files only<br/>
+/s means recurse subdirectories<br/>
+/b means bare format. Path and filename only. <br/>
+<br/>
+More on attributes:<br/>
+from <a href="https://www.computerhope.com/dirhlp.htm">www.computerhope.com</a>:<br/>
+/A:Attributes &#09;Displays only files with the specified file attributes. Attributes is a series of letters, each representing an attribute as shown below.<br/>
+<br/>
+D : Directories.<br/>
+R : Read-only files.<br/>
+H : Hidden files.<br/>
+A : Files marked ready for archiving.<br/>
+S : System files.<br/>
+I : Non-indexed files.<br/>
+L : Reparse points.<br/>
+- : Prefix meaning "not".<br/>
+<br/>
+For example, the option "/A:R-A" would match only files whose attributes (/A:) are read-only (R) and not (-) ready to be archived (A). <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Copy pasta output below. Not sorted or cleaned up for formatting. <br/>
+<br/>
+Syntax<br/>
+<br/>
+The syntax of the dir command has evolved somewhat over time. Select your operating system to jump to the information that applies to your version.<br/>
+<br/>
+&nbsp; &nbsp; Windows 10, 8, 7, Vista, XP, and 2000.<br/>
+&nbsp; &nbsp; Windows ME, 98, 95, 3.x, and MS-DOS.<br/>
+<br/>
+Syntax in Windows 10, 8, 7, Vista, XP, and 2000.<br/>
+<br/>
+DIR [Drive:][Path][FileName] [/A[[:]Attributes]] [/B] [/C] [/D] [/L] [/N]<br/>
+&nbsp; &nbsp; [/O[[:]SortOrder]] [/P] [/Q] [/R] [/S] [/T[[:]TimeField]] [/W] [/X] [/4]<br/>
+<br/>
+[Drive:][Path][FileName] &#09;Specifies the drive, directory, or files to list. Multiple filespecs are allowed, e.g., "*.txt *.exe".<br/>
+/A:Attributes &#09;Displays only files with the specified file attributes. Attributes is a series of letters, each representing an attribute as shown below.<br/>
+<br/>
+D : Directories.<br/>
+R : Read-only files.<br/>
+H : Hidden files.<br/>
+A : Files marked ready for archiving.<br/>
+S : System files.<br/>
+I : Non-indexed files.<br/>
+L : Reparse points.<br/>
+- : Prefix meaning "not".<br/>
+<br/>
+For example, the option "/A:R-A" would match only files whose attributes (/A:) are read-only (R) and not (-) ready to be archived (A).<br/>
+/B &#09;Uses bare format (no heading information or summary, just the information itself).<br/>
+/C &#09;Display the thousand separator in file sizes (e.g., a comma after every third digit), which is the default setting. Use /-C to disable the display of separator.<br/>
+/D &#09;Same as wide (/W), but files are sorted by column, rather than by row.<br/>
+/L &#09;Uses lowercase in the output.<br/>
+/N &#09;"New long-list" format, which displays file names on the far right.<br/>
+/O:SortOrder &#09;Sort the list of files by SortOrder, a series of letters representing sort criteria.<br/>
+<br/>
+N : By name (alphabetic).<br/>
+S : By size (smallest first).<br/>
+E : By extension (alphabetic).<br/>
+D : By date/time (oldest first).<br/>
+G : Group directories first.<br/>
+- : Prefix to reverse order.<br/>
+<br/>
+For instance, an option of "/O:D" displays files oldest-to-newest, and "/O:-S" displays files biggest-to-smallest.<br/>
+/P &#09;Pauses after each screenful of information.<br/>
+/Q &#09;Display the owner of the file.<br/>
+/R &#09;Display alternate data streams of the file.<br/>
+/S &#09;Displays files recursively, traversing any subdirectories.<br/>
+/T TimeField &#09;Specify the time field displayed and used for sorting. TimeField may be any of the following letters.<br/>
+<br/>
+C : Creation time.<br/>
+A : Last access time.<br/>
+W : Last write time.<br/>
+<br/>
+For instance, when you use the option "/T:C," the time listed is when the file was created.<br/>
+/W &#09;Uses wide list format, displaying file/folder names only, with multiple names on every line.<br/>
+/X &#09;Displays the short names generated for non-8dot3 file names. The format is that of /N ("new long-list" format, see above), with the short name inserted before the long name. If no short name is present, blanks are displayed in its place.<br/>
+/4 &#09;Display years with four digits, e.g., 2018 instead of 18.<br/>
+<br/>
+Syntax in Windows ME, 98, 95, 3.x, and MS-DOS.<br/>
+<br/>
+DIR [Drive:][Path][FileName] [/P] [/W] [/A[[:]attributes]] [/O[[:]sortorder]] [/S]<br/>
+&nbsp; &nbsp; [/B] [/L] [/V]<br/>
+<br/>
+[Drive:][Path][FileName] &#09;Specifies drive, directory, or files to list. Multiple filespecs are allowed, e.g., "*.txt *.exe".<br/>
+/P &#09;Pauses after each screenful of information.<br/>
+/W &#09;Uses wide list format.<br/>
+/A[:Attributes] &#09;List only files with the specified file attributes. Attributes is a series of letters indicating.<br/>
+<br/>
+D : Directories.<br/>
+R : Read-only files.<br/>
+H : Hidden files.<br/>
+A : Files ready for archiving.<br/>
+S : System files.<br/>
+- : Prefix meaning "not".<br/>
+/O[:SortOrder] &#09;List files in sorted order, indicated by SortOrder.<br/>
+<br/>
+N : By name (alphabetic).<br/>
+S : By size (smallest first).<br/>
+E : By extension (alphabetic).<br/>
+D : By date and time (earliest first).<br/>
+G : Group directories first.<br/>
+- : Prefix to reverse order.<br/>
+A : By last access date (earliest first).<br/>
+/S &#09;List files and directories recursively, traversing subdirectories.<br/>
+/B &#09;Uses bare format (no heading information or summary).<br/>
+/L &#09;Uses lowercase.<br/>
+/V &#09;Verbose mode. Display extra information.<br/>
+Examples<br/>
+<br/>
+dir<br/>
+<br/>
+Lists all files and directories in the current directory.<br/>
+<br/>
+dir *.exe<br/>
+<br/>
+Lists any file whose name has the file extension ".exe".<br/>
+<br/>
+dir *.txt *.doc<br/>
+<br/>
+List any files whose name has the file extension ".txt" or ".doc".<br/>
+<br/>
+dir /a:d<br/>
+<br/>
+Lists only directories.<br/>
+<br/>
+dir /a:r<br/>
+<br/>
+List only files with the read-only attribute.<br/>
+<br/>
+dir /s<br/>
+<br/>
+Recursively lists files and directories in the directory, and in any subdirectories. For instance, if your current directory is the root directory "C:\&gt;," this command this will list every file and directory on the C: drive.<br/>
+<br/>
+dir /p<br/>
+<br/>
+Pause after each screenful of output. Use this option if the information is scrolling past the screen before you can read it. You'll be prompted to press any key before listing continues past the current screen.<br/>
+<br/>
+dir /w<br/>
+<br/>
+Lists multiple file names on every line, producing "wide" output, which displays more file names at once. However, other information such as file size is omitted.<br/>
+<br/>
+dir /s /w /p<br/>
+<br/>
+Recursively lists all files and directories in the current directory and any subdirectories, in wide format, pausing after each screen of output.<br/>
+<br/>
+dir /s /w /p "C:\Program Files"<br/>
+<br/>
+Same as the above command, but lists everything in C:\Program Files, instead of the current directory. Because the directory name contains a space, it is enclosed in double-quotes, to prevent it from being interpreted is as two separate options.<br/>
+<br/>
+dir /o:n<br/>
+<br/>
+Lists files and directories in the current directory in alphabetical order. This example is the same as just running dir because files and directories are listed in alphabetical order by default.<br/>
+<br/>
+dir /o:-n<br/>
+<br/>
+Lists files in reverse alphabetical order.<br/>
+<br/>
+dir /s /q /a:sh /p C:\Windows<br/>
+<br/>
+Lists any files and directories in C:\Windows, and any of its subdirectories (/s), which have both the "hidden" and "system" file attributes (/a:sh). Also, lists the owner of the file (/q), and pauses after each screen of output (/p).<br/>
+<br/>
+dir \ /s | find "i" | more<br/>
+<br/>
+The above command uses vertical bars to pipe the output from dir to the command find, and then to the command more. The result is a list of all files and directories in the root directory of the current drive (\), with extra information. Namely, find will also display the number of files in each directory, and the amount of space occupied by each.<br/>
+<br/>
+dir &gt; myfile.txt<br/>
+<br/>
+Runs the dir command, but redirects the output to the file myfile.txt, instead of displaying it on the screen. Here, the dir command has no options, but redirection will work with any command you specify, so this will also work:<br/>
+<br/>
+dir /s /a:hs /q C:\Windows &gt; myfile.txt<br/>
+<br/>
+To view the contents of the file, you can use the type command:<br/>
+<br/>
+type myfile.txt<br/>
+<br/>
+If the file is very long, you can pipe type to more, so it pauses after each screen:<br/>
+<br/>
+type myfile.txt | more<br/>
+</body></html>

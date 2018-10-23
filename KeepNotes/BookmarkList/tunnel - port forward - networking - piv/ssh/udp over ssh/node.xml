@@ -5,11 +5,12 @@
   <key>title</key><string>UDP Over SSH</string>
   <key>nodeid</key><string>84cd0070-a66b-4f87-9584-e3e60cc9a486</string>
   <key>modified_time</key><integer>1519053120</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1519053088</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>4</integer>
+  <key>order</key><integer>5</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

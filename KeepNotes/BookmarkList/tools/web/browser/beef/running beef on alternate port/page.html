@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Running BEEF On Alternate Port</title>
+</head><body>https://nullsec.us/kali-running-beef-xss-on-port-80/<br/>
+https://security.stackexchange.com/questions/183471/how-to-use-beef-xss-on-ports-other-than-default-3000<br/>
+<br/>
+For low ports, you need to use &nbsp;authbind<br/>
+apt-get install authbind<br/>
+cd /etc/authbind/byport<br/>
+touch 80<br/>
+chown beef-xss 80<br/>
+chmod 500 80<br/>
+<br/>
+Change this:<br/>
+export LANG=C.UTF-8 start-stop-daemon --start --user beef-xss<br/>
+<br/>
+To &nbsp;this:<br/>
+export LANG=C.UTF-8 authbind --deep start-stop-daemon --start --user beef-xss<br/>
+<br/>
+and change your beef yml ports (about line 29)<br/>
+vim /etc/beef-xss/config.yaml<br/>
+/usr/share/beef-xss/beef -p 80<br/>
+<br/>
+<br/>
+<br/>
+For high ports, you should only need to edit the yml configuration<br/>
+vim /etc/beef-xss/config.yaml</body></html>

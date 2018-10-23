@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Quick NC</string>
+  <key>nodeid</key><string>f22864bc-3fb1-427b-8bd2-d1eb81e1af06</string>
+  <key>modified_time</key><integer>1539564448</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1539564324</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

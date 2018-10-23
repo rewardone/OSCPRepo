@@ -671,7 +671,7 @@ echo -e "\e[00;33m### SSH Information ####################################\e[00m
 
 #checks for if various ssh files are accessible - this can take some time so is only 'activated' with thorough scanning switch
 if [ "$thorough" = "1" ]; then
-sshfiles=`find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "identity*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" \) -exec ls -la {} 2>/dev/null \;`
+sshfiles=`find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "identity*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" \) -exec ls -la {} \; 2>/dev/null \;`
 	if [ "$sshfiles" ]; then
 		echo -e "\e[00;33m[+] SSH keys/host information found in the following locations. If known_hosts, it may be crackable:\e[00m\n$sshfiles"
 		echo -e "\n"
@@ -695,7 +695,7 @@ fi
 
 #specifically calling out known_hosts for pivoting purposes
 if [ "$thorough" = "1" ]; then
-sshknownhosts=`find / -name "known_hosts" -exec cat {} 2>/dev/null \;`
+sshknownhosts=`find / -name "known_hosts" -exec cat {} \; 2>/dev/null \;`
   if [ "$sshknownhosts" ]; then
     echo -e "\e[00;31m[-] Look at where this user has SSHd to (pivot/escalation opportunities even if local!):\e[00m\n$sshknownhosts"
     echo -e "\n"
@@ -894,7 +894,8 @@ fi
 }
 
 # files with sticky bit (+sS), files owned by current user
-# for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null; done    # Looks in 'common' places: /bin, /sbin, /usr/bin, /usr/sbin, /usr/local/bin, /usr/local/sbin and any other *bin, for SGID or SUID (Quicker search)
+# for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null; done
+# Looks in 'common' places: /bin, /sbin, /usr/bin, /usr/sbin, /usr/local/bin, /usr/local/sbin and any other *bin, for SGID or SUID (Quicker search)
 # find / -perm -g=s -type f 2>/dev/null    								# SGID (chmod 2000) - exec as the group, not the user who started it.
 # find / -perm -u=s -type f 2>/dev/null    								# SUID (chmod 4000) - exec as the owner, not the user who started it
 # find requires space before and after \( \) in order to function

@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Unblock restricted ports</title>
+</head><body>https://support.mozilla.org/en-US/questions/1083282<br/>
+<br/>
+Sometimes if you &nbsp;try to use firefox to browse 'restricted' ports (ie 21, 22, etc) firefox will block you. <br/>
+<br/>
+You can create a preference using about:config and allow the port number which Firefox is blocking. Here's how: <br/>
+(0) Select and copy the following preference name <br/>
+network.security.ports.banned.override &nbsp;<br/>
+(1) In a new tab, type or paste <b>about:config</b>&nbsp;in the address bar and press Enter/Return. Click the button promising to be careful. <br/>
+(2) In the search box above the list, type or paste <b>ports</b>&nbsp;and pause while the list is filtered <br/>
+<i>If the above-listed preference exists:</i>&nbsp;<br/>
+<br/>
+(3) Double-click it and add a comma to the end of the list followed by the port number you need to allow. No spaces. Then click OK. <br/>
+<i>If the above-listed preference does not exist:</i>&nbsp;<br/>
+<br/>
+(4) right-click anywhere on the page and choose New &gt; String <br/>
+(5) In the preference name dialog, paste the name you coped and click OK <br/>
+(6) In the preference value dialog, type in the port number you need to allow, then click OK. <br/>
+</body></html>

@@ -4,8 +4,8 @@
 <dict>
   <key>title</key><string>Local Priv Esc Running as Root</string>
   <key>nodeid</key><string>f41cd736-0963-41b7-82df-4b8294c8448f</string>
-  <key>modified_time</key><integer>1519523448</integer>
-  <key>expanded2</key><false/>
+  <key>modified_time</key><integer>1539558715</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1519518650</integer>

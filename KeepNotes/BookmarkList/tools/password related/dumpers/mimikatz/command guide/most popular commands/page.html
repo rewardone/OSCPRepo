@@ -11,6 +11,12 @@ Here are just some of the most popular Mimikatz command and related functionalit
 <li><a href="https://adsecurity.org/?page_id=1821#KERBEROSPTT">KERBEROS::PTT</a>&nbsp;– pass the ticket. Typically used to inject a stolen or forged Kerberos ticket (golden/silver/trust).</li>
 <li><a href="https://adsecurity.org/?page_id=1821#LSADUMPDCSync">LSADUMP::DCSync</a>&nbsp;– ask a DC to synchronize an object (get password data for account). No need to run code on DC.</li>
 <li><a href="https://adsecurity.org/?page_id=1821#LSADUMPLSA">LSADUMP::LSA</a>&nbsp;– Ask LSA Server to retrieve SAM/AD enterprise (normal, patch on the fly or inject). Use to dump all Active Directory domain credentials from a Domain Controller or lsass.dmp dump file. Also used to get specific account credential such as krbtgt with the parameter /name: “/name:krbtgt”</li>
+<li style="list-style-type: none"><ul><li>/inject – Inject LSASS to extract credentials</li>
+<li>/name – account name for target user account</li>
+<li>/id – RID for target user account</li>
+<li>/patch – patch LSASS.</li>
+</ul>
+</li>
 <li><a href="https://adsecurity.org/?page_id=1821#LSADUMPSAM">LSADUMP::SAM</a>&nbsp;– get the SysKey to decrypt SAM entries (from registry or hive). The SAM option connects to the local Security Account Manager (SAM) database and dumps credentials for local accounts. This is used to dump all local credentials on a Windows computer.</li>
 <li><a href="https://adsecurity.org/?page_id=1821#LSADUMPTrust">LSADUMP::Trust </a>– Ask LSA Server to retrieve Trust Auth Information (normal or patch on the fly). Dumps trust keys (passwords) for all associated trusts (domain/forest).</li>
 <li><a href="https://adsecurity.org/?page_id=1821#MISCAddSid">MISC::AddSid</a>&nbsp;– Add to SIDHistory to user account. The first value is the target account and the second value is the account/group name(s) (or SID). Moved to SID:modify as of May 6th, 2016.</li>
