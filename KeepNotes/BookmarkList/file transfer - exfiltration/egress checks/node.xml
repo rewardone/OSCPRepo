@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Egress Checks</string>
   <key>nodeid</key><string>45b6495d-ae94-4031-9718-8f0b00467949</string>
   <key>modified_time</key><integer>1539564309</integer>

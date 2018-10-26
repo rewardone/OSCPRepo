@@ -5,7 +5,7 @@
   <key>title</key><string>Linux</string>
   <key>nodeid</key><string>580f53f0-063a-431f-ab0e-0c5a69869f09</string>
   <key>modified_time</key><integer>1526480124</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1516823133</integer>

@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Windowss U 202E</title>
+</head><body>http://galogetlatorre.blogspot.com/2013/07/how-can-you-be-fooled-by-u202e-trick.html<br/>
+<br/>
+Unicode U+202E knows as an annulment from right to left. Similar to a potential file upload bypass (where you can just rev(php.txt) or similar function to reverse the extensin.<br/>
+<br/>
+Now we are going to follow the steps below to accomplish our goal:<br/>
+Open the Windows Character Map (Start, Run, charmap)<ul><li>Find and Copy the Unicode character U+202E. Notice that at the bottom left shows the ASCII value of the characters (see Figure 2).</li>
+<li>Paste (Ctrl + V) the character just before the extension point: "document[[U+202E]].exe"</li>
+<li>Enter the extension that you want but in reverse, for example, if we want "doc", we need to write "cod", or if we want "pdf", then we need to write "fdp".</li>
+<li>Finally, to perfect the infection vector, a good idea would be to change the icon of the malicious file and also use a name that can trick the user, considering that the "exe" or the original extension must remain.</li>
+</ul>
+<br/>
+<br/>
+Possible Countermeasures:<br/>
+If we try to rename the file (F2), we will see something strange, this effect is produced by the special character, so this is a clue to realize that something is wrong.<br/>
+If you are in a GNU/Linux based system, you can check the headers of the file with some commands.<br/>
+Another trick that you can use to verify the name of any file and its extension could be using the command prompt, but how?</body></html>

