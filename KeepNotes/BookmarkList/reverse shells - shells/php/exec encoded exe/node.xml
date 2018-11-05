@@ -4,7 +4,8 @@
 <dict>
   <key>title</key><string>Exec Encoded EXE</string>
   <key>nodeid</key><string>af565fd1-f239-4252-baaf-4f728d9a9b45</string>
-  <key>modified_time</key><integer>1537639349</integer>
+  <key>modified_time</key><integer>1541004769</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1537581330</integer>
