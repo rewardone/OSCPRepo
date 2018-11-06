@@ -1,0 +1,5 @@
+Others
+
+Passphrases: https://gitlab.com/initstring/passphrase-wordlist
+Probable-Wordlists: https://github.com/berzerk0/Probable-Wordlists
+Debian SSH-keys: (openssl bug)
