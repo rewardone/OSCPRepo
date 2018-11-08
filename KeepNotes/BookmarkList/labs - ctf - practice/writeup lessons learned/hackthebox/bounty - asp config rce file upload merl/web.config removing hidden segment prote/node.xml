@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>web.config Removing Hidden Segment Protection</string>
+  <key>nodeid</key><string>f776ccb4-976f-43d7-8a65-1e3f4c7b383d</string>
+  <key>modified_time</key><integer>1541698556</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1541698513</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

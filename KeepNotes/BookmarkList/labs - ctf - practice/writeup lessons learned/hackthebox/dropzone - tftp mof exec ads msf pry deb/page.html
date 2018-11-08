@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DropZone - TFTP MOF Exec ADS MSF Pry debug</title>
+</head><body>tftp &lt;ip address&gt;<br/>
+tftp&gt; get file<br/>
+Error code 1: Could not find fild 'C:\file'<br/>
+<br/>
+We know we're in C:\ as the root!<br/>
+<br/>
+You can try underscore instead of spaces, ie: documents_and_settings<br/>
+Alternatively, neat trick with abbreviated names. If you put in the first 6 chars followed by ~1, it will resolve to the first item that matches that name:<br/>
+tftp&gt; get /DOCUME~1<br/>
+Error code 1: Access to the path 'C:\Documents and Settings' is denied<br/>
+<br/>
+Continues for ~2, etc, etc. <br/>
+So Programs Files is: PROGRA~1<br/>
+Program Files (x86) is: PROGRA~2<br/>
+<br/>
+neat!<br/>
+<br/>
+With the above enumeration, we are against a windows XP machine 32 bit<br/>
+How to get code execution?<br/>
+<br/>
+For older machines, MOF is the answer (ie STUXNET)<br/>
+<br/>
+Analysis of psexec.rb from metasploit, 3 methods to exec<br/>
+Connects to smb ADMIN$, embeds payload in service, and starts<br/>
+Connects to smb ADMIN$, calls file at a location<br/>
+MOF upload<br/>
+<br/>
+Analysis of mof_upload method<br/>
+Expects the share to be ADMIN$<br/>
+Drops the payload in C:\windows\system32\&lt;payload.exe&gt;<br/>
+Creates a MOF and uploads to C:\windows\system32\wbem\mof\&lt;mof_name&gt;<br/>
+<br/>
+MOFs are auto executed! <br/>
+Essentially, this MOF execution is adding filter and a consumer to WMI and executing commands. This was generally unexplored before STUXNET, but now you find find malicious WMI providers openly. <br/>
+<br/>
+two great resources for WMI/MOF:<br/>
+<a href="http://poppopret.blogspot.com/2011/09/playing-with-mof-files-on-windows-for.htmlhttp://poppopret.blogspot.com/2011/09/playing-with-mof-files-on-windows-for.html">http://poppopret.blogspot.com/2011/09/playing-with-mof-files-on-windows-for.html</a>&nbsp;<br/>
+<a href="https://www.blackhat.com/docs/us-15/materials/us-15-Graeber-Abusing-Windows-Management-Instrumentation-WMI-To-Build-A-Persistent%20Asynchronous-And-Fileless-Backdoor-wp.pdf">https://www.blackhat.com/docs/us-15/materials/us-15-Graeber-Abusing-Windows-Management-Instrumentation-WMI-To-Build-A-Persistent%20Asynchronous-And-Fileless-Backdoor-wp.pdf</a>&nbsp; <br/>
+<br/>
+Note that on newer Windows OSes (VISTA+), MOF files are no longer autocompiled<br/>
+<br/>
+You can use a copy of metasploit module exploit/windows/tftp/distinct_tftp_traversal to exploit this. You'll need to take out the stuff regarding dir trav. <br/>
+There are also two timers that can be configured, <br/>
+1: while not tftp_client.complete<br/>
+2: #Let the TFTP server idle a bit before sending another file<br/>
+<br/>
+Increase the timeout from 1 to something higher since there is a lot of data to send (depends on how big the MOF you want to send is).<br/>
+</body></html>

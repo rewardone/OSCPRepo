@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>web.config Other Tricks</title>
+</head><body>Rewriting or creating the web.config file can lead to a major security flaw. In addition to the above scenarios, different web.config files can be used in different situations. I have listed some other examples below (a relevant web.config syntax can be easily found by searching in Google):<br/>
+<br/>
+<b>Re-enabling .Net extensions</b>: When .Net extensions such as .ASPX are blocked in the upload folder.<br/>
+<b>Using an allowed extension to run as another extension</b>: When ASP, PHP, or other extensions are installed on the server but they are not allowed in the upload directory.<br/>
+<b>Abusing error pages or URL rewrite rules to redirect users or deface the website</b>: When the uploaded files such as PDF or JavaScript files are in use directly by the users.<br/>
+<b>Manipulating MIME types of uploaded files</b>: When it is not possible to upload a HTML file (or other sensitive client-side files) or when IIS MIME types table is restricted to certain extensions.<br/>
+<br/>
+<b>Additional Tricks</b><br/>
+Sometimes it is not possible to upload or create a web.config file directly. In this case, copy, move, or rename functionality of the web application can be abused to create a web.config file.<br/>
+<br/>
+Alternate Data Stream feature can also be useful for this purpose. <br/>
+For example, “web.config::$DATA” can create a web.config file with the uploaded file contents, or “web.config:.txt” can be used to create an empty web.config file; and when a web.config file is available in the upload folder, Windows 8.3 filename (“WEB~1.con”) or PHP on IIS feature (“web&lt;&lt;”) can be used to point at the web.config file.</body></html>
