@@ -3,12 +3,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Quick NC</title>
-</head><body>for i in $(seq &nbsp;1 254); do nc -nvvz -w 1 10.10.10.$i; done<br/>
-<br/>
--z will check if the port is open <br/>
+</head><body>-z will check if the port is open <br/>
 -w 1 for 1 attempt/packet (speed things up)<br/>
 <br/>
-Loop not needed?<br/>
+Loop not needed<br/>
 nc -nvv -w 1 -z "Your IP Address" 1-100<br/>
 <br/>
-Use TCPdump to verify what reaches LHOST</body></html>
+Use TCPdump to verify what reaches LHOST<br/>
+<br/>
+Netcat port Scanning<br/>
+nc -nvv -w 1 -z $ip 3388-3390</body></html>

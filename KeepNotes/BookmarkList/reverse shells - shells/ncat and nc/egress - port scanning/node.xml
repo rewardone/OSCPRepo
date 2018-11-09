@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Egress / Port Scanning</string>
+  <key>nodeid</key><string>fd98c35e-686f-4c05-8cb0-9d7487da383b</string>
+  <key>modified_time</key><integer>1541777001</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1541776990</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>
