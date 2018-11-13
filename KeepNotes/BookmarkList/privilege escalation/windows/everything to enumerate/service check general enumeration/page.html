@@ -2,10 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Services Check: General Enumeration</title>
+<title>Service Check: General Enumeration</title>
 </head><body>sc.exe<br/>
 sc query state= all | findstr "SERVICE_NAME:" &gt;&gt; Servicenames.txt<br/>
 FOR /F %i in (Servicenames.txt) DO echo %i<br/>
 type Servicenames.txt<br/>
 FOR /F "tokens=2 delims= " %i in (Servicenames.txt) DO @echo %i &gt;&gt; services.txt<br/>
-FOR /F %i in (services.txt) DO @sc qc %i | findstr "BINARY_PATH_NAME" &gt;&gt; path.txt</body></html>
+FOR /F %i in (services.txt) DO @sc qc %i | findstr "BINARY_PATH_NAME" &gt;&gt; path.txt<br/>
+<br/>
+<br/>
+Powershell<br/>
+Get-Service | where {$_.Status -eq "Running"}</body></html>

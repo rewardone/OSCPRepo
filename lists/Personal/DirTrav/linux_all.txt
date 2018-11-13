@@ -2,7 +2,9 @@
 /apache/logs/error.log
 ~/.bash_history
 /etc/aliases
+/etc/alias
 /etc/anacrontab
+/etc/apache2/apache.conf
 /etc/apache2/apache2.conf
 /etc/apache2.conf
 /etc/apache2/conf/httpd.conf
@@ -28,6 +30,7 @@
 /etc/ftpaccess
 /etc/ftpchroot
 /etc/ftphosts
+/etc/ftpusers
 /etc/group
 /etc/grub.conf
 /etc/HOSTNAME
@@ -71,8 +74,11 @@
 /etc/nginx/sites-available/default
 /etc/nginx/sites-enabled/default
 /etc/npasswd
+/etc/openldap/ldap.conf
 /etc/ssl/openssl.cnf
+/etc/pam.conf
 /etc/passwd
+/etc/password.master
 /etc/php4.4/fcgi/php.ini
 /etc/php4/apache2/php.ini
 /etc/php4/apache/php.ini
@@ -91,6 +97,7 @@
 /etc/profile
 /etc/proftp.conf
 /etc/proftpd/proftpd.conf
+/etc/proftpd/modules.conf
 /etc/pure-ftpd.conf
 /etc/pureftpd.passwd
 /etc/pureftpd.pdb

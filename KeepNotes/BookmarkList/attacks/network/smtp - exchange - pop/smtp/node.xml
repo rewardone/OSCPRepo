@@ -5,7 +5,7 @@
   <key>title</key><string>SMTP</string>
   <key>nodeid</key><string>15f1e9a5-7506-4836-8ff0-65e4cc9bf694</string>
   <key>modified_time</key><integer>1535246681</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1535246681</integer>

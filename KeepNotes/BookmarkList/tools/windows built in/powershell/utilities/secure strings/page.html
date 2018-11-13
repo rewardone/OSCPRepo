@@ -9,4 +9,10 @@
 <br/>
 Encrypt / Make a Secure String<br/>
 $SecPass = ConvertTo-SecureString '&lt;YOUR_STRING_HERE&gt;' -AsPlainText -Force<br/>
-$cred = New-Object System.Management.Automation.PSCredential('&lt;USER&gt;',$SecPas)</body></html>
+$cred = New-Object System.Management.Automation.PSCredential('&lt;USER&gt;',$SecPas)<br/>
+<br/>
+Decrypt / Reverse a PSCredential<br/>
+$pass = "secure ps credential here" | convertto-securestring<br/>
+$user = "DOMAIN\USER"<br/>
+$cred = New-Object System.Management.Automation.PSCredential($user, $pass)<br/>
+$cred.GetNetworkCredential() | fl</body></html>
