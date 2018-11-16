@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Aliases</title>
+</head><body>https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/set-alias?view=powershell-6<br/>
+<br/>
+PS C:\&gt; function CD32 {set-location c:\windows\system32}<br/>
+PS C:\&gt; Set-Alias go cd32<br/>
+<br/>
+These commands show how to assign an alias to a command with parameters, or even to a pipeline of many commands.<br/>
+<br/>
+You can create an alias for a cmdlet, but you cannot create an alias for a command that consists of a cmdlet and its parameters. However, if you place the command in a function or a script, then you can create a useful function or script name and you can create one or more aliases for the function or script.<br/>
+<br/>
+In this example, the user wants to create an alias for the command Set-Location C:\windows\system32, where Set-Location is a cmdlet and C:\Windows\System32 is the value of the Path parameter.<br/>
+<br/>
+To do this, the first command creates a function called CD32 that contains the Set-Location command.<br/>
+<br/>
+The second command creates the alias go for the CD32 function. Then, to run the Set-Location command, the user can type either CD32 or go.<br/>
+<br/>
+<br/>
+<br/>
+So something that is useful like:<br/>
+function lsal {get-childitem -force}<br/>
+set-alias l lsal</body></html>

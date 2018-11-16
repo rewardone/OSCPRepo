@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WinRM Auth Methods</title>
+</head><body>Replicated from Metasploit below. Manual:<br/>
+curl --header "Content-Type: application/soap+xml;charset=UTF-8" http://10.10.10.104:5985/wsman -X POST --data "asdfasdf" -v &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br/>
+&lt; HTTP/1.1 401<br/>
+&lt; Server: Microsoft-HTTPAPI/2.0<br/>
+<b>&lt; WWW-Authenticate: Negotiate<br/>
+&lt; WWW-Authenticate: Basic realm="WSMAN"<br/>
+</b><b>&lt; WWW-Authenticate: CredSSP</b><br/>
+&lt; Date: Tue, 13 Nov 2018 18:22:28 GMT<br/>
+&lt; Connection: close<br/>
+&lt; Content-Length: 0<br/>
+&lt;<br/>
+* Closing connection 0<br/>
+<br/>
+Seeing what Metasploit is doing:<br/>
+<br/>
+def winrm_poke(timeout = 20)<br/>
+&nbsp; &nbsp; send_winrm_request(Rex::Text.rand_text_alpha(8), timeout)<br/>
+end<br/>
+<br/>
+def send_winrm_request(data, timeout=20)<br/>
+&nbsp; opts = {<br/>
+&nbsp; &nbsp; 'uri' =&gt; datastore['URI'],<br/>
+&nbsp; &nbsp; 'method' =&gt; 'POST',<br/>
+&nbsp; &nbsp; &nbsp;'data' =&gt; data,<br/>
+&nbsp; &nbsp; &nbsp;'username' =&gt; datastore['USERNAME'],<br/>
+&nbsp; &nbsp; 'password' =&gt; datastore['PASSWORD'],<br/>
+&nbsp; &nbsp; 'ctype' =&gt; "application/soap+xml;charset=UTF-8"<br/>
+&nbsp; }<br/>
+&nbsp; send_request_cgi(opts,timeout)<br/>
+end<br/>
+<br/>
+resp = winrm_poke<br/>
+return nil if resp.nil?<br/>
+if &nbsp;resp.code == 401 and resp.headers['Server'] and resp.headers['Server'].include? "Microsoft-HTTPAPI"<br/>
+&nbsp; methods = parse_auth_methods(resp)<br/>
+&nbsp; desc = resp.headers['Server'] + " Authentication Methods: " + methods.to_s<br/>
+&nbsp; report_service(<br/>
+&nbsp; &nbsp; :host &nbsp;=&gt; ip,<br/>
+&nbsp; &nbsp; :port &nbsp;=&gt; rport,<br/>
+&nbsp; &nbsp; :proto =&gt; 'tcp',<br/>
+&nbsp; &nbsp; :name &nbsp;=&gt; 'winrm',<br/>
+&nbsp; &nbsp; :info &nbsp;=&gt; desc<br/>
+&nbsp; )<br/>
+&nbsp; print_good "#{ip}:#{rport}: Negotiate protocol supported" if methods.include? "Negotiate"<br/>
+&nbsp; print_good "#{ip}:#{rport}: Kerberos protocol supported" if methods.include? "Kerberos"<br/>
+&nbsp; print_good "#{ip}:#{rport}: Basic protocol supported" if methods.include? "Basic"<br/>
+else<br/>
+&nbsp; print_error "#{ip}:#{rport} Does not appear to be a WinRM server</body></html>

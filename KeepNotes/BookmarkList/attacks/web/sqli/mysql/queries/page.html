@@ -154,7 +154,8 @@ Time Delay &#09;&#09;&#09;SELECT BENCHMARK(1000000,MD5(‘A’)); #BENCHMARK(how
 </ul>
 </li>
 </ul>
-Make DNS Requests &#09;Impossible?<br/>
+Make DNS Requests &#09;<a href="https://www.gracefulsecurity.com/sql-injection-out-of-band-exploitation/">load_file()</a>?<br/>
+&nbsp;/ Out of band<br/>
 Command Execution &#09;If mysqld (&lt;5.0) is running as root AND you compromise a DBA account you can execute OS commands by uploading a shared object file into /usr/lib (or similar). &nbsp;The .so file should contain a User Defined Function (UDF). &nbsp;raptor_udf.c explains exactly how you go about this. &nbsp;Remember to compile for the target architecture which may or may not be the same as your attack platform.<br/>
 Local File Access &#09;…’ UNION ALL SELECT LOAD_FILE(‘/etc/passwd’) — priv, can only read world-readable files.<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp; &nbsp;SELECT * FROM mytable INTO dumpfile ‘/tmp/somefile’; — priv, write to file system</li>
 </ul>

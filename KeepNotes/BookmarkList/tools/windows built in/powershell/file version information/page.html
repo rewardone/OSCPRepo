@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>File Version Information</title>
+</head><body>https://stackoverflow.com/questions/30686/get-file-version-in-powershell<br/>
+The link contains several options<br/>
+<br/>
+[System.Diagnostics.FileVersionInfo]::GetVersionInfo("somefilepath").FileVersion<br/>
+<br/>
+(Get-Item "file").VersionInfo.FileVersion</body></html>

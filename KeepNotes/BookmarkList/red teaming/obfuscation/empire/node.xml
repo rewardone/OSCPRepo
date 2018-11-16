@@ -5,6 +5,7 @@
   <key>title</key><string>Empire</string>
   <key>nodeid</key><string>bc45b61f-372c-4a75-82b0-baee4142873c</string>
   <key>modified_time</key><integer>1537282061</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1537282061</integer>

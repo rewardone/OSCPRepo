@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Insecure Setup</title>
+</head><body>Quick steps for configuring WinRM insecurely: Note: These are all commands that are run from a command shell with administrative privileges.<br/>
+<br/>
+&nbsp; &nbsp; Start the WinRM service. The only requirement to start the service is that none of your network interfaces can be set to “Public” in Windows. This typically isn’t an issue in domain environments. The command itself is not really a security issue, it’s just needed to actually run the WinRM service.<b>winrm quickconfig</b><br/>
+&nbsp; &nbsp; Allow WinRM commands to be accepted through unencrypted channels (HTTP).<b>winrm set winrm/config/service @{AllowUnencrypted=”true”}</b><br/>
+&nbsp; &nbsp; Allow WinRM command to be sent through unencrypted channels (HTTP).<b>winrm set winrm/config/client @{AllowUnencrypted=”true”}</b><br/>
+&nbsp; &nbsp; Enable “Basic” network authentication for inbound WinRM connections to the server.<b>winrm set winrm/config/service/auth @{Basic=”true”}</b><br/>
+&nbsp; &nbsp; Enable “Basic” network authentication for outbound WinRM client connections. So, when you make a WinRM connection to another host with the local WinRM client, you can authenticate using “Basic” authentication.<b>winrm set winrm/config/client/auth @{Basic=”true”}</b><br/>
+&nbsp; &nbsp; Allow credentials to be relayed out to another host using the CredSSP protocol. This allows the host receiving commands to pass incoming credentials on to another host for authentication.<b>winrm set winrm/config/service/auth @{CredSSP=”True”}</b><br/>
+<br/>
+In order to authenticate against the service remotely, the authenticating account either has to be the same as the service account running the WinRM service, or a member of the local administrators group. </body></html>

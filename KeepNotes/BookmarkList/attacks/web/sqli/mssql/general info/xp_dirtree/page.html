@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>xp_dirtree</title>
+</head><body>http://www.patrickkeisler.com/2012/11/how-to-use-xpdirtree-to-list-all-files.html<br/>
+http://www.patrickkeisler.com/2012/12/how-to-use-xpdirtree-to-list-all-files-part2.html<br/>
+<br/>
+In order to do that, we'll use another undocumented extended stored procedure; master.sys.xp_dirtree. &nbsp;This stored procedure will display a list of every folder, every subfolder, and every file for path you give it.<br/>
+<br/>
+Xp_dirtree has three parameters: <br/>
+&nbsp; &nbsp; directory - This is the directory you pass when you call the stored procedure; for example 'D:\Backup'.<br/>
+&nbsp; &nbsp; depth &nbsp;- This tells the stored procedure how many subfolder levels to display. &nbsp;The default of 0 will display all subfolders.<br/>
+&nbsp; &nbsp; file - This will either display files as well as each folder. &nbsp;The default of 0 will not display any files.<br/>
+<br/>
+This stored procedure also can accept UNC paths (\\Server\Folder) to get a list of files and subfolders from a network drive.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>
