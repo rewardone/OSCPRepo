@@ -102,25 +102,70 @@ def snmp_check(community):
         #for community in communities:
         #SNMPCHECK = "snmp-check -c %s -t %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
         #results = subprocess.check_output(SNMPSCAN, shell=True)
-        outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (ip_address,community)
-        results = subprocess.check_output(['snmp-check','-c',community,'-w','-t',ip_address])
+        outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck_v1" % (ip_address,community)
+        results = subprocess.check_output(['snmp-check','-v','1','-c',community,'-w','-t',ip_address])
         if results:
             f = open(outfile,'w')
             for res in results:
                 f.write(res)
             f.close()
+            snmpwalk("1", community)
+        outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck_v2" % (ip_address,community)
+        results = subprocess.check_output(['snmp-check','-v','2','-c',community,'-w','-t',ip_address])
+        if results:
+            f = open(outfile,'w')
+            for res in results:
+                f.write(res)
+            f.close()
+            snmpwalk("2c", community)
     if "v1.9" in version:
         #for community in communities:
         #SNMPCHECK = "snmp-check -c %s %s > /root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (community, ip_address, ip_address, community)
         #results = subprocess.check_output(SNMPSCAN, shell=True)
-        outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck" % (ip_address,community)
-        results = subprocess.check_output(['snmp-check','-c',community,'-w',ip_address])
+        outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck_v1" % (ip_address,community)
+        results = subprocess.check_output(['snmp-check','-v','1','-c',community,'-w',ip_address])
         if results:
             f = open(outfile,'w')
             for res in results:
                 f.write(res)
             f.close()
+            snmpwalk("1", community)
+        outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpcheck_v2c" % (ip_address,community)
+        results = subprocess.check_output(['snmp-check','-v','2c','-c',community,'-w',ip_address])
+        if results:
+            f = open(outfile,'w')
+            for res in results:
+                f.write(res)
+            f.close()
+            snmpwalk("2c", community)
     return True
+
+
+#  -v 1|2c|3             specifies SNMP version to use
+#  -V, --version         display package version number
+#SNMP Version 1 or 2c specific
+#  -c COMMUNITY          set the community string
+#SNMP Version 3 specific
+#  -a PROTOCOL           set authentication protocol (MD5|SHA)
+#  -A PASSPHRASE         set authentication protocol pass phrase
+#  -e ENGINE-ID          set security engine ID (e.g. 800000020109840301)
+#  -E ENGINE-ID          set context engine ID (e.g. 800000020109840301)
+#  -l LEVEL              set security level (noAuthNoPriv|authNoPriv|authPriv)
+#  -n CONTEXT            set context name (e.g. bridge1)
+#  -u USER-NAME          set security name (e.g. bert)
+#  -x PROTOCOL           set privacy protocol (DES|AES)
+#  -X PASSPHRASE         set privacy protocol pass phrase
+#  -Z BOOTS,TIME         set destination engine boots/time
+#TODO only snmp v1/v2c supported at this time!
+def snmpwalk(version, community):
+    print "Walking with snmpwalk"
+    outfile = "/root/scripts/recon_enum/results/exam/snmp/%s_%s_snmpwalk_%s" % (ip_address, community, version)
+    results = subprocess.check_output(['snmpwalk','-c',community,'-v',version,ip_address])
+    if results:
+        f = open(outfile, 'w')
+        for res in results:
+            f.write(res)
+        f.close()
 
 communities = onesixtyone()
 if communities:

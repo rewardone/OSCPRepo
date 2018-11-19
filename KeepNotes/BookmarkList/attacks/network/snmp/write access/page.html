@@ -5,4 +5,8 @@
 <title>Write Access</title>
 </head><body>The ability to download config files<br/>
 Search for sensitive information/passwords in router configs/etc<br/>
+<br/>
+<br/>
+snmpset can be used to write values you have write access to:<br/>
+snmpset -v 1 -c public &lt;IP&gt; .1.3.6.1.2.1.1.5.0 s &nbsp;HACKED<br/>
 </body></html>

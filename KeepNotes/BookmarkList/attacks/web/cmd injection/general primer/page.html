@@ -5,4 +5,80 @@
 <title>General Primer</title>
 </head><body>There are many ways to obtain CMD injection whether it is through exploits, serving pages, or part of a larger exploit chain. It probably does not need to be its own page because other vulnerabilities lead to command injection. Nevertheless, some pages may float around in this area until they are better sorted. <br/>
 <br/>
-Alternatively, &nbsp;many 'specifically command injection oriented' pages may end up here such as Server Side Template Injectino or Deserialization. </body></html>
+Alternatively, &nbsp;many 'specifically command injection oriented' pages may end up here such as Server Side Template Injectino or Deserialization. <br/>
+<br/>
+From OWASP<br/>
+Special Characters for Comand Injection <br/>
+The following special character can be used for command injection such as |  ; &amp; $ &gt; &lt; ` \ ! <br/>
+&nbsp;<ul><li>&nbsp;cmd1|cmd2  : Uses of | will make command 2 to be executed weather command 1 execution is successful or not.</li>
+<li>&nbsp;cmd1;cmd2  : Uses of ; will make command 2 to be executed weather command 1 execution is successful or not.</li>
+<li>&nbsp;cmd1||cmd2  : Command 2 will only be executed if command 1 execution fails.</li>
+<li>&nbsp;cmd1&amp;&amp;cmd2 : Command 2 will only be executed if command 1 execution succeeds.</li>
+<li>&nbsp;$(cmd) : For example, echo $(whoami) or $(touch test.sh; echo 'ls' &gt; test.sh)</li>
+<li>&nbsp;'cmd' : It's used to execute specific command. For example, 'whoami'</li>
+<li>&nbsp;&gt;(cmd): &lt;(ls)</li>
+<li>&nbsp;&lt;(cmd): &gt;(ls)</li>
+</ul>
+<br/>
+Code Review Dangerous API <br/>
+Be aware of the uses of the following API as it may introduce the command injection risks. <br/>
+Java <ul><li>&nbsp;Runtime.exec()</li>
+<li>&nbsp;getParameter</li>
+<li>&nbsp;getRuntime.exec()</li>
+<li>&nbsp;ProcessBuilder.start()</li>
+<li>&nbsp;setAttribute putValue getValue </li>
+<li>&nbsp;java.net.Socket java.io.fileInputStream java.io.FileReader</li>
+</ul>
+<br/>
+C/C++ <ul><li>&nbsp;system</li>
+<li>&nbsp;exec</li>
+<li>&nbsp;ShellExecute</li>
+<li>&nbsp;execlp</li>
+</ul>
+<br/>
+Python <ul><li>&nbsp;exec</li>
+<li>&nbsp;eval</li>
+<li>&nbsp;os.system</li>
+<li>&nbsp;os.popen</li>
+<li>&nbsp;subprocess.popen</li>
+<li>&nbsp;subprocess.call</li>
+</ul>
+<br/>
+PHP <ul><li>&nbsp;system</li>
+<li>&nbsp;shell_exec</li>
+<li>&nbsp;exec</li>
+<li>&nbsp;proc_open</li>
+<li>&nbsp;eval</li>
+<li>&nbsp;passthru</li>
+<li>&nbsp;proc_open</li>
+<li>&nbsp;expect_open</li>
+<li>&nbsp;ssh2_exec</li>
+<li>&nbsp;popen</li>
+</ul>
+<br/>
+Perl <ul><li>&nbsp;CGI.pm</li>
+<li>&nbsp;referer</li>
+<li>&nbsp;cookie</li>
+<li>&nbsp;ReadParse</li>
+</ul>
+<br/>
+ASP.NET <ul><li>&nbsp;HttpRequest.Params</li>
+<li>&nbsp;HttpRequest.Url</li>
+<li>&nbsp;HttpRequest.Item</li>
+</ul>
+<br/>
+Remediation Sanitization <br/>
+The URL and form data needs to be sanitized for invalid characters. A “blacklist” of characters is an option but it may be difficult to think of all of the characters to validate against. Also there may be some that were not discovered as of yet. A “white list” containing only allowable characters or command list should be created to validate the user input. Characters that were missed, as well as undiscovered threats, should be eliminated by this list. <br/>
+<br/>
+Genereal blacklist to be included for commannd injection can be |  ; &amp; $ &gt; &lt; ' \  ! &gt;&gt; # <br/>
+Escape or filter special characters for windows,   ( ) &lt; &gt; &amp; * ‘ | = ? ; [ ] ^ ~ ! . ” % @ / \ : + , ` <br/>
+Escape or filter special characters for Linux, { }  ( ) &lt; &gt; &amp; * ‘ | = ? ; [ ]  $ – # ~ ! . ” %  / \ : + , ` <br/>
+<br/>
+Permissions <br/>
+The web application and its components should be running under strict permissions that do not allow operating system command execution. Try to verify all these informations to test from a Gray Box point of view <br/>
+<br/>
+Tools <ul><li>&nbsp;OWASP <a href="https://www.owasp.org/index.php/OWASP_WebScarab_Project">WebScarab</a>&nbsp;</li>
+<li>&nbsp;OWASP <a href="https://www.owasp.org/index.php/OWASP_WebGoat_Project">WebGoat</a>&nbsp;</li>
+<li>&nbsp;<a href="https://github.com/commixproject/commix">Commix</a></li>
+</ul>
+</body></html>

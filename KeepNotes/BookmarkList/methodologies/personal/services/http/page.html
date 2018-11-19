@@ -33,16 +33,19 @@ See version? See title? Searchsploit them. Apache, Nginx, CMS, you name it<br/>
 <li style="list-style-type: none"></li>
 </ul>
 </li>
-<li style="list-style-type: none">Time to test URL parameters</li>
+<li style="list-style-type: none">Time to test URL: GET/POST parameters (yes, all of them)</li>
 <li style="list-style-type: none"><ul><li style="list-style-type: none">LFI (php? try php filters)</li>
 <li style="list-style-type: none">RFI</li>
 <li style="list-style-type: none">SSRF (if not RFI, how about 'localhost')</li>
-<li style="list-style-type: none">CMD exec</li>
+<li style="list-style-type: none">CMD injection</li>
 <li style="list-style-type: none">SQL Injection</li>
 <li style="list-style-type: none"></li>
 </ul>
 </li>
-<li style="list-style-type: none">Notice any encoded parameters? Cookies? </li>
+<li style="list-style-type: none">Notice any encoded parameters? Cookies? GET/POST parameters?</li>
+<li style="list-style-type: none"><ul><li style="list-style-type: none">Attempt to identify encoding!</li>
+</ul>
+</li>
 <li style="list-style-type: none">&nbsp;&#09;BitFlipping</li>
 <li style="list-style-type: none">&nbsp;&#09;Deserialization</li>
 <li style="list-style-type: none"><ul><li style="list-style-type: none"></li>
@@ -164,7 +167,7 @@ Droopescan / CMSmap / WPScan: Content management scanners<br/>
 davtest / cadaver: webdav tester<br/>
 <br/>
 <br/>
-<div style="text-align: left"><span style="font-size: 12pt"><span style="font-family: Arial">Method Testing</span></span></div><ul><li>nc IP_Adress Port</li>
+<span style="font-family: Arial"><span style="font-size: 12pt"><div style="text-align: left">Method Testing</div></span></span><ul><li>nc IP_Adress Port</li>
 <li style="list-style-type: none"><ul><li>HEAD / HTTP/1.0</li>
 <li>OPTIONS / HTTP/1.0</li>
 <li>PROPFIND / HTTP/1.0</li>
@@ -174,7 +177,7 @@ davtest / cadaver: webdav tester<br/>
 </ul>
 </li>
 </ul>
-<div style="text-align: left"><span style="font-size: 12pt"><span style="font-family: Arial">Upload Files</span></span></div><ul><li>curl</li>
+<span style="font-family: Arial"><span style="font-size: 12pt"><div style="text-align: left">Upload Files</div></span></span><ul><li>curl</li>
 <li style="list-style-type: none"><ul><li>curl -u &lt;username:password&gt; -T file_to_upload &lt;Target_URL&gt;</li>
 <li>curl -A "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" &lt;Target_URL&gt;</li>
 </ul>
