@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Options</title>
+</head><body>Raphael Mudge’s Cobalt Strike introduced a number of new features for ‘in-memory threat emulation’ such as:<br/>
+<ul><li>Modifiable memory permissions for reflectively loaded DLLs (as opposed to just setting the pages to RWX)</li>
+<li>Clean up of the initial memory allocation for reflectively loaded DLLs</li>
+<li>‘Module stomping’ to bypass injected thread scanners so that beacon appears to be running from the legitimate text section of a DLL</li>
+</ul>
+<br/>
+Other security researches have investigated bypassing injected thread scanners via techniques such as code caves or using SetThreadContext. In particular, see @_xpn_’s excellent blog on ‘<a href="https://blog.xpnsec.com/undersanding-and-evading-get-injectedthread/">Evading Get-InjectedThread</a>’.<br/>
+<br/>
+Gargoyle PoC technique for bypassing memory scanners by Josh Lospinoso. It enables hiding payloads in non-executable memory during periods of in-activity.</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Private Collaborator Server</string>
+  <key>nodeid</key><string>024122c4-73cd-42c4-a032-5eba541d58fa</string>
+  <key>modified_time</key><integer>1542642253</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1542642230</integer>
+  <key>order</key><integer>7</integer>
+</dict>
+</node>

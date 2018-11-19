@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>There are several types of requests as generally considered safer, and therefore not subject to CORS when being sent across origins. Some examples were the HTTP GET requests that the browser automatically makes when the HTML engine parses a tag that requires another resource, like a &lt;script&gt; tag or an &lt;img&gt; tag. A regular HTML &lt;form&gt; submit is another example of this. In these examples, one thing to note is that these types of requests don’t typically have a risk of exposing anything sensitive to the page. For example, if a &lt;form&gt; on secureideas.com is posted to professionallyevil.com by the normal submit event, the response is never returned to a context where scripts on secureideas.com could read it. The browser would effectively navigate to professionallyevil.com to show the response. All these examples are common, everyday cross-site requests which are perfectly fine. <br/>
+<br/>
+One significant thing to note is that if the browser has any cookies or HTTP Authorization headers for the target site, it will automatically include them in cross-site requests.<br/>
+<br/>
+So in the previous example, if the person browsing had previously logged into professionallyevil.com, they may have received a SESSION_ID cookie. This cookie is scoped to professionallyevil.com, so when they browse to secureideas.com, the browser will not allow the page on secureideas.com to read it. However, if the &lt;form&gt; on the secureideas.com gets submitted to professionallyevil.com, that SESSION_ID cookie will automatically be sent as part of the request. This is normal, acceptable behavior for the browser, and is critical to how web content works. But, maybe you already see where it presents a problem from a security perspective.<br/>
+<br/>
+<br/>
+<b>CSRF Classic</b><br/>
+That SESSION_ID is how professionallyevil.com identifies that the request is coming from an authenticated person, and who that person is. <br/>
+<br/>
+Cross-site request forgery (CSRF) is malicious exploitation of this particular behavior. <br/>
+<br/>
+An attacker can set up a malicious site that uses regular HTTP interactions, such as GET and POST actions from an HTML form, to send authenticated requests to a vulnerable application. This can be done in a hidden way without any user interaction beyond navigating to the attacker’s page. The prerequisites for such an attack are as follows:<br/>
+<ul><li>Cookies or HTTP Authorization headers are used for authentication and authorization.</li>
+<li>The victim has a valid session at the time he/she lands on the malicious page.</li>
+<li>All of the other parameters for the request are known to the attacker. The attack site could also present a ruse to trick the user into entering some of the parameters for the request, but if it’s something the user wouldn’t typically supply outside of the target app, one could argue that does not demonstrate more risk than regular credential phishing.</li>
+<li>The attack is effective even though the attacker is unable to see the response. This means that it needs to mutate data or application state in some way that is harmful, such as changing the victim account’s associated email address on the target app.</li>
+</ul>
+<br/>
+<br/>
+<br/>
+Hiding the attack is simple. The whole form element can be hidden using CSS, and could actually be submitted through a hidden &lt;iframe&gt; element to keep the user from being navigated from the malicious site.</body></html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypass</title>
+</head><body>CSP Bypass, "bad chars" to attempt to bypass:<br/>
+https://apapedulimu.click/clickjacking-on-google-myaccount-worth-7500/<br/>
+I just adding illegal character on the origin parameter. I try to put URL Encode before the business.google.com. Become like this:<br/>
+https://myaccount.google.com/u/0/brandaccounts/group/101656179839819660704/managers?originProduct=AC&amp;origin=https://%0d.business.google.com <br/>
+And csp is bypassed! <br/>
+<br/>
+Likely, %0d (carriage return) broke the parser or some such and allowed it to pass. </body></html>

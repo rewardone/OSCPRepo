@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Assumption is that we are up against Endpoint Detection and Response solutions (EDRs) using memory scanning technique which occur at regular time intervals and that do not alert on non-executable memory. Examples of defending software can include Carbon Black, Crowdstrike's Falcon, ENDGAME, CyberReason Countercept, Cylance, and FireEye HX. <br/>
+<br/>
+Capabilities can include:<ul><li>Memory scanning techniques, such as looking for reflectively loaded DLLs, injected threads, and inline/IAT/EAT hooking</li>
+<li>Real-time system tracing, such as process executino, file writes and registry activity</li>
+<li>Command line logging and anlysis</li>
+<li>Network tracing</li>
+<li>Common cross-process access techniques such as monitoring for CreateRemoteThread, WriteProcessMemory, and VirtualAllocEx</li>
+</ul>
+<br/>
+<br/>
+Memory scanning can be performance intensive and false positive heavy, meaning that it can scale poorly across thousands of endpoints. &nbsp;As a consequence, many vendors will focus on monitoring for specific processes (i.e. commonly targeted Windows processes), suspicious executable memory regions (i.e. RWX pages) and scanning at fixed intervals (which could vary from every fifteen minutes to once a day in the case of more intensive scanning techniques, such as comparing memory to disk).<br/>
+<br/>
+Therefore, if an attacker can hide a payload in a non-executable memory region and trigger it at certain intervals while no memory scanning is taking place, it could be possible to bypass in-memory detection capabilities. <br/>
+<br/>
+For example, the gargoyle memory scanning evasion technique uses Windows timers with specially crafted completion routines and rop gadgets to avoid any executable memory being present.</body></html>

@@ -504,13 +504,19 @@ if __name__=='__main__':
     dirStatusCodes = '200,204,301,302,307,403'
 
     #Set intensity for file extensions
+    #Technologies: .php,.asp,.aspx,.js,.cgi,.html
+    #Other: .txt,.log,
+    #Backups: .old,.bak,.gz,.tar.gz,.zip
+    #Repos: .git,.svn
     if args.intensity in [2,3,6,7,10,11]:
         if args.FILE_EXT != ".php":
-            FILE_EXT=".php,.html,.cgi,.txt,.log"+args.FILE_EXT
+            #FILE_EXT=".php,.html,.cgi,.txt,.log"+args.FILE_EXT
+            FILE_EXT=".html,.txt,.php"+args.FILE_EXT
         else:
-            FILE_EXT=".php,.html,.cgi,.txt,.log"
+            #FILE_EXT=".php,.html,.cgi,.txt,.log"
+            FILE_EXT=".html,.txt,.php"
     elif args.intensity in [4,8,12]:
-        FILE_EXT=".php,.html,.cgi,.txt,.log,.gz,.tar.gz,.bak,.php.bak,.html.bak"
+        FILE_EXT=".php,.html,.cgi,.txt,.bak,.old,.asp,.aspx,.git"
     else:
         if args.FILE_EXT == "":
             FILE_EXT=".html"

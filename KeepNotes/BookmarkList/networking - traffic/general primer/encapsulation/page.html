@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Encapsulation</title>
+</head><body>Protocols work together through encapsulation. The entire upper protocol packet (header + payload) IS the payload of the lower level protocol. <br/>
+<br/>
+Examples for TCP/IP four layers:<br/>
+Application<br/>
+Transport<br/>
+Network<br/>
+Data Link<br/>
+<br/>
+Every protocol adds its own header to the packet, treating it as a payload. <br/>
+This happens to every packet sent by a host. <br/>
+<br/>
+H = header<br/>
+P = Payload<br/>
+<br/>
+Application &nbsp;&#09;&#09;&#09;H[P] &#09;-&gt;&#09;H[P]<br/>
+Transport&#09;&#09;&#09; &nbsp; &nbsp; H[H[P]]&#09;-&gt; &#09;H[P]<br/>
+Network&#09;&#09;&#09; &nbsp;H[H[H[P]]] &#09;-&gt;&#09;H[P]<br/>
+Data Link&#09;&#09;&#09;H[H[H[H[P]]]] &#09;-&gt; &#09;H[P]<br/>
+<br/>
+The receiving host does the same operation in reverse order. </body></html>

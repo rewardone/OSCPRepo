@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Three Way Handshake</title>
+</head><body>Header fields involved in the handshake are:<br/>
+Sequence number<br/>
+Acknowledgement numbers<br/>
+SYN and ACK flags<br/>
+<br/>
+<br/>
+The steps in the handshake are used to synchronize the sequence and acknowledgement numbers between the server and the client. <br/>
+<br/>
+Client&#09;&#09;&#09; &nbsp; &nbsp;Server<br/>
+&nbsp; &nbsp;| &#09;&#09;-&gt; SYN&#09; &nbsp; &nbsp;&#09;|<br/>
+&nbsp; &nbsp;| &#09;Seq: 329 Ack: 0 &nbsp; &nbsp; &#09;|<br/>
+&nbsp; &nbsp;| &#09;&#09;&#09;&#09;&#09;|<br/>
+&nbsp; &nbsp;|&#09; &nbsp; &nbsp;&lt;- SYN/ACK&#09;&#09;|<br/>
+&nbsp; &nbsp;| &#09;Seq: 498 Ack: 330 &#09;|<br/>
+&nbsp; &nbsp;|&#09;&#09;&#09;&#09;&#09;|<br/>
+&nbsp; &nbsp;| &#09;&#09;-&gt; ACK &#09;&#09;|<br/>
+&nbsp; &nbsp;| &nbsp; Seq: 330 Ack: 449 &#09;|</body></html>

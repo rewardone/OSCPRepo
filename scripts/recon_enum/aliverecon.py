@@ -8,6 +8,10 @@ import multiprocessing
 from multiprocessing import Process
 import argparse
 
+#nmap ping sends 0 data by default (detectable)
+#TODO add options for --data <hex string>, --data-string <string>, or --data-length <number>
+
+
 def alive_hosts(target_hosts):
     print "INFO: Performing ping sweep over %s" % (target_hosts)
     output_file = "/root/scripts/recon_enum/results/exam/targets.txt"

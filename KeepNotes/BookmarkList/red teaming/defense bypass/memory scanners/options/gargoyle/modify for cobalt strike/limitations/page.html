@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Limitations</title>
+</head><body>Limitations<br/>
+Due to its experimental nature the PoC in this blog post suffers from a number of limitations:<br/>
+<ul><li>As beacon is terminated at each iteration it must renegotiate the session every time which would make it difficult to use during a live engagement.</li>
+<li>The use of thread and memory scanning within Metalgear is not an optimal solution.</li>
+<li>No consideration has been given to our in-memory profile once we are running. Therefore many EDR solutions which use real time tracing of suspicious indicators, such as anomalous thread creation and dynamic memory allocation, may still flag on beacon.</li>
+<li>As beacon wasn’t designed to work in this manner, terminating/suspending can affect post-exploitation jobs.</li>
+</ul>
+<br/>
+Ideally, at each invocation we would like to emulate beacon ‘checking-in’, so it can fetch new commands, execute them and immediately return to sleeping. In this set-up, our in-memory profile simply mirrors beacon’s latency on the network. As such, another potential approach could be to suspend the thread associated with beacon and change the memory permissions associated with the reflectively loaded beacon payload to READ_ONLY. However, this means the thread is always present and another technique, such as using ROP gadgets or SetThreadContext, would be needed to hide the starting location of this thread to make it appear as if it belonged to a legitimately mapped DLL. </body></html>

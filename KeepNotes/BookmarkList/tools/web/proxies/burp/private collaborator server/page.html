@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Private Collaborator Server</title>
+</head><body>https://portswigger.net/burp/documentation/collaborator/deploying<br/>
+<br/>
+Installation and execution<br/>
+The Burp Collaborator server is included in the same executable file as Burp Suite Professional itself. No license key is required to run your own instance of the server. The server can be started directly from the command line using the --collaborator-server argument, for example:<br/>
+<br/>
+sudo java -jar burp.jar --collaborator-server<br/>
+<br/>
+The server will fail to start if it cannot bind to the ports it needs to run its services. You will need to stop any other processes that are using these ports. By default, Burp Collaborator server listens on the following ports:<br/>
+<br/>
+DNS: UDP port 53<br/>
+HTTP: TCP port 80<br/>
+HTTP: TCP port 443<br/>
+SMTP: TCP ports 25 and 587<br/>
+SMTPS: TCP port 465<br/>
+Further, on Unix-based systems, you may need to run the server with root privileges in order to bind to these ports. Alternatively, you can configure the server to run on non-standard ports, and use port mapping to redirect the original ports.<br/>
+<br/>
+When launching the Collaborator server, it is desirable to configure the JVM's memory handling and garbage collection, based on the expected usage. If you are running the Collaborator server on a desktop machine for a small number of expected users, you can reduce the amount of memory used by the JVM. The following command allows the heap to fluctuate between 10 and 200 MB, and for the JVM to spend 5% of its time in garbage collection, which typically uses less memory:<br/>
+<br/>
+sudo java -Xms10m -Xmx200m -XX:GCTimeRatio=19 -jar burp.jar --collaborator-server<br/>
+<br/>
+If you are running the Collaborator server on a dedicated machine to support a larger number of users, then it is efficient to fix the size of the heap to the amount of physical memory available, typically leaving 1Gb available for the operating system, JVM and any other running processes. For example:<br/>
+<br/>
+sudo java -Xmx3g -Xms3g -jar burp.jar --collaborator-server<br/>
+<br/>
+If the server is expected to be heavily used and has more than 4Gb of physical memory, it is recommended to switch to the G1 garbage collector, which significantly reduces the JVM pauses that can occur during garbage collection. For example:<br/>
+<br/>
+sudo java -Xmx12g -Xms12g -XX:+UseG1GC -jar burp.jar --collaborator-server<br/>
+<br/>
+To make full use of the Collaborator server's capabilities, you will generally also need to create a suitable configuration file.<br/>
+<br/>
+Basic set-up on a closed network<br/>
+A common use case for a private Collaborator server is to support a single tester (or a small team) working on a private closed network. If you are testing an application on a closed network with no Internet access, then of course the default public Collaborator server cannot be used.<br/>
+<br/>
+In this situation, you can launch a basic Collaborator server instance using one of the commands in Installation and Execution, without the need for any configuration file. You then simply need to configure Burp to use your machine's IP address as its Collaborator server.<br/>
+<br/>
+In this set-up, the Collaborator will not support custom DNS resolution or valid trusted HTTPS connections. However, you will still be able to use the basic Collaborator features to detect issues like external HTTP interactions.<br/>
+<br/>
+Running on non-standard ports<br/>
+If you wish to run the Collaborator server as a non-root user, you will need to configure it to run on non-standard ports. You will also need to configure your operating system to map the original ports to the custom ports you are using. Typically, you will need to configure mappings for incoming TCP and UDP connections, and also for outgoing UDP responses.<br/>
+<br/>
+You can configure the Collaborator server to use non-standard ports using its configuration file. For example:<br/>
+<br/>
+{ <br/>
+&nbsp; "serverDomain" : "burpcollaborator.example.com", <br/>
+&nbsp; "eventCapture": { <br/>
+&nbsp; &nbsp; "http": { <br/>
+&nbsp; &nbsp; &nbsp; "ports" : 8080 <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "https": { <br/>
+&nbsp; &nbsp; &nbsp; "ports" : 8443 <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "smtp": { <br/>
+&nbsp; &nbsp; &nbsp; "ports" : [8025, 8587] <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "smtps": { <br/>
+&nbsp; &nbsp; &nbsp; "ports" : 8465 <br/>
+&nbsp; &nbsp; } <br/>
+&nbsp; }, <br/>
+&nbsp; "dns": { <br/>
+&nbsp; &nbsp; "ports" : 8053 <br/>
+&nbsp; } <br/>
+}<br/>
+<br/>
+Note that the "ports" value can be a single port number or an array of port numbers, if you want to listen for a service on multiple ports. By default, the Collaborator server listens for SMTP interactions on ports 25 and 587.<br/>
+<br/>
+DNS configuration<br/>
+Burp Collaborator by default runs a DNS service for a specific domain, and to make use of this you will need a dedicated domain or subdomain for the Collaborator to use. You can omit the DNS capability and access the Collaborator server only by IP address; however, this configuration is less effective at detecting various vulnerabilities.<br/>
+<br/>
+If you are running Burp Collaborator on the public Internet, you can purchase a dedicated domain (e.g. example.com), or use a subdomain of a domain that you already own and use (e.g. burpcollaborator.example.com). If your installation will be restricted to an internal network, you can choose any dedicated internal domain.<br/>
+<br/>
+The Collaborator server needs to know which domain it controls so that it can serve the appropriate DNS records. This is configured in the Collaborator configuration file. For example:<br/>
+<br/>
+{ <br/>
+&nbsp; "serverDomain": "burpcollaborator.example.com" <br/>
+}<br/>
+<br/>
+You will also need to configure your domain so that DNS for the domain is delegated to your Collaborator server. The details of this will depend on your set-up. Most domain registrars provide a web interface allowing you to configure the authoritative DNS servers for your domain.<br/>
+<br/>
+If you are using example.com as the domain for your Collaborator server, you will need to configure the domain to use the following name servers:<br/>
+<br/>
+ns1.example.com<br/>
+ns2.example.com<br/>
+<br/>
+You will also need to configure glue records to associate each of these with the IP address of your Collaborator server. If your domain registrar requires each configured DNS server for the domain to reside on a different IP address, then you might need to configure two public IP addresses on your Collaborator server.<br/>
+<br/>
+Note: It is not possible to avoid the use of the Collaborator DNS service by simply editing the hosts file of the target server being tested. When employing the Collaborator server in its testing, Burp uses randomly generated subdomains of the main configured domain. Host files do not support wildcards and so cannot be used to route queries with randomly generated subdomains.<br/>
+<br/>
+SSL configuration<br/>
+Burp Collaborator runs HTTPS and SMTPS services for capturing interactions initiated by tested systems, and to serve polling requests made by Burp Suite. Typically, SSL connections to the Collaborator server will only succeed if the Collaborator has been configured with a valid wildcard SSL certificate for the domain name being used. SSL certificates can be configured using the Collaborator configuration file.<br/>
+<br/>
+If you do not have a valid wildcard SSL certificate for your domain, then Burp Collaborator can create a self-signed certificate. For example, the following configuration will create a self-signed wildcard certificate for *.burpcollaborator.example.com:<br/>
+<br/>
+"ssl": { <br/>
+&nbsp; "hostname" : "burpcollaborator.example.com" <br/>
+}<br/>
+<br/>
+Using a self-signed certificate may be sufficient if you are able to install the certificate as trusted on the target server you are testing, or if the target application does not validate SSL certificates.<br/>
+<br/>
+If you have purchased a valid wildcard SSL certificate for your domain, you can obtain the certificate from your Certificate Authority (CA), and install it in your Collaborator server. In this example, we have generated a Certificate Signing Request (CSR) using OpenSSL, and the CA has provided the certificate and an intermediate certificate.<br/>
+<br/>
+With OpenSSL, the default format for keys is the traditional SSLeay format. These need to be converted to PKCS8 before the Collaborator server can import them. The OpenSSL command to do this conversion is:<br/>
+<br/>
+openssl pkcs8 -topk8 -inform PEM -in keys/burpcollaborator.example.com.key -outform PEM -out keys/burpcollaborator.example.com.key.pkcs8 -nocrypt<br/>
+<br/>
+SSL certificates can be configured using the Collaborator configuration file. The following example configuration file demonstrates how to load the private key, the certificate, and the intermediate certificate:<br/>
+<br/>
+"ssl": { <br/>
+&nbsp; "certificateFiles" : [ <br/>
+&nbsp; &nbsp; "keys/burpcollaborator.example.com.key.pkcs8", <br/>
+&nbsp; &nbsp; "keys/burpcollaborator.example.com.crt", <br/>
+&nbsp; &nbsp; "keys/intermediate.crt"] <br/>
+}<br/>
+<br/>
+Note: The certificate files must be specified in the correct order: private key, certificate, intermediate certificate(s).<br/>
+<br/>
+Alternatively, you can generate a CSR using the Java keytool, and import the resulting certificate into the Java keystore of the server. In this situation, you can configure the Collaborator to load the certificate using:<br/>
+<br/>
+"ssl": { <br/>
+&nbsp; "keystore": { <br/>
+&nbsp; &nbsp; "path" : "myKeystore.jks", <br/>
+&nbsp; &nbsp; "password" : "myPassword" <br/>
+}<br/>
+<br/>
+If you have configured separate network interfaces for interaction events and polling, you will need to configure SSL separately for each interface.<br/>
+<br/>
+Interaction events and polling<br/>
+The Collaborator server supports two types of incoming communications from clients:<br/>
+<br/>
+Interaction events - These occur when a target application being tested initiates some kind of interaction with the Collaborator server, for example a DNS lookup or an HTTP request.<br/>
+Polling requests - These occur when an instance of Burp asks the Collaborator server whether any interaction events have occurred resulting from its payloads.<br/>
+By default, the Collaborator server handles both interaction events and polling requests on the same network interface. If you wish, you can configure the Collaborator to use different interfaces (or ports) for serving polling requests. This facility can be used to work around firewall restrictions, or to control access to the polling function at the network layer.<br/>
+<br/>
+You can configure a separate polling interface using the optional "polling" section of the Collaborator configuration file. If you do this, you can use the same wildcard SSL certificate for both interfaces, and let the Collaborator server's DNS service direct polling requests to the correct interface. With this set-up, you will only need to configure the server location in the Burp Collaborator Server options, and Burp will automatically prepend "polling." to the server domain when performing polling requests. The Collaborator's DNS service will resolve the polling subdomain to the public IP address of the separate polling interface. This provides the benefit of using separate interaction and polling interfaces while simplifying the configuration of the Burp client.<br/>
+<br/>
+Metrics<br/>
+The Collaborator server captures various usage metrics allowing administrators to monitor the performance and load of the server. These metrics can be useful to validate that the Collaborator machine is sufficiently powerful for its level of usage. Note that the metrics do not contain any data extracted from specific interaction events and polling requests.<br/>
+<br/>
+Metrics data is accessible via the polling interface of the Collaborator server, and access can be controlled through the use of a shared secret URL path and a client IP address whitelist. Metrics are disabled by default but can be enabled using the optional "metrics" section of the Collaborator configuration file. For example:<br/>
+<br/>
+"polling" : { <br/>
+&nbsp; "publicAddress" : "10.20.0.159" <br/>
+}, <br/>
+"metrics": { <br/>
+&nbsp; "path" : "jnaicmez8", <br/>
+&nbsp; "addressWhitelist" : ["21.10.23.0/24"] <br/>
+},<br/>
+<br/>
+With this configuration, metrics would be available to clients on the 21.10.23.0/24 network at the URL:<br/>
+<br/>
+https://10.20.0.159/jnaicmez8/metrics<br/>
+<br/>
+Collaborator logging<br/>
+You can configure logging to standard output, via the logLevel value in the configuration file. The available values are:<br/>
+<br/>
+OFF - Nothing is logged.<br/>
+ERROR - Unexpected exceptions are logged.<br/>
+INFO - Information about configuration and services is logged at startup. This is the default value.<br/>
+DEBUG - Details of Collaborator interactions and polling are logged, including source IP address and interaction IDs. Note that this might disclose sensitive information in the log output.<br/>
+Testing the installation<br/>
+When the server is deployed, you can use Burp Suite to test that is operating correctly. In Burp Suite Professional, configure the details of your server in the Burp Collaborator Server options, and run the health check function. Burp will then attempt to exercise each of the expected Collaborator functions, and will provide feedback of the success or failure of each function.<br/>
+<br/>
+Collaborator configuration file format<br/>
+All options for Burp Collaborator server are controlled using a configuration file. By default, the Collaborator server looks for a file called collaborator.config in the current working directory. This location can be overridden from the command line using the --collaborator-config argument, for example:<br/>
+<br/>
+sudo java -jar burp.jar --collaborator-server --collaborator-config=myconfig.config<br/>
+<br/>
+The configuration file uses a JSON format, with support for comments. Where IP addresses are required, you can configure either a single address or a list of addresses. For example, either of the following could be used to configure the local address(es) of a network interface:<br/>
+<br/>
+"localAddress" : "10.20.0.159" <br/>
+"localAddress" : ["10.20.0.159", "127.0.0.1"]<br/>
+<br/>
+A complete sample configuration file, together with an explanation of each available option, is shown below:<br/>
+<br/>
+{ <br/>
+&nbsp; "serverDomain" : "burpcollaborator.example.com", <br/>
+&nbsp; "workerThreads" : 10, <br/>
+&nbsp; "eventCapture": { <br/>
+&nbsp; &nbsp; "localAddress" : ["10.20.0.159", "127.0.0.1"], <br/>
+&nbsp; &nbsp; "publicAddress" : "10.20.0.159", <br/>
+&nbsp; &nbsp; "http": { <br/>
+&nbsp; &nbsp; &nbsp; "ports" : 80 <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "https": { <br/>
+&nbsp; &nbsp; &nbsp; "ports" : 443 <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "smtp": { <br/>
+&nbsp; &nbsp; &nbsp; "ports" : [25, 587] <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "smtps": { <br/>
+&nbsp; &nbsp; &nbsp; "ports" : 465 <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "ssl": { <br/>
+&nbsp; &nbsp; &nbsp; "certificateFiles" : [ <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "keys/burpcollaborator.example.com.key.pkcs8", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "keys/burpcollaborator.example.com.crt", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "keys/intermediate.crt" ] <br/>
+&nbsp; &nbsp; } <br/>
+&nbsp; }, <br/>
+&nbsp; "polling" : { <br/>
+&nbsp; &nbsp; "localAddress" : "127.0.0.1", <br/>
+&nbsp; &nbsp; "publicAddress" : "10.20.0.159", <br/>
+&nbsp; &nbsp; "http": { <br/>
+&nbsp; &nbsp; &nbsp; "port" : 9090 <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "https": { <br/>
+&nbsp; &nbsp; &nbsp; "port" : 9443 <br/>
+&nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; "ssl": { <br/>
+&nbsp; &nbsp; &nbsp; "hostname" : "collaboratorpolling.example.com" <br/>
+&nbsp; &nbsp; } <br/>
+&nbsp; }, <br/>
+&nbsp; "metrics": { <br/>
+&nbsp; &nbsp; "path" : "jnaicmez8", <br/>
+&nbsp; &nbsp; "addressWhitelist" : ["21.10.23.0/24"] <br/>
+&nbsp; }, <br/>
+&nbsp; "dns": { <br/>
+&nbsp; &nbsp; "interfaces" : [{ <br/>
+&nbsp; &nbsp; &nbsp; "name": "ns1", <br/>
+&nbsp; &nbsp; &nbsp; "localAddress" : "34.23.11.6", <br/>
+&nbsp; &nbsp; &nbsp; "publicAddress" : "98.87.76.55" <br/>
+&nbsp; &nbsp; }, { <br/>
+&nbsp; &nbsp; &nbsp; "name" : "ns2", <br/>
+&nbsp; &nbsp; &nbsp; "localAddress" : "34.23.11.6", <br/>
+&nbsp; &nbsp; &nbsp; "publicAddress" : "98.87.11.00" <br/>
+&nbsp; &nbsp; }], <br/>
+&nbsp; &nbsp; "ports" : 53 <br/>
+&nbsp; }, <br/>
+&nbsp; "logLevel" : "INFO" <br/>
+}<br/>
+<br/>
+The definitions of the supported fields in the configuration file are shown below:<br/>
+<br/>
+serverDomain&#09;The domain or subdomain which the Collaborator server will control DNS for. This setting is required for DNS functionality.<br/>
+workerThreads&#09;The number of threads used by the Collaborator to process incoming requests.<br/>
+eventCapture.localAddress&#09;By default, the Collaborator will listen on all local interfaces for capturing interaction events. If specified, it will only listen on the configured interfaces.<br/>
+eventCapture.publicAddress&#09;The public IP address used for capturing interaction events.<br/>
+eventCapture.http.ports&#09;The ports for listening for HTTP interaction events. This should only be changed from the default if port 80 is being forwarded.<br/>
+eventCapture.https.ports&#09;The ports for listening for HTTPS interaction events. This should only be changed from the default if port 443 is being forwarded.<br/>
+eventCapture.smtp.ports&#09;The ports for listening for SMTP interaction events. This should only be changed from the default if ports 25 and 587 are being forwarded.<br/>
+eventCapture.smtps.ports&#09;The ports for listening for SMTPS interaction events. This should only be changed from the default if port 465 is being forwarded.<br/>
+eventCapture.https.hostname&#09;Used to generate a self-signed certificate. See SSL configuration for more details.<br/>
+polling.localAddress&#09;By default, the Collaborator will use the same network interface for capturing interaction events and serving polling requests. If specified, it will use a different interface for polling requests.<br/>
+polling.publicAddress&#09;The public address used for serving polling requests.<br/>
+polling.http.port&#09;The port to be used for polling over HTTP. This can be non-standard and Burp Suite will need to be configured to use it.<br/>
+polling.https.port&#09;The port to be used for polling over HTTPS. This can be non-standard and Burp Suite will need to be configured to use it.<br/>
+polling.https.hostname&#09;Used to generate a self-signed certificate. See SSL configuration for more details.<br/>
+metrics.path&#09;URL path under at which the metrics page can be accessed.<br/>
+metrics.whitelist&#09;A whitelist of client IP addresses allowed to access the metrics page.<br/>
+dns.ports&#09;Ports for listening for DNS queries. This should only be changed from the default if port 53 is being forwarded.<br/>
+dns.interfaces&#09;A list of local interfaces for listening for DNS queries. If your registrar requires that you configure a different IP address for each authoritative name server, you can use multiple network interfaces and configure their locations with this option.<br/>
+dns.interfaces.name&#09;The hostname to use for the name server running on this interface. A different hostname should be used for each name server (e.g. ns1, ns2, etc.).<br/>
+dns.interfaces.localAddress&#09;The local address to bind to for this name server.<br/>
+dns.interfaces.publicAddress&#09;The public IP address corresponding to the configured local address. Typically, you will need to use the configured hostname and public IP address in your DNS record for your domain.<br/>
+logLevel&#09;The level of logging required to standard output.</body></html>

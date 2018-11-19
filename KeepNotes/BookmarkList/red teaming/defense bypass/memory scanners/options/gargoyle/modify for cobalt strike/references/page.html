@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>References</title>
+</head><body>References<br/>
+[1] Hexacorn maintains an excellent up to date list of EDR solutions and their respective capabilities (<a href="http://www.hexacorn.com/blog/2016/08/06/endpoint-detection-and-response-edr-solutions-sheet/">http://www.hexacorn.com/blog/2016/08/06/endpoint-detection-and-response-edr-solutions-sheet/</a>)<br/>
+<br/>
+[2] See Jared Atkinson’s Get-Injected Thread: <a href="https://gist.github.com/jaredcatkinson/23905d34537ce4b5b1818c3e6405c1d2">https://gist.github.com/jaredcatkinson/23905d34537ce4b5b1818c3e6405c1d2</a><br/>
+<br/>
+[3] See Countercept’s ‘Memory Analysis’ whitepaper for more information on these types of techniques: <a href="https://www.countercept.com/our-thinking/memory-analysis-whitepaper/">https://www.countercept.com/our-thinking/memory-analysis-whitepaper/</a><br/>
+<br/>
+[4] Additionally, many EDR solutions use real time tracing of suspicious indicators, such as local/remote thread creation and dynamic memory allocations, however less attention is given to these types of techniques in this blog post.<br/>
+<br/>
+[5] Additionally, most API calls used for Metalgear were located in kernel32.dll which is loaded into memory at the same address for each process so hardcoded RVA’s could also potentially be used.<br/>
+<br/>
+[6] See Nick Cano for more information on this type of thread hijacking technique: <a href="https://github.com/GameHackingBook/GameHackingCode/blob/master/Chapter7_CodeInjection/main-codeInjection.cpp">https://github.com/GameHackingBook/GameHackingCode/blob/master/Chapter7_CodeInjection/main-codeInjection.cpp</a></body></html>

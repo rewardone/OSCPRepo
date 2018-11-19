@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Three Way Handshake</string>
+  <key>nodeid</key><string>afb0fde8-efde-479a-ab9b-f495dd385c59</string>
+  <key>modified_time</key><integer>1542650967</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1542650670</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

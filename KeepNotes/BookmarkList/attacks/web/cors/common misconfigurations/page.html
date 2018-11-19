@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Common Misconfigurations</title>
+</head><body>Reflect All<br/>
+On several tests for different clients, we’ve found them simply reflecting any origin header into the access-control-allow-origin policy, in combination with allowing credentials. This is the worst possible CORS misconfiguration, as it effectively disables the Same-Origin Policy. <br/>
+<br/>
+For example, a malicious person could set up a rogue site at www.evilpayload.com and using a phishing campaign to direct Secure Ideas users there. If those users are currently authenticated with api.professionallyevil.com, then www.evilpayload.com can make API calls to api.professionallyevil.com as those users. Meaning whatever sensitive data that API exposes to authenticated users can be harvested by any site those users visit (provided they have a valid cookie-based or HTTP auth-based session).<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

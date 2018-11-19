@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Execute-Assembly</string>
+  <key>nodeid</key><string>93711fe7-8c31-491c-bdbd-3e54a6b24056</string>
+  <key>modified_time</key><integer>1542646986</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1542646945</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

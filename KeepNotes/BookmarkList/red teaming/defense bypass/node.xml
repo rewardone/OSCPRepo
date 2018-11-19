@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Defense Bypass</string>
+  <key>nodeid</key><string>1e814dce-fb67-480b-a3bd-3168bf108986</string>
+  <key>modified_time</key><integer>1542641048</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1542641048</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

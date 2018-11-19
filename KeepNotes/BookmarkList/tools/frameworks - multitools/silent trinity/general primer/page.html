@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Under development released at DerbyCon 2018 by byt3bl33d3r, the maker of crackmapexec (amazing)<br/>
+https://www.youtube.com/watch?v=NaFiAx737qg <br/>
+https://github.com/byt3bl33d3r/silenttrinity<br/>
+<br/>
+A post-exploitation agent powered by Python, IronPython, C#/.NET<br/>
+<br/>
+Requirements<br/>
+Server requires Python &gt;= <b>3.7</b><br/>
+SILENTTRINITY C# implant requires .NET &gt;= <b>4.5</b><br/>
+<br/>
+Python 3.7 should be included in Kali, but you have to specify it directly every time.<br/>
+Probably also useful for apt install python3.7-dev python3-pip<br/>
+python3.7 -m pip install -r requirements.txt<br/>
+python3.7 st.py<br/>
+<br/>
+Notes<br/>
+.NET runtime support<br/>
+The implant needs .NET 4.5 or greater due to the IronPython DLLs being compiled against .NET 4.0, also there is no ZipArchive .NET library prior to 4.5 which the implant relies upon to download the initial stage containing the IronPython DLLs and the main Python code.<br/>
+<br/>
+Reading the source for the IronPython Compiler it seems like we can get around the first issue by directly generating IL code through IKVM (I still don't understand why this works). However this would require modifying the compiler to generate a completely new EXE stub (definitely feasible, just time consuming to find the proper IKVM API calls).<br/>
+<br/>
+C2 Comms<br/>
+Currently the implant only supports C2 over HTTP 1.1, .NET 4.5 seems to have a native WebSocket library which makes implementing a WS C2 channel more than possible.<br/>
+<br/>
+HTTP/2 client support for .NET's HttpClient API is in the works, just not yet released.<br/>
+<br/>
+The implant and server design are very much "future proof" which should make implementing these C2 Channels pretty trivial when the time comes.</body></html>

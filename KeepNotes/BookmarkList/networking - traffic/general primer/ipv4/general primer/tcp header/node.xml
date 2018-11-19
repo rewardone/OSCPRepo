@@ -2,12 +2,14 @@
 <node>
 <version>6</version>
 <dict>
-  <key>title</key><string>Packet Layout and Fields</string>
+  <key>title</key><string>TCP Header</string>
   <key>nodeid</key><string>d9a91964-497a-4365-89ca-798bb8914051</string>
   <key>modified_time</key><integer>1536590236</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1536589884</integer>
-  <key>order</key><integer>0</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>1</integer>
+  <key>info_sort</key><string>order</string>
 </dict>
 </node>

@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pre-Flight</title>
+</head><body>Okay, remember that CORS pre-flight that I mentioned earlier? I said it is performed when there are complex requests. <br/>
+<br/>
+Adding custom headers, or using less common HTTP methods (i.e. not GET, POST, or HEAD) or content-types (i.e. any other than: text/plain, application/x-www-form-urlencoded, or multipart/form-data) are the standard criteria for sending a pre-flight. <br/>
+<br/>
+What actually happens in this case is that transparent to the user, the browser sends an HTTP OPTIONS request, to which the server responds with its CORS policy including the headers discussed above, along with several others such as access-control-allow-methods which specifies which HTTP methods should be allowed. The browser will then only issue the specified request if it meets the CORS the policy returned in the OPTIONS response. Because the scenarios above are based around attacking from origins allowed due overly-permissive configurations, the pre-flight would not typically impact exploitability of those flaws.</body></html>

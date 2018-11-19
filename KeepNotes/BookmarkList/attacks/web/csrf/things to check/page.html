@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Things To Check</title>
+</head><body>Here are some things to look at whether you’re implementing a secure solution or validating the implementation in the context of a penetration test:<br/>
+<ul><li><b>Are there CSRF-sensitive transactions?</b>&nbsp;Specifically from the attacker perspective, I need to find something that would be damaging if done blindly. Some of the more common things that can lead to a bigger compromise are changing a user’s password or associated email address, but inserting, updating, or deleting any piece of data may have serious effects depending on the specific context.</li>
+<li><b>Is the auth mechanism CSRF-sensitive?</b>&nbsp;Is it a cookie or an HTTP Authorization header? Or is it a custom header, which inherently resists CSRF as long as the CORS policy is set correctly?</li>
+<li><b>Is there visible anti-CSRF protection?</b>&nbsp;Most, but not all of the defenses have some observable element, such as tokens in some part of the responses (headers, body). More often than not, if I can’t see the protection, it isn’t there.</li>
+<li><b>If I delete a CSRF token, is it actually enforced?</b>&nbsp;It seems like a silly question to ask, but every month or two we seem to see an application where there are CSRF tokens present, but the application doesn’t actually check if they’re present in the request.</li>
+<li><b>Is the CSRF token tied to a specific session?</b>&nbsp;If I switch from User A to User B, can User B use User A‘s token? As an attacker, could I create a script that gets a token to use in a CSRF request?</li>
+<li><b>Does the password change actually require the current password?</b>&nbsp;Just because the field is present doesn’t mean it’s properly enforced. If I remove that parameter, will the request be rejected? What if I set it to a boolean true?</li>
+<li><b>Is the content-type of application/json required?</b>&nbsp;Will, for example, text/plain be accepted and parsed as JSON?</li>
+<li><b>Does the confirmation page actually send a value that an attacker wouldn’t know?</b>&nbsp;If not, the attacker might be able to send two blind CSRF requests to beat the confirmation.</li>
+<li><b>Is there origin checking beyond setting the CORS policy?</b></li>
+<li><b>Similarly to CORS, are there other origins in-scope that might be weaker targets that are allowed to send request?</b>&nbsp;That old unpatched WordPress instance hosting the company blog, perhaps?</li>
+<li><b>Are there any GET requests mutating the state?</b>&nbsp;How are they protected against CSRF? Most solutions won’t work well for GET requests, but modifying the URLs to include a token or similar at render time (whether that be client or server) can work. The best choice is to follow the best practice of avoiding mutating state in GETs.</li>
+</ul>
+</body></html>

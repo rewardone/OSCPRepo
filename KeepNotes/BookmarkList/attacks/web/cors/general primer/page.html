@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>CORS (cross-origin resource sharing) is actually a policy that loosens a security control called the Same-Origin Policy, or SOP for short. Therefore, in order to understand CORS, we must first understand the SOP.<br/>
+<br/>
+The most common way to implement a CORS policy is to check the origin request header against a whitelist or pattern-match (e.g. regex) first, then include the access-control-allow-origin only if the origin header met the whitelisting criteria. &nbsp;If we don’t include access-control-allow-origin in the response, it’s not an allowed origin, and the Same-Origin Policy will keep the JavaScript in the requesting application from being able to access the response.<br/>
+<br/>
+It’s worth noting that the wildcard access-control-allow-origin:* is sometimes used to allow general public access. This is much less concerning than a reflected origin, because access-control-allow-credentials: true will not be enforced with the wildcard origin. In other words, credentials are never allowed with a wildcard origin.</body></html>

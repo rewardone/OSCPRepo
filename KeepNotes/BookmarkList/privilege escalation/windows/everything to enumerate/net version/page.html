@@ -10,8 +10,6 @@ https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determi
 To find .NET Framework versions by viewing the registry (.NET Framework 1-4)<br/>
 reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP"<br/>
 <br/>
-<br/>
-<br/>
 To find .NET Framework versions by viewing the registry (.NET Framework 4.5 and later)<br/>
 reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"<br/>
 <br/>
@@ -20,6 +18,13 @@ reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full
 <br/>
 Check for a DWORD value named Release. The existence of the Release DWORD indicates that the .NET Framework 4.5 or newer has been installed on that computer.<br/>
 The value of the Release DWORD indicates which version of the .NET Framework is installed.<br/>
+<br/>
+<br/>
+You may also be able to use powershell.<br/>
+powershell Get-Item C:\Windows\Microsoft.NET\Framework64\v4.0.30319\clr.dll | fl <br/>
+&nbsp;and look at ProductVersion<br/>
+<br/>
+<br/>
 <br/>
 <br/>
 The following table lists the keys of released versions of the .NET Framework only. It doesn't list the keys of preview or pre-release versions.<br/>
