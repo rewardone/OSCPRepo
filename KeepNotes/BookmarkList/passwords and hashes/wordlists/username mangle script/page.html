@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Username Mangle Script</title>
+</head><body>#!/usr/bin/env python<br/>
+#https://gist.github.com/superkojiman/11076951<br/>
+#<br/>
+# From a text file with one "first last" per line<br/>
+# script will mangle for potential usernames<br/>
+#<br/>
+import sys<br/>
+<br/>
+if __name__ == "__main__": <br/>
+&#09;if len(sys.argv) != 2:<br/>
+&#09;&#09;print "usage: %s names.txt" % (sys.argv[0])<br/>
+&#09;&#09;sys.exit(0)<br/>
+<br/>
+&#09;for line in open(sys.argv[1]):<br/>
+&#09;&#09;name = ''.join([c for c in line if &nbsp;c == " " or &nbsp;c.isalpha()])<br/>
+<br/>
+&#09;&#09;tokens = name.lower().split()<br/>
+&#09;&#09;fname = tokens[0]<br/>
+&#09;&#09;lname = tokens[-1]<br/>
+<br/>
+&#09;&#09;print fname + lname&#09;&#09;# johndoe<br/>
+&#09;&#09;print lname + fname&#09;&#09;# doejohn<br/>
+&#09;&#09;print fname + "." + lname&#09;# john.doe<br/>
+&#09;&#09;print lname + "." + fname&#09;# doe.john<br/>
+&#09;&#09;print lname + fname[0]&#09;&#09;# doej<br/>
+&#09;&#09;print fname[0] + lname&#09;&#09;# jdoe<br/>
+&#09;&#09;print lname[0] + fname&#09;&#09;# djoe<br/>
+&#09;&#09;print fname[0] + "." + lname&#09;# j.doe<br/>
+&#09;&#09;print lname[0] + "." + fname&#09;# d.john<br/>
+&#09;&#09;print fname&#09;&#09;&#09;# john<br/>
+&#09;&#09;print lname&#09;&#09;&#09;# joe</body></html>

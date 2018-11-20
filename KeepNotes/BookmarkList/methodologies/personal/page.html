@@ -8,81 +8,16 @@ TODO: Fill in with OS X tools as well (some at https://objective-see.com/product
 <br/>
 Pre assessment<br/>
 IP target list (ensure blacklist if requested)<br/>
-Start tcpdump<br/>
+Start tcpdump/wireshark<br/>
+&nbsp;&#09;Listen to network!<br/>
+&nbsp;&#09;Attempt to blend in if possible (MAC address, IP range, hostname, emulate ports/firewall, account names, etc)<br/>
 Start responder (when interacting with windows clients)<br/>
+&nbsp;&#09;Listen first! Only direct analyze attempts<br/>
+&nbsp;&#09;Maybe spoof/poison if RoE allow<br/>
 <br/>
 Begin assessment<br/>
-<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"><ul><li style="list-style-type: none"></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
 <br/>
 <br/>
-Define process for Limited Shell, ie:<ul><li style="list-style-type: none">Establish Userland Persistence Immediately</li>
-</ul>
-&#09;Determine rough limits<br/>
-&#09;&#09;Attempt basic limited shell escape (rbash/etc)<br/>
-&#09;Basic privexec and enumeration<br/>
-&#09;&#09;LinEnum<br/>
-&#09;Loot files (define process for what to go after)<br/>
-&#09;&#09;Identify commands that can be used<br/>
-&#09;&#09;Identify applications installed<br/>
-&nbsp;&#09;&#09;&#09;strings, elfstrings, objdump for binaries/executables<br/>
-&#09;&#09;Enumerate kernel<br/>
-&#09;&#09;Enumerate groups<br/>
-&#09;&#09;Loot (common):<br/>
-&#09;&#09;&#09;/var/www - website files<br/>
-&#09;&#09;&#09;/home/user/.ssh - ssh keys<br/>
-&#09;&#09;&#09;/etc/ssh - ssh config<br/>
-&#09;&#09;Enumerate all other config files<br/>
-&#09;&#09;&#09;'find' commands<br/>
-&#09;&#09;Enumerate directories with rwx access <br/>
-&#09;&#09;Enumerate files with +s bit<br/>
-&#09;Privexec <br/>
-Define process for Root shell<br/>
-&#09;Set up admin/advanced persistence<ul><li style="list-style-type: none">Setup certs for post/windows/manage/inject_ca (enables application/code signing, ssl, etc)</li>
-</ul>
-&#09;&#09;SSH:<br/>
-&#09;&#09;&#09;Add Kali public to /home/user/.ssh/authorized_keys<br/>
-&#09;&#09;&#09;Crack usernames/passwords<br/>
-&#09;&#09;&#09;Add new user with root privileges<br/>
-&#09;&#09;Establish C2:<br/>
-&#09;&#09;&#09;FruityC2 (with agent)<br/>
-&#09;Enumerate network connections<br/>
-&#09;&#09;During enumeration:<br/>
-&#09;&#09;More creds<br/>
-&#09;&#09;Loot files (define process for what to go after)<ul><li style="list-style-type: none">Sniff</li>
-<li style="list-style-type: none"><ul><li style="list-style-type: none">Passwords being passed?</li>
-<li style="list-style-type: none">Sensitive data being passed?</li>
-<li style="list-style-type: none">Other targets?</li>
-</ul>
-</li>
-<li style="list-style-type: none">Pillage</li>
-<li style="list-style-type: none"><ul><li style="list-style-type: none">User documents</li>
-<li style="list-style-type: none">Shared documents</li>
-<li style="list-style-type: none">Application Data</li>
-<li style="list-style-type: none">Data exfiltration</li>
-</ul>
-</li>
-</ul>
-&#09;&#09;&#09;DET (Data Exfiltration Toolkit)<ul><li style="list-style-type: none"><ul><li style="list-style-type: none"></li>
-</ul>
-</li>
-<li style="list-style-type: none">Next Target...</li>
-</ul>
-&#09;<br/>
-&#09;<br/>
-&#09;<br/>
-&#09;<br/>
-END REPORTING<br/>
-&#09;Tools that can help automate reporting?<br/>
-&#09;&#09;Dradis-CE<br/>
-&#09;&#09;<br/>
-&#09;&#09;<br/>
 &#09;&#09;<br/>
 Random useful/useless tools<br/>
 Unhide - http://www.unhide-forensics.info/</body></html>

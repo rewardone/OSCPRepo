@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OpenSSL_Cipher_Decrypt_Loop.sh</title>
+</head><body>#!/bin/sh<br/>
+<br/>
+#Obtain a list of ciphers available on a machine<br/>
+#And attempt to decrypt them with a key<br/>
+#IF YOU HAVE THE CORRECT KEY<br/>
+#it will tell you which cipher was used to encrypt it<br/>
+<br/>
+ciphers=`openssl list-cipher-commands`<br/>
+key="INSERT ENCRYPTION KEY"<br/>
+enc_file="INSERT FILE"<br/>
+<br/>
+for i in $ciphers; do<br/>
+&nbsp;openssl enc -d -${i} -in $enc_file -k $key &gt; /dev/null 2&gt;&amp;1<br/>
+&nbsp;if [[ $? -eq 0 ]]; then<br/>
+&nbsp; echo "Cipher is $i: openssl enc -d -${i} -in $enc_file -k $key -out foo"<br/>
+&nbsp; exit<br/>
+&nbsp;fi<br/>
+done</body></html>

@@ -5,4 +5,9 @@
 <title>Alt</title>
 </head><body>#!/usr/bin/python import urllib2; u = urllib2.urlopen('http://domain/file'); localFile = open('local_file', 'w'); localFile.write(u.read()); localFile.close();<br/>
 <br/>
-python test.py</body></html>
+python test.py<br/>
+<br/>
+<br/>
+#!/usr/bin/python<br/>
+import urllib2, urllib, sys<br/>
+urllib.urlretrieve("http://192.168.1.130/" + sys.argv[1], sys.argv[1]);</body></html>
