@@ -66,4 +66,8 @@ This attack will try to update every varchar column in your database to append t
 <b>Obfuscating with UTF-8</b>: <a href="https://medium.com/@Wflki/sql-injection-oracle-and-full-width-characters-13bb86fc034a">https://medium.com/@Wflki/sql-injection-oracle-and-full-width-characters-13bb86fc034a</a>&nbsp;<br/>
 Needed to bypass PHP comma filtering, but still get commas to the vulnerable SQL database. Was found that UTF-8 FULL-WIDTH COMMA was able to bypass the filtering while still being acceptable to SQL. <br/>
 Can use sqlmap tamper scripts or otherwise to help automate these kinds of replacements. <br/>
-</body></html>
+<br/>
+<br/>
+<b>Finding SQL path with id[]=1</b><br/>
+To get the current path, the easiest way is to get PHP to generate an error. You can, for example, use the common PHP array (id[]=) trick:<br/>
+eg: vulnerable/admin/edit.php?id[]=1</body></html>

@@ -5,7 +5,7 @@
   <key>title</key><string>Privileged Groups</string>
   <key>nodeid</key><string>bcd2a502-ec89-403c-ad41-cef1053c53d7</string>
   <key>modified_time</key><integer>1537208656</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1537208656</integer>
