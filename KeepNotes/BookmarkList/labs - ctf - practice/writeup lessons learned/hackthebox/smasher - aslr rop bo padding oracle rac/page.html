@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Smasher - ROP BO Padding Oracle Race</title>
+</head><body>Reading writeup since ippsec video isn't up yet: <br/>
+https://0xdf.gitlab.io/2018/11/24/htb-smasher.html<br/>
+https://epi052.gitlab.io/notes-to-self/blog/2018-10-02-hack-the-box-smasher/#exploiting-the-tiny-binary <br/>
+<br/>
+<br/>
+<br/>
+1111 open tcpwrapped&#09;is actually a web server<br/>
+It is interesting to note that going to the root gives a dir listing, despite the fact that index.html is present in that directory. On typical webserver, by convention, the default settings would have index.html load in that case.<br/>
+<br/>
+Check all headers. Headers for index.html are boring (standard), but for root path we see: Server: shenfeng tiny-web-server<br/>
+<br/>
+<br/>
+<br/>
+By default, curl will fix paths with directory traversal and remove the ../. However, if I use the --path-as-is flag, I can get what I’m looking for here. From the man pages:<br/>
+<br/>
+--path-as-is Tell curl to not handle sequences of /../ or /./ ​ in the given URL path. Normally curl will squash ​ or merge them according to standards but with ​ this option set you tell it not to do that.<br/>
+<br/>
+See python programming section for an 'overwriting status code' implementation.<br/>
+<br/>
+Analysis of checker<br/>
+IdaPro (free 7.0 version) gives a nice image as to the flow of this simple program:<br/>
+The program does the following:<ul><li style="list-style-type: none">Check uid and compares it to 0x3e9 (1001, which is smasher on smasher). If it isn’t smasher, it prints the string we saw in the strings output, “You’re not ‘smasher’ user please level up bro!” and exits.</li>
+<li style="list-style-type: none">Prints welcome message “[+] Welcome to file UID checker 0.1 by dzonerzy”.</li>
+<li style="list-style-type: none">Checks that the number of arguments passed in was 1 or more. If not, prints “Missing arguments” and exits.</li>
+<li style="list-style-type: none">malloc space for a stat buffer, and calls stat on the the first argument passed to the program. If the file doesn’t exist, it prints a message and exits.</li>
+<li style="list-style-type: none">Calls access on the the file. If the current user doesn’t have permissions, it prints an error and exits.</li>
+<li style="list-style-type: none">Calls setuid(0) and setgid(0) to start acting as root.</li>
+<li style="list-style-type: none">sleep for 1 second</li>
+<li style="list-style-type: none">Calls it’s own function ReadFile, which reads the content of the file into space on the heap and returns the address.</li>
+<li style="list-style-type: none">Calls strcpy to copy from that buffer to a new local variable on the stack.</li>
+<li style="list-style-type: none">Uses printf to print the file uid from the stat call and then the data from the file (as far as strcpy would copy).</li>
+</ul>
+Exploiting checker<br/>
+The one second sleep in the program presents an opportunity. The script is designed to not let the user read files smasher shouldn’t have access to. But that 1 seconds sleep happens between the access check and the file read. That’s something I can exploit.<br/>
+<br/>
+I’ll use a bash script:<br/>
+#!/bin/sh<br/>
+touch file<br/>
+checker file &amp;<br/>
+sleep 0.5<br/>
+rm file<br/>
+ln -s $1 file<br/>
+<br/>
+The script creates a file that the current user is able to read. Then it runs checker on the file, running in the background (&amp;) so that the script will continue. The script then sleeps for half a second, before removing the file, and replacing it with a symbolic link referencing a file passed in as an argument.</body></html>

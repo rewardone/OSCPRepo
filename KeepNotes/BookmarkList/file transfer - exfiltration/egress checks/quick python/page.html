@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Quick Python</title>
+</head><body>Python quick and dirty egress checker (can also do UDP if you change the socket arguments)<br/>
+import socket<br/>
+for port in xrange(1, 65535):<br/>
+&nbsp; &nbsp; sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br/>
+&nbsp; &nbsp; sock.settimeout(0.1)<br/>
+&nbsp; &nbsp; sock.connect_ex(("192.168.56.102", port))<br/>
+&nbsp; &nbsp; sock.close()</body></html>

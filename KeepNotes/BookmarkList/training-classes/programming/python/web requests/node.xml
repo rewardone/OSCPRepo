@@ -5,7 +5,7 @@
   <key>title</key><string>Web Requests</string>
   <key>nodeid</key><string>bce2641a-a1f6-40b4-b342-c664fe2ce529</string>
   <key>modified_time</key><integer>1526042917</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1526042917</integer>

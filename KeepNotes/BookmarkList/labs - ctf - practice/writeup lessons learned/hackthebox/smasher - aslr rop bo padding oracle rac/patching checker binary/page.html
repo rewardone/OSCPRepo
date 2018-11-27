@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Patching Checker Binary</title>
+</head><body>However, locally, my user isn’t uid 1001. I’ll show how I’ll quickly patch the binary so that I can run without having to worry about that check.<br/>
+<br/>
+Start by finding the check for 1001 = 0x3e9:<br/>
+<br/>
+root@kali:~/hackthebox/smasher-10.10.10.89/checker# objdump -M intel -d &nbsp;checker | grep -A1 3e9<br/>
+&nbsp; 400a98: &nbsp; &nbsp; &nbsp; 3d e9 03 00 00 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;cmp &nbsp; &nbsp;eax,0x3e9<br/>
+&nbsp; 400a9d: &nbsp; &nbsp; &nbsp; 74 14 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; je &nbsp; &nbsp; 400ab3 &lt;main+0x38&gt;<br/>
+<br/>
+There’s an infinite number of ways to do this, but I’ll replace the je with a jne. I’ll make a copy of checker and then open in hexcurse:<br/>
+<br/>
+root@kali:~/hackthebox/smasher-10.10.10.89/checker# cp checker checker-patch<br/>
+root@kali:~/hackthebox/smasher-10.10.10.89/checker# hexcurse checker-patch<br/>
+<br/>
+It looks like this:<br/>
+<br/>
+┌00000000────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐↑┌─────────────────────────────────────────────┐<br/>
+│00000000 7F 45 4C 46 02 01 01 00 00 00 00 00 00 00 00 00 02 00 3E 00 01 00 00 00 B0 08 40 00 00 00 00 00 40 00 00 00 00 00 00 00 70 2D 00 00 00 │◆│.ELF..............&gt;.......@.....@.......p-...│<br/>
+│0000002D 00 00 00 00 00 00 00 40 00 38 00 09 00 40 00 1F 00 1C 00 06 00 00 00 05 00 00 00 40 00 00 00 00 00 00 00 40 00 40 00 00 00 00 00 40 00 │▒│.......@.8...@.............@.......@.@.....@.│<br/>
+│0000005A 40 00 00 00 00 00 F8 01 00 00 00 00 00 00 F8 01 00 00 00 00 00 00 08 00 00 00 00 00 00 00 03 00 00 00 04 00 00 00 38 02 00 00 00 00 00 │▒│@.....................................8......│<br/>
+│00000087 00 38 02 40 00 00 00 00 00 38 02 40 00 00 00 00 00 1C 00 00 00 00 00 00 00 1C 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 01 00 00 00 │▒│.8.@.....8.@.................................│<br/>
+│000000B4 05 00 00 00 00 00 00 00 00 00 00 00 00 00 40 00 00 00 00 00 00 00 40 00 00 00 00 00 B4 0E 00 00 00 00 00 00 B4 0E 00 00 00 00 00 00 00 │▒│..............@.......@......................│<br/>
+│000000E1 00 20 00 00 00 00 00 01 00 00 00 06 00 00 00 10 1E 00 00 00 00 00 00 10 1E 60 00 00 00 00 00 10 1E 60 00 00 00 00 00 A8 02 00 00 00 00 │▒│. .......................`.......`...........│<br/>
+│0000010E 00 00 B0 02 00 00 00 00 00 00 00 00 20 00 00 00 00 00 02 00 00 00 06 00 00 00 28 1E 00 00 00 00 00 00 28 1E 60 00 00 00 00 00 28 1E 60 │▒│............ .............(.......(.`.....(.`│<br/>
+│0000013B 00 00 00 00 00 D0 01 00 00 00 00 00 00 D0 01 00 00 00 00 00 00 08 00 00 00 00 00 00 00 04 00 00 00 04 00 00 00 54 02 00 00 00 00 00 00 │▒│.....................................T.......│<br/>
+│00000168 54 02 40 00 00 00 00 00 54 02 40 00 00 00 00 00 44 00 00 00 00 00 00 00 44 00 00 00 00 00 00 00 04 00 00 00 00 00 00 00 50 E5 74 64 04 │▒│T.@.....T.@.....D.......D...............P.td.│<br/>
+│00000195 00 00 00 44 0D 00 00 00 00 00 00 44 0D 40 00 00 00 00 00 44 0D 40 00 00 00 00 00 44 00 00 00 00 00 00 00 44 00 00 00 00 00 00 00 04 00 │▒│...D.......D.@.....D.@.....D.......D.........│<br/>
+Use ctrl+f to find “3de90300007414”, which is the instructions for that compare and then the jump. Looking at <a href="http://unixwiz.net/techtips/x86-jumps.html">x86 jumps</a>, I just need to change the 74 to a 75. Then ctrl-q, tell it to save, and exit. Now I can run it with any user that isn’t 1001 and get past that check.</body></html>

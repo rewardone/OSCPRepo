@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Note On Using CURL For Testing</string>
+  <key>nodeid</key><string>6aa90762-ce50-4466-9c06-8a866c19fa97</string>
+  <key>modified_time</key><integer>1543332547</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1543332529</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

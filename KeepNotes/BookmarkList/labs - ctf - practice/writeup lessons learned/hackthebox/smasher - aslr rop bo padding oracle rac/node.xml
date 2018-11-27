@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Smasher - ASLR ROP BO Padding Oracle Race</string>
+  <key>nodeid</key><string>84087fbb-1256-4778-8cc8-91c4702c2671</string>
+  <key>modified_time</key><integer>1543334329</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1543332312</integer>
+  <key>order</key><integer>60</integer>
+</dict>
+</node>
