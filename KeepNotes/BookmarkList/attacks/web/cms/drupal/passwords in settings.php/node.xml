@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Passwords in settings.php</string>
+  <key>nodeid</key><string>f072cf8c-551d-4755-a841-1831be2160f2</string>
+  <key>modified_time</key><integer>1543866082</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1543865990</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>
