@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>runas.exe</title>
+</head><body>https://www.computerhope.com/runas.htm flags<br/>
+<br/>
+Note: <a href="http://blogs.msdn.com/b/oldnewthing/archive/2012/04/19/10295140.aspx">setting</a>&nbsp;the <i>Require trusted path for credential entry</i>&nbsp;policy. The <i>Run as different user</i>&nbsp;feature is disabled if you set this policy. <br/>
+Using SC / group policy to help allieviate runas issues: <a href="https://support.microsoft.com/en-us/help/977513/error-message-when-you-try-to-use-the-runas-command-the-run-as-adminis">webpage</a>&nbsp;<br/>
+<br/>
+Redirecting output you should pass a script or similar<br/>
+runas /user:myDomain\myUserId "cmd.exe /c net stop serviceName &gt; output.txt"</body></html>
