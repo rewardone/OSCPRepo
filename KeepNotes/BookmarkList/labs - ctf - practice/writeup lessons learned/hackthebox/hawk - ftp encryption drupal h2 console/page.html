@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Hawk - FTP Encryption Drupal H2 Console</title>
+</head><body>FTP remember: dir -a to view all files (hidden)<br/>
+<br/>
+Again also seeing base64 text, when decoded: Salted__<br/>
+Salted__ is openssl encrypted data. can also run "file" against it <br/>
+<br/>
+If it is divisible by 8, most likely a block cipher. Maybe padding oracle in regards to block ciphers? But we need to narrow down the encryption algorithm first. <br/>
+<br/>
+Let's use a bunch of algorithms and see which one will create encrypted data close to our target data. 176 characters. <br/>
+for i in $(seq 0 8 176); do python -c "print 'A'*$i" &gt; $i; done&#09;&#09;#this will create files with num of characters, steps of 8<br/>
+<br/>
+for cipher in $(cat ciphers.txt); do<br/>
+&nbsp;&#09;for length in $(ls | grep ^[0-9]$); do<br/>
+&nbsp;&#09;&#09;openssl enc $ciper -e -in $length -out $length$cipher.enc -k PleaseSubscribe<br/>
+&nbsp;&#09;done<br/>
+done<br/>
+<br/>
+Tool: bruteforce-salted-openssl<br/>
+apt-get install bruteforce-salted-openssl<br/>
+Note: sha256 is the default digest now, so update from default md5 <br/>
+<br/>
+bruteforce-salted-openssl -t 10 -f rockyou.txt -c $cipher -d sha256 encrypted_file<br/>
+<br/>
+Password candidate: friends<br/>
+<br/>
+openssl enc -aes-256-cbc -d -in encrypted -out decrypted -k friends<br/>
+<br/>
+<br/>
+Drupal, can enumerate valid/invalid usernames/emails with error based enumeration<br/>
+Create new account or Request new password<br/>
+Using invalid emails will not create the account (opsec)<br/>
+Also check out forced directory browsing such as /user/1, /user/2, /user/3, etc<br/>
+<br/>
+Get a drupal shell:<br/>
+Add php plugin<br/>
+Modules &gt; PHP filter &gt; enable and save configuration<br/>
+Content &gt; Add Content &gt; article/page &gt; modify text format to PHP<br/>
+<br/>
+H2 console. H2 in /opt/h2<br/>
+Check out the process id in /proc/<br/>
+cmdline<br/>
+environ<br/>
+root<br/>
+<br/>
+Attempt non-existent database<br/>
+Default creds: sa:&lt;blank&gt;<br/>
+<br/>
+<br/>
+</body></html>

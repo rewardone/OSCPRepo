@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>A mutable identifier is a defining parameter that the user can change: ie email address or username<br/>
+<br/>
+Using OAuth 2.0 or OpenID Connect for federated login is common practice, and many web apps allow you to “Sign in with X”.<br/>
+<br/>
+Here is what a vulnerable “Sign in with GitHub” looks like:<ul><li>User visit a web application that implements “Sign in with GitHub”.</li>
+<li>User hits “Sign in with GitHub”.</li>
+<li>After performing the OAuth2 / OpenID Connect flow, the user lands back at the web application, with proof of authorization (in case of OAuth2) / authentication (in case of OpenID Connect).</li>
+<li>The web application is using an endpoint, for example /userinfo, to access user information (emails, user id, username, …).</li>
+<li>The site chooses to use the GitHub username as the basis to match the GitHub user to the internal user. Internally, the app might keep information on payments, invoices, and other data.</li>
+</ul>
+<br/>
+</body></html>
