@@ -13,10 +13,10 @@
 # Loop by line, not space<br/>
 IFS=$'\n'<br/>
 <br/>
-old_process=$(ps -eo command)<br/>
+old_process=$(ps -eo user,command)<br/>
 while true; do<br/>
-&nbsp; new_process=$(ps -eo command)<br/>
-&nbsp; deff &lt;(echo "$old_process") &lt;(echo "$new_process") | grep [\&lt;\&lt;]<br/>
+&nbsp; new_process=$(ps -eo user,command)<br/>
+&nbsp; diff &lt;(echo "$old_process") &lt;(echo "$new_process") | grep [\&lt;\&lt;]<br/>
 &nbsp; sleep 1<br/>
 &nbsp; old_process=$new_process<br/>
 done</body></html>

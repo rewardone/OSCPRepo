@@ -146,7 +146,7 @@ def doLdapDD():
             try:
                 outfileDir = "%s/%s" % (BASE, args.port)
                 mkdir_p(outfileDir)
-                subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump.py','ldap://%s:%s' % (ip_address, port),'-o',outfileDir], stderr=DEVNULL)
+                subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump.py','ldap://%s:%s' % (ip_address, args.port),'-o',outfileDir], stderr=DEVNULL)
             except subprocess.CalledProcessError as e:
                 f = open(outfileLDD, 'w')
                 f.write("Error code: " + str(e.returncode) + "\n")
@@ -170,15 +170,60 @@ def doLdapDD():
             try:
                 outfileDir = "%s/%s" % (BASE, args.port)
                 mkdir_p(outfileDir)
-                subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump.py','-u',args.username,'-p',args.password,'ldap://%s:%s' % (ip_address, port),'-o',outfileDir], stderr=DEVNULL)
+                subprocess.check_output(['/root/Documents/LdapDD/./ldapdomaindump.py','-u',args.username,'-p',args.password,'ldap://%s:%s' % (ip_address, args.port),'-o',outfileDir], stderr=DEVNULL)
             except subprocess.CalledProcessError as e:
                 f = open(outfileLDD, 'w')
                 f.write("Error code: " + str(e.returncode) + "\n")
                 f.write("Tool output: " + e.output)
                 f.close()
-    print "INFO: Completed LdapDD on %s:%s" % (ip_address, port)
+    print "INFO: Completed LdapDD on %s:%s" % (ip_address, args.port)
     DEVNULL.close()
     return
+
+#tons of options, limited set here
+#-b         base dn
+#-c         continuous, do not stop on errors
+#-f         read operations from file
+#-T         write files to directory specified by path
+#-D         bind DN
+#-h         LDAP server
+#-n         show what would be done, but don't actually do it
+#-p         port
+#-Q         SASL quiet mode
+#-v         verbose
+#-w         password for simple authentication
+#-W         prompt for password
+#-x         simple authentication
+#-X         SASLS authorization identity
+#-y         read pass from file
+def doLdapSearch():
+    #Bare minimum enum command is: ldapsearch -h host -p 389 -x -b "dc=mywebsite,dc=com"
+    #grab the basedn from nmap (hopefully)
+    print "INFO: Starting ldapsearch on %s:%s" % (ip_address, args.port)
+    GREP_COMMAND = "grep namingContexts %s.nmap  | cut -d' ' -f9" % (outfileNmap)
+    try:
+        basedn = subprocess.check_output(GREP_COMMAND, shell=True)
+        if "\n" in basedn:
+            basedn = basedn[:-1]
+    except subprocess.CalledProcessError as e:
+        print "ldapsearch errorcode: " + str(e.returncode) + "\n"
+    if "," in args.port:
+        ports = args.port.split(",")
+        for port in ports:
+            try:
+                results = subprocess.check_output(['ldapsearch','-h',ip_address,'-p',port,'-x','-b',basedn])
+            except subprocess.CalledProcessError as e:
+                print "ldapsearch errorcode: " + str(e.returncode) + "\n"
+    else:
+        try:
+            results = subprocess.check_output(['ldapsearch','-h',ip_address,'-p',args.port,'-x','-b',basedn])
+        except subprocess.CalledProcessError as e:
+            print "ldapsearch errorcode: " + str(e.returncode) + "\n"
+    f = open(outfileLdapSearch, 'w+')
+    for res in results:    
+        f.write(res)
+    f.close()
+    print "INFO: Completed ldapsearch on %s:%s" % (ip_address, args.port)
     
 def cleanHistory():
     print "Cleaning history"
@@ -197,7 +242,7 @@ if __name__=='__main__':
     parser.add_argument('-p', '--password', nargs='?', default = "", help="Password to authentication. Anonymous if not specified. Will prompt if -p. Caution as subprocess may leave passwords in history file")
     parser.add_argument('-d', '--domain', default = "", help="FQDN")
     parser.add_argument('ip', help="IP address of target")
-    parser.add_argument('--port', default='389,636', help="Port. Default is 389,636")
+    parser.add_argument('--port', default='389,636', dest='port', help="Port. Default is 389,636")
     parser.add_argument('--not-safe', dest='not_safe', default=False, action='store_const', const=True, help="Disable removing of bash/zsh history files. If a password is used, it will be visible in your history file. By default, ldaprecon will remove history. This flag will preserve your history file, but leave passwords in clear text")
 
     args = parser.parse_args()
@@ -212,11 +257,13 @@ if __name__=='__main__':
     mkdir_p(BASE)
     outfile = "%s/%s_%s_ldaprecon.txt" % (BASE, ip_address, port)
     outfileNmap = "%s/%s_%s_ldapnmap" % (BASE, ip_address, port)
+    outfileLdapSearch = "%s/%s_%s_ldapsearch" % (BASE, ip_address, port)
 
     doNmap()
     if args.domain != "":
         doADLdapEnum()
     doLdapDD()
+    doLdapSearch()
     if not args.not_safe:
         cleanHistory()
     print "INFO: ldaprecon completed on %s:%s" % (ip_address, port)
