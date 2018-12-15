@@ -54,6 +54,11 @@ echo "\nCloning Parameth\n"
 direc=/root/Documents/Parameth
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/maK-/parameth.git $direc; fi
 
+echo "\nCloning PEDA\n"
+direc=/root/Documents/Peda
+if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/longld/peda.git $direc; fi
+echo "source $direc/peda.py" >> ~/.gdbinit
+
 echo "\nCloning PowerCat\n"
 direc=/root/Documents/PowerCat
 if [ -d "$direc" ]; then cd $direc && git pull; else git clone https://github.com/besimorhino/powercat.git $direc; fi

@@ -5,6 +5,7 @@
   <key>title</key><string>User Interaction</string>
   <key>nodeid</key><string>1e324de2-555b-4b25-9c09-38527221a991</string>
   <key>modified_time</key><integer>1544022537</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1544022506</integer>
