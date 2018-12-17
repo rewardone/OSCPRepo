@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Cached Kerberos Tickets</title>
+</head><body>So simply put, if you come across Kerberos “*.ccache” ticket caches, it may be possible to “Pass-the-Cache” and assume the identity of the ticket’s owner. In this case, the cached tickets we discovered were user accounts associated with domain administrator privileges.<br/>
+<br/>
+More reading on credential caches can be found here if you’re interested: <a href="https://web.mit.edu/kerberos/krb5-1.12/doc/basic/ccache_def.html">https://web.mit.edu/kerberos/krb5-1.12/doc/basic/ccache_def.html</a>&nbsp;<br/>
+<br/>
+Upon accessing this jump box using the user’s domain credentials, a list of kerberos caches (*.ccache) were found within the /tmp directory of the Linux file system. These files are automatically created when a user authenticates to the jump-box and are only valid for a certain period of time, keep this in mind.<br/>
+<br/>
+The relevant caches were copied from the jump-box and mimikatz (https://github.com/gentilkiwi/mimikatz) was used to inject one of the kerberos tickets into the current session and assume the target users’ identity.<br/>
+<br/>
+kerberos::ptc “C:\User\asimpson\jjones_adm.ccache”<br/>
+<br/>
+<br/>
+<br/>
+Another thing to note as well, is that these ccache files can be taken offline and cracked. Even better is the fact that they can be cracked even if they are expired. The following script from JTR provides the ability to extract a crackable hash from the ccache file: <a href="https://github.com/magnumripper/JohnTheRipper/blob/bleeding-jumbo/run/ccache2john.py">https://github.com/magnumripper/JohnTheRipper/blob/bleeding-jumbo/run/ccache2john.py</a>&nbsp;<br/>
+<br/>
+Another idea is just to use the tickets on the current session in addition to impacket tools or other:<br/>
+# export KRB5CCNAME=kerberos_keys.ccache<br/>
+on Linux and then use impacket to access a windows box?</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Waldo - DirTrav Docker rbash Linux Capabilities</string>
+  <key>nodeid</key><string>725accb3-ad0c-493a-a623-89b0d5814d6e</string>
+  <key>modified_time</key><integer>1545058219</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1536460118</integer>
+  <key>order</key><integer>64</integer>
+</dict>
+</node>
