@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body>Generic hardening<ul><li style="list-style-type: none">Turning off credential caching on Windows has been a standard issue in reports for ~10 years</li>
+<li style="list-style-type: none">Reducing plain text disclosures by tuning CredSSP has been a standard issue in reports for ~3-4 years</li>
+<li style="list-style-type: none">Avoid domain joined service access</li>
+<li style="list-style-type: none">Consider having separate domain accounts for (privileged) UNIX access</li>
+<li style="list-style-type: none">… and so on …</li>
+</ul>
+Restrict UID 0<ul><li style="list-style-type: none">Patch</li>
+<li style="list-style-type: none">unix-privesc-check</li>
+</ul>
+Restrict ptrace()<ul><li style="list-style-type: none">Restrict CAP_SYS_PTRACE</li>
+<li style="list-style-type: none">Yama et al</li>
+<li style="list-style-type: none">getsebool deny_ptrace</li>
+</ul>
+Protect resources with SELinux<br/>
+&nbsp;&#09;You’ll need to<ul><li style="list-style-type: none"><ul><li style="list-style-type: none">Define entry points</li>
+<li style="list-style-type: none">Define process types</li>
+<li style="list-style-type: none">Label files</li>
+</ul>
+</li>
+</ul>
+Auditing?<ul><li style="list-style-type: none">Auditing is rarely turned on</li>
+<li style="list-style-type: none">In cases where auditing is available, it’s not ingested into the threat analytics platform</li>
+</ul>
+RTFM<ul><li style="list-style-type: none">https://linux.die.net/man/5/sssd.conf</li>
+<li style="list-style-type: none">Credential caching</li>
+<li style="list-style-type: none">https://support.oneidentity.com/authenticationservices/kb/71261/vas-confmanpage-for-qas-3-5-2</li>
+<li style="list-style-type: none">Keytab encryption types</li>
+<li style="list-style-type: none">Credential caching</li>
+<li style="list-style-type: none">etc</li>
+</ul>
+More recommendations<br/>
+&nbsp;&#09;Harden your binaries<ul><li style="list-style-type: none">Permissions</li>
+<li style="list-style-type: none">Memory management</li>
+<li style="list-style-type: none">Cryptography</li>
+</ul>
+Permissions<br/>
+&nbsp;&#09;Drop unnecessary privileges entirely<br/>
+&nbsp;&#09;Don’t leave sockets world writable<br/>
+&nbsp;&#09;Don’t leave configuration and metadata world readable<br/>
+Memory Management<br/>
+&nbsp;&#09;Harden your binaries<br/>
+&nbsp;&#09;&#09;Canaries (SSP)<br/>
+&nbsp;&#09;&#09;ASLR (PIE/RELRO)<br/>
+&nbsp;&#09;&#09;Sandboxing (SecComp)<br/>
+&nbsp;&#09;Protect sensitive memory<br/>
+&nbsp;&#09;&#09;Restrict ptrace() using PTRACE_TRACEME<br/>
+&nbsp;&#09;&#09;Consider memset() to clean down memory after use<br/>
+Cryptography<br/>
+&nbsp;&#09;Utilise constant time comparisons or blinding for cryptographic comparisons<br/>
+&nbsp;&#09;KDFs are more suitable than hashing functions for storing credentials<br/>
+&nbsp;&#09;Many rounds make work harder<br/>
+<br/>
+<br/>
+</body></html>

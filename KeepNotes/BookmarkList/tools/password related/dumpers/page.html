@@ -4,8 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Dumpers</title>
 </head><body>Linux<br/>
-https://github.com/huntergregal/mimipenguin <br/>
-[mimikittenz](<a href="https://github.com/putterpanda/mimikittenz">https://github.com/putterpanda/mimikittenz</a>) | mimikittenz is a post-exploitation powershell tool that utilizes the Windows function ReadProcessMemory() in order to extract plain-text passwords from various target processes. <br/>
+[linikatz](https://github.com/portcullislabs/linikatz) | designed to pull credentials and work with kerberos to attack AD using domain-joined linux machine<br/>
+[mimipenguin](https://github.com/huntergregal/mimipenguin) | dump login password from current linux user<br/>
 [<a href="https://github.com/blendin/3snake">3snake</a>]() | Targeting rooted servers, reads memory from sshd and sudo system calls that handle password based authentication. Doesn't write any memory to the traced processes. Spawns a new process for every sshd and sudo command that is run. Listens for the proc event using netlink sockets to get candidate processes to trace. When it receives an sshd or sudo process ptrace is attached and traces read and write system calls, extracting strings related to password based authentication.<br/>
 <br/>
 <br/>
@@ -15,12 +15,13 @@ The top dumpers for Windows (IMO are Mimikatz, WCE, and (old) Cain&amp;Abel)<br/
 Popular<br/>
 [mimikatz](<a href="https://github.com/gentilkiwi/mimikatz">https://github.com/gentilkiwi/mimikatz</a>) | A useful tool to play with Windows security including extracting plaintext passwords, kerberos tickets, etc<br/>
 [MassMimikatz](https://raw.githubusercontent.com/NetSPI/PowerShell/master/Invoke-MassMimikatz-PsRemoting.psm1) | Use PSRemoting to invoke Mimikatz on multiple computers <br/>
+[mimikittenz](<a href="https://github.com/putterpanda/mimikittenz">https://github.com/putterpanda/mimikittenz</a>) | mimikittenz is a post-exploitation powershell tool that utilizes the Windows function ReadProcessMemory() in order to extract plain-text passwords from various target processes with user-level permissions<br/>
 [PowerMemory](https://github.com/giMini/PowerMemory) | Exploit creds present in files and memory using Microsoft signed binaries<br/>
 [SessionGopher](https://github.com/fireeye/SessionGopher) | use WMI to extract saved session information from RAT tools like PuTTY/RDP/etc<br/>
 [out-minidump](<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Out-Minidump.ps1">https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Out-Minidump.ps1</a>) | PowerSploit<br/>
 [WCE](<a href="http://www.ampliasecurity.com/research/wcefaq.html">http://www.ampliasecurity.com/research/wcefaq.html</a>) | Windows Credencial Editor. 32bit and 64bit versions. wce32.exe -w. Grab hashes and also implements PtH and PtT<br/>
-[<a href="https://github.com/quarkslab/quarkspwdump">quarkspwdump</a>]() | <ul>Dump various types of Windows credentials without injecting in any process.</ul>
-<br/>
+[<a href="https://github.com/quarkslab/quarkspwdump">quarkspwdump</a>]() | <br/>
+Dump various types of Windows credentials without injecting in any process.<br/>
 [Invoke-WCMDump](https://github.com/peewpw/Invoke-WCMDump) | grab creds for current user from Credential Manager, no admin required<br/>
 <a href="https://github.com/Neohapsis/creddump7">Creddump7</a>&nbsp;(<a href="https://github.com/Neohapsis/creddump7">https://github.com/Neohapsis/creddump7</a>)<br/>
 [Cain&amp;Abel](<a href="http://www.oxid.it/cain.html">http://www.oxid.it/cain.html</a>)<br/>

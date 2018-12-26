@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Vintela John Rules</title>
+</head><body>JtR rules<br/>
+<br/>
+[List.Generic:dynamic_1602]<br/>
+Expression=sha256(#.$salt.-.$pass) vas_auth<br/>
+Flag=MGF_INPUT_32_BYTE<br/>
+Flag=MGF_USERNAME<br/>
+Flag=MGF_SALTED<br/>
+Flag=MGF_FLAT_BUFFERS<br/>
+CONST1=#<br/>
+CONST2=-<br/>
+SALTLEN=36<br/>
+Func=DynamicFunc__clean_input<br/>
+Func=DynamicFunc__append_input_from_CONST1<br/>
+Func=DynamicFunc__append_salt<br/>
+Func=DynamicFunc__append_input_from_CONST2<br/>
+Func=DynamicFunc__append_keys<br/>
+Func=DynamicFunc__SHA256_crypt_input1_to_output1_FINAL<br/>
+Test=$dynamic_1602$&lt;hash&gt;$&lt;GUID&gt;:&lt;plaintext&gt;:&lt;username&gt;</body></html>

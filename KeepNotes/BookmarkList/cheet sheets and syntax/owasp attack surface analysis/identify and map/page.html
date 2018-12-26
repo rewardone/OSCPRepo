@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Identify and Map</title>
+</head><body><b>Identifying and Mapping the Attack Surface</b><br/>
+You can start building a baseline description of the Attack Surface in a picture and notes. Spend a few hours reviewing design and architecture documents from an attacker's perspective. Read through the source code and identify different points of entry/exit:<br/>
+<ul><li>User interface (UI) forms and fields</li>
+<li>HTTP headers and cookies</li>
+<li>APIs</li>
+<li>Files</li>
+<li>Databases</li>
+<li>Other local storage</li>
+<li>Email or other kinds of messages</li>
+<li>Run-time arguments</li>
+<li>…. [your points of entry/exit]</li>
+</ul>
+<br/>
+The total number of different attack points can easily add up into the thousands or more. To make this manageable, break the model into different types based on function, design and technology:<br/>
+<ul><li>Login/authentication entry points</li>
+<li>Admin interfaces</li>
+<li>Inquiries and search functions</li>
+<li>Data entry (CRUD) forms</li>
+<li>Business workflows</li>
+<li>Transactional interfaces/APIs</li>
+<li>Operational command and monitoring interfaces/APIs</li>
+<li>Interfaces with other applications/systems</li>
+<li>... [your types]</li>
+</ul>
+<br/>
+You also need to identify the valuable data (e.g. confidential, sensitive, regulated) in the application, by interviewing developers and users of the system, and again by reviewing the source code.<br/>
+<br/>
+You can also build up a picture of the Attack Surface by scanning the application. For web apps you can use a tool like the <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project">OWASP_Zed_Attack_Proxy_Project</a>&nbsp;or <a href="http://arachni-scanner.com/">Arachni</a>&nbsp;or Skipfish or <a href="http://w3af.sourceforge.net/">w3af</a>&nbsp;or one of the many commercial dynamic testing and vulnerability scanning tools or services to crawl your app and map the parts of the application that are accessible over the web. Some web application firewalls (WAFs) may also be able to export a model of the appliaction's entry points.<br/>
+<br/>
+Validate and fill in your understanding of the Attack Surface by walking through some of the main use cases in the system: signing up and creating a user profile, logging in, searching for an item, placing an order, changing an order, and so on. Follow the flow of control and data through the system, see how information is validated and where it is stored, what resources are touched and what other systems are involved. There is a recursive relationship between Attack Surface Analysis and <a href="https://www.owasp.org/index.php/Application_Threat_Modeling">Application Threat Modeling</a>: changes to the Attack Surface should trigger threat modeling, and threat modeling helps you to understand the Attack Surface of the application.<br/>
+<br/>
+The Attack Surface model may be rough and incomplete to start, especially if you haven’t done any security work on the application before. Fill in the holes as you dig deeper in a security analysis, or as you work more with the application and realize that your understanding of the Attack Surface has improved.</body></html>

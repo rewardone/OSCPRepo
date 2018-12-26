@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Measure and Assess</title>
+</head><body><b>Measuring and Assessing the Attack Surface</b><br/>
+Once you have a map of the Attack Surface, identify the high risk areas. Focus on remote entry points – interfaces with outside systems and to the Internet – and especially where the system allows anonymous, public access.<br/>
+<ul><li>Network-facing, especially internet-facing code</li>
+<li>Web forms</li>
+<li>Files from outside of the network</li>
+<li>Backwards compatible interfaces with other systems – old protocols, sometimes old code and libraries, hard to maintain and test multiple versions</li>
+<li>Custom APIs – protocols etc – likely to have mistakes in design and implementation</li>
+<li>Security code: anything to do with cryptography, authentication, authorization (access control) and session management</li>
+</ul>
+<br/>
+These are often where you are most exposed to attack. Then understand what compensating controls you have in place, operational controls like network firewalls and application firewalls, and intrusion detection or prevention systems to help protect your application.<br/>
+<br/>
+Michael Howard at Microsoft and other researchers have developed a method for measuring the Attack Surface of an application, and to track changes to the Attack Surface over time, called the <a href="http://www.cs.cmu.edu/~wing/publications/Howard-Wing03.pdf">Relative Attack Surface Quotient (RSQ)</a>. Using this method you calculate an overall attack surface score for the system, and measure this score as changes are made to the system and to how it is deployed. Researchers at Carnegie Mellon built on this work to develop a formal way to calculate an <a href="http://www.cs.cmu.edu/~pratyus/tse10.pdf">Attack Surface Metric</a>&nbsp;for large systems like SAP. They calculate the Attack Surface as the sum of all entry and exit points, channels (the different ways that clients or external systems connect to the system, including TCP/UDP ports, RPC end points, named pipes...) and untrusted data elements. Then they apply a damage potential/effort ratio to these Attack Surface elements to identify high-risk areas.<br/>
+<br/>
+Note that deploying multiple versions of an application, leaving features in that are no longer used just in case they may be needed in the future, or leaving old backup copies and unused code increases the Attack Surface. Source code control and robust change management/configurations practices should be used to ensure the actual deployed Attack Surface matches the theoretical one as closely as possible.<br/>
+<br/>
+Backups of code and data - online, and on offline media - are an important but often ignored part of a system's Attack Surface. Protecting your data and IP by writing secure software and hardening the infrastructure will all be wasted if you hand everything over to bad guys by not protecting your backups.</body></html>
