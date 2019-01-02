@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ADSI</title>
+</head><body>ADSI: Let’s say RSAT is not enabled on the windows box and if we want to get the attributes of ms-MCS-AdmPwd, Active Directory Service Interfaces to our rescue. The ADSI module can get the computer properties.<br/>
+<br/>
+$domain = New-Object DirectoryServices.DirectoryEntry("LDAP://OU=Managed Computers- LAPS,DC=AJLAB,DC=COM")<br/>
+$user=$domain.Get_Children().find('CN=LAB-WIN7CLONE')<br/>
+$user | Format-List *</body></html>
