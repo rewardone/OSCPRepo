@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>title</key><string>ippsec double request</string>
+  <key>title</key><string>ippsec double request httponly cookies</string>
   <key>nodeid</key><string>6e66c594-7ec8-41ff-a4f4-88cffebcee9d</string>
   <key>modified_time</key><integer>1535386844</integer>
   <key>version</key><integer>6</integer>

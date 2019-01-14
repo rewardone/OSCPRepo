@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Infiltration of Application Logic</title>
+</head><body>Data exfiltration is one of the important goals in the exploitation of XSS vulnerabilities, but is not the only one. In some settings, the attacker may be more interested in actively disrupting the state of the targeted application; these attacks typically seek one or more of the following outcomes:<br/>
+<br/>
+<b>Alteration or destruction of legitimate content.</b>&nbsp;Most attackers will seek to immediately replace victim-owned documents with misleading or disparaging content, to distribute offensive messages, or to simply destroy valuable data.<br/>
+<br/>
+<b>Delegation of account access.</b>&nbsp;Such attacks seek to gain longer-term access to the capabilities offered by the targeted site - such as read-only or read-write access to victim's private data. On a content publishing platform, this may involve adding an attacker-controlled persona as a secondary administrator of the victim-owned channel, or as a collaborator on a particular document; in a webmail system, the attack may focus on creating a mail forwarding rule to siphon off all the incoming mail; and on a social networking site, the goal may be to add the attacker as a trusted contact ("friend").<br/>
+<br/>
+<b>Use of special privileges.</b>&nbsp;In select cases, attackers may wish to abuse additional privileges bestowed upon the vulnerable origin by the browser itself (e.g., the ability to change critical settings, install extensions or updates); or the trust the user associates with the targeted site (perhaps expressed as the willingness to accept unsolicited downloads).<br/>
+<br/>
+<b>Propagation of attacker-supplied markup.</b>&nbsp;Certain attacks seek to create autonomously propagating worms that spread between the users of a site by leveraging site-specific messaging and content sharing mechanisms. The creation of a worm may be an accomplishment in itself, or a way for maximizing the efficiency of any other attack.<br/>
+<br/>
+This section showcases techniques that may be used to further these goals in absence of the ability to inject attacker-supplied code.</body></html>

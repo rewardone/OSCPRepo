@@ -1,0 +1,9 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Selective Removal of Scripts</title>
+</head><body>Selective removal of scripts (specific to XSS filters)<br/>
+The last script-related vector that deserves a brief mention in this document is associated with the use of reflected cross-site scripting filters. XSS filters are a security feature designed to selectively remove suspected XSS exploitation attempts from the rendered HTML. They do so by looking for scripting-capable markup that appears to correspond to a potentially attacker-controlled parameter present in the underlying HTTP request. For example, if a request for /search?q=&lt;script&gt;alert(1)&lt;/script&gt; returns a page containing &lt;script&gt;alert(1)&lt;/script&gt; in its markup, that snippet of HTML will be removed by the filter to stop possible exploitation of an XSS flaw.<br/>
+<br/>
+Because of the fully passive design of the detection stage, cross-site scripting filters have the unfortunate property of being prone to attacker-triggered false positives: By quoting a snippet of a legitimate script present on the page, the XSS filter may be duped into removing this block of code, while permitting any remaining &lt;script&gt; segments or inline event handlers to execute. </body></html>

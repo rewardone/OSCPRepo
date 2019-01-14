@@ -5,6 +5,7 @@
   <key>title</key><string>General Methodology</string>
   <key>nodeid</key><string>51a1e986-809b-48b7-8446-be61c44030a1</string>
   <key>modified_time</key><integer>1543163039</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1522082095</integer>

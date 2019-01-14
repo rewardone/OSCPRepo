@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Content Exfiltration</title>
+</head><body>In an application where theft of HTTP cookies is not practical, exfiltration attempts are usually geared toward the extraction of any of the following:<br/>
+<br/>
+<b>Personal data</b>. In applications such as webmail systems, discussion or messaging platforms, social networks, or shopping or banking sites, the information about the user may be of immense value on its own merit. The extraction of contact lists, messaging history, or transaction records, may be the ultimate goal of an attack.<br/>
+<br/>
+<b>Tokens used to defend against cross-site request forgery attacks</b>. Under normal circumstances, any website loaded in the victim's browser is free to blindly initiate cross-domain requests to any destination. Because such a request is automatically supplanted with user's ambient credentials, it is difficult to distinguish it from a request that arises in response to a legitimate user action. To prevent malicious interference, most websites append session-specific, unpredictable secrets - XSRF tokens - to all GET URLs or POST request bodies that change the state of user account or perform other disruptive tasks.<br/>
+<br/>
+The tokens are an attractive target for exfiltration, because their possession enables the attacker to bypass the defense, and construct valid-looking state changing requests that can be relayed through the victim's browser later on. Such requests may, for example, instruct the application to add an attacker-controlled persona as a privileged contact or a delegate for the victim.<br/>
+<br/>
+<b>Capability-bearing URLs</b>. Many modern web applications make occasional use of capability-bearing URLs; this is particularly common for constructing invitation and sharing links; offering downloads of private data; implementing single sign-on flows (SSO); or performing federated login. The ability for the attacker to obtain these URLs is equivalent to gaining access to the protected resource or functionality; especially in the case of authentication flows, that token may be equivalent to HTTP cookies.</body></html>

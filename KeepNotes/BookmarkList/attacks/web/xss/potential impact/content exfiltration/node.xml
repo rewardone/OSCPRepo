@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Content Exfiltration</string>
+  <key>nodeid</key><string>ab5939f1-211f-4e19-9455-88e855872982</string>
+  <key>modified_time</key><integer>1546530342</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1546530287</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

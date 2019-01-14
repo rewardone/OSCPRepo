@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Script Namespace Attacks</title>
+</head><body>The namespace attack discussed in the previous section may be also leveraged to directly interfere with the JavaScript execution environment, without relying on other HTML elements as a proxy. This is because of a little-known link between the markup and the script namespace: In all popular browsers, the identifiers attached to HTML tags are automatically registered in the JavaScript context associated with the page. This registration happens on two levels:<br/>
+<ul><li>For any type of a tag, a new node with a name matching the id parameter of the tag is inserted into the default object scope. In other words, &lt;div id=test&gt; will create a global variable test (of type HTMLDivElement), pointing to the DOM object associated with the tag. </li>
+<li style="list-style-type: none"><ul><li>In this scenario, the mapping has a lower priority than any built-ins or variables previously created by on-page scripts. The behavior of identically named variables created later on is browser-specific.</li>
+</ul>
+</li>
+<li>For several special tags, such as &lt;img&gt;, &lt;iframe&gt;, or &lt;embed&gt;, an entry for both the id and the name is additionally inserted into the document object. For example, &lt;img name=test&gt; will produce a node named document.test.</li>
+<li style="list-style-type: none"><ul><li>This mapping has a higher priority than built-ins and script-created variables.</li>
+</ul>
+</li>
+</ul>
+<br/>
+An attacker capable of injecting passive markup may leverage this property in a manner illustrated in this code snippet:<br/>
+<br/>
+&lt;img id='is_public'&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← Injected markup<br/>
+...<br/>
+// Legitimate application code follows<br/>
+function retrieve_acls() {<br/>
+&nbsp; ...<br/>
+&nbsp; if (response.access_mode == AM_PUBLIC) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← The subsequent assignment fails in IE<br/>
+&nbsp; &nbsp; is_public = true;<br/>
+&nbsp; else<br/>
+&nbsp; &nbsp; is_public = false;<br/>
+}<br/>
+<br/>
+function submit_new_acls() {<br/>
+&nbsp; ...<br/>
+&nbsp; if (is_public) request.access_mode = AM_PUBLIC; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ← Condition always evaluates to true<br/>
+&nbsp; ...<br/>
+}<br/>
+<br/>
+The consequences of this namespace pollution are made worse because the DOM objects associated with certain HTML elements have specialized methods for converting them to strings; this enables the attacker to attack not only simple Boolean conditions, but also to spoof numbers and strings:<br/>
+<br/>
+&lt;a id='owner_user' href='fredmbogo'&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← Injected markup<br/>
+&lt;img id='data_loaded''&gt;<br/>
+...<br/>
+// Legitimate application code follows<br/>
+function retrieve_data() {<br/>
+&nbsp; if (window.data_loaded) return; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ← Condition met in browsers other than Firefox<br/>
+&nbsp; ...<br/>
+&nbsp; owner_user = response.owner;<br/>
+&nbsp; data_loaded = true;<br/>
+}<br/>
+<br/>
+function submit_new_acls() {<br/>
+&nbsp; ...<br/>
+&nbsp; request.can_edit = owner_user + ...; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← The string 'fredmbogo' is inserted<br/>
+&nbsp; request.can_read = owner_user + ...;<br/>
+&nbsp; ...<br/>
+}<br/>
+<br/>
+Several other exploitation venues appear to exist, but will be more closely tied to the design of the targeted application. It is, for example, possible to shadow built-ins such as document.domain, document.cookie, document.location, or document.referrer in order to interfere with certain security decisions; it is also trivial to disrupt the operation of methods such as document.createElement() or document.open(); fabricate the availability of the window.postMessage(...), window.crypto, or other security APIs; and more.</body></html>

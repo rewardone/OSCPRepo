@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Limits of Defenses</title>
+</head><body>It is tempting to counter the vectors previously outlined in the document by simply preventing the attacker from contacting third-party servers; for example, one may wish to restrict the set of permissible destinations for markup such as &lt;form&gt;, &lt;a href=...&gt;, or &lt;img&gt;. Indeed, several academic anti-exfiltration frameworks have been proposed in the past, either as a sole defense against the consequences of cross-site scripting, or to be used in tandem with script execution countermeasures. It appears that some desire to prevent exfiltration influenced the original proposals for CSP, too.<br/>
+<br/>
+It must be noted, however, that any attempts to prevent exfiltration, even in script-less environments, are very unlikely to be successful. Browsers offer extensive indirect data disclosure opportunities through channels such as the Referer technique outlined in 2.5; through the window.name parameter that persists across origins (and policy scopes) on newly created views; and through a variety of DOM inspection and renderer and cache timing vectors that may be used by third-party documents to make surprisingly fine-grained observations about the structure of the policed page.<br/>
+<br/>
+It is also important to recognize that exfiltration attempts do not have to be geared toward relaying the data to a third-party website to begin with: In many settings, it is sufficient to move the data from private and into public view, all within the scope of a single website. A simple illustration of this attack on an e-commerce site may be:<br/>
+<br/>
+&lt;form action='/post_review.php'&gt;<br/>
+&lt;input type='hidden' name='review_body' value=" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ← Injected lines<br/>
+<br/>
+...<br/>
+Your current shipping address: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← Existing page text to be exfiltrated<br/>
+&nbsp; 123 Evergreen Terrace<br/>
+&nbsp; Springfield, USA<br/>
+...<br/>
+<br/>
+&lt;form action="/update_address.php"&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ← Existing form (ignored by the parser)<br/>
+...<br/>
+&lt;input type="hidden" name="xsrf_token" value="12345"&gt; &nbsp; &nbsp; &nbsp; ← Token valid for /update_address.php and /post_review.php<br/>
+...<br/>
+&lt;/form&gt;<br/>
+<br/>
+This form, if interacted with, will unexpectedly submit the victim's home address as the body of a publicly visible product review, where the attacker may be able to intercept it before the user notices the problem and reacts.</body></html>

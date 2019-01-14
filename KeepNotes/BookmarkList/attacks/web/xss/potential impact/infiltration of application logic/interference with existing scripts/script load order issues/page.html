@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Script Load Order Issues</title>
+</head><body>Script load order issues (CSP-specific)<br/>
+Script policing frameworks must necessarily seek compromise between the ease of deployment and the granularity of the offered security controls. In the case of Content Security Policy, this compromise may unexpectedly undermine the assurances offered to many real-world web apps.<br/>
+<br/>
+The key issue is that for the sake of simplicity, CSP relies on origin-level granularity: It is possible to control permissible script sources on a protocol, host, and port level, but not to specify individual script URLs - or the order they need to be loaded in. This design decision enables the attacker to load arbitrary scripts found anywhere on the site in an unexpected context, in an incorrect order, or an unplanned number of times.<br/>
+<br/>
+One trivial but plausible example where this capability may be used to put the application in an inconsistent state is illustrated below:<br/>
+<br/>
+&lt;script src='initialize.js'&gt;&lt;/script&gt;: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← Legitimate scripts<br/>
+&nbsp; var edited_text = '';<br/>
+<br/>
+&lt;script src='load_document.js'&gt;&lt;/script&gt;:<br/>
+&nbsp; edited_text = server_response.text;<br/>
+&nbsp; ...<br/>
+&nbsp; setInterval(autosave_to_server, 10000);<br/>
+<br/>
+&lt;script src='initialize.js'&gt;&lt;/script&gt;: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;← Injected script load<br/>
+&nbsp; var edited_text = '';<br/>
+<br/>
+The possibility of loading scripts that use similar variable or function names, but belong to logically separate views, is perhaps more unsettling and more difficult to audit for; consider the following snippet of code:<br/>
+<br/>
+&lt;script src='/admin/initialize.js'&gt;&lt;/script&gt;: &nbsp; ← Injected script load<br/>
+&nbsp; ...<br/>
+&nbsp; initialized = true;<br/>
+<br/>
+&lt;script src='/editor/editor.js'&gt;&lt;/script&gt;: &nbsp; &nbsp; &nbsp;← Legitimate scripts<br/>
+&nbsp; ...<br/>
+&nbsp; function load_data() {<br/>
+&nbsp; &nbsp; if (initialized) return;<br/>
+&nbsp; &nbsp; ...<br/>
+&nbsp; &nbsp; if (new_document) {<br/>
+&nbsp; &nbsp; &nbsp; acl_read_users &nbsp;= current_username;<br/>
+&nbsp; &nbsp; &nbsp; acl_write_users = current_username;<br/>
+&nbsp; &nbsp; &nbsp; ...<br/>
+&nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; ...<br/>
+&nbsp; &nbsp; initialized = true;<br/>
+&nbsp; }<br/>
+&nbsp; ...<br/>
+&nbsp; function save_acls() {<br/>
+&nbsp; &nbsp; ...<br/>
+&nbsp; &nbsp; request.acl_read_users = acl_read_users; &nbsp; &nbsp;← Submits user 'undefined' as a collaborator.<br/>
+&nbsp; &nbsp; request.acl_write_users = acl_write_users;<br/>
+&nbsp; &nbsp; ...<br/>
+&nbsp; }<br/>
+<br/>
+On any moderately complex website, it appears to be prohibitively difficult to account for all the possible interactions between hundreds of unrelated scripts. Further, it appears unlikely that webmasters would routinely appreciate the consequences of hosting nominally unused portions of JavaScript libraries, older versions of currently loaded scripts, or portions of JS used for testing or diagnostic purposes, anywhere within their WWW root.<br/>
+<br/>
+</body></html>

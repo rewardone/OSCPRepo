@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Intercept Browser-Managed Passwords</string>
+  <key>nodeid</key><string>740c5321-ec79-48fb-a042-c91326547cae</string>
+  <key>modified_time</key><integer>1546531182</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1546531157</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

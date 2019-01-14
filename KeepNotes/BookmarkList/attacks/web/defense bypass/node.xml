@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Defense Bypass</string>
   <key>nodeid</key><string>9bf1b91b-5b60-427e-9d4c-ad37c6292bcc</string>
   <key>modified_time</key><integer>1545848907</integer>

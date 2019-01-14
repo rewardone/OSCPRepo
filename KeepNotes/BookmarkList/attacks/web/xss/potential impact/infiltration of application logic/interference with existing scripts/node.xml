@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Interference With Existing Scripts</string>
+  <key>nodeid</key><string>4fd3e21e-a1d3-4044-a550-92ab7efdb61b</string>
+  <key>modified_time</key><integer>1546531472</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1546531436</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

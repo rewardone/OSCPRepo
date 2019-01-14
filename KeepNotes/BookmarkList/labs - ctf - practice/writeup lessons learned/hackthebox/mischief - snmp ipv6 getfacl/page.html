@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mischief - SNMP IPv6 getfacl</title>
+</head><body>SNMP is open, try to brute community with onesixtyone<br/>
+onesixtyone does have issues with long community names, so check for latest version or alter the community list as needed<br/>
+<br/>
+Interesting service on 3366 caldav, simple http server<br/>
+Needs authentication, BASIC auth<br/>
+<br/>
+SNMP brute string: public<br/>
+Use snmpwalk to enumerate. <br/>
+SNMP mibs to help make everything 'human readable'<br/>
+<br/>
+apt install mibs-downloader<br/>
+vi /etc/snmp/snmp.conf and comment out mibs:<br/>
+<br/>
+snmpwalk -c public -v2c ip_address<br/>
+<br/>
+can find running processes if you have permissions (hrSWRunParameters), snmpwalk finds the SimpleHTTPAuthServer with auth: loki:godofmischiefisloki<br/>
+<br/>
+python -m SimpleHTTPAuthServer &lt;port&gt; &lt;user&gt;:&lt;pass&gt; --dir &lt;dir&gt;<br/>
+<br/>
+Obtain credentials from the webserver (plain text)<br/>
+<br/>
+Enumeration with Link Local addresses if you're on the same network/subnet<br/>
+Find the MAC and translate into IPv6 Link Local<br/>
+eg: 00:50:56:8f:f4:a3 -&gt; fe80::0250:56ff:fe8f:f4a3<br/>
+prepend fe80, invert 6th bit, add ff:fe in middle<br/>
+<br/>
+Also find ipv6 address through SNMP<br/>
+<br/>
+ping6 link local also needs %interface to know where to send packets out<br/>
+ping6 ff80::0250:56ff:fe8f:f4a3%ens33<br/>
+<br/>
+nmap scan on the IPv6 address to see if anything is listening on IPv6 only<br/>
+nmap -sC -sV -oA &lt;out&gt; -6 &lt;IPv6 address&gt;<br/>
+<br/>
+nc also supports IPv6 with the -6 flag<br/>
+<br/>
+In a web browser, you need to put IPv6 in brackets<br/>
+http://[ff80::0250:56ff:fe8f:f4a3] because otherwise it would confuse the colon separators with ports<br/>
+<br/>
+Login to the webserver on IPv6 port 80<br/>
+Administrator:loki password from the 3366 server<br/>
+<br/>
+Command injection!<br/>
+<br/>
+Some simple command filtering (on 'credentials' for example due to 'ls')<br/>
+cat /home/loki/cred*<br/>
+pass:lokiisthebestnorsegod<br/>
+<br/>
+can also use Linux ? substitution to bypass filters<br/>
+eg: find -&gt; fin? or /usr/bin/fin?<br/>
+<br/>
+SSH in as loki<br/>
+<br/>
+<br/>
+getfacl and extended attributes<br/>
+loki cannot execute su :(<br/>
+Possible to use pkexec if it's available as alternative to su<br/>
+but the webserver is www-data, so how about a www-data shell? <br/>
+IPv4 outbound is blocked, so:<br/>
+IPv6 rev shell <br/>
+or <br/>
+ICMP shell<br/>
+<br/>
+<br/>
+www-data su with the password from loki/.bash_history<br/>
+root!...but the flag was replaced with a false one!<br/>
+<br/>
+Let's find something newer than may 17 (false flag)<br/>
+find / -newermt 2018-05-15 ! -newermt 2018-05-19<br/>
+/usr/lib/gcc/x86_64-linux-gnu/7/root.txt<br/>
+<br/>
+ip6tables -L &nbsp;to see any IPv6 rules<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

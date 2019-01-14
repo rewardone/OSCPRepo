@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Interference With Existing Scripts</title>
+</head><body>Contemporary web applications make extensive use of JavaScript to handle the bulk of content presentation and user interface tasks. From the security standpoint, these responsibilities may have seemed insignificant, but this view no longer holds true; for example, in an collaborative document editor, client-side scripts may be tasked with:<br/>
+<ul><li>Determining and recording the outcome of user-initiated ACL changes for the document ("sharing dialogs"),</li>
+<li>Sanitizing or escaping server-supplied strings to make them safe for display,</li>
+<li>Keeping track and synchronizing the contents of the edited file.</li>
+</ul>
+<br/>
+By analogy to conceptually similar but better-studied race condition or off-by-one vulnerabilities in non-browser applications, it can be expected that the ability to put the execution environment in an inconsistent and unexpected state will not merely render the program inoperative - but will routinely lead to outcomes desirable to the attacker.</body></html>
