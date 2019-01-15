@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Brute Force Login</string>
   <key>nodeid</key><string>49f65cce-3471-460a-9540-30df4e658d68</string>
   <key>modified_time</key><integer>1536256920</integer>

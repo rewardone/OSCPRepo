@@ -11,20 +11,23 @@ With nc and named pipes included in most Linuxes, we’ve got a nice way to pivo
 Wouldn’t it be cool if Windows could do that too?<br/>
 <br/>
 Turns out, it does!...On Win 7 and later, use the netsh command:<br/>
-PS C:\&gt; netsh interface portproxy add v4tov4<br/>
-listenport=&lt;LPORT&gt; listenaddress=0.0.0.0<br/>
+PS C:\&gt; netsh interface portproxy add <br/>
+v4tov4 listenport=&lt;LPORT&gt; listenaddress=0.0.0.0 <br/>
 connectport=&lt;RPORT&gt; connectaddress=&lt;RHOST&gt;<br/>
+<br/>
+May need to add a firewall rule as well:<br/>
+netsh advfirewall firewall add rule<br/>
+name=name dir=in/out protocol=TCP<br/>
+localport=port action=allow<br/>
 <br/>
 Also supports v6tov6, v4tov6, and v6tov4!<br/>
 <br/>
 <img src="image.png" /><br/>
 <br/>
 <br/>
-Wouldn’t it be cool if netsh had remote capabilities?<br/>
-Turns out, it does!<br/>
+Wouldn’t it be cool if netsh also had remote capabilities? <br/>
 The netsh command supports remote access!<br/>
-It’s like a shell (for network admin) built into Windows<br/>
-No psexec required!<br/>
+It’s like a shell (for network admin) built into Windows, No psexec required!<br/>
 Still need admin creds &amp; SMB access, but no separate download required<br/>
 <br/>
 PS C:\&gt; netsh<br/>

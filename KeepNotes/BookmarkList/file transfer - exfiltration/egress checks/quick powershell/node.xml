@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Quick Powershell</string>
+  <key>nodeid</key><string>aac864f3-bf47-49c5-a6e4-653ff8f824d5</string>
+  <key>modified_time</key><integer>1547584251</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1547584140</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

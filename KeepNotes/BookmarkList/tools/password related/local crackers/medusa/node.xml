@@ -6,6 +6,7 @@
   <key>title</key><string>Medusa</string>
   <key>nodeid</key><string>bb943b32-4b5f-4a20-aedc-2e673340f8b1</string>
   <key>modified_time</key><integer>1515522555</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1515522555</integer>
