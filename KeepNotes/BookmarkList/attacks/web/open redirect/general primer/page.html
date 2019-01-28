@@ -9,4 +9,12 @@ Open redirectors take you from a Google URL to another website chosen by whoever
 <br/>
 There are several ways to attack redirects whether it is an open direct, the page doesn't check its referrer, or otherwise. Redirects can be dangerous by forwarded the user to an unintended location or even given the user access to a page they normally wouldn't have access to (since the domain is referring itself OR to somewhere external to the domain). <br/>
 <br/>
-</body></html>
+Types of Open Redirects<br/>
+<b>Reflected</b><br/>
+Reflected Open Redirect occurs when user input is immediately causing a web application to redirect the user to a web resource of the attacker's choosing.<br/>
+<br/>
+<b>Persistent</b><br/>
+Persistent Open Redirect occurs when user input is stored on the target server, such as in a database, in a username, visitor log, comment field, etc. The redirection is then caused due to the user input being returned to one or many users.<br/>
+<br/>
+<b>DOM-based</b><br/>
+In some cases, the user provided data may never even leave the browser (e.g. manipulation of document.location.href). The attack payload might also be permanently stored in the victim's browser (e.g. HTML5 database).</body></html>

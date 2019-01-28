@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>CORS Bypass</string>
+  <key>nodeid</key><string>7f9790c3-20a6-4ebf-a061-ba74245de1a3</string>
+  <key>modified_time</key><integer>1547650101</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1547649819</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Deprecated</string>
+  <key>nodeid</key><string>76ddf888-4d37-439c-9e3a-e64dbd4a4b73</string>
+  <key>modified_time</key><integer>1548433399</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1548433301</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -4,7 +4,8 @@
 <dict>
   <key>title</key><string>Icebreaker</string>
   <key>nodeid</key><string>a916f508-0f7e-4b38-851f-ed726f593969</string>
-  <key>modified_time</key><integer>1528462228</integer>
+  <key>modified_time</key><integer>1548697430</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1528462091</integer>

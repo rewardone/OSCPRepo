@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body>The below content is from: https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html<br/>
+Which is regarding RDP tunelling. Similar advice should match for other types of tunnelling, though this list may be incomplete and not consider all recommended mitigations. <br/>
+<br/>
+<b>Prevention and Detection of RDP Tunneling</b><br/>
+<br/>
+If RDP is enabled, threat actors have a way to move laterally and maintain presence in the environment through tunneling or port forwarding. To mitigate vulnerability to and detect these types of RDP attacks, organizations should focus on both host-based and network-based prevention and detection mechanisms. For additional information see the FireEye blog post on establishing a baseline for remote desktop protocol.<br/>
+<br/>
+<b>Host-Based Prevention:</b><br/>
+<br/>
+&nbsp; &nbsp; Remote Desktop Service: Disable the remote desktop service on all end-user workstations and systems for which the service is not required for remote connectivity.<br/>
+&nbsp; &nbsp; Host-based Firewalls: Enable host-based firewall rules that explicitly deny inbound RDP connections.<br/>
+&nbsp; &nbsp; Local Accounts: Prevent the use of RDP using local accounts on workstations by enabling the “Deny log on through Remote Desktop Services” security setting.<br/>
+<br/>
+<b>Host-Based Detection:</b><br/>
+<br/>
+Registry Keys:<br/>
+<br/>
+&nbsp; &nbsp; Review registry keys associated with Plink connections that can be abused by RDP session tunneling to identify unique source and destination systems. By default, both PuTTY and Plink store session information and previously connected ssh servers in the following registry keys on Windows systems:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; HKEY_CURRENT_USER\Software\SimonTatham\PuTTY<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; HKEY_CURRENT_USER\SoftWare\SimonTatham\PuTTY\SshHostKeys<br/>
+&nbsp; &nbsp; Similarly, the creation of a PortProxy configuration with netsh is stored with the following Windows registry key:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; HKEY_CURRENT_USER\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4<br/>
+&nbsp; &nbsp; Collecting and reviewing these registry keys can identify both legitimate SSH and unexpected tunneling activity. Additional review may be needed to confirm the purpose of each artifact.<br/>
+<br/>
+Event Logs:<br/>
+<br/>
+&nbsp; &nbsp; Review event logs for high-fidelity logon events. Common RDP logon events are contained in the following event logs on Windows systems:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; %systemroot%\Windows\System32\winevt\Logs\Microsoft-TerminalServices-LocalSessionmanager%3Operational.evtx<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; %systemroot%\Windows\System32\winevt\Logs\Security.evtx<br/>
+&nbsp; &nbsp; The “TerminalServices-LocalSessionManager” log contains successful interactive local or remote logon events as identified by EID 21 and successful reconnection of a previously established RDP session not terminated by a proper user logout as identified by EID 25. The “Security” log contains successful Type 10 remote interactive logons (RDP) as identified by EID 4624. A source IP address recorded as a localhost IP address (127.0.0.1 – 127.255.255.255) may be indicative of a tunneled logon routed from a listening localhost port to the localhost’s RDP port TCP 3389.<br/>
+<br/>
+Review your artifacts of execution for “plink.exe” file execution. Note that attackers can rename the file name to avoid detection. Relevant artifacts include, but are not limited to:<br/>
+<br/>
+&nbsp; &nbsp; Application Compatibility Cache/Shimcache<br/>
+&nbsp; &nbsp; Amcache<br/>
+&nbsp; &nbsp; Jump Lists<br/>
+&nbsp; &nbsp; Prefetch<br/>
+&nbsp; &nbsp; Service Events<br/>
+&nbsp; &nbsp; CCM Recently Used Apps from the WMI repository<br/>
+&nbsp; &nbsp; Registry keys<br/>
+<br/>
+<b>Network-Based Prevention:</b><br/>
+<br/>
+&nbsp; &nbsp; Remote Connectivity: Where RDP is required for connectivity, enforce the connection to be initiated from a designated jump box or centralized management server.<br/>
+&nbsp; &nbsp; Domain Accounts: Employ the “Deny log on through Remote Desktop Services” security setting for privileged accounts (e.g. domain administrators) and service accounts, as these types of accounts are commonly used by threat actors to laterally move to sensitive systems in an environment.<br/>
+<br/>
+<b>Network-Based Detection:</b><br/>
+<br/>
+&nbsp; &nbsp; Firewall Rules: Review existing firewall rules to identify areas of vulnerability to port forwarding. In addition to the potential use of port forwarding, monitoring for internal communications between workstations in the environment should be conducted. Generally, workstations do not have a need to communicate with one another directly and Firewall rules can be used to prevent any such communication, except where needed.<br/>
+&nbsp; &nbsp; Network Traffic: Perform content inspection of network traffic. Not all traffic communicating on a given port is what it appears to be. For example, threat actors may use TCP ports 80 or 443 to establish an RDP tunnel with a remote server. Deep inspection of the network traffic can likely reveal that it is not actually HTTP or HTTPS, but entirely different traffic all together. Therefore, organizations should closely monitor their network traffic.<br/>
+&nbsp; &nbsp; Snort Rules: The main indicator of tunneled RDP occurs when the RDP handshake has a designated low source port generally used for another protocol. Figure 5 provides two sample Snort rules that can help security teams identify RDP tunneling in their network traffic by identifying designated low source ports generally used for other protocols.<br/>
+<br/>
+alert tcp any [21,22,23,25,53,80,443,8080] -&gt; any !3389 (msg:"RDP - HANDSHAKE [Tunneled msts]"; dsize:&lt;65; content:"|03 00 00|"; depth:3; content:"|e0|"; distance:2; within:1; content:"Cookie: mstshash="; distance:5; within:17; sid:1; rev:1;)<br/>
+<br/>
+alert tcp any [21,22,23,25,53,80,443,8080] -&gt; any !3389 (msg:"RDP - HANDSHAKE [Tunneled]"; flow:established; content:"|c0 00|Duca"; depth:250; content:"rdpdr"; content:"cliprdr"; sid:2; rev:1;)</body></html>

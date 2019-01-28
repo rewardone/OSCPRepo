@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CORS Bypass</title>
+</head><body><b>Check for vulnerabilities in subdomains</b><br/>
+Subdomains are not technically 'cross' origin (assuming origin is the entire domain), but allow an attacker to chain together vulnerabilities that may be present in a domain to a subdomain and then accross to another domain. <br/>
+eg: <a href="https://research.checkpoint.com/hacking-fortnite/">hacking fortnite</a>&nbsp;XSS in ut2004stats.epicgames.com can make requests to account.epicgames.com<br/>
+<br/>
+This could be considered a misconfiguration for 'overly permissive' CORS policy, eg: *.domain.com</body></html>

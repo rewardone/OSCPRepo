@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Session Issues</title>
+</head><body>Most of the time 2FA is implemented, it is on top of an existing authentication flow. This means that there is room for error when integrating a new step in the process. <br/>
+<br/>
+Assumptions: known user password AND code<br/>
+In a certain <a href="https://medium.com/@lukeberner/how-i-abused-2fa-to-maintain-persistence-after-a-password-change-google-microsoft-instagram-7e3f455b71a1">case</a>: <br/>
+Attempt to log in and wait at the 2FA prompt. <br/>
+In an already authenticated session, change a security setting such as password or attempt to remove 2FA. <br/>
+Now enter the current 2FA code in the first prompt (where you were waiting in step 1), and see if the application successfully authenticates.<br/>
+<br/>
+Issue:<br/>
+ALL sessions are not being properly terminated. Typically, websites will attempt to invalidate old sessions after a 10-20 minute period or so. If the issue persists beyond this point, there could be a more serious issue. <br/>
+<br/>
+<br/>
+Potential impacts include accound persistence:<br/>
+This means that if an Attacker hijacks an account (leaks happen everyday), exploiting this vulnerability the new attack scenario would be:<br/>
+<ul><li>An Attacker enables 2FA in Victim’s account.</li>
+<li>In another browser, Attacker waits indefinitely in the 2FA input page.</li>
+<li>Attacker disables 2FA<b>.</b></li>
+<li>The Victim regains access to the account (changing password &amp; resetting sessions)</li>
+<li>Then the Attacker could input a valid 2FA code and have access again to the account, <b>without knowing the current password.</b></li>
+</ul>
+&nbsp;<br/>
+<br/>
+Microsoft and Instagram responded with "working as intended, will not fix" as of the time of the article. </body></html>

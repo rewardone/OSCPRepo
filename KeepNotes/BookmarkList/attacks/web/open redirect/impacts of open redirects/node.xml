@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Impacts of Open Redirects</string>
+  <key>nodeid</key><string>a469e077-171e-4b7d-b72e-abf677a5445c</string>
+  <key>modified_time</key><integer>1547657081</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1547657081</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

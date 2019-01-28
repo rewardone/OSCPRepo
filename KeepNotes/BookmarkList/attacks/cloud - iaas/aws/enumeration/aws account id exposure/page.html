@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>AWS Account ID Exposure</title>
+</head><body>AWS account IDs uniquely identify every AWS account and are more sensitive than you might think. While divulging the ID does not directly expose an account to compromise, an attacker can leverage this information in other attacks. A reasonable effort should be made to keep AWS account IDs private, but in practice, they are often exposed to the public unintentionally. Every AWS account is uniquely identified by this 12 digit number. &nbsp; <br/>
+&nbsp;<br/>
+Account IDs are commonly leaked via:<br/>
+&nbsp;<ul><li>Screenshots</li>
+<li>GitHub and other code repositories</li>
+<li>Many AWS error messages (even access denied)</li>
+<li>Public EBS snapshots (EC2 -&gt; Snapshots -&gt; Public Snapshots)</li>
+<li>Public AMIs (EC2 -&gt; AMIs -&gt; Public images)</li>
+<li>RDS public snapshots (RDS -&gt; Snapshots -&gt; All Public Snapshots)</li>
+<li>People looking for troubleshooting help online and posting their ID</li>
+</ul>
+<br/>
+<b>If an attacker has your ID, various attack scenarios become feasible, including resource enumeration (identifying existing roles, users, etc.), Lambda function invocation, and IAM role assumption</b>.<br/>
+&nbsp; </body></html>

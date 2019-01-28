@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Testing UpdateAssumeRolePolicy</title>
+</head><body><b>Testing UpdateAssumeRolePolicy - Enumerating Users through Update AssumeRolePolicy</b><br/>
+Any invalid username returned an error message, while valid ones did not. This information leakage allows us to confirm the existence of a given IAM users, provided we have a given AWS Account ID. In all of the tests we performed, no account lockouts or CloudTrail Logs were encountered. &nbsp;<br/>
+<br/>
+<a href="https://github.com/RhinoSecurityLabs/Security-Research/tree/master/tools/aws-pentest-tools/iam_user_enum">Script</a>&nbsp;- accepts valid AWS account ID and tries to enum IAM users. Auto updates the policy with an explicity deny against the AWS account/IAM user, so no security holes are opened in your account during enumeration. 1100+ commn IAM usernames. <br/>
+<br/>
+NOTE: It is recommended to use test/sandbox AWS access keys for this script, as it will spam the local (attacker) CloudTrail with “iam:UpdateAssumeRolePolicy” logs (the target account CloudTrail will not have these log entries). The keys used must have the iam:UpdateAssumeRolePolicy permission on the role that you pass into “—role-name” to be able to identify a valid IAM user. &nbsp;<br/>
+<br/>
+Also included in <a href="https://github.com/RhinoSecurityLabs/pacu">Pacu</a>&nbsp;- The AWS exploitation framework. </body></html>

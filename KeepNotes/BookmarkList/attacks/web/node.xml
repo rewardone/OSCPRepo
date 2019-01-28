@@ -5,13 +5,13 @@
   <key>expanded</key><false/>
   <key>nodeid</key><string>545d0bd0-24ba-47dd-9347-384feb2c5a17</string>
   <key>modified_time</key><integer>1516295862</integer>
-  <key>expanded2</key><false/>
+  <key>expanded2</key><true/>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1516295862</integer>
   <key>info_sort_dir</key><integer>1</integer>
   <key>title</key><string>Web</string>
   <key>version</key><integer>6</integer>
-  <key>order</key><integer>3</integer>
+  <key>order</key><integer>4</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

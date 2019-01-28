@@ -1,0 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>AWS IAM Roles</title>
+</head><body>Amazon Web Services (AWS) IAM roles are sets of permissions that serve as a common way to delegate access to users or services. Roles can be bestowed to internal and external IAM users, AWS services, applications, and even external user accounts outside of AWS. Roles leveraged by users enable additional permissions for certain tasks. Applications using roles gain the access needed to transact with AWS services without the need to permanently embed an AWS key. Anytime additional access needs to be temporarily granted, IAM roles are a common go-to solution.<br/>
+<br/>
+When an entity assumes a role, the Security Token Service (STS) issues a set of role credentials which serve as a security token to access the environment. For more granular control, additional policies can also be applied to the request to further limit the role permissions. Requests made after the role is assumed are performed with this new identity, although CloudTrail logs can be used to discern the underlying entity.</body></html>

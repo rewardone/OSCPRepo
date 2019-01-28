@@ -3,26 +3,109 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>General</title>
-</head><body><b>Finding specific filetypes</b><br/>
+</head><body><b>filetype: Finding specific filetypes</b><br/>
 filetype:pdf<br/>
 <br/>
-<b>Search within webaddress</b><br/>
+<b>site: Search within webaddress</b><br/>
 site:example.com myword<br/>
 <br/>
-<b>Find in url</b><br/>
+<b>inurl: Find in url</b><br/>
 inurl:test.com<br/>
 <br/>
-<b>Wild cards</b><br/>
-You can use the asterisk to as a wildcard:<br/>
-*<br/>
-Example:<br/>
-"I've been * for a heart"<br/>
+<b>allinurl:</b><br/>
+Similar to “inurl,” but only results containing all of the specified words in the URL will be returned.<br/>
+Example: allinurl:apple iphone<br/>
 <br/>
-<b>Exclude words</b><br/>
--<br/>
+<b>Wild cards</b><br/>
+You can use the asterisk to as a wildcard: *<br/>
+Example: "I've been * for a heart"<br/>
+<br/>
+<b>Exclude words </b>-<br/>
 the dash excludes a specific word. This query searches for pages that used the word bananasplit.<br/>
 -banana bananasplit<br/>
 <br/>
-<b>Cached version</b><br/>
+<b>cache: Cached version</b><br/>
 So if a website has been taken down you can still find the cached version, of the last time google visited the site<br/>
-cache:website.com</body></html>
+cache:website.com<br/>
+<br/>
+<b>related:</b><br/>
+Find sites related to a given domain.<br/>
+Example: related:apple.com<br/>
+<br/>
+<b>intitle:</b><br/>
+Find pages with a certain word (or words) in the title. In our example, any results containing the word “apple” in the title tag will be returned.<br/>
+Example: intitle:apple<br/>
+<br/>
+<b>allintitle:</b><br/>
+Similar to “intitle,” but only results containing all of the specified words in the title tag will be returned.<br/>
+Example: allintitle:apple iphone<br/>
+<br/>
+<b>intext:</b><br/>
+Find pages containing a certain word (or words) somewhere in the content. For this example, any results containing the word “apple” in the page content will be returned.<br/>
+Example: intext:apple<br/>
+<br/>
+<b>allintext:</b><br/>
+Similar to “intext,” but only results containing all of the specified words somewhere on the page will be returned.<br/>
+Example: allintext:apple iphone<br/>
+<br/>
+<b>“search term”</b><br/>
+Force an exact‐match search. Use this to refine results for ambiguous searches, or to exclude synonyms when searching for single words.<br/>
+Example: “steve jobs”<br/>
+<br/>
+<b>OR</b><br/>
+Search for X or Y. This will return results related to X or Y, or both.<br/>
+Note: The pipe (|) operator can also be used in place of “OR.”<br/>
+Examples: jobs OR gates / jobs | gates<br/>
+<br/>
+<b>AND</b><br/>
+Search for X and Y. This will return only results related to both X and Y. <br/>
+Note: It doesn’t really make much difference for regular searches, as Google defaults to “AND” anyway. But it’s very useful when paired with other operators.<br/>
+Example: jobs AND gates<br/>
+<br/>
+<b>( )</b><br/>
+Group multiple terms or search operators to control how the search is executed.<br/>
+Example: (ipad OR iphone) apple<br/>
+<br/>
+<b>$</b><br/>
+Search for prices. Also works for Euro (€), but not GBP (£) 🙁<br/>
+Example: ipad $329<br/>
+<br/>
+<b>define:</b><br/>
+A dictionary built into Google, basically. This will display the meaning of a word in a card‐like result in the SERPs.<br/>
+Example: define:entrepreneur<br/>
+<br/>
+<b>AROUND(X)</b><br/>
+Proximity search. Find pages containing two words or phrases within X words of each other. For this example, the words “apple” and “iphone” must be present in the content and no further than four words apart.<br/>
+Example: apple AROUND(4) iphone<br/>
+<br/>
+<b>weather:</b><br/>
+Find the weather for a specific location. This is displayed in a weather snippet, but it also returns results from other “weather” websites.<br/>
+Example: weather:san francisco<br/>
+<br/>
+<b>stocks:</b><br/>
+See stock information (i.e., price, etc.) for a specific ticker.<br/>
+Example: stocks:aapl<br/>
+<br/>
+<b>map:</b><br/>
+Force Google to show map results for a locational search.<br/>
+Example: map:silicon valley<br/>
+<br/>
+<b>movie:</b><br/>
+Find information about a specific movie. Also finds movie showtimes if the movie is currently showing near you.<br/>
+Example: movie:steve jobs<br/>
+<br/>
+<b>in</b><br/>
+Convert one unit to another. Works with currencies, weights, temperatures, etc.<br/>
+Example: $329 in GBP<br/>
+<br/>
+<b>source:</b><br/>
+Find news results from a certain source in Google News.<br/>
+Example: apple source:the_verge<br/>
+<b><br/>
+</b><b>_</b><br/>
+Not exactly a search operator, but acts as a wildcard for Google Autocomplete.<br/>
+Example: apple CEO _ jobs<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

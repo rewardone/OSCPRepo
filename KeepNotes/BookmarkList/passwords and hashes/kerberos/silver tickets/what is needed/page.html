@@ -2,12 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Creating Silver Tickets</title>
+<title>What Is Needed</title>
 </head><body>Creating Silver Tickets:<br/>
 <br/>
 In order to create or forge a Silver Ticket, <b>the attacker has to gain knowledge of the password data (password hash) for the target service</b>. If the target service is running under the context of a user account, like MS SQL, then the Service Account’ password hash is required in order to create a Silver Ticket.<br/>
 <br/>
 <b>Cracking Service Account passwords with Kerberoast is one potential method for identifying a target service’s associated password data</b>.<br/>
+<br/>
+Another could be Spoofing or Downgrading a hash type to NetNTLMv1 and then brute force the NTLM<br/>
 <br/>
 Computers host services as well with the most common one being the Windows file share which leverages the “cifs” service. Since the computer itself hosts this service, the password data required to create a Silver Ticket is the associated computer account’s password hash. When a computer is joined to Active Directory, a new computer account object is created and linked to the computer. The password and associated hash is stored on the computer that owns the account and the NTLM password hash is stored in the Active Directory database on the Domain Controllers for the domain.<br/>
 <br/>

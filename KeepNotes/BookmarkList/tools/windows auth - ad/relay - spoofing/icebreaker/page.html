@@ -5,6 +5,76 @@
 <title>Icebreaker</title>
 </head><body>https://github.com/DanMcInerney/icebreaker<br/>
 <br/>
+Gets plaintext Active Directory credentials if you're on the internal network but outside the AD environment<br/>
+<br/>
+Summary Details<br/>
+The following attacks are performed sequentially until the fourth and fifth attacks which run in parallel and indefinitely.<br/>
+<ul><li>Reverse bruteforce</li>
+<li style="list-style-type: none"><ul><li>Automatically acquires a list of usernames and tests each one with two of the most common AD passwords (more than two attempts may trigger account lockout policies)</li>
+</ul>
+</li>
+<li>Upload to network shares</li>
+<li style="list-style-type: none"><ul><li>Capture users' passwords with malicious file uploads to available network shares</li>
+</ul>
+</li>
+<li>Poison broadcast network protocols</li>
+<li style="list-style-type: none"><ul><li>Uses common network protocols to trick users' computers into sending you passwords</li>
+</ul>
+</li>
+<li>Man-in-the-middle SMB connections</li>
+<li style="list-style-type: none"><ul><li>Performs remote command execution against AD computers in order to gather passwords</li>
+</ul>
+</li>
+<li>Poison IPv6 DNS</li>
+<li style="list-style-type: none"><ul><li>Exploits DNS to trick AD computers into sending their users' passwords to you</li>
+</ul>
+</li>
+</ul>
+<br/>
+Technical Details<br/>
+All NetNTLMv2 hashes which are captured in the techniques below are autocracked with JohnTheRipper and an AD-specific password list of 1 million in length.<br/>
+<ul><li>Reverse bruteforce</li>
+<li style="list-style-type: none"><ul><li>Uses rpcclient to find hosts that accept null SMB sessions</li>
+<li>Uses ridenum to find valid usernames via RID cycling on null SMB hosts</li>
+<li>Can use theHarvester to gather additional potential usernames from a specified internet domain</li>
+<li>Performs a 2 password reverse bruteforce of found usernames or you can specify a password list to use</li>
+<li>Default passwords tested: P@ssw0rd and &lt;current_season&gt;&lt;year&gt;, e.g., Spring2018</li>
+</ul>
+</li>
+<li>SCF upload</li>
+<li style="list-style-type: none"><ul><li>Uses Nmap to find anonymously writeable network shares via NSE script smb-enum-shares</li>
+<li>Writes an SCF file to the share with a file icon path that points to your machine</li>
+<li>When an AD user opens the share in File Explorer their NetNTLMv2 hash is sent to you</li>
+</ul>
+</li>
+<li>LLMNR/NBTNS/mDNS poisoning</li>
+<li style="list-style-type: none"><ul><li>Uses Responder.py to poison the layer 2 broadcast/multicast network protocols (LLMNR, NBT-NS, mDNS) and capture NetNTLMv2 hashes</li>
+</ul>
+</li>
+<li>SMB relay</li>
+<li style="list-style-type: none"><ul><li>Uses ntlmrelayx.py and Responder.py to relay SMB hashes</li>
+<li>Uses Nmap to identify vulnerable relay targets via the NSE script smb-security-mode</li>
+<li>Vulnerable targets will have SMBv1 enabled and SMB signing disabled</li>
+<li>Successful relaying of a hash will result in the capture of a user's NetNTLMv2 hash which will be autocracked</li>
+<li>If a user hash is relayed to a machine and that user is a local administrator, command execution will occur and the following will be remotely performed:</li>
+<li>Add an administrative user - icebreaker:P@ssword123456</li>
+<li>Run an obfuscated and AMSI bypassing version of Mimikatz</li>
+<li>Mimikatz output is parsed for NTLM hashes and plaintext passwords</li>
+<li>Run an obfuscated and AMSI bypassing version of Invoke-PowerDump for SAM hashes</li>
+<li>Output is parsed for NTLM hashes</li>
+</ul>
+</li>
+<li>IPv6 DNS poison</li>
+<li style="list-style-type: none"><ul><li>Uses mitm6 and ntlmrelayx.py to poison IPv6 DNS in order to capture NetNTLMv2 user hashes</li>
+<li>Creates fake WPAD server with authentication</li>
+<li>IPv6 DNS is enabled by default in Active Directory environments</li>
+<li>Note: this can cause network connectivity issues for users</li>
+</ul>
+</li>
+</ul>
+<br/>
+<br/>
+<br/>
 <br/>
 <br/>
 </body></html>

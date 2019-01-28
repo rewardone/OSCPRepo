@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>NetNTLMtoSilverTicket</string>
+  <key>nodeid</key><string>33d06646-6a1f-4cc5-aa5e-f147c2295e4e</string>
+  <key>modified_time</key><integer>1548697574</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1548697451</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

