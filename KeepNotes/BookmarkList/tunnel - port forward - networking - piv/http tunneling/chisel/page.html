@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Chisel</title>
+</head><body>[Chisel](https://github.com/jpillora/chisel) | A fast TCP tunnel over HTTP<br/>
+<br/>
+Chisel is a fast TCP tunnel, transported over HTTP, secured via SSH. Single executable including both client and server. Written in Go (golang). Chisel is mainly useful for passing through firewalls, though it can also be used to provide a secure endpoint into your network. Chisel is very similar to <a href="https://github.com/q3k/crowbar">crowbar</a>&nbsp;though achieves much higher performance.<br/>
+<br/>
+git clone and go build<br/>
+<br/>
+If you want a smaller more portable binary (7.5M), use:<br/>
+go build -ldflags="-s -w"<br/>
+<br/>
+Further compact with upx packer (2.9M):<br/>
+upx brute chisel<br/>
+<br/>
+Chisel usage: chisel [command] [--help]<br/>
+Commands:<br/>
+&nbsp;&#09;server - runs chisel in server mode<br/>
+&nbsp;&#09;client - runs chisel in client mode<br/>
+<br/>
+<a href="https://youtu.be/Yp4oxoQIBAM?t=1694">Ippsec video</a>&nbsp;running through how to use chisel<br/>
+<br/>
+</body></html>

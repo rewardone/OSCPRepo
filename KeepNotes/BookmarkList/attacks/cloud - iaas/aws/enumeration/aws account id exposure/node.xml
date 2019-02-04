@@ -5,6 +5,7 @@
   <key>title</key><string>AWS Account ID Exposure</string>
   <key>nodeid</key><string>0cd78c5d-8ccc-4088-beeb-a85e40fad366</string>
   <key>modified_time</key><integer>1548699573</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1548698503</integer>

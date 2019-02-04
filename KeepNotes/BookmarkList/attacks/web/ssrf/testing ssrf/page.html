@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Testing SSRF</title>
+</head><body><b>When you have a SSRF candidate, a good first test to do is the following</b>:<br/>
+<br/>
+&nbsp; &nbsp; &nbsp;Set up a controlled Internet (or internal if testing locally) facing web server.<br/>
+&nbsp; &nbsp; &nbsp;Make sure you can see the request log for that server, (“tail -f /var/log/apache2/access.log” or the output from Python’s HTTP server module, or even just “nc -nlvp &lt;80|443&gt;”).<br/>
+&nbsp; &nbsp; &nbsp;Try changing the variable value to something like “http://&lt;your_webserver&gt;/zzz”.<br/>
+&nbsp; &nbsp; &nbsp;If you receive a request to “/zzz” after you execute the manipulated request, it is probable that the attack worked.<br/>
+<br/>
+<br/>
+The next thing to test was sending the same request but modifying the “malicious” URL so as to test different ports, protocols, and hostnames. Interesting variations are the following:<br/>
+&nbsp;<ul><li>&nbsp;Test for ports. After the first SSRF test was successful, replicate request against the same controlled server but changing the port. Test for a port that is open and to another that is closed. Analyze both responses and compare the differences.</li>
+<li>Brute-force for internal hostnames. Instead of an IP address, brute-force for URLs that point to potential internal hostnames, hoping that the server will resolve them. It is useful to omit TLDs or domain names if you don’t have that information.</li>
+<li>Try different handlers. This could overlap with LFI/RFI, but if for example this was a PHP application, you could try the “file://”, “php://input”, etc. handlers. Each framework could have different URL handlers so make sure you try to understand the application and make smart tests.</li>
+<li>Search for other local services running on the vulnerable machine that could be leveraged or exploited to further access.</li>
+</ul>
+&nbsp;<br/>
+<br/>
+</body></html>

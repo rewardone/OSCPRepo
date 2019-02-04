@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Adding a User to a Group</string>
+  <key>nodeid</key><string>512e205f-f064-4c94-b606-848f2c1e2a5c</string>
+  <key>modified_time</key><integer>1548778049</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1548778035</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

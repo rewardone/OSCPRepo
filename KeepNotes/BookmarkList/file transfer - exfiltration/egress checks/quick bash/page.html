@@ -1,0 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Quick Bash</title>
+</head><body>Bash if /dev/tcp feature is enabled:<br/>
+<br/>
+for port in 22 25 80 443 8080 8443; do (echo PleaseSubscribe &gt; /dev/tcp/&lt;RHOST&gt;/$port &gt; /dev/null &amp;&amp; echo "open - $port") 2&gt; /dev/null; done</body></html>

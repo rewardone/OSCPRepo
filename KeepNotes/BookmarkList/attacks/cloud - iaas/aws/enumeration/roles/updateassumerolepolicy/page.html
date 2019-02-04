@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>UpdateAssumeRolePolicy</title>
+</head><body><br/>
+<b>How and Why UpdateAssumeRolePolicy Works for Enumerating Roles</b><br/>
+It behaves the same as the “iam__enum_assume_role” module on the outside but uses an alternate method on the inside. Given an AWS account ID, the module will attempt to guess roles in the target account. When that phase is complete, it will cycle through any roles that were discovered and it will try to assume them. If any of those roles are misconfigured, you might be able to gain credentials to the target account by assuming them.<br/>
+<br/>
+This time, cross-account role enumeration is abusing a feature of AWS, rather than the difference between two error messages, so it is highly unlikely that this method will be fixed any time soon.<br/>
+<br/>
+This method involves IAM role trust policies and abuses a feature that you may not have realized existed. When setting up an IAM role trust policy, you are specifying what AWS resources/services can assume that role and gain temporary credentials. In the background, there is something going on that you might not realize. <br/>
+<br/>
+This is because when you save the trust policy document of a role, AWS security will find the resource specified in the principal somewhere in AWS to ensure that it exists. If the resource is found, the trust policy will save successfully, but if it is not found, then an error will be thrown, indicating an invalid principal was supplied. When AWS does this on the back-end, it takes the ARN that you supplied (“arn:aws:iam::216825089941:role/Test” for us) and matches it to a unique identifier that correlates to the resource in AWS. Then, when we deleted the “Test” role, AWS was no longer able to match the ARN we specified to an AWS resource, so by default, it will replace the ARN with the unique ID that was associated with that resource originally.<br/>
+<br/>
+There are potentially multiple reasons that this is done, but the best example is as follows.<br/>
+<br/>
+Let’s say that a role allows the IAM user “Mike” in account “111111111111” to assume it. Mike is then fired from the company and has his AWS user deleted. Then, a week later, a new, different “Mike” is hired to the company and has an IAM user “Mike” created for him. Because of how AWS originally associates “Mike” to that unique ID (“AROAJUFJY2PBF22P35J4A” in our example above), the new “Mike” that just got hired would not be able to assume that original role, even though he has the same user name.<br/>
+<br/>
+To allow the new Mike to assume that old role, the trust policy of the old role would need to be updated to allow access to the same ARN as before, but the update allows AWS to re-associate that ARN with the new “Mike” that exists, rather than the old “Mike” that doesn’t exist.<br/>
+<br/>
+This is helpful in preventing situations where the old “Mike” was supposed to have more access than the new “Mike”, but because they had the same name, the new “Mike” gained additional privileges on accident. Instead, this problem is solved by associating ARNs to unique IDs for IAM resources.<br/>
+<br/>
+<b>The New Module</b><br/>
+So ultimately, we can abuse this functionality to enumerate users and roles that exist in another account.<br/>
+<br/>
+To try out the new module, you can run the following Pacu command from a Pacu session that has your own personal AWS credentials set:<br/>
+run iam__enum_roles --role-name MyOwnRole --account-id 111111111111<br/>
+<br/>
+This will use the “MyOwnRole” role in your own account to try and enumerate what roles exist in the account “111111111111”, then it will try to assume any that were discovered and provide you the credentials if successful.<br/>
+<br/>
+Now we have the same functionality the old “iam__enum_assume_role” module had, just with a different method. Like it was previously noted, this is the same method used in the “iam__enum_users” module that is used for cross-account IAM user enumeration.<br/>
+<br/>
+This attack will create a large amount of “UpdateAssumeRolePolicy” API calls in your own account’s CloudTrail logs, but the account you are targeting will not see anything in their logs, unless you successfully assume a misconfigured role. In that case, they will see that the role was assumed cross-account, but the basic cross-account enumeration is impossible to detect from their side.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

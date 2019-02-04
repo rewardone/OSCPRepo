@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body><br/>
+There are three main strategies to follow when trying to address this vulnerability. Through some basic defensive techniques it is possible to prevent this attack or at least make it significantly more difficult for an attacker to exploit:<br/>
+&nbsp;<ul><li>&nbsp;<b>Input validation</b>: as always, it is important to validate user (attacker) supplied data so that only expected values are accepted. If a variable only needs to have the name of a resource and you know names are only letters, then the character set for that variable should only be a-z, A-Z and eventually 0-9. It is best to keep it simple, use tested libraries for data validation and avoid complex regular expressions. In the case of SSRF-type payloads, if applicable, reject any value that has an unwanted scheme in it (schemes are “http://”, “https://”, “ftp://”, etc.).  </li>
+<li><b>Whitelisting</b>: if the application requires fetching resources from external servers programmatically, then define a whitelist of known resources (hostnames and schemes) and refer to each element on the list through an identifier, so as to not expose the location of the resource to the attacker.</li>
+<li style="list-style-type: none"><ul><li>Blacklisting is not recommended, as there are multiple tricks an attacker can use to bypass basic black lists. For example, one can refer to an IP address by using decimal notation: http:9999999. Where 9999999 would be the IP address expressed as decimal. This would bypass a filter that rejects anything looking like “http://&lt;IP&gt;”.</li>
+</ul>
+</li>
+<li><b>Traffic filtering:</b>&nbsp;implement network level protections (firewall rules) to restrict which servers the application can communicate with. Don’t forget about localhost traffic, as SSRF can be used to access different ports on the server hosting the application.</li>
+</ul>
+&nbsp;</body></html>

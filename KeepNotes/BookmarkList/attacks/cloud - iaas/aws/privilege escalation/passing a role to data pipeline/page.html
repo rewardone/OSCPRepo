@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Passing a Role to Data Pipeline</title>
+</head><body><b>Description: </b>An attacker with the <u>iam:PassRole</u>, <u>datapipeline:CreatePipeline</u>, and <u>datapipeline:PutPipelineDefinition</u>&nbsp;permissions would be able to escalate privileges by creating a pipeline and updating it to run an arbitrary AWS CLI command or create other resources, either once or on an interval with the permissions of the role that was passed in.<br/>
+&nbsp;<br/>
+Some example commands to exploit this method might look like these:<br/>
+<i>aws datapipeline create-pipeline –name my_pipeline –unique-id unique_string</i><br/>
+&nbsp;<br/>
+Which will create an empty pipeline. The attacker then needs to update the definition of the pipeline to tell it what to do, with a command like this:<br/>
+<i>aws datapipeline put-pipeline-definition –pipeline-id unique_string –pipeline-definition file://path/to/my/pipeline/definition.json</i><br/>
+&nbsp;<br/>
+Where the pipeline definition file contains a directive to run a command or create resources using the AWS API that could help the attacker gain additional privileges.<br/>
+&nbsp;<br/>
+<b>Potential Impact: </b>This would give the attacker access to the privileges associated with the role that was passed when creating the pipeline, which could range from no privilege escalation to full administrator access to the account.<br/>
+&nbsp; &nbsp;</body></html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Creating A New Policy Version</title>
+</head><body><b>Description:</b>&nbsp;An attacker with the <u>iam:CreatePolicyVersion</u>&nbsp;permission can create a new version of an IAM policy that they have access to. This allows them to define their own custom permissions. When creating a new policy version, it needs to be set as the default version to take effect, which you would think would require the <u>iam:SetDefaultPolicyVersion</u>&nbsp;permission, but when creating a new policy version, it is possible to include a flag (–set-as-default) that will automatically create it as the new default version. That flag does <b>not</b>&nbsp;require the <u>iam:SetDefaultPolicyVersion</u>&nbsp;permission to use.<br/>
+&nbsp;<br/>
+An example command to exploit this method might look like this:<br/>
+<i>aws iam create-policy-version –policy-arn target_policy_arn –policy-document file://path/to/administrator/policy.json –set-as-default</i><br/>
+&nbsp;<br/>
+Where the policy.json file would include a policy document that allows any action against any resource in the account.<br/>
+&nbsp;<br/>
+<b>Potential Impact: </b>This privilege escalation method could allow a user to gain full administrator access of the AWS account.<br/>
+&nbsp; &nbsp;</body></html>

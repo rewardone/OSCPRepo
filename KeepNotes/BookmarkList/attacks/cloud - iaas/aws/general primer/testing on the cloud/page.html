@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Testing On the Cloud</title>
+</head><body>Testing on the Cloud<br/>
+<br/>
+Testing systems and applications that are simply lifted-and-shifted to the cloud are likely to be no different to testing an application that was hosted on-premises. The differences are going to start coming in when the maturity of the cloud installation increases to the point that AWS specific functionality is incorporated, such as S3 buckets.<br/>
+<br/>
+By “testing on the cloud” I mean effectively having the perspective of a system running within an Amazon Virtual Private Cloud (VPC) or equivalent. Something similar to if a Penetration Tester were to walk in to an office and plug a laptop in to an available network port and start scanning machines, or if an attacker were to compromise a client device with a phishing attack and start trying to pivot into the corporate network. In the context of a cloud environment the attack could potentially be if a cloud server, or EC2 instance, was compromised by an attacker – how they would attempt to attack additional machines within the VPC.<br/>
+<br/>
+As with security testing any network environment there are a few different approaches. One of the simplest approaches would be to perform vulnerability scanning within the VPC, which could be achieved by deploying a vulnerability scanning appliance, these can be acquired through <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html">Amazon Machine Images (AMI)</a>, for which there are scanners available from <a href="https://aws.amazon.com/marketplace/pp/B01LXCD58S">Tenable (Nessus)</a>&nbsp;and <a href="https://aws.amazon.com/marketplace/pp/B01BLHOYPW">Qualys</a>, for example. &nbsp;<br/>
+<br/>
+Alternatively a Penetration Tester could be given secure access to an instance within the VPC, or interconnected to the VPC, to allow them network access for their testing. Another approach would be to set up a VPN tunnel to the AWS environment to allow penetration testing activity within the environment more directly. The number of instances, complexity of the environment, and desired level of assurance will likely dictate which is the best approach. &nbsp;<br/>
+<br/>
+<br/>
+</body></html>

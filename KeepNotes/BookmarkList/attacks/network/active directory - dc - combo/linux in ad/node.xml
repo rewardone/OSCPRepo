@@ -5,7 +5,7 @@
   <key>title</key><string>Linux in AD</string>
   <key>nodeid</key><string>f907afe1-edfd-4d53-b51c-87edad1b9ceb</string>
   <key>modified_time</key><integer>1545853810</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1545852782</integer>

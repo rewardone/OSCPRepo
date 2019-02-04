@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Creating an EC2 Instance With an Existing Instance Profile</title>
+</head><body><b>Description: </b>An attacker with the <u>iam:PassRole</u>&nbsp;and <u>ec2:RunInstances</u>&nbsp;permissions can create a new EC2 instance that they will have operating system access to and pass an existing EC2 instance profile/service role to it. They can then login to the instance and request the associated AWS keys from the EC2 instance meta data, which gives them access to all the permissions that the associated instance profile/service role has.<br/>
+&nbsp;<br/>
+The attacker can gain access to the instance in a few different ways. One way would be to create/import an SSH key and associated it with the instance on creation, so they can SSH into it. Another way would be to supply a script in the EC2 User Data that would give them access, such as an Empire stager, or even just a reverse shell payload.<br/>
+&nbsp;<br/>
+Once the instance is running and the user has access to it, they can query the EC2 metadata to retrieve temporary credentials for the associated instance profile, giving them access to any AWS service that the attached role has.<br/>
+&nbsp;<br/>
+An example command to exploit this method might look like this:<br/>
+<i>aws ec2 run-instances –image-id ami-a4dc46db –instance-type t2.micro –iam-instance-profile Name=iam-full-access-ip –key-name my_ssh_key –security-group-ids sg-123456</i><br/>
+&nbsp;<br/>
+Where the attacker has access to my_ssh_key and the security group sg-123456 allows SSH access. Another command that could be run that doesn’t require an SSH key or security group allowing SSH access might look like this:<br/>
+<i>aws ec2 run-instances –image-id ami-a4dc46db –instance-type t2.micro –iam-instance-profile Name=iam-full-access-ip –user-data file://script/with/reverse/shell.sh</i><br/>
+&nbsp;<br/>
+Where the .sh script file contains a script to open a reverse shell in one way or another.<br/>
+&nbsp;<br/>
+An important note to make about this attack is that <b>an obvious indicator of compromise is when EC2 instance profile credentials are used outside of the specific instance</b>. Even AWS GuardDuty triggers on this (https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#unauthorized11), so it is not a smart move to exfiltrate these credentials and run them locally, but rather access the AWS API from within that EC2 instance.<br/>
+&nbsp;<br/>
+<b>Potential Impact: </b>This attack would give an attacker access to the set of permissions that the instance profile/role has, which again could range from no privilege escalation to full administrator access of the AWS account.<br/>
+&nbsp; &nbsp;</body></html>

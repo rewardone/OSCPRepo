@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body><b>Hijacking Misconfigured Roles:</b><br/>
+Unless AWS reduces the verbosity of the error messages returned after a failed role assumption, attackers will be able to enumerate role names using this method. Thankfully, mitigating an attack of this nature simply involves avoiding a few simple configuration errors.<br/>
+<br/>
+Three actionable steps to take to protect your environment:<br/>
+<br/>
+&nbsp; &nbsp; Require strict AssumeRole policies that specifically list only the AWS service or IAM user/account that needs the additional access<br/>
+&nbsp; &nbsp; Don’t use common, guessable names for your AWS resources<br/>
+&nbsp; &nbsp; Avoid exposing your AWS account ID to the public<br/>
+<br/>
+This bruteforcing technique and script will generate a large amount of “iam:AssumeRole” CloudTrail logs in the account you are using for enumeration. Any account you target will not see anything in their CloudTrail logs until you successfully assume a misconfigured role, so that means enumeration is completely log-free on the target account<br/>
+<br/>
+<br/>
+<b>Enumerating Users:</b><br/>
+While this username enumeration vector is low risk in itself – most useful as part of a larger campaign – the underlying issue lies in AWS’ verbose error messaging, so all AWS users are affected.<br/>
+Even so, we’ve included an option in the &nbsp;iam_user_enum script to help gauge your susceptibility to IAM attacks. &nbsp;Run the “—self-check” option to pull all usernames for the associated account and if they have two-factor authentication (2FA) enabled.<br/>
+<br/>
+This security mechanism ensures that even if IAM usernames are enumerated and passwords are compromised, there’s a second authentication check to prevent account hijacking. &nbsp;2FA is highly recommended for all AWS users, if not already enabled.<br/>
+<br/>
+<br/>
+<b>Privilege Escalation:</b><br/>
+The number one recommendation would be to fully utilize the “Resource” option of IAM policies, and this includes using the built-in variables that policies support. A list of supporting variables and descriptions can be found here: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html, but broadly, they allow you set allow or deny certain IAM permissions based on something you don’t know exactly at the time of creation or something that can change over time, from user to user, or other ways (a variable).<br/>
+<br/>
+The two main IAM policy variables to pay attention to are “aws:SourceIp” (the IP address detected when making API calls) and “aws:username” (the username of the user who is making API calls). Obviously, by restricting permissions to a known IP address, the chances of API calls coming from that IP are not malicious is greatly increased.</body></html>

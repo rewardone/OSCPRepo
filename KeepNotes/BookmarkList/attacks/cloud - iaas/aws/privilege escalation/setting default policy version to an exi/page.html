@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Setting Default Policy Version to an Existing Version</title>
+</head><body><b>Description: </b>An attacker with the <u>iam:SetDefaultPolicyVersion</u>&nbsp;permission may be able to escalate privileges through existing policy versions that are not currently in use. If a policy that they have access to has versions that are not the default, they would be able to change the default version to any other existing version.<br/>
+&nbsp;<br/>
+An example command to exploit this method might look like this:<br/>
+<i>aws iam set-default-policy-version –policy-arn target_policy_arn –verion-id v2</i><br/>
+&nbsp;<br/>
+Where “v2” is the policy version with the most privileges available.<br/>
+&nbsp;<br/>
+<b>Potential Impact: </b>The potential impact is associated with the level of permissions that the inactive policy version has. This could range from no privilege escalation at all to gaining full administrator access to the AWS account, depending on what the inactive policy versions have access to.<br/>
+&nbsp; &nbsp;</body></html>

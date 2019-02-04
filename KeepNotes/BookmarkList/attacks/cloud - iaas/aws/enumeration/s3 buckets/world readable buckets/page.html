@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>World Readable Buckets</title>
+</head><body>“World-readable S3” bucket could actually refer to two issues, the first is an S3 bucket with read permissions granted to “Everyone” which in fact means everyone on the internet, not everyone within your organization. Also, granting read permission to “All AWS Users” means everyone with an AWS account, not everyone within your users list.<br/>
+<br/>
+Finally, you can’t restrict users to listing specific buckets. They can either list them all or they can’t. Keys that can list one bucket can list all the buckets for that account. So make sure their names don’t contain anything confidential. It’s also possible for an anonymous user to remotely enumerate that a bucket exists by guessing its name. Not the biggest vulnerability to be aware of but worth noting that it exists.<br/>
+<br/>
+<br/>
+If you want to see practical examples of this kind of issue then check out http://<a href="https://www.gracefulsecurity.com/an-introduction-to-penetration-testing-aws/flaws.cloud">flaws.cloud</a>!<br/>
+&nbsp;There are examples of this happening in the wild too:<br/>
+&nbsp;<a href="https://hackerone.com/reports/94502">https://hackerone.com/reports/94502</a><br/>
+&nbsp;<a href="https://hackerone.com/reports/98819">https://hackerone.com/reports/98819</a><br/>
+&nbsp;<a href="https://hackerone.com/reports/128088">https://hackerone.com/reports/128088</a><br/>
+<br/>
+<br/>
+<br/>
+&nbsp; </body></html>

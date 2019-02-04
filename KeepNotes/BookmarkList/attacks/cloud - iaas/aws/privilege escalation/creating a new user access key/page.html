@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Creating a New User Access Key</title>
+</head><body><b>Description: </b>An attacker with the <u>iam:CreateAccessKey</u>&nbsp;permission on other users can create an access key ID and secret access key belonging to another user in the AWS environment, if they don’t already have two sets associated with them (which best practice says they shouldn’t).<br/>
+&nbsp;<br/>
+An example command to exploit this method might look like this:<br/>
+<i>aws iam create-access-key –user-name target_user</i><br/>
+&nbsp;<br/>
+Where target_user has an extended set of permissions compared to the current user.<br/>
+&nbsp;<br/>
+<b>Potential Impact: </b>This method would give an attacker the same level of permissions as any user they were able to create an access key for, which could range from no privilege escalation to full administrator access to the account.<br/>
+&nbsp; &nbsp;</body></html>

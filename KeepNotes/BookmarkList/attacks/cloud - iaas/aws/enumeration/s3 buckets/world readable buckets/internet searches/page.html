@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Internet Searches</title>
+</head><body>Many buckets are now private, that doesn't mean they were always private. The s3.amazonaws.com site is regularly indexed by Google (unless the bucket itself includes a robots.txt) so Google dorks still apply. For example, the following Google query can identify Excel spreadsheets containing the word "password":<br/>
+<br/>
+site: s3.amazonaws.com file type: xls password<br/>
+<br/>
+<br/>
+Also, the WayBackMachine is a great resource to identify previously open buckets. <br/>
+<br/>
+Using a modified version of @mubix's Metasploit module, we also quickly identified a few hundred buckets that are currently private that previously weren't.</body></html>

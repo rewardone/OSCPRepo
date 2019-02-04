@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>S3 Buckets</title>
+</head><body>So the issues around S3 are effectively:<br/>
+<ul><li>Public Listable buckets</li>
+<li>AWS Authenticated Listable buckets</li>
+<li>Improper ACLs</li>
+<li style="list-style-type: none"><ul><li>World-readable buckets</li>
+<li>World-writeable buckets.</li>
+</ul>
+</li>
+</ul>
+<br/>
+All S3 buckets share a global naming scheme. Bucket enumeration is not avoidable.<br/>
+All S3 buckets have a DNS entry: [bucketname].s3.amazonaws.com<br/>
+<br/>
+It’s easiest to access a bucket over its HTTP interface:<br/>
+https://[bucketname].s3.amazonaws.com)<br/>
+<br/>
+or you can check the interface like:<br/>
+https://s3-[region].amazonaws.com/[organization_name] <br/>
+<br/>
+or to use the more powerful AWS CLI: <br/>
+pip3 install awscli or apt-get install awscli<br/>
+aws configure<br/>
+aws s3 ls s3://[bucket_name] &nbsp;</body></html>
