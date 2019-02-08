@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Base64</title>
+</head><body>This technique makes use of data URIs to obfuscate the phishing landing page by instructing the browser to load the base64 code as the page content. The browser will render the base64 code as html if it is a supported feature. If done correctly, the initial HTML content of the phishing page will not be observed on the wire. <br/>
+<img src="image.png" /><br/>
+<br/>
+In this case, the code simply instructs the browser to render the base64 code as text/HTML data (Fig. 6)<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+Once decoded, it is evident that the base64 encoded content is simple HTML.<br/>
+<br/>
+An end-user could watch for the unusual URL structure, as seen in the URL bar below, even if the rendered page looks <br/>
+legitimate (Fig. 8):<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+In one interesting variant, we spotted JavaScript was embedded inside another data URI.<br/>
+<br/>
+<img src="image 4.png" /><br/>
+<br/>
+This nesting of data URIs will show a somewhat legitimate looking Google URL in the browser bar while the page contains actual phishing code<br/>
+<br/>
+<img src="image 5.png" /><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

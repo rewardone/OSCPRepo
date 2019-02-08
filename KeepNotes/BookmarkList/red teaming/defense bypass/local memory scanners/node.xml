@@ -2,7 +2,7 @@
 <node>
 <version>6</version>
 <dict>
-  <key>title</key><string>Memory Scanners</string>
+  <key>title</key><string>Local Memory Scanners</string>
   <key>nodeid</key><string>7a9c1630-f40e-44f5-8883-d538a1b4d582</string>
   <key>modified_time</key><integer>1542641053</integer>
   <key>expanded2</key><false/>

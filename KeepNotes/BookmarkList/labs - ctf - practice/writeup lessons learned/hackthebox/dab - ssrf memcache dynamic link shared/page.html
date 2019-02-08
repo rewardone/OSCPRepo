@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Dab - SSRF MemCache Dynamic Link Shared Library</title>
+</head><body>wfuzz for password brute<br/>
+wfuzz for cookie value brute (header value)<br/>
+<br/>
+data loaded from MySQL DB vs data loaded from cache (debug 'hint')<br/>
+<br/>
+Socket Test page, need to enumerate bad characters<br/>
+wfuzz again! seclists alphanum-case-extra.txt<br/>
+<br/>
+Memcache cachedump passwords and crack password <br/>
+<br/>
+Shared library link for privesc<br/>
+<br/>
+myexec is a SUID binary, asks for a password. Strings/ltrace/r2 find the password<br/>
+ldconfig will set it to your own library based off a config in /etc/ld.so.conf.d<br/>
+test.conf lists: /tmp<br/>
+<br/>
+So, you can place a linked library in /tmp and ldconfig to force your shared library to be loaded<br/>
+use ldd to find which shared libraries a binary will load<br/>
+make your binary and place in tmp<br/>
+ldconfig to link it<br/>
+run the binary and pop shell<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

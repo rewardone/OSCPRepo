@@ -3,7 +3,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Relay</title>
-</head><body>If Exchange is running with high privileges, using a relay attack can allow an attacker to grant themselves DCSync rights. The push notification service has an option to send a message every X minutes (configurable) even if no event happened. This ensures Exchange will connect with PushSubscription even if there is no activity in an inbox. <br/>
+</head><body>The original article has been made more accessible through two additional tools:<br/>
+[PowerPriv](<a href="https://github.com/G0ldenGunSec/PowerPriv">https://github.com/G0ldenGunSec/PowerPriv</a>) | Powershell implementatino of PrivExchange. Walkthrough <a href="http://blog.redxorblue.com/2019/01/red-teaming-made-easy-with-exchange.html">article</a>&nbsp;<br/>
+[SharpExchangePriv](<a href="https://github.com/panagioto/SharpExchangePriv">https://github.com/panagioto/SharpExchangePriv</a>) | C# implementation of PowerPriv/PrivExchange<br/>
+<br/>
+Original:<br/>
+[PrivExchange](https://github.com/dirkjanm/PrivExchange) | Exchange your privs for Domain Admin, abuse Exchange<br/>
+<br/>
+If Exchange is running with high privileges, using a relay attack can allow an attacker to grant themselves DCSync rights. The push notification service has an option to send a message every X minutes (configurable) even if no event happened. This ensures Exchange will connect with PushSubscription even if there is no activity in an inbox. <br/>
 <br/>
 <b>Performing the Attack With User Credentials</b><br/>
 1. PushSubscription EWS Call<br/>
@@ -25,5 +32,6 @@ After a minute (which is the value supplied for the push notification) we see th
 secretsdump.py testsegment/ntu@s2016dc.testsegment.local -just-dc<br/>
 <br/>
 <b>Performing the Attack With NO Credentials<br/>
-</b>If an attacker is only in a position to perform a network attack, but doesn't have any credentials, it is still possible to trigger Exchange to authenticate. If we perform a SMB to HTTP (or HTTP to HTTP) relay attack (using LLMNR/NBNS/mitm6 spoofing) we can relay the authentication of a user in the same network segment to Exchange EwS and use their credentials to trigger the callback. Using httpattack.py and ntlmrelayx, an attacker can perform the attack from a network perspective without any credentials (need to modify your attacker host since it is hardcoded in the file).<br/>
+</b>If an attacker is only in a position to perform a network attack, but doesn't have any credentials, it is still possible to trigger Exchange to authenticate. <br/>
+If we perform a SMB to HTTP (or HTTP to HTTP) relay attack (using LLMNR/NBNS/mitm6 spoofing) we can relay the authentication of a user in the same network segment to Exchange EwS and use their credentials to trigger the callback. Using httpattack.py and ntlmrelayx, an attacker can perform the attack from a network perspective without any credentials (need to modify your attacker host since it is hardcoded in the file).<br/>
 </body></html>

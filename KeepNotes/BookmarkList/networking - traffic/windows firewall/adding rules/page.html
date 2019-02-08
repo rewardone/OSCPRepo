@@ -19,10 +19,9 @@ localport=<br/>
 Allowing a program like:<br/>
 netsh advfirewall firweall add rule name="allow_my_program" dir=in action=allow program="evil.exe" enable=yes<br/>
 <br/>
-<br/>
 Allowing ports like:<br/>
 netsh advfirewall firewall add rule name="allow_my_port_80" dir=in action=allow protocol=TCP localport=80<br/>
 <br/>
-<br/>
 Powershell also makes things very easy, with similar commands:<br/>
-New-NetFirewallRule -DisplayName &lt;name&gt; -RemoteAddress &lt;ip_address&gt; -Direction inbound -Action allow</body></html>
+New-NetFirewallRule -DisplayName &lt;name&gt; -RemoteAddress &lt;ip_address&gt; -Direction inbound -Action allow<br/>
+</body></html>

@@ -6,6 +6,7 @@
   <key>title</key><string>CMS</string>
   <key>nodeid</key><string>2065db3b-3581-462a-abba-933b02b1fbcb</string>
   <key>modified_time</key><integer>1525976257</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1525976257</integer>

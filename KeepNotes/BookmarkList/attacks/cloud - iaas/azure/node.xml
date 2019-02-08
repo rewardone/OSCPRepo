@@ -4,10 +4,12 @@
 <dict>
   <key>title</key><string>Azure</string>
   <key>nodeid</key><string>548e408b-49a8-447c-90dc-c523205fea4c</string>
-  <key>modified_time</key><integer>1547747106</integer>
+  <key>modified_time</key><integer>1549386185</integer>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1547747106</integer>
+  <key>info_sort_dir</key><integer>1</integer>
   <key>order</key><integer>1</integer>
+  <key>info_sort</key><string>order</string>
 </dict>
 </node>

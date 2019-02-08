@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>JS Obfuscation in Phishing Campaigns</string>
+  <key>nodeid</key><string>2bca48f9-3308-419c-a64e-d1f83ee76eb0</string>
+  <key>modified_time</key><integer>1549398801</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1549397136</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

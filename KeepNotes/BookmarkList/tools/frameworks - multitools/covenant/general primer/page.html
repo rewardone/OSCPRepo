@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>[Covenant](https://github.com/cobbr/Covenant) <br/>
+<br/>
+https://posts.specterops.io/entering-a-covenant-net-command-and-control-e11038bcf462<br/>
+<br/>
+<a href="https://github.com/cobbr/Covenant">Covenant</a>&nbsp;is a .NET command and control framework that aims to highlight the attack surface of .NET, make the use of offensive .NET tradecraft easier, and serve as a collaborative command and control platform for red teamers.<br/>
+Architecture<br/>
+Covenant has a client-server architecture that allows for multi-user collaboration. There are three main components of Covenant’s architecture:<br/>
+<ul><li><b>Covenant</b> — Covenant is the server-side component of the client-server architecture. Covenant runs the command and control server hosted on infrastructure shared between operators. I will also frequently use the term “Covenant” to refer to the entire overarching project that includes all components of the architecture.</li>
+<li><b>Elite</b> — Elite is the client-side component of the client-server architecture. Elite is a command-line interface that operators use to interact with the Covenant server to conduct operations.</li>
+<li><b>Grunt</b> — A “Grunt” is the name of Covenant’s implant that is deployed to targets.</li>
+</ul>
+<br/>
+All three components of Covenant are written in C#. Covenant and Elite both target .NET Core and have docker support, while Grunt implants target the .NET framework.<br/>
+Features<br/>
+Covenant has a few key features that I think make it useful and differentiate it from some other command and control frameworks:<br/>
+<ul><li><b>Multi-Platform</b> — Covenant and Elite both target .NET Core, which makes them multi-platform. This allows these programs to run natively on Linux, MacOS, and Windows platforms. Additionally, both Covenant and Elite have docker support, allowing these programs to run within a container on any system that has docker installed.</li>
+<li><b>Multi-User</b> — Covenant supports multi-user collaboration. The ability to collaborate has become crucial for effective red team operations. Many users can start Elite clients that connect to the same Covenant server and operate independently or collaboratively.</li>
+<li><b>API Driven</b> — Covenant is driven by a server-side API that enables multi-user collaboration and is easily extendible. Additionally, Covenant includes a Swagger UI that makes development and debugging easier and more convenient.</li>
+<li><b>Listener Profiles</b> — Covenant supports listener “profiles” that control how the network communication between Grunt implants and Covenant listeners look on the wire.</li>
+<li><b>Encrypted Key Exchange</b> — Covenant implements an encrypted key exchange between Grunt implants and Covenant listeners that is largely based on a similar exchange in the <a href="https://github.com/EmpireProject/Empire">Empire project</a>, in addition to optional SSL encryption. This achieves the cryptographic property of forward secrecy between Grunt implants.</li>
+<li><b>Dynamic Compilation</b> — Covenant uses the <a href="https://github.com/dotnet/roslyn">Roslyn API</a>&nbsp;for dynamic C# compilation. Every time a new Grunt is generated or a new task is assigned, the relevant code is recompiled and obfuscated with <a href="https://github.com/mkaring/ConfuserEx">ConfuserEx</a>, avoiding totally static payloads. Covenant reuses much of the compilation code from the <a href="https://github.com/cobbr/sharpgen">SharpGen</a>&nbsp;project, which I described in much more detail <a href="https://cobbr.io/SharpGen.html">in a previous post</a>.</li>
+<li><b>Inline C# Execution</b> — Covenant borrows code and ideas from both the <a href="https://github.com/cobbr/sharpgen">SharpGen</a>&nbsp;and <a href="https://github.com/cobbr/sharpshell">SharpShell</a>&nbsp;projects to allow operators to execute C# one-liners on Grunt implants. This allows for similar functionality to that described in the <a href="https://posts.specterops.io/sharpshell-the-worst-scripting-engine-of-all-time-3bbfed6c50e4">SharpShell post</a>, but allows the one-liners to be executed on remote implants.</li>
+<li><b>Tracking Indicators</b> — Covenant tracks “indicators” throughout an operation, and summarizes them in the Indicators menu. This allows an operator to conduct actions that are tracked throughout an operation and easily summarize those actions to the blue team during or at the end of an assessment for deconfliction and educational purposes. This feature is still in it’s infancy and still has room for improvement.</li>
+<li><b>Developed in C#</b> — Personally, I enjoy developing in C#, which may not be a surprise for anyone that has read my latest blogs or tools. Not everyone might agree that development in C# is ideal, but hopefully everyone agrees that it is nice to have all components of the framework written in the same language. I’ve found it very convenient to write the server, client, and implant all in the same language. This may not be a true “feature”, but hopefully it allows others to contribute to the project fairly easily.</li>
+</ul>
+&nbsp;</body></html>

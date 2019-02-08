@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Malicious RDP Server</title>
+</head><body>https://research.checkpoint.com/reverse-rdp-attack-code-execution-on-rdp-clients/<br/>
+<br/>
+There is no released PoC for this at time of article, but it details the attack that can be done. <br/>
+Microsoft does not believe that this meets their bar for servicing, ie: no Microsoft CVE<br/>
+<br/>
+<br/>
+After reading more about the different formats in <a href="https://docs.microsoft.com/en-us/windows/desktop/shell/clipboard#cf_hdrop">MSDN</a>, one format immediately attracted our attention: “CF_HDROP”. This format seems responsible for “Drag &amp; Drop” (hence the name H<b>DROP</b>), and in our case, the “Copy &amp; Paste” feature. It’s possible to simply copy a group of files from the first computer, and paste them in the second computer. For example, a malware researcher might want to copy the output log of his script from the remote VM to his desktop.<br/>
+&nbsp;<br/>
+It was roughly at this point, while I was trying to figure out the flow of the data, Omer (<a href="https://twitter.com/gullomer?lang=en">@GullOmer</a>) asked me if and where <a href="https://docs.microsoft.com/en-us/windows/desktop/api/shlwapi/nf-shlwapi-pathcanonicalizea">PathCanonicalizeA</a><u>&nbsp;is called</u>. If the client fails to properly canonicalize and sanitize the file paths it receives, it could be vulnerable to a path-traversal attack, allowing the server to drop arbitrary files in arbitrary paths on the client’s computer, a very strong attack primitive. After failing to find imports for the canonicalization function, we dug in deeper, trying to figure out the overall architecture for this data flow.<br/>
+&nbsp;<br/>
+Figure 8 summarizes our findings:<br/>
+&nbsp; <img src="image.png" /><br/>
+<br/>
+<br/>
+This is where rdpclip.exe comes into play. It turns out that the server accesses the clipboard through a broker, and that is rdpclip.exe. In fact, rdpclip.exe is just a normal process (we can kill / spawn it ourselves) that talks to the RDP service using a dedicated virtual channel API.<br/>
+&nbsp;<br/>
+At this stage, we installed <a href="https://www.codeproject.com/Articles/168/ClipSpy">ClipSpy</a>, and started to dynamically debug the clipboard’s data handling that is done inside rdpclip.exe.<br/>
+&nbsp;<br/>
+These are our conclusions regarding the data flow in an ordinary “Copy &amp; Paste” operation in which a file is copied from the server to the client:<br/>
+&nbsp;<ul><li>On the server, the “copy” operation creates a clipboard data of the format “CF_HDROP”.</li>
+<li>When the “paste” is performed in the client’s computer, a chain of events is triggered.</li>
+<li>The rdpclip.exe process on the server is asked for the clipboard’s content, and converts it to a FileGroupDescriptor (Fgd) clipboard format.</li>
+<li>The metadata of the files is added to the descriptor one at a time, using the HdropToFgdConverter::AddItemToFgd() function.</li>
+<li>After it is finished, the Fgd blob is sent to the RDP service on the server.</li>
+<li>The server simply wraps it and sends it to the client.</li>
+<li>The client unwraps it and stores it in its own clipboard.</li>
+<li>A “paste” event is sent to the process of the focused window (for example, explorer.exe).</li>
+<li>This process handles the event and reads the data from the clipboard.</li>
+<li>The content of the files is received over the RDP connection itself.</li>
+</ul>
+&nbsp;<br/>
+<b>Path Traversal over the shared RDP clipboard</b><br/>
+&nbsp;<br/>
+If we look back on the steps performed on the received clipboard data, we notice that the client doesn’t verify the received Fgd blob that came from the RDP server. And indeed, if we modify the server to include a path traversal path of the form: ..\canary1.txt, ClipSpy shows us (see Figure 9) that it was stored “as is” on the client’s clipboard:<br/>
+&nbsp; <br/>
+<img src="image 2.png" /><br/>
+<br/>
+<br/>
+And that’s practically it.<br/>
+<br/>
+If a client uses the “Copy &amp; Paste” feature over an RDP connection, a malicious RDP server can transparently drop arbitrary files to arbitrary file locations on the client’s computer, limited only by the permissions of the client. For example, we can drop malicious scripts to the client’s “Startup” folder, and after a reboot they will be executed on his computer, giving us full control.<br/>
+<br/>
+<b>Note</b>: In our exploit, we simply killed rdpclip.exe, and spawned our own process to perform the path traversal attack by adding additional malicious file to every “Copy &amp; Paste” operation. The attack was performed with “user” permissions, and does not require the attacker to have “system” or any other elevated permission.<br/>
+<br/>
+PoC video by <a href="https://www.youtube.com/watch?v=F70FGv_QxDY">checkpoint</a>. <br/>
+<br/>
+<br/>
+<br/>
+<b>Taking it one step further</b><br/>
+&nbsp;<br/>
+Every time a clipboard is updated on either side of the RDP connection, a <a href="https://msdn.microsoft.com/en-us/library/cc241105.aspx">CLIPRDR_FORMAT_LIST</a>&nbsp;message is sent to the other side, to notify it about the new clipboard formats that are now available. We can think of it as a complete sync between the clipboards of both parties (except for a small set of formats that are treated differently by the RDP connection itself). This means that our malicious server is notified whenever the client copies something to his “local” clipboard, and it can now query the values and read them. In addition, the server can notify the client about a clipboard “update” <b>without the need for a “copy” operation</b>&nbsp;<b>inside the RDP window</b>, thus completely controlling the client’s clipboard without being noticed.<br/>
+&nbsp;<br/>
+<b>Scenario #1:</b><br/>
+&nbsp;<br/>
+A malicious RDP server can eavesdrop on the client’s clipboard – this is a feature, not a bug. For example, the client locally copies an admin password, and now the server has it too.<br/>
+&nbsp;<br/>
+<b>Scenario #2:</b><br/>
+&nbsp;<br/>
+A malicious RDP server can modify any clipboard content used by the client, even if the client does <b>not</b>&nbsp;issue a “copy” operation inside the RDP window. If you click “paste” when an RDP connection is open, you are vulnerable to this kind of attack. For example, if you copy a file on your computer, the server can modify your (executable?) file / piggy-back your copy to add additional files / path-traversal files using the previously shown PoC.<br/>
+&nbsp;<br/>
+We were able to successfully test this attack scenario using <a href="https://www.nccgroup.trust/uk/about-us/newsroom-and-events/blogs/2018/december/beware-of-deserialisation-in-.net-methods-and-classes-code-execution-via-paste/">NCC’s .NET deserialization</a>&nbsp;PoC:<br/>
+&nbsp;<ul><li>The server executes their PoC, and positions in the clipboard a .NET content that will pop a calculator (using the “System.String” format).</li>
+<li>When the client clicks “paste” inside the PowerShell program, the deserialization occurs and a calc is popped.</li>
+</ul>
+<br/>
+<b>Note:</b>&nbsp;The content of the synced clipboard is subject to <a href="https://msdn.microsoft.com/en-us/library/cc241081.aspx">Delayed Rendering</a>. This means that the clipboard’s content is sent over the RDP connection only after a program actively asks for it, usually by clicking “paste”. Until then, the clipboard only holds the list of formats that are available, without holding the content itself.<br/>
+&nbsp; <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Multibyte XOR</title>
+</head><body>This method &nbsp;is among the more sophisticated phishing obfuscations we’ve observed. In this case, the initial landing is <br/>
+essentially two chunks of data that are unescaped and eval’d<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+Decoding the first eval statement (hex decode) yields the brains of the decoding (Fig. 35):<br/>
+<img src="image 2.png" /><br/>
+<br/>
+While it doesn’t involve much code, this is a fairly sophisticated obfuscation method as far as phishing goes. The second <br/>
+block of code decodes to eval the large chunk of data as the s variable in the above code. <br/>
+<br/>
+The tmp variable becomes an array by splitting the data into two bits of information where “17864328” occurs in the <br/>
+variable. tmp[0] holds the encoded data, while tmp[1] holds what will be used as a key for decoding. <br/>
+<img src="image 3.png" /><br/>
+<br/>
+<br/>
+The hex value of tmp[1] is appended by “817390” making the key for this instance a value of “4515988817390”.<br/>
+The for loop starts off initiating a counter and will iterate over the length of the data, the first value being 47.<br/>
+<b>String.fromCharCode((parseInt(k.charAt(i%k.length))^s.charCodeAt(i))+-7);</b><br/>
+s.charCodeAt(i) evaluates to the first byte in the s variable. In the first iteration, it will be 47 in hex which evaluates to 71 in decimal. <br/>
+<br/>
+<b>String.fromCharCode((parseInt(k.charAt(i%k.length))^s.charCodeAt(i))+-7);</b><br/>
+Evaluating further, i%k.length for the first loop will be 0. <br/>
+<br/>
+<b>String.fromCharCode((parseInt(k.charAt(i%k.length))^s.charCodeAt(i))+-7);</b><br/>
+Next, k.charAt(0) will evaluate to the first character in the key variable which is 4.<br/>
+<br/>
+<b>String.fromCharCode((parseInt(k.charAt(i%k.length))^s.charCodeAt(i))+-7);</b><br/>
+This evaluates to essentially 4^71 which evaluates to 67.<br/>
+<br/>
+<b>String.fromCharCode((parseInt(k.charAt(i%k.length))^s.charCodeAt(i))+-7);</b><br/>
+The next step just subtracts 7 from 67 and parses as an integer, so the result is 60.<br/>
+<br/>
+<b>String.fromCharCode((parseInt(k.charAt(i%k.length))^s.charCodeAt(i))+-7);</b><br/>
+Finally, the expression converts 60 decimal to ascii, so we end up with “&lt;”, which is saved in the r variable.<br/>
+<br/>
+Subsequent loop values would look something like this:<br/>
+String.fromCharCode((5^45)+-7) &nbsp; == !<br/>
+String.fromCharCode((1^106)+-7) == d<br/>
+String.fromCharCode((5^115)+-7) == o<br/>
+...<br/>
+<br/>
+The fully decoded value is then written to the page via document.write where we see normal html.<br/>
+<img src="image 4.png" /><br/>
+<br/>
+<br/>
+</body></html>

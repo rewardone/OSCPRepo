@@ -2,10 +2,11 @@
 <node>
 <version>6</version>
 <dict>
-  <key>expanded</key><true/>
+  <key>expanded</key><false/>
   <key>title</key><string>Exchange</string>
   <key>nodeid</key><string>08ac60e3-0913-4cc9-adbc-bc88189a9e45</string>
   <key>modified_time</key><integer>1548174151</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1548169453</integer>

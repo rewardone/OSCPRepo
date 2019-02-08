@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Testing on the Cloud</title>
+</head><body><br/>
+As with AWS, testing systems and application that are simply lifted-and-shifted to the cloud are likely to be no different to testing an application that was hosted on premises. However one thing to consider is Azure data storage. It’s common to use a MS-SQL database within Azure for storage and there are several security tools which apply here, such as database firewalls, data masking, and “always encrypted database”. Additionally, Azure offers a Web Application Firewall.<br/>
+&nbsp;<br/>
+Regarding Azure SQL Firewalls, they are always on and cannot be disabled, however it is possible to set up an allow rule with an allowed range like 0.0.0.0/0 which <i>effectively</i>&nbsp;disables it. Whilst this may be considered unlikely it should be remembered that the SQL firewall configuration may be done at the server level not the database level, so a “testing” rule may have granted wider than expected access.<br/>
+&nbsp;<br/>
+One interesting detail I found whilst researching this post was a section within the <a href="https://nostarch.com/azure">“Pentesting Azure Applications” by Matt Burrough</a>&nbsp;which states:<br/>
+&nbsp;<br/>
+<div style="text-align: center">“One final possible weakness is that SQL firewall rules are configured<br/>
+at the server level, not per database. So, if a server has 20 databases, each used by different teams, one rule set is applied to all of them.”<br/>
+</div>&nbsp;<br/>
+However this may be misleading, as it is possible to restrict access at a database-level, <a href="https://docs.microsoft.com/en-us/azure/sql-database/sql-database-security-tutorial#create-a-database-level-firewall-rule-using-ssms">as documented here</a>. Although I would note, just because a security feature is available doesn’t mean that it’s being used, or is correctly deployed, so it’s always worth checking!<br/>
+&nbsp;<br/>
+Finally, in regards to Azure’s Web Application Firewall, it comes preconfigured with the OWASP Core Rule Set (CRS) 3.0, although it supports 2.2.9. Information on configuring the WAF for defenders can be found <a href="https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-web-application-firewall-overview">here</a>, but attackers might prefer to take a look at the ruleset documentation (and even grab a copy of the ruleset for testing) <a href="https://coreruleset.org/">here</a>.<br/>
+&nbsp; </body></html>

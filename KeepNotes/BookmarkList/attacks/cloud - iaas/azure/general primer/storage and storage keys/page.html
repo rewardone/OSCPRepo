@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Storage and Storage Keys</title>
+</head><body><br/>
+Azure Storage can be accessed in several ways, with storage account keys, user credentials and a shared access signature. User credentials should be limited if a company has deployed multi-factor authentication. Shared access signature (SAS) tokens are used to grant a small amount of permissions to a set of files in storage and are formatted as URLs. SAS tokens are often not particularly useful due to the high level or restrictions placed on them (such as read-only access to a single file). However storage keys are a great find.<br/>
+&nbsp;<br/>
+Storage accounts have two keys, a primary and a secondary. They’re not user defined but are instead 64-byte values (but usually base64-encoded) and they are supported by Azure storage utility as well as storage APIs. For a quick look at accessing data within a container in an Azure Blob (Azure data storage, somewhat similar to AWS S3) you can use <a href="https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy?toc=%2fazure%2fstorage%2ffiles%2ftoc.json">AzCopy</a> and access a Blog like:<br/>
+<br/>
+&nbsp;AzCopy /Source:https://myaccount.blob.core.windows.net/mycontainer /Dest:C:\myfolder <span style="color: #ff0000">/SourceKey:key</span>&nbsp;/S <br/>
+ <br/>
+&nbsp; </body></html>
