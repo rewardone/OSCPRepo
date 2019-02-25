@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Common Mitigation Problems</title>
+</head><body><b>Common Problems Associated with Mitigating DOM Based XSS<br/>
+</b><b>Complex Contexts</b><br/>
+In many cases the context isn’t always straightforward to discern.<br/>
+<br/>
+&lt;a href="javascript:myFunction('&lt;%=untrustedData%&gt;', 'test');"&gt;Click Me&lt;/a&gt;<br/>
+&nbsp;...<br/>
+&lt;script&gt;<br/>
+Function myFunction (url,name) {<br/>
+&nbsp; &nbsp; window.location = url;<br/>
+}<br/>
+&lt;/script&gt;<br/>
+<br/>
+In the above example, untrusted data started in the rendering URL context (href attribute of an a tag) then changed to a JavaScript execution context (javascript: protocol handler) which passed the untrusted data to an execution URL subcontext (window.location of myFunction).<br/>
+<br/>
+Because the data was introduced in JavaScript code and passed to a URL subcontext the appropriate server-side encoding would be the following:<br/>
+<br/>
+&lt;a href="javascript:myFunction('&lt;%=Encoder.encodeForJS(Encoder.encodeForURL(untrustedData)) %&gt;', 'test');"&gt;<br/>
+Click Me&lt;/a&gt;<br/>
+&nbsp;...<br/>
+Or if you were using ECMAScript 5 with an immutable JavaScript client-side encoding libraries you could do the following:<br/>
+<br/>
+&lt;!-- server side URL encoding has been removed. &nbsp;Now only JavaScript encoding on server side. --&gt;<br/>
+&lt;a href="javascript:myFunction('&lt;%=Encoder.encodeForJS(untrustedData)%&gt;', 'test');"&gt;Click Me&lt;/a&gt;<br/>
+&nbsp;...<br/>
+&lt;script&gt;<br/>
+Function myFunction (url,name) {<br/>
+&nbsp; &nbsp; var encodedURL = ESAPI4JS.encodeForURL(url); &nbsp;//URL encoding using client-side scripts<br/>
+&nbsp; &nbsp; window.location = encodedURL;<br/>
+}<br/>
+&lt;/script&gt;<br/>
+<br/>
+<b>Inconsistencies of Encoding Libraries</b><br/>
+There are a number of open source encoding libraries out there:<br/>
+<br/>
+OWASP ESAPI<br/>
+OWASP Java Encoder<br/>
+Apache Commons Text StringEscapeUtils, replace one from Apache Commons Lang3<br/>
+Jtidy<br/>
+Your company’s custom implementation.<br/>
+<br/>
+Some work on a black list while others ignore important characters like “&lt;” and “&gt;”.<br/>
+<br/>
+Java Encoder is an active project providing supports for HTML, CSS and JavaScript encoding.<br/>
+<br/>
+ESAPI is one of the few which works on a whitelist and encodes all non-alphanumeric characters. It is important to use an encoding library that understands which characters can be used to exploit vulnerabilities in their respective contexts. Misconceptions abound related to the proper encoding that is required.<br/>
+<br/>
+<b>Encoding Misconceptions</b><br/>
+Many security training curriculums and papers advocate the blind usage of HTML encoding to resolve XSS.<br/>
+<br/>
+This logically seems to be prudent advice as the JavaScript parser does not understand HTML encoding.<br/>
+<br/>
+However, if the pages returned from your web application utilize a content type of text/xhtml or the file type extension of *.xhtml then HTML encoding may not work to mitigate against XSS.<br/>
+<br/>
+For example:<br/>
+<br/>
+&lt;script&gt;<br/>
+&amp;#x61;lert(1);<br/>
+&lt;/script&gt;<br/>
+<br/>
+The HTML encoded value above is still executable. If that isn’t enough to keep in mind, you have to remember that encodings are lost when you retrieve them using the value attribute of a DOM element.<br/>
+<br/>
+Let’s look at the sample page and script:<br/>
+<br/>
+&lt;form name="myForm" ...&gt;<br/>
+&nbsp; &lt;input type="text" name="lName" value="&lt;%=Encoder.encodeForHTML(last_name)%&gt;"&gt;<br/>
+&nbsp;...<br/>
+&lt;/form&gt;<br/>
+&lt;script&gt;<br/>
+&nbsp; var x = document.myForm.lName.value; &nbsp;//when the value is retrieved the encoding is reversed<br/>
+&nbsp; document.writeln(x); &nbsp;//any code passed into lName is now executable.<br/>
+&lt;/script&gt;<br/>
+<br/>
+Finally there is the problem that certain methods in JavaScript which are usually safe can be unsafe in certain contexts.<br/>
+<br/>
+<b>Usually Safe Methods</b><br/>
+One example of an attribute which is thought to be safe is innerText.<br/>
+<br/>
+Some papers or guides advocate its use as an alternative to innerHTML to mitigate against XSS in innerHTML. However, depending on the tag which innerText is applied, code can be executed.<br/>
+<br/>
+&lt;script&gt;<br/>
+&nbsp;var tag = document.createElement("script");<br/>
+&nbsp;tag.innerText = "&lt;%=untrustedData%&gt;"; &nbsp;//executes code<br/>
+&lt;/script&gt;<br/>
+<br/>
+The innerText feature was originally introduced by Internet Explorer, and was formally specified in the HTML standard in 2016 after being adopted by all major browser vendors.</body></html>

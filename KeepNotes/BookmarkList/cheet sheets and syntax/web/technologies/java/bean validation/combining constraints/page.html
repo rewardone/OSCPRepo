@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Combining Constraints</title>
+</head><body><b>Combining Constraints</b><br/>
+Validation annotations can be combined in any suitable way. For instance, to specify a valid reviewRating value between 1 and 5, specify the validation like this :<br/>
+<br/>
+<b>Annotation:</b><br/>
+@Min(value=), @Max(value=)<br/>
+<br/>
+<b>Data Type:</b><br/>
+BigDecimal, BigInteger, byte, short, int, long and the respective wrappers of the primitive types; Additionally supported by HV: any sub-type of CharSequence (the numeric value represented by the character sequence is evaluated), any sub-type of Number<br/>
+<br/>
+<b>Use:</b><br/>
+Checks whether the annotated value is higher/lower than or equal to the specified minimum<br/>
+<br/>
+<b>Reference:</b><br/>
+<a href="http://docs.jboss.org/hibernate/validator/5.2/reference/en-US/html/ch02.html#section-builtin-constraints">Documentation</a><br/>
+<br/>
+Model:<br/>
+import org.hibernate.validator.constraints.Min;<br/>
+import org.hibernate.validator.constraints.Max;<br/>
+<br/>
+public class Review {<br/>
+&nbsp;<br/>
+&nbsp;//Constraint: Review rating must be between 1 and 5<br/>
+&nbsp;@Min(1)<br/>
+&nbsp;@Max(5)<br/>
+&nbsp;private int reviewRating;<br/>
+<br/>
+&nbsp;public int getReviewRating() {<br/>
+&nbsp; &nbsp;return reviewRating;<br/>
+&nbsp;}<br/>
+<br/>
+&nbsp;public void setReviewRating(int reviewRating) {<br/>
+&nbsp; &nbsp;this.reviewRating = reviewRating;<br/>
+} <br/>
+&nbsp;...<br/>
+}<br/>
+<br/>
+<br/>
+Controller:<br/>
+import javax.validation.Valid;<br/>
+import com.company.app.model.ReviewRating;<br/>
+<br/>
+@Controller<br/>
+public class ReviewController {<br/>
+<br/>
+&nbsp; &nbsp;...<br/>
+<br/>
+&nbsp; &nbsp;@RequestMapping(value="/postReview", method=RequestMethod.POST)<br/>
+&nbsp; &nbsp;public @ResponseBody String postReview(@Valid Review review, BindingResult result, <br/>
+&nbsp; &nbsp;HttpServletResponse response){<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; if(result.hasErrors()){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;String errorMessage = "";<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;response.setStatus(HttpServletResponse.SC_BAD_REQUEST);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;List&lt;ObjectError&gt; errors = result.getAllErrors(); <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;for( ObjectError e : errors){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; errorMessage+= "ERROR: " + e.getDefaultMessage();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return errorMessage;<br/>
+&nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return "Validation Successful";<br/>
+&nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp;}<br/>
+}</body></html>

@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><true/>
   <key>title</key><string>XSS</string>
   <key>nodeid</key><string>1c193a47-9eb4-421d-af0f-45293ad16028</string>
   <key>modified_time</key><integer>1516376723</integer>

@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Spoof DNS Entries</title>
+</head><body>https://gosecure.net/2019/02/20/abusing-unsafe-defaults-in-active-directory/<br/>
+https://blog.netspi.com/exploiting-adidns/<br/>
+<br/>
+There are quite a few articles about this now and the technique is used in krbrelayx among many other kill chains. Many attacks rely on a victim sending information to an attacker. One of the primary ways to achieve this is through DNS!<br/>
+<br/>
+First, without implementing some router based wizardry, LLMNR and NBNS requests are contained within a single multicast or broadcast domain respectively. This can greatly limit the scope of a spoofing attack with regards to both the affected systems and potential privilege of the impacted sessions. Second, by default, Windows systems use the following priority list while attempting to resolve name resolution requests through network based protocols:<br/>
+<br/>
+&nbsp; &nbsp; DNS<br/>
+&nbsp; &nbsp; LLMNR<br/>
+&nbsp; &nbsp; NBNS<br/>
+<br/>
+Although not exploited directly as part of the attacks, DNS has a large impact on the effectiveness of LLMNR/NBNS spoofing due to controlling which requests fall down to LLMNR and NBNS. Basically, if a name request matches a record listed in DNS, a client won’t usually attempt to resolve the request through LLMNR and NBNS.<br/>
+<br/>
+<br/>
+<b>Why ADIDNS and not just LLMNR/NBNS?</b><br/>
+The major advantage of ADIDNS spoofing over LLMNR/NBNS spoofing is the extended reach<br/>
+the major disadvantage is the required AD access.<br/>
+<br/>
+LLMNR and NBNS spoofing both continue to be effective year after year. My general recommendation, having worked with ADIDNS spoofing for a little while now, would be to start with LLMNR/NBNS spoofing and add in ADIDNS spoofing as needed<br/>
+.<img src="image.png" /><br/>
+<br/>
+<b>Tools!</b>&nbsp;<br/>
+I’ve released an updated version of Powermad which contains several functions for working with ADIDNS, including the functions shown in the post:<br/>
+<a href="https://github.com/Kevin-Robertson/Powermad">https://github.com/Kevin-Robertson/Powermad</a><br/>
+&nbsp;<br/>
+I will be populating the Powermad wiki with step by step instructions:<br/>
+<a href="https://github.com/Kevin-Robertson/Powermad/wiki">https://github.com/Kevin-Robertson/Powermad/wiki</a><br/>
+&nbsp;<br/>
+Also, if you are feeling brave, an ADIDNS spoofing capable version of Inveigh 1.4 can be found in the dev branch:<br/>
+<a href="https://github.com/Kevin-Robertson/Inveigh/tree/dev">https://github.com/Kevin-Robertson/Inveigh/tree/dev</a><br/>
+&nbsp; <br/>
+<br/>
+</body></html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypassing Defenses</title>
+</head><body>https://www.thesubtlety.com/post/patching-boto3-useragent/<br/>
+<b>Boto3 User-Agent</b><br/>
+AWS GuardDuty can alert on Kali uname, which is used by certain automated AWS scanners. If you are testing with kali, ensure that tools are 'patched' or you run through a proxy to conceal the User-Agent. The main issue is in the boto3 library that many tools use.<br/>
+<br/>
+botocore/session.py calls platform.release()<br/>
+<br/>
+Can implement in pacu.py with monkeypatch (pip install pytest):<br/>
+from _pytest.monkeypatch import MonkeyPatch<br/>
+monkeypatch = MonkeyPatch()<br/>
+def my_user_agent(self):<br/>
+&#09;return "Boto3/1.9.89 Python/2.7.12 Linux/4.2.0-42-generic"<br/>
+<br/>
+monkeypatch.setattr(botocore.session.Session, 'user_agent', my_user_agent)<br/>
+<br/>
+Alternatively, Pacu has a PacuProxy feature or send things through Burp or other proxy and auto edit requests.</body></html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>User Interaction CSRF Defense</title>
+</head><body>User Interaction Based CSRF Defense<br/>
+While all the techniques referenced here do not require any user interaction, sometimes it’s easier or more appropriate to involve the user in the transaction to prevent unauthorized operations (forged via CSRF or otherwise). The following are some examples of techniques that can act as strong CSRF defense when implemented correctly.<br/>
+<br/>
+Re-Authentication (password or stronger)<br/>
+One-time Token<br/>
+CAPTCHA<br/>
+<br/>
+While these are a very strong CSRF defense, it does create a huge impact on the user experience. For applications that are in need of high security for some operations (password change, money transfer etc.), these techniques should be used along with token based mitigation. Please note that tokens by themselves can mitigate CSRF, developers should use these techniques only to achieve additional security for their high sensitive operations.</body></html>

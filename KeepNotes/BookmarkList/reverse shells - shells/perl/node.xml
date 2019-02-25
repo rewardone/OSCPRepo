@@ -12,7 +12,7 @@
   <key>info_sort_dir</key><integer>1</integer>
   <key>title</key><string>Perl</string>
   <key>version</key><integer>6</integer>
-  <key>order</key><integer>16</integer>
+  <key>order</key><integer>17</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

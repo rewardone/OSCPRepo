@@ -6,6 +6,7 @@
   <key>duplicate_of</key><string>835f7c00-ebdb-433e-ba42-bcfbdfabe120</string>
   <key>nodeid</key><string>16eadbe4-e8cb-49bf-a11c-1dc6b4436423</string>
   <key>modified_time</key><integer>1515786574</integer>
+  <key>expanded2</key><false/>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1515786574</integer>
   <key>info_sort_dir</key><integer>1</integer>

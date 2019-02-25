@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>XML BOM</title>
+</head><body>https://www.w3.org/TR/xml/#sec-guessing<br/>
+<br/>
+<br/>
+Before an XML processor can read the internal label, however, it apparently has to know what character encoding is in use—which is what the internal label is trying to indicate. Two cases may be distinguished, depending on whether the XML entity is presented to the processor without, or with, any accompanying (external) information. We will consider these cases in turn.<br/>
+<br/>
+F.1 Detection Without External Encoding Information<br/>
+Because each XML entity not accompanied by external encoding information and not in UTF-8 or UTF-16 encoding must begin with an XML encoding declaration, in which the first characters must be '&lt;?xml', any conforming processor can detect, after two to four octets of input, which of the following cases apply. In reading this list, it may help to know that in UCS-4, '&lt;' is " #x0000003C " and '?' is " #x0000003F ", and the Byte Order Mark required of UTF-16 data streams is " #xFEFF ". The notation ## is used to denote any byte value except that two consecutive ##s cannot be both 00.<br/>
+<br/>
+With a Byte Order Mark:<br/>
+00 00 FE FF &#09;UCS-4, big-endian machine (1234 order)<br/>
+FF FE 00 00 &#09;UCS-4, little-endian machine (4321 order)<br/>
+00 00 FF FE &#09;UCS-4, unusual octet order (2143)<br/>
+FE FF 00 00 &#09;UCS-4, unusual octet order (3412)<br/>
+FE FF ## ## &#09;UTF-16, big-endian<br/>
+FF FE ## ## &#09;UTF-16, little-endian<br/>
+EF BB BF &#09;UTF-8<br/>
+<br/>
+Without a Byte Order Mark:<br/>
+00 00 00 3C &#09;UCS-4 or other encoding with a 32-bit code unit and ASCII characters encoded as ASCII values, in respectively big-endian (1234), little-endian (4321) and two unusual byte orders (2143 and 3412). The encoding declaration must be read to determine which of UCS-4 or other supported 32-bit encodings applies.<br/>
+3C 00 00 00<br/>
+00 00 3C 00<br/>
+00 3C 00 00<br/>
+00 3C 00 3F &#09;UTF-16BE or big-endian ISO-10646-UCS-2 or other encoding with a 16-bit code unit in big-endian order and ASCII characters encoded as ASCII values (the encoding declaration must be read to determine which)<br/>
+3C 00 3F 00 &#09;UTF-16LE or little-endian ISO-10646-UCS-2 or other encoding with a 16-bit code unit in little-endian order and ASCII characters encoded as ASCII values (the encoding declaration must be read to determine which)<br/>
+3C 3F 78 6D &#09;UTF-8, ISO 646, ASCII, some part of ISO 8859, Shift-JIS, EUC, or any other 7-bit, 8-bit, or mixed-width encoding which ensures that the characters of ASCII have their normal positions, width, and values; the actual encoding declaration must be read to detect which of these applies, but since all of these encodings use the same bit patterns for the relevant ASCII characters, the encoding declaration itself may be read reliably<br/>
+4C 6F A7 94 &#09;EBCDIC (in some flavor; the full encoding declaration must be read to tell which code page is in use)<br/>
+Other&#09;UTF-8 without an encoding declaration, or else the data stream is mislabeled (lacking a required encoding declaration), corrupt, fragmentary, or enclosed in a wrapper of some kind</body></html>

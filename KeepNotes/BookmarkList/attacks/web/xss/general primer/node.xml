@@ -5,6 +5,7 @@
   <key>title</key><string>General Primer</string>
   <key>nodeid</key><string>36a89838-5a7a-422d-914e-b2d0d10e70b6</string>
   <key>modified_time</key><integer>1522078138</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1521476046</integer>

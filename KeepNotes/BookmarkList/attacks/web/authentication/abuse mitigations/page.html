@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Abuse Mitigations</title>
+</head><body><b>Primary Defenses</b><br/>
+It should be noted that defense mechanisms are intended to be used in a layered approach. In most cases, a single defense option would be inadequate to stop most Credential Stuffing attacks.<br/>
+<br/>
+In many cases, brute force protections will overlap with credential stuffing defenses.<br/>
+<br/>
+<b>Defense Option 1: Multi-Factor Authentication</b><br/>
+True multi-factor authentication is the best defense against Credential Stuffing attacks, but can have significant deployment and usability impacts, and so is frequently not a feasible option. If this defense is not feasible for your application, consider adopting as many of these other defenses as you can.<br/>
+<br/>
+<b>Defense Option 2: Multi-Step Login Process</b><br/>
+Most of the automated account validation we've seen is using single step validation and checking for a success conditions. By forcing the client to render the response and include that in the next request (and including <a href="https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md">Synchronizer (CSRF) Tokens</a>), we are just eliminating the basic attempts. It's not comprehensive.<br/>
+<br/>
+<b>Defense Option 3: IP blacklists</b><br/>
+Because the attacker requests will likely originate from a few (or one) IP, addresses attempting to log into multiple accounts can be blocked or sandboxed.<br/>
+<br/>
+Further, login monitoring with IP tracking could be used to eliminate (most) false positives. Use the last several IPs that the user's account logged in from and compare them to the suspected "bad" IP.<br/>
+<br/>
+Making the IP bans temporary, say 15 minutes, would reduce the negative impact to the customer and business services (who would have to fix false positives) significantly.<br/>
+<br/>
+<b>Defense Option 4: Device Fingerprinting</b><br/>
+By running some simple JavaScript device information collections, you can learn certain things about the device(s) used to log into each account. If a Windows(OS)/English(Language)/Chrome(Browser) device logged in the last 5 times, and we have a new geolocation source with Linux/FireFox/Spanish, then we can be pretty certain that the user is not the original one (other options include time zones, last login times, user agents, plugins version, flash, etc).<br/>
+<br/>
+The most simple implementation, while minimizing reduction in effectiveness, would be <b>Operating System + Geolocation + Language</b>.<br/>
+<br/>
+How you deal with mismatches is also a major consideration. If you are performing complex device fingerprinting, using many variables, then more severe actions might be taken, such as locking the account.<br/>
+<br/>
+Using simple fingerprinting, with maybe 2 or 3 variables would require that less stringent actions be taken, due to it's higher likelihood of a false positive. In this case, maybe the source IP is blocked if it attempts more than 3 user IDs.<br/>
+<br/>
+<b>Defense Option 5: Disallow Email Addresses as User IDs</b><br/>
+In many cases, credential reuse is an issue because user IDs are the same on multiple sites. In most cases, they are the email address of the user, for usability. This is an obvious problem when considering Credential Stuffing. One possible approach is to avoid use of email addresses as userids. Not using email addresses as userids also helps prevent spearfishing attacks against such users, because the email associated with the user account is far less obvious.</body></html>

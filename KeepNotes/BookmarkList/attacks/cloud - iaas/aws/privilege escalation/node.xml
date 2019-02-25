@@ -5,7 +5,7 @@
   <key>title</key><string>Privilege Escalation</string>
   <key>nodeid</key><string>b2a8d5a7-feb8-4527-a869-5785223156fd</string>
   <key>modified_time</key><integer>1548778815</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1548777162</integer>

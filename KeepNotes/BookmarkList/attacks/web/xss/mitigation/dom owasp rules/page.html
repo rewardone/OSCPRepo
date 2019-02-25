@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DOM OWASP Rules</title>
+</head><body><b>RULE #1 - HTML Escape then JavaScript Escape Before Inserting Untrusted Data into HTML Subcontext within the Execution Context</b><br/>
+There are several methods and attributes which can be used to directly render HTML content within JavaScript. These methods constitute the HTML Subcontext within the Execution Context. If these methods are provided with untrusted input, then an XSS vulnerability could result. For example:<br/>
+<br/>
+Example Dangerous HTML Methods<br/>
+Attributes<br/>
+&nbsp;element.innerHTML = "&lt;HTML&gt; Tags and markup";<br/>
+&nbsp;element.outerHTML = "&lt;HTML&gt; Tags and markup";<br/>
+Methods<br/>
+&nbsp;document.write("&lt;HTML&gt; Tags and markup");<br/>
+&nbsp;document.writeln("&lt;HTML&gt; Tags and markup");<br/>
+<br/>
+Guideline<br/>
+To make dynamic updates to HTML in the DOM safe, we recommend:<br/>
+HTML encoding, and then JavaScript encoding all untrusted input, as shown in these examples:<br/>
+&nbsp;element.innerHTML = "&lt;%=Encoder.encodeForJS(Encoder.encodeForHTML(untrustedData))%&gt;";<br/>
+&nbsp;element.outerHTML = "&lt;%=Encoder.encodeForJS(Encoder.encodeForHTML(untrustedData))%&gt;";<br/>
+&nbsp;document.write("&lt;%=Encoder.encodeForJS(Encoder.encodeForHTML(untrustedData))%&gt;");<br/>
+&nbsp;document.writeln("&lt;%=Encoder.encodeForJS(Encoder.encodeForHTML(untrustedData))%&gt;");<br/>
+<br/>
+Note: The Encoder.encodeForHTML() and Encoder.encodeForJS() are just notional encoders. Various options for actual encoders are listed later in this document.<br/>
+<b><br/>
+<br/>
+</b><b>RULE #2 - JavaScript Escape Before Inserting Untrusted Data into HTML Attribute Subcontext within the Execution Context</b><br/>
+The HTML attribute subcontext within the execution context is divergent from the standard encoding rules. This is because the rule to HTML attribute encode in an HTML attribute rendering context is necessary in order to mitigate attacks which try to exit out of an HTML attributes or try to add additional attributes which could lead to XSS.<br/>
+<br/>
+When you are in a DOM execution context you only need to JavaScript encode HTML attributes which do not execute code (attributes other than event handler, CSS, and URL attributes).<br/>
+<br/>
+For example, the general rule is to HTML Attribute encode untrusted data (data from the database, HTTP request, user, back-end system, etc.) placed in an HTML Attribute. This is the appropriate step to take when outputting data in a rendering context, however using HTML Attribute encoding in an execution context will break the application display of data.<br/>
+<br/>
+SAFE but BROKEN example<br/>
+&nbsp;var x = document.createElement("input");<br/>
+&nbsp;x.setAttribute("name", "company_name");<br/>
+&nbsp;// In the following line of code, companyName represents untrusted user input<br/>
+&nbsp;// The Encoder.encodeForHTMLAttr() is unnecessary and causes double-encoding<br/>
+&nbsp;x.setAttribute("value", '&lt;%=Encoder.encodeForJS(Encoder.encodeForHTMLAttr(companyName))%&gt;');<br/>
+&nbsp;var form1 = document.forms[0];<br/>
+&nbsp;form1.appendChild(x);<br/>
+<br/>
+The problem is that if companyName had the value “Johnson &amp; Johnson”. What would be displayed in the input text field would be “Johnson &amp; Johnson”. The appropriate encoding to use in the above case would be only JavaScript encoding to disallow an attacker from closing out the single quotes and in-lining code, or escaping to HTML and opening a new script tag.<br/>
+<br/>
+SAFE and FUNCTIONALLY CORRECT example<br/>
+&nbsp;var x = document.createElement("input");<br/>
+&nbsp;x.setAttribute("name", "company_name");<br/>
+&nbsp;x.setAttribute("value", '&lt;%=Encoder.encodeForJS(companyName)%&gt;');<br/>
+&nbsp;var form1 = document.forms[0];<br/>
+&nbsp;form1.appendChild(x);<br/>
+It is important to note that when setting an HTML attribute which does not execute code, the value is set directly within the object attribute of the HTML element so there is no concerns with injecting up.<br/>
+<br/>
+<br/>
+<b>RULE #3 - Be Careful when Inserting Untrusted Data into the Event Handler and JavaScript code Subcontexts within an Execution Context</b><br/>
+Putting dynamic data within JavaScript code is especially dangerous because JavaScript encoding has different semantics for JavaScript encoded data when compared to other encodings. In many cases, JavaScript encoding does not stop attacks within an execution context. For example, a JavaScript encoded string will execute even though it is JavaScript encoded.<br/>
+<br/>
+Therefore, the primary recommendation is to avoid including untrusted data in this context. If you must, the following examples describe some approaches that do and do not work.<br/>
+<br/>
+var x = document.createElement("a");<br/>
+x.href="#";<br/>
+// In the line of code below, the encoded data on the right (the second argument to setAttribute)<br/>
+// is an example of untrusted data that was properly JavaScript encoded but still executes.<br/>
+x.setAttribute("onclick", "\u0061\u006c\u0065\u0072\u0074\u0028\u0032\u0032\u0029");<br/>
+var y = document.createTextNode("Click To Test");<br/>
+x.appendChild(y);<br/>
+document.body.appendChild(x);<br/>
+<br/>
+The setAttribute(name_string,value_string) method is dangerous because it implicitly coerces the value_string into the DOM attribute datatype of name_string.<br/>
+<br/>
+In the case above, the attribute name is an JavaScript event handler, so the attribute value is implicitly converted to JavaScript code and evaluated. In the case above, JavaScript encoding does not mitigate against DOM based XSS.<br/>
+<br/>
+Other JavaScript methods which take code as a string types will have a similar problem as outline above (setTimeout, setInterval, new Function, etc.). This is in stark contrast to JavaScript encoding in the event handler attribute of a HTML tag (HTML parser) where JavaScript encoding mitigates against XSS.<br/>
+<br/>
+&lt;!-- Does NOT work &nbsp;--&gt;<br/>
+&lt;a id="bb" href="#" onclick="\u0061\u006c\u0065\u0072\u0074\u0028\u0031\u0029"&gt; Test Me&lt;/a&gt;<br/>
+<br/>
+An alternative to using Element.setAttribute(...) to set DOM attributes is to set the attribute directly. Directly setting event handler attributes will allow JavaScript encoding to mitigate against DOM based XSS. Please note, it is always dangerous design to put untrusted data directly into a command execution context.<br/>
+<br/>
+&lt;a id="bb" href="#"&gt; Test Me&lt;/a&gt;<br/>
+<br/>
+//The following does NOT work because the event handler is being set to a string. &nbsp;<br/>
+//"alert(7)" is JavaScript encoded.<br/>
+document.getElementById("bb").onclick = "\u0061\u006c\u0065\u0072\u0074\u0028\u0037\u0029";<br/>
+<br/>
+//The following does NOT work because the event handler is being set to a string.<br/>
+document.getElementById("bb").onmouseover = "testIt";<br/>
+<br/>
+//The following does NOT work because of the encoded "(" and ")". <br/>
+//"alert(77)" is JavaScript encoded.<br/>
+document.getElementById("bb").onmouseover = \u0061\u006c\u0065\u0072\u0074\u0028\u0037\u0037\u0029;<br/>
+<br/>
+//The following does NOT work because of the encoded ";". <br/>
+//"testIt;testIt" is JavaScript encoded.<br/>
+document.getElementById("bb").onmouseover = \u0074\u0065\u0073\u0074\u0049\u0074\u003b\u0074\u0065\u0073\u0074\u0049\u0074;<br/>
+<br/>
+//The following DOES WORK because the encoded value is a valid variable name or function reference. &nbsp;<br/>
+//"testIt" is JavaScript encoded<br/>
+document.getElementById("bb").onmouseover = \u0074\u0065\u0073\u0074\u0049\u0074;<br/>
+<br/>
+function testIt() {<br/>
+&nbsp; &nbsp;alert("I was called.");<br/>
+}<br/>
+<br/>
+There are other places in JavaScript where JavaScript encoding is accepted as valid executable code.<br/>
+<br/>
+&nbsp;for(var \u0062=0; \u0062 &lt; 10; \u0062++){<br/>
+&nbsp; &nbsp; &nbsp;\u0064\u006f\u0063\u0075\u006d\u0065\u006e\u0074<br/>
+&nbsp; &nbsp; &nbsp;.\u0077\u0072\u0069\u0074\u0065\u006c\u006e<br/>
+&nbsp; &nbsp; &nbsp;("\u0048\u0065\u006c\u006c\u006f\u0020\u0057\u006f\u0072\u006c\u0064");<br/>
+&nbsp;}<br/>
+&nbsp;\u0077\u0069\u006e\u0064\u006f\u0077<br/>
+&nbsp;.\u0065\u0076\u0061\u006c<br/>
+&nbsp;\u0064\u006f\u0063\u0075\u006d\u0065\u006e\u0074<br/>
+&nbsp;.\u0077\u0072\u0069\u0074\u0065(111111111);<br/>
+<br/>
+or<br/>
+<br/>
+&nbsp;var s = "\u0065\u0076\u0061\u006c";<br/>
+&nbsp;var t = "\u0061\u006c\u0065\u0072\u0074\u0028\u0031\u0031\u0029";<br/>
+&nbsp;window[s](t);<br/>
+<br/>
+Because JavaScript is based on an international standard (ECMAScript), JavaScript encoding enables the support of international characters in programming constructs and variables in addition to alternate string representations (string escapes).<br/>
+<br/>
+However the opposite is the case with HTML encoding. HTML tag elements are well defined and do not support alternate representations of the same tag. So HTML encoding cannot be used to allow the developer to have alternate representations of the &lt;a&gt; tag for example.<br/>
+<br/>
+<b>HTML Encoding’s Disarming Nature</b><br/>
+In general, HTML encoding serves to castrate HTML tags which are placed in HTML and HTML attribute contexts. Working example (no HTML encoding):<br/>
+<br/>
+&lt;a href="..." &gt;<br/>
+Normally encoded example (Does Not Work – DNW):<br/>
+<br/>
+&amp;#x3c;a href=... &amp;#x3e;<br/>
+HTML encoded example to highlight a fundamental difference with JavaScript encoded values (DNW):<br/>
+<br/>
+&lt;&amp;#x61; href=...&gt;<br/>
+If HTML encoding followed the same semantics as JavaScript encoding. The line above could have possibily worked to render a link. This difference makes JavaScript encoding a less viable weapon in our fight against XSS.<br/>
+<br/>
+<br/>
+<br/>
+<b>RULE #4 - JavaScript Escape Before Inserting Untrusted Data into the CSS Attribute Subcontext within the Execution Context</b><br/>
+Normally executing JavaScript from a CSS context required either passing javascript:attackCode() to the CSS url() method or invoking the CSS expression() method passing JavaScript code to be directly executed.<br/>
+<br/>
+From my experience, calling the expression() function from an execution context (JavaScript) has been disabled. In order to mitigate against the CSS url() method, ensure that you are URL encoding the data passed to the CSS url() method.<br/>
+<br/>
+document.body.style.backgroundImage = "url(&lt;%=Encoder.encodeForJS(Encoder.encodeForURL(companyName))%&gt;)";<br/>
+<br/>
+<br/>
+<b>RULE #5 - URL Escape then JavaScript Escape Before Inserting Untrusted Data into URL Attribute Subcontext within the Execution Context</b><br/>
+The logic which parses URLs in both execution and rendering contexts looks to be the same. Therefore there is little change in the encoding rules for URL attributes in an execution (DOM) context.<br/>
+<br/>
+var x = document.createElement("a");<br/>
+x.setAttribute("href", '&lt;%=Encoder.encodeForJS(Encoder.encodeForURL(userRelativePath))%&gt;');<br/>
+var y = document.createTextElement("Click Me To Test");<br/>
+x.appendChild(y);<br/>
+document.body.appendChild(x);<br/>
+<br/>
+If you utilize fully qualified URLs then this will break the links as the colon in the protocol identifier (http: or javascript:) will be URL encoded preventing the http and javascript protocols from being invoked.<br/>
+<br/>
+<b>RULE #6 - Populate the DOM using safe JavaScript functions or properties</b><br/>
+The most fundamental safe way to populate the DOM with untrusted data is to use the safe assignment property textContent.<br/>
+<br/>
+Here is an example of safe usage.<br/>
+<br/>
+&lt;script&gt;<br/>
+element.textContent = untrustedData; &nbsp;//does not execute code<br/>
+&lt;/script&gt;<br/>
+<br/>
+<br/>
+<b>RULE #7 - Fixing DOM Cross-site Scripting Vulnerabilities</b><br/>
+The best way to fix DOM based cross-site scripting is to use the right output method (sink). For example if you want to use user input to write in a div tag element don’t use innerHtml, instead use innerText or textContent. This will solve the problem, and it is the right way to re-mediate DOM based XSS vulnerabilities.<br/>
+<br/>
+It is always a bad idea to use a user-controlled input in dangerous sources such as eval. 99% of the time it is an indication of bad or lazy programming practice, so simply don’t do it instead of trying to sanitize the input.<br/>
+<br/>
+Finally, to fix the problem in our initial code, instead of trying to encode the output correctly which is a hassle and can easily go wrong we would simply use element.textContent to write it in a content like this:<br/>
+<br/>
+&lt;b&gt;Current URL:&lt;/b&gt; &lt;span id="contentholder"&gt;&lt;/span&gt;<br/>
+...<br/>
+&lt;script&gt;<br/>
+document.getElementById("contentholder").textContent = document.baseURI;<br/>
+&lt;/script&gt;<br/>
+<br/>
+It does the same thing but this time it is not vulnerable to DOM based cross-site scripting vulnerabilities.<br/>
+<br/>
+</body></html>

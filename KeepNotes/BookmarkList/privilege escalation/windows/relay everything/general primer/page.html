@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>In certain configurations, Windows automatically attempts to authenticate to services using NTLM hashes or other authentication. Under certain circumstances, these credentials can be intercepted and relayed to a server or service and allow an attacker to authenticate with the permissions of the relayed credentials. <br/>
+<br/>
+Two things to consider when relaying authentication. <br/>
+<b>What service is performing the authentication?</b>&nbsp;Most of the time, services are authenticating using SMB. This means one additional consideration needs to be taken into account. <br/>
+<b>Is SMB signing enabled?</b>&nbsp;If so, then a relay will not work. <br/>
+<br/>
+The exchange relay works because it is relaying from HTTP, not SMB, and can bypass SMB signing. <br/>
+<br/>
+<b>Technical Notes</b><br/>
+The difference between NTLM authentication in SMB and HTTP lies in the flags that are negotiated by default. The problematic part is the NTLMSSP_NEGOTIATE_SIGN flag (0x00000010), documented in <a href="https://msdn.microsoft.com/en-us/library/cc236650.aspx">MS-NLMP section 2.2.2.5</a>. NTLM authentication over HTTP does not set this flag by default, but if it is used over SMB this flag will be set by default:<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+When we relay this to LDAP the auth will succeed, but LDAP will expact all messages to be signed with a session key derived from the password. It will ignore any messages without the signature, causing the attack to fail. Modifying flags in transit won't work on modern versions of Windows since they include a MIC (Message Integrity Code) by default, which is a signature based on all 3 NTLM messages (meaning any modification in any of the messages will make it invalid). <br/>
+<br/>
+What about removing the MIC? It can be done since the MIC is not in a protected part of the NTLM message; however, there is one additional layer of protection in NTLM authentication (NTLMv2 only). Deep within the NTLMv2 response, which is in itself signed, there is an AV_PAIR structure which is called MsvAvFlags. When this field has the value 0x002, it indicates that the client sent a MIC along with the type 3 message. Modifying the NTLMv2 response will invalidate the authentication, and not including the MIC when the flag is specified will also invalidate the authentication. <br/>
+<br/>
+Custom appliances implementing NTLM may not include these flags, such as in the <a href="https://conference.hitb.org/hitbsecconf2018dxb/materials/D2T2%20-%20NTLM%20Relay%20Is%20Dead%20Long%20Live%20NTLM%20Relay%20-%20Jianing%20Wang%20and%20Junyu%20Zhou.pdf">Java implementation</a>, so it is important to know how exactly these protections work together. <br/>
+</body></html>

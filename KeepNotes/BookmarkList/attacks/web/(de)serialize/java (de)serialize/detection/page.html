@@ -71,4 +71,21 @@ These are the serialized objects.<br/>
 <br/>
 Sometimes an HTTP header needs to be included in requests. <br/>
 Content-Type: application/x-java-serialized-object<br/>
-</body></html>
+<br/>
+<br/>
+<b>WhiteBox Review</b><br/>
+Be aware of the following Java API uses for potential serilization vulnerability.<br/>
+<br/>
+1. XMLdecoder with external user defined parameters<br/>
+2. XStream with fromXML method (xstream version &lt;= v1.46 is vulnerable to the serialization issue)<br/>
+3. ObjectInputSteam with readObject<br/>
+4. Uses of readObject, readObjectNodData, readResolve or readExternal<br/>
+5. ObjectInputStream.readUnshared<br/>
+6. Serializable<br/>
+<br/>
+<b>BlackBox Review</b><br/>
+If the captured traffic data include the following patterns may suggest that the data was sent in Java serialization streams<br/>
+<br/>
+AC ED 00 05 in Hex<br/>
+rO0 in Base64<br/>
+Content-type header of an HTTP response set to application/x-java-serialized-object</body></html>

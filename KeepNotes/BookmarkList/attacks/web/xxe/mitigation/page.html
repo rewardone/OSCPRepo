@@ -3,7 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Mitigation</title>
-</head><body>Many XML parsing libraries, including the one that comes with the Java Development Kit, allow external entities by default. Removing the vulnerability is as simple as configuring the parser to not allow external entities to be defined.<br/>
+</head><body><b>Disable External Entities</b><br/>
+Many XML parsing libraries, including the one that comes with the Java Development Kit, allow external entities by default. Removing the vulnerability is as simple as configuring the parser to not allow external entities to be defined.<br/>
 <br/>
 The most robust method to protect against XXE is to configure the applications XML parser to not allow DOCTYPE declarations. This is done by setting the parsers “disallow-doctype-decl” parameter to true.<br/>
 <br/>
@@ -11,4 +12,5 @@ Figure 15 will allow DOCTYPE declarations but not external general entities to b
 <li style="list-style-type: none">parser.setFeature("http://xml.org/sax/features/external-general-entities", false)</li>
 <li style="list-style-type: none"></li>
 </ul>
-</body></html>
+<b>Disable External DTD Schemas</b>&nbsp;<br/>
+Including External DTD Schemas may include a document that references an external entity, and therefore should be considered dangerous. </body></html>

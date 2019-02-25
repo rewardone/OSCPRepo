@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Double Submit Cookie</string>
+  <key>nodeid</key><string>809e7c61-c2e6-4b2c-a74b-d94907b0f50b</string>
+  <key>modified_time</key><integer>1550852344</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1550852322</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

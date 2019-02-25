@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Bypass Defenses</string>
+  <key>nodeid</key><string>b911c12e-c4fa-40bf-9018-c7ff34c7d420</string>
+  <key>modified_time</key><integer>1550071421</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1550000119</integer>
+  <key>order</key><integer>5</integer>
+</dict>
+</node>

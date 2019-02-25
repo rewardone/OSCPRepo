@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body><b>Maintain control of critical records</b><br/>
+Oh alright, there are easily deployed defenses and one of them actually involves using a wildcard record to your advantage. The simplest way to disrupt potential ADIDNS spoofing is to <b>maintain control of critical records.</b>&nbsp;For example, creating a static wildcard record as an administrator will prevent unprivileged accounts from creating their own wildcard record.<br/>
+<br/>
+PS C:\Users\kevin\Desktop\Powermad&gt; New-ADIDNSNode -Node * -Tombstone -Verbose<br/>
+VERBOSE: [+] Domain Controller = Inveigh-DC1.inveigh.net<br/>
+VERBOSE: [+] Domain = inveigh.net<br/>
+VERBOSE: [+] ADIDNS Zone = inveigh.net<br/>
+VERBOSE: [+] Distinguished Name = DC=*,DC=inveigh.net,CN=MicrosoftDNS,DC=DomainDNSZones,DC=inveigh,DC=net<br/>
+VERBOSE: [+] Data = 192.168.125.100<br/>
+VERBOSE: [+] DNSRecord Array = 04-00-01-00-05-F0-00-00-BD-00-00-00-00-00-02-58-00-00-00-00-20-D8-37-00-C0-A8-7D-64<br/>
+[-] Exception calling "SendRequest" with "1" argument(s): "The object exists."<br/>
+<br/>
+The records can be pointed at your black-hole method of choice, such as 0.0.0.0.<br/>
+<br/>
+An added bonus of an administrator controlled wildcard record is that the record will also disrupt LLMNR/NBNS spoofing. The wildcard will satisfy all name requests for a zone through DNS and prevent requests from falling down to LLMNR/NBNS. I would go so far as to recommend administrator controlled wildcard records as a general defense for LLMNR/NBNS spoofing.<br/>
+<br/>
+<b>Harden the ADIDNS DACL</b><br/>
+You can also modify an ADIDNS zone’s DACL to be more restrictive. The appropriate settings are environment specific. Fortunately, the likelihood of having an actual requirement for allowing ‘Authenticated Users’ to create records is probably pretty low. So, there certainly may be room for DACL hardening. Just keep in mind that limiting record creation to only administrators and machine accounts may still leave a lot of opportunities for attack without also maintaining control of critical records.</body></html>

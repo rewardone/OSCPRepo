@@ -24,14 +24,14 @@ Cookies<br/>
 Persistent data supplied by users, and retrieved at a later date (such as from databases)<br/>
 The following methods or design considerations can be implemented by developers to better secure their application against HTTP based attacks, not just CSS.<br/>
 <br/>
-Limit Server Responses<br/>
+<b>Limit Server Responses</b><br/>
 In many cases it may be possible to limit the amount of “personalised” data that will be returned to client browsers through the use of generic responses. <br/>
 For example, consider a site that that displays the greeting “Hello, Gunter!” in response to http://trusted.org/greeting.jsp?name=Gunter. It would be a preferable security option to sacrifice this dynamic response with a hard-coded response such as “Hello, User!”<br/>
 <br/>
-Enforce Response Lengths<br/>
+<b>Enforce Response Lengths</b><br/>
 For the majority of applications, the developer should be able to limit the maximum length of any user-supplied strings. Although initially enforced at the client-side, all strings should also be checked at the server-side. Where possible, enforce the limitation of the maximum necessary string length by truncating any longer responses.<br/>
 <br/>
-HTTP Referer<br/>
+<b>HTTP Referer</b><br/>
 As part of the HTTP standard, provision is made for a field header called “referer”. When a client browser follows a link or submits form data, the referer field should contain the URL of the page that the link or data came from. If possible, the web application should check the referer field and reject data if it didn’t come from the correct host or link.<br/>
 <br/>
 HTTP Referer<br/>
@@ -56,7 +56,7 @@ HTTP POST not GET<br/>
 In the majority of cases, remote code insertion attacks are likely to be through the submission of user data in HTML forms. One prevention step is to ensure that form submission is only ever done through HTTP POST requests. Allowing HTTP GET request submissions will allow potentially attackers to craft distributable URL’s containing the offending code. <br/>
 When coding the server-side application, it is extremely important to ensure that the client-side data can only be received through HTTP POST variables. Most web hosting applications will indicate the variable delivery method.<br/>
 <br/>
-HTTP POST not GET<br/>
+<b>HTTP POST not GET</b><br/>
 Forcing the use of HTTP POST over GET is a simple process and easy to implement.<br/>
 Advantages:<br/>
 Almost always removes the threat of URL based code insertion attacks.<br/>
@@ -65,7 +65,7 @@ Application users may not be able to save URLs to their favourites for quick acc
 Cookie Inspection<br/>
 Many applications utilise cookies for managing the state of the communication, and local storage of information relevant to the user. Application developers must ensure that all cookie information is thoroughly checked and filtered before insertion into the HTML documents. Attackers modifying persistent cookies can also make their attacks persistent.<br/>
 <br/>
-URL Session Identifier<br/>
+<b>URL Session Identifier</b><br/>
 In some circumstances, the use of a unique session identifier for each valid user can be used to prevent remote exploitation of URL based code insertion attacks. <br/>
 As a user arrives at the web site, they are automatically allocated a unique session ID. This session ID can ONLY be obtained from one page on the site (usually the start/home page). Should a visitor try to access any other page within the site without a valid session ID, they are automatically redirected to the start page and issued one. <br/>
 Should an attacker discover a CSS flaw with one application component, any crafted exploit URL will have to contain a valid session ID. By rigorously controlling the session ID timeout, the attacker will not be able make use of the flaw (other than affecting the attacker locally) outside of this period. <br/>
@@ -135,7 +135,7 @@ Applying the appropriate solution efficiently is dependant upon the language use
 <br/>
 Depending upon the application, and the particular phase of operation, it may be necessary to use different techniques to handle the special characters. In most instances input or output filtering will be sufficient. However, if particular client data submissions are likely to contain special characters (e.g. a complex database search query), it may be necessary to encode the resultant data for presentation back to the client.<br/>
 <br/>
-Encode output based upon input parameters<br/>
+<b>Encode output based upon input parameters</b><br/>
 In this method, any non-validated user data is always encoded to the appropriate HTML characters as it is written back to the user. For instance the character “&lt;“ would be encoded as “&amp;lt” and, although appearing to the user as the less-than character, would not be interpreted by the client application as the start of a HTML tag.<br/>
 <br/>
 If a web page uses the UFT-7 character encoding, there are several different strings which will act as a ‘&lt;’ character and start an HTML tag; all of these strings start with a ‘+’. It is also important that the use of the”%” encoding character be carefully monitored, as it can be used to escape-encode or Unicode special characters that will be correctly interpreted the client web browser. There are many methods of encoding text and special characters. A detailed analysis can be found in the earlier paper, “URL Encoded Attacks”.<br/>
@@ -153,14 +153,14 @@ Server.HTMLEncode(Request.Form("UserName")) + <br/>
 <br/>
 With Microsoft’s ASP, the HTMLEncode call will automatically prevent any script in it from being executed.<br/>
 <br/>
-Filter input parameters for special characters.<br/>
+<b>Filter input parameters for special characters.</b><br/>
 Input filtering works by removing some or all special characters from user supplied data as it reaches the server-side application components. Although it is possible to implement client-side input filtering, this should never be relied upon as it is often a trivial exercise for an attacker to bypass it. Even if implemented at the client-side, the server-side processes should carry out the same input filtering processes.<br/>
 <br/>
 The recommended method of implementing input filtering is to only select from the set of characters that is known to be safe rather than excluding the named special characters. This method is referred to as Positive filtering, and by only selecting the characters that are acceptable, it will help to reduce the ability to exploit other yet unknown vulnerabilities.<br/>
 <br/>
 For example, a form field that is expecting a person's age can be limited to the set of digits 0 through 9. There is no reason for this age element to accept any letters or other special characters.<br/>
 <br/>
-Filter output based upon input parameters for special characters<br/>
+<b>Filter output based upon input parameters for special characters</b><br/>
 Output filtering functions similarly to Input filtering, except that special characters are filtered from the data at the server-side application before being sent to the client web browser. This technique should be used when data is retrieved from databases or storage formats, particularly when there is a probability that non-filtered content could have been added by other applications or system processes.<br/>
 <br/>
 Special care should be taken when using Output filtering. If the application outputs HTML content, vigilance is required to ensure that special character filtering is restricted to data that has been previously supplied by a user and stored in a database. Filtering the special characters “&lt;“ and “&gt;“ too early in the process is likely to render the client HTML document useless.<br/>
@@ -184,4 +184,10 @@ don't use mod_security &nbsp;until filters are better<br/>
 <b>For sanitizing HTML, use HTMLPurifier/Antisamy, or use templating systems</b>!<br/>
 If you have build/maintain an IDS/WAF, set up a demo site where the filters can be tested and bypasses submitted, please...<br/>
 Don't trust your IDS, it can and will be bypassed!<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Do NOT simply escape the list of example characters provided in the various rules. It is NOT sufficient to escape only that list. Blacklist approaches are quite fragile. The whitelist rules here have been carefully designed to provide protection even against future vulnerabilities introduced by browser changes.<br/>
+<br/>
 </body></html>

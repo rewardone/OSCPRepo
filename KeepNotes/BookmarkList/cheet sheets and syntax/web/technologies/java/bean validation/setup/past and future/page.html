@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Past and Future</title>
+</head><body><b>@Past / @Future<br/>
+</b><b>Annotation:</b><br/>
+@Past, @Future<br/>
+<br/>
+<b>Data Type:</b><br/>
+java.util.Date, java.util.Calendar, java.time.chrono.ChronoZonedDateTime, java.time.Instant, java.time.OffsetDateTime<br/>
+<br/>
+<b>Use:</b><br/>
+Checks whether the annotated date is in the past / future<br/>
+<br/>
+<b>Reference:</b><br/>
+<a href="http://docs.jboss.org/hibernate/validator/5.2/reference/en-US/html/ch02.html#section-builtin-constraints">Documentation</a><br/>
+<br/>
+Model:<br/>
+import org.hibernate.validator.constraints.Past;<br/>
+import org.hibernate.validator.constraints.Future;<br/>
+<br/>
+public class DoctorVisit {<br/>
+&nbsp;<br/>
+&nbsp; &nbsp;//Constraint: Birthdate must be in the past<br/>
+&nbsp; &nbsp;@Past<br/>
+&nbsp; &nbsp;private Date birthDate;<br/>
+<br/>
+&nbsp; &nbsp;public Date getBirthDate() {<br/>
+&nbsp; &nbsp; &nbsp; return birthDate;<br/>
+&nbsp; &nbsp;}<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp;public void setBirthDate(Date birthDate) {<br/>
+&nbsp; &nbsp; &nbsp; this.birthDate = birthDate;<br/>
+&nbsp; &nbsp;}<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp;//Constraint: Schedule visit date must be in the future<br/>
+&nbsp; &nbsp;@Future<br/>
+&nbsp; &nbsp;private String scheduledVisitDate;<br/>
+<br/>
+&nbsp; &nbsp;public String getScheduledVisitDate() {<br/>
+&nbsp; &nbsp; &nbsp; return scheduledVisitDate;<br/>
+&nbsp; &nbsp;}<br/>
+<br/>
+&nbsp; &nbsp;public void setScheduledVisitDate(String scheduledVisitDate) {<br/>
+&nbsp; &nbsp; &nbsp; this.scheduledVisitDate = scheduledVisitDate;<br/>
+&nbsp; &nbsp;}<br/>
+&nbsp;<br/>
+...<br/>
+}<br/>
+<br/>
+<br/>
+Controller:<br/>
+import javax.validation.Valid;<br/>
+import com.company.app.model.DoctorVisit;<br/>
+<br/>
+@Controller<br/>
+public class DoctorVisitController {<br/>
+<br/>
+&nbsp; &nbsp;...<br/>
+<br/>
+&nbsp; &nbsp;@RequestMapping(value="/scheduleVisit", method=RequestMethod.POST)<br/>
+&nbsp; &nbsp;public @ResponseBody String scheduleVisit(@Valid DoctorVisit doctorvisit, BindingResult result, <br/>
+&nbsp; &nbsp;HttpServletResponse response){<br/>
+&nbsp; &nbsp; <br/>
+&nbsp; &nbsp; &nbsp; if(result.hasErrors()){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;String errorMessage = "";<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;response.setStatus(HttpServletResponse.SC_BAD_REQUEST);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;List&lt;ObjectError&gt; errors = result.getAllErrors(); &nbsp; &nbsp;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;for( ObjectError e : errors){<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; errorMessage+= "ERROR: " + e.getDefaultMessage();<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return errorMessage;<br/>
+&nbsp; &nbsp; &nbsp; } <br/>
+&nbsp; &nbsp; &nbsp; else{<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return "Validation Successful";<br/>
+&nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp;}<br/>
+}</body></html>

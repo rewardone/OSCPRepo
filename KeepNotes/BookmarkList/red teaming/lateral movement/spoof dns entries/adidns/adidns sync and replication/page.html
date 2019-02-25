@@ -1,0 +1,9 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ADIDNS Sync and Replication</title>
+</head><body><b>ADIDNS Syncing and Replication</b><br/>
+When modifying an ADIDNS zone through LDAP, you may observe a delay between when the node is added to LDAP and when the record appears in DNS. This is due to the fact that the DNS server service is using its own in-memory copy of the ADIDNS zone. By default, the DNS server will sync the in-memory copy with AD every 180 seconds.<br/>
+<br/>
+In large, multi-site AD infrastructures, domain controller replication time may be a factor in ADIDNS spoofing. To fully leverage the reach of added records within an enterprise, the attack time will need to extend past replication delays. By default, replication between sites can take up to three hours. To cut down on delays, start the attack by targeting the DNS server which will have the biggest impact. Although adding records to each DNS server in an environment in order to jump ahead of replication will work, keep in mind that AD will need to sort out the duplicate objects once replication does take place.</body></html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSH CA</title>
+</head><body>SSH has the ability to operate as a Certificate Authority for easily issuing and managing SSH keys. <br/>
+SSH will attempt to authenticate with a public key and/or corresponding cert. CA checks if it's signed/valid, etc. <br/>
+Part of how it operates is based on AuthorizedPrincipals in the sshd_config. <br/>
+<br/>
+One was a signed key can be generated is with ssh-keygen where:<br/>
+-s is the signing key (CA private key)<br/>
+-n is the Principal name<br/>
+-I (i) is the identity (can be anything)<br/>
+$ ssh-keygen -s /home/userca/ca -n 3m3rgencyB4ckd00r -I PleaseSubscribe root<br/>
+Signed user key root-cert.pub: id "PleaseSubscribe" serial 0 for 3m3rgencyB4ckd00r valid forever<br/>
+<br/>
+This will create private key root, a public cert root-cert.pub, and a public ssh key root.pub. <br/>
+<br/>
+Can view information for a cert.pub with:<br/>
+ssh-keygen -Lf root-cert.pub<br/>
+<br/>
+Will show type, public key, singing CA, valid period, principals, extensions, etc. <br/>
+<br/>
+The principal is tied to a specific user, so the principal presented in the cert will be able to authenticate as the user it's tied to.</body></html>

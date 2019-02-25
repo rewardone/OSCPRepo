@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ADIDNS</title>
+</head><body><b>Active Directory-Integrated DNS Zones</b><br/>
+Domain controllers and ADIDNS zones go hand in hand. Each domain controller will usually have an accessible DNS server hosting at least the default ADIDNS zones. The first<b>&nbsp;default setting</b>&nbsp;I’d like to highlight is the ADIDNS zone discretionary access control list (DACL).<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+As you can see, the zone has ‘Authenticated Users’ with ‘Create all child objects’ listed by default.<br/>
+<br/>
+Notes on Viewing ADIDNS Zones<br/>
+I found that the ADIDNS zones are currently stored in either the DomainDNSZones or ForestDNSZones partitions.<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+LDAP provides a method for ‘Authenticated Users’ to modify an ADIDNS zone without relying on dynamic updates. DNS records can be added to an ADIDNS zone directly through LDAP by creating an AD object of class dnsNode.<br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+<br/>
+Why does this matter? Widlcard Records! Unfortunately, dynamic updates have isssues processing "*", but these can be added directly in LDAP!<br/>
+<br/>
+<br/>
+<b>Why does this work? What's in a Name?</b><br/>
+Taking a step back, let’s look at how DNS nodes are used to form an ADIDNS record. The main structure of the record is stored in the dnsRecord attribute. This attribute defines elements such as the record type, target IP address or hostname, and static vs. dynamic classification.<br/>
+<br/>
+<img src="image 4.png" /><br/>
+<br/>
+All of the key record details outside of the name are stored in dnsRecord. If you are interested, more information for the attribute’s structure can be found in <a href="https://msdn.microsoft.com/en-us/library/cc448821.aspx">MS-DNSP</a>. &nbsp;<br/>
+<br/>
+I created a PowerShell function called New-DNSRecordArray which can create a dnsRecord array for A, AAAA, CNAME, DNAME, MX, NS, PTR, SRV, and TXT record types.<br/>
+<br/>
+PS C:\Users\kevin\Desktop\Powermad&gt; $dnsRecord = New-DNSRecordArray -Type A -Data 192.168.125.100<br/>
+PS C:\Users\kevin\Desktop\Powermad&gt; [System.Bitconverter]::ToString($dnsrecord)<br/>
+04-00-01-00-05-F0-00-00-BA-00-00-00-00-00-02-58-00-00-00-00-79-D8-37-00-C0-A8-7D-64<br/>
+<br/>
+As I previously mentioned, LDAP offers a better view of how DNS records with a matching name are grouped together. A single DNS node can have multiple lines within the dnsRecord attribute. Each line represents a separate DNS record of the same name. Below is an example of the multiple records all contained within the dnsRecord attribute of a node named ‘@’.<br/>
+<br/>
+<img src="image 5.png" /><br/>
+<br/>
+Lines can be added to a node’s dnsRecord attribute by appending rather than overwriting the existing attribute value. The PowerShell function I created to perform attribute edits, Set-ADIDNSNodeAttribute, has an ‘Append’ switch to perform this task.<br/>
+<br/>
+</body></html>

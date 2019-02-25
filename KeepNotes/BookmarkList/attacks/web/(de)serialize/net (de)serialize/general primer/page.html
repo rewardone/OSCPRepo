@@ -20,4 +20,63 @@ System.Windows.Data.ObjectDataProvider <ul><li style="list-style-type: none">set
 </ul>
 <br/>
 <br/>
-</body></html>
+<br/>
+<b>WhiteBox Review</b><br/>
+Search the source code for the following terms:<br/>
+<br/>
+TypeNameHandling<br/>
+JavaScriptTypeResolver<br/>
+<br/>
+Look for any serializers where the type is set by a user controlled variable.<br/>
+<br/>
+<b>BlackBox Review</b><br/>
+Search for the following base64 encoded content that starts with:<br/>
+<br/>
+AAEAAAD/////<br/>
+<br/>
+Search for content with the following text:<br/>
+<br/>
+TypeObject<br/>
+$type:<br/>
+<br/>
+<br/>
+<br/>
+<b>General Precautions</b><br/>
+Don't allow the datastream to define the type of object that the stream will be deserialized to. You can prevent this by for example using the DataContractSerializer or XmlSerializer if at all possible.<br/>
+<br/>
+Where JSON.Net is being used make sure the TypeNameHandling is only set to None.<br/>
+<br/>
+TypeNameHandling = TypeNameHandling.None<br/>
+<br/>
+If JavaScriptSerializer is to be used then do not use it with a JavaScriptTypeResolver.<br/>
+<br/>
+If you must deserialise data streams that define their own type, then restrict the types that are allowed to be deserialized. One should be aware that this is still risky as many native .Net types potentially dangerous in themselves. e.g.<br/>
+<br/>
+System.IO.FileInfo<br/>
+<br/>
+FileInfo objects that reference files actually on the server can when deserialized, change the properties of those files e.g. to read-only, creating a potential denial of service attack.<br/>
+<br/>
+Even if you have limited the types that can be deserialised remember that some types have properties that are risky. System.ComponentModel.DataAnnotations.ValidationException, for example has a property Value of type Object. if this type is the type allowed for deserialization then an attacker can set the Value property to any object type they choose.<br/>
+<br/>
+Attackers should be prevented from steering the type that will be instantiated. If this is possible then even DataContractSerializer or XmlSerializer can be subverted e.g.<br/>
+<br/>
+// Action below is dangerous if the attacker can change the data in the database<br/>
+var typename = GetTransactionTypeFromDatabase(); &nbsp;<br/>
+var serializer = new DataContractJsonSerializer(Type.GetType(typename));<br/>
+var obj = serializer.ReadObject(ms);<br/>
+<br/>
+Execution can occur within certain .Net types during deserialization. Creating a control such as the one shown below is ineffective.<br/>
+<br/>
+var suspectObject = myBinaryFormatter.Deserialize(untrustedData);<br/>
+<br/>
+//Check below is too late! Execution may have already occurred.<br/>
+if (suspectObject is SomeDangerousObjectType) <br/>
+{<br/>
+&nbsp; &nbsp; //generate warnings and dispose of suspectObject<br/>
+}<br/>
+<br/>
+For BinaryFormatter and JSON.Net it is possible to create a safer form of white list control useing a custom SerializationBinder.<br/>
+<br/>
+Try to keep up-to-date on known .Net insecure deserialization gadgets and pay special attention where such types can be created by your deserialization processes. A deserializer can only instantiate types that it knows about.<br/>
+<br/>
+Try to keep any code that might create potential gagdets separate from any code that has internet connectivity. As an example System.Windows.Data.ObjectDataProvider used in WPF applications is a known gadget that allows arbitrary method invocation. It would be risky to have this a reference to this assembly in a REST service project that deserializes untrusted data.</body></html>

@@ -12,13 +12,12 @@ Finding useful POP chains:<ul><li style="list-style-type: none">RIPS can check f
 <li style="list-style-type: none">Python + grep + manual analysis works for me</li>
 <li style="list-style-type: none">Want to build fully automated POP gadget finder/builder</li>
 </ul>
-<b>Basic Idea</b><ul><li style="list-style-type: none">1. Grep for __wakeup() and __destruct() across popular packages</li>
-</ul>
-<ul>2. Starting with the most popular libraries, for each class with a potentially useful gadget,</ul>
-&nbsp;grep for other useful methods<ul><li style="list-style-type: none">3. Manually verify and build the POP chain</li>
-</ul>
-<ul>4. Deploy application with a vulnerable method and POP gadget class autoloaded, test</ul>
-&nbsp;exploit<br/>
+<b><br/>
+</b><b>Basic Idea</b><br/>
+1. Grep for __wakeup() and __destruct() across popular packages. Also check the use of unserialize() function and review how the external parameters are accepted. <br/>
+2. Starting with the most popular libraries, for each class with a potentially useful gadget, grep for other useful methods<br/>
+3. Manually verify and build the POP chain<br/>
+4. Deploy application with a vulnerable method and POP gadget class autoloaded, test exploit<br/>
 <br/>
 Vulnerable libraries discovered<br/>
 Turns out authentication libraries are easy wins…<br/>

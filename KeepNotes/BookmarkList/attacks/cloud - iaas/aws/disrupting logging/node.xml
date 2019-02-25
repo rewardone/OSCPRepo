@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Disrupting Logging</string>
+  <key>nodeid</key><string>aa83496e-a5a9-4b1a-8778-f25ddf0a7088</string>
+  <key>modified_time</key><integer>1550075177</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1550075086</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

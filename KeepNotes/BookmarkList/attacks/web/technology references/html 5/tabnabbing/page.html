@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tabnabbing</title>
+</head><body>Attack is described in details into this <a href="https://www.owasp.org/index.php/Reverse_Tabnabbing">article</a>.<br/>
+<br/>
+To resume, it's the capacity from a new opened page to act on parent page's content or location via the back link exposed by the opener javascript object instance.<br/>
+<br/>
+It apply to html link or javascript window.open function using the attribute/instruction target to specify a <a href="https://www.w3schools.com/tags/att_a_target.asp">target loading location</a>&nbsp;that do not replace the current location and then let the current window/tab available.<br/>
+<br/>
+To prevent this issue the following actions are available:<br/>
+<br/>
+Cut the back link between the parent and the child pages:<br/>
+<ul><li>For html link:</li>
+<li style="list-style-type: none"><ul><li>To cut this back link then add the attribute rel="noopener" on the tag used to create the link from the parent page to the child page. This attribute value cut the link but, depending on the browser, let referrer information be present in the request to the child page.</li>
+<li>To remove also the referrer information then use this attribute value: rel="noopener noreferrer".</li>
+</ul>
+</li>
+<li>For javascript window.open function, add the values noopener,noreferrer in the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/open">windowFeatures</a>&nbsp;parameter of the window.open function.</li>
+</ul>
+<br/>
+As the behavior using the elements above is different between the browsers either using html link or javascript to open a window (or tab) then use this configuration to maximize the cross supports:<br/>
+<ul><li>For html link, add the attribute rel="noopener noreferrer" for every links.</li>
+<li>For Javascript, use this function to open a window (or tab):</li>
+</ul>
+<br/>
+function openPopup(url, name, windowFeatures){<br/>
+&nbsp; //Open the popup and set the opener and referrer policy instruction<br/>
+&nbsp; var newWindow = window.open(url, name, 'noopener,noreferrer,' + windowFeatures);<br/>
+&nbsp; //Reset the opener link<br/>
+&nbsp; newWindow.opener = null;<br/>
+}<br/>
+<ul><li>Add the HTTP response header Referrer-Policy: no-referrer to every HTTP responses send by the application (<a href="https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#rp">Header Referrer-Policy information</a>. This configuration will ensure that no referrer information is sent along with requests from page.</li>
+</ul>
+<br/>
+Compatibility matrix:<br/>
+<br/>
+<a href="https://caniuse.com/#search=noopener">noopener</a><br/>
+<a href="https://caniuse.com/#search=noreferrer">noreferrer</a><br/>
+r<a href="https://caniuse.com/#feat=referrer-policy">eferrer-policy</a><br/>
+<br/>
+<br/>
+<br/>
+</body></html>

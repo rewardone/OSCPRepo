@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Tabnabbing</string>
+  <key>nodeid</key><string>dcb9abd5-0cc2-4cb8-87df-6c8900c114c1</string>
+  <key>modified_time</key><integer>1551117304</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1551117180</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

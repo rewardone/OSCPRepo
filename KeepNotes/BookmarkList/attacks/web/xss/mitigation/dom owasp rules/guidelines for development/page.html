@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Guidelines for Development</title>
+</head><body><b>Guidelines for Developing Secure Applications Utilizing JavaScript</b><br/>
+DOM based XSS is extremely difficult to mitigate against because of its large attack surface and lack of standardization across browsers.<br/>
+<br/>
+The guidelines below are an attempt to provide guidelines for developers when developing Web based JavaScript applications (Web 2.0) such that they can avoid XSS.<br/>
+<br/>
+<b>GUIDELINE #1 - Untrusted data should only be treated as displayable text</b><br/>
+Avoid treating untrusted data as code or markup within JavaScript code.<br/>
+<br/>
+<b>GUIDELINE #2 - Always JavaScript encode and delimit untrusted data as quoted strings when entering the application when building templated Javascript</b><br/>
+Always JavaScript encode and delimit untrusted data as quoted strings when entering the application as illustrated in the following example.<br/>
+<br/>
+var x = "&lt;%= Encode.forJavaScript(untrustedData) %&gt;";<br/>
+<br/>
+<br/>
+<b>GUIDELINE #3 - Use document.createElement("..."), element.setAttribute("...","value"), element.appendChild(...) and similar to build dynamic interfaces</b><br/>
+document.createElement("..."), element.setAttribute("...","value"), element.appendChild(...) and similar are save ways to build dynamic interfaces.<br/>
+<br/>
+Please note, element.setAttribute is only safe for a limited number of attributes.<br/>
+<br/>
+Dangerous attributes include any attribute that is a command execution context, such as onclick or onblur.<br/>
+<br/>
+Examples of safe attributes includes: align, alink, alt, bgcolor, border, cellpadding, cellspacing, class, color, cols, colspan, coords, dir, face, height, hspace, ismap, lang, marginheight, marginwidth, multiple, nohref, noresize, noshade, nowrap, ref, rel, rev, rows, rowspan, scrolling, shape, span, summary, tabindex, title, usemap, valign, value, vlink, vspace, width.<br/>
+<br/>
+<b>GUIDELINE #4 - Avoid sending untrusted data into HTML rendering methods</b><br/>
+Avoid populating the following methods with untrusted data.<br/>
+<br/>
+element.innerHTML = "...";<br/>
+element.outerHTML = "...";<br/>
+document.write(...);<br/>
+document.writeln(...);<br/>
+<br/>
+<br/>
+<b>GUIDELINE #5 - Avoid the numerous methods which implicitly eval() data passed to it</b><br/>
+There are numerous methods which implicitly eval() data passed to it that must be avoided.<br/>
+<br/>
+Make sure that any untrusted data passed to these methods is:<br/>
+<br/>
+Delimited with string delimiters<br/>
+Enclosed within a closure or JavaScript encoded to N-levels based on usage<br/>
+Wrapped in a custom function.<br/>
+Ensure to follow step 3 above to make sure that the untrusted data is not sent to dangerous methods within the custom function or handle it by adding an extra layer of encoding.<br/>
+<br/>
+Utilizing an Enclosure (as suggested by Gaz)<br/>
+<br/>
+The example that follows illustrates using closures to avoid double JavaScript encoding.<br/>
+<br/>
+&nbsp;setTimeout((function(param) { return function() {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; customFunction(param);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp;})("&lt;%=Encoder.encodeForJS(untrustedData)%&gt;"), y);<br/>
+The other alternative is using N-levels of encoding.<br/>
+<br/>
+N-Levels of Encoding<br/>
+<br/>
+If your code looked like the following, you would need to only double JavaScript encode input data.<br/>
+<br/>
+setTimeout("customFunction('&lt;%=doubleJavaScriptEncodedData%&gt;', y)");<br/>
+function customFunction (firstName, lastName)<br/>
+&nbsp; &nbsp; &nbsp;alert("Hello" + firstName + " " + lastNam);<br/>
+}<br/>
+<br/>
+The doubleJavaScriptEncodedData has its first layer of JavaScript encoding reversed (upon execution) in the single quotes.<br/>
+<br/>
+Then the implicit eval of setTimeout reverses another layer of JavaScript encoding to pass the correct value to customFunction<br/>
+<br/>
+The reason why you only need to double JavaScript encode is that the customFunction function did not itself pass the input to another method which implicitly or explicitly called eval If firstName was passed to another JavaScript method which implicitly or explicitly called eval() then &lt;%=doubleJavaScriptEncodedData%&gt; above would need to be changed to &lt;%=tripleJavaScriptEncodedData%&gt;.<br/>
+<br/>
+An important implementation note is that if the JavaScript code tries to utilize the double or triple encoded data in string comparisons, the value may be interpreted as different values based on the number of evals() the data has passed through before being passed to the if comparison and the number of times the value was JavaScript encoded.<br/>
+<br/>
+If A is double JavaScript encoded then the following if check will return false.<br/>
+<br/>
+&nbsp;var x = "doubleJavaScriptEncodedA"; &nbsp;//\u005c\u0075\u0030\u0030\u0034\u0031<br/>
+&nbsp;if (x == "A") {<br/>
+&nbsp; &nbsp; alert("x is A");<br/>
+&nbsp;} else if (x == "\u0041") {<br/>
+&nbsp; &nbsp; alert("This is what pops");<br/>
+&nbsp;}<br/>
+<br/>
+This brings up an interesting design point. Ideally, the correct way to apply encoding and avoid the problem stated above is to server-side encode for the output context where data is introduced into the application.<br/>
+<br/>
+Then client-side encode (using a JavaScript encoding library such as ESAPI4JS) for the individual subcontext (DOM methods) which untrusted data is passed to. ESAPI4JS and jQuery Encoder are two client side encoding libraries developed by Chris Schmidt.<br/>
+<br/>
+Here are some examples of how they are used:<br/>
+<br/>
+//server-side encoding<br/>
+var input = "&lt;%=Encoder.encodeForJS(untrustedData)%&gt;"; &nbsp;<br/>
+//HTML encoding is happening in JavaScript<br/>
+document.writeln(ESAPI4JS.encodeForHTML(input)); &nbsp;<br/>
+One option is utilize ECMAScript 5 immutable properties in the JavaScript library. Another option provided by Gaz (Gareth) was to use a specific code construct to limit mutability with anonymous closures.<br/>
+<br/>
+An example follows:<br/>
+<br/>
+function escapeHTML(str) {<br/>
+&nbsp; &nbsp; &nbsp;str = str + "''";<br/>
+&nbsp; &nbsp; &nbsp;var out = "''";<br/>
+&nbsp; &nbsp; &nbsp;for(var i=0; i&lt;str.length; i++) {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if(str[i] === '&lt;') {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;out += '&amp;lt;';<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else if(str[i] === '&gt;') {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;out += '&amp;gt;';<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else if(str[i] === "'") {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;out += '&amp;#39;';<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else if(str[i] === '"') {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;out += '&amp;quot;';<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;out += str[i];<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}<br/>
+&nbsp; &nbsp; &nbsp;}<br/>
+&nbsp; &nbsp; &nbsp;return out;<br/>
+}<br/>
+<br/>
+Chris Schmidt has put together another implementation of a JavaScript encoder here.<br/>
+<br/>
+<b>GUIDELINE #6 - Limit the usage of untrusted data to only right side operations</b><br/>
+Not only is it good design to limit the usage of untrusted data to right side operations, but also be aware of data which may be passed to the application which look like code (eg. location, eval()).<br/>
+<br/>
+If you want to change different object attributes based on user input then use a level of indirection. Instead of:<br/>
+<br/>
+window[userData] = "moreUserData";<br/>
+Do the following instead:<br/>
+<br/>
+if (userData === "location") {<br/>
+&nbsp; &nbsp;window.location = "static/path/or/properly/url/encoded/value";<br/>
+}<br/>
+<br/>
+<b>GUIDELINE #7 - When URL encoding in DOM be aware of character set issues</b><br/>
+When URL encoding in DOM be aware of character set issues as the character set in JavaScript DOM is not clearly defined (Mike Samuel).<br/>
+<br/>
+<b>GUIDELINE #8 - Limit access to properties objects when using object[x] accessors</b><br/>
+Limit access to properties objects when using object[x] accessors (Mike Samuel). In other words use a level of indirection between untrusted input and specified object properties.<br/>
+<br/>
+Here is an example of the problem when using map types:<br/>
+<br/>
+var myMapType = {};<br/>
+myMapType[&lt;%=untrustedData%&gt;] = "moreUntrustedData";<br/>
+Although the developer writing the code above was trying to add additional keyed elements to the myMapType object. This could be used by an attacker to subvert internal and external attributes of the myMapType object.<br/>
+<br/>
+<b>GUIDELINE #9 - Run your JavaScript in a ECMAScript 5 canopy or sandbox</b><br/>
+Run your JavaScript in a ECMAScript 5 canopy or sandbox to make it harder for your JavaScript API to be compromised (Gareth Heyes and John Stevens).<br/>
+<br/>
+<b>GUIDELINE #10 - Don’t eval() JSON to convert it to native JavaScript objects</b><br/>
+Don’t eval() JSON to convert it to native JavaScript objects. Instead use JSON.toJSON() and JSON.parse() (Chris Schmidt).</body></html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Digits</title>
+</head><body><b>@Digits<br/>
+</b><b>Annotation:</b><br/>
+@Digits(integer=,fraction=)<br/>
+<br/>
+<b>Data Type:</b><br/>
+BigDecimal, BigInteger, CharSequence, byte, short, int, long and the respective wrappers of the primitive types; Additionally supported by HV: any sub-type of Number<br/>
+<br/>
+<b>Use:</b><br/>
+Checks whether the annotated value is a number having up to integer digits and fraction fractional digits<br/>
+<br/>
+<b>Reference:</b><br/>
+<a href="http://docs.jboss.org/hibernate/validator/5.2/reference/en-US/html/ch02.html#section-builtin-constraints">Documentation</a><br/>
+<br/>
+Model:<br/>
+import org.hibernate.validator.constraints.Digits;<br/>
+<br/>
+public class Customer { <br/>
+&nbsp; //Constraint: Age can only be 3 digits long or less<br/>
+&nbsp; @Digits(integer = 3, fraction = 0)<br/>
+&nbsp; private int age;<br/>
+<br/>
+&nbsp; public String getAge() &nbsp;{<br/>
+&nbsp; &nbsp; return age;<br/>
+&nbsp; }<br/>
+<br/>
+&nbsp; public void setAge(String age) &nbsp;{<br/>
+&nbsp; &nbsp; &nbsp; this.age = age;<br/>
+&nbsp; &nbsp; }<br/>
+<br/>
+&nbsp; &nbsp; ...<br/>
+}<br/>
+<br/>
+<br/>
+Controller:<br/>
+import javax.validation.Valid;<br/>
+import com.company.app.model.Customer;<br/>
+<br/>
+@Controller<br/>
+public class CustomerController &nbsp;{<br/>
+<br/>
+&nbsp;...<br/>
+<br/>
+&nbsp;@RequestMapping(value = "/registerCustomer", &nbsp;method = RequestMethod.POST)<br/>
+&nbsp;public @ResponseBody String registerCustomer(@Valid Customer customer, BindingResult result, &nbsp;<br/>
+&nbsp;HttpServletResponse &nbsp;response) {<br/>
+<br/>
+&nbsp; if (result.hasErrors()) {<br/>
+&nbsp; &nbsp;String errorMessage = "";<br/>
+&nbsp; &nbsp;response.setStatus(HttpServletResponse.SC_BAD_REQUEST);<br/>
+&nbsp; &nbsp;List&lt;ObjectError&gt; errors = result.getAllErrors();<br/>
+<br/>
+&nbsp; &nbsp;for( ObjectError &nbsp;e : &nbsp;errors) {<br/>
+&nbsp; &nbsp; errorMessage += "ERROR: " &nbsp;+ &nbsp;e.getDefaultMessage();<br/>
+&nbsp; &nbsp;}<br/>
+&nbsp; &nbsp;return &nbsp;errorMessage;<br/>
+&nbsp; } else {<br/>
+&nbsp; &nbsp;return &nbsp;"Validation Successful";<br/>
+&nbsp; }<br/>
+&nbsp;}<br/>
+}</body></html>

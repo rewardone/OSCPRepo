@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DOM Based</title>
+</head><body><b>Definition</b><br/>
+DOM Based XSS (or as it is called in some texts, “type-0 XSS”) is an XSS attack wherein the attack payload is executed as a result of modifying the DOM “environment” in the victim’s browser used by the original client side script, so that the client side code runs in an “unexpected” manner. That is, the page itself (the HTTP response that is) does not change, but the client side code contained in the page executes differently due to the malicious modifications that have occurred in the DOM environment.<br/>
+<br/>
+This is in contrast to other XSS attacks (<a href="https://www.owasp.org/index.php/XSS#Stored_and_Reflected_XSS_Attacks">stored or reflected</a>), wherein the attack payload is placed in the response page (due to a server side flaw).<br/>
+<br/>
+Please note research from David Wichers seeking to reclassify DOM XSS more strictly as CLIENT SIDE XSS. <br/>
+<br/>
+<br/>
+<br/>
+<b>Example</b><br/>
+Suppose the following code is used to create a form to let the user choose his/her preferred language. A default language is also provided in the query string, as the parameter “default”.<br/>
+<br/>
+…<br/>
+Select your language:<br/>
+<br/>
+&lt;select&gt;&lt;script&gt;<br/>
+<br/>
+document.write("&lt;OPTION value=1&gt;"+document.location.href.substring(document.location.href.indexOf("default=")+8)+"&lt;/OPTION&gt;");<br/>
+<br/>
+document.write("&lt;OPTION value=2&gt;English&lt;/OPTION&gt;");<br/>
+<br/>
+&lt;/script&gt;&lt;/select&gt;<br/>
+…<br/>
+<br/>
+The page is invoked with a URL such as:<br/>
+http://www.some.site/page.html?default=French<br/>
+<br/>
+A DOM Based XSS attack against this page can be accomplished by sending the following URL to a victim:<br/>
+http://www.some.site/page.html?default=&lt;script&gt;alert(document.cookie)&lt;/script&gt;<br/>
+<br/>
+When the victim clicks on this link, the browser sends a request for:<br/>
+/page.html?default=&lt;script&gt;alert(document.cookie)&lt;/script&gt;<br/>
+<br/>
+to www.some.site. The server responds with the page containing the above Javascript code. The browser creates a DOM object for the page, in which the document.location object contains the string:<br/>
+http://www.some.site/page.html?default=&lt;script&gt;alert(document.cookie)&lt;/script&gt;<br/>
+<br/>
+The original Javascript code in the page does not expect the default parameter to contain HTML markup, and as such it simply echoes it into the page (DOM) at runtime. The browser then renders the resulting page and executes the attacker’s script:<br/>
+alert(document.cookie)<br/>
+<br/>
+Note that the HTTP response sent from the server does not contain the attacker’s payload. This payload manifests itself at the client-side script at runtime, when a flawed script accesses the DOM variable document.location and assumes it is not malicious.</body></html>

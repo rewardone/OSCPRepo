@@ -12,4 +12,11 @@ FOR /F %i in (services.txt) DO @sc qc %i | findstr "BINARY_PATH_NAME" &gt;&gt; p
 <br/>
 <br/>
 Powershell<br/>
-Get-Service | where {$_.Status -eq "Running"}</body></html>
+Get-Service | where {$_.Status -eq "Running"}<br/>
+<br/>
+<br/>
+<br/>
+Via registry (if powershell/sc are blocked)<br/>
+Set-Location 'HKLM\SYSTEM\CurrentControlSet\Services'<br/>
+dir or Get-ChildItem<br/>
+</body></html>

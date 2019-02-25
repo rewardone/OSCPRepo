@@ -3,12 +3,29 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Mitigations For CSRF</title>
-</head><body>There are a few strategies to defend against the attack, generally with the goal of ensuring only the requests originating from the actual legitimate application are accepted.<br/>
+</head><body><b>Warning: No Cross-Site Scripting (XSS) Vulnerabilities</b><br/>
+Cross-Site Scripting is not necessary for CSRF to work. However, any cross-site scripting vulnerability can be used to defeat all CSRF mitigation techniques available in the market today (except mitigation techniques that involve user interaction). This is because an XSS payload can simply read any page on the site using an XMLHttpRequest (direct DOM access can be done, if on same page) and obtain the generated token from the response, and include that token with a forged request.<br/>
+<br/>
+There are a few strategies to defend against the attack, generally with the goal of ensuring only the requests originating from the actual legitimate application are accepted.<br/>
 <br/>
 <b>CSRF tokens</b>&nbsp;are one of the most common strategies, often available at the web framework level. <br/>
 These add a random value (often in a hidden form field) to the legitimate page in the application. One version of this implementation is to have the server cache this token. When the server receives a request, it will then check that the token is included and matches what the server has cached. It’s essential that the token is uniquely associated to a specific session, or else the attacker may be able to acquire a valid token to include. <br/>
+<br/>
 Another variant of this is to set the token in a cookie. Even though the CSRF request will include the cookie, this attack will not allow the attacker to read the cookie. As with the first example, the server will expect the body of the request to include the token, and then it will compare the token in the body against the token in the cookie. If they match, it’s treated as a valid request from the legitimate application. This approach alleviates the need to maintain CSRF token state on the server. <br/>
+<br/>
 One more approach, particularly for a web service API, is to have the legitimate application(s) supply the token via custom header. This means every JavaScript request from the client will need to add that header, however it also means that it cannot be supplied without triggering a CORS pre-flight.<br/>
+<br/>
+<b>Auto CSRF Mitigation Techniques</b><br/>
+Though the technique of mitigating tokens is widely used (stateful with synchronizer token and stateless with encrypted/HMAC token), the major problem associated with these techniques is the human tendency to forget things at times. If a developer forgets to add the token to any state changing operation, they are making the application vulnerable to CSRF. To avoid this, you can try to automate the process of adding tokens to CSRF vulnerable resources (mentioned earlier in this document). You can achieve this by doing the following:<br/>
+<br/>
+Write wrappers (that would auto add tokens when used) around default form tags/ajax calls and educate your developers to use those wrappers instead of standard tags. Though this approach is better than depending purely on developers to add tokens, it still is vulnerable to the issue of human tendency to forget things. Spring Security uses this technique to add CSRF tokens by default when a custom &lt;form:form&gt; tag is used, you can opt to use after verifying that its enabled and properly configured in the <a href="https://docs.spring.io/spring-security/site/docs/3.2.0.CI-SNAPSHOT/reference/html/csrf.html">Spring Security</a>&nbsp;version you are using.<br/>
+<br/>
+Write a hook (that would capture the traffic and add tokens to CSRF vulnerable resources before rendering to customers) in your organizational web rendering frameworks. Because it is hard to analyze when a particular response is doing any state change (and thus needing a token), you might want to include tokens in all CSRF vulnerable resources (ex: include tokens in all POST responses). This is one recommended approach, but you need to consider the performance costs it might incur.<br/>
+<br/>
+Get the tokens automatically added on the client side when the page is being rendered in user’s browser, with help of a client side script (this approach is used by <a href="https://www.owasp.org/index.php/CSRF_Guard">CSRF Guard</a>). You need to consider any possible JavaScript hijacking attacks.<br/>
+<br/>
+We recommend researching if the framework you are using has an option to achieve CSRF protection by default before trying to build your custom auto tokening system. For example, .NET has an <a href="https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery?view=aspnetcore-2.1">in-built protection</a>&nbsp;that adds token to CSRF vulnerable resources. You are responsible for proper configuration (such as key management and token management) before using these in-built CSRF protections that do auto tokening to CSRF vulnerable resources.<br/>
+<br/>
 <br/>
 <b>Credential re-prompts</b>&nbsp;effectively defeat the CSRF attack as well. Consider the common case of requiring the current password when assigning a new password. Because the attacker does not known the current password (if they did, they wouldn’t need the CSRF attack), they can’t supply that as part of the request.<br/>
 <br/>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Giddy - ASP MSSQL Out of Band PTH WinRM</string>
+  <key>nodeid</key><string>80e398f5-7422-41c6-bb1c-bb733a842e9a</string>
+  <key>modified_time</key><integer>1550598773</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1550594934</integer>
+  <key>order</key><integer>71</integer>
+</dict>
+</node>

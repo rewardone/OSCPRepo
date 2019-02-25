@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Infrastructure as code. Describes what, not how:<br/>
+<br/>
+directory '/opt/application/config' do<br/>
+&nbsp; &nbsp; owner 'service'<br/>
+&nbsp; &nbsp; mode '0750'<br/>
+&nbsp; &nbsp; action :create<br/>
+&nbsp; &nbsp; recursive true<br/>
+end<br/>
+<br/>
+<br/>
+Knife is the CLI to interact with Chef. <br/>
+~/.chef/knife.rb&#09;&#09;where the Chef server is<br/>
+~/.chef/user.pem&#09;The private RSA key for Knife</body></html>

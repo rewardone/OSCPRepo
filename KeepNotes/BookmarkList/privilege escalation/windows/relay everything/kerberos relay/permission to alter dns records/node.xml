@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Permission to Alter DNS Records</string>
+  <key>nodeid</key><string>b03bb34f-97fc-415b-bfc4-577a9fac9105</string>
+  <key>modified_time</key><integer>1550592707</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1550589352</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

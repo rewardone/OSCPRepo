@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Add Wildcard Directly In LDAP</title>
+</head><body>Wildcard records allow DNS to function in a very similar fashion to LLMNR/NBNS spoofing. Once you create a wildcard record, the DNS server will use the record to answer name requests that do not explicitly match records contained in the zone. Unlike LLMNR/NBNS, requests for fully qualified names matching a zone are also resolved.<br/>
+<br/>
+With dynamic updates, my wildcard record injection efforts were prevented by limitations within dynamic updates itself. Dynamic updates, at least the Windows implementation, just doesn’t seem to process the ‘*’ character correctly. <br/>
+<br/>
+LDAP however, does not have the same problem.<br/>
+<br/>
+PS C:\Users\kevin\Desktop\Powermad&gt; New-ADIDNSNode -Node * -Verbose<br/>
+VERBOSE: [+] Domain Controller = Inveigh-DC1.inveigh.net<br/>
+VERBOSE: [+] Domain = inveigh.net<br/>
+VERBOSE: [+] ADIDNS Zone = inveigh.net<br/>
+VERBOSE: [+] Distinguished Name = DC=*,DC=inveigh.net,CN=MicrosoftDNS,DC=DomainDNSZones,DC=inveigh,DC=net<br/>
+VERBOSE: [+] Data = 192.168.125.100<br/>
+VERBOSE: [+] DNSRecord Array = 04-00-01-00-05-F0-00-00-BA-00-00-00-00-00-02-58-00-00-00-00-22-D8-37-00-C0-A8-7D-64<br/>
+[+] ADIDNS node * added<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b>SOA Serial Number</b><br/>
+Another consideration when working with ADIDNS zones is the potential presence of integrated DNS servers on the network. If a server is hosting a secondary zone, the serial number is used to determine if a change has occurred. Luckily, this number can be incremented when adding a DNS node through LDAP. The incremented serial number needs to be included in the node’s dnsRecord array to ensure that the record is copied to the server hosting the secondary zone. The zone’s SOA serial number will be the highest serial number listed in any node’s dnsRecord attribute. Care should be taken to only increment the SOA serial number by one so that a zone’s serial number isn’t unnecessarily increased by a large amount. I have created a PowerShell function called New-SOASerialNumberArray that simplifies the process.<br/>
+<br/>
+PS C:\Users\kevin\Desktop\Powermad&gt; New-SOASerialNumberArray<br/>
+62<br/>
+0<br/>
+0<br/>
+0<br/>
+<br/>
+The SOA serial number can also be obtained through nslookup.<br/>
+<br/>
+PS C:\Users\kevin\Desktop\Powermad&gt; nslookup<br/>
+Default Server: &nbsp;UnKnown<br/>
+Address: &nbsp;192.168.125.10<br/>
+<br/>
+&gt; set type=soa<br/>
+&gt; inveigh.net<br/>
+Server: &nbsp;UnKnown<br/>
+Address: &nbsp;192.168.125.10<br/>
+<br/>
+inveigh.net<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; primary name server = inveigh-dc1.inveigh.net<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; responsible mail addr = hostmaster.inveigh.net<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; serial &nbsp;= 255<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; refresh = 900 (15 mins)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; retry &nbsp; = 600 (10 mins)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; expire &nbsp;= 86400 (1 day)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; default TTL = 3600 (1 hour)<br/>
+inveigh-dc1.inveigh.net internet address = 192.168.125.10<br/>
+<br/>
+The gathered serial number can be fed directly to New-SOASerialNumberArray. In this scenario, &nbsp;New-SOASerialNumberArray will skip connecting to a DNS server and instead it will use the specified serial number.<br/>
+<br/>
+</body></html>

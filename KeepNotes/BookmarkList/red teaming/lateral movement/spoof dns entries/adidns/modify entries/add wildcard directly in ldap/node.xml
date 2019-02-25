@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Add Wildcard Directly In LDAP</string>
+  <key>nodeid</key><string>6b00e502-ffa9-417b-b1b9-9e9742438dba</string>
+  <key>modified_time</key><integer>1550768544</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1550767674</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

@@ -5,6 +5,7 @@
   <key>title</key><string>Lateral Movement</string>
   <key>nodeid</key><string>42ce7adc-1cde-456d-8347-a3f0003cff08</string>
   <key>modified_time</key><integer>1549393663</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1549393663</integer>

@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HMAC Token Pattern</title>
+</head><body><b>HMAC Based Token Pattern</b><br/>
+<a href="https://en.wikipedia.org/wiki/HMAC">HMAC</a>&nbsp;(hash-based message authentication code) is a cryptographic function that helps to guarantee integrity and authentication of a message. It is another way that CSRF mitigation can be achieved without maintaining any state at the server and is similar to an encryption token-based pattern with two main differences:<br/>
+<br/>
+Uses a strong HMAC function instead of an encryption function to generate the token<br/>
+Includes an additional field called ‘operation’ that would indicate the purpose of the operation for which you are including the CSRF token (may it be form tag/ajax call)<br/>
+<br/>
+Example:<br/>
+<br/>
+oneclickpurchase (or) buy/asin=SDFH&amp;category=2&amp;quantity=3)<br/>
+<br/>
+<b>Note</b>: Fields mentioned in encryption token pattern (user's ID, a timestamp value and a nonce) are included.<br/>
+<br/>
+The operation field helps in mitigating the fact that the hash function generates the same value irrespective of multiple iterations (unlike strong encryption functions that generate different values when they are encrypted each time). So, it would help in avoiding having repeated token values across your application. Nonce field serves the same purpose as in encrypted token pattern (i.e., to avoid rare collisions due to weak cryptographic functions and acts as a defense-in-depth measure).<br/>
+<br/>
+Generate the token using HMAC including all four fields mentioned previously (user's ID, a timestamp value, nonce, and operation) and then include it in hidden fields for form tags, headers/parameters for ajax calls. Once you receive the HMAC from the client in the requests, re-generate HMAC with the same fields that you used to generate it, and then verify that the HMAC you re-generated matches the HMAC received from the client. If it does, it is a legitimate user request and if it does not, flag it as a CSRF intrusion and alert your incident response teams. Because an attacker has no visibility into the key used for generating the hash fields used in generating it, there is no way for them to re-generate it to use in forged request.</body></html>

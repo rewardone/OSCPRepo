@@ -5,12 +5,12 @@
   <key>title</key><string>Hijacking Misconfigured Roles</string>
   <key>nodeid</key><string>abfa1e6d-ec43-476c-bd44-c77ebcd612b7</string>
   <key>modified_time</key><integer>1548698936</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1548698796</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>4</integer>
+  <key>order</key><integer>5</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>
