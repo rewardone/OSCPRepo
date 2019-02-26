@@ -5,6 +5,7 @@
   <key>title</key><string>Application Data</string>
   <key>nodeid</key><string>27e39b16-d29c-4ff9-bfa3-3c013bac8a40</string>
   <key>modified_time</key><integer>1532546977</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1532546952</integer>

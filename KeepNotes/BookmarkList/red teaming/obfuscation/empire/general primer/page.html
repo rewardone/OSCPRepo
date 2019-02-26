@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>tl;dr: Configure a (valid) certificate, add jitter, and change the DefaultProfile to have Empire communications stay below the radar.<br/>
+<br/>
+https://vanmieghem.io/reigning-the-empire-evading-detection/<br/>
+<br/>
+Instantly popping up is the large amount of HTTP keep-alive beacons the agent sends back to the C2. This in itself was not the issue, however, the fact that it requests the default Empire pages /admin/get.php, /news.asp, /login/process.jsp was. If we look more closely to the C2 response, we also see that a default “It works!” webpage is returned.<br/>
+<br/>
+A user constantly refreshing an “It works!” page doesn’t really looks like the benign behaviour to me… Let’s see if we can obfuscate this a bit. First thing we can do is customise the listeners’ DefaultProfile to, in this case, /feed.xml and index.html.<br/>
+<br/>
+listeners) &gt; set DefaultProfile /feed.xml,index.html|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0;rv:11.0) like Gecko<br/>
+<br/>
+This change results in an obvious customisation of the HTTP requests. In my scenario, this alone was enough to evade the IDS.<br/>
+<br/>
+However, the default webpage “It works!” is still there, which is lame.<br/>
+<br/>
+Now, if we provide the listener with a certificate (you may want to use a valid cert to increase stealthiness) and add random jitter, the communication is wrapped in a TLS layer and Empire specifics are gone! These options are the CertPath and DefaultJitter options.<br/>
+<br/>
+Excellent.</body></html>

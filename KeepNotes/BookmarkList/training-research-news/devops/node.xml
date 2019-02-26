@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>DevOps</string>
+  <key>nodeid</key><string>51d23a62-24a5-4bc6-8010-f81eee621e14</string>
+  <key>modified_time</key><integer>1551209686</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1551209686</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>
