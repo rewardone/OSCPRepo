@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Types of Mutation</title>
+</head><body>Types of mutation<br/>
+Applications handle modified inputs in one of two distinct ways. Most inputs vulnerable to server-side injection issues, especially those where the input originates from a free-form text field like a comment, only display a distinct response when you trigger a syntax error server-side:<br/>
+<br/>
+/post_comment?text=baseComment &nbsp; &nbsp; 200 OK<br/>
+/post_comment?text=randomtext &nbsp; &nbsp; &nbsp;200 OK<br/>
+/post_comment?text=random'text &nbsp; &nbsp; 500 Oops<br/>
+/post_comment?text=random\'text &nbsp; &nbsp;200 OK<br/>
+<br/>
+On other inputs, any deviation from the expected input triggers an error:<br/>
+<br/>
+/profile?user=bob &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;200 OK<br/>
+/profile?user=randomtext &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;500 Oops<br/>
+/profile?user=random'text &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;500 Oops<br/>
+/profile?user=random\'text &nbsp; &nbsp; &nbsp; &nbsp; 500 Oops<br/>
+/profile?user=bo'||'b &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;200 OK<br/>
+/profile?user=bo'|z'b &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;500 Oops<br/>
+<br/>
+The latter case is significantly harder to handle. To find such vulnerabilities we need to skip the quote-identification stage and guess the concatenation character to find evidence of a vulnerability, making the scanner less efficient. As we can't put random text in probes, we're constrained to a limited number of unique probes which makes reliably fingerprinting responses harder. At the time of writing the scanner doesn't handle such cases, although an early prototype has confirmed it's definitely possible.<br/>
+<br/>
+This limitation doesn't apply to detecting injections into numeric inputs - given a base number, there is an infinite number of ways to express the same number using simple arithmetic. I've opted for x/1 and x/0, since dividing by zero has the added bonus of throwing an exception in some circumstances.</body></html>

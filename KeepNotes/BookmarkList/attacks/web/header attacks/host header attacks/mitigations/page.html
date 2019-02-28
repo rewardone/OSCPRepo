@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body><b>Securing servers</b><br/>
+<br/>
+Due to the aforementioned absolute request URI technique, making the Host header itself trustworthy is almost a lost cause. What you can do is make SERVER_NAME trustworthy. This can be achieved under Apache (<a href="http://httpd.apache.org/docs/trunk/vhosts/examples.html#defaultallports">instructions</a>) and Nginx (<a href="http://wiki.nginx.org/ServerBlockExample">instructions</a>) by creating a dummy vhost that catches all requests with unrecognized Host headers. It can also be done under Nginx by specifying a non-wildcard <a href="http://nginx.org/en/docs/http/server_names.html">SERVER_NAME</a>, and under Apache by using a non-wildcard <a href="http://httpd.apache.org/docs/2.2/mod/core.html#servername">serverName</a>&nbsp;and turning the <a href="http://httpd.apache.org/docs/2.2/mod/core.html#usecanonicalname">UseCanonicalName</a>&nbsp;directive on. I'd recommend using both approaches wherever possible.<br/>
+<br/>
+A patch for Varnish should be released shortly. As a workaround until then, you can add the following to the config file:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; import std;<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; sub vcl_recv {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; std.collect(req.http.host);<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+<br/>
+<br/>
+<b>Securing applications</b><br/>
+<br/>
+Fixing this issue is difficult, as there is no entirely automatic way to identify which host names the administrator trusts. The safest, albeit mildly inconvenient solution, is to use Django's approach of requiring administrators to provide a whitelist of trusted domains during the initial site setup process. If that is too drastic, at least ensure that SERVER_NAME is used instead of the Host header, and encourage users to use a secure server configuration.<br/>
+</body></html>

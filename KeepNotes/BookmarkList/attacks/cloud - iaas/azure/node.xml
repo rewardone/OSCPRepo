@@ -5,6 +5,7 @@
   <key>title</key><string>Azure</string>
   <key>nodeid</key><string>548e408b-49a8-447c-90dc-c523205fea4c</string>
   <key>modified_time</key><integer>1549386185</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1547747106</integer>

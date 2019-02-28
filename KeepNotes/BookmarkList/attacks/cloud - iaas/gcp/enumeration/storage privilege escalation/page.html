@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Storage Privilege Escalation</title>
+</head><body>Buckets can be vulnerable to privilege escalation through misconfigured bucket ACLs (also see <a href="https://labs.detectify.com/2017/07/13/a-deep-dive-into-aws-s3-access-controls-taking-full-control-over-your-assets/)">here</a>). <br/>
+<br/>
+We can check for the bucket's policy by making direct HTTP requests to:<br/>
+https://www.googleapis.com/storage/v1/b/BUCKET_NAME/iam<br/>
+<br/>
+or use the gsutil CLI to run:<br/>
+gsutil iam get gs://BUCKET_NAME<br/>
+<br/>
+if "allUsers" or "allAuthenticatedUsers" are allowed to read the bucket policy, we will receive a valid response. Else, access denied. <br/>
+<br/>
+Bucket policy is helpful, but requires the "storage.buckets.getIamPolicy" permission. We can test permissions explicity with the Google Storage "TestIamPermissions" API. If we supply a bucket name and list Google Storage permissions, it will respond with the permissions we (the user making the request) have on that bucket. This completely bypasses the requirement of viewing the policy, with the restriction we can only view permissions for users we are able to authenticate as. <br/>
+<br/>
+To determine what permissions we have on a bucket, we can make a request to a URL similar to: <br/>
+https://www.googleapis.com/storage/v1/b/BUCKET_NAME/iam/testPermissions?permissions=storage.objects.list<br/>
+<br/>
+It will respond and let us know if we have the "storage.objects.list" permission on the "BUCKET_NAME". The permissions parameter can be passed multiple times to check multiple permissions at once, and the Google Storage Python library supports the test_iam_permissions API (even though "gsutil" does not). <br/>
+<br/>
+One privilege escalation method requires the "storage.buckets.setIamPolicy" permission. <br/>
+<br/>
+A vulnerable bucket policy might look something like this:<br/>
+{"bindings":[{"members":["allAuthenticatedUsers","projectEditor:my-test-project","projectOwner:my-test-project"],"role":"roles\/storage.legacyBucketOwner"},{"members":["projectViewer:my-test-project"],"role":"roles\/storage.legacyBucketReader"},{"members":["projectEditor:my-test-project","projectOwner:my-test-project"],"role":"roles\/storage.legacyObjectOwner"},{"members":["projectViewer:my-test-project"],"role":"roles\/storage.legacyObjectReader"}],"etag":"ROQ="}<br/>
+<br/>
+<br/>
+<b>Note:</b>&nbsp;The “gsutil iam ch” command requires permission to read the target bucket’s policy, because it first reads the policy, then adds your addition to it, then writes the new policy. You might not always have this permission, even if you have the SetBucketPolicy permission. In those cases, you would need to overwrite the existing policy and risk causing errors in their environment, such as if you accidentally revoke access from something that needs it.<br/>
+&nbsp; <br/>
+</body></html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Cache Poisoning</title>
+</head><body>Cache poisoning<br/>
+<br/>
+Web-cache poisoning using the Host header was first raised as a potential attack vector by Carlos Beuno in <a href="http://carlos.bueno.org/2008/06/host-header-injection.html">2008</a>. 5 years later there's no shortage of sites implicitly trusting the host header so I'll focus on the practicalities of poisoning caches. Such attacks are often difficult as all modern standalone caches are Host-aware; they will never assume that the following two requests reference the same resource:<br/>
+&gt; GET /index.html HTTP/1.1 &nbsp; &nbsp; &nbsp; &gt; GET /index.html HTTP/1.1<br/>
+&gt; Host: example.com &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&gt; Host: evil.com<br/>
+<br/>
+So, to persuade a cache to serve our poisoned response to someone else we need to create a disconnect between the host header the cache sees, and the host header the application sees. In the case of the popular caching solution <a href="https://www.varnish-cache.org/">Varnish</a>, this can be achieved using duplicate Host headers. Varnish uses the first host header it sees to identify the request, but Apache concatenates all host headers present and Nginx uses the last host header<a href="https://draft.blogger.com/2013/05/practical-http-host-header-attacks.html?showComment=1370252453549#c29796501277358581">[1]</a>. This means that you can poison a Varnish cache with URLs pointing at evil.com by making the following request:<br/>
+&gt; GET / HTTP/1.1<br/>
+&gt; Host: example.com<br/>
+&gt; <span style="color: #ff0000">Host: evil.com</span><br/>
+<br/>
+Application-level caches can also be susceptible. Joomla writes the Host header to every page without HTML-encoding it, and its cache is entirely oblivious to the Host header. Gaining persistent XSS on the homepage of a Joomla installation was as easy as:<br/>
+curl -H "Host: cow\"onerror='alert(1)'rel='stylesheet'" http://example.com/ | fgrep cow\"<br/>
+This will create the following request:<br/>
+&gt; GET / HTTP/1.1<br/>
+&gt; Host: cow"onerror='alert(1)'rel='stylesheet'<br/>
+<br/>
+The response should show a poisoned &lt;link&gt; element:<br/>
+&lt;link href="http://cow"onerror='alert(1)'rel='stylesheet'/" rel="canonical"/&gt;<br/>
+<br/>
+To verify that the cache has been poisoned, just load the homepage in a browser and observe the popup.<br/>
+<br/>
+</body></html>

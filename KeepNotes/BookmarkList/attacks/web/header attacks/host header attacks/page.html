@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Host Header Attacks</title>
+</head><body>Creating a trustworthy absolute URI is trickier than it sounds. Developers often resort to the exceedingly untrustworthy HTTP Host header (_SERVER["HTTP_HOST"] in PHP). Even otherwise-secure applications trust this value enough to write it to the page without HTML-encoding it with code equivalent to:<br/>
+&nbsp; &nbsp; &nbsp;&lt;link href="http://_SERVER['HOST']" &nbsp; &nbsp;(Joomla)<br/>
+<br/>
+...and append secret keys and tokens to links containing it:<br/>
+&nbsp; &nbsp; &lt;a href="http://_SERVER['HOST']?token=topsecret"&gt; &nbsp;(Django, Gallery, others)<br/>
+<br/>
+....and even directly import scripts from it:<br/>
+&nbsp; &nbsp; &nbsp; &lt;script src="http://_SERVER['HOST']/misc/jquery.js?v=1.4.4"&gt; &nbsp;(Various)<br/>
+<br/>
+&nbsp; &nbsp; There are two main ways to exploit this trust in regular web applications. The first approach is web-cache poisoning; manipulating caching systems into storing a page generated with a malicious Host and serving it to others. The second technique abuses alternative channels like password reset emails where the poisoned content is delivered directly to the target. In this post I'll look at how to exploit each of these in the presence of 'secured' server configurations, and how to successfully secure applications and <br/>
+<br/>
+<br/>
+<br/>
+Further research<ul><li>More effective / less inconvenient fixes</li>
+<li>Automated detection</li>
+<li>Exploiting wildcard whitelists with XSS &amp; window.history</li>
+<li>Exploiting multipart password reset emails by predicting boundaries</li>
+<li>Better cache fuzzing (trailing Host headers?)</li>
+</ul>
+&nbsp;<br/>
+If you're interested in automated detection of this issue, check out the <a href="https://github.com/albinowax/ActiveScanPlusPlus">ActiveScan++ plugin</a>&nbsp;I made for Burp Suite. (Disclaimer: I work for PortSwigger). For a discussion of how this extension works, and a demo of web-cache poisoning against Typo3, &nbsp;see the following video from OWASP AppSec EU: <a href="https://www.youtube.com/watch?v=dxo6-niEtyE">ActiveScan++: Augmenting manual testing with attack proxy plugins.</a></body></html>

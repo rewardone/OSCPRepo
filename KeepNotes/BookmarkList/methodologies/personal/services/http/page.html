@@ -28,6 +28,8 @@ See version? See title? Searchsploit them. Apache, Nginx, CMS, you name it<br/>
 <li style="list-style-type: none"></li>
 <li style="list-style-type: none">Test default logins! RTFM! (enables authenticated exploits if able)</li>
 <li style="list-style-type: none"></li>
+<li style="list-style-type: none">try injecting in some headers that aren't present, like <a href="https://portswigger.net/blog/exploiting-cors-misconfigurations-for-bitcoins-and-bounties">Origin</a>, X-Forwarded-For, Accept-Language, or <a href="http://www.skeletonscribe.net/2013/05/practical-http-host-header-attacks.html">X-Forwarded Host</a></li>
+<li style="list-style-type: none"></li>
 <li style="list-style-type: none">Time to test forms:</li>
 <li style="list-style-type: none"><ul><li style="list-style-type: none">SQL injection</li>
 <li style="list-style-type: none">Straight up command injection</li>
@@ -84,7 +86,7 @@ See version? See title? Searchsploit them. Apache, Nginx, CMS, you name it<br/>
 </ul>
 </li>
 <li style="list-style-type: none"></li>
-<li style="list-style-type: none">&nbsp;Tested: </li>
+<li style="list-style-type: none">&nbsp;Tested tools: </li>
 <li style="list-style-type: none">&nbsp;&#09; Burp / Zap for manual/fine grain testing</li>
 <li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Gobuster/Dirb are dir brute tools of choice</li>
 <li style="list-style-type: none"><ul><li style="list-style-type: none">&nbsp;Gobuster fast</li>
@@ -168,7 +170,7 @@ Droopescan / CMSmap / WPScan: Content management scanners<br/>
 davtest / cadaver: webdav tester<br/>
 <br/>
 <br/>
-<div style="text-align: left"><span style="font-size: 12pt"><span style="font-family: Arial">Method Testing</span></span></div><ul><li>nc IP_Adress Port</li>
+<span style="font-family: Arial"><span style="font-size: 12pt"><div style="text-align: left">Method Testing</div></span></span><ul><li>nc IP_Adress Port</li>
 <li style="list-style-type: none"><ul><li>HEAD / HTTP/1.0</li>
 <li>OPTIONS / HTTP/1.0</li>
 <li>PROPFIND / HTTP/1.0</li>
@@ -178,7 +180,7 @@ davtest / cadaver: webdav tester<br/>
 </ul>
 </li>
 </ul>
-<div style="text-align: left"><span style="font-size: 12pt"><span style="font-family: Arial">Upload Files</span></span></div><ul><li>curl</li>
+<span style="font-family: Arial"><span style="font-size: 12pt"><div style="text-align: left">Upload Files</div></span></span><ul><li>curl</li>
 <li style="list-style-type: none"><ul><li>curl -u &lt;username:password&gt; -T file_to_upload &lt;Target_URL&gt;</li>
 <li>curl -A "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" &lt;Target_URL&gt;</li>
 </ul>

@@ -5,7 +5,7 @@
   <key>title</key><string>Key Exposure</string>
   <key>nodeid</key><string>7f012704-96b8-4a79-96c2-943a2746a35a</string>
   <key>modified_time</key><integer>1548783986</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1548783944</integer>
