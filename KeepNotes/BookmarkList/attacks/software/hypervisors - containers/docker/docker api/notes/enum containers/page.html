@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Enum Containers</title>
+</head><body><span style="font-size: 10pt"><b>Get a list of running containers with the ps command</b><br/>
+docker -H &nbsp;open.docker.socket:2375 ps<br/>
+<br/>
+CONTAINER ID &nbsp; &nbsp; &#09;IMAGE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;COMMAND &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;CREATED &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;STATUS &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;PORTS &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;&#09;NAMES<br/>
+72cd30d28e5c &nbsp; &nbsp; &nbsp; &nbsp;&#09;gogs/gogs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;"/app/gogs/docker/st…" &nbsp; &#09;5 days ago &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;Up 5 days &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;0.0.0.0:3000-&gt;3000/tcp, 0.0.0.0:10022-&gt;22/tcp &nbsp; &#09;gogs<br/>
+b522a9034b30 &nbsp; &nbsp; &nbsp; &nbsp;&#09;jdk1.8 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;"/bin/bash" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;5 days ago &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;Up 5 days &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;&#09;&#09;myjdk8<br/>
+0f5947860c17 &nbsp; &nbsp; &nbsp; &nbsp;&#09;centos/mysql-57-centos7 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;"container-entrypoin…" &nbsp; &#09;8 days ago &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;Up 8 days &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;0.0.0.0:3306-&gt;3306/tcp &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;mysql<br/>
+3965c004c7a7 &nbsp; &nbsp; &nbsp; &nbsp;&#09;192.168.32.134:5000/tensquare_config:1.0-SNAPSHOT &nbsp; "java -jar /app.jar" &nbsp; &nbsp; 8 days ago &nbsp; &nbsp; &#09;Up 8 days &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;0.0.0.0:12000-&gt;12000/tcp &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;config<br/>
+3f466b754971 &nbsp; &nbsp; &nbsp; &nbsp;&#09;42cb59080921 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;"/bin/bash" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;8 days ago &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;Up 8 days &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;&#09;&#09;&#09;jdk8<br/>
+6499013fdc2d &nbsp; &nbsp; &nbsp; &nbsp;&#09;registry &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;"/entrypoint.sh /etc…" &nbsp; &#09;8 days ago &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;Up 8 days &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#09;0.0.0.0:5000-&gt;5000/tcp &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#09;&#09;registry<br/>
+<br/>
+<br/>
+<b>Exec into one of the containers</b><br/>
+docker -H &nbsp;open.docker.socket:2375 exec -it mysql /bin/bash<br/>
+<br/>
+bash-4.2$ whoami<br/>
+mysql<br/>
+<br/>
+</span><b>Are there some stopped containers?</b><br/>
+docker -H open.docker.socket:2375 ps -a<br/>
+<br/>
+<b>What are the images pulled on the host machine?</b><br/>
+docker -H open.docker.socket:2375 images<br/>
+<br/>
+I've frequently not been able to get the docker client to work well when it comes to the exec command but you can still code exec in the container with the API. &nbsp;The example below is using curl to interact with the API over https (if enabled). to create and exec job, set up the variable to receive the out put and then start the exec so you can get the output.</body></html>

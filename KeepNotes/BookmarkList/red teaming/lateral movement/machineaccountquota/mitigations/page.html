@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body><b>Defending Against MachineAccountQuota </b><br/>
+I believe that MAQ is just one of those default settings without enough awareness. I’m guessing companies rarely actually need the default MAQ setting or even need it enabled at all. To disable MAQ simply <a href="https://social.technet.microsoft.com/wiki/contents/articles/5446.active-directory-how-to-prevent-authenticated-users-from-joining-workstations-to-a-domain.aspx">set the count to 0</a>. If you do need to allow unprivileged users to add systems, the better route is to just delegate the privilege to specific groups. Just be aware that much of what is listed in this blog post would also apply to a compromised account with delegated domain join privilege.<br/>
+&nbsp;<br/>
+Defenders can also keep an eye out for two things:<br/>
+&nbsp;<ul><li>Populated ms-DS-CreatorSID attributes</li>
+<li>Machine accounts that are not changing their passwords</li>
+</ul>
+&nbsp;</body></html>

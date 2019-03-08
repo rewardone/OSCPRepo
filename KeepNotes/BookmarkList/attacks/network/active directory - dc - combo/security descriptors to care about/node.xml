@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Security Descriptors to Care About</string>
+  <key>nodeid</key><string>fa0a0ecc-4c2c-4761-9055-eb6510796fa0</string>
+  <key>modified_time</key><integer>1552059773</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1552059773</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

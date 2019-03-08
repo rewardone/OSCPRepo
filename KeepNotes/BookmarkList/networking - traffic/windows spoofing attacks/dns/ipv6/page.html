@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IPv6</title>
+</head><body>There’s another technique that utilizes IPv6 and DNS to relay credentials to a target. By default, IPv6 is enabled and actually <i>preferred </i>over IPv4, meaning if a machine has an IPv6 DNS server, it will use that over the IPv4. Also by default, Windows machines look for an IPv6 DNS server via DHCPv6 requests, which if we spoof with a fake IPv6 DNS server, we can effectively control how a device will query DNS. More can be read <a href="https://web.archive.org/web/20190306153013/https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/">here</a>. &nbsp; <br/>
+<br/>
+mitm6 -d lab.local<br/>
+<br/>
+Now the real vulnerability is that Windows prefers IPv6 over IPv4, meaning I now control DNS.<br/>
+</body></html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>A very common misconfiguration within AD results in the ability to conduct WPAD and NBT-NS poisoning. By default, Windows is configured to search for a Web Proxy Auto-Discovery file when using the internet. This is useful in an organization because the device will send out a broadcast asking for the proxy file and receive one. However, it naturally does not authenticate who is sending the proxy file, allowing an attacker to send a spoofed answer which then asks for credentials. <br/>
+<br/>
+responder -I eth0 --wpad<br/>
+<br/>
+In Responder, I see the request come through, which Responder then automatically answers the request with a challenge, which results in the victim sending their username and hashed password (in NTLMv2 format).<br/>
+<br/>
+The hash can be cracked or passed, etc. <br/>
+<br/>
+This attack is usually used in conjunction with DNS spoofing to point users to our WPAD server. </body></html>

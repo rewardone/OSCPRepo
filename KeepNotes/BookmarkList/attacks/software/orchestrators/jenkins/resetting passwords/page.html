@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Resetting Passwords</title>
+</head><body>These require restarting the Jenkins service; however, it is also possible to just grab any user hashes and crack them offline<br/>
+<br/>
+<b>Disable security</b><br/>
+Change true to false in /var/lib/jenkins/config.xml file.<br/>
+&lt;useSecurity&gt;true&lt;/useSecurity&gt;<br/>
+<br/>
+Then just restart Jenkins, by<br/>
+sudo service jenkins restart<br/>
+<br/>
+And then go to admin panel and set everything once again.<br/>
+<br/>
+<br/>
+<b>Update a users passwordHash</b><br/>
+One other way would be to manually edit the configuration file for your user (e.g. /var/lib/jenkins/users/username/config.xml) and update the contents of passwordHash:<br/>
+&lt;passwordHash&gt;#jbcrypt:$2a$10$razd3L1aXndFfBNHO95aj.IVrFydsxkcQCcLmujmFQzll3hcUrY7S&lt;/passwordHash&gt;<br/>
+<br/>
+Once you have done this, just restart Jenkins and log in using this password:<br/>
+test<br/>
+<br/>
+You can generate your own with python and bcrypt<br/>
+$ python<br/>
+&gt;&gt;&gt; import bcrypt<br/>
+&gt;&gt;&gt; bcrypt.hashpw("yourpassword", bcrypt.gensalt(rounds=10, prefix=b"2a"))<br/>
+'YOUR_HASH'<br/>
+<br/>
+<br/>
+<b>If the initial password was never changed</b>, you can grab it from:<b><br/>
+</b>step-1 : go to the directory cd .jenkins/secrets then you will get a 'initialAdminPassword'.<br/>
+step-2 : nano initialAdminPassword</body></html>

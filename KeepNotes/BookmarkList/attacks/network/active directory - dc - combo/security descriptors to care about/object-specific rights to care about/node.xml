@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Object-Specific Rights to Care About</string>
+  <key>nodeid</key><string>377bee36-f2b7-4bf2-8948-93c8e54992cf</string>
+  <key>modified_time</key><integer>1552059924</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1552059850</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

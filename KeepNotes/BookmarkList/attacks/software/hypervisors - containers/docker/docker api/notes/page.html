@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Notes</title>
+</head><body>This <b>wont</b>&nbsp;cover breaking out of docker containers<br/>
+<br/>
+Ports: usually 2375 &amp; 2376 (TLS) but can be anything<br/>
+<br/>
+Having the docker API/socket exposed is essentially granting root to any of the containers on the system. The daemon listens on:<br/>
+unix:///var/run/docker.sock <br/>
+<br/>
+but you can bind Docker to another host/port or a Unix socket. The docker socket is the socket the Docker daemon listens on by default and it can be used to communicate with the daemon from within a container, or if configured, outside the container against the host running docker. All the docker socket magic is happening via the docker API.<br/>
+<br/>
+</body></html>

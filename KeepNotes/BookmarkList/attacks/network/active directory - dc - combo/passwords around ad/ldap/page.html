@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LDAP</title>
+</head><body><b>Hunting for Passwords</b><br/>
+&nbsp;<br/>
+There are 3-4 fields that seem to be common in most AD schemas, <br/>
+<br/>
+UserPassword<br/>
+UnixUserPassword<br/>
+unicodePwd<br/>
+msSFU30Password.<br/>
+<br/>
+On a surprising number of tests we find one or more of these fields are populated with ACTUAL passwords. They are sometimes obfuscated by converting to the ASCII decimal equivalents but that is nothing that “man ascii” can’t help you with.<br/>
+&nbsp; </body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>MAQ Adding A Computer Account to a Domain</string>
+  <key>nodeid</key><string>2d54a224-49a5-4522-bdbe-c926c0e04866</string>
+  <key>modified_time</key><integer>1552057109</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1552057019</integer>
+  <key>order</key><integer>12</integer>
+</dict>
+</node>

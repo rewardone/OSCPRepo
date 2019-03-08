@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Backdoor Process</title>
+</head><body>An example to backdoor Exchange<br/>
+<br/>
+Process<br/>
+1. Identify a non-protected security group with local admin rights on one or more Exchange Servers<br/>
+2. Grant Authenticated Users full control over this security group<br/>
+3. Change the owner of the group to an Exchange server<br/>
+4. Denu Read Permissions on this group to the Everyone principal<br/>
+<br/>
+Execution<br/>
+1. Regain access to the Active Directory domain as any user<br/>
+2. Add your current user to the backdoored security group<br/>
+3. Use your new local admin rights on an Exchange server to execute commands as the SYSTEM user on that computer<br/>
+4. Abuse the rights Exchange Trusted Subsystem has over the domain object (i.e. WriteDacl)<br/>
+<br/>
+More information:<br/>
+https://specterops.io/assets/resources/an_ace_up_the_sleeve.pdf<br/>
+<br/>
+</body></html>

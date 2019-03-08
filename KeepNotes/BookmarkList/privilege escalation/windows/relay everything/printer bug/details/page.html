@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Details</title>
+</head><body>Print System Remote Protocol (<a href="https://msdn.microsoft.com/en-us/library/cc244528.aspx">MS-RPRN</a>) <br/>
+All comms are SMB-RPC (TCP 445)<br/>
+Named Pipe: \pipe\spoolss<br/>
+RPC UUID: 12345678-1234-ABCD-EF00-0123456789AB<br/>
+"Discovered" by reading the protocol spec (likely more RPC servers that do a similar thing)<br/>
+<br/>
+Opnum 62 or 65<br/>
+&nbsp;&#09;RpcRemoteFindFirstPrinterChangeNotification<br/>
+&nbsp;&#09;RpcRemoteFindFirstPrinterChangeNotificationEx<br/>
+The RPC server is accessible by all domain users on Windows &gt;= 8 if the Spooler service is started (Server &amp; Workstation enabled by default)<br/>
+&nbsp;&#09;On Windows &lt; 8, seems possible if the host has shared a printer<br/>
+<br/>
+</body></html>

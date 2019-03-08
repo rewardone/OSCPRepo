@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Kerberos Unconstrained Delegation Attack</title>
+</head><body><b>Kerberos Unconstrained Delegation Attack </b><br/>
+With the above in place, we next need to sort out how to get the desired account traffic to the compromised host. For this first round, we’ll use <a href="https://www.slideshare.net/harmj0y/derbycon-the-unintended-risks-of-trusting-active-directory/39">tifkin’s printer bug</a>&nbsp;to get a domain controller machine account to connect to our system over SMB. Additionally, we will be using the <a href="https://github.com/Kevin-Robertson/Inveigh/tree/dev">dev Branch version of Inveigh</a>. Through packet sniffing, this version can grab SMB Kerberos TGT traffic and attempt to output a kirbi file for use with tools such as <a href="https://github.com/gentilkiwi/mimikatz">Mimikatz</a>&nbsp;and <a href="https://github.com/GhostPack/Rubeus">Rubeus</a>.<br/>
+&nbsp;<br/>
+For Inveigh, we will need to have either the unconstrained delegation account’s AES256 hash or a PSCredential object with a Kerberos salt as the username. Shown below is the process of generating the correct AES256 hash using Powermad’s Get-KerberosAESKey function.<br/>
+&nbsp; <img src="image.png" /><br/>
+<br/>
+Note, Inveigh currently only supports AES256 Kerberos decryption.<br/>
+&nbsp;<br/>
+Since we want to use our unconstrained delegation machine account’s SPN, we will need to have the target connect to the correct host name. For this example, I’ll use <a href="https://twitter.com/_dirkjan">Dirk-jan</a>‘s printerbug script from his <a href="https://dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/">recently released</a>&nbsp;<a href="https://github.com/dirkjanm/krbrelayx/">Krbrelayx toolkit</a>.<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+<br/>
+&nbsp; At this point, let’s take a step back and go over the various SPNs in play. First, we have a compromised system running an SMB server as SYSTEM. This means that the SMB server will decrypt Kerberos tickets using the system’s machine account credentials. If we cause an SPN mismatch and attempt to perform Kerberos authentication with data encrypted under a different SPN, the SMB authentication will fail. However, the SMB server will not reject the authentication attempt until after the client has transmitted the AP-REQ. &nbsp;<br/>
+<img src="image 3.png" /><br/>
+<br/>
+More importantly for this scenario, the SMB server will reject the connection after receiving the TGT. Therefore, if we can grab the Kerberos traffic through packet sniffing, we can decrypt the needed data with the machine account credentials we have in our possession. &nbsp;<br/>
+<img src="image 4.png" /><br/>
+<br/>
+<br/>
+Note, using the SPN mismatch trick has a tendency to trigger multiple Kerberos authentication attempts from a client. I have Inveigh set to only output 2 kirbi files per user by default. Inveigh stores the rest in memory for access through Get-Inveigh.<br/>
+&nbsp;<br/>
+Now that we have a kirbi TGT for the domain controller, we can pass it to Mimikatz and attempt a dcsync.<br/>
+<img src="image 5.png" /><br/>
+<br/>
+For another quick example, I used Inveigh to capture a Domain Administrator TGT over SMB. &nbsp;<br/>
+<img src="image 6.png" /><br/>
+<br/>
+Next, I used the kirbi file with Rubeus. &nbsp;<br/>
+<img src="image 7.png" /><br/>
+<br/>
+As a last example, below is Inveigh catching a TGT over HTTP. &nbsp;<br/>
+<br/>
+<img src="image 8.png" /><br/>
+<br/>
+<br/>
+HTTP may, in ideal conditions, remove the requirement for local administrator access on the compromised system.<br/>
+&nbsp;<br/>
+Finally, the Kerberos unconstrained delegation technique above would also work well with the new krbrelayx toolkit.<br/>
+&nbsp;<br/>
+One last word on SeEnableDelegationPrivilege + MAQ, fully setting up standard constrained delegation is usually out of reach due to the lack of write access to msDS-AllowedToDelegateTo.<br/>
+&nbsp; <br/>
+<br/>
+</body></html>

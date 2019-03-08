@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body><b>Mitigations </b><br/>
+As this attack consists of several components, there are several mitigations that apply to it.<br/>
+<br/>
+<b>Mitigating mitm6 </b><br/>
+mitm6 abuses the fact that Windows queries for an IPv6 address even in IPv4-only environments. If you don’t use IPv6 internally, the safest way to prevent mitm6 is to block DHCPv6 traffic and incoming router advertisements in Windows Firewall via Group Policy. Disabling IPv6 entirely may have unwanted side effects. Setting the following predefined rules to Block instead of Allow prevents the attack from working:<br/>
+&nbsp;<ul><li><i>(Inbound) Core Networking - Dynamic Host Configuration Protocol for IPv6(DHCPV6-In)</i></li>
+<li><i>(Inbound) Core Networking - Router Advertisement (ICMPv6-In)</i></li>
+<li><i>(Outbound) Core Networking - Dynamic Host Configuration Protocol for IPv6(DHCPV6-Out)</i></li>
+</ul>
+<br/>
+<b>Mitigating WPAD abuse</b>&nbsp;<br/>
+If WPAD is not in use internally, disable it via Group Policy and by disabling the WinHttpAutoProxySvc service. Further mitigation and detection measures are discussed <a href="https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/">in the original mitm6 blog</a>.<br/>
+<br/>
+<b>Mitigating relaying to LDAP </b><br/>
+Relaying to LDAP and LDAPS can only be mitigated by enabling both LDAP signing and <a href="https://support.microsoft.com/en-us/help/4034879/how-to-add-the-ldapenforcechannelbinding-registry-entry">LDAP channel binding</a>.<br/>
+<br/>
+<b>Mitigating resource based delegation abuse </b><br/>
+This is hard to mitigate as it is a legitimate Kerberos concept. The attack surface can be reduced by adding Administrative users to the Protected Users group or marking them as Account is sensitive and cannot be delegated, which will prevent any impersonation of that user via delegation. Further mitigations and detection methods are <a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html">available here</a>.<br/>
+&nbsp; </body></html>

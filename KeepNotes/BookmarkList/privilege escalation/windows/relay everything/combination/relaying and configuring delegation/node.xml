@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Relaying and Configuring Delegation</string>
+  <key>nodeid</key><string>881110e0-a167-49d6-9276-eca4f13d2c73</string>
+  <key>modified_time</key><integer>1551810958</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1551810655</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>
