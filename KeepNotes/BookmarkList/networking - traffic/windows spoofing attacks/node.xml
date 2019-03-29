@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Windows Spoofing Attacks</string>
   <key>nodeid</key><string>e3d5498d-1851-4b66-b070-e28547d0846a</string>
   <key>modified_time</key><integer>1551983911</integer>

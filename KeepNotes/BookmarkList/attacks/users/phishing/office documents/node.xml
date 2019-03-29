@@ -4,8 +4,8 @@
 <dict>
   <key>title</key><string>Office Documents</string>
   <key>nodeid</key><string>c6deb94a-3c28-4d9f-b2c6-74b80051f8b6</string>
-  <key>modified_time</key><integer>1547658039</integer>
-  <key>expanded2</key><false/>
+  <key>modified_time</key><integer>1552418679</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1547658039</integer>
