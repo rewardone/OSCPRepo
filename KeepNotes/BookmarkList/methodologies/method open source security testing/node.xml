@@ -13,6 +13,6 @@
   <key>title</key><string>Method: Open Source Security Testing</string>
   <key>version</key><integer>6</integer>
   <key>order</key><integer>5</integer>
-  <key>info_sort</key><string>order</string>
+  <key>info_sort</key><string>modified_time</string>
 </dict>
 </node>
