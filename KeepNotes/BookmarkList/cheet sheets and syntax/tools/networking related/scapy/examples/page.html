@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Examples</title>
+</head><body>https://www.packetlevel.ch/html/scapy/docs/scapy_sans.pdf<br/>
+<br/>
+This is how interactive scapy may be used to send a TCP SYN segment to two destination hosts, 172.22.7.133 and 172.22.10.132, to four different destination ports – 111, 139, 445, and 80.<br/>
+&gt;&gt;&gt; sr(IP(dst=[“172.22.7.133”, “172.22.10.132”])/TCP(dport = [111, 139, 445, 80], flags=”S”))<br/>
+<br/>
+Here is how interactive scapy may be used to craft a UDP datagram to send to destination host 172.22.7.133 and destination port 13 with some payload and listen for the response.<br/>
+&gt;&gt;&gt; ip=IP(dst=”172.22.7.133”)<br/>
+&gt;&gt;&gt; udp=UDP(sport=1024,dport=13)<br/>
+&gt;&gt;&gt; payload=”All your base are belong to us”<br/>
+&gt;&gt;&gt; packet=ip/udp/payload<br/>
+&gt;&gt;&gt; sr1(packet)<br/>
+<br/>
+The following is a simple scapy program that creates an actual TCP session from source host 172.22.8.135 and source port 1030 to destination host 172.22.7.133 and destination port 80. &nbsp;It crafts the SYN segment, listens for the server’s SYN/ACK and acknowledges it to complete the three-way handshake. &nbsp;Next, it sends a segment that contains data. &nbsp;There is an issue with an undesirable side effect that creates a reset and inadvertently aborts the session.<br/>
+<br/>
+#!/usr/bin/python<br/>
+from scapy.all import *<br/>
+ip=IP(src=”172.22.8.135”, dst=”172.22.7.133”)<br/>
+SYN=TCP(sport=1030, dport=80, flags=”S”, seq=10)<br/>
+SYNACK=sr1(ip/SYN)my_ack = SYNACK.seq + 1<br/>
+ACK=TCP(sport=1030, dport=80, flags=”A”, seq=11, ack=my_ack)<br/>
+send(ip/ACK)<br/>
+payload = “SEND TCP”<br/>
+PUSH=TCP(sport=1030,dport=80, flags=”PA”, seq=11, ack=my_ack)<br/>
+send(ip/PUSH/payload)</body></html>

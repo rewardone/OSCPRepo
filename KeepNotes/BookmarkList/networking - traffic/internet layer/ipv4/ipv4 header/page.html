@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>TCP Header</title>
+</head><body><br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<b>Version </b><br/>
+The first header field in an IP <a href="https://en.wikipedia.org/wiki/Packet_(information_technology)">packet</a>&nbsp;is the four-bit version field. For IPv4, this is always equal to 4. <br/>
+<br/>
+<b>Internet Header Length (IHL) &nbsp;</b><br/>
+The Internet Header Length (IHL) field has 4 bits, which is the number of 32-bit <a href="https://en.wikipedia.org/wiki/Word_(data_type)">words</a>. Since an IPv4 header may contain a variable number of options, this field specifies the size of the header (this also coincides with the offset to the data). The minimum value for this field is 5,<a href="https://en.wikipedia.org/wiki/IPv4#cite_note-22">[22]</a>&nbsp;which indicates a length of 5 × 32 bits = 160 bits = 20 bytes. As a 4-bit field, the maximum value is 15 words (15 × 32 bits, or 480 bits = 60 bytes). <br/>
+<br/>
+<b><a href="https://en.wikipedia.org/wiki/Differentiated_Services_Code_Point">Differentiated Services Code Point (DSCP)</a>&nbsp;</b><br/>
+Originally defined as the <a href="https://en.wikipedia.org/wiki/Type_of_service">type of service</a>&nbsp;(ToS), this field specifies <a href="https://en.wikipedia.org/wiki/Differentiated_services">differentiated services</a>&nbsp;(DiffServ) per <a href="https://tools.ietf.org/html/rfc2474">RFC 2474</a>&nbsp;(updated by <a href="https://tools.ietf.org/html/rfc3168">RFC 3168</a>&nbsp;and <a href="https://tools.ietf.org/html/rfc3260">RFC 3260</a>). New technologies are emerging that require real-time data streaming and therefore make use of the DSCP field. An example is <a href="https://en.wikipedia.org/wiki/Voice_over_IP">Voice over IP</a>&nbsp;(VoIP), which is used for interactive voice services. <br/>
+<br/>
+<b><a href="https://en.wikipedia.org/wiki/Explicit_Congestion_Notification">Explicit Congestion Notification</a>&nbsp;(ECN) </b><br/>
+This field is defined in <a href="https://tools.ietf.org/html/rfc3168">RFC 3168</a>&nbsp;and allows end-to-end notification of <a href="https://en.wikipedia.org/wiki/Network_congestion">network congestion</a>&nbsp;without dropping packets. ECN is an optional feature that is only used when both endpoints support it and are willing to use it. It is effective only when supported by the underlying network. <br/>
+<br/>
+<b>Total Length </b><br/>
+This 16-bit field defines the entire packet size in bytes, including header and data. The minimum size is 20 bytes (header without data) and the maximum is 65,535 bytes. All hosts are required to be able to reassemble datagrams of size up to 576 bytes, but most modern hosts handle much larger packets. Sometimes links impose further restrictions on the packet size, in which case datagrams must be fragmented. Fragmentation in IPv4 is handled in either the host or in routers. <br/>
+<br/>
+<b>Identification </b><br/>
+This field is an identification field and is primarily used for uniquely identifying the group of fragments of a single IP datagram. Some experimental work has suggested using the ID field for other purposes, such as for adding packet-tracing information to help trace datagrams with spoofed source addresses,<a href="https://en.wikipedia.org/wiki/IPv4#cite_note-23">[23]</a>&nbsp;but <a href="https://tools.ietf.org/html/rfc6864">RFC 6864</a>&nbsp;now prohibits any such use. <br/>
+<br/>
+<b>Flags </b><br/>
+A three-bit field follows and is used to control or identify fragments. They are (in order, from most significant to least significant): <ul><li>bit 0: Reserved; must be zero.<a href="https://en.wikipedia.org/wiki/IPv4#cite_note-24">[note 1]</a></li>
+<li>bit 1: Don't Fragment (DF)</li>
+<li>bit 2: More Fragments (MF)</li>
+</ul>
+If the DF flag is set, and fragmentation is required to route the packet, then the packet is dropped. This can be used when sending packets to a host that does not have resources to handle fragmentation. It can also be used for <a href="https://en.wikipedia.org/wiki/Path_MTU_discovery">path MTU discovery</a>, either automatically by the host IP software, or manually using diagnostic tools such as <a href="https://en.wikipedia.org/wiki/Ping_(networking_utility)">ping</a>&nbsp;or <a href="https://en.wikipedia.org/wiki/Traceroute">traceroute</a>. For unfragmented packets, the MF flag is cleared. For fragmented packets, all fragments except the last have the MF flag set. The last fragment has a non-zero Fragment Offset field, differentiating it from an unfragmented packet. <br/>
+<br/>
+<b>Fragment Offset &nbsp;</b><br/>
+The fragment offset field is measured in units of eight-byte blocks. It is 13 bits long and specifies the offset of a particular fragment relative to the beginning of the original unfragmented IP datagram. The first fragment has an offset of zero. This allows a maximum offset of (213 – 1) × 8 = 65,528 bytes, which would exceed the maximum IP packet length of 65,535 bytes with the header length included (65,528 + 20 = 65,548 bytes). <br/>
+<br/>
+<b>Time To Live (TTL) </b><br/>
+An eight-bit <a href="https://en.wikipedia.org/wiki/Time_to_live">time to live</a>&nbsp;field helps prevent datagrams from persisting (e.g. going in circles) on an internet. This field limits a datagram's lifetime. It is specified in seconds, but time intervals less than 1 second are rounded up to 1. In practice, the field has become a <a href="https://en.wikipedia.org/wiki/Hop_count">hop count</a>—when the datagram arrives at a <a href="https://en.wikipedia.org/wiki/Router_(computing)">router</a>, the router decrements the TTL field by one. When the TTL field hits zero, the router discards the packet and typically sends an <a href="https://en.wikipedia.org/wiki/ICMP_Time_Exceeded">ICMP Time Exceeded</a>&nbsp;message to the sender. The program <i>traceroute</i>&nbsp;uses these ICMP Time Exceeded messages to print the routers used by packets to go from the source to the destination. <br/>
+<br/>
+<b>Protocol </b><br/>
+This field defines the protocol used in the data portion of the IP datagram. The <a href="https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority">Internet Assigned Numbers Authority</a>&nbsp;maintains a <a href="https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers">list of IP protocol numbers</a>&nbsp;as directed by <a href="https://tools.ietf.org/html/rfc790">RFC 790</a>. <br/>
+<br/>
+<b>Header Checksum</b><br/>
+The 16-bit <a href="https://en.wikipedia.org/wiki/IPv4_header_checksum">IPv4 header checksum</a>&nbsp;field is used for error-checking of the header. When a packet arrives at a router, the router calculates the checksum of the header and compares it to the checksum field. If the values do not match, the router discards the packet. Errors in the data field must be handled by the encapsulated protocol. Both <a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a>&nbsp;and <a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a>&nbsp;have checksum fields. When a packet arrives at a router, the router decreases the TTL field. Consequently, the router must calculate a new checksum. &nbsp;<br/>
+<br/>
+<b>Source address </b><br/>
+This field is the <a href="https://en.wikipedia.org/wiki/IPv4_address">IPv4 address</a>&nbsp;of the sender of the packet. Note that this address may be changed in transit by a <a href="https://en.wikipedia.org/wiki/Network_address_translation">network address translation</a>&nbsp;device. <br/>
+<br/>
+<b>Destination address </b><br/>
+This field is the <a href="https://en.wikipedia.org/wiki/IPv4_address">IPv4 address</a>&nbsp;of the receiver of the packet. As with the source address, this may be changed in transit by a <a href="https://en.wikipedia.org/wiki/Network_address_translation">network address translation</a>&nbsp;device. <br/>
+<br/>
+<b>Options</b>&nbsp; <br/>
+The <a href="https://en.wikipedia.org/wiki/Internet_Protocol_Options">options field</a>&nbsp;is not often used. Note that the value in the IHL field must include enough extra 32-bit words to hold all the options (plus any padding needed to ensure that the header contains an integer number of 32-bit words). The list of options may be terminated with an EOL (<a href="https://en.wikipedia.org/w/index.php?title=End_of_Options_List&action=edit&redlink=1">End of Options List</a>, 0x00) option; this is only necessary if the end of the options would not otherwise coincide with the end of the header. The possible options that can be put in the header are as follows: <br/>
+<br/>
+Field &#09;&#09;Size (bits) &#09;Description &nbsp; <br/>
+Copied &#09;&#09;1 &#09;&#09;&#09;Set to 1 if the options need to be copied into all fragments of a fragmented packet. &nbsp; <br/>
+Option Class &#09;2 &#09;&#09;&#09;A general options category. 0 is for "control" options, and 2 is for "debugging and measurement". 1 and 3 are reserved. &nbsp; <br/>
+Option Number &#09;5 &#09;&#09;Specifies an option. &nbsp; <br/>
+Option Length &#09;8 &#09;&#09;Indicates the size of the entire option (including this field). This field may not exist for simple options. &nbsp; <br/>
+Option Data &#09;Variable &#09;&#09;Option-specific data. This field may not exist for simple options. &nbsp;<ul><li>Note: If the header length is greater than 5 (i.e., it is from 6 to 15) it means that the options field is present and must be considered.</li>
+<li>Note: Copied, Option Class, and Option Number are sometimes referred to as a single eight-bit field, the <i>Option Type</i>.</li>
+</ul>
+<br/>
+Packets containing <a href="https://en.wikipedia.org/wiki/Internet_Protocol_Options_Considerations">some options may be considered as dangerous</a>&nbsp;by some routers and be blocked.<a href="https://en.wikipedia.org/wiki/IPv4#cite_note-25">[24]</a>&nbsp;<br/>
+<br/>
+<b>Data</b><br/>
+The packet payload is not included in the checksum. Its contents are interpreted based on the value of the Protocol header field. <br/>
+Some of the common payload protocols are: <br/>
+Protocol Number &#09;Protocol Name &#09;&#09;&#09;&#09;&#09;Abbreviation &nbsp; <br/>
+1 &#09;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">Internet Control Message Protocol</a>&nbsp;&#09;ICMP &nbsp; <br/>
+2 &#09;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Internet_Group_Management_Protocol">Internet Group Management Protocol</a>&nbsp;&#09;IGMP &nbsp; <br/>
+6 &#09;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">Transmission Control Protocol</a>&nbsp;&#09;&#09;TCP &nbsp; <br/>
+17 &#09;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">User Datagram Protocol</a>&nbsp;&#09;&#09;&#09;UDP &nbsp; <br/>
+41 &#09;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/IPv6#Tunneling">IPv6 encapsulation</a>&nbsp;&#09;&#09;&#09;&#09;ENCAP &nbsp; <br/>
+89 &#09;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First">Open Shortest Path First</a>&nbsp;&#09;&#09;&#09;OSPF &nbsp; <br/>
+132 &#09;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Stream_Control_Transmission_Protocol">Stream Control Transmission Protocol</a>&nbsp;&#09;SCTP &nbsp;<br/>
+<br/>
+See &#09;<a href="https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers">List of IP protocol numbers</a>&nbsp;for a complete list. <br/>
+<br/>
+<br/>
+0 &#09;&#09;&#09; &nbsp; &nbsp; &nbsp;1 &#09;&#09;&#09; &nbsp; &nbsp;2 &#09;&#09;&#09; &nbsp; &#09; &nbsp; 3<br/>
+0 1 2 3 &nbsp;4 5 6 &nbsp;7 8 9 &nbsp;0 1 2 3 &nbsp;4 5 6 &nbsp;7 8 9 0 1 2 3 &nbsp;4 5 6 &nbsp;7 8 9 &nbsp;0 1<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09; &nbsp; &nbsp;Source Port&#09;&#09; &nbsp; &nbsp;| &#09;&#09;Destination Port &#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09;&#09;&#09;&#09; Sequence Number &#09;&#09;&#09;&#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+|&#09;&#09;&#09; &nbsp; &nbsp;Acknowledgment Number &#09;&#09;&#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &nbsp;Data | &#09;&#09;|C|E|U|A|P|R|S|F| &#09;&#09;&#09;&#09;&#09;&#09; |<br/>
+| Offset | Res. &#09;|W|C|R|C|S|S|Y|I| &#09;&#09; &nbsp; Window &#09;&#09; |<br/>
+| &#09; &nbsp; | &#09;&#09;|R|E|G|K|H|T|N|N| &#09;&#09;&#09;&#09;&#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09; &nbsp;Checksum &#09;&#09; &nbsp; &nbsp;| &#09;&#09;&#09;Urgent Pointer &#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09;&#09;&#09;Options &#09;&#09;&#09;&#09;&#09;|&#09; Padding &#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+| &#09;&#09;&#09;&#09;&#09;data&#09;&#09;&#09;&#09;&#09;&#09;&#09; |<br/>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<br/>
+<br/>
+TCP Flags: CEUAPRSF and occur in the 14th byte of the TCP header<br/>
+&nbsp;&#09;A:&#09;ACK<br/>
+&nbsp;&#09;P:&#09;PSH<br/>
+<br/>
+</body></html>

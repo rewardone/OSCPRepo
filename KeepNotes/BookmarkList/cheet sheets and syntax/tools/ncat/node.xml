@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Ncat</string>
   <key>nodeid</key><string>7cad72aa-7b17-418b-99a3-bf10cf5f925e</string>
   <key>modified_time</key><integer>1524499337</integer>

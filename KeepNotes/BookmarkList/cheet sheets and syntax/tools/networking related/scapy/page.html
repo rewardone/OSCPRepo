@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Scapy</title>
+</head><body>https://blogs.sans.org/pen-testing/files/2016/04/ScapyCheatSheet_v0.2.pdf - Local copy<br/>
+http://packetlife.net/media/library/36/scapy.pdf<br/>
+<br/>
+<b>Basics</b>:<br/>
+List supported layers:<br/>
+&gt;&gt;&gt; ls()<br/>
+key layers are: arp, ip, ipv6, tcp, udp, icmp<br/>
+<br/>
+View layer fields use ls(layer)<br/>
+&gt;&gt;&gt; ls(IPv6)<br/>
+<br/>
+list available commands:<br/>
+&gt;&gt;&gt; lsc()<br/>
+<br/>
+key commands for interacting with packets:<br/>
+rdpcap, send, sr, sniff, wrpcap<br/>
+<br/>
+Get help with commands use help(command):<br/>
+&gt;&gt;&gt; help(rdpcap)<br/>
+<br/>
+<b>Basic Packet Crafting / Viewing</b><br/>
+Scapy works with layers. Layers are individual functions linked together with the "/" character to construct packets. To build a basic TCP/IP packet with "data" as the payload:<br/>
+&gt;&gt;&gt; packet = IP(dst="1.2.3.4")/TCP(dport=22)/"data"<br/>
+<br/>
+Scapy allows crafting all the way down to the ether() layer, but will use default values if layers are omitted. To correct pass traffic, layers should be ordered from lowest to highest from left to right eg: ether -&gt; IP -&gt; TCP<br/>
+<br/>
+Packet summary:<br/>
+&gt;&gt;&gt; packet.summary()<br/>
+<br/>
+More packet details:<br/>
+&gt;&gt;&gt; packet.show()<br/>
+<br/>
+Combining layers<br/>
+&gt;&gt;&gt;l3=IP()/TCP()<br/>
+&gt;&gt;&gt;l2=Ether()/l3<br/>
+<br/>
+Splitting layers apart<br/>
+&gt;&gt;&gt;l2.getlayer(1)<br/>
+&gt;&gt;&gt;l2.getlayer(2)<br/>
+<br/>
+<b>Sending Packets:</b><br/>
+Functions:<br/>
+sr()&#09;&#09;send and receive without custom ether layer<br/>
+sendp()&#09;sends with a custom ether() layer<br/>
+srp()&#09;sends and receives at with a custom ether() layer<br/>
+sr1()&#09;sends packets without custom ether() layer and waits for first answer<br/>
+sr1p()&#09;sneds packets with custom ether() layer and waits for first answer<br/>
+<br/>
+Send function options:<br/>
+filter=&lt;Berkley Packet Filter&gt;<br/>
+retry=&lt;retry count for unanswered packets&gt;<br/>
+timeout=&lt;num seconds to wait before give up&gt;<br/>
+iface=&lt;iface to send/receive&gt;<br/>
+<br/>
+&gt;&gt;&gt; packet = IP(dst="4.5.6.7",src="1.2.3.4")/TCP(dport=80,flags="S")<br/>
+&gt;&gt;&gt; send(packet)<br/>
+&gt;&gt;&gt; packets = sr(packet, retry=5,timeout=1.5,iface="eth0",filter="host 1.2.3.4 and port 80")<br/>
+<br/>
+Send packets much faster at layer two using tcpreplay<br/>
+&gt;&gt;&gt; sendpfast(pkt, pps=N, mbps=N, loop=0, iface=N)<br/>
+<br/>
+Send packets in a loop and print each reply:<br/>
+srloop(pkt, timeout=N, count=N), srploop(...)<br/>
+<br/>
+Fuzzing, Randomize fields where applicable<br/>
+&gt;&gt;&gt;fuzz(ICMP()).show()<br/>
+<br/>
+<b>Sniffing and pcaps</b><br/>
+Sniff using Berkley Packet Filters:<br/>
+&gt;&gt;&gt; packets = sniff(filter="host 1.1.1.1")<br/>
+<br/>
+Sniff using counts:<br/>
+&gt;&gt;&gt; packets = sniff(count=100)<br/>
+<br/>
+Read from pcap:<br/>
+&gt;&gt;&gt; packets = rdpcap("filename.pcap")<br/>
+<br/>
+Writing to pcap:<br/>
+&gt;&gt;&gt; wrpcap("filename.pcap",packets)<br/>
+<br/>
+<b>Receiving and analzing</b>&nbsp;<br/>
+Received packets can be stored in a variable when using a send/receive function such as sr(), srp(), sr1(), sr1p():<br/>
+&gt;&gt;&gt; packet = IP(dst="10.10.10.20)/TCP(dport=0,1024)<br/>
+&gt;&gt;&gt; unans,ans = sr(packet)<br/>
+received 1086 packets, got 1024 answers, remaining 0 packets<br/>
+<br/>
+'ans' wil lstore the answered packets:<br/>
+&gt;&gt;&gt; ans<br/>
+&lt;Results: TCP:1024 UDP:0 ICMP:0 Other:0&gt;<br/>
+<br/>
+To see a summary of responses:<br/>
+&gt;&gt;&gt; ans.sumary()<br/>
+<br/>
+To view a specific answer as a stream in array form:<br/>
+&gt;&gt;&gt; ans[15]<br/>
+<br/>
+To view first packet in a stream:<br/>
+&gt;&gt;&gt; ans[15][0]<br/>
+<br/>
+To view the TCP flags in the response packet:<br/>
+&gt;&gt;&gt; ans[15][1].springf("%TCP.flags%")<br/>
+<br/>
+Altering Packets<br/>
+&gt;&gt;&gt; packet = IP(dst="10.10.10.50")/TCP(sport=80)<br/>
+<br/>
+View field's value like the source port:<br/>
+&gt;&gt;&gt; packet.sport<br/>
+80<br/>
+<br/>
+Setting source port:<br/>
+&gt;&gt;&gt; packet.sport = 443<br/>
+<br/>
+Setting port ranges:<br/>
+&gt;&gt;&gt; packet[TCP].dport = (1,1024)<br/>
+<br/>
+Setting list of ports:<br/>
+&gt;&gt;&gt; packet[TCP].dport = [22,80,445]<br/>
+<br/>
+Setting TCP flags:<br/>
+&gt;&gt;&gt; packet[TCP].flags="SA"<br/>
+&gt;&gt;&gt; packet.sprintf("%TCP.flags%")<br/>
+<br/>
+Note, for ambiguous fields like "flags", you must specify the target layer (TCP)<br/>
+<br/>
+Set destination:<br/>
+&gt;&gt;&gt; packet[IP].dst="1.2.3.4"<br/>
+<br/>
+Using CIDR:<br/>
+&gt;&gt;&gt; packet[IP].dst = "1.2.3.4/16"<br/>
+<br/>
+Multiple Destination:<br/>
+&gt;&gt;&gt; packet[IP].dst = ["1.2.3.4","2.3.4.5","1.1.1.1"]<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

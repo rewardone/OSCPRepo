@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IPv6 Header</title>
+</head><body><img src="image.png" /><br/>
+<br/>
+<i><b>Version</b></i><b>&nbsp;(4 bits) </b><br/>
+The constant 6 (bit sequence <tt>0110</tt>). <br/>
+<br/>
+<i><b>Traffic Class</b></i><b>&nbsp;(6+2 bits)  </b><br/>
+The bits of this field hold two values. The six most-significant bits hold the <a href="https://en.wikipedia.org/wiki/Differentiated_Services">Differentiated Services</a>&nbsp;(DS) field, which is used to classify packets.<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc2474-2">[2]</a><a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc3260-3">[3]</a>&nbsp;Currently, all standard DS fields end with a '0' bit. Any DS field that ends with two '1' bits is intended for local or experimental use.<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc4727-4">[4]</a>&nbsp;The remaining two bits are used for <a href="https://en.wikipedia.org/wiki/Explicit_Congestion_Notification">Explicit Congestion Notification</a>&nbsp;(ECN);<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc3168-5">[5]</a>&nbsp;priority values subdivide into ranges: traffic where the source provides congestion control and non-congestion control traffic. <br/>
+<br/>
+<i><b>Flow Label</b></i><b>&nbsp;(20 bits) </b><br/>
+Originally created for giving <a href="https://en.wikipedia.org/wiki/Real-time_computing">real-time applications</a>&nbsp;special service.<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc8200-1">[1]</a>&nbsp;When set to a non-zero value, it serves as a hint to routers and switches with multiple outbound paths that these packets should stay on the same path, so that they will not be reordered.<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc3595-6">[6]</a><a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc6437-7">[7]</a>&nbsp;It has further been suggested that the flow label be used to help detect spoofed packets.<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-8">[8]</a>&nbsp;<br/>
+<br/>
+<i><b>Payload Length</b></i><b>&nbsp;(16 bits) </b><br/>
+The size of the payload in octets, including any extension headers. The length is set to zero when a <i>Hop-by-Hop</i>&nbsp;extension header carries a <a href="https://en.wikipedia.org/wiki/IPv6_packet#Jumbogram">Jumbo Payload</a>&nbsp;option.<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc2675-9">[9]</a>&nbsp;<br/>
+<br/>
+<i><b>Next Header</b></i><b>&nbsp;(8 bits) </b><br/>
+Specifies the type of the next header. This field usually specifies the <a href="https://en.wikipedia.org/wiki/Transport_layer">transport layer</a>&nbsp;protocol used by a packet's payload. When extension headers are present in the packet this field indicates which extension header follows. The values are <a href="https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers">shared</a>&nbsp;with those used for the IPv4 protocol field, as both fields have the same function (see <a href="https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers">List of IP protocol numbers</a>). <br/>
+<br/>
+<i><b>Hop Limit</b></i><b>&nbsp;(8 bits) </b><br/>
+Replaces the <a href="https://en.wikipedia.org/wiki/Time_to_live">time to live</a>&nbsp;field of IPv4. This value is decremented by one at each forwarding node and packet discarded if it becomes 0. However destination node should process the packet normally even if hop limit becomes 0. <br/>
+<br/>
+<i><b>Source Address</b></i><b>&nbsp;(128 bits) </b><br/>
+The <a href="https://en.wikipedia.org/wiki/IPv6_address">IPv6 address</a>&nbsp;of the sending node. <br/>
+<br/>
+<i><b>Destination Address</b></i><b>&nbsp;(128 bits) </b><br/>
+The IPv6 address of the destination node(s). <br/>
+In order to increase performance, and since current <a href="https://en.wikipedia.org/wiki/Link_layer">link layer</a>&nbsp;technology and transport or application layer protocols are assumed to provide sufficient error detection,<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc1726-10">[10]</a>&nbsp;the header has no <a href="https://en.wikipedia.org/wiki/Checksum">checksum</a>&nbsp;to protect it.<a href="https://en.wikipedia.org/wiki/IPv6_packet#cite_note-rfc8200-1">[1]</a>&nbsp;<br/>
+</body></html>
