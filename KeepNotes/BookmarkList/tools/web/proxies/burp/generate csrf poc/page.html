@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Generate CSRF PoC</title>
+</head><body>Cross-site Request Forgery (CSRF)<br/>
+Name &#09;&#09;&#09;&#09;&#09;Description &nbsp; &nbsp;<br/>
+Burp: Generate CSRF PoC &#09;Burp tool used to generate a CSRF proof of concept against the target application &nbsp; &nbsp;<br/>
+<br/>
+If it comes to light that your target is vulnerable to CSRF (usually one of the first things Burp Scanner will pick up) you can use the Burp tool Generate CSRF PoC to validate if the target application is indeed vulnerable.<br/>
+&nbsp;<br/>
+<a href="https://support.portswigger.net/customer/portal/articles/1965674-using-burp-to-test-for-cross-site-request-forgery-csrf-">Here is a tutoral</a>&nbsp;from portswigger on how to use the tool.<br/>
+&nbsp;<br/>
+However, it’s generally just a matter of:<br/>
+&nbsp;<ul><li>&nbsp;Intercepting an HTTP request (ideally one where your testing account is changing some account information)</li>
+<li>Right-clicking that request in Burp</li>
+<li>Generating the CSRF PoC (and modifying some details of the request body)</li>
+<li>Saving the CSRF PoC to an html file</li>
+<li>Opening the new html file and clicking the submit request button</li>
+<li>Validating that the attacker-intended change happened.</li>
+</ul>
+&nbsp;</body></html>

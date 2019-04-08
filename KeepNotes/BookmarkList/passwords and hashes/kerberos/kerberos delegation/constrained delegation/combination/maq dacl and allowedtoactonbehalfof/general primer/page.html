@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>MAQ DACL and allowedToActOnBehalfOfOtherIdentity<br/>
+<br/>
+This post is lengthy, and I am conscious that many of you do not have the time or attention span to read it, so I will try to convey the important points first:<br/>
+&nbsp;<ul><li>&nbsp;<a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#serendipity">Resource-based constrained delegation does not require a forwardable TGS when invoking S4U2Proxy</a>.</li>
+<li><a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#a-misunderstood-feature-1">S4U2Self works on any account that has an SPN</a>, regardless of the state of the TrustedToAuthForDelegation attribute. If TrustedToAuthForDelegation is set, then the TGS that S4U2Self produces is forwardable, unless the principal is sensitive for delegation or a member of the Protected Users group.</li>
+<li style="list-style-type: none"><ul><li>The above points mean that <a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#generic-dacl-abuse">if an attacker can control a computer object in Active Directory, then it may be possible to abuse it to compromise the host</a>.</li>
+</ul>
+</li>
+<li><a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#a-forwardable-result">S4U2Proxy always produces a forwardable TGS, even if the provided additional TGS in the request was not forwardable</a>.</li>
+<li style="list-style-type: none"><ul><li><a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-accounts-collude---trustedtoauthfordelegation-who">The above point means that if an attacker compromises any account with an SPN as well as an account with classic constrained delegation, then it does not matter whether the TrustedToAuthForDelegation attribute is set</a>.</li>
+</ul>
+</li>
+<li>By default, any domain user can abuse the <a href="nbk:///76173172-2e38-403f-b211-6d4f022963ee">MachineAccountQuota</a>&nbsp;to create a computer account and set an SPN for it, which makes it even more trivial to abuse resource-based constrained delegation to mimic protocol transition (obtain a forwardable TGS for arbitrary users to a compromised service).</li>
+<li><a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#solving-a-sensitive-problem">S4U2Self allows generating a valid TGS for arbitrary users, including those marked as sensitive for delegation or members of the Protected Users group</a>. The resulting TGS has a PAC with a valid KDC signature. All that’s required is the computer account credentials or a TGT.</li>
+<li style="list-style-type: none"><ul><li><a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-the-stars-align-unconstrained-delegation-leads-to-rce">The above point in conjunction with unconstrained delegation and “the printer bug” can lead to remote code execution (RCE)</a>.</li>
+</ul>
+</li>
+<li><a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#unconstrained-domain-persistence">Resource-based constrained delegation on the krbtgt account allows producing TGTs for arbitrary users, and can be abused as a persistence technique</a>.</li>
+<li>Configuring resource-based constrained delegation through NTLM relay from HTTP to LDAP may facilitate <a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#case-study-1-mssql-rcelpe">remote code execution (RCE) or local privilege escalation (LPE) on MSSQL servers</a>, and <a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#case-study-2-windows-1020162019-lpe">local privilege escalation (LPE) on Windows 10/2016/2019</a>.</li>
+<li>Computer accounts just got a lot more interesting. Start hunting for more primitives to trigger attack chains!</li>
+</ul>
+&nbsp;</body></html>

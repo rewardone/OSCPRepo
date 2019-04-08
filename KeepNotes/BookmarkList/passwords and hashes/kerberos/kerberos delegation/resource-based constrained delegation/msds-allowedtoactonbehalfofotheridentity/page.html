@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>msDS-AllowedToActOnBehalfOfOtherIdentity</title>
+</head><body>Astute readers might have noticed two specific sentences in the resource-based constrained delegation explanation section:<br/>
+<br/>
+Of note, domain admin/equivalent rights to modified this field are not needed, as opposed to previous forms of delegation. The only right needed is the ability to edit this property on a computer object in Active Directory, so rights like GenericAll/GenericWrite/WriteDacl/etc. against the target computer object all apply here.<br/>
+<br/>
+This means that, assuming we control an account with S4U2Self enabled, and another account that had edit rights over a computer object we want to target, we can modify the target computer object’s msDS-AllowedToActOnBehalfOfOtherIdentity property to include the S4U2Self account as the principal and execute the Rubeus s4u process to gain access to any Kerberos supporting service on the system! We finally have a (somewhat limited, but still useful) ACL-based computer takeover primitive!</body></html>

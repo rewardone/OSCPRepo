@@ -1,0 +1,9 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body>Preauth is enabled by default, so audit which accounts do not have it set. <br/>
+also for the defensive side, <a href="http://web.archive.org/web/20190223142423/https://twitter.com/munmap">@munmap</a> suggested investigating <a href="http://web.archive.org/web/20190223142423/https://tools.ietf.org/html/rfc6113#section-5.4">Kerberos FAST pre-authentication</a> and/or <a href="http://web.archive.org/web/20190223142423/https://tools.ietf.org/html/rfc4556">Public Key Cryptography for Initial Authentication in Kerberos (PKINIT)</a>. &nbsp;<br/>
+<br/>
+Defensively, the same protections outlined for Kerberoasting apply here, specifically have really long passwords for these types of accounts and alert when abnormal hosts are sent an AS-REP for the account. &nbsp;</body></html>

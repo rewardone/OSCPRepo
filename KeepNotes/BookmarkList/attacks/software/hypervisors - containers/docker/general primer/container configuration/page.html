@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Container Configuration</title>
+</head><body>Container Configuration Components <br/>
+Under the covers Docker utilizes a few different configuration options. Below are the ones I found myself using the most and are probably going to be helpful for you.<br/>
+&nbsp;<ul><li><b>Container Name</b>&nbsp;- A name for the container. I keep them short and lowercase to for easy of reference in the CLI and GUI.</li>
+<li><b>Image</b>&nbsp;- The underlying source for a container. Images from the community in <a href="https://hub.docker.com/">Docker Hub</a>&nbsp;are referenced by username/imagename unless its an official Docker image. Specific versions or releases are denoted with a <i>tag</i>&nbsp;or trailing colon :rc or :0.86.1. ie robwolff3/ga-webserver or robwolff3/ga-webserver:0.2.0</li>
+<li><b>Restart Behavior</b>&nbsp;- What it should do if the container halts or is stopped. I find myself almost always using unless-stopped, always restart the container regardless of the exit status unless it was stopped by me. always in the case of a management container that would be problematic if stopped running, it always restarts it even if I stop it.</li>
+<li><b>Volumes</b>&nbsp;- Used for mounting host paths or persistent volumes. I tend to only use them to mount configuration and service data stored on the host to the container. Using a folder hierarchy: /home/user/docker/config/gawebserver:/config everything is organized and condensed. If I blow away the container and recreate it, it’ll pull the same configuration, data and be back up running.</li>
+<li><b>Ports and Network Mode</b>&nbsp;- Ports are exposed one by one, in ranges with and with protocols. Some containerized services don’t play nice in the specified port paradigm, in those cases you can specify network_mode: host giving the container free reign to open whichever ports it would like. Be careful with that last one, you can’t use host networking at the same time as specifying ports.</li>
+<li><b>Environment Variables</b>&nbsp;- How to pass variables into your container. Used heavily for configuring the containerized service. Pretty self explanatory.</li>
+<li><b>Host Devices</b>&nbsp;- For when a container needs access to host hardware. I’ve used them in the cases of USB Z-wave, USB Bluetooth, mic and speakers.</li>
+<li><b>Depends On</b>&nbsp;- If a container is dependent on another starting before it does, set a Depends On and they will come up in the correct order.</li>
+<li><b>Health Check</b>&nbsp;- Useful if you need to preform a health check on a container before considering it healthy. I used a curl health check on Zoneminder to make a dependency on it more reliable.</li>
+</ul>
+<br/>
+More on ports: When utilizing a single Docker host all of the running services will share the ip address assigned to that host. The best way to manage this with many services is to utilize a port schema i.e. 9000-9020. Ports exposed inside a container map to ports on the host. They do not have to match allowing a service that listens on port 80 to be exposed on the host as 9003. Further separation can be accomplished with a reverse proxy like <a href="https://hub.docker.com/r/linuxserver/letsencrypt/">Nginx</a>&nbsp;to map services to domain names and more.<br/>
+&nbsp;<br/>
+<i>Docker Run</i>&nbsp;utilizes command line switches for the parameters above and <i>Docker Compose</i>&nbsp;formats them in a yaml file that is executes into state, more on that later. For information on these parameters and more, reference the Docker documentation I link below, it’s quite good and thorough.<br/>
+&nbsp; </body></html>

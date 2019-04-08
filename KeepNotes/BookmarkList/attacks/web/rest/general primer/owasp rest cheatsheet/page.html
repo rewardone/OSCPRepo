@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OWASP REST CheatSheet</title>
+</head><body><b>HTTPS</b><br/>
+Secure REST services must only provide HTTPS endpoints<br/>
+<br/>
+<b>Access Control</b><br/>
+Non-public REST services must perform control at each API endpoint. Web services in monolithic applications implement this by means of user authentication, authorization login, and session management. This has several drawbacks for modern architectures which compose multiple micro services following the RESTful style. <br/>
+&nbsp;&#09;In order to minimize latency and reduce coupling between services, the access control decision should be taken locally by REST endpoints<br/>
+&nbsp;&#09;User authenitcation should be centralized in an Identity Provider which issues access tokens<br/>
+<br/>
+<b>JSON Web Tokens (JWT)</b>&nbsp;<br/>
+JWTs are JSON data structures containing a set of claims that can be used for access control decisions. A cryptographic signature or message authentication code (MAC) can be used to protect the integrity of the JWT.<br/>
+&nbsp;<ul><li>&nbsp;Ensure JWTs are integrity protected by either a signature or a MAC. Do not allow the unsecured JWTs: {"alg":"none"}. </li>
+<li style="list-style-type: none"><ul><li>&nbsp;See <a href="https://tools.ietf.org/html/rfc7519#section-6.1">here</a></li>
+</ul>
+</li>
+<li>In general, signatures should be preferred over MACs for integrity protection of JWTs.</li>
+</ul>
+&nbsp;<br/>
+If MACs are used for integrity protection, every service that is able to validate JWTs can also create new JWTs using the same key. This means that all services using the same key have to mutually trust each other. Another consequence of this is that a compromise of any service also compromises all other services sharing the same key. &nbsp;<br/>
+<br/>
+The relying party or token consumer validates a JWT by verifying its integrity and claims contained.<br/>
+&nbsp;<ul><li>&nbsp;A relying party must verify the integrity of the JWT based on its own configuration or hard-coded logic. It must not rely on the information of the JWT header to select the verification algorithm.</li>
+</ul>
+&nbsp;<br/>
+Some claims have been standardised and should be present in JWT used for access controls. At least the following of the standard claims should be verified:<br/>
+&nbsp;<ul><li>iss or issuer - is this a trusted issuer? Is it the expected owner of the signing key?</li>
+<li>aud or audience - is the relying party in the target audience for this JWT?</li>
+<li>exp or expiration time - is the current time before the end of the validity period of this token?</li>
+<li>nbf or not before time - is the current time after the start of the validity period of this token?</li>
+</ul>
+&nbsp;<br/>
+<b>Restrict HTTP methods </b><ul><li>Apply a whitelist of permitted HTTP Methods e.g. GET, POST, PUT.</li>
+<li>Reject all requests not matching the whitelist with HTTP response code 405 Method not allowed.</li>
+<li>Make sure the caller is authorised to use the incoming HTTP method on the resource collection, action, and record</li>
+</ul>
+<br/>
+Automated HTTP verb tampering testing <br/>
+If you are able to analyze your application via simple HTTP status codes (200 OK, 501 Error, etc) - then the following bash script will test all available HTTP methods. <br/>
+<br/>
+&nbsp;#!/bin/bash<br/>
+for webservmethod in GET POST PUT TRACE CONNECT OPTIONS PROPFIND; do printf "$webservmethod " ; printf "$webservmethod / HTTP/1.1\nHost: $1\n\n" | nc -q 1 $1 80 | grep "HTTP/1.1" done &nbsp; <br/>
+<br/>
+<br/>
+<b>Input validation </b><ul><li>Do not trust input parameters/objects.</li>
+<li>Validate input: length / range / format and type.</li>
+<li>Achieve an implicit input validation by using strong types like numbers, booleans, dates, times or fixed data ranges in API parameters.</li>
+<li>Constrain string inputs with regexps.</li>
+<li>Reject unexpected/illegal content.</li>
+<li>Make use of validation/sanitation libraries or frameworks in your specific language.</li>
+<li>Define an appropriate request size limit and reject requests exceeding the limit with HTTP response status 413 Request Entity Too Large.</li>
+<li>Consider logging input validation failures. Assume that someone who is performing hundreds of failed input validations per second is up to no good.</li>
+<li>Have a look at input validation cheat sheet for comprehensive explanation.</li>
+<li>Use a secure parser for parsing the incoming messages. If you are using XML, make sure to use a parser that is not vulnerable to <a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing">XXE</a>&nbsp;and similar attacks.</li>
+</ul>
+&nbsp;<br/>
+<br/>
+<b>Validate content types </b><br/>
+A REST request or response body should match the intended content type in the header. Otherwise this could cause misinterpretation at the consumer/producer side and lead to code injection/execution.<ul><li>Document all supported content types in your API.</li>
+</ul>
+<br/>
+<b>Validate request content types </b><ul><li>Reject requests containing unexpected or missing content type headers with HTTP response status 406 Unacceptable or 415 Unsupported Media Type.</li>
+<li>For XML content types ensure appropriate XML parser hardening, see the <a href="https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md">XXE cheat sheet</a>.</li>
+<li>Avoid accidentally exposing unintended content types by explicitly defining content types e.g. <a href="https://jersey.github.io/">Jersey</a>&nbsp;(Java) @consumes("application/json"); @produces("application/json"). This avoids <a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing">XXE-attack</a>&nbsp;vectors for example.</li>
+</ul>
+<br/>
+<b>Send safe response content types </b><br/>
+It is common for REST services to allow multiple response types (e.g. application/xml or application/json, and the client specifies the preferred order of response types by the Accept header in the request.<ul><li>&nbsp;<b>Do NOT</b>&nbsp;simply copy the Accept header to the Content-type header of the response.</li>
+<li>Reject the request (ideally with a 406 Not Acceptable response) if the Accept header does not specifically contain one of the allowable types.</li>
+</ul>
+<br/>
+Services including script code (e.g. JavaScript) in their responses must be especially careful to defend against header injection attack.<br/>
+&nbsp;<ul><li>&nbsp;Ensure sending intended content type headers in your response matching your body content e.g. application/json and not application/javascript.</li>
+</ul>
+&nbsp;<br/>
+<br/>
+<b>Management endpoints </b><ul><li>Avoid exposing management endpoints via Internet.</li>
+<li>If management endpoints must be accessible via the Internet, make sure that users must use a strong authentication mechanism, e.g. multi-factor.</li>
+<li>Expose management endpoints via different HTTP ports or hosts preferably on a different NIC and restricted subnet.</li>
+<li>Restrict access to these endpoints by firewall rules  or use of access control lists.</li>
+</ul>
+&nbsp;<br/>
+<br/>
+<b>Security headers </b><br/>
+To make sure the content of a given resources is interpreted correctly by the browser, the server should always send the Content-Type header with the correct content type, and preferably the Content-Type header should include a charset. The server should also send the X-Content-Type-Options: nosniff <a href="https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#tab=Headers">security header</a>&nbsp;to make sure the browser does not try to detect a different Content-Type than what is actually sent (can lead to XSS).<br/>
+&nbsp;<br/>
+Additionally the client should send the X-Frame-Options: deny <a href="https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#tab=Headers">security header</a>&nbsp;to protect against drag'n drop clickjacking attacks in older browsers.<br/>
+<br/>
+<br/>
+<b>CORS</b>&nbsp;<br/>
+Cross-Origin Resource Sharing (CORS) is a W3C standard to flexibly specify what cross-domain requests are permitted. By delivering appropriate CORS Headers your REST API signals to the browser which domains, AKA origins, are allowed to make JavaScript calls to the REST service.<br/>
+&nbsp;<ul><li>Disable CORS headers if cross-domain calls are not supported/expected.</li>
+<li>Be as specific as possible and as general as necessary when setting the origins of cross-domain calls.</li>
+</ul>
+&nbsp;<br/>
+<br/>
+<b>Sensitive information in HTTP requests </b><br/>
+RESTful web services should be careful to prevent leaking credentials. Passwords, security tokens, and API keys should not appear in the URL, as this can be captured in web server logs, which makes them intrinsically valuable.<br/>
+&nbsp;<ul><li>In POST/PUT requests sensitive data should be transferred in the request body or request headers.</li>
+<li>In GET requests sensitive data should be transferred in an HTTP Header.</li>
+</ul>
+<br/>
+<b>OK:</b><br/>
+https://example.com/resourceCollection/[ID]/action<br/>
+https://twitter.com/vanderaj/lists<br/>
+&nbsp;<br/>
+<b>NOT OK:</b><br/>
+https://example.com/controller/123/action?apiKey=a53f435643de32 because API Key is into the URL.<br/>
+&nbsp; <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Collaborator With SSL</title>
+</head><body>Great instructions for Lets Encrypt with Collaborator: https://blog.fabiopires.pt/running-your-instance-of-burp-collaborator-server/<br/>
+<br/>
+<br/>
+Override Burp’s default launcher<br/>
+<br/>
+You should be able to locate this file in [BURP_LAUNCHER]. As root, edit this file. Near the top of the file, you are going to want to change:<br/>
+<br/>
+# Uncomment the following line to add additional VM parameters<br/>
+#INSTALL4J_ADD_VM_PARAMS=<br/>
+<br/>
+To<br/>
+<br/>
+# Uncomment the following line to add additional VM parameters<br/>
+INSTALL4J_ADD_VM_PARAMS="-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"<br/>
+<br/>
+This will tell the virtual machine to use the Java KeyStore which contains the LetsEncrypt certificates we inserted at an earlier date.</body></html>

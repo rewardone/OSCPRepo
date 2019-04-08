@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IPTables</title>
+</head><body>https://gist.github.com/davydany/0ad377f6de3c70056d2bd0f1549e1017<br/>
+<br/>
+Before we determine the individual rules for each of the chain, we need to determine the default policy for each chain. This can be shown by typing:<br/>
+sudo iptables -L | grep policy &nbsp;<br/>
+<b><br/>
+</b><b>Change the default policy for a Chain</b><br/>
+To change the default policy of a chain, run: `iptables --policy &lt;ACCEPT/DROP&gt;<br/>
+&nbsp;<br/>
+If we want to ACCEPT all connections (on all Chains), run the following:<br/>
+iptables --policy INPUT ACCEPT iptables --policy OUTPUT ACCEPT iptables --policy FORWARD ACCEPT <br/>
+<br/>
+If we want to DROP all connections (on all chains), run the following:<br/>
+iptables --policy INPUT DROP iptables --policy OUTPUT DROP iptables --policy FORWARD DROP <br/>
+<b><br/>
+</b><b>Actions: ACCEPT vs DROP vs REJECT</b><ul><li style="list-style-type: none"><b>ACCEPT</b>: Allow the connection</li>
+<li><b>DROP</b>: Drop the connection (as if no connection was ever made; Useful if you want the system to 'disappear' on the network)</li>
+<li><b>REJECT</b>: Don't allow the connection but send an error back.</li>
+</ul>
+&nbsp;<br/>
+<br/>
+<br/>
+The Commands (Examples) <br/>
+<b>List Entries in iptables</b><br/>
+&nbsp;$ iptables -L <br/>
+<br/>
+<b>Set Default Policy for INPUT to ACCEPT</b><br/>
+&nbsp;iptables --policy INPUT ACCEPT <br/>
+<br/>
+<b>Set Default Policy for OUTPUT to DROP</b><br/>
+&nbsp;iptables --policy OUTPUT DROP <br/>
+<br/>
+<b>Set Default Policy for FORWARD to REJECT</b><br/>
+&nbsp;iptables --policy FORWARD ACCEPT <br/>
+<br/>
+<b>ACCEPT Connections From a Single IP Address</b><br/>
+$ iptables -A INPUT -s 10.10.10.10 -j ACCEPT <br/>
+# Explanation: <br/>
+# ACCEPTS all INCOMING Connections from 10.10.10.10. <br/>
+# -A &lt;CHAIN&gt; : Append a Rule to the chain that is specified (INPUT in this scenario) <br/>
+# -s &lt;SOURCE&gt; : Source - The Source IP of the connection (10.10.10.10) <br/>
+# -j &lt;ACTION&gt; : (jump) - Defines what to do when the Packet matches this rule. We can either ACCEPT, DROP or REJECT it. (ACCEPT) &nbsp;<br/>
+<br/>
+<b>DROP Connections for an IP Range</b><br/>
+$ iptables -A INPUT -s 10.10.10.0/24 -j DROP <br/>
+# Explanation: <br/>
+# BLOCKS all INCOMING connections from 10.10.10.0 to 10.10.10.255 <br/>
+# -A &lt;CHAIN&gt; : Append a Rule to the chain that is specified (INPUT in this scenario)<br/>
+# -s &lt;SOURCE&gt; : Source - The Source IP of the connection (10.10.10.0 to 10.10.10.255) <br/>
+# -j &lt;ACTION&gt; : (jump) - Defines what to do when the Packet matches this rule. We can either ACCEPT, DROP or REJECT it. (DROP) &nbsp;<br/>
+<br/>
+<b>REJECT OUTBOUND Connections for an IP on a Specific Port (SSH)</b><br/>
+$ iptables -A OUTPUT -p tcp --dport ssh -s 10.10.10.10 -j REJECT <br/>
+# Explanation: # REJECTs all OUTPUT connections to 10.10.10.10 on TCP Port <br/>
+# -A &lt;CHAIN&gt; : Append a Rule to the chain that is specified (OUTPUT in this scenario) <br/>
+# -s &lt;SOURCE&gt; : Source - The Source IP of the connection (10.10.10.10) <br/>
+# -j &lt;ACTION&gt; : (jump) - Defines what to do when the Packet matches this rule. We can either ACCEPT, DROP or REJECT it. (REJECT) &nbsp;<br/>
+<br/>
+<b>DROP All OUTGOING Connections; ALLOW only CONNECTIONS to 192.168.1.1</b><br/>
+$ iptables --policy OUTPUT DROP <br/>
+# Explanation: <br/>
+# DROP all OUTPUT connections. $ iptables -A OUTPUT -d 192.168.1.1 -j ACCEPT <br/>
+# Explanation:<br/>
+# Allow connections to the destination port 192.168.1.1 &nbsp;<br/>
+<br/>
+<b>Saving Changes Made to iptables</b><br/>
+&nbsp;The changes you made to your iptables rules will not be saved unless it is called explicitly to be saved. The next time the service starts, any unsaved changes will be wiped away. The following are examples on how to save on different platforms<br/>
+&nbsp;<br/>
+<i>Ubuntu:</i>&nbsp;sudo /sbin/iptables-save<br/>
+<i>RedHat / Centos:</i>&nbsp;/sbin/service iptables save<br/>
+<i>Others:</i>&nbsp;/etc/init.d/iptables save<br/>
+*<i>Clearing All the Rules</i><br/>
+&nbsp;<br/>
+To clear all the rules that are configured, you can flush it with the <i>Flush</i>&nbsp;command.<br/>
+iptables -F &nbsp;<br/>
+<br/>
+<b>Deleting Individual Rules</b><br/>
+You can delete rules based on what they're doing:<br/>
+&nbsp;iptables -D INPUT -s 127.0.0.1 -p tcp -dport 111 -j ACCEPT <br/>
+# Explanation <br/>
+# -D &lt;CHAIN&gt; : The Rule to delete (INPUT -s 127.0.0.1 -p tcp -dport 111 -j ACCEPT) <br/>
+# -s &lt;SOURCE&gt; : Source - The Source IP of the connection (127.0.0.1) <br/>
+# -p &lt;protocol&gt; : Protocol - THe protocol of the rule or of the packet to check <br/>
+# --dport &lt;port&gt;: Destination Port: The Destination port or port range specification <br/>
+# -j &lt;ACTION&gt; : (jump) - Defines what to do when the Packet matches this rule. We can either ACCEPT, DROP or REJECT it. (REJECT) &nbsp;<br/>
+You can also delete base don the rule number:<br/>
+&nbsp;iptables -D INPUT 4 &nbsp; </body></html>

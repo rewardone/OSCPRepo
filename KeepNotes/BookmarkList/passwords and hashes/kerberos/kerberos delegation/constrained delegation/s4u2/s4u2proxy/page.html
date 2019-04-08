@@ -1,0 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>S4U2Proxy</title>
+</head><body>The second extension is <a href="https://msdn.microsoft.com/en-us/library/cc246079.aspx">S4U2proxy</a>, which allows the caller, the service account in our case, to use this forwardable ticket to request a service ticket to any SPN specified in msds-allowedtodelegateto, impersonating the user specified in the S4U2self step. The KDC checks if the requested service is listed in the msds-allowedtodelegateto field of the requesting user, and issues the ticket if this check passes. In this way the delegation is ‘constrained’ to specific target services.</body></html>

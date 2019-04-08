@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>There are three types of delegation to keep track of, each with their own nuances:<ul><li>Unconstrained Delegation</li>
+<li>Constrained Delegation</li>
+<li>Resource-based Constrained Delegation</li>
+</ul>
+<br/>
+All forms of delegation are <i>potentially</i>&nbsp;dangerous if not configured correctly:<br/>
+&nbsp;<ul><li><b>Unconstrained Delegation</b>&nbsp;– compromise of a server with unconstrained delegation can result in domain elevation.</li>
+<li><b>(Traditional) Constrained Delegation</b>&nbsp;– introduces attack paths from any user/computer account to any server configured in <b>msDS-AllowedToDelegateTo</b>&nbsp;property on the account.</li>
+<li><b>Resource-based Constrained Delegation</b>&nbsp;– in some situations introduces an ACL-based computer object takeover primitive.</li>
+</ul>
+&nbsp;<br/>
+<br/>
+<b>Unconstrained Delegation </b><br/>
+Unconstrained delegation used to be the only option available in Windows 2000, and the functionality has been kept (presumably for backwards compatibility reasons). We’ll only briefly cover this delegation type as <a href="https://twitter.com/pyrotek3">Sean Metcalf</a>&nbsp;has a <a href="https://adsecurity.org/?p=1667">great post that covers it in depth</a>. <br/>
+&nbsp; <br/>
+Translation: if a user not in the <a href="https://technet.microsoft.com/en-us/library/dn466518.aspx">“Protected Users” group</a>&nbsp;who also doesn’t have their account set with “Account is sensitive and cannot be delegated” requests a service ticket for a service on a server set with unconstrained delegation, the user’s ticket-granting-ticket (TGT) is stuffed into the service ticket that’s presented to the server. The server can extract the user’s TGT and cache it in memory for later reuse. I.e. the server can pretend to be that user to any resource on the domain.<br/>
+&nbsp;<br/>
+This is dangerous for a number of reasons. One scenario that my workmates and I covered at DerbyCon this year is <a href="https://www.slideshare.net/harmj0y/derbycon-the-unintended-risks-of-trusting-active-directory/39">highlighted in our presentation</a>.<br/>
+&nbsp; <br/>
+<b>Traditional Constrained Delegation</b><br/>
+Obviously unconstrained delegation can be quite dangerous in the hands of a careless admin. Microsoft realized this early on and released ‘constrained’ delegation with Windows 2003. This included a set of Kerberos protocol extensions called S4U2Self and S4U2Proxy. I covered this process in depth in the <a href="http://www.harmj0y.net/blog/activedirectory/s4u2pwnage/">S4U2Pwnage</a>&nbsp;post and covered some new Rubeus weaponizations against constrained delegation in the <b>s4u</b>&nbsp;section of the <a href="http://www.harmj0y.net/blog/redteaming/from-kekeo-to-rubeus/">From Kekeo to Rubeus</a>&nbsp;post.<br/>
+&nbsp;<br/>
+Operationally, without getting into the implementation details of S4U2Self/S4U2Proxy, any accounts (user or computer) that have service principal names (SPNs) set in their <b>msDS-AllowedToDelegateTo</b>&nbsp;property can pretend to be any user in the domain (they can “delegate”) to those specific SPNs. Additionally, <a href="https://twitter.com/agsolino">Alberto Solino</a>&nbsp;discovered that <a href="https://www.coresecurity.com/blog/kerberos-delegation-spns-and-more">service name (sname) is not protected in the KRB-CRED file</a>, only the server name is. This means that <i>any</i>&nbsp;service name can be substituted and we’re not restricted <i>just</i>&nbsp;to the specified SPN!<br/>
+&nbsp;<br/>
+So while delegation has been “constrained” to specific targets, this is still dangerous. If you could modify the <b>msDS-AllowedToDelegateTo </b>contents for an account you control to include, say, <b>ldap/DC.domain.com</b>, then that account could DCSync the current domain! Luckily for us, Microsoft anticipated this attack. You need a right called SeEnableDelegationPrivilege <i>on a domain controller</i>&nbsp;to modify any of the previously described delegation settings. By default just elevated accounts like Domain/Enterprise admins will have this right on DCs, which is actually one of the main motivations for our next type of delegation. I talked more about this right in the “<a href="http://www.harmj0y.net/blog/activedirectory/the-most-dangerous-user-right-you-probably-have-never-heard-of/">The Most Dangerous User Right You (Probably) Have Never Heard Of</a>” post.<br/>
+&nbsp; <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

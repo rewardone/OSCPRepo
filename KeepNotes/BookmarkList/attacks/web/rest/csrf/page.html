@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CSRF</title>
+</head><body>For protection against CSRF, a check on the mere existence of a particular HTTP header, like X-CSRF or X-Requested-By, for state-changing verbs (anything except GET, OPTIONS or HEAD) could be done at REST endpoint (for example, in an HTTP filter) to make sure that no malicious content loaded from a browser with valid session could emit unexpected requests to the target service, on behalf of a previously authenticated, trusted user. Jersey framework, for example, use a CsrfProtectionFilter for this. Remember that any cross-site scripting (XSS) vulnerability in the target application could allow injection of JavaScript code that creates XMLHttpRequest (XHR) with the anti-CSRF header, and the browser SOP will allow that (because JavaScript has same origin as the request target).<br/>
+<br/>
+Authentication and session-management data (API keys, username/password, session tokens, etc.) should not appear in the URL, as such sensitive info could be leaked in web server logs, intermediate proxies, etc. Authentication with client-side (and server-side, of course) SSL certificates could be useful here.<br/>
+<br/>
+As RESTful (stateless) web services often need to maintain a transactional state, an state blob is typically exchanged between client and server. Your API should be designed to avoid replay attacks with the state blob. A session token or API key could be used to keep all state information at server side, in a similar way as conventional web applications use a session cookie + server-side session data.<br/>
+<br/>
+Another general recommendation with REST is to avoid encoding sensitive information in the URL (REST principles always tell you to avoid using GET for state-changing operations). As URLs could be logged or cached, this may result in information leakage.</body></html>

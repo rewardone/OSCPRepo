@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Server-Side Request Forgery</title>
+</head><body>In a Server-Side Request Forgery (SSRF), the vulnerable application composes the URL using data from the HTTP request that could also affect the scheme, host and port parts of the URL, so the vulnerable application acts as an open proxy/relay for the attacker. Remember, the wish for an attacker is to gain access to an interface that allows access to internal resources.<br/>
+<br/>
+Remember that browsers impose at least a Same-Origin Policy (SOP) to control cross-site reads, but HTTP clients (and REST stubs/proxies) do not enforce any kind of SOP. This is your business.<br/>
+<br/>
+Of course, if your app is so naive as to use untrusted input directly as the prefix part of a resource URL to be retrieved, SSRF is open. But there are other enablers for SSRF. Some REST frameworks provide proxies (RESTlet Redirector) for server-side redirections that may use an input URL directly. XML External Entity vulnerabilities (more on this later) may force unintended connections to internal URLs. And when the attacker has control over the target URL, you may hear really loud laughters across your office window!<br/>
+<br/>
+Public REST services attack internal REST services<ul><li>Enablers: RFI through PHP include(), REST framework specificy proxy, XXE, WS-* protocols, etc</li>
+<li>Causes: concatenation in URLs built to connect to internal REST services or arbitrary xml loaded by server</li>
+</ul>
+<br/>
+<br/>
+</body></html>

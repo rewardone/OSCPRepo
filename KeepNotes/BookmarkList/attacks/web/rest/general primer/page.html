@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>REST (REpresentational State Transfer) is an architectural style to build services on top of the Web. REST simplifies interaction with a web-based system via simplified URLs, instead of complex HTTP requests.<br/>
+<br/>
+A REST-enabled application is made of resources (“nouns“), each responding to different “verbs” (for example, HTTP methods like GET, POST, PUT, DELETE…) over well-defined URLs (typically HTTP/HTTPS URLs) which map entities in the system to endpoints. Each REST request/response to a resource uses one or more resource representation, typically negotiated between client and server (for example, using Accept and Content-Type HTTP headers). Most common representation formats include JSON, XML or raw text, with many other alternatives like YAML, Atom and HTML which are also used.<br/>
+<br/>
+Here are the <b>main characteristics of a REST architecture style</b>:<br/>
+&nbsp;<ul><li><i>Client-Server</i>: a pull-based interaction style: consuming components pull representations.</li>
+<li><i>Stateless</i>: each request from client to server must contain all the information necessary to understand the request, and cannot take advantage of any stored context on the server.</li>
+<li><i>Cache aware</i>: to improve network efficiency, responses must be capable of being labeled as cacheable or non-cacheable.</li>
+<li><i>Uniform interface</i>: all resources are accessed with a generic interface (e.g., HTTP GET, POST, PUT, DELETE).</li>
+<li><i>Named resources</i>&nbsp;– the system is comprised of resources which are named using a URL.</li>
+<li><i>Interconnected resource representations</i>&nbsp;– the representations of the resources state are interconnected using URIs, thereby enabling a client to progress from one state to another.</li>
+<li><i>Layered components</i>&nbsp;– intermediaries, such as proxy servers, cache servers, gateways, etc., can be inserted between clients and resources to support performance, security, etc.</li>
+</ul>
+<br/>
+In the Java/J2EE platform, a standard Java API for RESTful Web Services (JAX-RS, JSR 311) is the most common API for building and consuming REST services. There are many widely used implementations, like <a href="https://jersey.java.net/">Jersey</a>, <a href="http://cxf.apache.org/">Apache CXF</a>, <a href="https://restlet.com/">Restlet</a>, or <a href="http://resteasy.jboss.org/">RESTEasy</a>.<br/>
+&nbsp; <br/>
+<b>Security concerns with REST</b>&nbsp;<br/>
+REST typically uses HTTP as its underlying protocol, which brings forth the usual set of security concerns:<br/>
+&nbsp;<ul><li>A potential attacker has full control over each single bit of an HTTP request (if your app acts as REST server) or HTTP response (if your app is a REST client). We remind this just in case…</li>
+<li>The attacker could be at the REST client (the victim is the REST server) or at the REST server (a rogue, malicious app, the victim is the REST client, for example an application consuming resources from remote REST services).</li>
+<li>For an application using REST as client or server, the other side typically has full control on the resource representation, and <i>could inject any payload to attack resource handling</i>&nbsp;(gaining arbitrary Java code or system command execution, for example).</li>
+</ul>
+<br/>
+In a REST architecture, end-to-end processing implies a sequence of potentially vulnerable operations:<br/>
+&nbsp;<ul><li>During the mapping from/to the HTTP message and resource URL.</li>
+<li>When the object representing the target resource is instantiated and the requested operation is invoked.</li>
+<li>When producing/parsing state representation for the target resources.</li>
+<li>When accessing/modifying the data in the backend systems that host the resource state.</li>
+</ul>
+<br/>
+The layered sequence of transformations in REST frameworks means that <b>a single weak link in the chain could made your application vulnerable</b>.<br/>
+<br/>
+Causes of REST vulnerabilities<ul><li>Location in the trusted network of your data center</li>
+<li>SSRF to internal REST APIs</li>
+<li>URLs to backend REST APIs are built with concatentation instead of URIBuilder (Prepared)</li>
+<li>Self describing nature</li>
+<li>Inbread architecture</li>
+<li>Incorrect assumptions of application behavior</li>
+<li>Input types and interfaces</li>
+<li>Extensions in REST frameworks that enhance development of REST functionality at the expense of security</li>
+</ul>
+<br/>
+<br/>
+</body></html>

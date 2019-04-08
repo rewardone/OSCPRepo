@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Constrained Delegation<br/>
+Obviously unconstrained delegation can be quite dangerous in the hands of a careless admin. Microsoft realized this early on and released ‘constrained’ delegation with Windows 2003. This included a set of Kerberos protocol extensions called S4U2Self and S4U2Proxy. These extensions also enable something called protocol transition, which we’ll go over in a bit.<br/>
+<br/>
+In essence, constrained delegation is a way to limit exactly what services a particular machine/account can access while impersonating other users. Here’s how a service account configured with constrained delegation looks in the Active Directory GUI:<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+The ‘service’ specified is a service principal name that the account is allowed to access while impersonating other users. This is HOST/PRIMARY.testlab.local in our above example. Before we get into the specifics of how this works, here’s how that target object looks in PowerView:<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+The field of interest is msds-allowedtodelegateto, but there’s also a modification to the account’s userAccountControl property. Essentially, if a computer/user object has a userAccountControl value containing <a href="https://msdn.microsoft.com/en-us/library/aa772300(v=vs.85).aspx">TRUSTED_TO_AUTH_FOR_DELEGATION</a>&nbsp;then anyone who compromises that account can impersonate any user to the SPNs set in msds-allowedtodelegateto. Ben mentions SeEnableDelegationPrivilege being required to actually modify these parameters.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Developing A Toolset for ASEPRoasting</title>
+</head><body>I spent a while searching for any .NET method that would allow access to the raw byte response of the AS-REP and unfortunately came up short. Though I can’t say definitively if this is impossible, my gut feeling is that it’s likely an abstraction level too deep for us to access easily through .NET. Even if there was, we would still have one complication, as modern Windows Kerberos environments default to the the AES256-CTS-HMAC-SHA1-96 encryption in the AS-REP instead of the much quicker ARCFOUR-HMAC-MD5/RC4 approach. RC4-HMAC is <i>significantly</i>&nbsp;quicker to crack, so we prefer it if possible. &nbsp;<br/>
+<br/>
+The approach I ended up taking was to construct the AS-REQ by hand in order to control the necessary parameters, and parsing the KDC’s AS-REP response in order to determine success/failure and extract the encrypted material. Here was another roadblock- Kerberos uses ASN.1 encoding for its structures, something that .NET does not have built in encoders or decoders for. Luckily, there is an <a href="http://web.archive.org/web/20190223142423/https://github.com/bcgit/bc-csharp">open source C# version</a>&nbsp;of the <a href="http://web.archive.org/web/20190223142423/https://www.bouncycastle.org/">Bouncy Castle</a>&nbsp;crypto library that features, among many, many other things, robust capability for ASN.1 encoding and decoding.<br/>
+&nbsp; <br/>
+after a few struggles with tagging and finding the correct data structures, I came up with <b>New-ASReq</b>, which <a href="http://web.archive.org/web/20190223142423/https://github.com/adaptivethreat/ASREPRoast/blob/21c4ea5a0e2a70ea51a4763df8308ec8e4b233f0/ASREPRoast.ps1#L496-L571">takes a user/domain name, builds the properly nested components, and returns the raw bytes for the request</a>. &nbsp;<br/>
+<br/>
+And because we’re building this by hand, we can include or omit anything we want. So we can include <b>just </b>the ARCFOUR-HMAC-MD5 etype instead of all supported encryption etypes. This type and its use in Windows Kerberos auth is <a href="http://web.archive.org/web/20190223142423/https://tools.ietf.org/html/rfc4757">explained in detail in RFC4757</a>. What’s especially nice is <a href="http://web.archive.org/web/20190223142423/https://tools.ietf.org/html/rfc4757#section-3">that section 3</a>&nbsp;includes the message types for different uses of the algorithm. While the AS-REP <b>ticket</b>&nbsp;uses type 2 like a TGS-REP ticket (i.e. kerberoasting) this component of the response is encrypted with the service key, which in this case is the krbtgt hash and therefore not crackable. However, the AS-REP <b>encrypted part</b>, which is the section we can essentially ‘downgrade’ to RC4-HMAC, is the same algorithm but of message type 8. This will come into play later during the cracking section.<br/>
+&nbsp; <br/>
+<b>Get-ASREPHash</b>, wraps <b>New-ASReq</b>&nbsp;to generate the appropriate AS-REQ for a specific user/domain, enumerates a domain controller for the passed domain, <a href="http://web.archive.org/web/20190223142423/https://github.com/adaptivethreat/ASREPRoast/blob/21c4ea5a0e2a70ea51a4763df8308ec8e4b233f0/ASREPRoast.ps1#L745-L767">sends the crafted AS-REQ, and receives the response bytes</a>. Bouncy Castle is used to decode the response, checking whether it is a <a href="http://web.archive.org/web/20190223142423/http://www.freesoft.org/CIE/RFC/1510/68.htm">KRB-ERROR</a>&nbsp;response or a proper <a href="http://web.archive.org/web/20190223142423/http://www.freesoft.org/CIE/RFC/1510/56.htm">AS-REP</a>. If the request succeeded, we can <a href="http://web.archive.org/web/20190223142423/https://github.com/adaptivethreat/ASREPRoast/blob/21c4ea5a0e2a70ea51a4763df8308ec8e4b233f0/ASREPRoast.ps1#L776-L781">extract out the enc-part section</a>&nbsp;that’s RC4-HMAC encrypted using the specified user’s hash and return it in a nice format: &nbsp;<br/>
+<img src="image.png" /><br/>
+<br/>
+The final useful function in <a href="http://web.archive.org/web/20190223142423/https://github.com/adaptivethreat/ASREPRoast">ASREPRoast</a>&nbsp;is <b><a href="http://web.archive.org/web/20190223142423/https://github.com/adaptivethreat/ASREPRoast/blob/21c4ea5a0e2a70ea51a4763df8308ec8e4b233f0/ASREPRoast.ps1#L795-L910">Invoke-ASREPRoast</a></b>. If run from a domain authenticated, but otherwise unprivileged, user context in a Windows Kerberos environment, this function will first enumerate all users who have “Do not require Kerberos preauthentication” set in their user account control settings by using the LDAP filter <b>(userAccountControl:1.2.840.113556.1.4.803:=4194304)</b>. For each user returned <b>Get-ASREPHash</b>&nbsp;is used to return a crackable hash: &nbsp;<br/>
+<img src="image 2.png" /><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

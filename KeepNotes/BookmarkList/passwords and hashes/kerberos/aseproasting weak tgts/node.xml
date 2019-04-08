@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>ASEPRoasting Weak TGTs</string>
+  <key>nodeid</key><string>6670e98b-fea4-4bc7-a8d5-f5fa5398b82c</string>
+  <key>modified_time</key><integer>1552418819</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1552418781</integer>
+  <key>order</key><integer>11</integer>
+</dict>
+</node>

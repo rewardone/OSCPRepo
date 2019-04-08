@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Injection</title>
+</head><body>– If the REST framework (or REST application) uses a generic Java-XML marshalling API, like JDK XMLEncoder/XMLDecoder or XStream, that need to include method and constructor invocations during XML unmarshalling to Java objects, a potential Java code injection could be leveraged by the attacker.<br/>
+<br/>
+The following xml attack payload for XMLDecoder will overwrite a sensitive file. Similar to:<br/>
+new PrintWriter("/myapp/WEB-INF/sensitive.dat").println("hacked!") . <br/>
+<br/>
+The bad guys could install a JSPShell page, modify configuration files, deface web contents, etc.<br/>
+&lt;java&gt;<br/>
+&nbsp; &lt;object class="java.io.PrintWriter"&gt;<br/>
+&nbsp; &nbsp; &lt;string&gt;/myapp/WEB-INF/sensitive.dat&lt;/string&gt;<br/>
+&nbsp; &nbsp; &lt;void method="println"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;string&gt;hacked!&lt;/string&gt;<br/>
+&nbsp; &nbsp; &lt;/void&gt;<br/>
+&nbsp; &lt;/object&gt;<br/>
+&lt;/java&gt;<br/>
+<br/>
+<br/>
+The good news is that newer versions of some Java REST frameworks have patched this, but often a specific configuration on XML parser and XML marshalling components should be performed by the REST application. For example, Jersey fixed this bug (“All Jersey web services that accept XML are vulnerable to XXE attacks“, bug-id <a href="https://java.net/jira/browse/JERSEY-323">JERSEY-323</a>) only recently (September 2015)!<br/>
+<br/>
+Be cautious. For example, RESTlet uses XMLEncoder/XMLDecoder for its ObjectRepresentation, when the media type chosen was ‘application/x-java-serialized-object+xml’. This was deactivated by default, but insane developers may ignore the security warning and activate it.</body></html>

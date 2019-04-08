@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Backdooring a Domain</title>
+</head><body>Why Care <br/>
+There are a million ways to backdoor Active Directory given sufficient rights (make that a million and one : ). <a href="https://twitter.com/pyrotek3">Sean Metcalf</a>&nbsp;calls these “<a href="https://adsecurity.org/?p=1929">Sneaky Active Directory Persistence Tricks</a>“. Some of these involve ACL backdoors, something <a href="http://www.harmj0y.net/blog/redteaming/abusing-active-directory-permissions-with-powerview/">I’ve covered some in the past</a>. Other approaches might require <a href="http://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/">maliciously editing GPOs</a>. Still others could involve <a href="http://www.harmj0y.net/blog/redteaming/targeted-plaintext-downgrades-with-powerview/">editing user objects</a>. The <b>SeEnableDelegationPrivilege</b>&nbsp;approach is a bit of everything above.<br/>
+&nbsp;<br/>
+<b>TL;DR:</b>&nbsp;if we control an object that has <b>SeEnableDelegationPrivilege</b>&nbsp;in the domain, AND said object has GenericAll/GenericWrite rights over <i>any</i>&nbsp;other user object in the domain, we can compromise the domain at will, indefinitely.<br/>
+&nbsp;<br/>
+Given elevated domain rights OR edit rights to the default domain controller GPO (something <a href="https://twitter.com/_wald0">@_wald0</a>, <a href="https://twitter.com/cptjesus">@cptjesus</a>, and I are currently working on for BloodHound) for just a few minutes, you can make a single modification to the given GPO to implement this backdoor. This GPO is located at <b>\\DOMAIN\sysvol\testlab.local\Policies\{6AC1786C-016F-11D2-945F-00C04fB984F9}\MACHINE\Microsoft\Windows NT\SecEdit\GptTmpl.inf</b>. By adding any user SID or username to the <b>SeEnableDelegationPrivilege</b>&nbsp;line of the <b>[Privilege Rights]</b>&nbsp;section, the setting will take hold whenever the user/machine’s current DC reboots or refreshes its group policy:<br/>
+&nbsp; <br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+If eviluser has full rights over ANY user in the domain, we can modify that user’s msDS-AllowedToDelegateTo value to be whatever target service we want to compromise. We can also modify the TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION UAC flag if needed. In this case, let’s use ldap/DOMAIN_CONTROLLER to facilitate DCSyncing at will:<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<img src="image 3.png" /><br/>
+<br/>
+<br/>
+If <b>eviluser</b>&nbsp;has GenericAll over any target <b>victim</b>, then we don’t even have to know the victim user’s password. We can execute a force password reset using <b><a href="https://github.com/PowerShellMafia/PowerSploit/blob/3f7a32d6237caa037b870aaa941a35e3761bf13c/Recon/PowerView.ps1#L4965-L5075">Set-DomainUserPassword</a></b> to a known value and then execute the <a href="http://www.harmj0y.net/blog/activedirectory/s4u2pwnage/">asktgt.exe/s4u.exe attack flow</a>.<br/>
+&nbsp;<br/>
+Obviously, from the defensive side, take note of what users have the <b>SeEnableDelegationPrivilege</b>&nbsp;privilege on your domain controllers, through <a href="https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1">PowerView</a>&nbsp;or other means. This right effectively gives those users complete control of the domain, making a great ‘subtle’, but easy to detect (if you know what you’re looking for) AD backdoor.<br/>
+&nbsp; <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>
