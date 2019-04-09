@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSSQL RCE/LPE</title>
+</head><body><b>Case Study 1: MSSQL RCE/LPE </b><br/>
+MSSQL has an undocumented stored procedure called xp_dirtree that lists the file and folders of a provided path. By default, this stored procedure is accessible to all authenticated users (“Public”).<br/>
+&nbsp;<br/>
+Under the following conditions, an attacker can achieve RCE/LPE (depending mainly on connectivity) by abusing the xp_dirtree stored procedure:<br/>
+&nbsp;<ul><li>The the attacker has compromised a user permitted to invoke the xp_dirtree stored procedure.</li>
+<li>The MSSQL service is running as Network Service, Local System, or a <a href="http://web.archive.org/web/20190315093814/https://docs.microsoft.com/en-us/windows/security/identity-protection/access-control/service-accounts#bkmk-virtualserviceaccounts">Virtual Account</a>&nbsp;(default).</li>
+<li>The WebDAV client is installed and running on the target host.</li>
+</ul>
+<br/>
+The abuse case would work as follows:<br/>
+&nbsp;<ul><li>The attacker compromises credentials or a TGT for an account that has an SPN or creates one (“Service A”), and an account premitted to connect and invoke xp_dirtree on the target MSSQL instance.</li>
+<li>If required, the attacker uses Service A to add a DNS record using ADIDNS. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL1.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL1.png" /></a></li>
+<li>The attacker logs in to the MSSQL service on the target host (“Service B”) and invokes xp_dirtree to trigger a connection to a rogue <a href="http://web.archive.org/web/20190315093814/https://gist.github.com/3xocyte/4ea8e15332e5008581febdb502d0139c">WebDAV NTLM relay server</a>. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL2.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL2.png" /></a></li>
+<li>The attacker relays the computer account NTLM authentication to the LDAP service on the domain controller, and configures resource-based constrained delegation from Service A to Service B. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL3.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL3.png" /></a>&nbsp;<a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL4.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL4.png" /></a></li>
+<li>The attacker uses Rubeus to perform a full S4U attack to obtain a TGS to Service B for a user that has local administrator privileges on the target host. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL5.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL5.png" /></a></li>
+<li>The attacker can pass-the-ticket to compromise the target host. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL6.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/MSSQL6.png" /></a></li>
+</ul>
+<br/>
+The following diagram illustrates this scenario: <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Diagrams/MSSQL.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Diagrams/MSSQL.png" /></a><br/>
+<br/>
+<a href="http://web.archive.org/web/20190315093814/https://youtu.be/nL2oa3URkCs">https://youtu.be/nL2oa3URkCs</a><br/>
+&nbsp;<br/>
+Matt Bush (<a href="http://web.archive.org/web/20190315093814/https://twitter.com/3xocyte">@3xocyte</a>) implemented “<a href="http://web.archive.org/web/20190315093814/https://gist.github.com/3xocyte/0dc0bd4cb48cc7b4075bdc90a1ccc7d3">Bad Sequel</a>” as a PoC exploit for this scenario. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/bad_sequel.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/bad_sequel.png" /></a><br/>
+&nbsp; </body></html>

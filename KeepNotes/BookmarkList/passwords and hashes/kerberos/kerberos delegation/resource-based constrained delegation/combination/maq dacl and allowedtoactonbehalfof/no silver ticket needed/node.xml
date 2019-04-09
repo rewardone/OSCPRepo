@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>No Silver Ticket Needed</string>
+  <key>nodeid</key><string>2c79b9dc-bca9-4e29-a1e0-cecd4ed48c51</string>
+  <key>modified_time</key><integer>1554833793</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1554833590</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

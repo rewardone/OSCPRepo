@@ -3,4 +3,40 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>S4U2Proxy</title>
-</head><body>The second extension is <a href="https://msdn.microsoft.com/en-us/library/cc246079.aspx">S4U2proxy</a>, which allows the caller, the service account in our case, to use this forwardable ticket to request a service ticket to any SPN specified in msds-allowedtodelegateto, impersonating the user specified in the S4U2self step. The KDC checks if the requested service is listed in the msds-allowedtodelegateto field of the requesting user, and issues the ticket if this check passes. In this way the delegation is ‘constrained’ to specific target services.</body></html>
+</head><body>The second extension is <a href="https://msdn.microsoft.com/en-us/library/cc246079.aspx">S4U2proxy</a>, which allows the caller, the service account in our case, to use this forwardable ticket to request a service ticket to any SPN specified in msds-allowedtodelegateto, impersonating the user specified in the S4U2self step. The KDC checks if the requested service is listed in the msds-allowedtodelegateto field of the requesting user, and issues the ticket if this check passes. In this way the delegation is ‘constrained’ to specific target services.<br/>
+<br/>
+<b>A Misunderstood Feature #2 </b><br/>
+So, S4U2Proxy still shouldn’t have worked with a non-forwardable ticket, right?<br/>
+&nbsp;<br/>
+When I attempted invoking S4U2Proxy with a non-forwardable TGS with classic (“outgoing”) constrained delegation, it failed. But with resource-based constrained delegation (“incoming”) it consistently worked. I thought it must be a bug, and so on 26/10/2018, I reported it to Microsoft Response Center (MSRC).<br/>
+&nbsp;<br/>
+As I was impatiently waiting for a response, I read <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246071.aspx">MS-SFU</a>&nbsp;again and found <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/ff634460.aspx">section 3.2.5.2</a>:<br/>
+&nbsp; <br/>
+“If the <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_b4041466-ae24-4fd4-83e4-5dbc4f32aaab">service ticket</a>&nbsp;in the <b>additional-tickets</b>&nbsp;field is not set to <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_4c6cd79b-120d-4ee1-ab24-d1b000e0b3ca">forwardable&lt;20&gt;</a>&nbsp;and the PA-PAC-OPTIONS [167] (<a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc233855.aspx">[MS-KILE]</a>&nbsp;section <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/hh553950.aspx">2.2.10</a>) padata type has the resource-based <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_b7f30547-6d3a-4224-9441-434174c2dec1">constrained delegation</a>&nbsp;bit:<br/>
+&nbsp;<ul><li>Not set, then the KDC MUST return KRB-ERR-BADOPTION with STATUS_NO_MATCH.</li>
+<li>Set and the USER_NOT_DELEGATED bit is set in the <b>UserAccountControl</b>&nbsp;field in the <b>KERB_VALIDATION_INFO</b>&nbsp;structure (<a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc237917.aspx">[MS-PAC]</a>&nbsp;section <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc237948.aspx">2.5</a>), then the KDC MUST return KRB-ERR-BADOPTION with STATUS_NOT_FOUND.”</li>
+</ul>
+&nbsp; <br/>
+<br/>
+It seems like a design flaw, also known in Microsoft parlance as a “feature”. S4U2Proxy for resource-based constrained delegation works when provided with a non-forwardable TGS by design!<br/>
+&nbsp;<br/>
+Note that as per the above documentation, even though the TGS doesn’t have to be forwardable for resource-based constrained delegation, if the user is set as “sensitive for delegation”, S4U2Proxy will fail, which is expected.<br/>
+&nbsp; <br/>
+<br/>
+<b>A Forwardable Result </b><br/>
+When I inspected the resulting TGS in the S4U2Proxy response, it had the FORWARDABLE flag set. I provided S4U2Proxy with a non-forwardable TGS as “evidence” and got a forwardable TGS.<img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Forwardable.png" /><br/>
+<br/>
+Is this a bug or a feature?<br/>
+&nbsp;<br/>
+I went back to <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246071.aspx">MS-SFU</a>&nbsp;<a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/hh554124.aspx">section 3.2.5.2.2</a>, and found the following:<br/>
+&nbsp; <br/>
+“The <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_6e5aafba-6b66-4fdd-872e-844f142af287">KDC</a>&nbsp;MUST reply with the <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_b4041466-ae24-4fd4-83e4-5dbc4f32aaab">service ticket</a>&nbsp;where:<br/>
+&nbsp;<ul><li>The sname field contains the name of Service 2.</li>
+<li>The realm field contains the <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_a6d72903-d1a8-4968-bd9b-bf22005e8b58">realm</a>&nbsp;of Service 2.</li>
+<li>The cname field contains the cname from the service ticket in the additional-tickets field.</li>
+<li>The crealm field contains the crealm from the service ticket in the additional-tickets field.</li>
+<li><b>The FORWARDABLE <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_838d3fe1-e504-4442-93cc-75de14e6f569">ticket</a>&nbsp;flag is set.</b></li>
+<li>The S4U_DELEGATION_INFO structure is in the new <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_26456104-0afb-4afe-a92e-ac160a9efdf8">PAC</a>.”</li>
+</ul>
+&nbsp;<br/>
+It seems like it is another great feature: <b>every TGS produced by S4U2Proxy is always forwardable.</b></body></html>

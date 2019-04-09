@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Active Directory Specific</string>
   <key>nodeid</key><string>0df02696-440c-4ce3-b01f-c23987584431</string>
   <key>modified_time</key><integer>1528859847</integer>

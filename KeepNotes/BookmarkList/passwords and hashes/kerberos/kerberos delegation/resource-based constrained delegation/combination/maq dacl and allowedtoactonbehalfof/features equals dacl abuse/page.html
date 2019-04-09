@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Features Equals DACL Abuse</title>
+</head><body><b>Generic DACL Abuse </b><br/>
+These two misunderstood “features” mean that the only requirement for the ACL-based computer object takeover primitive is the DACL to configure resource-based constrained delegation on the computer object and another account. Any account with an SPN will do. Even just a TGT for the other account will be enough.<br/>
+&nbsp;<br/>
+The reason an SPN is required is that S4U2Self does not seem to work for accounts that do not have it. But any domain user can obtain an account with an SPN by abusing the MachineAccountQuota, which is set to 10 by default, and allows creating new computer accounts. When creating the new computer account, the user can set an SPN for it, or add one later on. Kevin Robertson (<a href="http://web.archive.org/web/20190315093814/https://twitter.com/kevin_robertson">@NetSPI</a>) implemented a tool called <a href="http://web.archive.org/web/20190315093814/https://github.com/Kevin-Robertson/Powermad">Powermad</a>&nbsp;that allows doing that through LDAP.<br/>
+&nbsp;<br/>
+The generic abuse case would work as follows:<br/>
+&nbsp;<ul><li>The attacker compromises </li>
+<li style="list-style-type: none"><ul><li>an account that has an SPN or creates one (“Service A”) and </li>
+<li>the DACL to configure resource-based constrained delegation on a computer account (“Service B”).</li>
+</ul>
+</li>
+<li>The attacker configures resource-based constrained delegation from Service A to Service B. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Generic1.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Generic1.png" /></a></li>
+<li>The attacker uses Rubeus to perform a full S4U attack (S4U2Self and S4U2Proxy) from Service A to Service B for a user with privileged access to Service B. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Generic2.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Generic2.png" /></a></li>
+<li>The attacker can pass-the-ticket and impersonate the user to gain access to Service B. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Generic3.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Generic3.png" /></a></li>
+</ul>
+&nbsp;<br/>
+<br/>
+<a href="http://web.archive.org/web/20190315093814/https://youtu.be/ayavtG7J_TQ">https://youtu.be/ayavtG7J_TQ</a><br/>
+&nbsp;<br/>
+Note that the TGS obtained from S4U2Self in step 3 is not forwardable, and yet it is accepted as “evidence” when invoking S4U2Proxy.<br/>
+&nbsp; <br/>
+<b>A Forwardable Result </b><br/>
+When I inspected the resulting TGS in the S4U2Proxy response, it had the FORWARDABLE flag set. I provided S4U2Proxy with a non-forwardable TGS as “evidence” and got a forwardable TGS.<img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Forwardable.png" /><br/>
+<br/>
+Is this a bug or a feature?<br/>
+&nbsp;<br/>
+I went back to <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246071.aspx">MS-SFU</a>&nbsp;<a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/hh554124.aspx">section 3.2.5.2.2</a>, and found the following:<br/>
+&nbsp; <br/>
+“The <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_6e5aafba-6b66-4fdd-872e-844f142af287">KDC</a>&nbsp;MUST reply with the <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_b4041466-ae24-4fd4-83e4-5dbc4f32aaab">service ticket</a>&nbsp;where:<br/>
+&nbsp;<ul><li>The sname field contains the name of Service 2.</li>
+<li>The realm field contains the <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_a6d72903-d1a8-4968-bd9b-bf22005e8b58">realm</a>&nbsp;of Service 2.</li>
+<li>The cname field contains the cname from the service ticket in the additional-tickets field.</li>
+<li>The crealm field contains the crealm from the service ticket in the additional-tickets field.</li>
+<li><b>The FORWARDABLE <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_838d3fe1-e504-4442-93cc-75de14e6f569">ticket</a>&nbsp;flag is set.</b></li>
+<li>The S4U_DELEGATION_INFO structure is in the new <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc246073.aspx#gt_26456104-0afb-4afe-a92e-ac160a9efdf8">PAC</a>.”</li>
+</ul>
+&nbsp;<br/>
+It seems like it is another great feature: <b>every TGS produced by S4U2Proxy is always forwardable.</b><br/>
+&nbsp; </body></html>

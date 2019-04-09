@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Unconstrained Domain Persist</title>
+</head><body><b>Unconstrained Domain Persistence </b><br/>
+Once attackers compromise the domain, they can obviously configure resource-based constrained delegation on strategic objects, such as domain controllers, and obtain a TGS on-demand. But resource-based constrained delegation can also be configured to generate TGTs on-demand as a domain persistence technique.<br/>
+&nbsp;<br/>
+Once the domain is compromised, resource-based constrained delegation can be configured from a compromised account to the krbtgt account to produce TGTs.<br/>
+&nbsp;<br/>
+The abuse case would work as follows:<br/>
+&nbsp;<ul><li>The attacker compromises the domain and an account that has an SPN or creates one (“Service A”).</li>
+<li>The attacker configures resource-based constrained delegation from Service A to krbtgt. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Persistence1.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Persistence1.png" /></a></li>
+<li>The attacker uses Rubeus to perform a full S4U attack and obtain a TGS for an arbitrary user to krbtgt, which is, in fact, a TGT. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Persistence2.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Persistence2.png" /></a>&nbsp;</li>
+<li>The attacker can use the TGT to request a TGS to arbitrary services. <a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Persistence4.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Persistence4.png" /></a>&nbsp;<a href="http://web.archive.org/web/20190315093814/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Persistence5.png"><img src="http://web.archive.org/web/20190315093814im_/http://shenaniganslabs.io/images/TrustedToAuthForDelegationWho/Persistence5.png" /></a></li>
+</ul>
+&nbsp;<br/>
+<br/>
+<a href="http://web.archive.org/web/20190315093814/https://youtu.be/1BU2BflUHxA">https://youtu.be/1BU2BflUHxA</a><br/>
+&nbsp;<br/>
+In this scenario, the account Service A obtained a degree of power somewhat similar to that of the KDC in the sense that it can produce a TGT for arbitrary users.<br/>
+&nbsp;<br/>
+Arguably, more subtle persistence can be achieved through a new access control entry (ACE) to allow configuring resource-based constrained delegation on-demand, rather than leaving it in plain sight.<br/>
+&nbsp; </body></html>

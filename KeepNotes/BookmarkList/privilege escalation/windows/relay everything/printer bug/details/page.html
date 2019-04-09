@@ -3,7 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Details</title>
-</head><body>Print System Remote Protocol (<a href="https://msdn.microsoft.com/en-us/library/cc244528.aspx">MS-RPRN</a>) <br/>
+</head><body>As Lee Christensen (<a href="http://web.archive.org/web/20190315093814/https://twitter.com/tifkin_">@tifkin_</a>) demonstrated in <a href="http://web.archive.org/web/20190315093814/https://www.slideshare.net/harmj0y/derbycon-the-unintended-risks-of-trusting-active-directory/38">“the printer bug” abuse case study at DerbyCon 8</a>, it is possible to trick the Printer Spooler to connect back over SMB to a specified IP/hostname, by invoking the method <a href="http://web.archive.org/web/20190315093814/https://msdn.microsoft.com/en-us/library/cc244812.aspx">RpcRemoteFindFirstPrinterChangeNotification (Opnum 62)</a>. &nbsp;<br/>
+<br/>
+Print System Remote Protocol (<a href="https://msdn.microsoft.com/en-us/library/cc244528.aspx">MS-RPRN</a>) <br/>
 All comms are SMB-RPC (TCP 445)<br/>
 Named Pipe: \pipe\spoolss<br/>
 RPC UUID: 12345678-1234-ABCD-EF00-0123456789AB<br/>

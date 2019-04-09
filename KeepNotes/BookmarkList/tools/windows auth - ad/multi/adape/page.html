@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ADAPE</title>
+</head><body>[ADAPE](https://github.com/hausec/ADAPE-Script) | AD Assessment and Privilege Escalation Script<br/>
+<br/>
+This script will do the following:<br/>
+&nbsp;<br/>
+Gather hashes via WPAD, LLMNR, and NBT-NS spoofing<br/>
+Check for GPP password (MS14-025)<br/>
+Gather hashes for accounts via Kerberoast<br/>
+Map out the domain and identify targets via BloodHound<br/>
+Check for privilege escalation methods<br/>
+Search for open SMB shares on the network<br/>
+&nbsp;<br/>
+Search those shares and other accessible directories for sensitive files and strings (Passwords, PII, or whatever your want, really). By default it's looking for the term "password". If you wanted to search for CVVs for example, you'd just add it next to 'password', e.g. password,cvv<br/>
+&nbsp;<br/>
+Check patches of systems on the network<br/>
+Search for file servers<br/>
+Search attached shares<br/>
+Gather the domain policy<br/>
+&nbsp;<br/>
+This script will completely run on it's own, without using the internet at all. All the scripts needed are obfuscated powershell and included, so it should bypass most basic AV solutions. By default, it will turn off Windows Defender. If OpSec worries you (e.g. target has alerts configured around when Defender is turned off), then you can comment it out by putting a '#' before "Set-MpPreference -DisableRealtimeMonitoring $true" on line 34.<br/>
+&nbsp;<br/>
+It uses the following modules:<br/>
+&nbsp;<br/>
+Inveigh - <a href="https://github.com/Kevin-Robertson/Inveigh/blob/master/Scripts/Inveigh.ps1">https://github.com/Kevin-Robertson/Inveigh/blob/master/Scripts/Inveigh.ps1</a><br/>
+Kerberoast - <a href="https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1">https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1</a><br/>
+Bloodhound - <a href="https://github.com/BloodHoundAD/BloodHound/blob/master/Ingestors/SharpHound.exe">https://github.com/BloodHoundAD/BloodHound/blob/master/Ingestors/SharpHound.exe</a><br/>
+Get-GPPP - <a href="https://github.com/EmpireProject/Empire/blob/master/data/module_source/privesc/Get-GPPPassword.ps1">https://github.com/EmpireProject/Empire/blob/master/data/module_source/privesc/Get-GPPPassword.ps1</a><br/>
+PowerUp - <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1">https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1</a><br/>
+PowerView - <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1</a><br/>
+&nbsp;<br/>
+The script will ask to run as admin, as it requires it. If you do not have admin access, it will only run the privilege escalation module. If you're being blocked by UAC, I suggest running a bypass UAC script (<a href="https://raw.githubusercontent.com/samratashok/nishang/master/Escalation/Invoke-PsUACme.ps1">https://raw.githubusercontent.com/samratashok/nishang/master/Escalation/Invoke-PsUACme.ps1</a>).<br/>
+&nbsp;<br/>
+After running the .ps1, it will create the capture file in the same folder it's being ran in and zips it. At the end of the script, it deletes all the folders it created (except the .zip file, obviously).<br/>
+&nbsp;<br/>
+GPP password checking and searching sensitive files takes awhile, so don't be surprised if this script takes a long time to finish depending on the number of domain controllers, open shares, and strings you're searching for. Comment those sections out if they take too long to run.<br/>
+&nbsp;<br/>
+Usage: PowerShell.exe -ExecutionPolicy Bypass ./ADAPE.ps1<br/>
+&nbsp; </body></html>

