@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Another Constrained Delegation 101 S4U2Proxy</string>
+  <key>nodeid</key><string>4aa4684d-2437-49bc-935b-ac0b495c8870</string>
+  <key>modified_time</key><integer>1552501975</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1552501856</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

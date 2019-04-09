@@ -1,0 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>alt s4u2self</title>
+</head><body><b>Protocol Transition (S4U2Self/TrustedToAuthForDelegation)</b>: S4U2Proxy requires the service to present a TGS for the user to itself before the authentication service produces a TGS for the user to another service. It is often referred to as the “additional ticket”, but I like referring to it as “evidence” that the user has indeed authenticated to the service invoking S4U2Proxy. However, sometimes users authenticate to services via other protocols, such as NTLM or even form-based authentication, and so they do not send a TGS to the service. In such cases, a service can invoke S4U2Self to ask the authentication service to produce a TGS for arbitrary users to itself, which can then be used as “evidence” when invoking S4U2Proxy. <b>This feature allows impersonating users out of thin air, and it is only possible when the TrustedToAuthForDelegation flag is set for the service account that invokes S4U2Self. &nbsp;<br/>
+</b><b><br/>
+</b><img src="image.png" />&nbsp; </body></html>
