@@ -1,9 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Another Constrained Delegation 101 S4U2Proxy</title>
-</head><body><b>Constrained Delegation (S4U2Proxy):</b>&nbsp;The user sends a TGS to access the service (“Service A”), and if the service is allowed to delegate to another pre-defined service (“Service B”), then Service A can present to the authentication service the TGS that the user provided and obtain a TGS for the user to Service B. Note that the TGS provided in the S4U2Proxy request must have the FORWARDABLE flag set. The FORWARDABLE flag is never set for accounts that are configured as “sensitive for delegation” (the USER_NOT_DELEGATED attribute is set to true) or for members of the Protected Users group. &nbsp; <br/>
-<br/>
-<img src="image.png" /><br/>
-</body></html>

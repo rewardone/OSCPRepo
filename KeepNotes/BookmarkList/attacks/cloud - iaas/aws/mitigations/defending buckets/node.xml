@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Defending Buckets</string>
+  <key>nodeid</key><string>d31119aa-83ae-47cc-96a7-f8ede409942b</string>
+  <key>modified_time</key><integer>1554904901</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1554904842</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

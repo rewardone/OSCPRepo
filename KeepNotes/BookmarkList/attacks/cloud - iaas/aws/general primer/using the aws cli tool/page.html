@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Using the AWS CLI Tool</title>
+</head><body>aws s3 ls s3://&lt;bucket&gt; --no-sign-request&#09;&#09;&#09;&#09;&#09;List Objects in a bucket<br/>
+aws s3 cp s3://&lt;bucket&gt;/item . --no-sign-request&#09;&#09;&#09;&#09;Copy object from bucket to local<br/>
+aws s3 cp item s3://&lt;bucket&gt;/item --no-sign-request&#09;&#09;&#09;Upload object to bucket from local<br/>
+aws s3 api get-bucket-acl --bucket &lt;bucket&gt; --no-sign request&#09;Get bucket ACL<br/>
+&nbsp;&#09;can append ?policy to the path to query the bucket policy<br/>
+aws s3 api get-object-acl --bucket &lt;bucket&gt; --key item --no-sign-request&#09;Get ACL for specific object<br/>
+</body></html>

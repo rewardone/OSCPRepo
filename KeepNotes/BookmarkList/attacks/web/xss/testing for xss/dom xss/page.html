@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DOM XSS</title>
+</head><body><b>Awesome DOM XSS</b><br/>
+<br/>
+&nbsp; &nbsp; Does your source (input) go into a sink? <b>Vulnerable</b><br/>
+&nbsp; &nbsp; It doesn't? Not vulnerable<br/>
+<br/>
+<b>Source: An input that could be controlled by an external (untrusted) source.</b><br/>
+<br/>
+document.URL<br/>
+document.documentURI<br/>
+document.URLUnencoded (IE 5.5 or later Only)<br/>
+document.baseURI<br/>
+location<br/>
+location.href<br/>
+location.search<br/>
+location.hash<br/>
+location.pathname<br/>
+document.cookie<br/>
+document.referrer<br/>
+window.name<br/>
+history.pushState()<br/>
+history.replaceState()<br/>
+localStorage<br/>
+sessionStorage<br/>
+<br/>
+<b>Sink: A potentially dangerous method that could lead to a vulnerability. In this case a DOM Based XSS.</b><br/>
+<br/>
+eval<br/>
+Function<br/>
+setTimeout<br/>
+setInterval<br/>
+setImmediate<br/>
+execScript<br/>
+crypto.generateCRMFRequest<br/>
+ScriptElement.src<br/>
+ScriptElement.text<br/>
+ScriptElement.textContent<br/>
+ScriptElement.innerText<br/>
+anyTag.onEventName<br/>
+document.write<br/>
+document.writeln<br/>
+anyElement.innerHTML<br/>
+Range.createContextualFragment<br/>
+window.location<br/>
+document.location<br/>
+</body></html>

