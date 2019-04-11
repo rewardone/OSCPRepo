@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Target Domain Objects</string>
+  <key>nodeid</key><string>a51de4ca-cf98-4a6f-84b3-7881bd376f91</string>
+  <key>modified_time</key><integer>1554989543</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1554989457</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

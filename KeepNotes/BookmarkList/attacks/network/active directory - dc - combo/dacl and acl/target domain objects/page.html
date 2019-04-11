@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Target Domain Objects</title>
+</head><body>Main takeover primitive is<ul><li>Granting a user domain replication rights (for DCSync)</li>
+<li style="list-style-type: none"><ul><li>Or someone who currently has DCSync rights</li>
+</ul>
+</li>
+</ul>
+<br/>
+Additional rights that we care about:<ul><li><b>WriteDacl</b>&nbsp;(so we can grant a principal DCSync rights)</li>
+</ul>
+<br/>
+These rights are abusable through<ul><li>Add-DomainObjectAcl</li>
+<li>Or Explicit</li>
+<li style="list-style-type: none"><ul><li>DS-Replication-Get-Changes</li>
+<li>DS-Replication-Get-Changes-All</li>
+</ul>
+</li>
+</ul>
+</body></html>

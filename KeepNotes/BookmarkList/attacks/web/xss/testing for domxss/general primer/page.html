@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>DOMXSS vulnerabilities are rather hard to find by using classic techniques such as scanners and black box testing methods.<br/>
+<br/>
+Luckily the tester usually has full access to the JavaScript sources to apply a source code audit and use simple techniques to get an overview on where possible sources and sinks hide in the analyzed files.<br/>
+<br/>
+One of the easiest methods to use is to just apply several regular expressions to the sources and have a look at the results. Most editors provide a way to use regular expressions as search pattern and will show the results highlighted very nicely so the tester can navigate from finding to finding and have a more detailed look if the possible sources and sinks can be exploited.<br/>
+<br/>
+<br/>
+<b>Finding Sources</b><br/>
+The following regular expression attempts to match most common DOMXSS sources (BETA):<br/>
+<br/>
+/(location\s*[\[.])|([.\[]\s*["']?\s*(arguments|dialogArguments|innerHTML|write(ln)?|open(Dialog)?|showModalDialog|cookie|URL|documentURI|baseURI|referrer|name|opener|parent|top|content|self|frames)\W)|(localStorage|sessionStorage|Database)/<br/>
+<br/>
+<br/>
+<br/>
+<b>Finding Sinks</b><br/>
+The following regular expression attempts to match most common DOMXSS sinks (BETA):<br/>
+<br/>
+/((src|href|data|location|code|value|action)\s*["'\]]*\s*\+?\s*=)|((replace|assign|navigate|getResponseHeader|open(Dialog)?|showModalDialog|eval|evaluate|execCommand|execScript|setTimeout|setInterval)\s*["'\]]*\s*\()/<br/>
+<br/>
+<br/>
+<b>This regular expression finds sinks based on jQuery, it also finds the $ function, which is not always insecure:</b><br/>
+/after\(|\.append\(|\.before\(|\.html\(|\.prepend\(|\.replaceWith\(|\.wrap\(|\.wrapAll\(|\$\(|\.globalEval\(|\.add\(|jQUery\(|\$\(|\.parseHTML\(/<br/>
+<br/>
+</body></html>

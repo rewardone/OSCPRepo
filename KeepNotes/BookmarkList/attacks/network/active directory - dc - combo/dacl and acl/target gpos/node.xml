@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Target GPOs</string>
+  <key>nodeid</key><string>b8285e7a-3fdd-4595-8268-86e6d3ca3676</string>
+  <key>modified_time</key><integer>1554989642</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1554989550</integer>
+  <key>order</key><integer>7</integer>
+</dict>
+</node>

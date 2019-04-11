@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Stealth and Hiding the DACL</title>
+</head><body>Effectifvely hiding DACLs requires two steps:<ul><li>Change the <b>object owner</b>&nbsp;from "Domain Admins" to the attacker account</li>
+<li>Add a new explicit ACE, denying the "<b>Everyone</b>"<b>&nbsp;</b>principal the "<b>Read Permissions</b>" privilege</li>
+</ul>
+<br/>
+Hiding a principal from defendes requires three steps:<ul><li>Change the principal owner to itself or another controled principal</li>
+<li>Grant explicit ocntrol of the principal to either itself, or another controlled principal</li>
+<li>On the OU containing your hidden principal, deny the "<b>List Contents</b>" privilege to "<b>Everyone</b>"</li>
+</ul>
+<br/>
+</body></html>
