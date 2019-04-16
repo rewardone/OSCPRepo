@@ -1,2 +1,50 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><body></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bettercap</title>
+</head><body>[Bettercap](https://www.bettercap.org) | Extensible MitM platform with a lot of built-in features (proxy server, cred sniffer, DNS proxy, more)<br/>
+<br/>
+BetterCap supersedes Ettercap<br/>
+<br/>
+Warning: without specifying, Bettercap targets all devices on the LAN, so specify a target list with -T, specify one with -G or exclude hosts on the LAN with --ignore<br/>
+Bettercap's modules are easy to use and create. <br/>
+Bettercap offers more flexibility and simpler output. <br/>
+Bettercap won't contextualize certificates in SSL/HTTP, which Ettercap does. <br/>
+Bettercap cannot modify the output HTTP requests from clients, which Ettercap can do (but it is difficult). <br/>
+<br/>
+-L&#09;&#09;&#09;&#09;Sniff packets<br/>
+--sniffer-output&#09;&#09;Write packets to pcap<br/>
+--sniffer-filter "&lt;&gt;"&#09;sniff based on a filter<br/>
+--custom-parser "&lt;&gt;"&#09;sniff and display based on regex<br/>
+--proxy&#09;&#09;&#09;sniff and sent through Bettercap proxy server<br/>
+--dns &lt;file&gt;&#09;&#09;use the text file to spoof DNS responses <br/>
+<br/>
+Bettercap Proxy modules<br/>
+--httpd<br/>
+--httpd-port &lt;port&gt;<br/>
+--httpd-path &lt;path&gt;<br/>
+--proxy-module injectjs<ul><li>--js-data &lt;string&gt;</li>
+<li>--js-file &lt;path&gt;</li>
+<li>--js-url &lt;url&gt;</li>
+</ul>
+--proxy-module injectcss<ul><li>--css-data &lt;string&gt;</li>
+<li>--css-file &lt;path&gt;</li>
+<li>--css-url &lt;url&gt;</li>
+</ul>
+--proxy-module injecthtml<ul><li>--html-data &lt;string&gt;</li>
+<li>--html-file &lt;path&gt;</li>
+<li>--html-iframe-url &lt;url&gt;</li>
+</ul>
+--proxy-module &lt;custom.rb&gt;<br/>
+<br/>
+Bettercap popular custom modules (https://github.com/evilsocket/bettercap-proxy-modules)<br/>
+androidpwn.rb&#09;&#09;execute command exploiting Android addJavaScriptInterface vulnerability in Android &lt; 4.2<br/>
+osxsparkle.rb&#09;&#09;execute custom OS X Mach-O executable using Sparkle Updater vulnerability<br/>
+beefbox.rb&#09;&#09;&#09;inject a beef hook<br/>
+replace_images.rb&#09;replace images with specified alternative<br/>
+replace_file.rb&#09;&#09;replace files downloaded with a specified alternative<br/>
+sshdowngrade.rb&#09;implements an ssh 2.x to 1.x downgrade attack<br/>
+mssqlauth.rb&#09;&#09;downgrade MSSQL connections to capture credentials<br/>
+<br/>
+</body></html>

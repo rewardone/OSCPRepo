@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Network Access Control</string>
   <key>nodeid</key><string>7b3f5bb1-01c0-443b-8d56-bd56aa35cdc6</string>
   <key>modified_time</key><integer>1555076757</integer>

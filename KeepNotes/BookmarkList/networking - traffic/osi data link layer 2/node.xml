@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>expanded</key><false/>
+  <key>title</key><string>OSI Data Link Layer 2</string>
+  <key>nodeid</key><string>a926cc30-6d3d-4834-bd9f-2a94c4906259</string>
+  <key>modified_time</key><integer>1555429185</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1555429185</integer>
+  <key>info_sort_dir</key><integer>1</integer>
+  <key>order</key><integer>3</integer>
+  <key>info_sort</key><string>order</string>
+</dict>
+</node>

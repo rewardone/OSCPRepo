@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Firewalls / Filters</string>
   <key>nodeid</key><string>72c60aa3-a900-482b-8e4e-62868f577bd2</string>
   <key>modified_time</key><integer>1554739908</integer>
@@ -9,7 +10,7 @@
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1554739908</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>4</integer>
+  <key>order</key><integer>5</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

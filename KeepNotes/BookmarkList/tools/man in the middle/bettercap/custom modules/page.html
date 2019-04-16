@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Custom Modules</title>
+</head><body>Modules are written in Ruby extending the BetterCap::HTTP::Proxy::Module class. Template:<ul><li>self.on_options&#09;define usage optoins, accept command line parameters</li>
+<li>initialize&#09;&#09;&#09;called when script is loaded</li>
+<li>on_request&#09;&#09;called when proxy has an HTTP response; includes request and response data</li>
+</ul>
+<br/>
+Other useful extensions:<br/>
+BetterCap::Logger<br/>
+<br/>
+Request objects include a headers hash, variables, etc<br/>
+Response objects are similar including headers, body<br/>
+<br/>
+private functions indicate that methods and class variables that follow should not be accessible outside of the class itself. <br/>
+Display value of strings from another string by using: #{variable_name}<br/>
+has_key?() function tests if a given string representing a hash entry name, returns TRUE or FALSE<br/>
+sub!('orig','replacement') function is a replacement function<br/>
+</body></html>
