@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>DTP With Yersinia</string>
+  <key>nodeid</key><string>009c0511-d440-404a-a473-cd9add3dab88</string>
+  <key>modified_time</key><integer>1555177515</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1555177160</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

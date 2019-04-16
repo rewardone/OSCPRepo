@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Spoofing is a common technique used to manipulate a switched network, allowing an attacker to eavesdrop on all or selected LAN activity by establishing a MitM attack. With access to the LAN, the attacker enumerates hosts on the network to learn ARP address and IP address information. This is typically done through flooding the network with ARP request messages. <br/>
+<br/>
+It is possible to do this with ICMP Echo Request messages, or by passively observing broadcast or multicast information from clients. <br/>
+<br/>
+Each ARP reply message is faked, disclosing to the default gateway that the attacker's MAC address is the addres that should be associated with the network node being impersonated. <br/>
+<br/>
+After manipulating the gateway, the attacker repeats the process in reverse. Once complete, all network traffic will bridge to the attacker, regardless of its final destination. </body></html>

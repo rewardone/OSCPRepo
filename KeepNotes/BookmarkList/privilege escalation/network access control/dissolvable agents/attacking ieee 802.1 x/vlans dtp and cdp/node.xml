@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>VLANs DTP and CDP</string>
+  <key>nodeid</key><string>88c67293-7ff7-4d79-8014-692e26785df5</string>
+  <key>modified_time</key><integer>1555181281</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1555169182</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

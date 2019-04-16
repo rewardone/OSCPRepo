@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>Typically implemented when a company wants to enforce a simple authentication and check clients meet minimum security requirements. A dissolvable agent will be downloaded and run on a computer and will remove itself after checks are complete. If checks are passed, access is granted to the network. <br/>
+<br/>
+<b>Auth</b><br/>
+Clientless NAC systems often leverage a captive portal authentication system to validate a user's identity. Once authenticated, the server will grant access to the network. <br/>
+<br/>
+<b>Validation</b><br/>
+ActiveX, Java, or other browser control can launch and perform the system validation. <br/>
+Captive portals can use a variety of ways to identify and fingerprint the client including MAC address, IP address, User-Agents, a combination of techniques, and more.<br/>
+<br/>
+<b>Post-Auth</b><br/>
+If the server is using out-of-band management, it may use SNMP or an interactive session to grant the end-user access to a second VLAN that has interactive access. <br/>
+<br/>
+<br/>
+<b>Captive Portals</b><br/>
+Lightweight NAC systems use weak authentication controls. Mobile devices often obtain a policy exception due to platform limitations (no Java/Flash, lack of management, etc). <br/>
+These exceptions in Lightweight NACs create opportunities for bypass/exploitation.<br/>
+<br/>
+<b>iEEE 802.1x</b><br/>
+Switch access ports are "closed" until successful authentication<br/>
+Three components are generally required:<ul><li>Supplicant or client software</li>
+<li>The Port Access Entity (PAE)</li>
+<li>Authentication server (backend RADIUS server)</li>
+</ul>
+<br/>
+In wired NAC environments, simple EAP methods are more common. Weak password-based authentication such as EAP-MD5 may be used with certificate-based authentication using EAP/TLS is becoming more popular<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

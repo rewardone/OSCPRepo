@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Scapy iPad-like Connection</title>
+</head><body>#!/usr/bin/python<br/>
+#<br/>
+# Ensure iptables rules are set up and tear down afterwards<br/>
+# iptables -A OUTPUT -p tcp --destination-port 80 --tcp-flags RST RST -s &lt;source&gt; -d &lt;captive_portal&gt; -j DROP<br/>
+#<br/>
+import scapy<br/>
+DST="dest_ip"<br/>
+SPORT=RandNum(range_start,range_end)<br/>
+ip=IP(dst=DST, flags="DF", ttl=64)<br/>
+tcpopt = [ ("MSS",1460), ("NOP",None), ("WScale",2), ("NOP",None), ("NOP",None), ("Timestamp",(123,0)), ("SAckOK",""), ("EOL",None) ]<br/>
+SYN=TCP(sport=SPORT, dport=80, flags="S", seq=10, window=0xffff, options=tcpopt)<br/>
+<br/>
+SYNACK=sr1(ip/SYN)&#09;&#09;&#09;#send the packet with our TCP Options and record the response as SYNACK<br/>
+my_ack = SYNACK.seq + 1&#09;&#09;#use the SYN/ACK response to get the initial seq. number<br/>
+ACK=TCP(sport=SPORT, dport=80, flags="A", seq=11, ack=my_ack, window=0xffff)<br/>
+send(ip/ACK)<br/>
+<br/>
+data = "GET / HTTP/1.1\r\nHOST: " + DSTIP + "\r\ Mozilla/5.0 (iPad; CPU iPad OS 10_0 like Mac OS X [. . . ]\r\n\r\n"<br/>
+PUSH=TCP(sport=SPORT,dsport=80, flags="PA", seq=11, ack=my_ack, window=0xffff)<br/>
+send(ip/PUSH/data)<br/>
+<br/>
+RST=TCP(sport=SPORT,dport=80, flags="R", seq=11, ack=0, window=0xffff)<br/>
+send(ip/RST)</body></html>

@@ -6,7 +6,7 @@
   <key>title</key><string>Attacks</string>
   <key>nodeid</key><string>4f25c74a-8876-481b-ba06-ebed6b3f9fe3</string>
   <key>modified_time</key><integer>1535294942</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1535294942</integer>

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VLANs DTP and CDP</title>
+</head><body><b>VLAN Manipulation</b><br/>
+Windows do not natively support VLAN trunking features (such as IEEE 802.1Q). Windows will identify and drop tagged frames upon receipt instead of passing to the OS. <br/>
+Virtual machine guests are unable to observe trunk packets and unable to participate in or exploit VLANs as well. <br/>
+<br/>
+Use a native Linux OS system when working with VLANs as much as possible. <br/>
+<br/>
+<br/>
+<b>Dynamic Trunking Protocol (DTP)</b><br/>
+Proprietary CISCO protocol. Negotiates a trunk port and encapsulation (802.1Q/ISL). If no trunking is performed, it defaults to an normal access port. <br/>
+The DTP master shares VLAN information with all downstream switches. <br/>
+<br/>
+As a primer, DTP will allow the switch to determine and negotiate the switchport state as a trunk port or Inter-Switch LAN (ISL is CISCO proprietary) or as an access port.<br/>
+If another switch connects to a DTP port, the DTP switch will watch for the presence of 802.1Q or ISL traffic for 30 seconds. When either protocol is discovered, the DTP port will auto-configure to match the trunking configuration, sharing VLAN information with downstream switches; however, if no 802.1Q or ISL traffic is observed, then the switch will default to making the port a regular access port. <br/>
+<br/>
+As an attacker, it can be crucial to identify if the switch port will look for and/or accept DTP traffic, forcing the switch to configure the port as a trunk port and pass all VLAN information to the attacker. <br/>
+<br/>
+Examinign the DTP protocol header frame will reveal useful information including the VLAN TRrunking Protocol domain name (if it's configured), the status of the oprt, and the DTP type. <br/>
+[Yersinia]() | multi-function network attack tool focused on exploiting LAN protocols. Manipulates multiple LAN-related protocols such as STP, CDP, DTP, HSRP, DHCP, 802.1Q, VTP, ISL<br/>
+<br/>
+<b>Configuring Linux for VLAN Participation</b><br/>
+Linux supports native 802.1Q VLAN support. Requires "8021q" kernel support and VLAN tools for the vconfig utility<br/>
+Ensure you load the kernel support<br/>
+# modprobe 8021q<br/>
+Add the virtual interface with the specified VLAN number<br/>
+# vconfig add eth0 100<br/>
+Added VLAN with VID == 100 to IP -:eth0:-<br/>
+# ifconfig eth0.100<br/>
+&lt;output&gt;<br/>
+Attempt to get a dhcp lease<br/>
+# dhclient eth0.100<br/>
+Remove the virtual adapter<br/>
+# vconfig rem eth0.100<br/>
+<br/>
+vconfig will not attempt to validate you have the correct VLAN, it will just create a VLAN sub-interface with any number you specify and encapsulate it with the appropriate header. <br/>
+<br/>
+Can read more in the DEFCON paper: https://media.defcon.org/DEF%20CON%2024/DEF%20/CON%2024%20presentations/DEFCON-24-Bull-Matthews-Trumbull-VLAN-Hopping-ARP-MITM-in-Virtualized-UPDATED.pdf<br/>
+<br/>
+<br/>
+<b>VLAN Voice Hopping and CDP</b><br/>
+CISCO switches accommodate a special "voice VLAN" feature. VoIP phone plugs into a switch and the PC plugs into VoIP phone. The switch must trunk two VLANs. Attackers can identify VLANs used for voice through CDP traffic. <br/>
+The VoIP phone essentially becomes a 2-port switch with VLAN Trunking<br/>
+Despite port configued as access, attacker can create 802.1Q trunk and gain access to the voice VLAN<br/>
+<br/>
+<br/>
+<b>CISCO Discovery Protocol (CDP)</b><br/>
+CDP packets reveal a lot of information such as <ul><li>Device ID (hostname of the switch)</li>
+<li>Software iOS Version</li>
+<li>Platform</li>
+<li>Port ID</li>
+<li>Native VLAN</li>
+<li>VoIP VLAN<b></b></li>
+</ul>
+<b><br/>
+</b>Just like with normal VLAN hopping, you can use vconfig to add an 802.1Q VLAN to your local interface. Without the ability to directly interact with CDP the VLAN will sometimes need to be guessed or brute-forced, which is doable because there are only 4094 VLANs. <br/>
+[Voiphopper](http://voiphopper.sf.net) | automates voice VLAN hopping attack including attack options for CISCO, Avaya, and Nortel switches<br/>
+<br/>
+</body></html>

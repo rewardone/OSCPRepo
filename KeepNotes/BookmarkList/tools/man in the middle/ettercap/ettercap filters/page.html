@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ettercap Filters</title>
+</head><body>Can alter traffic on the fly using custom rules.<br/>
+Need to be written with etterfilter:<br/>
+# etterfilter filerName -o filterName.ef<br/>
+<br/>
+Loaded with:<br/>
+# ettercap -F filterName.ef<br/>
+<br/>
+<br/>
+Some verbs are:<br/>
+search(where,what)&#09;&#09;search the "where" for the "what". Where can be DATA.data or DECODED.data. <br/>
+regex(where,regex)&#09;&#09;replacement for search() with regular expressions<br/>
+replace(what,with)&#09;&#09;&#09;Replace using DATA.data or DECODED.data<br/>
+drop()&#09;&#09;&#09;&#09;&#09;Drop the current packet<br/>
+inject(filename)&#09;&#09;&#09;inject the contents of a named file as a valid TCP or UDP payload; commonly follows drop() (eg client requests a file, drop the response and inject your own)<br/>
+kill()&#09;&#09;&#09;&#09;&#09;terminate the connection with RST or ICMP unreachable<br/>
+exec(command)&#09;&#09;&#09;execute the filesystem command <br/>
+exit()&#09;&#09;&#09;&#09;&#09;stops the filter execution for the current packet<br/>
+<br/>
+</body></html>
