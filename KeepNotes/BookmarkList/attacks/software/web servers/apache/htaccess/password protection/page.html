@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Password Protection</title>
+</head><body>&nbsp;Very easily, we can password protect a directory (or multiple) of a web site which require a username and password to access. The login procedure for these secure directories is handled automatically by the web browser using a pop-up login interface (you've probably seen these before). &nbsp; <br/>
+<br/>
+&nbsp;To begin, decide which directory you would like to password protect (note that all files and subdirectories within the directory will be password protected), then create a .htaccess file following the main instructions and guidance which includes the following text:<br/>
+<br/>
+AuthName "Member's Area Name"<br/>
+AuthUserFile /path/to/password/file/.htpasswd<br/>
+AuthType Basic<br/>
+require valid-user <br/>
+<br/>
+&nbsp;The first line tells the Apache Web Server the secure directory is called 'Member's Area Name', this will be displayed when the pop-up login prompt appears. <br/>
+The second line specifies the location of the password file. <br/>
+The third line specifies the authentication type, in this example we are using 'Basic' because we are using basic HTTP authentication. <br/>
+The fourth line specifies that we require valid login credentials, this line can also be used to specify a specific username, e.g. 'require user username' would require the username 'username'. You would use this if you were password protecting an administration area, rather than setting up a public password protected directory.<br/>
+<br/>
+The location of the password file can be anywhere on your web server, the '/location/of/password/file/' must be replaced with the full/absolute path to the directory containing the password file, and the '.htpasswd' file must exist, this can however be called anything. We use the filename '.htpasswd' because the server will recognise the filename and will hide it from visitors. Note, some servers do require the password file be located in the same directory as the .htaccess file. It is also important to use a full/absolute server path for the location of the password file, a relative path, or any variation of a URL will not work.<br/>
+<br/>
+The password file would contain something similar to the following text:<br/>
+<br/>
+username:encryptedpassword<br/>
+fred_smith:oCF9Pam/MXJg2 <br/>
+<br/>
+Note, it is not possible to offer a log-out facility, the login details are cached in the web browser until the browser is closed, so visitors may leave the web site and return later in the session without being prompted to login again. When the browser is closed and re-opened the login details are deleted from the cache and the pop-up prompt will be displayed. The log-out facility has been discussed for some time, various methods have been suggested but none are reliable enough to be worth discussing. </body></html>

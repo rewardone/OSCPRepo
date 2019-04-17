@@ -5,6 +5,7 @@
   <key>title</key><string>DNS Re-Binding</string>
   <key>nodeid</key><string>da2ebecf-c2a1-47ef-a79e-acdfd732462a</string>
   <key>modified_time</key><integer>1532445036</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1529513401</integer>

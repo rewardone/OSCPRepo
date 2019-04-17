@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Nexus</string>
   <key>nodeid</key><string>b09661e5-facb-4a75-ad57-a390ade682fc</string>
   <key>modified_time</key><integer>1550072667</integer>

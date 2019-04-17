@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Artifact Servers</string>
   <key>nodeid</key><string>1de33bd1-952f-4bef-a7f4-328576a74572</string>
   <key>modified_time</key><integer>1550072656</integer>

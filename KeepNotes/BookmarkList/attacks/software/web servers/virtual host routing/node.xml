@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Virtual Host Routing</string>
   <key>nodeid</key><string>558e3c84-3e78-4fe6-861f-d41934b6d3c9</string>
   <key>modified_time</key><integer>1535033535</integer>

