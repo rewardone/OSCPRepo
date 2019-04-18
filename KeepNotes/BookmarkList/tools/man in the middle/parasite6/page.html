@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Parasite6</title>
+</head><body>[parasite6]() | Attempts to create a symmetric MitM with unsolicited NA with the <br/>
+override flag<br/>
+<br/>
+This technique is good for a few devices, but does not scale well. <br/>
+<br/>
+Ensure forwarding is set up (so you don't DoS clients)<br/>
+# sysctl -w net.ipv6.conf.all.forwarding=1<br/>
+# parasite6 -lR eth0</body></html>

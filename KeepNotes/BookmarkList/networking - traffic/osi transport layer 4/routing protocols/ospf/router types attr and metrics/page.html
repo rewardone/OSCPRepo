@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Router Types Attr and Metrics</title>
+</head><body><b>Router types</b><br/>
+OSPF defines the following overlapping categories of routers: <br/>
+<br/>
+<b>&nbsp;Internal router (IR) </b><br/>
+An <i>internal router</i>&nbsp;has all its interfaces belonging to the same area.<br/>
+&nbsp;<br/>
+<b>Area border router (ABR) </b><br/>
+An <i>area border router</i>&nbsp;is a router that connects one or more areas to the main backbone network. It is considered a member of all areas it is connected to. An ABR keeps multiple <a href="https://en.wikipedia.org/wiki/Instance_(computer_science)">instances</a>&nbsp;of the link-state database in memory, one for each area to which that router is connected. <br/>
+<br/>
+<b>Backbone router (BR) </b><br/>
+A <i>backbone router</i>&nbsp;has an interface to the backbone area. Backbone routers may also be area routers, but do not have to be. <br/>
+<br/>
+<b>Autonomous system boundary router (ASBR) </b><br/>
+An <i>autonomous system boundary router</i>&nbsp;is a router that is connected by using more than one routing protocol and that exchanges routing information with routers autonomous systems. ASBRs typically also run an exterior routing protocol (e.g., <a href="https://en.wikipedia.org/wiki/BGP">BGP</a>), or use static routes, or both. An ASBR is used to <a href="https://en.wikipedia.org/wiki/Route_redistribution">distribute routes</a>&nbsp;received from other, external ASs throughout its own autonomous system. An ASBR creates External LSAs for external addresses and floods them to all areas via ABR. Routers in other areas use ABRs as next hops to access external addresses. Then ABRs forward packets to the ASBR that announces the external addresses. <br/>
+<br/>
+The router type is an attribute of an OSPF process. A given physical router may have one or more OSPF processes. For example, a router that is connected to more than one area, and which receives routes from a BGP process connected to another AS, is both an area border router and an autonomous system boundary router. <br/>
+<br/>
+Each router has an identifier, customarily written in the dotted decimal format (e.g., 1.2.3.4) of an IP address. This identifier must be established in every OSPF instance. If not explicitly configured, the highest logical IP address will be duplicated as the router identifier. However, since the router identifier is not an IP address, it does not have to be a part of any routable subnet in the network, and often isn't to avoid confusion. <br/>
+&nbsp; <br/>
+<br/>
+Router attributes<br/>
+In addition to the four router types, OSPF uses the terms <i>designated router</i>&nbsp;(DR) and <i>backup designated router</i>&nbsp;(BDR), which are attributes of a router interface. <br/>
+&nbsp;<br/>
+<b>Designated router </b><br/>
+A <i>designated router</i>&nbsp;(DR) is the router interface elected among all routers on a particular multiaccess network segment, generally assumed to be broadcast multiaccess. Special techniques, often vendor-dependent, may be needed to support the DR function on non-broadcast multiaccess (NBMA) media. It is usually wise to configure the individual virtual circuits of a NBMA subnet as individual point-to-point lines; the techniques used are implementation-dependent. <br/>
+<br/>
+<b>Backup designated router </b><br/>
+A <i>backup designated router</i>&nbsp;(BDR) is a router that becomes the designated router if the current designated router has a problem or fails. The BDR is the OSPF router with second highest priority at the time of the last election. <br/>
+<br/>
+A given router can have some interfaces that are designated (DR) and others that are backup designated (BDR), and others that are non-designated. If no router is a DR or a BDR on a given subnet, the BDR is first elected, and then a second election is held for the DR.<a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First#cite_note-rfc2328-1">[1]</a>:75 The DR is elected based on the following default criteria: <br/>
+&nbsp;<ul><li>If the priority setting on an OSPF router is set to 0, that means it can NEVER become a DR or BDR.</li>
+<li>When a DR fails and the BDR takes over, there is another election to see who becomes the replacement BDR.</li>
+<li>The router sending the Hello packets with the highest priority wins the election.</li>
+<li>If two or more routers tie with the highest priority setting, the router sending the Hello with the highest RID (Router ID) wins. NOTE: a RID is the highest logical (loopback) IP address configured on a router, if no logical/loopback IP address is set then the router uses the highest IP address configured on its active interfaces (e.g. <i>192.168.0.1</i>&nbsp;would be higher than <i>10.1.1.2</i>).</li>
+<li>Usually the router with the second highest priority number becomes the BDR.</li>
+<li>The priority values range between 0 – 255,<a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First#cite_note-18">[18]</a>&nbsp;with a higher value increasing its chances of becoming DR or BDR.</li>
+<li>If a higher priority OSPF router comes online after the election has taken place, it will not become DR or BDR until (at least) the DR and BDR fail.</li>
+<li>If the current DR 'goes down' the current BDR becomes the new DR and a new election takes place to find another BDR. If the new DR then 'goes down' and the original DR is now available, still previously chosen BDR will become DR.</li>
+</ul>
+<br/>
+DR's exist for the purpose of reducing network traffic by providing a source for routing updates. The DR maintains a complete topology table of the network and sends the updates to the other routers via multicast. All routers in a multi-access network segment will form a slave/master relationship with the DR. They will form adjacencies with the DR and BDR only. Every time a router sends an update, it sends it to the DR and BDR on the multicast address <i>224.0.0.6</i>. The DR will then send the update out to all other routers in the area, to the multicast address <i>224.0.0.5</i>. This way all the routers do not have to constantly update each other, and can rather get all their updates from a single source. The use of multicasting further reduces the network load. DRs and BDRs are always setup/elected on OSPF broadcast networks. DR's can also be elected on NBMA (Non-Broadcast Multi-Access) networks such as Frame Relay or ATM. DRs or BDRs are not elected on point-to-point links (such as a point-to-point WAN connection) because the two routers on either sides of the link must become fully adjacent and the bandwidth between them cannot be further optimized. DR and non-DR routers evolve from 2-way to full adjacency relationships by exchanging DD, Request, and Update. <br/>
+<br/>
+<b>&nbsp;Routing metrics</b><br/>
+OSPF uses <i>path cost</i>&nbsp;as its basic routing metric, which was defined by the standard not to equate to any standard value such as speed, so the network designer could pick a metric important to the design. In practice, it is determined by the speed (bandwidth) of the interface addressing the given route, although that tends to need network-specific scaling factors now that links faster than 25 Mbit/s are common. Cisco uses a metric like 108/bandwidth (the reference value, 108 by default, can be adjusted). So, a 100Mbit/s link will have a cost of 1, a 10Mbit/s a cost of 10 and so on. But for links faster than 100Mbit/s, the cost would be &lt;1. <br/>
+<br/>
+Metrics, however, are only directly comparable when of the same type. Four types of metrics are recognized. In decreasing preference, these types are (for example, an intra-area route is always preferred to an External route regardless of metric): <br/>
+&nbsp;<ul><li>Intra-area</li>
+<li>Inter-area</li>
+<li>External Type 1, which includes both the external path cost and the sum of internal path costs to the ASBR that advertises the route,<a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First#cite_note-19">[19]</a></li>
+<li>External Type 2, the value of which is solely that of the external path cost,</li>
+</ul>
+&nbsp;</body></html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OSPF Areas</title>
+</head><body><b>OSPF areas</b><br/>
+An OSPF network can be divided into <i>areas</i>&nbsp;that are logical groupings of hosts and networks. An area includes its connecting router having interfaces connected to the network. Each area maintains a separate link state database whose information may be summarized towards the rest of the network by the connecting router. Thus, the topology of an area is unknown outside the area. This reduces the routing traffic between parts of an autonomous system. <br/>
+<br/>
+Areas are uniquely identified with 32-bit numbers. The area identifiers are commonly written in the dot-decimal notation, familiar from IPv4 addressing. However, they are not IP addresses and may duplicate, without conflict, any IPv4 address. The area identifiers for IPv6 implementations (OSPFv3) also use 32-bit identifiers written in the same notation. When dotted formatting is omitted, most implementations expand area <i>1</i>&nbsp;to the area identifier <i>0.0.0.1</i>, but some have been known to expand it as <i>1.0.0.0</i>.[<a href="https://en.wikipedia.org/wiki/Wikipedia:Citation_needed"><i>citation needed</i></a>] <br/>
+<br/>
+OSPF defines several special area types: <br/>
+&nbsp; <br/>
+<b>Backbone area</b><br/>
+The backbone area (also known as <i>area 0</i>&nbsp;or <i>area 0.0.0.0</i>) forms the core of an OSPF network. All other areas are connected to it, either directly or through other routers. Inter-area routing happens via routers connected to the backbone area and to their own associated areas. It is the logical and physical structure for the 'OSPF domain' and is attached to all nonzero areas in the OSPF domain. Note that in OSPF the term Autonomous System Boundary Router (ASBR) is historic, in the sense that many OSPF domains can coexist in the same Internet-visible autonomous system, <a href="https://tools.ietf.org/html/rfc1996">RFC 1996</a>.<a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First#cite_note-14">[14]</a><a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First#cite_note-15">[15]</a>&nbsp;<br/>
+<br/>
+The backbone area is responsible for distributing routing information between nonbackbone areas. The backbone must be contiguous, but it does not need to be physically contiguous; backbone connectivity can be established and maintained through the configuration of virtual links. <br/>
+<br/>
+All OSPF areas must connect to the backbone area. This connection, however, can be through a virtual link. For example, assume area 0.0.0.1 has a physical connection to area 0.0.0.0. Further assume that area 0.0.0.2 has no direct connection to the backbone, but this area does have a connection to area 0.0.0.1. Area 0.0.0.2 can use a virtual link through the <i>transit area</i>&nbsp;0.0.0.1 to reach the backbone. To be a transit area, an area has to have the transit attribute, so it cannot be stubby in any way. <br/>
+<br/>
+<b>&nbsp;Stub area</b><br/>
+A stub area is an area which does not receive route advertisements external to the AS and routing from within the area is based entirely on a default route. An ABR deletes type 4, 5 LSAs from internal routers, sends them a default route of 0.0.0.0 and turns itself into a default gateway. This reduces LSDB and routing table size for internal routers. <br/>
+<br/>
+Modifications to the basic concept of stub areas exist in the <i>not-so-stubby</i>&nbsp;area (NSSA). In addition, several other proprietary variations have been implemented by systems vendors, such as the <i>totally stubby area</i>&nbsp;(TSA) and the <i>NSSA totally stubby area</i>, both an extension in <a href="https://en.wikipedia.org/wiki/Cisco_Systems">Cisco Systems</a>&nbsp;routing equipment. <br/>
+<br/>
+<b>&nbsp;Not-so-stubby area</b><br/>
+A <i>not-so-stubby area</i>&nbsp;(NSSA) is a type of stub area that can import autonomous system external routes and send them to other areas, but still cannot receive AS-external routes from other areas.<a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First#cite_note-rfc3101-16">[16]</a>&nbsp;NSSA is an extension of the stub area feature that allows the injection of external routes in a limited fashion into the stub area. A case study simulates an NSSA getting around the Stub Area problem of not being able to import external addresses. It visualizes the following activities: the ASBR imports external addresses with a type 7 LSA, the ABR converts a type 7 LSA to type 5 and floods it to other areas, the ABR acts as an "ASBR" for other areas. The ASBRs do not take type 5 LSAs and then convert to type 7 LSAs for the area.<br/>
+&nbsp;<br/>
+<b>&nbsp;Proprietary extensions</b><br/>
+Several vendors (Cisco, Allied Telesis, Juniper, Alcatel-Lucent, Huawei, Quagga), implement the two extensions below for stub and not-so-stubby areas. Although not covered by RFC standards, they are considered by many to be standard features in OSPF implementations. <br/>
+<br/>
+<b>&nbsp;Totally stubby area </b><br/>
+A <i>totally stubby area</i>&nbsp;is similar to a stub area. However, this area does not allow <i>summary</i>&nbsp;routes in addition to not having <i>external</i>&nbsp;routes, that is, <i>inter-area</i>&nbsp;(IA) routes are not summarized into totally stubby areas. The only way for traffic to get routed outside the area is a default route which is the only Type-3 LSA advertised into the area. When there is only one route out of the area, fewer routing decisions have to be made by the route processor, which lowers system resource utilization. <br/>
+<br/>
+Occasionally, it is said that a TSA can have only one ABR.<a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First#cite_note-17">[17]</a>&nbsp;<br/>
+<br/>
+<b>NSSA totally stubby area </b><br/>
+An addition to the standard functionality of an NSSA, the <i>totally stubby NSSA</i>&nbsp;is an NSSA that takes on the attributes of a TSA, meaning that type 3 and 4 summary routes are not flooded into this type of area. It is also possible to declare an area both totally stubby and not-so-stubby, which means that the area will receive only the default route from area 0.0.0.0, but can also contain an autonomous system boundary router (ASBR) that accepts external routing information and injects it into the local area, and from the local area into area 0.0.0.0. <br/>
+<br/>
+Redistribution into an NSSA area creates a special type of LSA known as type 7, which can exist only in an NSSA area. An NSSA ASBR generates this LSA, and an NSSA ABR router translates it into type 5 LSA which gets propagated into the OSPF domain. <br/>
+<br/>
+A newly acquired subsidiary is one example of where it might be suitable for an area to be simultaneously not-so-stubby and totally stubby if the practical place to put an ASBR is on the edge of a totally stubby area. In such a case, the ASBR does send externals into the totally stubby area, and they are available to OSPF speakers within that area. In Cisco's implementation, the external routes can be summarized before injecting them into the totally stubby area. In general, the ASBR should not advertise default into the TSA-NSSA, although this can work with extremely careful design and operation, for the limited special cases in which such an advertisement makes sense. <br/>
+<br/>
+By declaring the totally stubby area as NSSA, no external routes from the backbone, except the default route, enter the area being discussed. The externals do reach area 0.0.0.0 via the TSA-NSSA, but no routes other than the default route enter the TSA-NSSA. Routers in the TSA-NSSA send all traffic to the ABR, except to routes advertised by the ASBR. <br/>
+&nbsp;<br/>
+<b>Transit area</b><br/>
+A transit area is an area with two or more OSPF border routers and is used to pass network traffic from one adjacent area to another. The transit area does not originate this traffic and is not the destination of such traffic. &nbsp; </body></html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Loki OSPF</title>
+</head><body>1. Start niffing<br/>
+2. Select Routing &gt; OSPF<br/>
+3. If no auth, can attack immediately. <br/>
+3a. Select auth type "AUTH_NONE" in connection tab<br/>
+3b. Change auth ID to 1 (reflex index of MD5 secret, usually 1, but can try others if 1 fails)<br/>
+4. If auth:<br/>
+4a. Select "cracking"<br/>
+4b. Select wordlist<br/>
+4c. Select "Crack PW"<br/>
+4d. Select auth type "AUTH_CRYPT" and enter password in connection tab<br/>
+5. Click "Hello" to start neighbor process<br/>
+6. Wait for FULL status</body></html>

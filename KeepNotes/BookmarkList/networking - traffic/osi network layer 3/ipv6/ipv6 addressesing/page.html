@@ -2,27 +2,35 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Special Use Addresses</title>
-</head><body><br/>
+<title>IPv6 Addressesing</title>
+</head><body>Thre types of IPv6:<ul><li>Unicast: Global, site local, or link local</li>
+<li>Anycast: One to nearest</li>
+<li>Multicast: One to many</li>
+</ul>
+<br/>
+For calculating IPv6 using a client MAC, see ippsec <a href="nbk:///72cda72f-a2b3-4466-b413-1c34b120e313">Sneaky</a>&nbsp;<br/>
+<br/>
 There are a number of addresses with special meaning in IPv6.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc6890-26">[25]</a>&nbsp;They represent less than 2% of the entire address space: <br/>
 <br/>
 Special address blocks &nbsp; <br/>
 <br/>
-Address block (CIDR) &nbsp;First address &nbsp;&#09;&#09;Last address &nbsp;&#09;&#09;&#09;&#09;&#09;Number of addresses &nbsp;&#09;Usage &nbsp;&#09;&#09;&#09;Purpose &nbsp; <br/>
-<i>::/0</i>&nbsp; &#09;&#09;&#09;&#09;&#09;<i>::</i>&nbsp; &#09;&#09;&#09;&#09;<i>ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;2128 &nbsp;&#09;&#09;&#09;&#09;Routing &nbsp;&#09;&#09;&#09;Default route. &nbsp; <br/>
-<i>::/128</i>&nbsp; &#09;&#09;&#09;&#09;<i>::</i>&nbsp; &nbsp; &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;1 &nbsp;&#09;&#09;&#09;&#09;&#09;Software &nbsp;&#09;&#09;Unspecified address. &nbsp; <br/>
+Address block (CIDR) &nbsp;First address &nbsp;&#09;&#09;&#09;Last address &nbsp;&#09;&#09;&#09;&#09;&#09;Number of addresses &nbsp;&#09;Usage &nbsp;&#09;&#09;&#09;Purpose &nbsp; <br/>
+<i>::/0</i>&nbsp; &#09;&#09;&#09;&#09;&#09;<i>::</i>&nbsp; &#09;&#09;&#09;&#09;<i>ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;2128 &nbsp;&#09;&#09;&#09;&#09;Routing &nbsp;&#09;&#09;&#09;Default route. &nbsp; <br/>
+<i>::/128</i>&nbsp; &#09;&#09;&#09;&#09;<i>::</i>&nbsp; &nbsp; &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;1 &nbsp;&#09;&#09;&#09;&#09;&#09;Software &nbsp;&#09;&#09;&#09;Unspecified address. &nbsp; <br/>
 <i>::1/128</i>&nbsp; &#09;&#09;&#09;&#09;<i>::1</i>&nbsp; &nbsp; &#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;1 &nbsp;&#09;&#09;&#09;&#09;&#09;Host &nbsp;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Loopback_address">Loopback address</a>&nbsp;to the local host. &nbsp; <br/>
-<i>::ffff:0:0/96</i>&nbsp; &#09;&#09;&#09;<i>::ffff:0.0.0.0</i>&nbsp; &#09;&#09;<i>::ffff:255.255.255.255</i>&nbsp; &#09;&#09;&#09;4294967296 &nbsp;&#09;&#09;&#09;Software &nbsp;&#09;&#09;IPv4 mapped addresses. &nbsp; <br/>
-<i>::ffff:0:0:0/96</i>&nbsp; &#09;&#09;&#09;<i>::ffff:0:0.0.0.0</i>&nbsp; &#09;<i>::ffff:0:255.255.255.255</i>&nbsp; &#09;&#09;232 &nbsp;&#09;&#09;&#09;&#09;Software &nbsp;&#09;&#09;IPv4 translated addresses. &nbsp; <br/>
-<i>64:ff9b::/96</i>&nbsp; &#09;&#09;&#09;<i>64:ff9b::0.0.0.0</i>&nbsp; &#09;<i>64:ff9b::255.255.255.255</i>&nbsp; &#09;&#09;232 &nbsp;&#09;&#09;&#09;&#09;Global Internet &nbsp;&#09;IPv4/IPv6 translation.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc6052-27">[26]</a>&nbsp; &nbsp;<br/>
-<i>100::/64</i>&nbsp; &#09;&#09;&#09;&#09;<i>100::</i>&nbsp; &#09;&#09;&#09;<i>100::ffff:ffff:ffff:ffff </i>&nbsp; &#09;&#09;&#09;264 &nbsp;&#09;&#09;&#09;&#09;Routing &nbsp;&#09;&#09;&#09;Discard prefix.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc6666-28">[27]</a>&nbsp; &nbsp;<br/>
-<i>2001::/32</i>&nbsp; &#09;&#09;&#09;<i>2001::</i>&nbsp; &#09;&#09;&#09;<i>2001::ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;296 &nbsp;&#09;&#09;&#09;&#09;Global Internet &nbsp;&#09;<a href="https://en.wikipedia.org/wiki/Teredo_tunneling">Teredo tunneling</a>. &nbsp; <br/>
-<i>2001:20::/28</i>&nbsp; &#09;&#09;&#09;<i>2001:20::</i>&nbsp; &#09;&#09;<i>2001:2f:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;2100 &nbsp;&#09;&#09;&#09;&#09;Software &nbsp;&#09;&#09;<a href="https://en.wikipedia.org/w/index.php?title=ORCHIDv2&action=edit&redlink=1">ORCHIDv2</a>.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc7343-29">[28]</a>&nbsp; &nbsp;<br/>
-<i>2001:db8::/32</i>&nbsp; &#09;&#09;<i>2001:db8::</i>&nbsp; &#09;&#09;<i>2001:db8:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;296 &nbsp;&#09;&#09;&#09;&#09;Documentation &nbsp;&#09;Addresses used in documentation and example source code.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc3849-30">[29]</a>&nbsp; &nbsp;<br/>
-<i>2002::/16</i>&nbsp; &#09;&#09;&#09;<i>2002::</i>&nbsp; &#09;&#09;&#09;<i>2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;2112 &nbsp;&#09;&#09;&#09;&#09;Global Internet &nbsp;&#09;The <a href="https://en.wikipedia.org/wiki/6to4">6to4</a>&nbsp;addressing scheme (now deprecated).<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc7526-31">[30]</a>&nbsp; &nbsp;<br/>
-<i>fc00::/7</i>&nbsp; &#09;&#09;&#09;&#09;<i>fc00::</i>&nbsp; &#09;&#09;&#09;<i>fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;2121 &nbsp;&#09;&#09;&#09;&#09;Private network &nbsp;&#09;<a href="https://en.wikipedia.org/wiki/Unique_local_address">Unique local address</a>.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc4193-32">[31]</a>&nbsp; &nbsp;<br/>
-<i>fe80::/10</i>&nbsp; &#09;&#09;&#09;<i>fe80::</i>&nbsp; &#09;&#09;&#09;<i>febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;2118 &nbsp;&#09;&#09;&#09;&#09;Link &nbsp;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Link-local_address#IPv6">Link-local address</a>. &nbsp; <br/>
-<i>ff00::/8</i>&nbsp; &#09;&#09;&#09;&#09;<i>ff00::</i>&nbsp; <i>f&#09;&#09;&#09;fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;2120 &nbsp;&#09;&#09;&#09;&#09;Global Internet &nbsp;&#09;<a href="https://en.wikipedia.org/wiki/Multicast_address#IPv6">Multicast address</a>. &nbsp;<br/>
+<i>::ffff:0:0/96</i>&nbsp; &#09;&#09;&#09;<i>::ffff:0.0.0.0</i>&nbsp; &#09;&#09;<i>::ffff:255.255.255.255</i>&nbsp; &#09;&#09;&#09;4294967296 &nbsp;&#09;&#09;&#09;Software &nbsp;&#09;&#09;&#09;IPv4 mapped addresses. &nbsp; <br/>
+<i>::ffff:0:0:0/96</i>&nbsp; &#09;&#09;&#09;<i>::ffff:0:0.0.0.0</i>&nbsp; &#09;&#09;<i>::ffff:0:255.255.255.255</i>&nbsp; &#09;&#09;&#09;232 &nbsp;&#09;&#09;&#09;&#09;Software &nbsp;&#09;&#09;&#09;IPv4 translated addresses. &nbsp; <br/>
+<i>64:ff9b::/96</i>&nbsp; &#09;&#09;&#09;<i>64:ff9b::0.0.0.0</i>&nbsp; &#09;<i>64:ff9b::255.255.255.255</i>&nbsp; &#09;&#09;&#09;232 &nbsp;&#09;&#09;&#09;&#09;Global Internet &nbsp;&#09;&#09;IPv4/IPv6 translation.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc6052-27">[26]</a>&nbsp; &nbsp;<br/>
+<i>100::/64</i>&nbsp; &#09;&#09;&#09;&#09;<i>100::</i>&nbsp; &#09;&#09;&#09;<i>100::ffff:ffff:ffff:ffff </i>&nbsp; &#09;&#09;&#09;&#09;264 &nbsp;&#09;&#09;&#09;&#09;Routing &nbsp;&#09;&#09;&#09;Discard prefix.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc6666-28">[27]</a>&nbsp; &nbsp;<br/>
+2000::/16&#09;&#09;&#09;&#09;2000::&#09;&#09;&#09;2000:ffff:ffff:ffff:ffff:ffff:ffff:ffff&#09;&#09;&#09;2112&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;Stateless autoconf IPv6 using EUI 64 expansion method (client MAC address)<br/>
+<i>2001::/32</i>&nbsp; &#09;&#09;&#09;<i>2001::</i>&nbsp; &#09;&#09;&#09;<i>2001::ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;296 &nbsp;&#09;&#09;&#09;&#09;Global Internet &nbsp;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Teredo_tunneling">Teredo tunneling</a>. &nbsp; <br/>
+<i>2001:20::/28</i>&nbsp; &#09;&#09;&#09;<i>2001:20::</i>&nbsp; &#09;&#09;<i>2001:2f:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;2100 &nbsp;&#09;&#09;&#09;&#09;Software &nbsp;&#09;&#09;&#09;<a href="https://en.wikipedia.org/w/index.php?title=ORCHIDv2&action=edit&redlink=1">ORCHIDv2</a>.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc7343-29">[28]</a>&nbsp; &nbsp;<br/>
+<i>2001:db8::/32</i>&nbsp; &#09;&#09;&#09;<i>2001:db8::</i>&nbsp; &#09;&#09;<i>2001:db8:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;296 &nbsp;&#09;&#09;&#09;&#09;Documentation &nbsp;&#09;Addresses used in documentation and example source code.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc3849-30">[29]</a>&nbsp; &nbsp;<br/>
+<i>2002::/16</i>&nbsp; &#09;&#09;&#09;<i>2002::</i>&nbsp; &#09;&#09;&#09;<i>2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;2112 &nbsp;&#09;&#09;&#09;&#09;Global Internet &nbsp;&#09;&#09;The <a href="https://en.wikipedia.org/wiki/6to4">6to4</a>&nbsp;addressing scheme (now deprecated).<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc7526-31">[30]</a>&nbsp; &nbsp;<br/>
+<b><i>fc00::/7</i>&nbsp; &#09;&#09;&#09;&#09;<i>fc00::</i>&nbsp; &#09;&#09;&#09;<i>fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;2121 &nbsp;&#09;&#09;&#09;&#09;Private network &nbsp;&#09;<a href="https://en.wikipedia.org/wiki/Unique_local_address">Unique local address</a>.<a href="https://en.wikipedia.org/wiki/IPv6_address#cite_note-rfc4193-32">[31]</a>&nbsp; &nbsp;</b><br/>
+<b><i>fe80::/10</i>&nbsp; &#09;&#09;&#09;&#09;<i>fe80::</i>&nbsp; &#09;&#09;&#09;<i>febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;2118 &nbsp;&#09;&#09;&#09;&#09;Link &nbsp;&#09;&#09;&#09;<a href="https://en.wikipedia.org/wiki/Link-local_address#IPv6">Link-local address</a>. &nbsp; </b><br/>
+<b><i>ff00::/8</i>&nbsp; &#09;&#09;&#09;&#09;<i>ff00::f&#09;&#09;&#09;fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff</i>&nbsp; &#09;&#09;2120 &nbsp;&#09;&#09;&#09;&#09;Global Internet &nbsp;&#09;<a href="https://en.wikipedia.org/wiki/Multicast_address#IPv6">Multicast address</a>.</b>&nbsp; <br/>
+<b>ff02::1/64&#09;&#09;&#09;&#09;ff02::1&#09;&#09;&#09;ff02::ffff:ffff:ffff:ffff&#09;&#09;&#09;&#09;264&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;&#09;All node multicast (IPv4 255.255.255.255)</b><br/>
 <br/>
 Unicast addresses<br/>
 <b>Default route</b><ul><li><i>::/0</i>&nbsp;— The default route address (corresponding to <i>0.0.0.0/0</i>&nbsp;in IPv4).</li>
@@ -34,7 +42,7 @@ Unicast addresses<br/>
 <li>Applications may be listening on one or more specific interfaces for incoming connections, which are shown in listings of active internet connections by a specific IP address (and a port number, separated by a colon). When the unspecified address is shown it means that an application is listening for incoming connections on all available interfaces.</li>
 </ul>
 <br/>
-<b>Local addresses</b><ul><li><i>::1/128</i>&nbsp;— The <a href="https://en.wikipedia.org/wiki/Loopback">loopback</a>&nbsp;address is a unicast <a href="https://en.wikipedia.org/wiki/Localhost">localhost</a>&nbsp;address (corresponding to <a href="https://en.wikipedia.org/wiki/Localhost"><i>127.0.0.1</i></a><i>/8</i>&nbsp;in IPv4).</li>
+<b>Local addresses</b><ul><li><i>::1/128</i>&nbsp;— The <a href="https://en.wikipedia.org/wiki/Loopback">loopback</a>&nbsp;address is a unicast <a href="https://en.wikipedia.org/wiki/Localhost">localhost</a>&nbsp;address (corresponding to <i><a href="https://en.wikipedia.org/wiki/Localhost">127.0.0.1</a>/8</i>&nbsp;in IPv4).</li>
 <li>If an application in a host sends packets to this address, the IPv6 stack will loop these packets back on the same virtual interface.</li>
 <li><i>fe80::/10</i>&nbsp;— Addresses in the link-local prefix are only valid and unique on a single link (comparable to the auto-configuration addresses <i>169.254.0.0/16</i>&nbsp;of IPv4).</li>
 <li>Within this prefix only one subnet is allocated (54 zero bits), yielding an effective format of <i>fe80::/64</i>. The least significant 64 bits are usually chosen as the interface hardware address constructed in <a href="https://en.wikipedia.org/wiki/IPv6_address#Modified_EUI-64">modified EUI-64</a>&nbsp;format. A <a href="https://en.wikipedia.org/wiki/Link-local_address">link-local address</a>&nbsp;is required on every IPv6-enabled interface—in other words, applications may rely on the existence of a link-local address even when there is no IPv6 routing.</li>

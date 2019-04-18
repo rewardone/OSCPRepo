@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Attacking IPv6 Remotely</title>
+</head><body>If order for attacks to succeed remotely, your ISP must provide native support for IPv6. An alternative is to use a tunneling solution from a company such as SixXS or Hurricane Electric. Dynamic, but simple, IPv6 tunnelling can be done with Teredo and Linux miredo daemon<br/>
+<br/>
+# miredo<br/>
+# ping6 ipv6.google.com<br/>
+<br/>
+<br/>
+Other tools may not be compatible with IPv6 at all. Simple tunnels can be constructed in order to allow them to work (though not all functionality can be guaranteed)<br/>
+<br/>
+Windows: <br/>
+netsh interface portproxy add v4tov6 listenport=8080 connectport=80 connectaddress=fe80::XXXX<br/>
+<br/>
+Linux:<br/>
+socat TCP-LISTEN:8080,reuseaddr,fork TCP6:[fe80:XXXX]:80</body></html>

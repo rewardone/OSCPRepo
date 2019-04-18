@@ -19,8 +19,9 @@ If another switch connects to a DTP port, the DTP switch will watch for the pres
 <br/>
 As an attacker, it can be crucial to identify if the switch port will look for and/or accept DTP traffic, forcing the switch to configure the port as a trunk port and pass all VLAN information to the attacker. <br/>
 <br/>
-Examinign the DTP protocol header frame will reveal useful information including the VLAN TRrunking Protocol domain name (if it's configured), the status of the oprt, and the DTP type. <br/>
+Examining the DTP protocol header frame will reveal useful information including the VLAN TRrunking Protocol domain name (if it's configured), the status of the oprt, and the DTP type. <br/>
 [Yersinia]() | multi-function network attack tool focused on exploiting LAN protocols. Manipulates multiple LAN-related protocols such as STP, CDP, DTP, HSRP, DHCP, 802.1Q, VTP, ISL<br/>
+See <a href="nbk:///009c0511-d440-404a-a473-cd9add3dab88">Yersinia DTP</a>&nbsp;in tools section for automated DTP attack<br/>
 <br/>
 <b>Configuring Linux for VLAN Participation</b><br/>
 Linux supports native 802.1Q VLAN support. Requires "8021q" kernel support and VLAN tools for the vconfig utility<br/>

@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IPv6 Enumerating</title>
+</head><body>Local or Remote attacks. <br/>
+Mainly looking for opportunities in misconfigured firewalls/filters (IPv4 set up, but not IPv6). <br/>
+<br/>
+<b>Local Enumeration:</b><br/>
+# Ping6 to multicast and receive responses. List with ip -6 neigh<br/>
+# ping6 -c 5 ff02::1%eth0 &gt;/dev/null<br/>
+# ip -6 neigh<br/>
+<br/>
+<b>Remote Enumeration:</b><br/>
+Must rely on DNS, error message content, HTTP/JS content, etc. <br/>
+Make note of IPv6 addresses that you can gather from IPv4 known addresses (AAAA record type is for IPv6)<br/>
+# dig +short IN AAAA www.google.com<br/>
+<br/>
+<b>Script options:</b><br/>
+Passive listening<br/>
+# detect-new-ip6 eth0&#09;&#09;(may be renamed to atk6-detect-new-ip6)<br/>
+<br/>
+<b>Scanning IPv6:</b><br/>
+Native tools like nmap<br/>
+nmap -6 -sS -sC fc00:XXXX<br/>
+<br/>
+<b>IPv6 Neigh and Router MitM opportunity</b><br/>
+See Networking &gt; Attacks &gt; MitM and Spoof &gt; IPv6</body></html>

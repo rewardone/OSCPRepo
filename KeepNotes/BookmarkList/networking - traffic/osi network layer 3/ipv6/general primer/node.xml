@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><true/>
   <key>title</key><string>General Primer</string>
   <key>nodeid</key><string>fcf2e041-dec6-43a3-9140-11bb4e251e10</string>
   <key>modified_time</key><integer>1554680795</integer>
