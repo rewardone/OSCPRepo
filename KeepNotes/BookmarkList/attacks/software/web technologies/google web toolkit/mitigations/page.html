@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mitigations</title>
+</head><body>CSRF Protection<br/>
+Requests include a “X-GWT-Permutation” HTTP header<br/>
+Provides minimal protection since<br/>
+&nbsp;&#09;Form submissions cannot set headers<br/>
+&nbsp;&#09;XmlHttpRequest can not make requests across domains because of Same Origin Policy (SOP)<br/>
+However, the X-GWT-Permutation value is not unique or tied to a user’s session. <br/>
+Can be bypassed as long as the X-GWT-Permutation request header can be set.<br/>
+Since the X-GWT-Permutation is a static value this will not disrupt automated testing<br/>
+</body></html>

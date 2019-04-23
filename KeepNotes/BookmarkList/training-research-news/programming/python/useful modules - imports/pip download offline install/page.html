@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pip Download Offline Install</title>
+</head><body>The pip download command lets you download packages without installing them:<br/>
+<br/>
+pip download -r requirements.txt<br/>
+<br/>
+(In previous versions of pip, this was spelled pip install --download -r requirements.txt.)<br/>
+<br/>
+Then you can use pip install --no-index --find-links /path/to/download/dir/ -r requirements.txt to install those downloaded sdists, without accessing the network.<br/>
+</body></html>

