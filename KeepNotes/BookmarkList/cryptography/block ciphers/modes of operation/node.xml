@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Modes of Operation</string>
+  <key>nodeid</key><string>e625a9a7-0d10-4f4c-b844-e7eb0b7ac560</string>
+  <key>modified_time</key><integer>1556072909</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1556072824</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

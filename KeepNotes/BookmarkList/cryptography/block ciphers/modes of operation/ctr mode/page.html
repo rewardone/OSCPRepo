@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CTR Mode</title>
+</head><body>https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_(CTR)<br/>
+<br/>
+General notes<br/>
+Use an IV in addition to a counter that increments. IV is a few bytes smaller than the block to accommodate the counter. <br/>
+Main benefit is parallelization (blocks do not depend on each other like in CBC)<br/>
+Each keystream is different (IV + Counter) so randomization is better than ECB<br/>
+<br/>
+Rule 0 of stream ciphers applies: Never use the same key twice per IV<br/>
+<br/>
+<br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+Counter (CTR)<br/>
+<i>Note: CTR mode (CM) is also known as </i>integer counter mode<i>&nbsp;(ICM) and </i>segmented integer counter<i>&nbsp;(SIC) mode</i><br/>
+<br/>
+Like OFB, Counter mode turns a <a href="https://en.wikipedia.org/wiki/Block_cipher">block cipher</a>&nbsp;into a <a href="https://en.wikipedia.org/wiki/Stream_cipher">stream cipher</a>. It generates the next <a href="https://en.wikipedia.org/wiki/Keystream">keystream</a>&nbsp;block by encrypting successive values of a "counter". The counter can be any function which produces a sequence which is guaranteed not to repeat for a long time, although an actual increment-by-one counter is the simplest and most popular. The usage of a simple deterministic input function used to be controversial; critics argued that "deliberately exposing a cryptosystem to a known systematic input represents an unnecessary risk."<a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#cite_note-19">[19]</a>&nbsp;However, today CTR mode is widely accepted and any problems are considered a weakness of the underlying block cipher, which is expected to be secure regardless of systemic bias in its input.<a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#cite_note-20">[20]</a>&nbsp;Along with CBC, CTR mode is one of two block cipher modes recommended by Niels Ferguson and Bruce Schneier.<a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#cite_note-21">[21]</a>&nbsp;<br/>
+<br/>
+CTR mode was introduced by <a href="https://en.wikipedia.org/wiki/Whitfield_Diffie">Whitfield Diffie</a>&nbsp;and <a href="https://en.wikipedia.org/wiki/Martin_Hellman">Martin Hellman</a>&nbsp;in 1979.<a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#cite_note-22">[22]</a>&nbsp;<br/>
+<br/>
+CTR mode has similar characteristics to OFB, but also allows a random access property during decryption. CTR mode is well suited to operate on a multi-processor machine where blocks can be encrypted in parallel. Furthermore, it does not suffer from the short-cycle problem that can affect OFB.<a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#cite_note-23">[23]</a>&nbsp;<br/>
+<br/>
+If the IV/nonce is random, then they can be combined together with the counter using any lossless operation (concatenation, addition, or XOR) to produce the actual unique counter block for encryption. In case of a non-random nonce (such as a packet counter), the nonce and counter should be concatenated (e.g., storing the nonce in the upper 64 bits and the counter in the lower 64 bits of a 128-bit counter block). Simply adding or XORing the nonce and counter into a single value would break the security under a chosen-plaintext attack in many cases, since the attacker may be able to manipulate the entire IV–counter pair to cause a collision. Once an attacker controls the IV–counter pair and plaintext, XOR of the ciphertext with the known plaintext would yield a value that, when XORed with the ciphertext of the other block sharing the same IV–counter pair, would decrypt that block.<a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#cite_note-24">[24]</a>&nbsp;<br/>
+<br/>
+Note that the <a href="https://en.wikipedia.org/wiki/Cryptographic_nonce">nonce</a>&nbsp;in this diagram is equivalent to the <a href="https://en.wikipedia.org/wiki/Initialization_vector">initialization vector</a>&nbsp;(IV) in the other diagrams. However, if the offset/location information is corrupt, it will be impossible to partially recover such data due to the dependence on byte offset. <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

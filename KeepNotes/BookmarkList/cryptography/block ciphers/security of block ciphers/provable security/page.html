@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Provable Security</title>
+</head><body>Provable security<br/>
+When a block cipher is used in a given <a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation">mode of operation</a>, the resulting algorithm should ideally be about as secure as the block cipher itself. ECB (discussed above) emphatically lacks this property: regardless of how secure the underlying block cipher is, ECB mode can easily be attacked. On the other hand, CBC mode can be proven to be secure under the assumption that the underlying block cipher is likewise secure. Note, however, that making statements like this requires formal mathematical definitions for what it means for an encryption algorithm or a block cipher to "be secure". This section describes two common notions for what properties a block cipher should have. Each corresponds to a mathematical model that can be used to prove properties of higher level algorithms, such as CBC. <br/>
+<br/>
+This general approach to cryptography – proving higher-level algorithms (such as CBC) are secure under explicitly stated assumptions regarding their components (such as a block cipher) – is known as <i>provable security</i>. <br/>
+&nbsp;<br/>
+<b>Standard model</b><br/>
+Main article: <a href="https://en.wikipedia.org/wiki/Ciphertext_indistinguishability">Ciphertext indistinguishability</a>&nbsp;<br/>
+Informally, a block cipher is secure in the standard model if an attacker cannot tell the difference between the block cipher (equipped with a random key) and a random permutation. <br/>
+To be a bit more precise, let <i>E</i>&nbsp;be an <i>n</i>-bit block cipher. We imagine the following game: <br/>
+&nbsp;<ul><li>The person running the game flips a coin. </li>
+<li style="list-style-type: none"><ul><li>If the coin lands on heads, he chooses a random key <i>K</i>&nbsp;and defines the function <i>f = EK</i>.</li>
+<li>If the coin lands on tails, he chooses a random permutation <i>π</i>&nbsp;on the set of <i>n</i>-bit strings, and defines the function <i>f = π</i>.</li>
+</ul>
+</li>
+<li>The attacker chooses an <i>n</i>-bit string <i>X</i>, and the person running the game tells him the value of <i>f(X)</i>.</li>
+<li>Step 2 is repeated a total of <i>q</i>&nbsp;times. (Each of these <i>q</i>&nbsp;interactions is a <i>query</i>.)</li>
+<li>The attacker guesses how the coin landed. He wins if his guess is correct.</li>
+</ul>
+<br/>
+The attacker, which we can model as an algorithm, is called an <a href="https://en.wikipedia.org/wiki/Adversary_(cryptography)"><i>adversary</i></a>. The function <i>f</i>&nbsp;(which the adversary was able to query) is called an <a href="https://en.wikipedia.org/wiki/Oracle_machine"><i>oracle</i></a>. <br/>
+<br/>
+Note that an adversary can trivially ensure a 50% chance of winning simply by guessing at random (or even by, for example, always guessing "heads"). Therefore, let <i>PE(A)</i>&nbsp;denote the probability that the adversary <i>A</i>&nbsp;wins this game against <i>E</i>, and define the <i>advantage</i>&nbsp;of <i>A</i>&nbsp;as 2(<i>PE(A)</i>&nbsp;− 1/2). It follows that if <i>A</i>&nbsp;guesses randomly, its advantage will be 0; on the other hand, if <i>A</i>&nbsp;always wins, then its advantage is 1. The block cipher <i>E</i>&nbsp;is a <i>pseudo-random permutation</i>&nbsp;(PRP) if no adversary has an advantage significantly greater than 0, given specified restrictions on <i>q</i>&nbsp;and the adversary's running time. If in Step 2 above adversaries have the option of learning <i>f−1(X)</i>&nbsp;instead of <i>f(X)</i>&nbsp;(but still have only small advantages) then <i>E</i>&nbsp;is a <i>strong</i>&nbsp;PRP (SPRP). An adversary is <i>non-adaptive</i>&nbsp;if it chooses all <i>q</i>&nbsp;values for <i>X</i>&nbsp;before the game begins (that is, it does not use any information gleaned from previous queries to choose each <i>X</i>&nbsp;as it goes). <br/>
+<br/>
+These definitions have proven useful for analyzing various modes of operation. For example, one can define a similar game for measuring the security of a block cipher-based encryption algorithm, and then try to show (through a <a href="https://en.wikipedia.org/wiki/Reduction_(complexity)">reduction argument</a>) that the probability of an adversary winning this new game is not much more than <i>PE(A)</i>&nbsp;for some <i>A</i>. (The reduction typically provides limits on <i>q</i>&nbsp;and the running time of <i>A</i>.) Equivalently, if <i>PE(A)</i>&nbsp;is small for all relevant <i>A</i>, then no attacker has a significant probability of winning the new game. This formalizes the idea that the higher-level algorithm inherits the block cipher's security. <br/>
+</body></html>

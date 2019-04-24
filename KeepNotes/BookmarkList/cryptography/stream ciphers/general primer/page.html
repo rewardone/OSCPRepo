@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body>https://en.wikipedia.org/wiki/Stream_cipher<br/>
+<br/>
+General notes:<br/>
+Encrypt one bit at a time<br/>
+Encrypted length is the same length as the plaintext<br/>
+Keystream is generated from a key and other data (iv, etc)<br/>
+&nbsp;&#09;To encrypt: Keystream is XORed with the plaintext<br/>
+&nbsp;&#09;To decrypt: Keystream is XORed with the ciphertext<br/>
+<br/>
+A <b>stream cipher</b>&nbsp;is a <a href="https://en.wikipedia.org/wiki/Symmetric_key_algorithm">symmetric key</a>&nbsp;<a href="https://en.wikipedia.org/wiki/Cipher">cipher</a>&nbsp;where plaintext digits are combined with a <a href="https://en.wikipedia.org/wiki/Pseudorandom">pseudorandom</a>&nbsp;cipher digit stream (<a href="https://en.wikipedia.org/wiki/Keystream">keystream</a>). In a stream cipher, <u>each <a href="https://en.wikipedia.org/wiki/Plaintext">plaintext</a>&nbsp;<a href="https://en.wikipedia.org/wiki/Numerical_digit">digit</a>&nbsp;is encrypted one at a time with the corresponding digit of the keystream</u>, to give a digit of the ciphertext stream. Since encryption of each digit is dependent on the current state of the cipher, it is also known as <b><i>state cipher</i></b>. In practice, a digit is typically a <a href="https://en.wikipedia.org/wiki/Bit">bit</a>&nbsp;and the combining operation an <a href="https://en.wikipedia.org/wiki/Exclusive-or">exclusive-or</a>&nbsp;(XOR). <br/>
+<br/>
+The pseudorandom keystream is typically generated serially from a random seed value using digital <a href="https://en.wikipedia.org/wiki/Shift_register">shift registers</a>. The seed value serves as the <a href="https://en.wikipedia.org/wiki/Cryptographic_key">cryptographic key</a>&nbsp;for decrypting the ciphertext stream. Stream ciphers represent a different approach to symmetric encryption from <a href="https://en.wikipedia.org/wiki/Block_cipher">block ciphers</a>. Block ciphers operate on large blocks of digits with a fixed, unvarying transformation. This distinction is not always clear-cut: in some <a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation">modes of operation</a>, a block cipher primitive is used in such a way that it acts effectively as a stream cipher. Stream ciphers typically execute at a higher speed than block ciphers and have lower hardware complexity. However, stream ciphers can be susceptible to serious security problems if used incorrectly (see <a href="https://en.wikipedia.org/wiki/Stream_cipher_attack">stream cipher attacks</a>); in particular, the same starting state (seed) must never be used twice. <br/>
+<br/>
+<br/>
+<br/>
+</body></html>

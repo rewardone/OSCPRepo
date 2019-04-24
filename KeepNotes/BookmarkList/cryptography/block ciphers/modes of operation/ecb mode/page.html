@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ECB Mode</title>
+</head><body>https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#ECB<br/>
+<br/>
+General notes<br/>
+Encrypts each block with the same key<br/>
+&nbsp;&#09;Same plaintext blocks encrypt to same ciphertext blocks<br/>
+&nbsp;&#09;&#09;Attackers can use this to identify blocks of plaintext that repeat<br/>
+See bottom for visual example of issue with same data blocks<br/>
+<br/>
+Electronic Code Book Mode<br/>
+The simplest of the encryption modes is the <b>Electronic Codebook</b>&nbsp;(ECB) mode (named after conventional physical <a href="https://en.wikipedia.org/wiki/Codebook">codebooks</a><a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#cite_note-10">[10]</a>). The message is divided into blocks, and each block is encrypted separately. <br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+<img src="image 2.png" /><br/>
+<br/>
+<br/>
+The disadvantage of this method is a lack of <a href="https://en.wikipedia.org/wiki/Confusion_and_diffusion">diffusion</a>. Because ECB encrypts identical <a href="https://en.wikipedia.org/wiki/Plaintext">plaintext</a>&nbsp;blocks into identical <a href="https://en.wikipedia.org/wiki/Ciphertext">ciphertext</a>&nbsp;blocks, it does not hide data patterns well. In some senses, it doesn't provide serious message confidentiality, and it is not recommended for use in cryptographic protocols at all. <br/>
+<br/>
+A striking example of the degree to which ECB can leave plaintext data patterns in the ciphertext can be seen when ECB mode is used to encrypt a <a href="https://en.wikipedia.org/wiki/Bitmap_image">bitmap image</a>&nbsp;which uses large areas of uniform color. While the color of each individual <a href="https://en.wikipedia.org/wiki/Pixel">pixel</a>&nbsp;is encrypted, the overall image may still be discerned, as the pattern of identically colored pixels in the original remains in the encrypted version. <br/>
+<br/>
+ECB mode can also make protocols without integrity protection even more susceptible to <a href="https://en.wikipedia.org/wiki/Replay_attack">replay attacks</a>, since each block gets decrypted in exactly the same way. <br/>
+<br/>
+<img src="image 3.png" /><br/>
+<br/>
+You can demonstrate this using [ecb_encrypt_image]<br/>
+</body></html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Identifying In-Use Ciphers or Hashing</title>
+</head><body>While on a pentest, how can you identify the cipher in use? <br/>
+<br/>
+<b>Is it a hash?</b><br/>
+Tools like hash-identifier will evaluate a hash by length and format and give recommendations<br/>
+<br/>
+<b>Is it even encrypted?</b><br/>
+<br/>
+<br/>
+<br/>
+<b>Look at data size:</b><br/>
+&nbsp;&#09;Not evenly divisible by 8? Increased likelyhood to be a stream cipher<br/>
+&nbsp;&#09;Always divisible by 16: Increased likelyhood for block cipher 128-bit block (AES)<br/>
+&nbsp;&#09;Sometimes divisibly by 16, always by 8: 64-bit block size (DES/3DES)<br/>
+Look for documentation from vendor, call engineering support, etc<br/>
+<br/>
+</body></html>
