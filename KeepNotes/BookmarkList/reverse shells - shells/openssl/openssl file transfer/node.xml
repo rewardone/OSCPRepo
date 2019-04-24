@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Openssl File Transfer</string>
+  <key>nodeid</key><string>5695f219-2618-4bb3-894a-9f35cd13aeea</string>
+  <key>modified_time</key><integer>1556114419</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1556113920</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

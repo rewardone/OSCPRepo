@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Startup Applications</string>
   <key>nodeid</key><string>818e2fae-3e54-4f4e-81fc-97835368653c</string>
   <key>modified_time</key><integer>1524683423</integer>

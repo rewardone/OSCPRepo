@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Compiled HTML Files</title>
+</head><body><span style="font-size: 10pt"><a href="https://attack.mitre.org/techniques/T1223/">https://attack.mitre.org/techniques/T1223/</a>&nbsp; <br/>
+<br/>
+<br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Compiled HTML files (.chm) are commonly distributed as part of the Microsoft HTML Help system. CHM files are compressed compilations of various content such as HTML documents, images, and scripting/web related programming languages such VBA, JScript, Java, and ActiveX. <a href="https://docs.microsoft.com/previous-versions/windows/desktop/htmlhelp/microsoft-html-help-1-4-sdk">[1]</a>CHM content is displayed using underlying components of the Internet Explorer browser <a href="https://msdn.microsoft.com/windows/desktop/ms644670">[2]</a> loaded by the HTML Help executable program (hh.exe). <a href="https://msdn.microsoft.com/windows/desktop/ms524405">[3]</a><br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Adversaries may abuse this technology to conceal malicious code. A custom CHM file containing embedded payloads could be delivered to a victim then triggered by <a href="https://attack.mitre.org/techniques/T1204">User Execution</a>. CHM execution may also bypass application whitelisting on older and/or unpatched systems that do not account for execution of binaries through hh.exe. <a href="https://msitpros.com/?p=3909">[4]</a> <a href="https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2017-8625">[5]</a><br/>
+</span></div>&nbsp; </span></body></html>

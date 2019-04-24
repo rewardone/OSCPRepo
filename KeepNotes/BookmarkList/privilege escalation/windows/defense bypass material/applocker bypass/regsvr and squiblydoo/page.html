@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Regsvr</title>
+</head><body><span style="font-size: 10pt"><a href="https://attack.mitre.org/techniques/T1117/">https://attack.mitre.org/techniques/T1117/</a>&nbsp; <br/>
+<br/>
+<br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Regsvr32.exe is a command-line program used to register and unregister object linking and embedding controls, including dynamic link libraries (DLLs), on Windows systems. Regsvr32.exe can be used to execute arbitrary binaries. <a href="https://support.microsoft.com/en-us/kb/249873">[1]</a><br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Adversaries may take advantage of this functionality to proxy execution of code to avoid triggering security tools that may not monitor execution of, and modules loaded by, the regsvr32.exe process because of whitelists or false positives from Windows using regsvr32.exe for normal operations. Regsvr32.exe is also a Microsoft signed binary.<br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Regsvr32.exe can also be used to specifically bypass process whitelisting using functionality to load COM scriptlets to execute DLLs under user permissions. Since regsvr32.exe is network and proxy aware, the scripts can be loaded by passing a uniform resource locator (URL) to file on an external Web server as an argument during invocation. This method makes no changes to the Registry as the COM object is not actually registered, only executed. [2] This variation of the technique is often referred to as a "Squiblydoo" attack and has been used in campaigns targeting governments. <a href="https://www.carbonblack.com/2016/04/28/threat-advisory-squiblydoo-continues-trend-of-attackers-using-native-os-tools-to-live-off-the-land/">[3]</a> <a href="https://www.fireeye.com/blog/threat-research/2017/02/spear_phishing_techn.html">[4]</a><br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Regsvr32.exe can also be leveraged to register a COM Object used to establish Persistence via <a href="https://attack.mitre.org/techniques/T1122">Component Object Model Hijacking</a>. <a href="https://www.carbonblack.com/2016/04/28/threat-advisory-squiblydoo-continues-trend-of-attackers-using-native-os-tools-to-live-off-the-land/">[3]</a><br/>
+</span></div>&nbsp; <br/>
+<br/>
+regsvr32 /s /u PowerShdll.dll --&gt;Calls DllUnregisterServer<br/>
+regsvr32 /s PowerShdll.dll --&gt; Calls DllRegisterServer</span></body></html>

