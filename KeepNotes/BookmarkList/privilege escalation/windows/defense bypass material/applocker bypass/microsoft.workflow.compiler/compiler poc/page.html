@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Compiler PoC</title>
+</head><body>Bypass Technique Proof of Concept<br/>
+The weaponization workflow is as follows:<br/>
+<br/>
+1. Drop a XOML file to disk. The XOML will contain attacker-supplied C# or VB.Net code to be compiled, loaded, and ultimately invoked. The malicious logic must be contained within a class constructor that derives from the System.Workflow.ComponentModel.Activity class.<br/>
+<br/>
+2. Drop an XML file to disk that contains a serialized CompilerInput object. This XML document is where the path to the XOML file is stored. (Can be generated with the PowerShell script in child page)<br/>
+<br/>
+3. Execute Microsoft.Workflow.Compiler.exe supplying the XML path.<br/>
+<br/>
+Here is an example invocation of Microsoft.Workflow.Compiler.exe:<br/>
+C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe test.xml results.xml<br/>
+<br/>
+<br/>
+Upon calling Microsoft.Workflow.Compiler.exe, it will compile the inline C#, load the compiled DLL and invoke the “Foo” constructor in a fashion that is not subject to code integrity enforcement.</body></html>

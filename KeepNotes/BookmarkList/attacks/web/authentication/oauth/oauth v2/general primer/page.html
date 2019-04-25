@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>General Primer</title>
+</head><body><ul><li>The application requests authorization to access service resources from the user. The application needs to provide the client ID, client secret, redirect URI and the required scopes.</li>
+<li>If the user authorizes the request, the application receives an authorization grant</li>
+<li>The application requests an access token from the authorization server by presenting authentication of its own identity, and the authorization grant</li>
+<li>If the application identity is authenticated and the authorization grant is valid, the authorization server issues the access and refresh (if required) token to the application. Authorization is complete.</li>
+<li>The application requests the resource from the resource server and presents the access token for authentication</li>
+<li>If the access token is valid, the resource server serves the resource to the application</li>
+</ul>
+<br/>
+The are some main Pros and Cons in OAuth 2.0<br/>
+<ul><li>OAuth 2.0 is easier to use and implement (compared to OAuth 1.0)</li>
+<li>Wide spread and continuing growing</li>
+<li>Short lived Tokens</li>
+<li>Encapsulated Tokens</li>
+</ul>
+<br/>
+— No signature (relies solely on SSL/TLS ), Bearer Tokens<br/>
+— No built-in security<br/>
+— Can be dangerous if used from not experienced people<br/>
+— Too many compromises. Working group did not make clear decisions<br/>
+— Mobile integration (web views)<br/>
+— Oauth 2.0 spec is not a protocol, it is rather a framework — RFC 6749 <br/>
+&nbsp; </body></html>

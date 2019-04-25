@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CSRF OAuth Client</title>
+</head><body>Cross-site request forgery OAuth Client<br/>
+<br/>
+A CSRF attack against the client's redirection URI allows an attacker to inject their own authorization code or access token, which can result in the client using an access token associated with the attacker's protected resources rather than the victim's (e.g. save the victim's bank account information to a protected resource controlled by the attacker).<br/>
+<br/>
+&nbsp; &nbsp; Choose Client which suits hack's "condition" — some site.com(we will use Pinterest as showcase) Start authentication process — click "Add OAuth Provider login". You need to get callback from Provider but should not visit it.<br/>
+<br/>
+&nbsp; &nbsp; Do not visit the last URL(http://pinterest.com/connect/facebook/?code=AQCOtAVov1Cu316rpqPfs-8nDb-jJEiF7aex9n05e2dq3oiXlDwubVoC8VEGNq10rSkyyFb3wKbtZh6xpgG59FsAMMSjIAr613Ly1usZ47jPqADzbDyVuotFaRiQux3g6Ut84nmAf9j-KEvsX0bEPH_aCekLNJ1QAnjpls0SL9ZSK-yw1wPQWQsBhbfMPNJ_LqI#), just save and put it into img src="URL" or iframe or anything else you prefer to send requests.<br/>
+<br/>
+&nbsp; &nbsp; Now all you need is to make the User (some certain target or random site.com user) to send HTTP request on your callback URL. You can force him to visit example.com/somepage.html which contains iframe src=URL, post img on his wall, send him an email/tweet, whatever. User must be logged in site.com when he sends the request.<br/>
+&nbsp; &nbsp; Well done, your oauth account is attached to User's account on site.com.<br/>
+<br/>
+&nbsp; &nbsp; Voila, press Log In with that OAuth Provider — you are logged in directly to User's account on site.com<br/>
+<br/>
+<br/>
+Lessons learned:<br/>
+<br/>
+The client MUST implement CSRF protection for its redirection URI. This is typically accomplished by requiring any request sent to the redirection URI endpoint to include a value that binds the request to the user-agent's authenticated state (e.g. a hash of the session cookie used to authenticate the user-agent). The client SHOULD utilize the "state" request parameter to deliver this value to the authorization server when making an authorization request.<br/>
+<br/>
+Once authorization has been obtained from the end-user, the authorization server redirects the end-user's user-agent back to the client with the required binding value contained in the "state" parameter. The binding value enables the client to verify the validity of the request by matching the binding value to the user- agent's authenticated state. The binding value used for CSRF protection MUST contain a non-guessable value, and the user-agent's authenticated state (e.g.session cookie, HTML5 local storage) MUST be kept in a location accessible only to the client and the user-agent (i.e., protected by same-origin policy).<br/>
+<br/>
+A CSRF attack against the authorization server's authorization endpoint can result in an attacker obtaining end-user authorization for a malicious client without involving or alerting the end-user.<br/>
+<br/>
+The authorization server MUST implement CSRF protection for its authorization endpoint, and ensure that a malicious client cannot obtain authorization without the awareness and explicit consent of the resource owner</body></html>

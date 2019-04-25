@@ -4,11 +4,11 @@
 <dict>
   <key>title</key><string>VSTO Files</string>
   <key>nodeid</key><string>6a78b54b-32c7-45b2-9b68-00a208a27ca4</string>
-  <key>modified_time</key><integer>1556133753</integer>
-  <key>expanded2</key><true/>
+  <key>modified_time</key><integer>1556203264</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1556133716</integer>
-  <key>order</key><integer>10</integer>
+  <key>order</key><integer>16</integer>
 </dict>
 </node>

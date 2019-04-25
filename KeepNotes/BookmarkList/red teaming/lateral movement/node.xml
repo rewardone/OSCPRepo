@@ -3,15 +3,15 @@
 <version>6</version>
 <dict>
   <key>expanded</key><false/>
-  <key>title</key><string>Lateral Movement</string>
   <key>nodeid</key><string>42ce7adc-1cde-456d-8347-a3f0003cff08</string>
   <key>modified_time</key><integer>1549393663</integer>
-  <key>expanded2</key><true/>
-  <key>version</key><integer>6</integer>
+  <key>expanded2</key><false/>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1549393663</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>3</integer>
+  <key>title</key><string>Lateral Movement</string>
+  <key>version</key><integer>6</integer>
+  <key>order</key><integer>4</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

@@ -3,10 +3,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Generating the msbuild.xml</title>
-</head><body>The easiest way to build the xml template with NPS_Payload on github: <a href="https://github.com/trustedsec/nps_payload">https://github.com/trustedsec/nps_payload</a>; however, it uses msvenom to generate payloads (ie, antivirus will pick it up). <br/>
-A fork by Franci has the ability to generate C# payloads: <a href="https://github.com/fsacer/nps_payload">https://github.com/fsacer/nps_payload</a>&nbsp;and does NOT use powershell at all<br/>
+</head><body>The easiest way to build the xml template with NPS_Payload on github: <br/>
+[nps_payload](<a href="https://github.com/trustedsec/nps_payload">https://github.com/trustedsec/nps_payload</a>); however, it uses msvenom to generate payloads (ie, antivirus will pick it up). <br/>
+<br/>
+A fork by Franci has the ability to generate C# payloads: <br/>
+[nps_payload](<a href="https://github.com/fsacer/nps_payload">https://github.com/fsacer/nps_payload</a>) and does NOT use powershell at all<br/>
 <br/>
 You can build the xml file with nps payload and replace it with code from any other generator such as Veil or Invoke-Obfuscation. <br/>
+<br/>
 Cmd or Powershell should both work, just base64 encode your commands/obfuscation and place the payload string in: <br/>
 public override bool Execute(){<br/>
 &nbsp;&#09;string cmd = "&lt;PAYLOAD&gt;"<br/>

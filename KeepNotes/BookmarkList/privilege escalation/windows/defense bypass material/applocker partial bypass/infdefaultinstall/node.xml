@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>InfDefaultInstall</string>
+  <key>nodeid</key><string>79c00b0b-7f26-4ece-82f6-87f6124482ae</string>
+  <key>modified_time</key><integer>1556204685</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1556204158</integer>
+  <key>order</key><integer>10</integer>
+</dict>
+</node>

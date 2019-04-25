@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Microsoft.Workflow.Compiler</title>
+</head><body><a href="https://posts.specterops.io/arbitrary-unsigned-code-execution-vector-in-microsoft-workflow-compiler-exe-3d9294bc5efb">https://posts.specterops.io/arbitrary-unsigned-code-execution-vector-in-microsoft-workflow-compiler-exe-3d9294bc5efb</a>&nbsp; <br/>
+<br/>
+Here is an example invocation of Microsoft.Workflow.Compiler.exe:<br/>
+C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe test.xml results.xml<br/>
+<br/>
+The following is a PoC demonstrating that pure C# content can be supplied for execution regardless of file extension:<br/>
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe test.txt results.blah<br/>
+<br/>
+To date, I still have no clue what the exact purpose of Microsoft.Workflow.Compiler.exe is nor why anyone would ever consider writing XOML. Not really my concern though. If I had to speculate based on the utter lack of public documentation on the utility is that it is likely used internally by Microsoft.<br/>
+<br/>
+Microsoft.Workflow.Compiler.exe, a utility included by default in the .NET framework, permits the execution of arbitrary, unsigned code by supplying a serialized workflow in the form of a XOML workflow file (don’t worry. I had no clue what that was either) and an XML file consisting of serialized compiler arguments. This bypass is similar in its mechanics to Casey Smith’s <a href="nbk:///b07ece56-7799-4c34-8358-f6640417c2c8">msbuild.exe bypass</a>.<br/>
+<br/>
+Microsoft.Workflow.Compiler.exe requires two command-line arguments. <br/>
+The first argument must be the path to an XML file consisting of a serialized CompilerInput object. <br/>
+The second argument expected is a file path to which the utility writes serialized compilation results.<br/>
+<br/>
+The root of the execution vector is that Microsoft.Workflow.Compiler.exe calls <a href="https://msdn.microsoft.com/en-us/library/h538bck7%28v=vs.110%29.aspx">Assembly.Load(byte[])</a>&nbsp;(which is not code integrity aware) on an attacker-supplied .NET assembly. Loading an assembly will not achieve code execution by itself, though. When C# (or VB.Net) code is supplied via a XOML file, a code path is reached where a class constructor is called for the loaded assembly. The only constraint is that to achieve code execution, the class constructor must be derived from the System.Workflow.ComponentModel.Activity class.<br/>
+<br/>
+This technique bypasses code integrity enforcement in Windows Defender Application Control (including Windows 10S), AppLocker, and likely any other app whitelisting product. These days though, I tend to care less about the fact that something bypasses application whitelisting and instead focus on the fact that arbitrary, unsigned code execution can be achieved through a signed, high-reputation, in-box binary. Bypassing application whitelisting (w/ DLL enforcement) just happens to be the bar I tend to set for myself when researching new post-exploitation tradecraft.</body></html>

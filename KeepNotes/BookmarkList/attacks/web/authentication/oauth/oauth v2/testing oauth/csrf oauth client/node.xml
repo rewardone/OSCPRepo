@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>CSRF OAuth Client</string>
+  <key>nodeid</key><string>bf7e1cfd-6492-4eaf-8691-d9c030dc7378</string>
+  <key>modified_time</key><integer>1556199353</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1556199309</integer>
+  <key>order</key><integer>2</integer>
+</dict>
+</node>

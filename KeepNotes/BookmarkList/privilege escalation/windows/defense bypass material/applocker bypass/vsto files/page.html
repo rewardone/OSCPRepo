@@ -10,4 +10,8 @@ evilfile.vsto<br/>
 You need to build a solution using Visual Studio Tools for Office. User needs to confirm installation after executing.<br/>
 <br/>
 <a href="https://bohops.com/2018/01/31/vsto-the-payload-installer-that-probably-defeats-your-application-whitelisting-rules/">https://bohops.com/2018/01/31/vsto-the-payload-installer-that-probably-defeats-your-application-whitelisting-rules/</a>&nbsp;<br/>
+<br/>
+<br/>
+<span style="font-size: 10pt"><span style="font-family: inherit">Blue-DFIR-Defensive Considerations</span><br/>
+</span><span style="font-size: 10pt"><span style="font-family: inherit">VSTO application deployment is not very stealthy.  Monitor for VSTO file execution in logging facilities, untrusted/previously unseen certificates, and registry key/value creation.  Additionally, check for “installed programs” as an entry will likely be created under the user’s ‘Unistall’ Registry Key.  Consider adding VSTO files to Application Whitelisting policies.  Refer to the MSDN document <a href="https://msdn.microsoft.com/en-us/library/bb386106.aspx">Registry Entries for VSTO Add-ins</a> for more information.</span></span><br/>
 </body></html>

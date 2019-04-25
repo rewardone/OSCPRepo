@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Powershell generate compiler xml</title>
+</head><body>#<a href="https://gist.githubusercontent.com/mattifestation/7ba8fc8f724600a9f525714c9cf767fd/raw/4805f8bdde992cf3034672a1902218e34a47ce2f/CreateCompilerInputXml.ps1">https://gist.githubusercontent.com/mattifestation/7ba8fc8f724600a9f525714c9cf767fd/raw/4805f8bdde992cf3034672a1902218e34a47ce2f/CreateCompilerInputXml.ps1</a>&nbsp; <br/>
+<br/>
+#<br/>
+# In reality, all you need to change in the serialized CompilerInput object is the path/file name of the XOML file.<br/>
+#<br/>
+<br/>
+function New-CompilerInputXml {<br/>
+&lt;#<br/>
+.SYNOPSIS<br/>
+<br/>
+Creates a an XML file consisting of a serialized CompilerInput object.<br/>
+<br/>
+.DESCRIPTION<br/>
+<br/>
+New-CompilerInputXml creates an XML file consisting of compiler options. This file is required as the first argument for Microsoft.Workflow.Compiler.exe.<br/>
+<br/>
+.PARAMETER XOMLPath<br/>
+<br/>
+Specifies the path to the target XOML file. This can be a relative or absolute path. This path will be included in the resulting XML file that New-CompilerInputXml outputs.<br/>
+<br/>
+.PARAMETER OutputPath<br/>
+<br/>
+Specifies the path to which New-CompilerInputXml will save the serialized CompilerInput object.<br/>
+<br/>
+.EXAMPLE<br/>
+<br/>
+New-CompilerInputXml -XOMLPath C:\Test\foo.xoml -OutputPath test.xml<br/>
+<br/>
+Outputs a serialized CompilerInput object to test.xml and specifies a full path to a XOML assembly reference.<br/>
+<br/>
+.EXAMPLE<br/>
+<br/>
+New-CompilerInputXml -XOMLPath foo.xoml -OutputPath test.txt<br/>
+<br/>
+Outputs a serialized CompilerInput object to test.txt and specifies a XOML assembly reference using a relative path. Note that Microsoft.Workflow.Compiler.exe doesn't care about the extension supplied in the first argument.<br/>
+<br/>
+.OUTPUTS<br/>
+<br/>
+System.IO.FileInfo<br/>
+<br/>
+Outputs a FileInfo object to serve as confirmation that the resulting serialized XML wil was created.<br/>
+#&gt;<br/>
+<br/>
+&nbsp; &nbsp; [OutputType([System.IO.FileInfo])]<br/>
+&nbsp; &nbsp; param (<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [ValidateNotNullOrEmpty()]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $XOMLPath = 'test.xoml',<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [Parameter(Mandatory = $True)]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [String]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; [ValidateNotNullOrEmpty()]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; $OutputPath<br/>
+&nbsp; &nbsp; )<br/>
+<br/>
+&nbsp; &nbsp; # This assembly won't be loaded by default. We need to load<br/>
+&nbsp; &nbsp; # it in order to get access to the WorkflowCompilerParameters class.<br/>
+&nbsp; &nbsp; Add-Type -AssemblyName 'System.Workflow.ComponentModel'<br/>
+<br/>
+&nbsp; &nbsp; # This class contains the properties we need to specify for Microsoft.Workflow.Compiler.exe<br/>
+&nbsp; &nbsp; $WFCompilerParams = New-Object -TypeName Workflow.ComponentModel.Compiler.WorkflowCompilerParameters<br/>
+<br/>
+&nbsp; &nbsp; # Necessary to get Microsoft.Workflow.Compiler.exe to call Assembly.Load(byte[])<br/>
+&nbsp; &nbsp; $WFCompilerParams.GenerateInMemory = $True<br/>
+<br/>
+&nbsp; &nbsp; # Full path to Microsoft.Workflow.Compiler.exe that we will load and access a non-public method from<br/>
+&nbsp; &nbsp; $WorkflowCompilerPath = [Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory() + 'Microsoft.Workflow.Compiler.exe'<br/>
+<br/>
+&nbsp; &nbsp; # Load the assembly<br/>
+&nbsp; &nbsp; $WFCAssembly = [Reflection.Assembly]::LoadFrom($WorkflowCompilerPath)<br/>
+<br/>
+&nbsp; &nbsp; # This is the helper method that will serialize the CompilerInput object to disk<br/>
+&nbsp; &nbsp; $SerializeInputToWrapper = [Microsoft.Workflow.Compiler.CompilerWrapper].GetMethod('SerializeInputToWrapper', [Reflection.BindingFlags] 'NonPublic, Static')<br/>
+<br/>
+&nbsp; &nbsp; $TempFile = $SerializeInputToWrapper.Invoke($null, @([Workflow.ComponentModel.Compiler.WorkflowCompilerParameters] $WFCompilerParams, [String[]] @(,$OutputPath)))<br/>
+<br/>
+&nbsp; &nbsp; Move-Item $TempFile $OutputPath -PassThru<br/>
+}</body></html>

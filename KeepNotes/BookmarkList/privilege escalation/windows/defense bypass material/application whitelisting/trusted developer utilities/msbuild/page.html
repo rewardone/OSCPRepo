@@ -3,14 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>MSBuild</title>
-</head><body>https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus/<br/>
-https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus-part-2/<span style="font-size: 10pt"><br/>
+</head><body><a href="https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus/">https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus/</a><br/>
+<a href="https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus-part-2/">https://www.n00py.io/2018/06/executing-meterpreter-in-memory-on-windows-10-and-bypassing-antivirus-part-2/</a><br/>
+<a href="https://web.archive.org/web/20161212224652/http://subt0x10.blogspot.com/2016/09/bypassing-application-whitelisting.html">https://web.archive.org/web/20161212224652/http://subt0x10.blogspot.com/2016/09/bypassing-application-whitelisting.html</a><span style="font-size: 10pt">&nbsp; <br/>
 </span><span style="font-size: 10pt"><br/>
+<br/>
 MSBuild<br/>
-<span style="font-family: Roboto-Regular"><div style="text-align: left">MSBuild.exe (Microsoft Build Engine) is a software build platform used by Visual Studio. It takes XML formatted project files that define requirements for building various platforms and configurations. <a href="https://msdn.microsoft.com/library/dd393574.aspx">[1]</a><br/>
-</div></span><br/>
-<span style="font-family: Roboto-Regular"><div style="text-align: left">Adversaries can use MSBuild to proxy execution of code through a trusted Windows utility. The inline task capability of MSBuild that was introduced in .NET version 4 allows for C# code to be inserted into the XML project file. <a href="https://msdn.microsoft.com/library/dd393574.aspx">[1]</a>Inline Tasks MSBuild will compile and execute the inline task. MSBuild.exe is a signed Microsoft binary, so when it is used this way it can execute arbitrary code and bypass application whitelisting defenses that are configured to allow MSBuild.exe execution. [2]<br/>
-</div></span><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">MSBuild.exe (Microsoft Build Engine) is a software build platform used by Visual Studio. It takes XML formatted project files that define requirements for building various platforms and configurations. <a href="https://msdn.microsoft.com/library/dd393574.aspx">[1]</a><br/>
+</span></div><br/>
+<div style="text-align: left"><span style="font-family: Roboto-Regular">Adversaries can use MSBuild to proxy execution of code through a trusted Windows utility. The inline task capability of MSBuild that was introduced in .NET version 4 allows for C# code to be inserted into the XML project file. <a href="https://msdn.microsoft.com/library/dd393574.aspx">[1]</a>Inline Tasks MSBuild will compile and execute the inline task. MSBuild.exe is a signed Microsoft binary, so when it is used this way it can execute arbitrary code and bypass application whitelisting defenses that are configured to allow MSBuild.exe execution. [2]<br/>
+</span></div><br/>
 ========================================================================== &nbsp;<br/>
 </span><br/>
 In certain versions of .Net, you can use msbuild.exe to execute a payload from an .xml file. Msbuild can be called any number of ways. There are two main ways to source the payload: smb and webdav (or www server). <br/>

