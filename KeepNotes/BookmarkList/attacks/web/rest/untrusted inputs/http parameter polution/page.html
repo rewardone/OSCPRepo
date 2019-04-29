@@ -3,7 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>HTTP Parameter Polution</title>
-</head><body>In an HPPP (HTTP parameter/path pollution attack), a parameter is used to compose the resource URL to be used to prepare a REST request for a resource (or generate an embedded link). The problem is that the attacker may either alter the path or add/overwrite unexpected parameters in the “query string”. Additionally, REST frameworks may use a parameter (like _method) to allow the specification of a REST verb different from the incoming HTTP method, so a GET request could be interpreted as a PUT operation. An attacker may change the semantics of the REST resource URL!<br/>
+</head><body>See the parent class of vulnerability in Attacks &gt; Web &gt; <a href="nbk:///43e2d065-c526-4875-8a0a-6582db6a405d">Parameter Poluttion</a>&nbsp;<br/>
+<br/>
+In an (Extended) HPPP (HTTP parameter/path pollution attack), a parameter is used to compose the resource URL to be used to prepare a REST request for a resource (or generate an embedded link). The problem is that the attacker may either alter the path or add/overwrite unexpected parameters in the “query string”. Additionally, REST frameworks may use a parameter (like <b>_method)</b>&nbsp;to allow the specification of a REST verb different from the incoming HTTP method, so a GET request could be interpreted as a PUT operation. An attacker may change the semantics of the REST resource URL!<br/>
 <br/>
 For example, with the following code:<br/>
 String entity = request.getParameter("entity");<br/>

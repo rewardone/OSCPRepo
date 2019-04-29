@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Server Side HPP</title>
+</head><body><span style="color: #000000">To test for HPP vulnerabilities, identify any form or action that allows user-supplied input. Query string parameters in HTTP GET requests are easy to tweak in the navigation bar of the browser. To test for HPP vulnerabilities simply append the same parameter to the GET or POST data but with a different value assigned. <br/>
+<br/>
+For example: if testing the search_string parameter in the query string, the request URL would include that parameter name and value.<br/>
+http://example.com/?search_string=kittens<br/>
+<br/>
+The particular parameter might be hidden among several other parameters, but the approach is the same; leave the other parameters in place and append the duplicate.<br/>
+http://example.com/?mode=guest&amp;search_string=kittens&amp;num_results=100&amp;search_string=puppies<br/>
+<br/>
+Analyze the response page to determine which value(s) were parsed. In the above example, the search results may show kittens, puppies, some combination of both (kittens,puppies or kittens~puppies or ['kittens','puppies']), may give an empty result, or error page. <br/>
+<b><br/>
+</b><b>As a general rule</b>: if existing input validation and other security mechanisms are sufficient on single inputs, and if the server assigns only the first or last polluted parameters, then parameter pollution does not reveal a vulnerability. <br/>
+<br/>
+If the duplicate parameters are concatenated, different web application components use different occurrences or testing generates an error, there is an increased likelihood of being able to use parameter pollution to trigger security vulnerabilities. <b><br/>
+</b><b><br/>
+</b>A more in-depth analysis would require three HTTP requests for each HTTP parameter:<br/>
+<ul><li>Submit an HTTP request containing the standard parameter name and value, and record the HTTP response. E.g. page?par1=val1</li>
+<li>Replace the parameter value with a tampered value, submit and record the HTTP response. E.g. page?par1=HPP_TEST1</li>
+<li>Send a new request combining step (1) and (2). Again, save the HTTP response. E.g. page?par1=val1&amp;par1=HPP_TEST1</li>
+<li>Compare the responses obtained during all previous steps. If the response from (3) is different from (1) and the response from (3) is also different from (2), there is an impedance mismatch that may be eventually abused to trigger HPP vulnerabilities.</li>
+</ul>
+<br/>
+<b><br/>
+</b><b>HPP Server Side - URL Rewriting</b><br/>
+URL Rewriting could be affected as well if regexp are too permissive:<br/>
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ .+page\.php.*\ HTTP/RewriteRule ^page\.php.*$ - [F,L]<br/>
+RewriteCond %{REQUEST_FILENAME} !-f<br/>
+RewriteCond %{REQUEST_FILENAME} !-d<br/>
+RewriteRule ^([^/]+)$ page.php?action=view&amp;page=$1&amp;id=0 [L]<br/>
+<br/>
+http://host/abcbecomes:http://host/page.php?action=view&amp;page=abc&amp;id=0<br/>
+<br/>
+An attacker may try to inject:<br/>
+http://host/abc%26action%3dedit<br/>
+<br/>
+and the url will be rewritten as:<br/>
+http://host/page.php?action=view&amp;page=abc&amp;action=edit&amp;id=0<br/>
+<br/>
+Obviously, the impact depends on the functionality exposed<br/>
+<br/>
+<br/>
+<b>Concatenation Bypasses (WAF or otherwise)</b><br/>
+While the following query is properly detected <br/>
+</span><span style="color: #000000">/index.aspx?page=</span><span style="color: #ff0000">select 1,2,3 from table where id=1</span><span style="color: #000000"><br/>
+</span><span style="color: #000000"><br/>
+Using HPP, it is possible to bypass the filter<br/>
+</span><span style="color: #000000">/index.aspx?</span><span style="color: #ff0000">page=select 1</span><span style="color: #000000">&amp;page=</span><span style="color: #ff0000">2,3 from table where id=1</span><span style="color: #000000"><br/>
+</span><span style="color: #000000"><br/>
+This will only work on webservers/technologies where the duplicate page parameter is concatenated with a comma or other<br/>
+</span></body></html>

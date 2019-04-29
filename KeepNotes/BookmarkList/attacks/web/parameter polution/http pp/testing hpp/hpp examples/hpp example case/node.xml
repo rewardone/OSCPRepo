@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>HPP Example Case</string>
+  <key>nodeid</key><string>b851ece4-3235-4096-a591-ac88ab440871</string>
+  <key>modified_time</key><integer>1556474163</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1556474143</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>
