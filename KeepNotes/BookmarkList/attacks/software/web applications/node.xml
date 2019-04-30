@@ -6,6 +6,7 @@
   <key>title</key><string>Web Applications</string>
   <key>nodeid</key><string>2ca7347c-5ce5-4d24-bad0-6c131f70a51a</string>
   <key>modified_time</key><integer>1556021893</integer>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1545848939</integer>
