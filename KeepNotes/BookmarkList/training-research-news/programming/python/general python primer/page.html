@@ -11,6 +11,27 @@ for item in my_list:<br/>
 # Append/push to list<br/>
 my_list.append("addMe")<br/>
 <br/>
+Finding the index of a substring of a string in a list:<br/>
+indices = [i for i,e in enumerate(mylist) if 'aa' in e]<br/>
+<br/>
+<b>Dictionary</b><br/>
+dict = {}<br/>
+dict = {1: 'one', 2:'two'}<br/>
+dict = {'name':'john', 1:[2,3,4]}<br/>
+dict.get(key)<br/>
+<br/>
+<b>Nested Dictionary</b><br/>
+dict = {}<br/>
+dict = {1: {'name':'John', 'age':'20'}, 2: {'name':'Jane','age':'21'}}<br/>
+print(dict[1]['name'])<br/>
+<br/>
+add by specifying a new key<br/>
+dict[3]['name'] = 'Josh'<br/>
+<br/>
+for id, info in dict.items():<br/>
+&nbsp; &nbsp; for key in info:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; print(key + ":", info[key])<br/>
+<br/>
 <b>Modules</b><br/>
 Always good to modular your code.<br/>
 <i>module1</i>.py:<br/>

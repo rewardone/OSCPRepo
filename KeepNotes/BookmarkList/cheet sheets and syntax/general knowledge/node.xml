@@ -5,11 +5,12 @@
   <key>title</key><string>General Knowledge</string>
   <key>nodeid</key><string>a7075e40-a0db-4eb7-97d6-c5db139cfc11</string>
   <key>modified_time</key><integer>1550847901</integer>
+  <key>expanded2</key><false/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1550847901</integer>
   <key>info_sort_dir</key><integer>1</integer>
-  <key>order</key><integer>5</integer>
+  <key>order</key><integer>6</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

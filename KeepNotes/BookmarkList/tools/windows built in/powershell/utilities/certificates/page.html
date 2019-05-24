@@ -1,0 +1,9 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Certificates</title>
+</head><body>https://blogs.technet.microsoft.com/scotts-it-blog/2014/12/30/working-with-certificates-in-powershell | Working with certs in powershell<br/>
+<br/>
+Create a new self-signed wildcard certificate for my.domain:<br/>
+New-SelfSignedCertificate -Subject *.my.domain -DnsName my.domain, *.my.domain -CertStoreLocation Cert:\LocalMachine\My -NotAfter (Get-Date).AddYears(10)</body></html>

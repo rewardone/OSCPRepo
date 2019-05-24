@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Python Regex</title>
+</head><body><b>Substitutions</b><br/>
+Regex is not always the fastest implementation, consider text.replace()<br/>
+'Fastest' text.replace() method:<br/>
+chars = \\`*_{}[]()&gt;#+-..!$"<br/>
+for c in chars:<br/>
+&nbsp; &nbsp; text = text.replace(c, "\\" + c)<br/>
+<br/>
+Compiling a regex string is good if the string will be used multiple times, otherwise it creates overhead<br/>
+rx = re.compile('([&amp;#])')<br/>
+text = rx.sub(r'\\\1', text)<br/>
+<br/>
+<b>Find &amp; Replace All</b><br/>
+import re<br/>
+regex = re.compile('([a-zA-Z]\"[a-zA-Z])')<br/>
+myfile = "foo's bar'<br/>
+myfile2 = regex.sub(lambda m: m.group().replace('"'."%",1), myfile)<br/>
+print(myfile2)<br/>
+<br/>
+m is a match object, get the group (matched substring o"s) and replace " with %<br/>
+<br/>
+<b>Match vs Search</b><br/>
+Match checks ONLY at the beginning of the string<br/>
+Search checks ANYWHERE in the string<br/>
+<br/>
+<br/>
+Regex Flags<br/>
+re.A&#09;&#09;&#09;ASCII-only matching instead of full unicode matching<br/>
+re.DEBUG&#09;Display debug information about the compiled expression<br/>
+re.I&#09;&#09;&#09;Perform case-insensitive matching<br/>
+re.L&#09;&#09;&#09;make \w, \W, \b, \B and case-insensitive matching dependent on the current locale<br/>
+re.M&#09;&#09;&#09;Multiline, '^' matches at beginning of string and beginning of each line (following newline). '$' matches end of string and end of each line<br/>
+re.S&#09;&#09;&#09;Make '.' match any character at all, including newline. without this flag, '.' will match anything <i>except</i>&nbsp;a newline<br/>
+re.X&#09;&#09;&#09;Verbose<br/>
+<br/>
+Other methods<br/>
+findall<br/>
+groups<br/>
+match<br/>
+sub<br/>
+subn<br/>
+search<br/>
+<br/>
+</body></html>

@@ -5,18 +5,32 @@
 <title>Ignoring SSL  Errors</title>
 </head><body>http://blog.pengyifan.com/how-to-fix-python-ssl-certificate_verify_failed/<br/>
 <br/>
-As a quick (and insecure) fix, you can turn certificate verification off, by:<br/>
-<br/>
-&nbsp; &nbsp; Set PYTHONHTTPSVERIFY environment variable to 0. For example, run<br/>
+As a quick (and insecure) fix, you can turn certificate verification off, by setting PYTHONHTTPSVERIFY environment variable to 0. For example, run<br/>
 &#09;<br/>
 export PYTHONHTTPSVERIFY=0<br/>
 python your_script<br/>
-&#09;<br/>
+<br/>
+or<br/>
+<br/>
 PYTHONHTTPSVERIFY=0 python your_script<br/>
 <br/>
-&nbsp; &nbsp; Alternatively, you can add this to your code before doing the https request<br/>
-<br/>
+Alternatively, you can add this to your code before doing the https request<br/>
 import os, ssl<br/>
 if (not os.environ.get('PYTHONHTTPSVERIFY', '') and<br/>
 &nbsp; &nbsp; getattr(ssl, '_create_unverified_context', None)): <br/>
-&nbsp; &nbsp; ssl._create_default_https_context = ssl._create_unverified_context</body></html>
+&nbsp; &nbsp; ssl._create_default_https_context = ssl._create_unverified_context<br/>
+<br/>
+<br/>
+Another alternative is to create a new SSLContext, which defaults to CERT_NONE<br/>
+import ssl<br/>
+blank_ssl_context = ssl.SSLContext()<br/>
+content = urllib2.urlopen(some_url, context=blank_ssl_context).read()<br/>
+<br/>
+Or create an unverified SSLContext:<br/>
+import ssl<br/>
+unverified_context = ssl._create_unverified_context()<br/>
+content = urllib2.urlopen(some_url, context=unverified_context).read()<br/>
+<br/>
+Lastly, you can override _create_default_https_context with your own...<br/>
+import ssl<br/>
+ssl._create_default_https_context = ssl._create_unverified_context</body></html>

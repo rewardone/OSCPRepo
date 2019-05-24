@@ -3,7 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>URLLib2</title>
-</head><body>import urllib2<br/>
+</head><body>Read content from URL<br/>
+import urllib2<br/>
 some_url="http://www.vulnerabilityassessment.co.uk/passwordsA.htm"<br/>
 content = urllib2.urlopen(some_url).read()<br/>
-print content</body></html>
+print content<br/>
+<br/>
+Get status code<br/>
+status_code = urllib2.urlopen(some_url).getcode()<br/>
+<br/>
+Build a request object<br/>
+some_url = "http://www.google.com"<br/>
+request = urllib2.Request(some_url, headers = { 'Cookie': 'Cooooooookie' })<br/>
+content = urllib2.urlopen(request).read()</body></html>

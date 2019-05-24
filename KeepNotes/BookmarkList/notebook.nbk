@@ -91,7 +91,7 @@
                 </dict>
             </dict>
         </dict>
-        <key>default_font</key><string>Sans 10</string>
+        <key>default_font</key><string>sans 10</string>
     </dict>
 </pref>
 </notebook>

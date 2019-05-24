@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Regex</title>
+</head><body>https://www.dataquest.io/blog/regex-cheatsheet<br/>
+<br/>
+<b>Special Chars</b><br/>
+^&#09;&#09;Matches the expression to its right at the start of a string. It matches every such instance before each \n in the string<br/>
+$&#09;&#09;Matches the expression to its left at the end of a string. It matches every such instance before each \n in the string<br/>
+.&#09;&#09;Matches any character except line terminators like \n<br/>
+\&#09;&#09;Escapes special characters or denotes character classes<br/>
+A|B&#09;&#09;Matches expression A or B. If A is matched first, B is left untried<br/>
++&#09;&#09;Greedily matches the expressino to its left 1 or more times<br/>
+*&#09;&#09;Greedily matches the expression to its left 0 or more times<br/>
+?&#09;&#09;Greedily matches the expression to its left 0 or 1 times. But if ? is added to qualifiers (+,*, and ? itself) it will perform matches in a non-greedy manner<br/>
+{m}&#09;&#09;Matches expression to its left m times, and not less<br/>
+{m,n}&#09;Matches expression to its left m to n times and not less<br/>
+{m,n}?&#09;Matches expression to its left m times, and ignores n. See ? above<br/>
+<br/>
+<b>Character Classes</b><br/>
+\w&#09;&#09;Matches alphanumeric chars: a-z,A-Z,0-9. It also matches underscore _<br/>
+\d&#09;&#09;Matches digits: 0-9<br/>
+\D&#09;&#09;Matches any non-digits<br/>
+\s&#09;&#09;Matches whitespace characters, including \t, \n, \r, and space characters<br/>
+\S&#09;&#09;Matches non-whitespace characters<br/>
+\b&#09;&#09;Matches boundary (or empty string) at the start and end of a word, that is, between \w and \W<br/>
+\B&#09;&#09;Matches where \b does not, that is, the boundary of \w characters<br/>
+\A&#09;&#09;Matches the expression to its right at the absolute start of a string whether in single or multi-line mode<br/>
+\Z&#09;&#09;Matches the expression to its left at the absolute end of a string whether in single or multi-line mode<br/>
+<br/>
+<b>Sets</b><br/>
+[ ]&#09;&#09;Contains a set of characters to match<br/>
+[amk]&#09;Matches either a, m, or k. It does not match amk<br/>
+[a-z]&#09;&#09;Matches any alphabet from a to z<br/>
+[a\-z]&#09;Matches a, -, or z. it matches - because \ escapes it<br/>
+[a-]&#09;&#09;Matches a or -, because - is not being used to indicate a series of characters<br/>
+[-a]&#09;&#09;As above<br/>
+[a-z0-9]&#09;Matches from a to z and from 0 to 9<br/>
+[(+*)]&#09;Special characters become literal inside a set, so this matches (, +, *, and )<br/>
+[^ab5]&#09;Adding ^ excludes any character in the set. Matches characters that are not a, b, or 5<br/>
+<br/>
+<b>Groups</b><br/>
+( )&#09;&#09;Matches the expression inside the parentheses and groups it<br/>
+(? )&#09;&#09;Inside parentheses like this, ? acts as an extension notation. Its meaning depends on the caracter immediately to its right<br/>
+(?PAB)&#09;Matches the expression AB, and it can be accessed with the group name<br/>
+(?aiLmsux)&#09;Here, a, i, L, m, s, u, and x are flags<br/>
+&nbsp;&#09;a:&#09;Matches ASCII only<br/>
+&nbsp;&#09;i: &#09;Ignore case<br/>
+&nbsp;&#09;L: &#09;Locale dependent<br/>
+&nbsp;&#09;m: &#09;Multi-line<br/>
+&nbsp;&#09;s: &#09;Matches all<br/>
+&nbsp;&#09;u: &#09;Matches unicode<br/>
+&nbsp;&#09;x: &#09;Verbose<br/>
+(?:A) &#09;Matches the expressino as represented by A, but unlike (?PAB), it canno tbe retrieved afterwards<br/>
+(?#...)&#09;A comment. Contents are for us to read, not for matching<br/>
+A(?=B)&#09;Lookahead assertion. This matches the expression A only if it is followed by B<br/>
+A(?!B)&#09;Negative lookahead assertion. This matches the expression A only if it is not followed by B<br/>
+(?&lt;=B)A&#09;Positive lookbehind assertion. This matches the expression A only if B is immediately to its left. This can only match fixed length expressions<br/>
+(?&lt;!B)A&#09;Negative lookbehind assertion. This matches the expression A only if B is not immediately to its left. This can only match fixed length expression. <br/>
+(?P=name)&#09;Matches the expression matched by an earlier group named "name"<br/>
+(...)\1&#09;The number 1 corresponds to the first group to be matched. If we want to match more instances of the same expression, simply use its number instead of writing the whole expression again. <br/>
+&nbsp;&#09;&#09;We can use from 1 up to 99 such groups and their corresponding numbers<br/>
+<br/>
+<b>Some Python Methods</b><br/>
+re.findall(A, B)&#09;&#09;Matches all instances of an expression A in a string B and returns them in a list<br/>
+re.search(A, B)&#09;&#09;Matches the first instance of an expression A in a string B, and returns it as a re match object<br/>
+re.split(A, B)&#09;&#09;Split a string B into a list using the delimiter A<br/>
+re.sub(C, B, C)&#09;&#09;Replace A with B in the string C</body></html>
