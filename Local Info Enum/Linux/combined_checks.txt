@@ -1,4 +1,4 @@
-Running list of checks accross scripts:
+Running list of checks across scripts:
 
 common_checks
 ###############################################################################################################
@@ -8,14 +8,14 @@ common_checks
 # 
 ####KERNEL####
 # uname -arms
-# /proc/version															#kernel
-# /etc/*-release														#operating system
-# /etc/issue 															#operating system
+# /proc/version						# kernel
+# /etc/*-release					# operating system
+# /etc/issue 						# operating system
 #
 ####NETWORK###
-# ifconfig -a															#interfaces
-# route																	#routing information
-# netstat -antup | grep -v 'TIME_WAIT'									#Netstat
+# ifconfig -a						# interfaces
+# route							# routing information
+# netstat -antup | grep -v 'TIME_WAIT'			# Netstat
 # cat /etc/network/interfaces
 # cat /etc/sysconfig/network
 # cat /etc/resolv.conf
@@ -26,16 +26,16 @@ common_checks
 # iptables -L
 #
 ####USER####
-# whoami																#current user
-# id 																	#current user id
-# check for super users in /etc/passwd									#/etc/passwd
-# check for other users	in /etc/passwd									#/etc/passwd
+# whoami						# current user
+# id 							# current user id
+# check for super users in /etc/passwd			# /etc/passwd
+# check for other users	in /etc/passwd			# /etc/passwd
 # /etc/group
-# w 																	#who is logged on
-# last																	#pulls from /var/log/wtmp which deals with more than just user logins. Virtually any change to the system-wide state is recorded there
-# lastlog																#pulls from /var/log/lastlog which is only concerned with previous logins
-# env																	#environment variables
-# echo $PATH															#path
+# w 							# who is logged on
+# last							# pulls from /var/log/wtmp which deals with more than just user logins. Virtually any change to the system-wide state is recorded there
+# lastlog						# pulls from /var/log/lastlog which is only concerned with previous logins
+# env							# environment variables
+# echo $PATH						# path
 #
 ####USER STUFF####
 # user home directories: writable?
@@ -74,13 +74,13 @@ common_checks
 # cat /etc/ssh/ssh_host_key
 #
 ####PROCESSES####
-# ps aux | awk '{print $1,$2,$9,$10,$11}'								#current processes 
-# ps -ef | /bin/grep root												#processes running as root
+# ps aux | awk '{print $1,$2,$9,$10,$11}'				# current processes 
+# ps -ef | /bin/grep root						# processes running as root
 # top
 # cat /etc/services
 #
 ####MOUNT####
-# /etc/fstab															#mount information
+# /etc/fstab								# mount information
 # mount | column -t
 # df -h
 #
@@ -98,40 +98,40 @@ common_checks
 #
 ####FILE/FOLDER PERMISSIONS: WORLD####
 # files with sticky bit (+sS)
-# find / -perm -1000 -type d 2>/dev/null   								# Sticky bit 
-# find / -perm -g=s -o -perm -u=s -type f 2>/dev/null    				# SGID or SUID
+# find / -perm -1000 -type d 2>/dev/null   				# sticky bit 
+# find / -perm -g=s -o -perm -u=s -type f 2>/dev/null    		# SGID or SUID
 # world writable folders
-# find / -writable -type d 2>/dev/null      							# world-writeable folders
-# find / -perm -222 -type d 2>/dev/null     							# world-writeable folders
-# find / -perm -o w -type d 2>/dev/null     							# world-writeable folders
-# find / -perm -o x -type d 2>/dev/null     							# world-executable folders
-# find / \( -perm -o w -perm -o x \) -type d 2>/dev/null   				# world-writeable & executable folders
+# find / -writable -type d 2>/dev/null      				# world-writeable folders
+# find / -perm -222 -type d 2>/dev/null     				# world-writeable folders
+# find / -perm -o w -type d 2>/dev/null     				# world-writeable folders
+# find / -perm -o x -type d 2>/dev/null     				# world-executable folders
+# find / \( -perm -o w -perm -o x \) -type d 2>/dev/null   		# world-writeable & executable folders
 # world writable files
 # list potentially sensitive files
-# ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null     					# Anyone - write
-# find /etc/ -readable -type f 2>/dev/null               				# Anyone - read
-# find /etc/ -readable -type f -maxdepth 1 2>/dev/null   				# Anyone - read
-# find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print   		# world-writeable files
+# ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null     			# anyone - write
+# find /etc/ -readable -type f 2>/dev/null               		# anyone - read
+# find /etc/ -readable -type f -maxdepth 1 2>/dev/null   		# anyone - read
+# find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print   	# world-writeable files
 #
 ####FILE/FOLDER PERMISSIONS: OWN/GROUP
-# find / -perm -g=s -type f 2>/dev/null    								# SGID (chmod 2000) - run as the group, not the user who started it.
-# find / -perm -u=s -type f 2>/dev/null    								# SUID (chmod 4000) - run as the owner, not the user who started it
+# find / -perm -g=s -type f 2>/dev/null    				# SGID (chmod 2000) - run as the group, not the user who started it.
+# find / -perm -u=s -type f 2>/dev/null    				# SUID (chmod 4000) - run as the owner, not the user who started it
 # for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null; done    # Looks in 'common' places: /bin, /sbin, /usr/bin, /usr/sbin, /usr/local/bin, /usr/local/sbin and any other *bin, for SGID or SUID (Quicker search)
 # files owned by current user
 # list group-writable files
-# ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null      					# Owner
-# ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null    					# Group
-# find /dir -xdev \( -nouser -o -nogroup \) -print   					# Noowner files
+# ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null      			# owner
+# ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null    			# group
+# find /dir -xdev \( -nouser -o -nogroup \) -print   			# Noowner files
 #
 ####BINARIES####
 # check for dev tools (awk/perl/python/nc/etc)
 # list installed packages
-# ls -alh /usr/bin/
-# ls -alh /sbin/
+# ls -lah /usr/bin/
+# ls -lah /sbin/
 # dpkg -l
 # rpm -qa
-# ls -alh /var/cache/apt/archivesO
-# ls -alh /var/cache/yum/ 
+# ls -lah /var/cache/apt/archivesO
+# ls -lah /var/cache/yum/ 
 #
 ###############################################################################################################
 
@@ -139,9 +139,9 @@ extra_checks
 ###############################################################################################################
 #
 ####NETWORK####
-# arp -a																#ARP information
+# arp -a								# ARP information
 # arp -e
-# /etc/resolv.conf | grep "nameserver"									#DNS settings
+# /etc/resolv.conf | grep "nameserver"					# DNS settings
 # lsof -i
 # lsof -i :80
 # grep 80 /etc/services
@@ -184,29 +184,29 @@ extra_checks
 # list all jar files
 #
 ####var####
-# ls -alh /var/log
-# ls -alh /var/mail
-# ls -alh /var/spool
-# ls -alh /var/spool/lpd
-# ls -alh /var/lib/pgsql
-# ls -alh /var/lib/mysql
+# ls -lah /var/log
+# ls -lah /var/mail
+# ls -lah /var/spool
+# ls -lah /var/spool/lpd
+# ls -lah /var/lib/pgsql
+# ls -lah /var/lib/mysql
 # cat /var/lib/dhcp3/dhclient.lease
 #
 ####www####
-# ls -alhR /var/www/
-# ls -alhR /srv/www/htdocs/
-# ls -alhR /usr/local/www/apache22/data/
-# ls -alhR /opt/lampp/htdocs/
-# ls -alhR /var/www/html/
+# ls -lahR /var/www/
+# ls -lahR /srv/www/htdocs/
+# ls -lahR /usr/local/www/apache22/data/
+# ls -lahR /opt/lampp/htdocs/
+# ls -lahR /var/www/html/
 #
 ####CRON####
-# ls -al /etc/cron* 2>/dev/null											#scheduled cron jobs
-# ls -aRl /etc/cron* 2>/dev/null | awk '$1 ~ /w.$/' 2>/dev/null			#writable cron directories
-# ls -al /etc/anacrontab 2>/dev/null; cat /etc/anacrontab 2>/dev/null	#anacrontab
+# ls -la /etc/cron* 2>/dev/null						# scheduled cron jobs
+# ls -laR /etc/cron* 2>/dev/null | awk '$1 ~ /w.$/' 2>/dev/null		# writable cron directories
+# ls -la /etc/anacrontab 2>/dev/null; cat /etc/anacrontab 2>/dev/null	# anacrontab
 # crontab -l
-# ls -alh /var/spool/cron
-# ls -al /etc/ | grep cron
-# ls -al /etc/cron*
+# ls -lah /var/spool/cron
+# ls -la /etc/ | grep cron
+# ls -la /etc/cron*
 # cat /etc/cron*
 # cat /etc/at.allow
 # cat /etc/at.deny
@@ -231,8 +231,8 @@ extra_checks
 # check permissions of postgres config file
 #
 ####MYSQL####
-# mysql --version														#check version
-# mysql root:root														#default login
+# mysql --version							# check version
+# mysql root:root							# default login
 #
 #
 ###############################################################################################################
@@ -331,7 +331,7 @@ Lynis Checks
 # Check if Oracle is being used
 # Check Oracle home paths from oratab
 # Checks if a DB2 instance is currently running
-# Determine if redis is running
+# Determine if Redis is running
 # Determine Redis configuration
 #
 ####FIREWALL####
@@ -363,7 +363,7 @@ Lynis Checks
 # Check php disable functions option
 #
 ####SHELL####
-# check all console TTYs in which root user can enter single user mode without password
+# Check all console TTYs in which root user can enter single user mode without password
 # which shells are available according /etc/shells
 # 
 ####SNMP####
@@ -412,31 +412,6 @@ Lynis Checks
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Lin_Enum
 ###############################################################################################################
 #
@@ -446,33 +421,33 @@ Lin_Enum
 # cat /prov/version 2>/dev/null
 # cat /etc/*-release 2>/dev/null
 #
-# hostname 2>/dev/null										#hostname
-# id 2>/dev/null											#current user information
-# lastlog 2>/dev/null |grep -v "Never" 2>/dev/null			#last logged on user
-# w 2>/dev/null												#who else is logged on
+# hostname 2>/dev/null							# hostname
+# id 2>/dev/null							# current user information
+# lastlog 2>/dev/null |grep -v "Never" 2>/dev/null			# last logged on user
+# w 2>/dev/null								# who else is logged on
 #
 #list all user id's and respective groups
-# for i in $(cat /etc/passwd 2>/dev/null| cut -d":" -f1 2>/dev/null);do id $i;done 2>/dev/null
+# for i in $(cat /etc/passwd 2>/dev/null| cut -d ":" -f1 2>/dev/null); do id $i; done 2>/dev/null
 #
-# grep -v '^[^:]*:[x]' /etc/passwd 2>/dev/null				#check for hashes being stored in /etc/passwd
+# grep -v '^[^:]*:[x]' /etc/passwd 2>/dev/null				# check for hashes being stored in /etc/passwd
 #
 #Locate custom user accounts with 'known default' UIDs
 #grep -v "^#" /etc/passwd | awk -F: '$3 == 0 || $3 == 500 || $3 == 501 || $3 == 502 || $3 == 1000 || $3 == 1001 || $3 == 1002 || $3 == 2000 || $3 == 2001 || $3 == 2002 { print }'
 #
-# cat /etc/shadow 2>/dev/null								#check read /etc/shadow
-# cat /etc/master.passwd 2>/dev/null						#check read /etc/master.passwd (BSD 'shadow' variant)
+# cat /etc/shadow 2>/dev/null						# check read /etc/shadow
+# cat /etc/master.passwd 2>/dev/null					# check read /etc/master.passwd (BSD 'shadow' variant)
 # check for root accounts (/etc/passwd UID 0)
 #
 #Pull out vital sudoers info (if readable)
-# cat /etc/sudoers 2>/dev/null | grep -v -e '^$' 2>/dev/null |grep -v "#" 2>/dev/null
+# cat /etc/sudoers 2>/dev/null | grep -v -e '^$' 2>/dev/null | grep -v "#" 2>/dev/null
 #
-# echo '' | sudo -S -l 2>/dev/null							#check sudo without password
+# echo '' | sudo -S -l 2>/dev/null					# check sudo without password
 #
 #Print known 'good' breakout binaries
 #echo '' | sudo -S -l 2>/dev/null | grep -w 'nmap\|perl\|'awk'\|'find'\|'bash'\|'sh'\|'man'\|'more'\|'less'\|'vi'\|'emacs'\|'vim'\|'nc'\|'netcat'\|python\|ruby\|lua\|irb' | xargs -r ls -la 2>/dev/null
 #
-# ls -ahl /root/ 2>/dev/null								#check root home accessible
-# ls -ahl /home/ 2>/dev/null								#check /home directory accessible
+# ls -lah /root/ 2>/dev/null						# check root home accessible
+# ls -lah /home/ 2>/dev/null						# check /home directory accessible
 #
 #Find world writable files
 #find / -writable -not -user \`whoami\` -type f -not -path "/proc/*" -exec ls -al {} \; 2>/dev/null
@@ -480,7 +455,7 @@ Lin_Enum
 #Find world readable files within /home
 #find /home/ -perm -4 -type f -exec ls -al {} \; 2>/dev/null
 #
-# ls -ahl ~ 2>/dev/null										#list /home directories contents
+# ls -lah ~ 2>/dev/null							# list /home directories contents
 #
 #Check for various ssh files
 find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" \) -exec ls -la {} 2>/dev/null \;
@@ -488,25 +463,25 @@ find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "known_hosts" -o -name "au
 #Check root login via SSH (/etc/ssh/sshd_config)
 #grep "PermitRootLogin " /etc/ssh/sshd_config 2>/dev/null | grep -v "#" | awk '{print  $2}'
 #
-# env 2>/dev/null | grep -v 'LS_COLORS' 2>/dev/null			#print $env information
-# echo $PATH 2>/dev/null										#print $PATH information
-# cat /etc/shells 2>/dev/null								#list available shells
-# umask -S 2>/dev/null & umask 2>/dev/null					#umask value with octal and symbolic output
+# env 2>/dev/null | grep -v 'LS_COLORS' 2>/dev/null			# print $env information
+# echo $PATH 2>/dev/null						# print $PATH information
+# cat /etc/shells 2>/dev/null						# list available shells
+# umask -S 2>/dev/null & umask 2>/dev/null				# umask value with octal and symbolic output
 #
 #Umask value as in /etc/login.defs
-#cat /etc/login.defs 2>/dev/null |grep -i UMASK 2>/dev/null |grep -v "#" 2>/dev/null
+#cat /etc/login.defs 2>/dev/null | grep -i UMASK 2>/dev/null |grep -v "#" 2>/dev/null
 #
 #Password policy information as stored in /etc/login.defs
 #cat /etc/login.defs 2>/dev/null | grep "PASS_MAX_DAYS\|PASS_MIN_DAYS\|PASS_WARN_AGE\|ENCRYPT_METHOD" 2>/dev/null | grep -v "#" 2>/dev/null
 #
-# ls -la /etc/cron* 2>/dev/null								#Check cron jobs
+# ls -la /etc/cron* 2>/dev/null						# check cron jobs
 #
 #Check permissions on cron jobs
 #find /etc/cron* -perm -0002 -type f -exec ls -la {} \; -exec cat {} 2>/dev/null \;
 #
-# cat /etc/crontab 2>/dev/null								#Print crontab contents
-# ls -la /var/spool/cron/crontabs 2>/dev/null				#Print crontab contents
-# ls -la /var/spool/anacron 2>/dev/null						#Print anacron contents
+# cat /etc/crontab 2>/dev/null						# print crontab contents
+# ls -la /var/spool/cron/crontabs 2>/dev/null				# print crontab contents
+# ls -la /var/spool/anacron 2>/dev/null					# print anacron contents
 #
 #Check anacron
 #ls -la /etc/anacrontab 2>/dev/null; cat /etc/anacrontab 2>/dev/null
@@ -514,16 +489,16 @@ find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "known_hosts" -o -name "au
 #(priv) Check account name associated cronjobs
 #cat /etc/passwd | cut -d ":" -f 1 | xargs -n1 crontab -l -u 2>/dev/null
 #
-# /sbin/ifconfig -a 2>/dev/null								#nic information
-# arp -a 2>/dev/null										#arp information
-# cat /etc/resolv.conf 2>/dev/null | grep "nameserver"		#dns settings
-# route 2>/dev/null | grep default							#default route configuration
-# netstat -antp 2>/dev/null									#netstat listening TCP
-# netstat -anup 2>/dev/null									#netstat listening UDP
-# ps aux 2>/dev/null										#running processes
+# /sbin/ifconfig -a 2>/dev/null						# NIC information
+# arp -a 2>/dev/null							# arp information
+# cat /etc/resolv.conf 2>/dev/null | grep "nameserver"			# DNS settings
+# route 2>/dev/null | grep default					# default route configuration
+# netstat -antp 2>/dev/null						# netstat listening TCP
+# netstat -anup 2>/dev/null						# netstat listening UDP
+# ps aux 2>/dev/null							# running processes
 # 
 #Lookup process binary path and permissions
-#ps aux 2>/dev/null | awk '{print $11}'|xargs -r ls -la 2>/dev/null |awk '!x[$0]++' 2>/dev/null
+#ps aux 2>/dev/null | awk '{print $11}' | xargs -r ls -la 2>/dev/null | awk '!x[$0]++' 2>/dev/null
 #
 # check xinetd.conf, try to show permissions of binaries
 # check init.d files NOT belonging to root
@@ -582,8 +557,7 @@ These are checks in lib/checks....there are more in lib/misc...OS specific, enha
 #	do
 #		case "${permissions}" in
 #			????????w?)
-#				if [ "`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1 ]
-#				then
+#				if [ "`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1 ]; then
 #					stdio_message_warn "world_writable" "${filename} is owned by user ${userid} (group ${groupid}) and is world-writable with sticky bit (${permissions})"
 #				else
 #					stdio_message_warn "world_writable" "${filename} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"
@@ -635,9 +609,9 @@ These are checks in lib/checks....there are more in lib/misc...OS specific, enha
 #}
 #
 # extensive file permissions checker. Looks for the following:
-#	"`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1				(${systemfilename}) ${filename} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"	
-#	"`group_is_in_group_name \"${groupid}\"`" -eq 1										(${systemfilename}) ${filename} is owned by user ${userid} (group ${groupid}: YOU) and is group-writable (${permissions})"
-#	 "`user_is_root \"${userid}\"`" -ne 1 -a "`user_show_user_name`" = "${userid}"		(${systemfilename}) ${filename} is owned by user ${userid} (YOU) (group ${groupid}), non-root user (${permissions})"
+#	"`permission_is_world_writable_sticky_bit \"${permissions}\"`" -eq 1		(${systemfilename}) ${filename} is owned by user ${userid} (group ${groupid}) and is world-writable (${permissions})"	
+#	"`group_is_in_group_name \"${groupid}\"`" -eq 1					(${systemfilename}) ${filename} is owned by user ${userid} (group ${groupid}: YOU) and is group-writable (${permissions})"
+#	 "`user_is_root \"${userid}\"`" -ne 1 -a "`user_show_user_name`" = "${userid}"	(${systemfilename}) ${filename} is owned by user ${userid} (YOU) (group ${groupid}), non-root user (${permissions})"
 #
 # check sensitive files:
 #	sensitive_config_files="
@@ -718,7 +692,7 @@ These are checks in lib/checks....there are more in lib/misc...OS specific, enha
 ###############################################################################################################
 
 Linux-local-enum.sh
-# ###############################################################################################################
+################################################################################################################
 # v1.0
 #
 # Provides the following functions
@@ -736,30 +710,29 @@ Linux-local-enum.sh
 # Run commands:
 #     uname -ar
 #     df -h         			(This information  includes  the file system name, the total space
-#				    			 allocated in the file system, the amount of space	allocated
-#				     			to  existing  files, the total amount of space available for
-#				     			the creation of new files by  unprivileged  users,  and  the
-#				     			percentage  of  normally  available  space that is currently
-#				     			allocated to all files on the file system. This option over-
-#				     			rides the -b, -e, -n, and -t options.
-#                    			)
+#				    	allocated in the file system, the amount of space allocated
+#				     	to  existing  files, the total amount of space available for
+#				     	the creation of new files by  unprivileged  users,  and  the
+#				     	percentage  of  normally  available  space that is currently
+#				     	allocated to all files on the file system. This option over-
+#				     	rides the -b, -e, -n, and -t options.)
 #     mount | column -t
 #     ls -ahlR /home/
 #     ls -ahlR /root/
-#     w			     																	##find logged on users and what they're doing
-#     last			 																	##Last logged on users
-#     ps -ef | /bin/grep root															##Processes running as root
-#     dpkg -l																			##List installed packages for Debian/RHEL based systems
-#     rpm -qa																			##List installed packages for RHEL/Debian based systems
-#     chkconfig --list | grep $(runlevel | awk '{ print $2}'):on						##RHEL/CentOS services that start at Boot
-#     ls /etc/init.d/																	##List of init scripts / system services
+#     w			     						# find logged on users and what they're doing
+#     last			 					# last logged on users
+#     ps -ef | /bin/grep root						# processes running as root
+#     dpkg -l								# list installed packages for Debian/RHEL based systems
+#     rpm -qa								# list installed packages for RHEL/Debian based systems
+#     chkconfig --list | grep $(runlevel | awk '{ print $2}'):on	# RHEL/CentOS services that start at boot
+#     ls /etc/init.d/							# list of init scripts / system services
 #
 # Find files:
 #
 # find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 3 -exec ls -ld {} \; 2>/dev/null  ##Sticky Bit Files
-# find / -perm -222 -type d 2>/dev/null 												 ##World Writable Directories
-# find / -type f -perm 0777 2>/dev/null													 ##World Writable Files
-# find / -user $(whoami) 2>/dev/null													 ##Files owned by Current User
+# find / -perm -222 -type d 2>/dev/null 				# world Writable Directories
+# find / -type f -perm 0777 2>/dev/null					# world Writable Files
+# find / -user $(whoami) 2>/dev/null					# files owned by Current User
 #
 ################################################################################################################
 
@@ -769,60 +742,60 @@ linuxprivchecker.py
 ###############################################################################################################
 #
 # Cat files:
-#	/etc/issue															#Operating system
-#	/proc/version														#Kernel
-#	/etc/fstab 2>/dev/null												#fstab entries
-#	/etc/passwd															#user entries
-#	/etc/shadow 2>/dev/null												#user passwords
-#	/etc/apache2/apache2.conf 2>/dev/null								#Apache conf file
+#	/etc/issue							# operating system
+#	/proc/version							# kernel
+#	/etc/fstab 2>/dev/null						# fstab entries
+#	/etc/passwd							# user entries
+#	/etc/shadow 2>/dev/null						# user passwords
+#	/etc/apache2/apache2.conf 2>/dev/null				# Apache conf file
 #
 # Run Command:
-#	hostname															#hostname
-#	ifconfig -a															#Interfaces
-#	route																#Route
-#	netstat -antup | grep -v 'TIME_WAIT'								#Netstat (active connections?)
-#	mount																#Mount information
-#	ls -la /etc/cron* 2>/dev/null										#Scheduled cron jobs
-#	ls -aRl /etc/cron* 2>/dev/null | awk '$1 ~ /w.$/' 2>/dev/null		#Writable cron directories
-#	whoami																#current user	
-#	id																	#current user id
-#	grep -v -E '^#' /etc/passwd | awk -F: '$3 == 0{print $1}'			#super users in /etc/passwd
-#	ls -la ~/.*_history; ls -la /root/.*_history 2>/dev/null			#root and current user history (privs dependant)
-#	env 2>/dev/null | grep -v 'LS_COLORS'								#Environment variables
-#	cat /etc/sudoers 2>/dev/null | grep -v '#' 2>/dev/null				#Sudoers (privs dependant)
-#	w 2>/dev/null														#Who is logged in and what they're doing
-#	dpkg -l | awk '{$1=$4=\"\"; print $0}'								#Debian systems, find packages
-#	rpm -qa | sort -u													#RH/other, find packages
-#	ps aux | awk '{print $1,$2,$9,$10,$11}'								#Current processes
-# 	sudo -V | grep version 2>/dev/null									#Sudo Version (check exploitdb)
-#	apache2 -v; apache2ctl -M; httpd -v; apachectl -l 2>/dev/null		#Apache version and modules
-#	which awk perl python ruby gcc cc vi vim nmap find netcat nc wget tftp ftp 2>/dev/null	#dev tools available				
+#	hostname							# hostname
+#	ifconfig -a							# interfaces
+#	route								# route
+#	netstat -antup | grep -v 'TIME_WAIT'				# netstat (active connections?)
+#	mount								# mount information
+#	ls -la /etc/cron* 2>/dev/null					# scheduled cron jobs
+#	ls -aRl /etc/cron* 2>/dev/null | awk '$1 ~ /w.$/' 2>/dev/null	# writable cron directories
+#	whoami								# current user	
+#	id								# current user id
+#	grep -v -E '^#' /etc/passwd | awk -F: '$3 == 0{print $1}'	# super users in /etc/passwd
+#	ls -la ~/.*_history; ls -la /root/.*_history 2>/dev/null	# root and current user history (privs dependent)
+#	env 2>/dev/null | grep -v 'LS_COLORS'				# environment variables
+#	cat /etc/sudoers 2>/dev/null | grep -v '#' 2>/dev/null		# sudoers (privs dependent)
+#	w 2>/dev/null							# who is logged in and what they're doing
+#	dpkg -l | awk '{$1=$4=\"\"; print $0}'				# Debian systems, find packages
+#	rpm -qa | sort -u						# RedHat/other, find packages
+#	ps aux | awk '{print $1,$2,$9,$10,$11}'				# current processes
+# 	sudo -V | grep version 2>/dev/null				# sudo Version (check Exploitdb)
+#	apache2 -v; apache2ctl -M; httpd -v; apachectl -l 2>/dev/null	# Apache version and modules
+#	which awk perl python ruby gcc cc vi vim nmap find netcat nc wget tftp ftp 2>/dev/null	# dev tools available
 #
-#		#World writable directories for User/Group 'Root'
+#		# world writable directories for User/Group 'Root'
 #	find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep root
 #
-#		#World writeable directories for users other than 'Root'
+#		# world writeable directories for users other than 'Root'
 #	find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep -v root
 #
-#		#World writeable files
+#		# world writeable files
 #	find / \( -wholename '/home/homedir/*' -prune -o -wholename '/proc/*' -prune \) -o \( -type f -perm -0002 \) -exec ls -l '{}' ';' 2>/dev/null
 #
 #		#SUID/SGID Files and directories (+s 'sticky' bit)
 #	find / \( -perm -2000 -o -perm -4000 \) -exec ls -ld {} \; 2>/dev/null
 #
-#		#Check if root's /home/ folder is accessible
+#		# check if root's /home/ folder is accessible
 #	ls -ahlR /root 2>/dev/null
 #
-#		#Logs containing the keyword 'password'
+#		# logs containing the keyword 'password'
 #	find /var/log -name '*.log' 2>/dev/null | xargs -l10 egrep 'pwd|password' 2>/dev/null
 #
-#		#Config files **ending with '*.c*' ** containing the keyword 'password'
+#		# config files **ending with '*.c*' ** containing the keyword 'password'
 #	find /etc -name '*.c*' 2>/dev/null | xargs -l10 egrep 'pwd|password' 2>/dev/null
 #
 #
-#	#Function for identifying processes and packages running as root or other superuser#
+#	# function for identifying processes and packages running as root or other superuser#
 #
-#	#Print popular shell escape sequences#
+#	# print popular shell escape sequences#
 #	vi
 #		:!bash
 #		:set shell=/bin/bash:shell
@@ -839,7 +812,7 @@ linuxprivchecker.py
 #		--interactive
 #
 #
-#	#Enumerate hard coded exploit checking based on kernel/OS version#
+#	# enumerate hard coded exploit checking based on kernel/OS version#
 #
 #
 ###############################################################################################################
