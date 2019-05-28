@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Command and Control</string>
+  <key>nodeid</key><string>876f1c11-ec32-4ef3-8ca7-4a5892bb7ef4</string>
+  <key>modified_time</key><integer>1558828430</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1558828033</integer>
+  <key>order</key><integer>11</integer>
+</dict>
+</node>

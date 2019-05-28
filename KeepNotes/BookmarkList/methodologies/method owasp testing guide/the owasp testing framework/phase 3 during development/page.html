@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Phase 3: During Development</title>
+</head><body><b>Phase 3: During Development</b><br/>
+Theoretically, development is the implementation of a design. How-ever, in the real world, many design decisions are made during code development. These are often smaller decisions that were either too detailed to be described in the design, or issues where no policy or standard guidance was offered. If the design and architecture were not &nbsp;adequate, &nbsp;the &nbsp;developer &nbsp;will &nbsp;be &nbsp;faced &nbsp;with &nbsp;many &nbsp;decisions. &nbsp;If &nbsp;there were insufficient policies and standards, the developer will be faced with even more decisions.<br/>
+<br/>
+<b>Phase 3.1: Code Walk Through</b><br/>
+The &nbsp;security &nbsp;team &nbsp;should &nbsp;perform &nbsp;a &nbsp;code &nbsp;walk &nbsp;through &nbsp;with &nbsp;the &nbsp;developers, and in some cases, the system architects. A code walk through is a high-level walk through of the code where the devel-opers can explain the logic and flow of the implemented code. It al-lows the code review team to obtain a general understanding of the code, and allows the developers to explain why certain things were developed the way they were.<br/>
+<br/>
+The purpose is not to perform a code review, but to understand at a high level the flow, the layout, and the structure of the code that makes up the application.<br/>
+<br/>
+<b>Phase 3.2: Code Reviews</b><br/>
+Armed &nbsp;with &nbsp;a &nbsp;good &nbsp;understanding &nbsp;of &nbsp;how &nbsp;the &nbsp;code &nbsp;is &nbsp;structured &nbsp;and &nbsp;why &nbsp;certain &nbsp;things &nbsp;were &nbsp;coded &nbsp;the &nbsp;way &nbsp;they &nbsp;were, &nbsp;the &nbsp;tester &nbsp;can now examine the actual code for security defects.<br/>
+<br/>
+Static &nbsp;code &nbsp;reviews &nbsp;validate &nbsp;the &nbsp;code &nbsp;against &nbsp;a &nbsp;set &nbsp;of &nbsp;checklists, &nbsp;icluding:<ul><li>Business requirements for availability, confidentiality, and integrity.</li>
+<li>OWASP Guide or Top 10 Checklists for technical exposures(depending on the depth of the review).</li>
+<li>Specific issues relating to the language or framework in use, suchas the Scarlet paper for PHP or Microsoft Secure Coding checklists for ASP.NET.</li>
+<li>Any industry specific requirements, such as Sarbanes-Oxley 404,COPPA, &nbsp;ISO/IEC &nbsp;27002, &nbsp;APRA, &nbsp;HIPAA, &nbsp;Visa &nbsp;Merchant &nbsp;guidelines, &nbsp;or other regulatory regimes.</li>
+</ul>
+<br/>
+In terms of return on resources invested (mostly time), static code reviews &nbsp;produce &nbsp;far &nbsp;higher &nbsp;quality &nbsp;returns &nbsp;than &nbsp;any &nbsp;other &nbsp;security &nbsp;review method and rely least on the skill of the reviewer. However, they are not a silver bullet and need to be considered carefully with-in a full-spectrum testing regime.<br/>
+<br/>
+For &nbsp;more &nbsp;details &nbsp;on &nbsp;OWASP &nbsp;checklists, &nbsp;please &nbsp;refer &nbsp;to &nbsp;OWASP &nbsp;Guide &nbsp;for Secure Web Applications, or the latest edition of the OWASP Top 10.</body></html>

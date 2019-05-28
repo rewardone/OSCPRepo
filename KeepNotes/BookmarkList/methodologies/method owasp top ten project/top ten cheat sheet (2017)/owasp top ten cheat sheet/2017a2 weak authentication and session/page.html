@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>2017:A2 Weak authentication and session management</title>
+</head><body><img src="image.png" /><br/>
+<br/>
+<b>Is the Application Vulnerable?</b><br/>
+Confirmation of the user's identity, authentication, and session management are critical to protect against authentication-related attacks.<br/>
+There may be authentication weaknesses if the application:<br/>
+•Permits automated attacks such as credential stuffing, where the attacker has a list of valid usernames and passwords.<br/>
+•Permits brute force or other automated attacks.<br/>
+•Permits default, weak, or well-known passwords, such as "Password1" or "admin/admin“.<br/>
+•Uses weak or ineffective credential recovery and forgot-password processes, such as "knowledge-based answers", which cannot be made safe.•Uses plain text, encrypted, or weakly hashed passwords (see A3:2017-Sensitive Data Exposure).<br/>
+•Has missing or ineffective multi-factor authentication.•Exposes Session IDs in the URL (e.g., URL rewriting).<br/>
+•Does not rotate Session IDs after successful login.<br/>
+•Does not properly invalidate Session IDs. User sessions or authentication tokens (particularly single sign-on (SSO) tokens) aren’t properly invalidated during logout or a period of inactivity.<br/>
+<br/>
+<b>How to Prevent</b><br/>
+•Where possible, implement multi-factor authentication to prevent automated, credential stuffing, brute force, and stolen credential re-use attacks. <br/>
+•Do not ship or deploy with any default credentials, particularly for admin users.<br/>
+•Implement weak-password checks, such as testing new or changed passwords against a list of the top 10000 worst passwords.<br/>
+•Align password length, complexity and rotation policies with NIST 800-63 B's guidelines in section 5.1.1 for Memorized Secretsor other modern, evidence based password policies.<br/>
+•Ensure registration, credential recovery, and API pathways are hardened against account enumeration attacks by using the same messages for all outcomes.<br/>
+•Limit or increasingly delay failed login attempts. Log all failures and alert administrators when credential stuffing, brute force, orother attacks are detected.<br/>
+•Use a server-side, secure,built-in session manager that generates a new random session ID with high entropy after login. Session IDs should not be in the URL, be securely stored and invalidated after logout, idle, and absolute timeouts.<br/>
+<br/>
+<b>Example Attack Scenarios</b><br/>
+Scenario #1: Credential stuffing, the use of lists of known passwords, is a common attack. If an application does not implement automated threat or credential stuffing protections, the application can be used as a password oracle to determine if the credentials are valid.<br/>
+<br/>
+Scenario #2: Most authentication attacks occur due to the continued use of passwords as a sole factor. Once considered best practices, password rotation and complexity requirements are viewed as encouraging users to use, and reuse, weak passwords. Organizations are recommended to stop these practices per NIST 800-63 and use multi-factor authentication.<br/>
+<br/>
+Scenario #3: Application session timeouts aren’t set properly. A user uses a public computer to access an application. Instead of selecting “logout” the user simply closes the browser tab and walks away. An attacker uses the same browser an hour later, and the user is still authenticated.</body></html>

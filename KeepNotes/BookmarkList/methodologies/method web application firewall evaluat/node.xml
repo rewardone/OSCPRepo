@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Method: Web Application Firewall Evaluation Criteria</string>
+  <key>nodeid</key><string>7f48a533-afb6-4727-b687-5968b8e0d3ec</string>
+  <key>modified_time</key><integer>1558826228</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1558826228</integer>
+  <key>order</key><integer>12</integer>
+</dict>
+</node>

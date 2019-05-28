@@ -7,7 +7,7 @@
   <key>title</key><string>Top Ten Cheat Sheet (2017)</string>
   <key>nodeid</key><string>368b084d-35a3-4421-a23b-4fcf5dc55d1e</string>
   <key>modified_time</key><integer>1515430100</integer>
-  <key>expanded2</key><false/>
+  <key>expanded2</key><true/>
   <key>version</key><integer>6</integer>
   <key>content_type</key><string>text/xhtml+xml</string>
   <key>created_time</key><integer>1515430100</integer>

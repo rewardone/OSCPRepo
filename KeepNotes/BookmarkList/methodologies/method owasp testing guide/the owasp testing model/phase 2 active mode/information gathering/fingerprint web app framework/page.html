@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Fingerprint Web App Framework</title>
+</head><body><b>Summary</b><br/>
+Web framework[*] fingerprinting is an important subtask of the infor-mation gathering process. Knowing the type of framework can auto-matically give a great advantage if such a framework has already been tested by the penetration tester. It is not only the known vulnerabili-ties in unpatched versions but specific misconfigurations in the frame-work and known file structure that makes the fingerprinting process so important.<br/>
+<br/>
+Several different vendors and versions of web frameworks are widely used. &nbsp;Information &nbsp;about &nbsp;it &nbsp;significantly &nbsp;helps &nbsp;in &nbsp;the &nbsp;testing &nbsp;process, &nbsp;and can also help in changing the course of the test. Such information can be derived by careful analysis of certain common locations. Most of the web frameworks have several markers in those locations which help an attacker to spot them. This is basically what all automatic tools do, they look for a marker from a predefined location and then com-pare it to the database of known signatures. For better accuracy sev-eral markers are usually used.<br/>
+<br/>
+[*] Please note that this article makes no differentiation between Web Application &nbsp;Frameworks &nbsp;(WAF) &nbsp;and &nbsp;Content &nbsp;Management &nbsp;Systems &nbsp;(CMS). This has been done to make it convenient to fingerprint both of them in one chapter. Furthermore, both categories are referenced as web frameworks.<br/>
+<br/>
+<b>Test Objectives</b><br/>
+To define type of used web framework so as to have a better under-standing of the security testing methodology.<br/>
+<br/>
+<b>How to Test</b><br/>
+Black Box testing<br/>
+There are several most common locations to look in in order to define the current framework:<br/>
+HTTP headers<br/>
+Cookies<br/>
+HTML source code<br/>
+Specific files and folders<br/>
+<br/>
+<b>HTTP headers</b><br/>
+The most basic form of identifying a web framework is to look at the X-Powered-By field in the HTTP response header. Many tools can be used to fingerprint a target. The simplest one is netcat utility.<br/>
+<br/>
+Consider the following HTTP Request-Response:<br/>
+$ nc 127.0.0.1 80<br/>
+HEAD / HTTP/1.0<br/>
+<br/>
+HTTP/1.1 200 OK<br/>
+Server: nginx/1.0.14<br/>
+Date: Sat, 07 Sep 2013 08:19:15 GMT<br/>
+Content-Type: text/html;charset=ISO-8859-1<br/>
+Connection: close<br/>
+Vary: Accept-Encoding<br/>
+X-Powered-By: Mono<br/>
+<br/>
+From &nbsp;the &nbsp;X-Powered-By &nbsp;field, &nbsp;we &nbsp;understand &nbsp;that &nbsp;the &nbsp;web &nbsp;ap-plication framework is likely to be Mono. However, although this approach &nbsp;is &nbsp;simple &nbsp;and &nbsp;quick, &nbsp;this &nbsp;methodology &nbsp;doesn’t &nbsp;work &nbsp;in &nbsp;100% of cases. It is possible to easily disable X-Powered-By header &nbsp;by &nbsp;a &nbsp;proper &nbsp;configuration. &nbsp;There &nbsp;are &nbsp;also &nbsp;several &nbsp;techniques &nbsp;that allow a web site to obfuscate HTTP headers (see an example in #Remediation chapter).<br/>
+<br/>
+So in the same example the tester could either miss the X-Pow-ered-By header or obtain an answer like the following<br/>
+<br/>
+HTTP/1.1 200 OK<br/>
+Server: nginx/1.0.14<br/>
+Date: Sat, 07 Sep 2013 08:19:15 GMT<br/>
+Content-Type: text/html;charset=ISO-8859-1<br/>
+Connection: close<br/>
+Vary: Accept-Encoding<br/>
+X-Powered-By: Blood, sweat and tears<br/>
+<br/>
+Sometimes there are more HTTP-headers that point at a certain web &nbsp;framework. &nbsp;In &nbsp;the &nbsp;following &nbsp;example, &nbsp;according &nbsp;to &nbsp;the &nbsp;in-formation &nbsp;from &nbsp;HTTP-request, &nbsp;one &nbsp;can &nbsp;see &nbsp;that &nbsp;X-Powered-By &nbsp;header &nbsp;contains &nbsp;PHP &nbsp;version. &nbsp;However, &nbsp;the &nbsp;X-Generator &nbsp;header &nbsp;points out the used framework is actually Swiftlet, which helps a penetration &nbsp;tester &nbsp;to &nbsp;expand &nbsp;his &nbsp;attack &nbsp;vectors. &nbsp;When &nbsp;perform-ing fingerprinting, always carefully inspect every HTTP-header for such leaks<br/>
+<br/>
+HTTP/1.1 200 OK<br/>
+Server: nginx/1.4.1<br/>
+Date: Sat, 07 Sep 2013 09:22:52 GMT<br/>
+Content-Type: text/html<br/>
+Connection: keep-alive<br/>
+Vary: Accept-Encoding<br/>
+X-Powered-By: PHP/5.4.16-1~dotdeb.1<br/>
+Expires: Thu, 19 Nov 1981 08:52:00 GMT<br/>
+Cache-Control: &nbsp; no-store, &nbsp; no-cache, &nbsp; must-revalidate, &nbsp; post-check=0, pre-check=0<br/>
+Pragma: no-cache<br/>
+X-Generator: Swiftlet<br/>
+<br/>
+<b>Cookies</b><br/>
+Another similar and somehow more reliable way to determine the current web framework are framework-specific cookies.<br/>
+<br/>
+Consider the following HTTP-request:<br/>
+GET /cake HTTP /1.1<br/>
+Host: &nbsp; defcon-moscow.org<br/>
+User-Agent: &nbsp;Mozilla75.0 &nbsp; |Macintosh; &nbsp; &nbsp;Intel &nbsp;Mac &nbsp;OS &nbsp;X &nbsp;10.7; &nbsp;rv: 22. 0) &nbsp; Gecko/20100101 &nbsp;Firefox/22 . 0<br/>
+Accept: &nbsp; &nbsp; &nbsp;text/html, &nbsp;application/xhtml &nbsp;+ &nbsp;xml, &nbsp;application/xml; &nbsp;q=0.9, */*; q=0 , 8<br/>
+Accept - Language: &nbsp; ru-ru, ru; q=0.8, en-us; q=0.5 , en; q=0 . 3<br/>
+Accept - Encoding: &nbsp; &nbsp;gzip, deflate<br/>
+DNT: &nbsp;1<br/>
+Cookie: &nbsp; &nbsp;CAKEPHP=rm72kprivgmau5fmjdesbuqi71;<br/>
+Connection: &nbsp; &nbsp;Keep-alive<br/>
+Cache-Control: &nbsp; max-age=0<br/>
+<br/>
+/**<br/>
+* The name of CakePHP’s session cookie.*<br/>
+* &nbsp;Note &nbsp;the &nbsp;guidelines &nbsp;for &nbsp;Session &nbsp;names &nbsp;states: &nbsp;“The &nbsp;session &nbsp;name references* &nbsp;the &nbsp;session &nbsp;id &nbsp;in &nbsp;cookies &nbsp;and &nbsp;URLs. &nbsp;It &nbsp;should &nbsp;contain &nbsp;only &nbsp;al-phanumeric<br/>
+* characters.”<br/>
+* @link http://php.net/session_name<br/>
+*/<br/>
+Configure::write(‘Session.cookie’, ‘CAKEPHP’);<br/>
+<br/>
+However, these changes are less likely to be made than changes to the X-Powered-By header, so this approach can be considered as more reliable.<br/>
+<br/>
+<b>HTML source code</b><br/>
+This &nbsp;technique &nbsp;is &nbsp;based &nbsp;on &nbsp;finding &nbsp;certain &nbsp;patterns &nbsp;in &nbsp;the &nbsp;HTML &nbsp;page &nbsp;source &nbsp;code. &nbsp;Often &nbsp;one &nbsp;can &nbsp;find &nbsp;a &nbsp;lot &nbsp;of &nbsp;information &nbsp;which &nbsp;helps &nbsp;a &nbsp;tester &nbsp;to &nbsp;recognize &nbsp;a &nbsp;specific &nbsp;web &nbsp;framework. &nbsp;One &nbsp;of &nbsp;the &nbsp;common &nbsp;markers &nbsp;are &nbsp;HTML &nbsp;comments &nbsp;that &nbsp;directly &nbsp;lead &nbsp;to &nbsp;framework &nbsp;disclosure. &nbsp;More &nbsp;often &nbsp;certain &nbsp;framework-specific &nbsp;paths can be found, i.e. links to framework-specific css and/or js folders. Finally, specific script variables might also point to a cer-tain framework.<br/>
+<br/>
+From the screenshot below one can easily learn the used frame-work &nbsp;and &nbsp;its &nbsp;version &nbsp;by &nbsp;the &nbsp;mentioned &nbsp;markers. &nbsp;The &nbsp;comment, &nbsp;specific &nbsp;paths &nbsp;and &nbsp;script &nbsp;variables &nbsp;can &nbsp;all &nbsp;help &nbsp;an &nbsp;attacker &nbsp;to &nbsp;quickly determine an instance of ZK framework.<br/>
+<br/>
+More &nbsp;frequently &nbsp;such &nbsp;information &nbsp;is &nbsp;placed &nbsp;between &nbsp;&lt;head&gt;&lt;/head&gt; tags, in &lt;meta&gt; tags or at the end of the page. Nevertheless, &nbsp;it &nbsp;is &nbsp;recommended &nbsp;to &nbsp;check &nbsp;the &nbsp;whole &nbsp;document &nbsp;since it can be useful for other purposes such as inspection of oth-er useful comments and hidden fields. Sometimes, web develop-ers do not care much about hiding information about the frame-work used. It is still possible to stumble upon something like this at the bottom of the page:<br/>
+<img src="image.png" /><br/>
+<br/>
+<b>Specific files and folders</b><br/>
+Specific &nbsp;files &nbsp;and &nbsp;folders &nbsp;are &nbsp;different &nbsp;for &nbsp;each &nbsp;specific &nbsp;frame-work. It is recommended to install the corresponding framework during &nbsp;penetration &nbsp;tests &nbsp;in &nbsp;order &nbsp;to &nbsp;have &nbsp;better &nbsp;understanding &nbsp;of &nbsp;what &nbsp;infrastructure &nbsp;is &nbsp;presented &nbsp;and &nbsp;what &nbsp;files &nbsp;might &nbsp;be &nbsp;left &nbsp;on &nbsp;the &nbsp;server. &nbsp;However, &nbsp;several &nbsp;good &nbsp;file &nbsp;lists &nbsp;already &nbsp;exist &nbsp;and &nbsp;one good example is FuzzDB wordlists of predictable files/folders (http://code.google.com/p/fuzzdb/).<br/>
+<br/>
+<b>Tools</b><br/>
+A list of general and well-known tools is presented below. There are also a lot of other utilities, as well as framework-based finger-printing tools.<br/>
+<br/>
+<b>WhatWeb</b><br/>
+Website: http://www.morningstarsecurity.com/research/whatwebCurrently one of the best fingerprinting tools on the market. Included in a default Kali Linux build. Language: Ruby Matches for fingerprinting are made with:<br/>
+Text strings (case sensitive)<br/>
+Regular expressions<br/>
+Google Hack Database queries (limited set of keywords)<br/>
+MD5 hashes<br/>
+URL recognition<br/>
+HTML tag patterns<br/>
+Custom ruby code for passive and aggressive operations<br/>
+<br/>
+Sample output is presented on a screenshot below. <br/>
+<br/>
+<b>BlindElephant</b><br/>
+Website: https://community.qualys.com/community/blindelephant<br/>
+This great tool works on the principle of static file checksum based version difference thus providing a very high quality of fingerprint-ing. Language: Python<br/>
+<br/>
+Sample output of a successful fingerprint:<br/>
+pentester$ python BlindElephant.py http://my_target drupalLoaded &nbsp; &nbsp; /<br/>
+Library/Python/2.7/site-packages/blindelephant/dbs/drupal.pkl &nbsp;with &nbsp;145 &nbsp;versions, &nbsp;478 &nbsp;differentiating &nbsp;paths, &nbsp;and 434 version groups.<br/>
+Starting &nbsp;BlindElephant &nbsp;fingerprint &nbsp;for &nbsp;version &nbsp;of &nbsp;drupal &nbsp;at &nbsp;http://my_target Hit http://my_target/CHANGELOG.txtFile &nbsp;produced &nbsp;no &nbsp;match. &nbsp;Error: &nbsp;Retrieved &nbsp;file &nbsp;doesn’t &nbsp;match &nbsp;known fingerprint. 527b085a3717bd691d47713dff74acf4 <br/>
+<br/>
+Hit http://my_target/INSTALL.txtFile &nbsp;produced &nbsp;no &nbsp;match. &nbsp;Error: &nbsp;Retrieved &nbsp;file &nbsp;doesn’t &nbsp;match &nbsp;known fingerprint. 14dfc133e4101be6f0ef5c64566da4a4 <br/>
+Hit http://my_target/misc/drupal.jsPossible versions based on result: 7.12, 7.13, 7.14<br/>
+Hit http://my_target/MAINTAINERS.txtFile &nbsp;produced &nbsp;no &nbsp;match. &nbsp;Error: &nbsp;Retrieved &nbsp;file &nbsp;doesn’t &nbsp;match &nbsp;known fingerprint. 36b740941a19912f3fdbfcca7caa08ca <br/>
+Hit http://my_target/themes/garland/style.cssPossible &nbsp;versions &nbsp;based &nbsp;on &nbsp;result: &nbsp;7.2, &nbsp;7.3, &nbsp;7.4, &nbsp;7.5, &nbsp;7.6, &nbsp;7.7, &nbsp;7.8, 7.9, 7.10, 7.11, 7.12, 7.13, 7.14...<br/>
+<br/>
+Fingerprinting resulted in:<br/>
+7.14<br/>
+<br/>
+Best Guess: 7.14<br/>
+<br/>
+<b>Wappalyzer</b><br/>
+Website: http://wappalyzer.com<br/>
+Wapplyzer is a Firefox Chrome plug-in. It works only on regular ex-pression matching and doesn’t need anything other than the page to be loaded on browser. It works completely at the browser level and gives results in the form of icons. Although sometimes it has false positives, this is very handy to have notion of what technol-ogies were used to construct a target website immediately after browsing a page.<br/>
+<br/>
+<b>References<br/>
+</b><b>Whitepapers</b><br/>
+Saumil &nbsp;Shah: &nbsp;“An &nbsp;Introduction &nbsp;to &nbsp;HTTP &nbsp;fingerprinting” &nbsp;- &nbsp;http://www.net-square.com/httprint_paper.html<br/>
+Anant &nbsp;Shrivastava &nbsp;: &nbsp;“Web &nbsp;Application &nbsp;Finger &nbsp;Printing” &nbsp;- &nbsp;http://anantshri.info/articles/web_app_finger_printing.html<br/>
+<br/>
+<b>Remediation</b><br/>
+The general advice is to use several of the tools described above and check logs to better understand what exactly helps an attack-er &nbsp;to &nbsp;disclose &nbsp;the &nbsp;web &nbsp;framework. &nbsp;By &nbsp;performing &nbsp;multiple &nbsp;scans &nbsp;after changes have been made to hide framework tracks, it’s pos-sible to achieve a better level of security and to make sure of the framework &nbsp;can &nbsp;not &nbsp;be &nbsp;detected &nbsp;by &nbsp;automatic &nbsp;scans. &nbsp;Below &nbsp;are &nbsp;some &nbsp;specific &nbsp;recommendations &nbsp;by &nbsp;framework &nbsp;marker &nbsp;location &nbsp;and some additional interesting approaches.<br/>
+<br/>
+<b>HTTP headers</b><br/>
+Check the configuration and disable or obfuscate all HTTP-head-ers &nbsp;that &nbsp;disclose &nbsp;information &nbsp;the &nbsp;technologies &nbsp;used. &nbsp;Here &nbsp;is &nbsp;an &nbsp;interesting &nbsp;article &nbsp;about &nbsp;HTTP-headers &nbsp;obfuscation &nbsp;using &nbsp;Net-scaler: &nbsp; &nbsp; &nbsp; &nbsp; http://grahamhosking.blogspot.ru/2013/07/obfuscat-ing-http-header-using-netscaler.html<br/>
+<br/>
+<b>Cookies</b><br/>
+It is recommended to change cookie names by making changes in the corresponding configuration files.<br/>
+<br/>
+<b>HTML source code</b><br/>
+Manually check the contents of the HTML code and remove every-thing that explicitly points to the framework.<br/>
+<br/>
+<b>General guidelines:</b><br/>
+Make sure there are no visual markers disclosing the framework<br/>
+Remove any unnecessary comments (copyrights, buginformation, specific framework comments)<br/>
+Remove META and generator tags<br/>
+Use the companies own css or js files and do not store those in a framework-specific folders<br/>
+Do not use default scripts on the page or obfuscate them if theymust be used.<br/>
+<br/>
+Specific files and folders<br/>
+<b>General guidelines:</b><br/>
+Remove any unnecessary or unused files on the server. This implies &nbsp;text &nbsp;files &nbsp;disclosing &nbsp;information &nbsp;about &nbsp;versions &nbsp;and &nbsp;installation too.<br/>
+Restrict access to other files in order to achieve 404-responsewhen &nbsp; accessing &nbsp; them &nbsp; from &nbsp; outside. &nbsp; This &nbsp; can &nbsp; be &nbsp; done, &nbsp; for &nbsp; example, &nbsp;by &nbsp;modifying &nbsp;htaccess &nbsp;file &nbsp;and &nbsp;adding &nbsp;RewriteCond &nbsp;or &nbsp;RewriteRule &nbsp;there. &nbsp;An &nbsp;example &nbsp;of &nbsp;such &nbsp;restriction &nbsp;for &nbsp;two &nbsp;common WordPress folders is presented below.<br/>
+&nbsp;RewriteCond %{REQUEST_URI} /wp-login\.php$ [OR]RewriteCond %{REQUEST_URI} /wp-admin/$<br/>
+&nbsp;RewriteRule $ /http://your_website [R=404,L]<br/>
+<br/>
+However, these are not the only ways to restrict access. In order to automate &nbsp;this &nbsp;process, &nbsp;certain &nbsp;framework-specific &nbsp;plugins &nbsp;exist. &nbsp;One example for WordPress is StealthLogin (http://wordpress.org/plugins/stealth-login-page).<br/>
+<br/>
+<b>Additional approaches<br/>
+</b><b>General guidelines:</b><br/>
+[1] Checksum management<br/>
+The purpose of this approach is to beat checksum-based scanners and not let them disclose files by their hashes. Generally, there are two approaches in checksum management:<br/>
+Change the location of where those files are placed (i.e. movethem to another folder, or rename the existing folder)<br/>
+Modify the contents - even slight modification results in a completely different hash sum, so adding a single byte in the end of the file should not be a big problem.<br/>
+<br/>
+[2] Controlled chaos<br/>
+A funny and effective method that involves adding bogus files and folders from other frameworks in order to fool scanners and con-fuse an attacker. But be careful not to overwrite existing files and folders and to break the current framework!<br/>
+</body></html>

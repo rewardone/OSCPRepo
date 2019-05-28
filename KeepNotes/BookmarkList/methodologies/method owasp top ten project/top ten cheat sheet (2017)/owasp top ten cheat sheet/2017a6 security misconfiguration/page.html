@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>2017:A6 Security Misconfiguration</title>
+</head><body><img src="image.png" /><br/>
+<br/>
+<b>Is the Application Vulnerable?</b><br/>
+The application might be vulnerable if the application is:<br/>
+•Missing appropriate security hardening across any part of the application stack, or improperly configured permissions on cloud services.<br/>
+•Unnecessary features are enabled or installed (e.g. unnecessary ports, services, pages, accounts, or privileges).<br/>
+•Default accounts and their passwords still enabled and unchanged.<br/>
+•Error handling reveals stack traces or other overly informative error messages to users.<br/>
+•For upgraded systems, latest security features are disabled or not configured securely.<br/>
+•The security settings in the application servers, application frameworks (e.g. Struts, Spring, ASP.NET), libraries, databases, etc. not set to secure values.<br/>
+•The server does not send security headers or directives or they are not set to secure values.<br/>
+•The software is out of date or vulnerable (see A9:2017-Using Components with Known Vulnerabilities).Without a concerted, repeatable application security configuration process, systems are at a higher risk.<br/>
+<br/>
+<b>How to Prevent</b><br/>
+Secure installation processes should be implemented, including:<br/>
+•A repeatable hardening process that makes it fast and easy to deploy another environment that is properly locked down. Development, QA, and production environments should all be configured identically, with different credentials used in each environment. This process should be automated to minimize the effort required to setup a new secure environment.<br/>
+•A minimal platform withoutany unnecessary features, components, documentation, and samples. Remove or do not install unused features and frameworks.<br/>
+•A task to review and update the configurations appropriate to all security notes, updates and patches as part of the patch management process (see A9:2017-Using Components with Known Vulnerabilities). In particular, review cloud storage permissions (e.g. S3 bucket permissions). <br/>
+•A segmented application architecture that provides effective, secure separation between components or tenants, with segmentation, containerization, or cloud security groups.<br/>
+•Sending security directives to clients, e.g. Security Headers.<br/>
+•An automated process to verify the effectiveness of the configurations and settings in all environments.<br/>
+<br/>
+<b>Example Attack Scenarios</b><br/>
+Scenario #1: The application server comes with sample applications that are not removed from the production server. These sample applications have known security flaws attackers use to compromise the server. If one of these applications &nbsp;is the admin console, and default accounts weren’t changed the attacker logs in with default passwords and takes over.<br/>
+<br/>
+Scenario #2: Directory listing is not disabled on theserver. An attacker discovers they can simply list directories. The attacker finds and downloads the compiled Java classes, which they decompile and reverse engineer to view the code. The attacker then finds a serious access control flaw in the application.<br/>
+<br/>
+Scenario #3: The application server’s configuration allows de-tailederror messages, e.g. stack traces, to be returned to users. This potentially exposes sensitive information or underlying flaws such as component versions that are known to be vulnerable.<br/>
+<br/>
+Scenario #4: A cloud service provider has default sharing permissions open to the Internet by other CSP users. This allows sensitive data stored within cloud storage to beaccessed.<br/>
+</body></html>

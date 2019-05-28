@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Priv Transport and Logic</title>
+</head><body>Privilege, Transport, Logic Privilege <br/>
+Often logic, priv, auth bugs are blurred.<br/>
+&nbsp;<br/>
+Testing user priv:<br/>
+&nbsp;<ul><li>admin has power</li>
+<li>peon has none</li>
+<li>peon can use function only meant for admin</li>
+</ul>
+More Privilege <ul><li>&nbsp;Find site functionality that is restricted to certain user types</li>
+<li>Try accessing those functions with lesser/other user roles</li>
+<li>Try to directly browse to views with sensitive information as a lesser priv user</li>
+</ul>
+<br/>
+Autorize Burp plugin is pretty neat [here] (<a href="https://github.com/Quitten/Autorize">https://github.com/Quitten/Autorize</a>).<br/>
+&nbsp;Common Functions or Views <br/>
+<br/>
+&nbsp;<ul><li>Add user function</li>
+<li>Delete user function</li>
+<li>start project / campaign / etc function</li>
+<li>change account info (pass, CC, etc) function</li>
+<li>customer analytics view</li>
+<li>payment processing view</li>
+<li>any view with PII</li>
+</ul>
+Insecure direct object references <br/>
+IDORs are common place in bounties, and hard to catch with scanners.<br/>
+&nbsp;<br/>
+Find <i>any and all</i>&nbsp;UIDs<br/>
+&nbsp;<ul><li>increment</li>
+<li>decrement</li>
+<li>negative values</li>
+<li>Attempt to perform sensitive functions substituting another UID </li>
+<li style="list-style-type: none"><ul><li>&nbsp;change password</li>
+<li>forgot password</li>
+<li>admin only functions</li>
+</ul>
+</li>
+</ul>
+<br/>
+Common Functions , Views, or Files:<br/>
+&nbsp;<ul><li>Everything from the CSRF Table, trying cross account attacks</li>
+<li>Sub: UIDs, user hashes, or emails</li>
+<li>Images that are non-public</li>
+<li>Receipts</li>
+<li>Private Files (pdfs, ++)</li>
+<li>Shipping info &amp; Purchase Orders</li>
+<li>Sending / Deleting messages</li>
+</ul>
+Transport <br/>
+Most security concerned sites will enable HTTPs. It’s your job to ensure they’ve done it <i>EVERYWHERE</i>. Most of the time they miss something.<br/>
+&nbsp;<br/>
+Examples:<br/>
+&nbsp;<ul><li>Sensitive images transported over HTTP</li>
+<li>Analytics with session data / PII leaked over HTTP</li>
+</ul>
+<br/>
+(ForceSSL) [<a href="https://github.com/arvinddoraiswamy/mywebappscripts/tree/master/ForceSSL">https://github.com/arvinddoraiswamy/mywebappscripts/tree/master/ForceSSL</a>]<br/>
+&nbsp;Business Logic Flaws <br/>
+Logic flaws that are tricky, mostly manual:<br/>
+&nbsp;<ul><li>substituting hashed parameters</li>
+<li>step manipulation</li>
+<li>use negatives in quantities</li>
+<li>authentication bypass</li>
+<li>application level DoS</li>
+<li>Timing attacks</li>
+</ul>
+</body></html>

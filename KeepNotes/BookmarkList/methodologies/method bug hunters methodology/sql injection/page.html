@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL Injection</title>
+</head><body><br/>
+#Tactical Fuzzing - SQLi<br/>
+&nbsp;SQL Injection <br/>
+Core Idea: Does the page look like it might need to call on stored data?<br/>
+&nbsp;<br/>
+There exist some SQLi polyglots, i.e (Mathias Karlsson);<br/>
+&nbsp;<br/>
+SLEEP(1) /*‘ or SLEEP(1) or ‘“ or SLEEP(1) or “*/<br/>
+&nbsp;<br/>
+Works in single quote context, works in double quote context, works in “straight into query” context!<br/>
+&nbsp;<br/>
+You can also leverage the large database of fuzzlists from Seclists (<a href="https://github.com/danielmiessler/SecLists">https://github.com/danielmiessler/SecLists</a>)<br/>
+&nbsp;<br/>
+##SQL Injection Observations Blind is predominant, Error based is highly unlikely.<br/>
+&nbsp;<br/>
+‘%2Bbenchmark(3200,SHA1(1))%2B’<br/>
+&nbsp;<br/>
+‘+BENCHMARK(40000000,SHA1(1337))+’<br/>
+&nbsp;<br/>
+SQLMap is king!<br/>
+&nbsp;<ul><li>&nbsp;Use -l to parse a Burp log file.</li>
+<li>Use Tamper Scripts for blacklists.</li>
+<li>SQLiPy Burp plugin works well to instrument SQLmap quickly. Lots of injection in web services!</li>
+</ul>
+<br/>
+##Best SQL injection resources<br/>
+&nbsp;<ul><li>MySQL: </li>
+<li style="list-style-type: none"><ul><li>[PentestMonkey's mySQL injection cheat sheet] (<a href="http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet">http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet</a>)</li>
+<li>[Reiners mySQL injection Filter Evasion Cheatsheet] (<a href="https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/">https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/</a>)</li>
+</ul>
+</li>
+<li>MSQQL: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;[EvilSQL's Error/Union/Blind MSSQL Cheatsheet] (<a href="http://evilsql.com/main/page2.php">http://evilsql.com/main/page2.php</a>)</li>
+<li>[PentestMonkey's MSSQL SQLi injection Cheat Sheet] (<a href="http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet">http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet</a>)</li>
+</ul>
+</li>
+<li>ORACLE: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;[PentestMonkey's Oracle SQLi Cheatsheet] (<a href="http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet">http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet</a>)</li>
+</ul>
+</li>
+<li>POSTGRESQL: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;[PentestMonkey's Postgres SQLi Cheatsheet] (<a href="http://pentestmonkey.net/cheat-sheet/sql-injection/postgres-sql-injection-cheat-sheet">http://pentestmonkey.net/cheat-sheet/sql-injection/postgres-sql-injection-cheat-sheet</a>)</li>
+</ul>
+</li>
+<li>Others </li>
+<li style="list-style-type: none"><ul><li>&nbsp;[Access SQLi Cheatsheet] (<a href="http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html">http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html</a>)</li>
+<li>[PentestMonkey's Ingres SQL Injection Cheat Sheet] (<a href="http://pentestmonkey.net/cheat-sheet/sql-injection/ingres-sql-injection-cheat-sheet">http://pentestmonkey.net/cheat-sheet/sql-injection/ingres-sql-injection-cheat-sheet</a>)</li>
+<li>[Pentestmonkey's DB2 SQL Injection Cheat Sheet] (<a href="http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet">http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet</a>)</li>
+<li>[Pentestmonkey's Informix SQL Injection Cheat Sheet] (<a href="http://pentestmonkey.net/cheat-sheet/sql-injection/informix-sql-injection-cheat-sheet">http://pentestmonkey.net/cheat-sheet/sql-injection/informix-sql-injection-cheat-sheet</a>)</li>
+<li>[SQLite3 Injection Cheat sheet] (<a href="https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet">https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet</a>)</li>
+<li>[Ruby on Rails (Active Record) SQL Injection Guide] (<a href="http://rails-sqli.org/">http://rails-sqli.org/</a>)</li>
+</ul>
+</li>
+</ul>
+</body></html>

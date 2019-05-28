@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Fingerprint Web Server</title>
+</head><body><b>Summary</b><br/>
+Web &nbsp;server &nbsp;fingerprinting &nbsp;is &nbsp;a &nbsp;critical &nbsp;task &nbsp;for &nbsp;the &nbsp;penetration &nbsp;tester. &nbsp;Knowing the version and type of a running web server allows testers to determine known vulnerabilities and the appropriate exploits to use during testing.<br/>
+<br/>
+There &nbsp;are &nbsp;several &nbsp;different &nbsp;vendors &nbsp;and &nbsp;versions &nbsp;of &nbsp;web &nbsp;servers &nbsp;on &nbsp;the market today. Knowing the type of web server that is being test-ed &nbsp;significantly &nbsp;helps &nbsp;in &nbsp;the &nbsp;testing &nbsp;process &nbsp;and &nbsp;can &nbsp;also &nbsp;change &nbsp;the &nbsp;course of the test. <br/>
+<br/>
+This &nbsp;information &nbsp;can &nbsp;be &nbsp;derived &nbsp;by &nbsp;sending &nbsp;the &nbsp;web &nbsp;server &nbsp;specific &nbsp;commands &nbsp;and &nbsp;analyzing &nbsp;the &nbsp;output, &nbsp;as &nbsp;each &nbsp;version &nbsp;of &nbsp;web &nbsp;server &nbsp;software &nbsp;may &nbsp;respond &nbsp;differently &nbsp;to &nbsp;these &nbsp;commands. &nbsp;By &nbsp;knowing &nbsp;how &nbsp;each &nbsp;type &nbsp;of &nbsp;web &nbsp;server &nbsp;responds &nbsp;to &nbsp;specific &nbsp;commands &nbsp;and &nbsp;keeping this information in a web server fingerprint database, a pen-etration tester can send these commands to the web server, analyze the response, and compare it to the database of known signatures. Please note that it usually takes several different commands to accu-rately identify the web server, as different versions may react similarly to the same command. Rarely do different versions react the same to all HTTP commands. So by sending several different commands, the tester can increase the accuracy of their guess.<br/>
+<br/>
+<b>Test Objectives</b><br/>
+Find the version and type of a running web server to determine known vulnerabilities and the appropriate exploits to use during testing.<br/>
+<br/>
+<b>How to Test</b><br/>
+<b>Black Box testing</b><br/>
+<br/>
+The simplest and most basic form of identifying a web server is to look at the Server field in the HTTP response header. Netcat is used in this experiment.<br/>
+<br/>
+Consider the following HTTP Request-Response:<br/>
+$ nc 202.41.76.251 80<br/>
+HEAD / HTTP/1.0<br/>
+<br/>
+HTTP/1.1 200 OK<br/>
+Date: Mon, 16 Jun 2003 02:53:29 GMT<br/>
+Server: Apache/1.3.3 (Unix) &nbsp;(Red Hat/Linux)<br/>
+Last-Modified: Wed, 07 Oct 1998 11:18:14 GMT<br/>
+ETag: “1813-49b-361b4df6”<br/>
+Accept-Ranges: bytes<br/>
+Content-Length: 1179<br/>
+Connection: close<br/>
+Content-Type: text/html<br/>
+<br/>
+From &nbsp;the &nbsp;Server &nbsp;field, &nbsp;one &nbsp;can &nbsp;understand &nbsp;that &nbsp;the &nbsp;server &nbsp;is &nbsp;likely &nbsp;Apache, version 1.3.3, running on Linux operating system.Four examples of the HTTP response headers are shown below.<br/>
+<br/>
+From an Apache 1.3.23 server:<br/>
+HTTP/1.1 200 OK <br/>
+Date: Sun, 15 Jun 2003 17:10: 49 GMT <br/>
+Server: Apache/1.3.23 <br/>
+Last-Modified: Thu, 27 Feb 2003 03:48: 19 GMT <br/>
+ETag: 32417-c4-3e5d8a83 <br/>
+Accept-Ranges: bytes <br/>
+Content-Length: 196 <br/>
+Connection: close <br/>
+Content-Type: text/HTML<br/>
+<br/>
+From a Microsoft IIS 5.0 server:<br/>
+HTTP/1.1 200 OK <br/>
+Server: Microsoft-IIS/5.0 <br/>
+Expires: Yours, 17 Jun 2003 01:41: 33 GMT <br/>
+Date: Mon, 16 Jun 2003 01:41: 33 GMT <br/>
+Content-Type: text/HTML <br/>
+Accept-Ranges: bytes <br/>
+Last-Modified: Wed, 28 May 2003 15:32: 21 GMT <br/>
+ETag: b0aac0542e25c31: 89d <br/>
+Content-Length: 7369<br/>
+<br/>
+From a Netscape Enterprise 4.1 server:<br/>
+HTTP/1.1 200 OK <br/>
+Server: Netscape-Enterprise/4.1 <br/>
+Date: Mon, 16 Jun 2003 06:19: 04 GMT <br/>
+Content-type: text/HTML <br/>
+Last-modified: Wed, 31 Jul 2002 15:37: 56 GMT <br/>
+Content-length: 57 <br/>
+Accept-ranges: bytes <br/>
+Connection: close<br/>
+<br/>
+From a SunONE 6.1 server:<br/>
+HTTP/1.1 200 OK<br/>
+Server: Sun-ONE-Web-Server/6.1<br/>
+Date: Tue, 16 Jan 2007 14:53:45 GMT<br/>
+Content-length: 1186<br/>
+Content-type: text/html<br/>
+Date: Tue, 16 Jan 2007 14:50:31 GMT<br/>
+Last-Modified: Wed, 10 Jan 2007 09:58:26 GMT<br/>
+Accept-Ranges: bytes<br/>
+Connection: close<br/>
+<br/>
+However, &nbsp;this &nbsp;testing &nbsp;methodology &nbsp;is &nbsp;limited &nbsp;in &nbsp;accuracy. &nbsp;There &nbsp;are &nbsp;several techniques that allow a web site to obfuscate or to modify the server banner string. For example one could obtain the following an-swer:<br/>
+403 HTTP/1.1 Forbidden <br/>
+Date: Mon, 16 Jun 2003 02:41: 27 GMT <br/>
+Server: Unknown-Webserver/1.0 <br/>
+Connection: close <br/>
+Content-Type: text/HTML; charset=iso-8859-1<br/>
+<br/>
+In this case, the server field of that response is obfuscated. The tester &nbsp;cannot &nbsp;know &nbsp;what &nbsp;type &nbsp;of &nbsp;web &nbsp;server &nbsp;is &nbsp;running &nbsp;based &nbsp;on &nbsp;such &nbsp;information.<br/>
+<br/>
+<b>Protocol Behavior</b><br/>
+More refined techniques take in consideration various characteristics of the several web servers available on the market. Below is a list of some &nbsp;methodologies &nbsp;that &nbsp;allow &nbsp;testers &nbsp;to &nbsp;deduce &nbsp;the &nbsp;type &nbsp;of &nbsp;web server in use.<br/>
+<br/>
+<b>HTTP header field ordering</b><br/>
+The &nbsp;first &nbsp;method &nbsp;consists &nbsp;of &nbsp;observing &nbsp;the &nbsp;ordering &nbsp;of &nbsp;the &nbsp;several &nbsp;headers in the response. Every web server has an inner ordering of the header. Consider the following answers as an example:<br/>
+<br/>
+Response from Apache 1.3.23<br/>
+$ nc apache.example.com 80 <br/>
+HEAD / HTTP/1.0 <br/>
+<br/>
+HTTP/1.1 200 OK <br/>
+Date: Sun, 15 Jun 2003 17:10: 49 GMT <br/>
+Server: Apache/1.3.23 <br/>
+Last-Modified: Thu, 27 Feb 2003 03:48: 19 GMT <br/>
+ETag: 32417-c4-3e5d8a83 <br/>
+Accept-Ranges: bytes <br/>
+Content-Length: 196 <br/>
+Connection: close <br/>
+Content-Type: text/HTML<br/>
+<br/>
+Response from IIS 5.0<br/>
+$ nc iis.example.com 80 <br/>
+HEAD / HTTP/1.0 <br/>
+<br/>
+HTTP/1.1 200 OK <br/>
+Server: Microsoft-IIS/5.0 <br/>
+Content-Location: http://iis.example.com/Default.htm <br/>
+Date: Fri, 01 Jan 1999 20:13: 52 GMT <br/>
+Content-Type: text/HTML <br/>
+Accept-Ranges: bytes <br/>
+Last-Modified: Fri, 01 Jan 1999 20:13: 52 GMT <br/>
+ETag: W/e0d362a4c335be1: ae1 <br/>
+Content-Length: 133 <br/>
+<br/>
+Response from Netscape Enterprise 4.1<br/>
+$ nc netscape.example.com 80 <br/>
+HEAD / HTTP/1.0 <br/>
+<br/>
+HTTP/1.1 200 OK <br/>
+Server: Netscape-Enterprise/4.1 <br/>
+Date: Mon, 16 Jun 2003 06:01: 40 GMT <br/>
+Content-type: text/HTML <br/>
+Last-modified: Wed, 31 Jul 2002 15:37: 56 GMT <br/>
+Content-length: 57 <br/>
+Accept-ranges: bytes <br/>
+Connection: close<br/>
+<br/>
+Response from a SunONE 6.1<br/>
+$ nc sunone.example.com 80 <br/>
+HEAD / HTTP/1.0<br/>
+<br/>
+HTTP/1.1 200 OK<br/>
+Server: Sun-ONE-Web-Server/6.1<br/>
+Date: Tue, 16 Jan 2007 15:23:37 GMT<br/>
+Content-length: 0<br/>
+Content-type: text/html<br/>
+Date: Tue, 16 Jan 2007 15:20:26 GMT<br/>
+Last-Modified: Wed, 10 Jan 2007 09:58:26 GMT<br/>
+Connection: close<br/>
+<br/>
+We can notice that the ordering of the Date field and the Server field differs between Apache, Netscape Enterprise, and IIS.<br/>
+<br/>
+<b>Malformed requests test</b><br/>
+Another useful test to execute involves sending malformed requests or requests of nonexistent pages to the server. Consider the following HTTP responses.<br/>
+<br/>
+Response from Apache 1.3.23<br/>
+$ nc apache.example.com 80 <br/>
+GET / HTTP/3.0 <br/>
+<br/>
+HTTP/1.1 400 Bad Request <br/>
+Date: Sun, 15 Jun 2003 17:12: 37 GMT <br/>
+Server: Apache/1.3.23 <br/>
+Connection: close <br/>
+Transfer: chunked <br/>
+Content-Type: text/HTML; charset=iso-8859-1<br/>
+<br/>
+Response from IIS 5.0<br/>
+$ nc iis.example.com 80 <br/>
+GET / HTTP/3.0 <br/>
+<br/>
+HTTP/1.1 200 OK <br/>
+Server: Microsoft-IIS/5.0<br/>
+Content-Location: http://iis.example.com/Default.htm <br/>
+Date: Fri, 01 Jan 1999 20:14: 02 GMT <br/>
+Content-Type: text/HTML <br/>
+Accept-Ranges: bytes <br/>
+Last-Modified: Fri, 01 Jan 1999 20:14: 02 GMT <br/>
+ETag: W/e0d362a4c335be1: ae1 <br/>
+Content-Length: 133<br/>
+<br/>
+Response from Netscape Enterprise 4.1<br/>
+$ nc netscape.example.com 80 <br/>
+GET / HTTP/3.0<br/>
+<br/>
+HTTP/1.1 505 HTTP Version Not Supported <br/>
+Server: Netscape-Enterprise/4.1 <br/>
+Date: Mon, 16 Jun 2003 06:04: 04 GMT <br/>
+Content-length: 140 <br/>
+Content-type: text/HTML Connection: close<br/>
+<br/>
+Response from a SunONE 6.1<br/>
+$ nc sunone.example.com 80 <br/>
+GET / HTTP/3.0<br/>
+<br/>
+HTTP/1.1 400 Bad request<br/>
+Server: Sun-ONE-Web-Server/6.1<br/>
+Date: Tue, 16 Jan 2007 15:25:00 GMT<br/>
+Content-length: 0<br/>
+Content-type: text/html<br/>
+Connection: close<br/>
+<br/>
+We &nbsp;notice &nbsp;that &nbsp;every &nbsp;server &nbsp;answers &nbsp;in &nbsp;a &nbsp;different &nbsp;way. &nbsp;The &nbsp;answer &nbsp;also &nbsp;differs &nbsp;in &nbsp;the &nbsp;version &nbsp;of &nbsp;the &nbsp;server. &nbsp;Similar &nbsp;observations &nbsp;can &nbsp;be &nbsp;done &nbsp;we &nbsp;create &nbsp;requests &nbsp;with &nbsp;a &nbsp;non-existent &nbsp;HTTP &nbsp;method/verb. &nbsp;Consider the following responses:<br/>
+<br/>
+Response from Apache 1.3.23<br/>
+$ nc apache.example.com 80 <br/>
+GET / JUNK/1.0 <br/>
+<br/>
+HTTP/1.1 200 OK <br/>
+Date: Sun, 15 Jun 2003 17:17: 47 GMT <br/>
+Server: Apache/1.3.23 <br/>
+Last-Modified: Thu, 27 Feb 2003 03:48: 19 GMT <br/>
+ETag: 32417-c4-3e5d8a83 <br/>
+Accept-Ranges: bytes <br/>
+Content-Length: 196 <br/>
+Connection: close <br/>
+Content-Type: text/HTML<br/>
+<br/>
+Response from IIS 5.0<br/>
+$ nc iis.example.com 80 <br/>
+GET / JUNK/1.0 <br/>
+<br/>
+HTTP/1.1 400 Bad Request <br/>
+Server: Microsoft-IIS/5.0 <br/>
+Date: Fri, 01 Jan 1999 20:14: 34 GMT <br/>
+Content-Type: text/HTML <br/>
+Content-Length: 87<br/>
+<br/>
+Response from Netscape Enterprise 4.1<br/>
+$ nc netscape.example.com 80 <br/>
+GET / JUNK/1.0 <br/>
+<br/>
+&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Bad request&lt;/TITLE&gt;&lt;/HEAD&gt; &lt;BODY&gt;&lt;H1&gt;Bad request&lt;/H1&gt; <br/>
+Your browser sent to query this server could not understand. <br/>
+&lt;/BODY&gt;&lt;/HTML&gt;<br/>
+<br/>
+Response from a SunONE 6.1<br/>
+$ nc sunone.example.com 80 <br/>
+GET / JUNK/1.0<br/>
+<br/>
+&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Bad request&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;&lt;H1&gt;Bad request&lt;/H1&gt;Your browser sent a query this server could not understand.&lt;/BODY&gt;&lt;/HTML&gt;<br/>
+<br/>
+<b>Tools</b><br/>
+httprint - http://net-square.com/httprint.html<br/>
+httprecon - http://www.computec.ch/projekte/httprecon/<br/>
+Netcraft - http://www.netcraft.com<br/>
+Desenmascarame - http://desenmascara.me<br/>
+<br/>
+<b>Automated Testing</b><br/>
+Rather than rely on manual banner grabbing and analysis of the web server headers, a tester can use automated tools to achieve the same results. There are many tests to carry out in order to accurately finger-print a web server. Luckily, there are tools that automate these tests. “httprint” is one of such tools. httprint uses a signature dictionary that allows &nbsp;it &nbsp;to &nbsp;recognize &nbsp;the &nbsp;type &nbsp;and &nbsp;the &nbsp;version &nbsp;of &nbsp;the &nbsp;web &nbsp;server &nbsp;in &nbsp;use.<br/>
+<br/>
+<b>Online Testing</b><br/>
+Online &nbsp;tools &nbsp;can &nbsp;be &nbsp;used &nbsp;if &nbsp;the &nbsp;tester &nbsp;wishes &nbsp;to &nbsp;test &nbsp;more &nbsp;stealthily &nbsp;and doesn’t wish to directly connect to the target website. An example of an online tool that often delivers a lot of information about target Web &nbsp;Servers, &nbsp;is &nbsp;Netcraft. &nbsp;With &nbsp;this &nbsp;tool &nbsp;we &nbsp;can &nbsp;retrieve &nbsp;information &nbsp;about &nbsp;operating &nbsp;system, &nbsp;web &nbsp;server &nbsp;used, &nbsp;Server &nbsp;Uptime, &nbsp;Netblock &nbsp;Owner, history of change related to Web server and O.S.<br/>
+<br/>
+OWASP &nbsp;Unmaskme &nbsp;Project &nbsp;is &nbsp;expected &nbsp;to &nbsp;become &nbsp;another &nbsp;online &nbsp;tool to do fingerprinting of any website with an overall interpreta-tion of all the Web-metadata extracted. The idea behind this project is that anyone in charge of a website could test the metadata the site is showing to the world and assess it from a security point of view. While &nbsp;this &nbsp;project &nbsp;is &nbsp;still &nbsp;being &nbsp;developed, &nbsp;you &nbsp;can &nbsp;test &nbsp;a &nbsp;Spanish &nbsp;Proof of Concept of this idea.<br/>
+<br/>
+<b>References</b><br/>
+<b>Whitepapers</b><br/>
+Saumil Shah: “An &nbsp;Introduction &nbsp;to &nbsp;HTTP &nbsp;fingerprinting” &nbsp;- &nbsp;http://www.net-square.com/httprint_paper.html <br/>
+Anant &nbsp;Shrivastava: “Web &nbsp;Application &nbsp;Finger &nbsp;Printing” &nbsp;- &nbsp;http://anantshri.info/articles/web_app_finger_printing.html<br/>
+<br/>
+<b>Remediation</b><br/>
+Protect &nbsp;the &nbsp;presentation &nbsp;layer &nbsp;web &nbsp;server &nbsp;behind &nbsp;a &nbsp;hardened &nbsp;re-verse proxy.<br/>
+Obfuscate the presentation layer web server headers.<br/>
+Apache<br/>
+IIS</body></html>

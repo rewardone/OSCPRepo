@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>2017:A8 Insecure Deserialization</title>
+</head><body><img src="image.png" /><br/>
+<br/>
+Is the Application Vulnerable?<br/>
+Applications and APIs will be vulnerable if they deserialize hostile or tampered objects supplied by an attacker. <br/>
+This can result in two primary types of attacks:<br/>
+•Object and data structure related attacks where the attacker modifies application logic or achieves arbitrary remote code execution if there are classes available to the application that can change behavior during or after deserialization.<br/>
+•Typical data tampering attacks, such as access-control-related attacks, where existing data structures are used but the content is changed.<br/>
+<br/>
+Serialization may be used in applications for:<br/>
+•Remote-and inter-process communication (RPC/IPC) <br/>
+•Wire protocols, web services, message brokers<br/>
+•Caching/Persistence<br/>
+•Databases, cache servers, file systems <br/>
+•HTTP cookies, HTML form parameters, API authentication tokens <br/>
+<br/>
+How to Prevent<br/>
+The only safe architectural pattern is not to accept serialized objects from untrusted sources or to use serialization mediums that only permit primitive data types.<br/>
+If that is not possible, consider one of more of the following:<br/>
+•Implementing integrity checks such as digital signatures on any serialized objects to prevent hostile object creation or data tampering.<br/>
+•Enforcing strict type constraints during deserialization before object creation as the code typically expects a definable set of classes. Bypasses to this technique have been demonstrated, so reliance solely on this is not advisable.<br/>
+•Isolating and running code that deserializes in low privilege environments when possible.<br/>
+•Logging deserialization exceptions and failures, such as where the incoming type is not the expected type, or the deserialization throws exceptions.<br/>
+•Restricting or monitoring incoming and outgoing network connectivity from containers or servers that deserialize.<br/>
+•Monitoring deserialization, alerting if a user deserializes constantly.<br/>
+<br/>
+<br/>
+Example Attack Scenarios<br/>
+Scenario #1: A React application calls a set of Spring Boot microservices. Being functional programmers, they tried to ensure that their code is immutable. The solution they came up with is serializing user state and passing it back and forth with each request. An attacker notices the "R00" Java object signature, and uses the Java Serial Killer tool to gain remote code execution on the application server.<br/>
+<br/>
+Scenario #2: A PHP forum uses PHP object serialization to save a "super" cookie, containing the user's user ID, role, password hash, and other state:<br/>
+a:4:{i:0;i:132;i:1;s:7:"Mallory";i:2;s:4:"user";i:3;s:32:"b6a8b3bea87fe0e05022f8f3c88bc960";}<br/>
+<br/>
+An attacker changes the serialized object to give themselves admin privileges:<br/>
+a:4:{i:0;i:1;i:1;s:5:"Alice";i:2;s:5:"admin";i:3;s:32:"b6a8b3bea87fe0e05022f8f3c88bc960";}<br/>
+</body></html>

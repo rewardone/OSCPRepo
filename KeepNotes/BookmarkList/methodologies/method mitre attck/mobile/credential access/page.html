@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Credential Access</title>
+</head><body>&nbsp;Credential Access<br/>
+Credential access represents techniques that can be used by adversaries to obtain access to or control over passwords, tokens, cryptographic keys, or other values that could be used by an adversary to gain unauthorized access to resources. Credential access allows the adversary to assume the identity of an account, with all of that account's permissions on the system and network, and makes it harder for defenders to detect the adversary. With sufficient access within a network, an adversary can create accounts for later use within the environment. <br/>
+<br/>
+<br/>
+ID&#09;Name&#09;Description<br/>
+T1453&#09;Abuse Accessibility Features&#09;A malicious app could abuse Android's accessibility features to capture sensitive data or perform other malicious actions.<br/>
+<br/>
+T1413&#09;Access Sensitive Data in Device Logs&#09;On versions of Android prior to 4.1, an adversary may use a malicious application that holds the READ_LOGS permission to obtain private keys, passwords, other credentials, or other sensitive data stored in the device's system log. On Android 4.1 and later, an adversary would need to attempt to perform an operating system privilege escalation attack to be able to access the log.<br/>
+<br/>
+T1409&#09;Access Sensitive Data or Credentials in Files&#09;An adversary could attempt to read files that contain sensitive data or credentials (e.g., private keys, passwords, access tokens). This technique requires either escalated privileges or for the targeted app to have stored the data in an insecure manner (e.g., with insecure file permissions or in an insecure location such as an external storage directory).<br/>
+<br/>
+T1416&#09;Android Intent Hijacking&#09;A malicious app can register to receive intents meant for other applications and may then be able to receive sensitive values such as OAuth authorization codes.<br/>
+<br/>
+T1414&#09;Capture Clipboard Data&#09;A malicious app or other attack vector could capture sensitive data stored in the device clipboard, for example passwords being copy-and-pasted from a password manager app.<br/>
+<br/>
+T1412&#09;Capture SMS Messages&#09;A malicious application could capture sensitive data sent via SMS, including authentication credentials. SMS is frequently used to transmit codes used for multi-factor authentication.<br/>
+<br/>
+T1405&#09;Exploit TEE Vulnerability&#09;A malicious app or other attack vector could be used to exploit vulnerabilities in code running within the Trusted Execution Environment (TEE) . The adversary could then obtain privileges held by the TEE potentially including the ability to access cryptographic keys or other sensitive data . Escalated operating system privileges may be first required in order to have the ability to attack the TEE . If not, privileges within the TEE can potentially be used to exploit the operating system .<br/>
+<br/>
+T1417&#09;Malicious Third Party Keyboard App&#09;A malicious app can register as a device keyboard and intercept keypresses containing sensitive values such as usernames and passwords.<br/>
+<br/>
+T1410&#09;Network Traffic Capture or Redirection&#09;An adversary may capture network traffic to and from the device to obtain credentials or other sensitive data, or redirect network traffic to flow through an adversary-controlled gateway to do the same.<br/>
+<br/>
+T1415&#09;URL Scheme Hijacking&#09;An iOS application may be able to maliciously claim a URL scheme, allowing it to intercept calls that are meant for a different application. This technique, for example, could be used to capture OAuth authorization codes or to phish user credentials.<br/>
+<br/>
+T1411&#09;User Interface Spoofing&#09;User Interface Spoofing can be used to trick users into providing sensitive information, such as account credentials, bank account information, or Personally Identifiable Information (PII) to an unintended entity.</body></html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>2017:A9 Using Components with Known Vulnerabilities</title>
+</head><body><img src="image.png" /><br/>
+<br/>
+<b>Is the Application Vulnerable?</b><br/>
+You are likely vulnerable:<br/>
+•If you do not know the versions of all components you use (both client-side and server-side). This includes components you directly use as well as nested dependencies.<br/>
+•If software is vulnerable, unsupported, or out of date. This includes the OS, web/application server, database management system (DBMS), applications, APIs and all components, runtime environments, and libraries.<br/>
+•If you do not scan for vulnerabilities regularly and subscribe to security bulletins related to the components you use.<br/>
+•If you do not fix or upgrade the underlying platform, frameworks, and dependencies in a risk-based, timely fashion. This commonly happens in environments when patching is a monthly or quarterly task under change control, which leaves organizations open to many days or months of unnecessary exposure to fixed vulnerabilities.<br/>
+•If software developers do not test the compatibility of updated, upgraded, or patched libraries.<br/>
+•If you do not secure the components' configurations (seeA6:2017-Security Misconfiguration).<br/>
+<br/>
+<b>How to Prevent</b><br/>
+There should be a patch management process in place to:<br/>
+•Remove unused dependencies, unnecessary features, components, files, and documentation.<br/>
+•Continuously inventory the versions of both client-side and server-side components (e.g. frameworks, libraries) and their dependencies using tools likeversions,DependencyCheck,retire.js, etc. Continuously monitor sources likeCVEandNVDfor vulnerabilities in the components. Use software composition analysis tools to automate the process. Subscribe to email alerts for security vulnerabilities related to components you use.<br/>
+•Only obtain components from official sources over secure links. Prefer signed packages to reduce the chance of including a modified, malicious component.<br/>
+•Monitor for libraries and components that are unmaintained or do not create security patches for older versions. If patching is not possible, consider deploying a virtual patchto monitor, detect, or protect against the discovered issue.<br/>
+<br/>
+Every organization must ensure that there is an ongoing plan for monitoring, triaging, and applying updates or configuration changes for the lifetime of the application or portfolio.<br/>
+<br/>
+<b>Example Attack Scenarios</b><br/>
+Scenario #1: Components typically run with the same privileges as the application itself, so flaws in any component can result in serious impact. Such flaws can be accidental (e.g. coding error) or intentional (e.g. backdoor in component). Some example exploitable component vulnerabilities discovered are:<br/>
+•CVE-2017-5638, a Struts 2 remote code execution vulnerability that enables execution of arbitrary code on the server, has been blamed for significant breaches.<br/>
+•Whileinternet of things (IoT)are frequently difficult or impossible to patch, the importance of patching them can be great (e.g. biomedical devices).<br/>
+<br/>
+There are automated tools to help attackers find unpatched or misconfigured systems. For example, the ShodanIoT search engine can help youfind devicesthat still suffer from theHeartbleed vulnerabilitythat was patched in April 2014.<br/>
+<br/>
+<br/>
+</body></html>

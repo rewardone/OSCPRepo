@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Phase 2: During Definition and Design</title>
+</head><body><b>Phase 2: During Definition and Design</b><br/>
+<br/>
+<b>Phase 2.1: Review Security Requirements</b><br/>
+Security requirements define how an application works from a se-curity perspective. It is essential that the security requirements are tested. Testing in this case means testing the assumptions that are made in the requirements and testing to see if there are gaps in the requirements definitions.<br/>
+<br/>
+For example, if there is a security requirement that states that users must be registered before they can get access to the whitepapers section &nbsp;of &nbsp;a &nbsp;website, &nbsp;does &nbsp;this &nbsp;mean &nbsp;that &nbsp;the &nbsp;user &nbsp;must &nbsp;be &nbsp;regis-tered with the system or should the user be authenticated? Ensure that requirements are as unambiguous as possible.<br/>
+<br/>
+When &nbsp;looking &nbsp;for &nbsp;requirements &nbsp;gaps, &nbsp;consider &nbsp;looking &nbsp;at &nbsp;security &nbsp;mechanisms such as:<ul><li>User Management</li>
+<li>Authentication</li>
+<li>Authorization</li>
+<li>Data Confidentiality</li>
+<li>Integrity</li>
+<li>Accountability</li>
+<li>Session Management</li>
+<li>Transport Security</li>
+<li>Tiered System Segregation</li>
+<li>Legislative and standards compliance (including Privacy,Government and Industry standards)</li>
+</ul>
+<br/>
+<b>Phase 2.2: Review Design and Architecture</b><br/>
+Applications &nbsp;should &nbsp;have &nbsp;a &nbsp;documented &nbsp;design &nbsp;and &nbsp;architecture. &nbsp;This &nbsp;documentation &nbsp;can &nbsp;include &nbsp;models, &nbsp;textual &nbsp;documents, &nbsp;and &nbsp;other similar artifacts. It is essential to test these artifacts to ensure that the design and architecture enforce the appropriate level of se-curity as defined in the requirements.<br/>
+<br/>
+Identifying security flaws in the design phase is not only one of the most &nbsp;cost-efficient &nbsp;places &nbsp;to &nbsp;identify &nbsp;flaws, &nbsp;but &nbsp;can &nbsp;be &nbsp;one &nbsp;of &nbsp;the &nbsp;most effective places to make changes. For example, if it is identi-fied that the design calls for authorization decisions to be made in multiple places, it may be appropriate to consider a central autho-rization component. If the application is performing data validation at multiple places, it may be appropriate to develop a central valida-tion framework (ie, fixing input validation in one place, rather than in hundreds of places, is far cheaper).<br/>
+<br/>
+If weaknesses are discovered, they should be given to the system architect for alternative approaches.<br/>
+<br/>
+<b>Phase 2.3: Create and Review UML Models</b><br/>
+Once &nbsp; the &nbsp; design &nbsp; and &nbsp; architecture &nbsp; is &nbsp; complete, &nbsp; build &nbsp; Unified &nbsp; Modeling &nbsp; Language &nbsp; (UML) &nbsp; models &nbsp; that &nbsp; describe &nbsp; how &nbsp; the &nbsp; ap-plication &nbsp;works. &nbsp;In &nbsp;some &nbsp;cases, &nbsp;these &nbsp;may &nbsp;already &nbsp;be &nbsp;available.Use these models to confirm with the systems designers an exact understanding of how the application works. If weaknesses are dis-covered, they should be given to the system architect for alternative approaches.<br/>
+<br/>
+<b>Phase 2.4: Create and Review Threat Models</b><br/>
+Armed &nbsp;with &nbsp;design &nbsp;and &nbsp;architecture &nbsp;reviews &nbsp;and &nbsp;the &nbsp;UML &nbsp;models &nbsp;explaining exactly how the system works, undertake a threat mod-eling exercise. Develop realistic threat scenarios. Analyze the design and architecture to ensure that these threats have been mitigated, accepted &nbsp;by &nbsp;the &nbsp;business, &nbsp;or &nbsp;assigned &nbsp;to &nbsp;a &nbsp;third &nbsp;party, &nbsp;such &nbsp;as &nbsp;an &nbsp;insurance firm. When identified threats have no mitigation strate-gies, revisit the design and architecture with the systems architect to modify the design.</body></html>

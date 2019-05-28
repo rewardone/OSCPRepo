@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Whats Next for Organizations</string>
+  <key>nodeid</key><string>8c0dc6fc-88fa-45d2-894a-c3eb40dc8150</string>
+  <key>modified_time</key><integer>1558880814</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1558880404</integer>
+  <key>order</key><integer>13</integer>
+</dict>
+</node>

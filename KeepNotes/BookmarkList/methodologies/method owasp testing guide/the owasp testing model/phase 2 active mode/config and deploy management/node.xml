@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Config and Deploy Management</string>
+  <key>nodeid</key><string>cd86bc72-0acb-471a-a34d-6b975a1c1792</string>
+  <key>modified_time</key><integer>1559010650</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1559010620</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

@@ -6,13 +6,13 @@
   <key>duplicate_of</key><string>87f007dc-2445-44a9-a0bb-7849d41897e7</string>
   <key>nodeid</key><string>54efcc61-7d6d-4804-9b9a-1188e08812b2</string>
   <key>modified_time</key><integer>1515423875</integer>
-  <key>expanded2</key><true/>
+  <key>expanded2</key><false/>
   <key>content_type</key><string>application/x-notebook-dir</string>
   <key>created_time</key><integer>1515423875</integer>
   <key>info_sort_dir</key><integer>1</integer>
   <key>title</key><string>Other Writeups</string>
   <key>version</key><integer>6</integer>
-  <key>order</key><integer>13</integer>
+  <key>order</key><integer>15</integer>
   <key>info_sort</key><string>order</string>
 </dict>
 </node>

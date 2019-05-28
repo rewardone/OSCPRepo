@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>PRE-Attack</string>
+  <key>nodeid</key><string>25000860-0355-45ab-9b05-45f9afad1ec2</string>
+  <key>modified_time</key><integer>1558826899</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>application/x-notebook-dir</string>
+  <key>created_time</key><integer>1558826899</integer>
+  <key>order</key><integer>12</integer>
+</dict>
+</node>

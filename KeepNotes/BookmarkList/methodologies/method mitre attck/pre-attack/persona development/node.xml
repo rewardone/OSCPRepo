@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Persona Development</string>
+  <key>nodeid</key><string>c62edb0e-8b3e-40c1-ab6b-485427d2c007</string>
+  <key>modified_time</key><integer>1558827836</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1558827048</integer>
+  <key>order</key><integer>13</integer>
+</dict>
+</node>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Bug Bounty Template Writing</string>
+  <key>nodeid</key><string>40b7410b-8a36-4186-b1aa-776cc9a3e526</string>
+  <key>modified_time</key><integer>1558831151</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1558831126</integer>
+  <key>order</key><integer>0</integer>
+</dict>
+</node>

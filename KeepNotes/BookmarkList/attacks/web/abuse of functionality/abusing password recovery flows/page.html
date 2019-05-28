@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Abusing Password Recovery Flows</title>
+</head><body>This is becoming a larger target as applications become more hardened through frameworks or other mitigations. <br/>
+<br/>
+<br/>
+Abusing Password Recovery Flows <br/>
+Password recovery flows can often be abused to leak data about accounts that would otherwise be secret. Although usernames on many websites are public knowledge, many sites such as online banks do not reveal a username except to the owner of that account.<br/>
+&nbsp;<br/>
+Some password recovery flows perform the following steps:<br/>
+&nbsp;<ul><li>Ask user for username/email</li>
+<li>Message the user that a mail has been sent to their account</li>
+<li>Send user a link allowing them to change their password</li>
+</ul>
+<br/>
+In these types of recovery flows there can be information leakage in step-2 by confirming that the user entered a valid email address and/or account name. This can be avoided by having generic messaging on this flow or requiring more specific information about the account before sending a reset email.<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Organizational Weakness Identification</string>
+  <key>nodeid</key><string>876cda58-8d18-41fd-8e77-5337a30b479c</string>
+  <key>modified_time</key><integer>1558827649</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1558827022</integer>
+  <key>order</key><integer>10</integer>
+</dict>
+</node>

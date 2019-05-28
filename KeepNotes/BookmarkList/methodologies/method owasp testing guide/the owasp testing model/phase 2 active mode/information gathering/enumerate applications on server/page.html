@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Enumerate Applications on Server</title>
+</head><body>Summary<br/>
+A &nbsp;paramount &nbsp;step &nbsp;in &nbsp;testing &nbsp;for &nbsp;web &nbsp;application &nbsp;vulnerabilities &nbsp;is &nbsp;to &nbsp;find &nbsp;out &nbsp;which &nbsp;particular &nbsp;applications &nbsp;are &nbsp;hosted &nbsp;on &nbsp;a &nbsp;web &nbsp;server. &nbsp;Many applications have known vulnerabilities and known attack strat-egies that can be exploited in order to gain remote control or to exploit data. &nbsp;In &nbsp;addition, &nbsp;many &nbsp;applications &nbsp;are &nbsp;often &nbsp;misconfigured &nbsp;or &nbsp;not &nbsp;updated, due to the perception that they are only used “internally” and therefore no threat exists.<br/>
+<br/>
+With &nbsp;the &nbsp;proliferation &nbsp;of &nbsp;virtual &nbsp;web &nbsp;servers, &nbsp;the &nbsp;traditional &nbsp;1:1-type &nbsp;relationship &nbsp;between &nbsp;an &nbsp;IP &nbsp;address &nbsp;and &nbsp;a &nbsp;web &nbsp;server &nbsp;is &nbsp;losing &nbsp;much &nbsp;of &nbsp;its &nbsp;original &nbsp;significance. &nbsp;It &nbsp;is &nbsp;not &nbsp;uncommon &nbsp;to &nbsp;have &nbsp;multiple &nbsp;web &nbsp;sites &nbsp;or &nbsp;applications &nbsp;whose &nbsp;symbolic &nbsp;names &nbsp;resolve &nbsp;to &nbsp;the &nbsp;same &nbsp;IP &nbsp;address. This scenario is not limited to hosting environments, but also applies to ordinary corporate environments as well.<br/>
+<br/>
+Security professionals are sometimes given a set of IP addresses as a target to test. It is arguable that this scenario is more akin to a pene-tration test-type engagement, but in any case it is expected that such an assignment would test all web applications accessible through this target. The problem is that the given IP address hosts an HTTP service on port 80, but if a tester should access it by specifying the IP address (which is all they know) it reports “No web server configured at this ad-dress” or a similar message. But that system could “hide” a number of web applications, associated to unrelated symbolic (DNS) names. Obviously, the extent of the analysis is deeply affected by the tester tests all applications or only tests the applications that they are aware of.<br/>
+<br/>
+Sometimes, the target specification is richer. The tester may be given a &nbsp;list &nbsp;of &nbsp;IP &nbsp;addresses &nbsp;and &nbsp;their &nbsp;corresponding &nbsp;symbolic &nbsp;names. &nbsp;Nevertheless, &nbsp;this &nbsp;list &nbsp;might &nbsp;convey &nbsp;partial &nbsp;information, &nbsp;i.e., &nbsp;it &nbsp;could &nbsp;omit &nbsp;some &nbsp;symbolic &nbsp;names &nbsp;and &nbsp;the &nbsp;client &nbsp;may &nbsp;not &nbsp;even &nbsp;being &nbsp;aware &nbsp;of &nbsp;that (this is more likely to happen in large organizations).<br/>
+<br/>
+Other &nbsp;issues &nbsp;affecting &nbsp;the &nbsp;scope &nbsp;of &nbsp;the &nbsp;assessment &nbsp;are &nbsp;represented &nbsp;by web applications published at non-obvious URLs (e.g., http://www.example.com/some-strange-URL), &nbsp;which &nbsp;are &nbsp;not &nbsp;referenced &nbsp;elsewhere. This may happen either by error (due to misconfigurations), or intentionally (for example, unadvertised administrative interfaces).<br/>
+<br/>
+To &nbsp;address &nbsp;these &nbsp;issues, &nbsp;it &nbsp;is &nbsp;necessary &nbsp;to &nbsp;perform &nbsp;web &nbsp;application &nbsp;discovery.<br/>
+<br/>
+<b>Test Objectives</b><br/>
+Enumerate the applications within scope that exist on a web server<br/>
+<br/>
+<b>How to Test<br/>
+</b><b>Black Box Testing</b><br/>
+Web application discovery is a process aimed at identifying web ap-plications on a given infrastructure. The latter is usually specified as a set of IP addresses (maybe a net block), but may consist of a set of DNS symbolic names or a mix of the two. This information is hand-ed out prior to the execution of an assessment, be it a classic-style penetration &nbsp;test &nbsp;or &nbsp;an &nbsp;application-focused &nbsp;assessment. &nbsp;In &nbsp;both &nbsp;cases, unless the rules of engagement specify otherwise (e.g., “test only the application located at the URL http://www.example.com/”), the &nbsp;assessment &nbsp;should &nbsp;strive &nbsp;to &nbsp;be &nbsp;the &nbsp;most &nbsp;comprehensive &nbsp;in &nbsp;scope, &nbsp;i.e. &nbsp;it &nbsp;should &nbsp;identify &nbsp;all &nbsp;the &nbsp;applications &nbsp;accessible &nbsp;through &nbsp;the given target. The following examples examine a few techniques that can be employed to achieve this goal.<br/>
+<br/>
+<b>Note</b>: Some &nbsp;of &nbsp;the &nbsp;following &nbsp;techniques &nbsp;apply &nbsp;to &nbsp;Internet-facing &nbsp;web &nbsp;servers, &nbsp;namely &nbsp;DNS &nbsp;and &nbsp;reverse-IP &nbsp;web-based &nbsp;search &nbsp;ser-vices and the use of search engines. Examples make use of private IP addresses (such as 192.168.1.100), which, unless indicated oth-erwise, represent generic IP addresses and are used only for ano-nymity purposes.<br/>
+<br/>
+There &nbsp;are &nbsp;three &nbsp;factors &nbsp;influencing &nbsp;how &nbsp;many &nbsp;applications &nbsp;are &nbsp;re-lated to a given DNS name (or an IP address):<br/>
+<br/>
+<b>1. Different base URL</b><br/>
+The &nbsp;obvious &nbsp;entry &nbsp;point &nbsp;for &nbsp;a &nbsp;web &nbsp;application &nbsp;is &nbsp;www.example.com, i.e., with this shorthand notation we think of the web applica-tion originating at http://www.example.com/ (the same applies for https). &nbsp;However, &nbsp;even &nbsp;though &nbsp;this &nbsp;is &nbsp;the &nbsp;most &nbsp;common &nbsp;situation, &nbsp;there is nothing forcing the application to start at “/”.<br/>
+<br/>
+For example, the same symbolic name may be associated to three web &nbsp; applications &nbsp; such &nbsp; as: &nbsp; http://www.example.com/url1 &nbsp; http://www.example.com/url2 http://www.example.com/url3<br/>
+<br/>
+In &nbsp;this &nbsp;case, &nbsp;the &nbsp;URL &nbsp;http://www.example.com/ &nbsp;would &nbsp;not &nbsp;be &nbsp;as-sociated with a meaningful page, and the three applications would be “hidden”, unless the tester explicitly knows how to reach them, i.e., the tester knows url1, url2 or url3. There is usually no need to publish web applications in this way, unless the owner doesn’t want them to be accessible in a standard way, and is prepared to inform the users about their exact location. This doesn’t mean that these applications are secret, just that their existence and location is not explicitly advertised.<br/>
+<br/>
+<b>2. Non-standard ports</b><br/>
+While web applications usually live on port 80 (http) and 443 (https), there is nothing magic about these port numbers. In fact, web ap-plications &nbsp;may &nbsp;be &nbsp;associated &nbsp;with &nbsp;arbitrary &nbsp;TCP &nbsp;ports, &nbsp;and &nbsp;can &nbsp;be &nbsp;referenced by specifying the port number as follows: http[s]://www.example.com:port/. For example, http://www.example.com:20000/.<br/>
+<br/>
+<b>3. Virtual hosts</b><br/>
+DNS &nbsp;allows &nbsp;a &nbsp;single &nbsp;IP &nbsp;address &nbsp;to &nbsp;be &nbsp;associated &nbsp;with &nbsp;one &nbsp;or &nbsp;more &nbsp;symbolic &nbsp;names. &nbsp;For &nbsp;example, &nbsp;the &nbsp;IP &nbsp;address &nbsp;192.168.1.100 &nbsp;might &nbsp;be &nbsp;associated &nbsp;to &nbsp;DNS &nbsp;names &nbsp;www.example.com, &nbsp;helpdesk.example.com, &nbsp;webmail.example.com. &nbsp;It &nbsp;is &nbsp;not &nbsp;necessary &nbsp;that &nbsp;all &nbsp;the &nbsp;names &nbsp;belong to the same DNS domain. This 1-to-N relationship may be re-flected to serve different content by using so called virtual hosts. The information &nbsp;specifying &nbsp;the &nbsp;virtual &nbsp;host &nbsp;we &nbsp;are &nbsp;referring &nbsp;to &nbsp;is &nbsp;embed-ded in the HTTP 1.1 Host: header [1].<br/>
+<br/>
+One would not suspect the existence of other web applications in ad-dition &nbsp;to &nbsp;the &nbsp;obvious &nbsp;www.example.com, &nbsp;unless &nbsp;they &nbsp;know &nbsp;of &nbsp;help-desk.example.com and webmail.example.com.<br/>
+<br/>
+<b>Approaches to address issue 1 - non-standard URLs</b><br/>
+There &nbsp;is &nbsp;no &nbsp;way &nbsp;to &nbsp;fully &nbsp;ascertain &nbsp;the &nbsp;existence &nbsp;of &nbsp;non-standard-named web applications. Being non-standard, there is no fixed crite-ria governing the naming convention, however there are a number of techniques that the tester can use to gain some additional insight.<br/>
+<br/>
+First, if the web server is mis-configured and allows directory brows-ing, it may be possible to spot these applications. Vulnerability scan-ners may help in this respect.<br/>
+<br/>
+Second, &nbsp;these &nbsp;applications &nbsp;may &nbsp;be &nbsp;referenced &nbsp;by &nbsp;other &nbsp;web &nbsp;pages &nbsp;and &nbsp;there &nbsp;is &nbsp;a &nbsp;chance &nbsp;that &nbsp;they &nbsp;have &nbsp;been &nbsp;spidered &nbsp;and &nbsp;indexed &nbsp;by &nbsp;web search engines. If testers suspect the existence of such “hidden” applications &nbsp;on &nbsp;www.example.com &nbsp;they &nbsp;could &nbsp;search &nbsp;using &nbsp;the &nbsp;site &nbsp;operator and examining the result of a query for “site: www.example.com”. Among the returned URLs there could be one pointing to such a non-obvious application.<br/>
+<br/>
+Another option is to probe for URLs which might be likely candidates for non-published applications. For example, a web mail front end might be accessible from URLs such as https://www.example.com/webmail,https://webmail.example.com/, &nbsp; &nbsp;or &nbsp; &nbsp;https://mail.example.com/. &nbsp; &nbsp;The &nbsp; &nbsp;same holds for administrative interfaces, which may be published at hidden URLs (for example, a Tomcat administrative interface), and yet not referenced anywhere. So doing a bit of dictionary-style searching (or “intelligent guessing”) could yield some results. Vulnerability scan-ners may help in this respect.<br/>
+<br/>
+<b>Approaches to address issue 2 - non-standard ports</b><br/>
+It is easy to check for the existence of web applications on non-stan-dard ports. A port scanner such as nmap [2] is capable of performing service recognition by means of the -sV option, and will identify http[s] services on arbitrary ports. What is required is a full scan of the whole 64k TCP port address space.<br/>
+<br/>
+For example, the following command will look up, with a TCP connect scan, all open ports on IP 192.168.1.100 and will try to determine what services are bound to them (only essential switches are shown – nmap features a broad set of options, whose discussion is out of scope):<br/>
+nmap –PN –sT –sV –p0-65535 192.168.1.100<br/>
+<br/>
+It &nbsp;is &nbsp;sufficient &nbsp;to &nbsp;examine &nbsp;the &nbsp;output &nbsp;and &nbsp;look &nbsp;for &nbsp;http &nbsp;or &nbsp;the &nbsp;indi-cation of SSL-wrapped services (which should be probed to confirm that they are https). For example, the output of the previous command could look like<br/>
+<br/>
+901/tcp &nbsp; open &nbsp;http &nbsp; &nbsp; &nbsp; &nbsp;Samba SWAT administration server<br/>
+1241/tcp &nbsp;open &nbsp;ssl &nbsp; &nbsp; &nbsp; &nbsp; Nessus security scanner<br/>
+3690/tcp &nbsp;open &nbsp;unknown<br/>
+8000/tcp &nbsp;open &nbsp;http-alt?<br/>
+8080/tcp &nbsp;open &nbsp;http &nbsp; &nbsp; &nbsp; &nbsp;Apache Tomcat/Coyote JSP engine 1.1<br/>
+<br/>
+From this example, one see that:<br/>
+There is an Apache http server running on port 80.I<br/>
+t looks like there is an https server on port 443 (but this needs tobe confirmed, for example, by visiting https://192.168.1.100 with a browser).<br/>
+On port 901 there is a Samba SWAT web interface.<br/>
+The service on port 1241 is not https, but is the SSL-wrapped Nessusdaemon.<br/>
+Port 3690 features an unspecified service (nmap gives back itsfingerprint &nbsp;- &nbsp;here &nbsp;omitted &nbsp;for &nbsp;clarity &nbsp;- &nbsp;together &nbsp;with &nbsp;instructions &nbsp;to &nbsp;submit &nbsp;it &nbsp;for &nbsp;incorporation &nbsp;in &nbsp;the &nbsp;nmap &nbsp;fingerprint &nbsp;database, &nbsp;provided you know which service it represents).<br/>
+Another unspecified service on port 8000; this might possibly behttp, since it is not uncommon to find http servers on this port. Let’s examine this issue:<br/>
+<br/>
+Interesting ports on 192.168.1.100:<br/>
+(The &nbsp;65527 &nbsp;ports &nbsp;scanned &nbsp;but &nbsp;not &nbsp;shown &nbsp;below &nbsp;are &nbsp;in &nbsp;state: &nbsp;closed)<br/>
+PORT &nbsp; &nbsp; &nbsp;STATE SERVICE &nbsp; &nbsp; VERSION<br/>
+22/tcp &nbsp; &nbsp;open &nbsp;ssh &nbsp; &nbsp; &nbsp; &nbsp; OpenSSH 3.5p1 (protocol 1.99)<br/>
+80/tcp &nbsp; &nbsp;open &nbsp;http &nbsp; &nbsp; &nbsp; &nbsp;Apache httpd 2.0.40 ((Red Hat Linux))<br/>
+443/tcp &nbsp; open &nbsp;ssl &nbsp; &nbsp; &nbsp; &nbsp; OpenSSL<br/>
+<br/>
+This &nbsp;confirms &nbsp;that &nbsp;in &nbsp;fact &nbsp;it &nbsp;is &nbsp;an &nbsp;HTTP &nbsp;server. &nbsp;Alternatively, &nbsp;testers &nbsp;could &nbsp;have &nbsp;visited &nbsp;the &nbsp;URL &nbsp;with &nbsp;a &nbsp;web &nbsp;browser; &nbsp;or &nbsp;used &nbsp;the &nbsp;GET &nbsp;or &nbsp;HEAD &nbsp;Perl &nbsp;commands, &nbsp;which &nbsp;mimic &nbsp;HTTP &nbsp;interactions &nbsp;such &nbsp;as &nbsp;the &nbsp;one given above (however HEAD requests may not be honored by all servers).<br/>
+<br/>
+Apache Tomcat running on port 8080.<br/>
+<br/>
+The same task may be performed by vulnerability scanners, but first check &nbsp;that &nbsp;the &nbsp;scanner &nbsp;of &nbsp;choice &nbsp;is &nbsp;able &nbsp;to &nbsp;identify &nbsp;http[s] &nbsp;services &nbsp;running on non-standard ports. For example, Nessus [3] is capable of identifying them on arbitrary ports (provided it is instructed to scan all the ports), and will provide, with respect to nmap, a number of tests on &nbsp;known &nbsp;web &nbsp;server &nbsp;vulnerabilities, &nbsp;as &nbsp;well &nbsp;as &nbsp;on &nbsp;the &nbsp;SSL &nbsp;configu-ration of https services. As hinted before, Nessus is also able to spot popular applications or web interfaces which could otherwise go un-noticed (for example, a Tomcat administrative interface).<br/>
+<br/>
+<b>Approaches to address issue 3 - virtual hosts</b><br/>
+There are a number of techniques which may be used to identify DNS names associated to a given IP address x.y.z.t.<br/>
+<br/>
+<b>DNS zone transfers</b><br/>
+This &nbsp;technique &nbsp;has &nbsp;limited &nbsp;use &nbsp;nowadays, &nbsp;given &nbsp;the &nbsp;fact &nbsp;that &nbsp;zone transfers &nbsp;are &nbsp;largely &nbsp;not &nbsp;honored &nbsp;by &nbsp;DNS &nbsp;servers. &nbsp;However, &nbsp;it &nbsp;may &nbsp;be worth a try. First of all, testers must determine the name servers serving &nbsp;x.y.z.t. &nbsp;If &nbsp;a &nbsp;symbolic &nbsp;name &nbsp;is &nbsp;known &nbsp;for &nbsp;x.y.z.t &nbsp;(let &nbsp;it &nbsp;be &nbsp;www.example.com), its name servers can be determined by means of tools such as nslookup, host, or dig, by requesting DNS NS records.<br/>
+<br/>
+If &nbsp;no &nbsp;symbolic &nbsp;names &nbsp;are &nbsp;known &nbsp;for &nbsp;x.y.z.t, &nbsp;but &nbsp;the &nbsp;target &nbsp;definition &nbsp;contains at least a symbolic name, testers may try to apply the same process &nbsp;and &nbsp;query &nbsp;the &nbsp;name &nbsp;server &nbsp;of &nbsp;that &nbsp;name &nbsp;(hoping &nbsp;that &nbsp;x.y.z.t &nbsp;will be served as well by that name server). For example, if the target consists of the IP address x.y.z.t and the name mail.example.com, de-termine the name servers for domain example.com.<br/>
+<br/>
+The &nbsp;following &nbsp;example &nbsp;shows &nbsp;how &nbsp;to &nbsp;identify &nbsp;the &nbsp;name &nbsp;servers &nbsp;for &nbsp;www.owasp.org by using the host command:<br/>
+$ host -t ns www.owasp.org<br/>
+www.owasp.org is an alias for owasp.org.<br/>
+owasp.org name server ns1.secure.net.<br/>
+owasp.org name server ns2.secure.net.<br/>
+<br/>
+A &nbsp;zone &nbsp;transfer &nbsp;may &nbsp;now &nbsp;be &nbsp;requested &nbsp;to &nbsp;the &nbsp;name &nbsp;servers &nbsp;for &nbsp;do-main example.com. If the tester is lucky, they will get back a list of the DNS entries for this domain. This will include the obvious www.exam-ple.com and the not-so-obvious helpdesk.example.com and webmail.example.com &nbsp;(and &nbsp;possibly &nbsp;others). &nbsp;Check &nbsp;all &nbsp;names &nbsp;returned &nbsp;by &nbsp;the &nbsp;zone transfer and consider all of those which are related to the target being evaluated.<br/>
+<br/>
+Trying to request a zone transfer for owasp.org from one of its name servers:<br/>
+$ host -l www.owasp.org ns1.secure.net<br/>
+Using domain server:<br/>
+Name: ns1.secure.net<br/>
+Address: 192.220.124.10#53<br/>
+Aliases:<br/>
+<br/>
+Host www.owasp.org not found: 5(REFUSED); Transfer failed.<br/>
+<br/>
+<b>DNS inverse queries</b><br/>
+This process is similar to the previous one, but relies on inverse (PTR) DNS &nbsp;records. &nbsp;Rather &nbsp;than &nbsp;requesting &nbsp;a &nbsp;zone &nbsp;transfer, &nbsp;try &nbsp;setting &nbsp;the &nbsp;record &nbsp;type &nbsp;to &nbsp;PTR &nbsp;and &nbsp;issue &nbsp;a &nbsp;query &nbsp;on &nbsp;the &nbsp;given &nbsp;IP &nbsp;address. &nbsp;If &nbsp;the &nbsp;testers are lucky, they may get back a DNS name entry. This technique relies &nbsp;on &nbsp;the &nbsp;existence &nbsp;of &nbsp;IP-to-symbolic &nbsp;name &nbsp;maps, &nbsp;which &nbsp;is &nbsp;not &nbsp;guaranteed.<br/>
+<br/>
+<b>Web-based DNS searches</b><br/>
+This &nbsp;kind &nbsp;of &nbsp;search &nbsp;is &nbsp;akin &nbsp;to &nbsp;DNS &nbsp;zone &nbsp;transfer, &nbsp;but &nbsp;relies &nbsp;on &nbsp;web-based &nbsp;services &nbsp;that &nbsp;enable &nbsp;name-based &nbsp;searches &nbsp;on &nbsp;DNS. &nbsp;One &nbsp;such &nbsp;service &nbsp;is &nbsp;the &nbsp;Netcraft &nbsp;Search &nbsp;DNS &nbsp;service, &nbsp;available &nbsp;at &nbsp;http://searchdns.netcraft.com/?host. &nbsp;The &nbsp;tester &nbsp;may &nbsp;query &nbsp;for &nbsp;a &nbsp;list &nbsp;of &nbsp;names &nbsp;belonging &nbsp;to &nbsp;your &nbsp;domain &nbsp;of &nbsp;choice, &nbsp;such &nbsp;as &nbsp;example.com. &nbsp;Then they will check whether the names they obtained are pertinent to the target they are examining.<br/>
+<br/>
+<b>Reverse-IP services</b><br/>
+Reverse-IP &nbsp;services &nbsp;are &nbsp;similar &nbsp;to &nbsp;DNS &nbsp;inverse &nbsp;queries, &nbsp;with &nbsp;the &nbsp;dif-ference &nbsp;that &nbsp;the &nbsp;testers &nbsp;query &nbsp;a &nbsp;web-based &nbsp;application &nbsp;instead &nbsp;of &nbsp;a &nbsp;name server. There are a number of such services available. Since they tend &nbsp;to &nbsp;return &nbsp;partial &nbsp;(and &nbsp;often &nbsp;different) &nbsp;results, &nbsp;it &nbsp;is &nbsp;better &nbsp;to &nbsp;use &nbsp;multiple services to obtain a more comprehensive analysis.<br/>
+<br/>
+Domain &nbsp;tools &nbsp;reverse &nbsp;IP: &nbsp;http://www.domaintools.com/reverse-ip/ &nbsp;(requires free membership)<br/>
+MSN search:http://search.msn.com syntax: “ip:x.x.x.x” (without the quotes)<br/>
+Webhosting info: http://whois.webhosting.info/ syntax: http://whois.webhosting.info/x.x.x.x<br/>
+DNSstuff: http://www.dnsstuff.com/ (multiple services available)<br/>
+http://www.net-square.com/mspawn.html (multiple queries on domains and IP addresses, requires installation)<br/>
+tomDNS:http://www.tomdns.net/index.php (some services are still private at the time of writing)<br/>
+SEOlogs.com: http://www.seologs.com/ip-domains.html (re-verse-IP/domain lookup)<br/>
+<br/>
+The following example shows the result of a query to one of the above reverse-IP services to 216.48.3.18, the IP address of www.owasp.org. Three additional non-obvious symbolic names mapping to the same address have been revealed.<br/>
+<br/>
+<b>Googling</b><br/>
+Following &nbsp;information &nbsp;gathering &nbsp;from &nbsp;the &nbsp;previous &nbsp;techniques, &nbsp;tes-ters can rely on search engines to possibly refine and increment their analysis. &nbsp;This &nbsp;may &nbsp;yield &nbsp;evidence &nbsp;of &nbsp;additional &nbsp;symbolic &nbsp;names &nbsp;be-longing to the target, or applications accessible via non-obvious URLs.<br/>
+<br/>
+For &nbsp; instance, &nbsp; considering &nbsp; the &nbsp; previous &nbsp; example &nbsp; regarding &nbsp; www.owasp.org, &nbsp;the &nbsp;tester &nbsp;could &nbsp;query &nbsp;Google &nbsp;and &nbsp;other &nbsp;search &nbsp;engines &nbsp;looking for information (hence, DNS names) related to the newly dis-covered &nbsp;domains &nbsp;of &nbsp;webgoat.org, &nbsp;webscarab.com, &nbsp;and &nbsp;webscarab.net.<br/>
+<br/>
+Googling &nbsp;techniques &nbsp;are &nbsp;explained &nbsp;in &nbsp;Testing: &nbsp;Spiders, &nbsp;Robots, &nbsp;and &nbsp;Crawlers.<br/>
+<br/>
+<b>Gray Box Testing</b><br/>
+Not applicable. The methodology remains the same as listed in Black Box testing no matter how much information the tester starts with.<br/>
+<br/>
+<b>Tools</b><br/>
+DNS lookup tools such as nslookup, dig and similar.<br/>
+Search engines (Google, Bing and other major search engines).<br/>
+Specialized DNS-related web-based search service: see text.<br/>
+Nmap - http://www.insecure.org<br/>
+Nessus Vulnerability Scanner - http://www.nessus.org<br/>
+Nikto - http://www.cirt.net/nikto2<br/>
+<br/>
+<b>References<br/>
+</b><b>Whitepapers</b>&nbsp;<br/>
+[1] RFC 2616 – Hypertext Transfer Protocol – HTTP 1.1<br/>
+</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Stage Capabilities</string>
+  <key>nodeid</key><string>14e5124d-5013-4db3-9587-57b29d0a2b40</string>
+  <key>modified_time</key><integer>1558827969</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1558827058</integer>
+  <key>order</key><integer>16</integer>
+</dict>
+</node>

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Search Discovery</title>
+</head><body><b>Summary</b><br/>
+There &nbsp;are &nbsp;direct &nbsp;and &nbsp;indirect &nbsp;elements &nbsp;to &nbsp;search &nbsp;engine &nbsp;discovery &nbsp;and &nbsp;reconnaissance. &nbsp;Direct &nbsp;methods &nbsp;relate &nbsp;to &nbsp;searching &nbsp;the &nbsp;indexes &nbsp;and &nbsp;the &nbsp;associated &nbsp;content &nbsp;from &nbsp;caches. &nbsp;Indirect &nbsp;methods &nbsp;relate &nbsp;to &nbsp;gleaning sensitive design and configuration information by searching forums, newsgroups, and tendering websites.<br/>
+<br/>
+Once a search engine robot has completed crawling, it commences in-dexing the web page based on tags and associated attributes, such as &lt;TITLE&gt;, in order to return the relevant search results [1]. If the robots.txt &nbsp;file &nbsp;is &nbsp;not &nbsp;updated &nbsp;during &nbsp;the &nbsp;lifetime &nbsp;of &nbsp;the &nbsp;web &nbsp;site, &nbsp;and &nbsp;inline &nbsp;HTML &nbsp;meta &nbsp;tags &nbsp;that &nbsp;instruct &nbsp;robots &nbsp;not &nbsp;to &nbsp;index &nbsp;content &nbsp;have &nbsp;not &nbsp;been used, then it is possible for indexes to contain web content not intended &nbsp;to &nbsp;be &nbsp;included &nbsp;in &nbsp;by &nbsp;the &nbsp;owners. &nbsp;Website &nbsp;owners &nbsp;may &nbsp;use &nbsp;the previously mentioned robots.txt, HTML meta tags, authentication, and tools provided by search engines to remove such content.<br/>
+<br/>
+<b>Test Objectives</b><br/>
+To understand what sensitive design and configuration information of the &nbsp;application/system/organization &nbsp;is &nbsp;exposed &nbsp;both &nbsp;directly &nbsp;(on &nbsp;the &nbsp;organization’s website) or indirectly (on a third party website).<br/>
+<br/>
+<b>How to Test</b><ul><li>Use a search engine to search for:</li>
+<li>Network diagrams and configurations</li>
+<li>Archived posts and emails by administrators and other key staff</li>
+<li>Log on procedures and username formats</li>
+<li>Usernames and passwords</li>
+<li>Error message content</li>
+<li>Development, test, UAT and staging versions of the website</li>
+</ul>
+<br/>
+<b>Search operators</b><br/>
+Using &nbsp;the &nbsp;advanced &nbsp;“site:” &nbsp;search &nbsp;operator, &nbsp;it &nbsp;is &nbsp;possible &nbsp;to &nbsp;restrict &nbsp;search &nbsp;results &nbsp;to &nbsp;a &nbsp;specific &nbsp;domain &nbsp;[2]. &nbsp;Do &nbsp;not &nbsp;limit &nbsp;testing &nbsp;to &nbsp;just &nbsp;one &nbsp;search &nbsp;engine &nbsp;provider &nbsp;as &nbsp;they &nbsp;may &nbsp;generate &nbsp;different &nbsp;results &nbsp;depending &nbsp;on &nbsp;when &nbsp;they &nbsp;crawled &nbsp;content &nbsp;and &nbsp;their &nbsp;own &nbsp;algorithms. &nbsp;Consider using the following search engines:<ul><li>Baidu</li>
+<li>binsearch.info</li>
+<li>Bing</li>
+<li>Duck Duck Go</li>
+<li>ixquick/Startpage</li>
+<li>Google</li>
+<li>Shodan</li>
+<li>PunkSpider</li>
+</ul>
+<br/>
+Duck &nbsp;Duck &nbsp;Go &nbsp;and &nbsp;ixquick/Startpage &nbsp;provide &nbsp;reduced &nbsp;information &nbsp;leakage about the tester.<br/>
+<br/>
+Google &nbsp;provides &nbsp;the &nbsp;Advanced &nbsp;“cache:” &nbsp;search &nbsp;operator &nbsp;[2], &nbsp;but &nbsp;this &nbsp;is the equivalent to clicking the “Cached” next to each Google Search Result. &nbsp;Hence, &nbsp;the &nbsp;use &nbsp;of &nbsp;the &nbsp;Advanced &nbsp;“site:” &nbsp;Search &nbsp;Operator &nbsp;and &nbsp;then clicking “Cached” is preferred.<br/>
+<br/>
+The Google SOAP Search API supports the doGetCachedPage and the associated doGetCachedPageResponse SOAP Messages [3] to assist with retrieving cached pages. An implementation of this is under de-velopment by the OWASP “Google Hacking” Project.<br/>
+<br/>
+PunkSpider &nbsp;is &nbsp;web &nbsp;application &nbsp;vulnerability &nbsp;search &nbsp;engine. &nbsp;It &nbsp;is &nbsp;of &nbsp;lit-tle &nbsp;use &nbsp;for &nbsp;a &nbsp;penetration &nbsp;tester &nbsp;doing &nbsp;manual &nbsp;work. &nbsp;However &nbsp;it &nbsp;can &nbsp;be &nbsp;useful &nbsp;as &nbsp;demonstration &nbsp;of &nbsp;easiness &nbsp;of &nbsp;finding &nbsp;vulnerabilities &nbsp;by &nbsp;script-kiddies.<br/>
+<br/>
+Example &nbsp;To &nbsp;find &nbsp;the &nbsp;web &nbsp;content &nbsp;of &nbsp;owasp.org &nbsp;indexed &nbsp;by &nbsp;a &nbsp;typical &nbsp;search engine, the syntax required is:<br/>
+site:owasp.org<br/>
+<br/>
+To display the index.html of owasp.org as cached, the syntax is:<br/>
+cache:owasp.org<br/>
+<br/>
+<b>Google Hacking Database</b><br/>
+The Google Hacking Database is list of useful search queries for Goo-gle. Queries are put in several categories:<ul><li>Footholds</li>
+<li>Files containing usernames</li>
+<li>Sensitive Directories</li>
+<li>Web Server Detection</li>
+<li>Vulnerable Files</li>
+<li>Vulnerable Servers</li>
+<li>Error Messages</li>
+<li>Files containing juicy info</li>
+<li>Files containing passwords</li>
+<li>Sensitive Online Shopping Info</li>
+</ul>
+<br/>
+<b>Tools</b><br/>
+[4] FoundStone SiteDigger: http://www.mcafee.com/uk/downloads/free-tools/sitedigger.aspx<br/>
+[5] &nbsp;Google &nbsp;Hacker: &nbsp;http://yehg.net/lab/pr0js/files.php/googlehacker.zip<br/>
+[6] Stach &amp; Liu’s Google Hacking Diggity Project: http://www.stach-liu.com/resources/tools/google-hacking-diggity-project/<br/>
+[7] PunkSPIDER: http://punkspider.hyperiongray.com/<br/>
+<br/>
+<b>ReferencesWeb</b><br/>
+[1] &nbsp; “Google &nbsp; Basics: &nbsp; Learn &nbsp; how &nbsp; Google &nbsp; Discovers, &nbsp; Crawls, &nbsp; and &nbsp; Serves &nbsp;Web &nbsp;Pages” &nbsp;- &nbsp;https://support.google.com/webmasters/an-swer/70897<br/>
+[2] “Operators and More Search Help”: https://support.google.com/websearch/answer/136861?hl=en<br/>
+[3] &nbsp; “Google &nbsp; Hacking &nbsp; Database”:http://www.exploit-db.com/goo-gle-dorks/<br/>
+<br/>
+<b>Remediation</b><br/>
+Carefully consider the sensitivity of design and configuration informa-tion before it is posted online.<br/>
+<br/>
+Periodically review the sensitivity of existing design and configuration information that is posted online.<br/>
+<br/>
+</body></html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mapping</title>
+</head><body>Mapping <br/>
+Mapping Tips: <ul><li>Google</li>
+<li>Smart* Directory Brute Forcing </li>
+<li style="list-style-type: none"><ul><li>RAFT lists (included in Seclists)</li>
+<li>SVN Digger (included in Seclists)</li>
+<li>Git Digger</li>
+</ul>
+</li>
+<li>Platform Identification: </li>
+<li style="list-style-type: none"><ul><li>Wapplyzer (Chrome)</li>
+<li>Builtwith (Chrome)</li>
+<li>retire.js (cmd-line or Burp)</li>
+<li>Check CVE’s</li>
+</ul>
+</li>
+<li>Auxiliary </li>
+<li style="list-style-type: none"><ul><li>&nbsp;WPScan -CMSmap</li>
+</ul>
+</li>
+</ul>
+<br/>
+##Directory Bruteforce Workflow <br/>
+After bruteforcing look for other status codes indicating you are denied or require auth then append list there to test for misconfigured access control.<br/>
+&nbsp;<br/>
+Example:<br/>
+&nbsp;GET http://www.acme.com - 200 <br/>
+GET http://www.acme.com/backlog/ - 404 <br/>
+GET http://www.acme.com/controlpanel/ - **401 hmm.. ok** <br/>
+GET http://www.acme.com/controlpanel/[bruteforce here now] &nbsp;<br/>
+<br/>
+Mapping/Vuln Discovery using OSINT <br/>
+Find previous/existing problem:<br/>
+&nbsp;<ul><li>Xssed.com</li>
+<li>Reddit XSS - /r/xss</li>
+<li>Punkspider</li>
+<li>xss.cx</li>
+<li>xssposed.org</li>
+<li>twitter searching</li>
+</ul>
+<br/>
+Issues might already reported but use the flaw area and injection type to guide you to further injections or filter bypass<br/>
+&nbsp;<br/>
+New Project: Maps <br/>
+New OSINT/Mapping project<br/>
+&nbsp;<ul><li>250+ bounty programs</li>
+<li>Crawl</li>
+<li>DNS info + bruteforce</li>
+<li>Bounty metadata (links, rewards, scope)</li>
+<li>API -&gt; Intrigue</li>
+</ul>
+<br/>
+<a href="https://github.com/bugcrowdlabs/maps">https://github.com/bugcrowdlabs/maps</a><br/>
+&nbsp;<br/>
+Using the Maps Project: Crawling <br/>
+Using + Ruby + Anemone + JSON + Grep<br/>
+&nbsp;$cat test_target_json.txt | grep redirect https://test_target/redirect/?url=http://twitter.com https://test_target/redirect/?url=http://facebook.com/... https://test_target/redirect/?url=http://pinterest.com/... &nbsp;<br/>
+<br/>
+New Tool: Intrigue <br/>
+OSINT framework, simple to integrate. Features like:<br/>
+&nbsp;<ul><li>DNS Subdomain Brute force</li>
+<li>Web Spider</li>
+<li>Nmap Scan</li>
+<li>etc Code @ <a href="http://github.com/intrigueio/intrigue-core">http://github.com/intrigueio/intrigue-core</a></li>
+</ul>
+</body></html>

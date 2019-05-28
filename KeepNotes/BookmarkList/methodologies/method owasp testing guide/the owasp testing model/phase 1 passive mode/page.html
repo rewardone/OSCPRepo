@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Phase 1: Passive Mode</title>
+</head><body>Phase 1 Passive mode:<br/>
+In &nbsp;the &nbsp;passive &nbsp;mode &nbsp;the &nbsp;tester &nbsp;tries &nbsp;to &nbsp;understand &nbsp;the &nbsp;application’s &nbsp;logic &nbsp;and &nbsp;plays &nbsp;with &nbsp;the &nbsp;application. &nbsp;Tools &nbsp;can &nbsp;be &nbsp;used &nbsp;for &nbsp;informa-tion gathering. For example, an HTTP proxy can be used to observe all the HTTP requests and responses. At the end of this phase, the tester should understand all the access points (gates) of the application (e.g., HTTP &nbsp;headers, &nbsp;parameters, &nbsp;and &nbsp;cookies). &nbsp;The &nbsp;Information &nbsp;Gathering &nbsp;section explains how to perform a passive mode test.<br/>
+<br/>
+For example the tester could find the following:<br/>
+https://www.example.com/login/Authentic_Form.html<br/>
+<br/>
+This &nbsp;may &nbsp;indicate &nbsp;an &nbsp;authentication &nbsp;form &nbsp;where &nbsp;the &nbsp;application &nbsp;re-quests a username and a password.<br/>
+<br/>
+The following parameters represent two access points (gates) to the application:<br/>
+http://www.example.com/Appx.jsp?a=1&amp;b=1<br/>
+<br/>
+In this case, the application shows two gates (parameters a and b). All the gates found in this phase represent a point of testing. A spread-sheet &nbsp;with &nbsp;the &nbsp;directory &nbsp;tree &nbsp;of &nbsp;the &nbsp;application &nbsp;and &nbsp;all &nbsp;the &nbsp;access &nbsp;points would be useful for the second phase.</body></html>
