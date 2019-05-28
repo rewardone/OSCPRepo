@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Session Management Testing</string>
+  <key>nodeid</key><string>c6b91015-06bf-4c99-b8b5-3b2cdd4a4150</string>
+  <key>modified_time</key><integer>1559061722</integer>
+  <key>expanded2</key><false/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1559061624</integer>
+  <key>order</key><integer>6</integer>
+</dict>
+</node>

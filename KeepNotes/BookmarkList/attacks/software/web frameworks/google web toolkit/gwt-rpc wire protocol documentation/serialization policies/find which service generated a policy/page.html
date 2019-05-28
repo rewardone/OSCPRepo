@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Find Which Service Generated A Policy</title>
+</head><body><b>How can I find out which GWT-RPC service generated a policy?</b><br/>
+The GWT compiler writes output to two directories, controlled by the <a href="https://developers.google.com/web-toolkit/doc/latest/DevGuideCompilingAndDebugging#DevGuideCompilerOptions">-deploy and -extra flags</a>.<br/>
+In the extra directory, there is a file named rpcPolicyManifest/manifest.txt that has the mapping from RPC services to policy files. For example, the validation sample app generates this file:<br/>
+<br/>
+# Module validation<br/>
+# RPC service class, partial path of RPC policy file<br/>
+com.google.gwt.sample.validation.client.GreetingService, D031DD0CECD85E06AF1E383A0EC73E6E.gwt.rpc<br/>
+<br/>
+There is also a directory named "manifests/" which contains a file for each mapping, in a somewhat more machine-readable format. (The filenames in this directory are meaningless; they're just the MD5 of the contents.)<br/>
+</body></html>

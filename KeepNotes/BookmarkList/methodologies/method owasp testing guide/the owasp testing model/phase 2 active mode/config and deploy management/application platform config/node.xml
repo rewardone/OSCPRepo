@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Application Platform Config</string>
+  <key>nodeid</key><string>17edbd8e-52a1-4b49-b9f3-291ecea20fe9</string>
+  <key>modified_time</key><integer>1559050401</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1559050093</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>

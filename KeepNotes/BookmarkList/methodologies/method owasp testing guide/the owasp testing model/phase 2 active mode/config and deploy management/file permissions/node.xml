@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>File Permissions</string>
+  <key>nodeid</key><string>6835edc0-ee0c-4900-867e-1316e4036066</string>
+  <key>modified_time</key><integer>1559051392</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1559051336</integer>
+  <key>order</key><integer>8</integer>
+</dict>
+</node>

@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Unlocking UI Features</title>
+</head><body><b>Inspect all requests to see if capabilities are enabling UI</b><br/>
+ALL client-side code is compiled and loaded by the browser<br/>
+&nbsp;&#09;Similar to Adobe Flash and MS Silverlight<br/>
+What if the front-end displays different functionality based on a user’s role?<br/>
+<br/>
+Pay close attention to HTTP responses to see if the client is reading a user’s role or admin flag<br/>
+Roles can be manipulated in order to trick the client into displaying additional functionality<br/>
+Authorization testing is much easier when all application functionality readily available in the UI<br/>
+<br/>
+Example highlighted role-based access control parameters:<br/>
+<br/>
+HTTP/1.1 200 OK<br/>
+Content-Type: application/json; charset=UTF-8<br/>
+Content-Length: 2465<br/>
+<br/>
+{accountExternalCustomerId:’[Omitted]’,accountCustomerId:’ [Omitted]’,emailAddress:’ [Omitted] ’,preBilling3:’false’,<span style="color: #ff0000">canServiceAccounts:’false’</span>,obfuscatedCustomerId:’ [Omitted] ’,defaultToCuesVersion2:'true‘, <span style="color: #ff0000">isInternalUser:’false’</span>,userCustomerId:’ [Omitted] ’,userExternalCustomerId:’ [Omitted] ’,CuesHeaderVersion:’2’,<span style="color: #ff0000">capabilities:’ [{a:false,e:false},{a:false,e:false},{a:false,e:false},{a:false,e:false},{a:false,e:false},{a:true,e:true},{a:false,e:false},{a:false,e:false},{a:false,e:false},{a:false,e:false},{a:true,e:true},{a:true,e:true},{a:true,e:true},{a:true,e:true},{a:false,e:false},</span>{[..snip..]</body></html>

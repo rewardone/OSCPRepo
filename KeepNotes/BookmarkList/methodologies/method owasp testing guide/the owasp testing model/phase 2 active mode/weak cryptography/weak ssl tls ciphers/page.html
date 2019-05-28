@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Weak SSL TLS Ciphers</title>
+</head><body>&nbsp;<ul><li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Summary">1 Summary</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Common_Issues">2 Common Issues</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Sensitive_data_transmitted_in_clear-text">2.1 Sensitive data transmitted in clear-text</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Weak_SSL.2FTLS_Ciphers.2FProtocols.2FKeys">2.2 Weak SSL/TLS Ciphers/Protocols/Keys</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#SSL_certificate_validity_.E2.80.93_client_and_server">2.3 SSL certificate validity – client and server</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Other_vulnerabilities">2.4 Other vulnerabilities</a></li>
+</ul>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#How_to_Test">3 How to Test</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Testing_for_sensitive_data_transmitted_in_clear-text">3.1 Testing for sensitive data transmitted in clear-text</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_1._Basic_Authentication_over_HTTP">3.1.1 Example 1. Basic Authentication over HTTP</a></li>
+</ul>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Testing_for_Weak_SSL.2FTLS_Ciphers.2FProtocols.2FKeys_vulnerabilities">3.2 Testing for Weak SSL/TLS Ciphers/Protocols/Keys vulnerabilities</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_2._SSL_service_recognition_via_nmap">3.2.1 Example 2. SSL service recognition via nmap</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_3._Checking_for_Certificate_information.2C_Weak_Ciphers_and_SSLv2_via_nmap">3.2.2 Example 3. Checking for Certificate information, Weak Ciphers and SSLv2 via nmap</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_4_Checking_for_Client-initiated_Renegotiation_and_Secure_Renegotiation_via_openssl_.28manually.29">3.2.3 Example 4 Checking for Client-initiated Renegotiation and Secure Renegotiation via openssl (manually)</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_5._Testing_supported_Cipher_Suites.2C_BEAST_and_CRIME_attacks_via_TestSSLServer">3.2.4 Example 5. Testing supported Cipher Suites, BEAST and CRIME attacks via TestSSLServer</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_6._Testing_SSL.2FTLS_vulnerabilities_with_sslyze">3.2.5 Example 6. Testing SSL/TLS vulnerabilities with sslyze</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_7._Testing_SSL.2FTLS_with_testssl.sh">3.2.6 Example 7. Testing SSL/TLS with testssl.sh</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_8._Testing_O-Saft_-_OWASP_SSL_advanced_forensic_tool">3.2.7 Example 8. Testing O-Saft - OWASP SSL advanced forensic tool</a></li>
+</ul>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Testing_SSL_certificate_validity_.E2.80.93_client_and_server">3.3 Testing SSL certificate validity – client and server</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_1._Testing_for_certificate_validity_.28manually.29">3.3.1 Example 1. Testing for certificate validity (manually)</a></li>
+</ul>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Testing_for_other_vulnerabilities">3.4 Testing for other vulnerabilities</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Surf_Jacking">3.4.1 Surf Jacking</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#SSL_Strip">3.4.2 SSL Strip</a></li>
+</ul>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Testing_via_HTTP_proxy">3.5 Testing via HTTP proxy</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_8._Testing_via_HTTP_proxy">3.5.1 Example 8. Testing via HTTP proxy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Configuration_Review">4 Configuration Review</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Testing_for_Weak_SSL.2FTLS_Cipher_Suites">4.1 Testing for Weak SSL/TLS Cipher Suites</a>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_9._Windows_Server">4.1.1 Example 9. Windows Server</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Example_10:_Apache">4.1.2 Example 10: Apache</a></li>
+</ul>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Testing_SSL_certificate_validity_.E2.80.93_client_and_server_2">4.2 Testing SSL certificate validity – client and server</a></li>
+</ul>
+</li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#Tools">5 Tools</a></li>
+<li><a href="https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)#References">6 References</a></li>
+</ul>
+&nbsp; <br/>
+Summary <br/>
+Sensitive data must be protected when it is transmitted through the network. Such data can include user credentials and credit cards. As a rule of thumb, if data must be protected when it is stored, it must be protected also during transmission. <br/>
+<br/>
+HTTP is a clear-text protocol and it is normally secured via an SSL/TLS tunnel, resulting in HTTPS traffic [1]. The use of this protocol ensures not only confidentiality, but also authentication. Servers are authenticated using digital certificates and it is also possible to use client certificate for mutual authentication. <br/>
+<br/>
+Even if high grade ciphers are today supported and normally used, some misconfiguration in the server can be used to force the use of a weak cipher - or at worst no encryption - permitting to an attacker to gain access to the supposed secure communication channel. Other misconfiguration can be used for a Denial of Service attack. <br/>
+&nbsp; <br/>
+<b>Tools</b>&nbsp;<ul><li>[21][Qualsys SSL Labs - SSL Server Test|<a href="https://www.ssllabs.com/ssltest/index.html">https://www.ssllabs.com/ssltest/index.html</a>]: internet-facing scanner</li>
+<li>[27] [Tenable - Nessus Vulnerability Scanner|<a href="http://www.tenable.com/products/nessus">http://www.tenable.com/products/nessus</a>]: includes some plugins to test different SSL related vulnerabilities, Certificates and the presence of HTTP Basic authentication without SSL.</li>
+<li>[32] [TestSSLServer|<a href="http://www.bolet.org/TestSSLServer/">http://www.bolet.org/TestSSLServer/</a>]: a java scanner - and also windows executable - includes tests for cipher suites, CRIME and BEAST</li>
+<li>[33] [sslyze|<a href="https://github.com/iSECPartners/sslyze">https://github.com/iSECPartners/sslyze</a>]: is a python script to check vulnerabilities in SSL/TLS.</li>
+<li>[28] [SSLAudit|<a href="https://code.google.com/p/sslaudit/">https://code.google.com/p/sslaudit/</a>]: a perl script/windows executable scanner which follows Qualys SSL Labs Rating Guide.</li>
+<li>[29] [SSLScan|<a href="http://sourceforge.net/projects/sslscan/">http://sourceforge.net/projects/sslscan/</a>] with [SSL Tests|<a href="http://www.pentesterscripting.com/discovery/ssl_tests">http://www.pentesterscripting.com/discovery/ssl_tests</a>]: a SSL Scanner and a wrapper in order to enumerate SSL vulnerabilities.</li>
+<li>[31] [nmap|<a href="http://nmap.org/">http://nmap.org/</a>]: can be used primary to identify SSL-based services and then to check Certificate and SSL/TLS vulnerabilities. In particular it has some scripts to check [Certificate and SSLv2|<a href="http://nmap.org/nsedoc/scripts/ssl-cert.html">http://nmap.org/nsedoc/scripts/ssl-cert.html</a>] and supported [SSL/TLS protocols/ciphers|<a href="http://nmap.org/nsedoc/scripts/ssl-enum-ciphers.html">http://nmap.org/nsedoc/scripts/ssl-enum-ciphers.html</a>] with an internal rating.</li>
+<li>[30] [curl|<a href="http://curl.haxx.se/">http://curl.haxx.se/</a>] and [openssl|<a href="http://www.openssl.org/">http://www.openssl.org/</a>]: can be used to manually query SSL/TLS services</li>
+<li>[9] [Stunnel|<a href="http://www.stunnel.org">http://www.stunnel.org</a>]: a noteworthy class of SSL clients is that of SSL proxies such as stunnel available at which can be used to allow non-SSL enabled tools to talk to SSL services)</li>
+<li>[37] [socat| <a href="http://www.dest-unreach.org/socat/">http://www.dest-unreach.org/socat/</a>]: Multipurpose relay</li>
+<li>[38] [testssl.sh| <a href="https://testssl.sh/">https://testssl.sh/</a> ]</li>
+<li>[39] <a href="https://www.owasp.org/index.php/O-Saft">O-Saft - OWASP SSL advanced forensic tool</a></li>
+</ul>
+<b><br/>
+</b><b>References</b>&nbsp;<br/>
+<b>OWASP Resources</b>&nbsp;<br/>
+&nbsp;<ul><li>&nbsp;[5] [OWASP Testing Guide - Testing for cookie attributes (OTG-SESS-002)|<a href="https://www.owasp.org/index.php/Testing_for_cookies_attributes_(OTG-SESS-002)">https://www.owasp.org/index.php/Testing_for_cookies_attributes_(OTG-SESS-002)</a>]</li>
+<li>&nbsp;[4][OWASP Testing Guide - Test Network/Infrastructure Configuration (OTG-CONFIG-001)|<a href="https://www.owasp.org/index.php/Test_Network/Infrastructure_Configuration_(OTG-CONFIG-001)">https://www.owasp.org/index.php/Test_Network/Infrastructure_Configuration_(OTG-CONFIG-001)</a>]</li>
+<li>&nbsp;[6] [OWASP Testing Guide - Testing for HTTP_Strict_Transport_Security (OTG-CONFIG-007)|<a href="https://www.owasp.org/index.php/Test_HTTP_Strict_Transport_Security_(OTG-CONFIG-007)">https://www.owasp.org/index.php/Test_HTTP_Strict_Transport_Security_(OTG-CONFIG-007)</a>]</li>
+<li>&nbsp;[2] [OWASP Testing Guide - Testing for Sensitive information sent via unencrypted channels (OTG-CRYPST-003)|<a href="https://www.owasp.org/index.php/Testing_for_Sensitive_information_sent_via_unencrypted_channels_(OTG-CRYPST-003)">https://www.owasp.org/index.php/Testing_for_Sensitive_information_sent_via_unencrypted_channels_(OTG-CRYPST-003)</a>]</li>
+<li>&nbsp;[3] [OWASP Testing Guide - Testing for Credentials Transported over an Encrypted Channel (OTG-AUTHN-001)|<a href="https://www.owasp.org/index.php/Testing_for_Credentials_Transported_over_an_Encrypted_Channel_(OTG-AUTHN-001)">https://www.owasp.org/index.php/Testing_for_Credentials_Transported_over_an_Encrypted_Channel_(OTG-AUTHN-001)</a>]</li>
+<li>&nbsp;[22] [OWASP Cheat sheet - Transport Layer Protection|<a href="https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet">https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet</a>]</li>
+<li>&nbsp;[23] [OWASP TOP 10 2013 - A6 Sensitive Data Exposure|<a href="https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure">https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure</a>]</li>
+<li>&nbsp;[24] [OWASP TOP 10 2010 - A9 Insufficient Transport Layer Protection|<a href="https://www.owasp.org/index.php/Top_10_2010-A9-Insufficient_Transport_Layer_Protection">https://www.owasp.org/index.php/Top_10_2010-A9-Insufficient_Transport_Layer_Protection</a>]</li>
+<li>&nbsp;[25] [OWASP ASVS 2009 - Verification 10|<a href="https://code.google.com/p/owasp-asvs/wiki/Verification_V10">https://code.google.com/p/owasp-asvs/wiki/Verification_V10</a>]</li>
+<li>&nbsp;[26] [OWASP Application Security FAQ - Cryptography/SSL|<a href="https://www.owasp.org/index.php/OWASP_Application_Security_FAQ#Cryptography.2FSSL">https://www.owasp.org/index.php/OWASP_Application_Security_FAQ#Cryptography.2FSSL</a>]</li>
+</ul>
+<br/>
+<br/>
+<b>Whitepapers</b>&nbsp;<br/>
+&nbsp;<ul><li>&nbsp;[1] [RFC5246 - The Transport Layer Security (TLS) Protocol Version 1.2 (Updated by <a href="https://tools.ietf.org/html/rfc5746">RFC 5746</a>, <a href="https://tools.ietf.org/html/rfc5878">RFC 5878</a>, <a href="https://tools.ietf.org/html/rfc6176">RFC 6176</a>)|<a href="http://www.ietf.org/rfc/rfc5246.txt">http://www.ietf.org/rfc/rfc5246.txt</a>]</li>
+<li>&nbsp;[36] [RFC2817 - Upgrading to TLS Within HTTP/1.1|]</li>
+<li>&nbsp;[34] [RFC6066 - Transport Layer Security (TLS) Extensions: Extension Definitions|<a href="http://www.ietf.org/rfc/rfc6066.txt">http://www.ietf.org/rfc/rfc6066.txt</a>]</li>
+<li>&nbsp;[11] [SSLv2 Protocol Multiple Weaknesses |<a href="http://osvdb.org/56387">http://osvdb.org/56387</a>]</li>
+<li>&nbsp;[12] [Mitre - TLS Renegotiation MiTM|<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3555">http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3555</a>]</li>
+<li>&nbsp;[13] [Qualys SSL Labs - TLS Renegotiation DoS|<a href="https://community.qualys.com/blogs/securitylabs/2011/10/31/tls-renegotiation-and-denial-of-service-attacks">https://community.qualys.com/blogs/securitylabs/2011/10/31/tls-renegotiation-and-denial-of-service-attacks</a>]</li>
+<li>&nbsp;[10] [Qualys SSL Labs - SSL/TLS Deployment Best Practices|<a href="https://www.ssllabs.com/projects/best-practices/index.html">https://www.ssllabs.com/projects/best-practices/index.html</a>]</li>
+<li>&nbsp;[14] [Qualys SSL Labs - SSL Server Rating Guide|<a href="https://www.ssllabs.com/projects/rating-guide/index.html">https://www.ssllabs.com/projects/rating-guide/index.html</a>]</li>
+<li>&nbsp;[20] [Qualys SSL Labs - SSL Threat Model|<a href="https://www.ssllabs.com/projects/ssl-threat-model/index.html">https://www.ssllabs.com/projects/ssl-threat-model/index.html</a>]</li>
+<li>&nbsp;[18] [Qualys SSL Labs - Forward Secrecy|<a href="https://community.qualys.com/blogs/securitylabs/2013/06/25/ssl-labs-deploying-forward-secrecy">https://community.qualys.com/blogs/securitylabs/2013/06/25/ssl-labs-deploying-forward-secrecy</a>]</li>
+<li>&nbsp;[15] [Qualys SSL Labs - RC4 Usage|<a href="https://community.qualys.com/blogs/securitylabs/2013/03/19/rc4-in-tls-is-broken-now-what">https://community.qualys.com/blogs/securitylabs/2013/03/19/rc4-in-tls-is-broken-now-what</a>]</li>
+<li>&nbsp;[16] [Qualys SSL Labs - BEAST|<a href="https://community.qualys.com/blogs/securitylabs/2011/10/17/mitigating-the-beast-attack-on-tls">https://community.qualys.com/blogs/securitylabs/2011/10/17/mitigating-the-beast-attack-on-tls</a>]</li>
+<li>&nbsp;[17] [Qualys SSL Labs - CRIME|<a href="https://community.qualys.com/blogs/securitylabs/2012/09/14/crime-information-leakage-attack-against-ssltls">https://community.qualys.com/blogs/securitylabs/2012/09/14/crime-information-leakage-attack-against-ssltls</a>]</li>
+<li>&nbsp;[7] [SurfJacking attack|<a href="https://resources.enablesecurity.com/resources/Surf%20Jacking.pdf">https://resources.enablesecurity.com/resources/Surf%20Jacking.pdf</a>]</li>
+<li>&nbsp;[8] [SSLStrip attack|<a href="http://www.thoughtcrime.org/software/sslstrip/">http://www.thoughtcrime.org/software/sslstrip/</a>]</li>
+<li>&nbsp;[19] [PCI-DSS v2.0|<a href="https://www.pcisecuritystandards.org/security_standards/documents.php">https://www.pcisecuritystandards.org/security_standards/documents.php</a>]</li>
+<li>&nbsp;[35] [Xiaoyun Wang, Hongbo Yu: How to Break MD5 and Other Hash Functions| <a href="http://link.springer.com/chapter/10.1007/11426639_2">http://link.springer.com/chapter/10.1007/11426639_2</a>]</li>
+<li>&nbsp;<a href="https://github.com/ssllabs/research/wiki">https://github.com/ssllabs/research/wiki</a></li>
+</ul>
+&nbsp;</body></html>

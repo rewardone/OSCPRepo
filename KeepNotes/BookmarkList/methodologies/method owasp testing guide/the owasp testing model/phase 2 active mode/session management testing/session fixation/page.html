@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Session Fixation</title>
+</head><body>Brief Summary <br/>
+When an application does not renew its session cookie(s) after a successful user authentication, it could be possible to find a session fixation vulnerability and force a user to utilize a cookie known by the attacker. In that case, an attacker could steal the user session (session hijacking). <br/>
+<br/>
+Session fixation vulnerabilities occur when:<br/>
+<br/>
+&nbsp;<ul><li>&nbsp;A web application authenticates a user without first invalidating the existing session ID, thereby continuing to use the session ID already associated with the user.</li>
+<li>&nbsp;An attacker is able to force a known session ID on a user so that, once the user authenticates, the attacker has access to the authenticated session. </li>
+</ul>
+<br/>
+<br/>
+In the generic exploit of session fixation vulnerabilities, an attacker creates a new session on a web application and records the associated session identifier. The attacker then causes the victim to authenticate against the server using the same session identifier, giving the attacker access to the user's account through the active session. <br/>
+<br/>
+Furthermore, the issue described above is problematic for sites that issue a session identifier over HTTP and then redirect the user to a HTTPS log in form. If the session identifier is not reissued upon authentication, the attacker can eavesdrop and steal the identifier and then use it to hijack the session. <br/>
+&nbsp;How to Test Black Box Testing <br/>
+<b>Testing for Session Fixation vulnerabilities:</b>&nbsp;<br/>
+The first step is to make a request to the site to be tested (example www.example.com). If the tester requests the following: <br/>
+GET www.example.com<br/>
+<br/>
+They will obtain the following answer: &nbsp; <br/>
+HTTP/1.1 200 OK<br/>
+Date: Wed, 14 Aug 2008 08:45:11 GMT<br/>
+Server: IBM_HTTP_Server<br/>
+Set-Cookie: JSESSIONID=0000d8eyYq3L0z2fgq10m4v-rt4:-1; Path=/; secure<br/>
+Cache-Control: no-cache="set-cookie,set-cookie2"<br/>
+Expires: Thu, 01 Dec 1994 16:00:00 GMT<br/>
+Keep-Alive: timeout=5, max=100<br/>
+Connection: Keep-Alive<br/>
+Content-Type: text/html;charset=Cp1254<br/>
+Content-Language: en-US<br/>
+<br/>
+<br/>
+The application sets a new session identifier JSESSIONID=0000d8eyYq3L0z2fgq10m4v-rt4:-1 for the client. <br/>
+<br/>
+Next, if the tester successfully authenticates to the application with the following POST HTTPS: <br/>
+POST https://www.example.com/authentication.php HTTP/1.1<br/>
+Host: www.example.com<br/>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16<br/>
+Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5<br/>
+Accept-Language: it-it,it;q=0.8,en-us;q=0.5,en;q=0.3<br/>
+Accept-Encoding: gzip,deflate<br/>
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7<br/>
+Keep-Alive: 300<br/>
+Connection: keep-alive<br/>
+Referer: http://www.example.com<br/>
+Cookie: JSESSIONID=0000d8eyYq3L0z2fgq10m4v-rt4:-1<br/>
+Content-Type: application/x-www-form-urlencoded<br/>
+Content-length: 57<br/>
+<br/>
+Name=Meucci&amp;wpPassword=secret!&amp;wpLoginattempt=Log+in &nbsp;<br/>
+<br/>
+The tester observes the following response from the server: &nbsp;<br/>
+HTTP/1.1 200 OK<br/>
+Date: Thu, 14 Aug 2008 14:52:58 GMT<br/>
+Server: Apache/2.2.2 (Fedora)<br/>
+X-Powered-By: PHP/5.1.6<br/>
+Content-language: en<br/>
+Cache-Control: private, must-revalidate, max-age=0<br/>
+X-Content-Encoding: gzip<br/>
+Content-length: 4090<br/>
+Connection: close<br/>
+Content-Type: text/html; charset=UTF-8<br/>
+...<br/>
+HTML data<br/>
+...<br/>
+<br/>
+<br/>
+<br/>
+As no new cookie has been issued upon a successful authentication the tester knows that it is possible to perform session hijacking. <br/>
+<br/>
+<br/>
+<b>Result Expected:</b>&nbsp;The tester can send a valid session identifier to a user (possibly using a social engineering trick), wait for them to authenticate, and subsequently verify that privileges have been assigned to this cookie. <br/>
+<br/>
+<br/>
+<b>&nbsp;Gray Box Testing </b><br/>
+Talk with developers and understand if they have implemented a session token renew after a user successful authentication. <br/>
+<br/>
+<b>Result Expected:</b>&nbsp;The application should always first invalidate the existing session ID before authenticating a user, and if the authentication is successful, provide another sessionID. <br/>
+<br/>
+<br/>
+<b>Tools</b>&nbsp;<ul><li>&nbsp;JHijack - a numeric session hijacking tool - <a href="http://yehg.net/lab/pr0js/files.php/jhijackv0.2beta.zip">http://yehg.net/lab/pr0js/files.php/jhijackv0.2beta.zip</a></li>
+<li>&nbsp;OWASP WebScarab: <a href="https://www.owasp.org/index.php/OWASP_WebScarab_Project">OWASP_WebScarab_Project</a></li>
+</ul>
+<br/>
+&nbsp;<b>References</b>&nbsp;<br/>
+<b>Whitepapers</b><br/>
+<ul><li>&nbsp;<a href="https://www.owasp.org/index.php/Session_Fixation">Session Fixation</a></li>
+<li>&nbsp;ACROS Security: <a href="http://www.acrossecurity.com/papers/session_fixation.pdf">http://www.acrossecurity.com/papers/session_fixation.pdf</a></li>
+<li>&nbsp;Chris Shiflett: <a href="http://shiflett.org/articles/session-fixation">http://shiflett.org/articles/session-fixation</a></li>
+</ul>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

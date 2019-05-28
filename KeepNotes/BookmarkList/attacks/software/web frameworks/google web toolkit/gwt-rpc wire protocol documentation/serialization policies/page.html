@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Serialization Policies</title>
+</head><body>A GWT-RPC serialization policy controls whether each Java type is whitelisted for serialization or deserialization over GWT-RPC. (This is from the server's point of view; deserialization happens for request parameters and serialization for objects returned or thrown.) GWT-RPC supports two levels of serializability:<br/>
+<ul><li>Field-serializable means that the fields of the class may be serialized.</li>
+<li>Instantiable means that in addition, a new instance of the class may be created.</li>
+</ul>
+<br/>
+For example, in the Validation sample app, the RPC call may throw NumberFormatException, so this type is both field-serializable and instantiable for the serialization direction. NumberFormatException inherits from RuntimeException and Throwable but they're never thrown directly, so these classes have field serialization turned on but aren't instantiable.<br/>
+</body></html>

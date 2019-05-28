@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Fields of a GWT-RPC Request</title>
+</head><body><b>Version</b><br/>
+The protocol version (int). GWT currently accepts versions 5-7 on the server.<br/>
+<br/>
+<b>Flags</b><br/>
+A bitset (int) containing the options for this request. Currently, only two options are allowed:<ul><li>FLAG_ELIDE_TYPE_NAMES = 1</li>
+<li style="list-style-type: none"><ul><li>This flag will be set if the GWT application turns on type obfuscation by including the RemoteServiceObfuscateTypeNames module. When enabled, type names will be represented as opaque keys referring to records in the serialization policy file. (The GWT-RPC generator allocates unique ids using a counter and encodes them as base-36 numbers.)</li>
+</ul>
+</li>
+<li>FLAG_RPC_TOKEN_INCLUDED = 2</li>
+<li style="list-style-type: none"><ul><li>If set, the request includes an RpcToken used to guard against XSRF attacks.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<b>The string table</b><br/>
+This is a count followed by a list of escaped strings. Escape sequences for decoding:<ul><li>\0 -&gt; nul character (U+0000)</li>
+<li>\\ -&gt; \</li>
+<li>\! -&gt; |</li>
+<li>\u followed by four hex digits -&gt; decodes to the unicode character</li>
+</ul>
+The remaining fields in the request can use an index into the string table to represent a Java string. This allows repeated strings to be represented compactly. String indexes are one-based, with a 0 representing a Java null.<br/>
+<br/>
+<b>Module base URL</b><br/>
+The base URL of the GWT app that sent this request. (String index.) This is used to find the serialization policy file (unless overridden).<br/>
+<br/>
+<b>Strong name</b><br/>
+An index into the string table for the "strong name" of the policy file. Policy files may be different for each GWT-RPC service and permutation, or may be shared if the policies turn out to be identical.<br/>
+<br/>
+<b>RPC Token (optional)</b><br/>
+If the RPC_TOKEN_INCLUDED flag is set, a serialized RpcToken object comes next. (See below for the format of a serialized Object.)<br/>
+<br/>
+<b>Service name</b><br/>
+The next field is a string index pointing to the type name of the GWT-RPC service. Note that a servlet might implement multiple interfaces, and this field disambiguates between them. If the servlet doesn't implement the interface, an IncompatibleRemoteServiceException is thrown.<br/>
+<br/>
+<b>Method name</b><br/>
+A string index pointing to the method name.<br/>
+<br/>
+<b>Parameter count</b><br/>
+An integer with the number of parameters to the method.<br/>
+<br/>
+<b>Parameter types</b><br/>
+The declared type of each method parameter for the method to be called. (See below.)<br/>
+<br/>
+<b>Parameter values</b><br/>
+A sequence of Java values, one per parameter. (See Java Values.)<br/>
+</body></html>

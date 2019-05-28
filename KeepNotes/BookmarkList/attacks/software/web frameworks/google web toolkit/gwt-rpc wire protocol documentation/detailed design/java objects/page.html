@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Objects</title>
+</head><body><b>Java Objects</b><br/>
+The first field of an object is a number indicating how to decode it. A '0' means null.<br/>
+<br/>
+A negative numbers means to repeat a previously decoded object. (Note that this could be a parent of the object currently being deserialized, allowing for cycles.)<br/>
+<br/>
+A positive number is a string index of the Java type, which is used for type-checking and to decode the rest of the value. (Decoding starts in AbstractSerializationReader.readObject.)<br/>
+<br/>
+<br/>
+<b>Type checking</b><br/>
+If type name wasn't obfuscated, the stream reader checks its signature to make sure none of its fields changed. (See ServerSerializationStreamReader.deserialize.) Also, if it knows the declared type then resolves any generic types as much as possible. For example, if an RPC call passes a parameter to a method and the parameter's declared type is ArrayList&lt;String&gt;, the runtime type will be just ArrayList, but the stream reader can infer that the each element should be a String.<br/>
+The stream reader then checks that the serialization policy allows this type to be instantiated (validateDeserialize).<br/>
+<br/>
+<br/>
+<b>Arrays</b><br/>
+For an array, the type is followed by the array's length and the serialization of each item in the array. Each item is deserialized recursively, so arrays of non-null non-primitives will have each item preceded by its type (unless it was previously seen).<br/>
+<br/>
+<br/>
+<b>Enums</b><br/>
+For enums, the type is followed by the Enum's ordinal (an integer).<br/>
+<br/>
+<br/>
+<b>Custom serialization</b><br/>
+GWT-RPC supports custom serialization (see <a href="https://developers.google.com/web-toolkit/doc/latest/DevGuideServerCommunication#DevGuideCustomSerialization">doc</a>). This is used both within GWT itself for types such as collections and by applications. Custom serialization uses the methods on &nbsp;SerializationStreamReader and SerializationStreamWriter to read and write Java primitives using the format described here, and to recurse using readObject() and writeObject().<br/>
+<br/>
+When a type has a custom serializer, the GWT-RPC generator doesn't know at compile time which fields will be recursively serialized using writeObject(). It makes a conservative assumption:<br/>
+If a field can be serialized, the custom serializer will call writeObject() on it.<br/>
+<br/>
+If a type is serializable but the custom serializer won't call writeObject() on it, adding the "transient" keyword to the field will suppress visiting it.<br/>
+<br/>
+<br/>
+<b>Other objects</b><br/>
+For other Java objects, the type is followed by the value for each serializable field in the leaf class, sorted by field name, followed by the fields in its ancestor classes (recursively). Fields are deserialized recursively.<br/>
+</body></html>

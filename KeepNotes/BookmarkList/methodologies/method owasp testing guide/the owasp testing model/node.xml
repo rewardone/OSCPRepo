@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><true/>
   <key>title</key><string>The OWASP Testing Model</string>
   <key>nodeid</key><string>829a5c42-2ad9-4c88-a3cd-3d2ffdd1b304</string>
   <key>modified_time</key><integer>1558882523</integer>

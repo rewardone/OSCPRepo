@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bypassing Authorization Schema</title>
+</head><body><b>Summary </b><br/>
+This kind of test focuses on verifying how the authorization schema has been implemented for each role or privilege to get access to reserved functions and resources. <br/>
+<br/>
+&nbsp;For every specific role the tester holds during the assessment, for every function and request that the application executes during the post-authentication phase, it is necessary to verify: <br/>
+&nbsp;<ul><li>&nbsp;Is it possible to access that resource even if the user is not authenticated?</li>
+<li>&nbsp;Is it possible to access that resource after the log-out?</li>
+<li>&nbsp;Is it possible to access functions and resources that should be accessible to a user that holds a different role or privilege? </li>
+</ul>
+<br/>
+<br/>
+Try to access the application as an administrative user and track all the administrative functions. <br/>
+&nbsp;<ul><li>&nbsp;Is it possible to access administrative functions also if the tester is logged as a user with standard privileges?</li>
+<li>&nbsp;Is it possible to use these administrative functions as a user with a different role and for whom that action should be denied?</li>
+</ul>
+<br/>
+<b>&nbsp;How to test </b><br/>
+<b>Testing for access to administrative functions</b>&nbsp;<br/>
+For example, suppose that the 'AddUser.jsp' function is part of the administrative menu of the application, and it is possible to access it by requesting the following URL: <br/>
+https://www.example.com/admin/addUser.jsp <br/>
+<br/>
+Then, the following HTTP request is generated when calling the AddUser function:<br/>
+POST /admin/addUser.jsp HTTP/1.1<br/>
+Host: www.example.com<br/>
+[other HTTP headers]<br/>
+<br/>
+userID=fakeuser&amp;role=3&amp;group=grp001<br/>
+<br/>
+<br/>
+What happens if a non-administrative user tries to execute that request? Will the user be created? If so, can the new user use their privileges?<br/>
+<br/>
+<br/>
+<b>Testing for access to resources assigned to a different role</b><br/>
+For example analyze an application that uses a shared directory to store temporary PDF files for different users. Suppose that documentABC.pdf should be accessible only by the user test1 with roleA. Verify if user test2 with roleB can access that resource.<br/>
+<br/>
+<b>Tools</b>&nbsp;<ul><li>&nbsp;OWASP WebScarab: <a href="https://www.owasp.org/index.php/OWASP_WebScarab_Project">OWASP WebScarab Project</a></li>
+<li>&nbsp;<a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project">OWASP Zed Attack Proxy (ZAP)</a></li>
+</ul>
+&nbsp;</body></html>

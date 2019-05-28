@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Calculating Serialization Policy</string>
+  <key>nodeid</key><string>f561661f-1d53-440b-b394-5affdd6f471c</string>
+  <key>modified_time</key><integer>1559048048</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1559048004</integer>
+  <key>order</key><integer>3</integer>
+</dict>
+</node>

@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How Many Policies Per GWT App</title>
+</head><body><b>How many serialization policies does a GWT app have?</b><br/>
+The worst case is quite large:<br/>
+&nbsp;permutations = supported browsers * locales<br/>
+&nbsp;policies = permutations * GWT-RPC services<br/>
+<br/>
+However, normally GWT-RPC services don't use any types that are specific to a browser or locale. In that case, each permutation should generate an identical serialization policy for a given service and so there's one policy per service.<br/>
+<br/>
+If for any reason the serialization policies turn out to be different for each permutation, this can cause server-side memory usage to blow up due to the large number of policies. It's a good idea to write a test on the output of the GWT compiler to make sure this doesn't happen.<br/>
+</body></html>

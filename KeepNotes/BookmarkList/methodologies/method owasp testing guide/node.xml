@@ -2,6 +2,7 @@
 <node>
 <version>6</version>
 <dict>
+  <key>expanded</key><false/>
   <key>title</key><string>Method: OWASP Testing Guide</string>
   <key>nodeid</key><string>32161054-536b-4345-947b-701c3ab09e24</string>
   <key>modified_time</key><integer>1558881550</integer>

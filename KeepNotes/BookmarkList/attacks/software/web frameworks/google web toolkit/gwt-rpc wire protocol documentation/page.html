@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>GWT-RPC Wire Protocol Documentation</title>
+</head><body>The following is from: https://docs.google.com/document/d/1eG0YocsYYbNAtivkLtcaiEE5IOF5u4LUol8-LL0TIKU/view <br/>
+which is authored by Brian Slesinsky and is community 'best-effort' documentation<br/>
+<br/>
+Contents<ul><li>Objective</li>
+<li>Background</li>
+<li>Overview</li>
+<li style="list-style-type: none"><ul><li>Example</li>
+</ul>
+</li>
+<li>Detailed Design</li>
+<li style="list-style-type: none"><ul><li>Envelope</li>
+<li style="list-style-type: none"><ul><li>How the client code chooses the URL</li>
+<li>How GWT calculates the base URL</li>
+<li>How the frontend server routes requests to a GWT-RPC service</li>
+<li>HTTP(S) Requirements</li>
+<li>Request format</li>
+<li>Response format</li>
+</ul>
+</li>
+<li>The fields in a GWT-RPC request</li>
+<li style="list-style-type: none"><ul><li>Version</li>
+<li>Flags</li>
+<li style="list-style-type: none"><ul><li>FLAG_ELIDE_TYPE_NAMES = 1</li>
+<li>FLAG_RPC_TOKEN_INCLUDED = 2</li>
+</ul>
+</li>
+<li>The string table</li>
+<li>Module base URL</li>
+<li>Strong name</li>
+<li>RPC Token (optional)</li>
+<li>Service name</li>
+<li>Method name</li>
+<li>Parameter count</li>
+<li>Parameter types</li>
+<li>Parameter values</li>
+</ul>
+</li>
+<li>Java Types</li>
+<li style="list-style-type: none"><ul><li>Type name obfuscation</li>
+</ul>
+</li>
+<li>Java Values</li>
+<li style="list-style-type: none"><ul><li>Boolean</li>
+<li>Byte</li>
+<li>Char</li>
+<li>Short</li>
+<li>Integer</li>
+<li>Long</li>
+<li>Float</li>
+<li>Double</li>
+<li>String</li>
+<li>Java Objects</li>
+<li style="list-style-type: none"><ul><li>Type checking</li>
+<li>Arrays</li>
+<li>Enums</li>
+<li>Custom serialization</li>
+<li>Other objects</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Serialization policies</li>
+<li style="list-style-type: none"><ul><li>API</li>
+<li>How RemoteServiceServlet locates the serialization policy file</li>
+<li>Policy file format</li>
+<li>How is a serialization policy calculated?</li>
+<li style="list-style-type: none"><ul><li>Arrays</li>
+<li>Custom Serializers</li>
+</ul>
+</li>
+<li>How many serialization policies does a GWT app have?</li>
+<li>How can I find out which GWT-RPC service generated a policy?</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Caveats</li>
+</ul>
+</body></html>
