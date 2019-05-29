@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MSAccessi</title>
+</head><body><b>Summary </b><br/>
+As explained in the generic <a href="https://www.owasp.org/index.php/SQL_injection">SQL injection</a>&nbsp;section, SQL injection vulnerabilities occur whenever user-supplied input is used during the construction of a SQL query without being adequately constrained or sanitized. This class of vulnerabilities allows an attacker to execute SQL code under the privileges of the user that is used to connect to the database. In this section, relevant SQL injection techniques that utilize specific features of <a href="http://en.wikipedia.org/wiki/Microsoft_Access">Microsoft Access</a>&nbsp;will be discussed. <br/>
+<br/>
+<br/>
+<b>&nbsp;How to Test Fingerprinting </b><br/>
+Fingerprinting the specific database technology while testing SQL-powered application is the first step to properly asses potential vulnerabilities. A common approach involves injecting standard SQL injection attack patterns (e.g. single quote, double quote, ...) in order to trigger database exceptions. Assuming that the application does not handle exceptions with custom pages, it is possible to fingerprint the underline DBMS by observing error messages. <br/>
+<br/>
+Depending on the specific web technology used, MS Access driven applications will respond with one of the following errors: <br/>
+&nbsp;Fatal error: Uncaught exception 'com_exception' with message Source: Microsoft JET Database Engine &nbsp;<br/>
+or <br/>
+&nbsp;Microsoft JET Database Engine error '80040e14' &nbsp;<br/>
+or <br/>
+&nbsp;Microsoft Office Access Database Engine &nbsp;<br/>
+<br/>
+In all cases, we have a confirmation that we're testing an application using MS Access database. <br/>
+<br/>
+<br/>
+<b>&nbsp;Basic Testing </b><br/>
+Unfortunately, MS Access doesn't support typical operators that are traditionally used during SQL injection testing, including: <br/>
+&nbsp;<ul><li>&nbsp;No comments characters</li>
+<li>&nbsp;No stacked queries</li>
+<li>&nbsp;No LIMIT operator</li>
+<li>&nbsp;No SLEEP or BENCHMARK alike operators</li>
+<li>&nbsp;and many others</li>
+</ul>
+<br/>
+<br/>
+Nevertheless, it is possible to emulate those functions by combining multiple operators or by using alternative techniques. As mentioned, it is not possible to use the trick of inserting the characters /*, -- or # in order to truncate the query. However, we can fortunately bypass this limitation by injecting a 'null' character. Using a null byte %00 within a SQL query results in MS Access ignoring all remaining characters. This can be explained by considering that all strings are NULL terminated in the internal representation used by the database. It is worth mentioning that the 'null' character can sometimes cause troubles too as it may truncate strings at the web server level. In those situations, we can however employ another character: 0x16 (%16 in URL encoded format). <br/>
+<br/>
+<b>Considering the following query: </b><br/>
+&nbsp;SELECT [username],[password] FROM users WHERE [username]='$myUsername' AND [password]='$myPassword' &nbsp;<br/>
+We can truncate the query with the following two URLs: <br/>
+&nbsp;<a href="http://www.example.com/page.asp?user=admin'%00&pass=foo">http://www.example.com/page.asp?user=admin'%00&amp;pass=foo</a>&nbsp;<a href="http://www.example.com/page.app?user=admin'%16&pass=foo">http://www.example.com/page.app?user=admin'%16&amp;pass=foo</a>&nbsp; <br/>
+The LIMIT operator is not implemented in MS Access, however it is possible to limit the number of results by using the TOP or LAST operators instead. <br/>
+&nbsp;<a href="http://www.example.com/page.app?id=2'+UNION+SELECT+TOP+3+name+FROM+appsTable%00">http://www.example.com/page.app?id=2'+UNION+SELECT+TOP+3+name+FROM+appsTable%00</a>&nbsp; <br/>
+By combining both operators, it is possible to select specific results. String concatenation is possible by using &amp; (%26) and + (%2b) characters. <br/>
+<br/>
+There are also many other functions that can be used while testing SQL injection, including but not limited to: <br/>
+&nbsp;<ul><li>&nbsp;ASC: Obtain the ASCII value of a character passed as input</li>
+<li>&nbsp;CHR: Obtain the character of the ASCII value passed as input</li>
+<li>&nbsp;LEN: Return the length of the string passed as parameter</li>
+<li>&nbsp;IIF: Is the IF construct, for example the following statement IIF(1=1, 'a', 'b') return 'a'</li>
+<li>&nbsp;MID: This function allows you to extract substring, for example the following statement mid('abc',1,1) return 'a'</li>
+<li>&nbsp;TOP: This function allows you to specify the maximum number of results that the query should return from the top. For example TOP 1 will return only 1 row.</li>
+<li>&nbsp;LAST: This function is used to select only the last row of a set of rows. For example the following query SELECT last(*) FROM users will return only the last row of the result.</li>
+</ul>
+<br/>
+<br/>
+Some of these operators are essential to exploit blind SQL injections. For other advanced operators, please refer to the documents in the references. <br/>
+<br/>
+<br/>
+<b>&nbsp;Attributes Enumeration </b><br/>
+In order to enumerate the column of a database table, it is possible to use a common error-based technique. In short, we can obtain the attributes name by analyzing error messages and repeating the query with different selectors. For example, assuming that we know the existence of a column, we can also obtain the name of the remaining attributes with the following query: <br/>
+&nbsp;' GROUP BY Id%00 &nbsp;<br/>
+<br/>
+In the error message received, it is possible to observe the name of the next column. At this point, we can iterate the method until we obtain the name of all attributes. If we don't know the name of the first attribute, we can still insert a fictitious column name and obtain the name of the first attribute within the error message. <br/>
+<br/>
+<br/>
+<b>&nbsp;Obtaining Database Schema </b><br/>
+Various system tables exist by default in MS Access that can be potentially used to obtain table names and columns. Unfortunately, in the default configuration of recent MS Access database releases, these tables are not accessible. Nevertheless, it is always worth trying: <br/>
+&nbsp;<ul><li>&nbsp;MSysObjects</li>
+<li>&nbsp;MSysACEs</li>
+<li>&nbsp;MSysAccessXML</li>
+</ul>
+<br/>
+<br/>
+For example, if a union SQL injection vulnerability exists, you can use the following query: <br/>
+&nbsp;' UNION SELECT Name FROM MSysObjects WHERE Type = 1%00 &nbsp;<br/>
+<br/>
+Alternatively, it is always possible to bruteforce the database schema by using a standard wordlist (e.g. <a href="http://code.google.com/p/fuzzdb/">FuzzDb</a>). <br/>
+<br/>
+In some cases, developers or system administrators do not realize that including the actual <i>.mdb</i>&nbsp;file within the application webroot can allow to download the entire database. Database filenames can be inferred with the following query: <br/>
+&nbsp;<a href="http://www.example.com/page.app?id=1'+UNION+SELECT+1+FROM+name.table%00">http://www.example.com/page.app?id=1'+UNION+SELECT+1+FROM+name.table%00</a>&nbsp; <br/>
+<br/>
+where name is the <i>.mdb</i>&nbsp;filename and table is a valid database table. In case of password protected databases, multiple software utilities can be used to crack the password. Please refer to the references. <br/>
+<br/>
+<br/>
+<b>&nbsp;Blind SQL Injection Testing </b><br/>
+<a href="https://www.owasp.org/index.php/Blind_SQL_Injection">Blind SQL Injection</a>&nbsp;vulnerabilities are by no means the most easily exploitable SQL injections while testing real-life applications. In case of recent versions of MS Access, it is also not feasible to execute shell commands or read/write arbitrary files. <br/>
+<br/>
+In case of blind SQL injections, the attacker can only infer the result of the query by evaluating time differences or application responses. It is supposed that the reader already knows the theory behind blind SQL injection attacks, as the remaining part of this section will focus on MS Access specific details. <br/>
+<br/>
+The following example is used: <br/>
+&nbsp;<a href="http://www.example.com/index.php?myId=">http://www.example.com/index.php?myId=</a>[sql] &nbsp;<br/>
+where the id parameter is used within the following query: <br/>
+&nbsp;SELECT * FROM orders WHERE [id]=$myId &nbsp;<br/>
+<br/>
+Let's consider the myId parameter vulnerable to blind SQL injection. As an attacker, we want to extract the content of column 'username' in the table 'users', assuming that we have already disclosed the database schema. <br/>
+<br/>
+A typical query that can be used to infer the first character of the username of the 10th rows is: <br/>
+&nbsp;<a href="http://www.example.com/index.php?id=IIF((select%20MID(LAST(username),1,1)%20from%20(select%20TOP%2010%20username%20from%20users))='a',0,'no')">http://www.example.com/index.php?id=IIF((select%20MID(LAST(username),1,1)%20from%20(select%20TOP%2010%20username%20from%20users))='a',0,'no')</a>&nbsp; <br/>
+If the first character is 'a', the query will return 0 or otherwise the string 'no'. <br/>
+<br/>
+By using a combination of the IFF, MID, LAST and TOP functions, it is possible to extract the first character of the username on a specifically selected row. As the inner query returns a set of records, and not just one, it is not possible to use it directly. Fortunately, we can combine multiple functions to extract a specific string. <br/>
+<br/>
+Let's assume that we want to retrieve the username of the 10th row. First, we can use the TOP function to select the first ten rows using the following query: <br/>
+&nbsp;SELECT TOP 10 username FROM users &nbsp;<br/>
+<br/>
+Then, using this subset, we can extract the last row by using the LAST function. Once we have only one row and exactly the row containing our string, we can use the IFF, MID and LAST functions to infer the actual value of the username. In our example, we employ IFF to return a number or a string. Using this trick, we can distinguish whether we have a true response or not, by observing application error responses. As id is numeric, the comparison with a string results in a SQL error that can be potentially leaked by 500 Internal Server Error pages. Otherwise, a standard 200 OK page will be likely returned. <br/>
+<br/>
+For example, we can have the following query: <br/>
+&nbsp;<a href="http://www.example.com/index.php?id='%20AND%201=0%20OR%20'a'=IIF((select%20MID(LAST(username),1,1)%20from%20(select%20TOP%2010%20username%20from%20users))='a','a','b')%00">http://www.example.com/index.php?id='%20AND%201=0%20OR%20'a'=IIF((select%20MID(LAST(username),1,1)%20from%20(select%20TOP%2010%20username%20from%20users))='a','a','b')%00</a>&nbsp; <br/>
+that is TRUE if the first character is 'a' or false otherwise. <br/>
+<br/>
+As mentioned, this method allows to infer the value of arbitrary strings within the database: <br/>
+&nbsp;<ul><li>&nbsp;By trying all printable values, until we find a match</li>
+<li>&nbsp;By inferring the length of the string using the LEN function, or by simply stopping after we have found all characters</li>
+</ul>
+<br/>
+<br/>
+Time-based blind SQL injections are also possible by abusing <a href="http://technet.microsoft.com/it-it/library/cc512676%28en-us%29.aspx">heavy queries</a>. <br/>
+<br/>
+&nbsp;References <ul><li>&nbsp;<a href="http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html">http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html</a></li>
+<li>&nbsp;<a href="http://packetstormsecurity.com/files/65967/Access-Through-Access.pdf.html">http://packetstormsecurity.com/files/65967/Access-Through-Access.pdf.html</a></li>
+<li>&nbsp;<a href="http://seclists.org/pen-test/2003/May/74">http://seclists.org/pen-test/2003/May/74</a></li>
+<li>&nbsp;<a href="http://www.techonthenet.com/access/functions/index_alpha.php">http://www.techonthenet.com/access/functions/index_alpha.php</a></li>
+<li>&nbsp;<a href="http://en.wikipedia.org/wiki/Microsoft_Access">http://en.wikipedia.org/wiki/Microsoft_Access</a></li>
+</ul>
+&nbsp;</body></html>

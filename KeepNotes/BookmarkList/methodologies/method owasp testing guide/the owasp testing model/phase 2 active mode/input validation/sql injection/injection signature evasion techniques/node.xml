@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Injection Signature Evasion Techniques</string>
+  <key>nodeid</key><string>0820485c-f076-4003-96fc-d28dab632e2c</string>
+  <key>modified_time</key><integer>1559141687</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1559141253</integer>
+  <key>order</key><integer>4</integer>
+</dict>
+</node>

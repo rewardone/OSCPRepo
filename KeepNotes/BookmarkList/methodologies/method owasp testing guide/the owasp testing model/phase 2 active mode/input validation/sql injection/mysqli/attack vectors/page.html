@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Attack Vectors</title>
+</head><body><b>Attack vectors <br/>
+</b><b>Write in a File </b><br/>
+If the connected user has <b>FILE</b>&nbsp;privileges and single quotes are not escaped, the 'into outfile' clause can be used to export query results in a file. <br/>
+&nbsp;Select * from table into outfile '/tmp/file' &nbsp;<br/>
+<br/>
+Note: there is no way to bypass single quotes surrounding a filename. So if there's some sanitization on single quotes like escape (\') there will be no way to use the 'into outfile' clause. <br/>
+<br/>
+This kind of attack could be used as an out-of-band technique to gain information about the results of a query or to write a file which could be executed inside the web server directory. <br/>
+<br/>
+Example: <br/>
+&nbsp;1 limit 1 into outfile '/var/www/root/test.jsp' FIELDS ENCLOSED BY '//' LINES TERMINATED BY '\n&lt;%jsp code here%&gt;'; &nbsp;<br/>
+<br/>
+<b>Result Expected:</b><br/>
+Results are stored in a file with rw-rw-rw privileges owned by MySQL user and group. <br/>
+Where <i>/var/www/root/test.jsp</i>&nbsp;will contain: <br/>
+&nbsp;//field values// &lt;%jsp code here%&gt; &nbsp;<br/>
+<br/>
+<br/>
+<b>&nbsp;Read from a File </b><br/>
+Load_file is a native function that can read a file when allowed by the file system permissions. If a connected user has <b>FILE</b>&nbsp;privileges, it could be used to get the files' content. Single quotes escape sanitization can by bypassed by using previously described techniques. <br/>
+&nbsp;load_file('filename') &nbsp;<br/>
+<br/>
+<b>Result Expected:</b><br/>
+The whole file will be available for exporting by using standard techniques. <br/>
+<br/>
+<br/>
+<b>&nbsp;Standard SQL Injection Attack </b><br/>
+In a standard SQL injection you can have results displayed directly in a page as normal output or as a MySQL error. By using already mentioned SQL Injection attacks and the already described MySQL features, direct SQL injection could be easily accomplished at a level depth depending primarily on the MySQL version the pentester is facing. <br/>
+<br/>
+A good attack is to know the results by forcing a function/procedure or the server itself to throw an error. A list of errors thrown by MySQL and in particular native functions could be found on <a href="http://dev.mysql.com/doc/refman/5.0/en/error-messages-server.html">MySQL Manual</a>. <br/>
+<br/>
+<br/>
+<b>&nbsp;Out of band SQL Injection </b><br/>
+Out of band injection could be accomplished by using the <a href="https://www.owasp.org/index.php/Testing_for_MySQL#Write_in_a_File">'into outfile'</a>&nbsp;clause. <br/>
+<br/>
+<br/>
+<b>&nbsp;Blind SQL Injection </b><br/>
+For blind SQL injection, there is a set of useful function natively provided by MySQL server. <br/>
+&nbsp;<ul><li>&nbsp;String Length: &nbsp;<i>LENGTH(str)</i></li>
+<li>&nbsp;Extract a substring from a given string: &nbsp;<i>SUBSTRING(string, offset, #chars_returned)</i></li>
+<li>&nbsp;Time based Blind Injection: BENCHMARK and SLEEP &nbsp;<i>BENCHMARK(#ofcycles,action_to_be_performed )</i>&nbsp; The benchmark function could be used to perform timing attacks, when blind injection by boolean values does not yield any results. &nbsp;See. SLEEP() (MySQL &gt; 5.0.x) for an alternative on benchmark.</li>
+</ul>
+<br/>
+For a complete list, refer to the MySQL manual at <a href="http://dev.mysql.com/doc/refman/5.0/en/functions.html">http://dev.mysql.com/doc/refman/5.0/en/functions.html</a>&nbsp;<br/>
+&nbsp; </body></html>

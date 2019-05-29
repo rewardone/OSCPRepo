@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>XPath Injection</string>
+  <key>nodeid</key><string>87cf5cdf-a448-4cc6-b9bc-c99fb320f406</string>
+  <key>modified_time</key><integer>1559146163</integer>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1559146026</integer>
+  <key>order</key><integer>9</integer>
+</dict>
+</node>

@@ -1,2 +1,41 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><body></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Input Validation</title>
+</head><body><b>&nbsp;4.8 Input Validation Testing</b><br/>
+<br/>
+The most common web application security weakness is the failure to properly validate input coming from the client or from the environment before using it. This weakness leads to almost all of the major vulnerabilities in web applications, such as cross site scripting, SQL injection, interpreter injection, locale/Unicode attacks, file system attacks, and buffer overflows.<br/>
+<br/>
+<br/>
+Data from an external entity or client should never be trusted, since it can be arbitrarily tampered with by an attacker. "All Input is Evil", says Michael Howard in his famous book "Writing Secure Code". That is rule number one. Unfortunately, complex applications often have a large number of entry points, which makes it difficult for a developer to enforce this rule. This chapter describes Data Validation testing. This is the task of testing all the possible forms of input to understand if the application sufficiently validates input data before using it. <br/>
+<br/>
+<br/>
+(OTG-INPVAL-001) Reflected Cross Site Scripting<br/>
+(OTG-INPVAL-002) Stored Cross Site Scripting<br/>
+(OTG-INPVAL-003) HTTP Verb Tampering<br/>
+(OTG-INPVAL-004) HTTP Parameter Pollution<br/>
+(OTG-INPVAL-005) SQL Injection<br/>
+(OTG-INPVAL-005-1) Oracle<br/>
+(OTG-INPVAL-005-2) MySQL <br/>
+(OTG-INPVAL-005-3) MSSQL<br/>
+(OTG-INPVAL-005-4) PostgreSQL<br/>
+(OTG-INPVAL-005-5) MSAccess<br/>
+(OTG-INPVAL-005-6) NoSQL<br/>
+(OTG-INPVAL-006) LDAP Injection<br/>
+(OTG-INPVAL-007) ORM Injection<br/>
+(OTG-INPVAL-008) XML Injection<br/>
+(OTG-INPVAL-009) SSI Injection<br/>
+(OTG-INPVAL-0010) XPath Injection<br/>
+(OTG-INPVAL-0011) IMAP/SMTP Injection<br/>
+(OTG-INPVAL-0012) Code Injection<br/>
+(OTG-INPVAL-0012-1) Local File Inclusion<br/>
+(OTG-INPVAL-0012-2) Remote File Inclusion<br/>
+(OTG-INPVAL-0013) Command Injection<br/>
+(OTG-INPVAL-0014) Buffer Overflow<br/>
+(OTG-INPVAL-0014-1) Heap Overflow<br/>
+(OTG-INPVAL-0014-2) Stack Overflow<br/>
+(OTG-INPVAL-0014-3) Format String<br/>
+(OTG-INPVAL-0015) Incubated Vulnerabilities<br/>
+(OTG-INPVAL-0016) HTTP Splitting/Smuggling<br/>
+(OTG-INPVAL-0017) HTTP Incoming Requests</body></html>

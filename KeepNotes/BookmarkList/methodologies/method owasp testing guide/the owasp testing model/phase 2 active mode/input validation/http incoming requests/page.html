@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTTP Incoming Requests</title>
+</head><body><b>Summary</b>&nbsp;<br/>
+This section describes how to monitor all incoming/outgoing http requests on both client or web server side. The purpose of this testing is to verify if there is unnecessary or suspicious http request sending in the background. <br/>
+<br/>
+Most of Web security testing tools (i.e. AppScan, BurpSuite, ZAP) act as Http Proxy. This will require changes of proxy on client side application or browser. The testing techniques listed below is primary focused on how we can monitor Http requests without changes of client side which will be more close to production usage scenario. <br/>
+<b><br/>
+</b><b>Test Objectives </b><br/>
+1. Monitor all incoming and outgoing http requests to the Web Server to inspect any suspicious requests. <br/>
+2. Monitor http traffic without changes of end user Browser proxy or client-side application. <br/>
+<br/>
+<b>How to Test <br/>
+</b><b>Reverse Proxy </b><br/>
+There is situation that we would like to monitor all http incoming requests on web server side but we can't change configuration on browser or application client side. In this scenario, we can setup reverse proxy on web server side to monitor all incoming/outgoing requests on web server side. <br/>
+For windows platform, Fiddler is recommended. It provides not only monitor but can also edit/reply the http requests. Refer the refernece for how to configure fiddler as reverse Proxy. <br/>
+<a href="http://docs.telerik.com/fiddler/Configure-Fiddler/Tasks/UseFiddlerAsReverseProxy">http://docs.telerik.com/fiddler/Configure-Fiddler/Tasks/UseFiddlerAsReverseProxy</a>&nbsp;<br/>
+<br/>
+For Linux platform, Charles Web Debugging Proxy may be used. <br/>
+The testing steps: <br/>
+1. Install Fiddler or Charles on Web Server <br/>
+2. Configure the Fiddler or Charles as Reverse Proxy <br/>
+3. Capture the http traffic <br/>
+4. Inspect Http traffic <br/>
+5. Modify Http requests and replay the modified requests for testing &nbsp;Port Forwarding <br/>
+<br/>
+Port forwarding is another way to allow us intercept http requests without changes of client side. You can also use Charles as a SOCKS proxy to act as port forwarding or uses of Port Forwarding tools. It will allow us to forward all coming client side captured traffic to web server port. <br/>
+<br/>
+The testing flow will be: <br/>
+1. Install the Charles or port forwarding on another machine or web Server <br/>
+2. Configure the Charles as Socks proxy as port forwarding. &nbsp;TCP-level Network Traffic Capture <br/>
+This technique monitor all the network traffic at TCP-level. TCPDump or WireShark tools can be used. However, these tools don't allow us edit the captured traffic and send modified http requests for testing. To replay the captured traffic (PCAP) packets, Ostinato can be used. <br/>
+<br/>
+The testing steps will be: <br/>
+1. Activate TCPDump or WireShark on Web Server side to capture network traffic <br/>
+2. Monitor the captured files (PCAP) <br/>
+3. Edit PCAP files by Ostinato tool based on need <br/>
+4. Reply the http requests &nbsp;<br/>
+Fiddler or Charles are recommended since these tools can capture http traffic and also easily edit/reply the modified http requests. In addition, if the web traffic is HTTPS, the wireshark will need to import the web server private key to inspect the HTTPS message body. Otherwise, the HTTPS message body of the captured traffic will all be encrypted. <br/>
+&nbsp;<br/>
+<b>Tools</b>&nbsp;<ul><li>&nbsp;Fiddler</li>
+<li>&nbsp;TCPProxy </li>
+<li>&nbsp;Charles Web Debugging Proxy</li>
+<li>&nbsp;WireShark</li>
+<li>&nbsp;PowerEdit-Pcap</li>
+<li>&nbsp;WireEdit</li>
+<li>&nbsp;pcapteller</li>
+<li>&nbsp;replayproxy</li>
+<li>&nbsp;Ostinato</li>
+</ul>
+<b><br/>
+</b><b>References</b>&nbsp;<ul><li>&nbsp;<a href="https://www.charlesproxy.com/">https://www.charlesproxy.com/</a></li>
+<li>&nbsp;<a href="http://www.telerik.com/fiddler/">http://www.telerik.com/fiddler/</a></li>
+<li>&nbsp;<a href="http://www.tcpdump.org/">http://www.tcpdump.org/</a></li>
+<li>&nbsp;<a href="https://wireedit.com/">https://wireedit.com/</a></li>
+<li>&nbsp;<a href="http://ostinato.org/">http://ostinato.org/</a></li>
+</ul>
+&nbsp;</body></html>

