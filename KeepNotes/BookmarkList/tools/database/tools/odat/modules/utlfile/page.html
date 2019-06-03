@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>utlfile</title>
+</head><body>Download and upload files <br/>
+This module can be used to upload a file, download a file or delete a remote file.<br/>
+&nbsp;<ul><li>&nbsp;To download the <i>/etc/passwd</i>&nbsp;file:</li>
+</ul>
+./odat.py utlfile -s $SERVER -d $SID -U $USER -P $PASSWORD --test-module --getFile /etc/ passwd passwd.txt <br/>
+<ul><li>&nbsp;To upload the <i>test.txt</i>&nbsp;file:</li>
+</ul>
+./odat.py utlfile -s $SERVER -d $SID -U $USER -P $PASSWORD --putFile /tmp/ file.txt test.txt <br/>
+<ul><li>&nbsp;To delete the <i>file.txt</i>&nbsp;file stored in <i>/tmp/</i>:</li>
+</ul>
+./odat.py utlfile -s $SERVER -d $SID -U $USER -P $PASSWORD --removeFile /tmp/ file.txt &nbsp;</body></html>

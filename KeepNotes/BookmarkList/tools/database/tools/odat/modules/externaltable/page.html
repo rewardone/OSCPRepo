@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>externaltable</title>
+</head><body>Execute remote script and download files <br/>
+This module can be used to download files or to run script remotely.<br/>
+&nbsp;<br/>
+<b>Notes</b>:<br/>
+&nbsp;<br/>
+~ It is <b>not possible to give an argument</b>&nbsp;to the executable<br/>
+&nbsp;<br/>
+~ The executable must be stored on the database server<br/>
+&nbsp;<br/>
+~ The executable must have the execution bit enabled<br/>
+&nbsp;<ul><li>&nbsp;To download the <i>temp.sh</i>&nbsp;file stored in <i>/tmp/</i>&nbsp;in <i>test.txt</i>:</li>
+</ul>
+./odat.py externaltable -s $SERVER -d $SID -U $USER -P $PASSWORD --getFile /tmp/ temp.sh test.txt <br/>
+<ul><li>&nbsp;To run the <i>temp.sh</i>&nbsp;executable file stored in the <i>/tmp/</i>&nbsp;folder of the database server:</li>
+</ul>
+./odat.py externaltable -s $SERVER -d $SID -U $USER -P $PASSWORD --exec /tmp/ temp.sh &nbsp; &nbsp; <a href="https://github.com/quentinhardy/odat/wiki/_Footer/_edit">&nbsp; </a>&nbsp; </body></html>

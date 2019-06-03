@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>userlikepwd</title>
+</head><body>Test each username as password <br/>
+When you are authenticated, this module takes all Oracle users and tries to connect to the database using the username as password (lowercase &amp; uppercase value).<br/>
+&nbsp;<br/>
+For example, if the database has 2 Oracle users (<i>SYS</i>, <i>SYSTEM</i>), this module will try to connect to the database with these credentials: SYS/SYS, SYS/sys, SYSTEM/SYSTEM and SYSTEM/system.<br/>
+&nbsp;<br/>
+This module <b>is started automatically when the <i>all</i>&nbsp;module is launched</b>&nbsp;with a valid Oracle account (<i>-U</i>&nbsp;and <i>-P</i>&nbsp;options).<br/>
+&nbsp;<br/>
+Here is an example:<br/>
+&nbsp;./odat.py userlikepwd -s $HOST -d $SID -U $LOGIN -P $PASSWORD --run &nbsp;</body></html>

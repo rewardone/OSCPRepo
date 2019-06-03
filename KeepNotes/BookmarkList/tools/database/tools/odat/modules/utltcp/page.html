@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>utltcp</title>
+</head><body>To scan ports <br/>
+This module can be used to scan ports and it can be used to forge and send TCP packet (ex: HTTP request).<br/>
+&nbsp;<ul><li>&nbsp;To scan ports:</li>
+</ul>
+./odat.py utltcp -s $SERVER -d $SID -U $USER -P $PASSWORD --scan-ports 127.0.0.1 1521,443,22 <br/>
+<ul><li>&nbsp;To forge a HTTP GET request:</li>
+</ul>
+echo 'GET / HTTP/1.0\n\n' &gt; ./temp.txt; <br/>
+./odat.py utltcp -s $SERVER -d $SID -U $USER -P $PASSWORD --send-packet 127.0.0.1 80 ./temp.txt <br/>
+rm ./temp.txt &nbsp;</body></html>

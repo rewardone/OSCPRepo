@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tnscmd</title>
+</head><body>Get information without authentication <br/>
+This module can be used to communicate directly with the TNS listener without authentication.<br/>
+&nbsp;<ul><li>&nbsp;If you would like to know the alias defined on the TNS listener, you could use this following command:</li>
+</ul>
+./odat.py tnscmd -s $SERVER -p $PORT --ping <br/>
+<ul><li>&nbsp;To know the remote database version, the following command can be used:</li>
+</ul>
+./odat.py tnscmd -s $SERVER -p $PORT --version <br/>
+<ul><li>&nbsp;To know the remote database status, the following command can be used:</li>
+</ul>
+./odat.py tnscmd -s $SERVER -p $PORT --status &nbsp;</body></html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>All</title>
+</head><body>The first module to use!** <br/>
+The <i>all</i>&nbsp;module allows you to <b>run all modules</b>&nbsp;(depends on options that you have purchased).<br/>
+&nbsp;<br/>
+It is very useful when you want to known <b>what you can do on a database server</b>&nbsp;with a valid SID or no, with a valid Oracle account or no.<br/>
+&nbsp;<ul><li>&nbsp;For example, the following commands runs <b>all ODAT modules</b>&nbsp;on the $HOST Oracle database server listening on the 1521 port:</li>
+</ul>
+./odat.py all -s $HOST -p 1521 <br/>
+With these options (<i>-s</i>&nbsp;and <i>-p</i>), ODAT will search valid SID (System ID) in a first step. You can configure some options for configuring methods (i.e. wordlist or bruteforce attack). By default, ODAT will use a big word list and it will do a small bruteforce attack.<br/>
+&nbsp;<br/>
+If ODAT founds at least one SID (e.g. <i>ORCL</i>), it will search valid Oracle accounts. It will do that on each SID found. You can specify some options for credentials (e.g. <i>--accounts-file</i>, <i>--accounts-files</i>, <i>--login-as-pwd</i>).<br/>
+&nbsp;<br/>
+For each valid account (e.g. <i>SYS</i>) on each valid instance (SID), ODAT will give you what each Oracle user can do (e.g. reverse shell, read files, become DBA).<br/>
+&nbsp;<ul><li>&nbsp;If you don't known a SID, you can give the number of character maximum, the charset to use for the brute force attack and the file witch contains SID list for the dictionary attack:</li>
+</ul>
+./odat.py all -s 192.168.142.73 -p 1521 --sids-max-size=3 --sid-charset='abc' --accounts-file=accounts.txt <br/>
+If you give a SID, ODAT will not search others valid SID.<br/>
+&nbsp;<ul><li>&nbsp;If you known a SID (e.g. <i>ORCL</i>), you can use the <i>-d</i>&nbsp;option to give it to ODAT:</li>
+</ul>
+./odat.py all -s $HOST -p $PORT -d ORCL <ul><li>&nbsp;If you known a SID (ex: <i>ORCL</i>) and an account (<i>SYS/password</i>), you can give this information to ODAT:</li>
+</ul>
+./odat.py all -s $SERVER -p $PORT -d ORCL -U SYS -P password &nbsp;</body></html>
