@@ -3,4 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Chrome</title>
-</head><body>Google Chrome Web browser: The passwords are stored in [Windows Profile]\Local Settings\Application Data\Google\Chrome\User Data\Default\Web Data (This filename is SQLite database which contains encrypted passwords and other stuff) </body></html>
+</head><body>Google Chrome Web browser: The passwords are stored in [Windows Profile]\Local Settings\Application Data\Google\Chrome\User Data\Default\Web Data (This filename is SQLite database which contains encrypted passwords and other stuff) <br/>
+<br/>
+Chrome stores its cookies in a SQLite database with the cookie values themselves protected as encrypted DPAPI blobs. Luckily for us, Benjamin implemented Chrome SQLite database parsing in Mimikatz! To list the cookies available for the current user, you can run the following Mimikatz command: mimikatz dpapi::chrome /in:”%localappdata%\Google\Chrome\User Data\Default\Cookies”<br/>
+<br/>
+However, the actual cookie values are DPAPI encrypted with the user’s master key, which is in turn protected by the user’s password (or domain backup key ;) There are a couple of scenarios we might find ourselves in when trying to retrieve these cookie (or login data) values. &nbsp;</body></html>
