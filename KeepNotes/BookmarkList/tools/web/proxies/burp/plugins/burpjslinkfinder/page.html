@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>BurpJSLinkFinder</title>
+</head><body>[BurpJSLinkFinder](https://github.com/InitRoot/BurpJSLinkFinder) | Passive scanning JS files for endpoint links<br/>
+<br/>
+<br/>
+<br/>
+Burp Extension for a passive scanning JS files for endpoint links.<br/>
+&nbsp;<ul><li>&nbsp;Export results the text file</li>
+<li>Exclude specific 'js' files e.g. jquery, google-analytics</li>
+</ul>
+<br/>
+Copyright (c) 2019 Frans Hendrik Botes<br/>
+&nbsp;<br/>
+Credit to <a href="https://github.com/GerbenJavado/LinkFinder">https://github.com/GerbenJavado/LinkFinder</a>&nbsp;for the idea and regex<br/>
+&nbsp;Setup <br/>
+For use with the professional version of Burp Suite. Ensure you have JPython loaded and setup before installing.<br/>
+&nbsp;<br/>
+You can modify the exclusion list by updating the strings on line 33. Currently any strings that include the included words will not be analysed.<br/>
+&nbsp;# Needed params JSExclusionList = ['jquery', 'google-analytics','gpt.js'] &nbsp;Usage <br/>
+Once you've loaded the plugin there is some things to consider. Burp performs threading on passive scanning by itself. This can be controlled by looking at the Scanner options. For quick scanning I make use of the following settings with this plugin:<br/>
+&nbsp;<br/>
+Scanner --&gt; Live Scanning<br/>
+&nbsp;<ul><li>&nbsp;Live Active Scanning : Disabled</li>
+<li>Live Passive Scanning : Use suite scope</li>
+</ul>
+<br/>
+As with ALL the burp scanner items, you have to give it a minute or so to work through the data. You shouldn't be waiting several minutes for a result tho.<br/>
+&nbsp;<br/>
+If the links have been excluded monitor the OUTPUT of the extension under the Extender options to verify.<br/>
+&nbsp; </body></html>

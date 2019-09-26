@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Rlwrap</title>
+</head><body>[Rlwrap](https://github.com/hanslub42/rlwrap) | A readline wrapper<br/>
+<br/>
+* WHAT IT IS: <br/>
+<br/>
+rlwrap is a 'readline wrapper', a small utility that uses the GNU<br/>
+readline library to allow the editing of keyboard input for any<br/>
+command. I couldn't find anything like it when I needed it, so I wrote<br/>
+this one back in 1999. &nbsp;By now, there are (and, in hindsight, even<br/>
+then there were) a number of good readline wrappers around, like rlfe,<br/>
+distributed as part of the GNU readline library, and the amazing socat<br/>
+(http://freecode.com/projects/socat). You should consider rlwrap <br/>
+especially when you need user-defined completion (by way of completion word<br/>
+lists) and persistent history, or if you want to program 'special<br/>
+effects' using the filter mechanism. rlwrap compiles and runs on a <br/>
+fairly wide range of Unix-like systems.<br/>
+<br/>
+* HOW TO USE IT:<br/>
+If <br/>
+<br/>
+&nbsp; $ &lt;command&gt; &lt;args&gt;<br/>
+<br/>
+doesn't let you use arrow keys to edit input, or if you just want<br/>
+decent input history and completion, try:<br/>
+<br/>
+&nbsp; $ rlwrap [-options] &lt;command&gt; &lt;args&gt;<br/>
+<br/>
+You then can edit &lt;command&gt;'s input and recall the input history using<br/>
+the arrow keys. &nbsp;Input history is remembered accross invocations,<br/>
+separately for different &lt;command&gt;s. Typing !&lt;prefix&gt;&lt;TAB&gt; will recall<br/>
+the last input line starting with &lt;prefix&gt;, CTRL-R will search the<br/>
+input history. &nbsp;With the -r and -f options you can specify the list of<br/>
+words which rlwrap will use as possible completions, taking them from a <br/>
+file (-f option) or from &lt;command&gt;'s standard in/output.<br/>
+rlwrap monitors &lt;command&gt;'s terminal settings, so that it can do the<br/>
+right thing when command asks for single keypresses or for a password.<br/>
+Commands that already use readline will always ask for (and get)<br/>
+single keypresses, which makes rlwrapping them rather<br/>
+pointless. However, if one uses the -a option, rlwrap will use its own<br/>
+line editing and history. Unforunately, in this case, rlwrap cannot<br/>
+detect whether &lt;command&gt; asks for a password. This can be remedied by<br/>
+giving the password prompt (excluding trailing space and possibly the<br/>
+first few letters) as an argument to the -a option.<br/>
+&nbsp;<br/>
+* EXAMPLES:<br/>
+Run netcat with command-line editing:<br/>
+<br/>
+&nbsp; rlwrap nc localhost 80<br/>
+<br/>
+Run lprolog and use library1 and library2 to build a completion word<br/>
+list:<br/>
+&nbsp; <br/>
+&nbsp; rlwrap -f library1 -f library2 lprolog<br/>
+<br/>
+Run smbclient (which already uses readline), add all input and output<br/>
+to completion list, complete local filenames, avoid showing (and<br/>
+storing) passwords:<br/>
+<br/>
+&nbsp; rlwrap -cr -aPassword: smbclient '\\PEANUT\C' <br/>
+<br/>
+* INSTALLATION:<br/>
+Usually just<br/>
+<br/>
+# ./configure; make install<br/>
+<br/>
+See the INSTALL file for more information.<br/>
+<br/>
+* PARENTHESIS MATCHING <br/>
+This can be controlled by putting "set blink-matching-paren (off|on)"<br/>
+in your .inputrc. This setting is mentioned, but not clearly<br/>
+documented in readline's info or manpages; it should be on by default.<br/>
+<br/>
+* FILTERS <br/>
+Filters are "plug-in" scripts that give you complete control<br/>
+over rlwrap's input and output, history and completion. They are <br/>
+somewhat experimental, and their implementation and the example<br/>
+filters still are of slightly dubious ('alpha') quality.<br/>
+<br/>
+* AUTHOR<br/>
+Hans Lub, hanslub42@gmail.com<br/>
+<br/>
+* HOMEPAGE<br/>
+https://github.com/hanslub42/rlwrap</body></html>

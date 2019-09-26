@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+<version>6</version>
+<dict>
+  <key>title</key><string>Chrome-Password-Dumper.ps1</string>
+  <key>nodeid</key><string>c53955d3-2f29-43f5-91d3-70266951068e</string>
+  <key>modified_time</key><integer>1566846256</integer>
+  <key>expanded2</key><true/>
+  <key>version</key><integer>6</integer>
+  <key>content_type</key><string>text/xhtml+xml</string>
+  <key>created_time</key><integer>1566846239</integer>
+  <key>order</key><integer>1</integer>
+</dict>
+</node>
