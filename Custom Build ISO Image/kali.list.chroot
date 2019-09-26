@@ -35,6 +35,7 @@ hashcat-utils
 hashid
 hydra
 hydra-gtk
+impacket-scripts
 iodine
 john
 laudanum
@@ -56,15 +57,19 @@ nikto
 nishang
 nmap
 oclhashcat
+odat
 onesixtyone
 patator
 php
 powercat
 powersploit
+powershell-empire
 proxychains
 proxytunnel
 ptunnel
 python3
+python3-pip
+python3-ldapdomaindump
 python-impacket
 recon-ng
 responder

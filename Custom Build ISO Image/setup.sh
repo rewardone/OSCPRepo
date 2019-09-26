@@ -8,8 +8,9 @@
 # Build dev-build environment
 apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade 
 apt install git live-build cdebootstrap devscripts -y
-git clone https://gitlab.com/kalilinux/build-scripts/live-build-config.git /root/live-build-config
-cd /root/live-build-config/kali-config
+direc="/root/live-build-config"
+if [ -d $direct ]; then cd $direc && git pull; else git clone https://gitlab.com/kalilinux/build-scripts/live-build-config.git $direc; fi
+cd "$direc/kali-config"
 
 # Overwrite default kali package list at kali-config/variant-default/package-lists/kali.list.chroot
 # with your desired packages. See https://tools.kali.org/kali-metapackages for list of the breakdowns
@@ -19,63 +20,55 @@ wget "https://raw.githubusercontent.com/rewardone/OSCPRepo/master/Custom Build I
 wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
 
 # download things that apt can't
-mkdir -p /tmp/tools/
-git clone https://github.com/dirkjanm/ldapdomaindump.git /tmp/tools/ldapdomaindump
-odat=`curl https://github.com/quentinhardy/odat/releases/latest -L --max-redirs 1 | grep -i "quentinhardy/odat/releases/download" | grep "x86_64" | cut -d '"' -f 2`
-wget http://github.com$odat -O ~/tmp/odat.zip
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/Tools"
-mkdir -p $direc 
-unzip ~/tmp/odat.zip -d $direc/ODAT && rm ~/tmp/odat.zip
-cd $direc/ODAT && mv odat*/* .
-git clone https://github.com/maK-/parameth.git $direc/parameth
-git clone https://github.com/EmpireProject/Empire.git $direc/empire
+mkdir -p $direc 2>/dev/null
+if [ -d "$direc/parameth" ]; then cd "$direc/parameth" && git pull; else git clone https://github.com/maK-/parameth.git "$direc/parameth"; fi
 
 # Now download everything 
 # Reference: https://www.ostechnix.com/download-packages-dependencies-locally-ubuntu/
 # --reinstall will bypass "already installed" errors, install --download-only 'should' grab dependencies as well
 # These packages are in /var/cache/apt/archives/
 # fail safe way of downloading everything for local install is to use 'apt-get download':
-for i in $(cat /root/live-build-config/kali-config/variant-default/package-lists/kali.list.chroot); do for j in $(apt-cache depends $i | grep -E 'Depends|Recommends|Suggests' | cut -d ':' -f 2,3 | sed -e s/'<'/''/ -e s/'>'/''/); do apt-get download $j 2>/dev/null; done; done
+cd /var/cache/apt/archives/
+for i in $(cat /root/live-build-config/kali-config/variant-default/package-lists/kali.list.chroot); do for j in $(apt-cache depends $i | grep -E 'Depends|Recommends|Suggests' | cut -d ':' -f 2,3 | sed -e s/'<'/''/ -e s/'>'/''/); do apt-get download $j 2>/dev/null; done; apt-get download $i; done
 
 # Now place in packages.chroot 
 cp -R /var/cache/apt/archives/*.deb /root/live-build-config/kali-config/common/packages.chroot/
 
 # Download non-binary packages for use 
-git clone https://github.com/rewardone/OSCPRepo.git /root/live-build-config/kali-config/common/includes.chroot/root/Documents/OSCPRepo
-git clone https://github.com/infodox/python-pty-shells.git /root/live-build-config/kali-config/common/includes.chroot/root/Documents/python-pty-shells
+direc="/root/live-build-config/kali-config/common/includes.chroot/root/Documents"
+mkdir -p $direc 2>/dev/null
+if [ -d "$direc/OSCPRepo" ]; then cd "$direc/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "$direc/OSCPRepo"; fi
+if [ -d "$direc/python-pty-shells" ]; then cd "$direc/python-pty-shells" && git pull; else git clone https://github.com/infodox/python-pty-shells.git "$direc/python-pty-shells"; fi
 
 # Local Info Enum - Linux 
-direc="/root/live-build-config/kali-config/common/includes.chroot/root/Local Info Enum"
-mkdir -p $direc 2>/dev/null
-direc="/root/live-build-config/kali-config/common/includes.chroot/root/Local Info Enum/Linux"
-git clone https://github.com/rebootuser/LinEnum.git $direc/RebootLinEnum
-cp "/root/live-build-config/kali-config/common/includes.chroot/root/Documents/OSCPRepo/Local Info Enum/LinEnum.sh" $direc/LinEnum
-mkdir -p $direc 2>/dev/null
+direc="/root/live-build-config/kali-config/common/includes.chroot/root/Local_Info_Enum"
+mkdir -p "$direc/Linux" 2>/dev/null
+if [ -d "$direc/Linux/RebootLinEnum" ]; then cd "$direc/Linux/RebootLinEnum" && git pull; else git clone https://github.com/rebootuser/LinEnum.git "$direc/Linux/RebootLinEnum"; fi
+cp /root/live-build-config/kali-config/common/includes.chroot/root/Documents/OSCPRepo/Local\ Info\ Enum/LinEnum.sh "$direc/Linux/LinEnum.sh"
 
 # Local Info Enum - Windows 
-direc="/root/live-build-config/kali-config/common/includes.chroot/root/Local Info Enum/Windows"
-mkdir -p $direc 2>/dev/null
-git clone https://github.com/dafthack/HostRecon.git $direc/HostRecon
-git clone https://github.com/threatexpress/red-team-scripts.git $direc/HostEnum
-git clone https://github.com/azmatt/windowsEnum $direc/WinEnum
+mkdir -p "$direc/Windows" 2>/dev/null
+if [ -d "$direc/Windows/HostRecon" ]; then cd "$direc/Windows/HostRecon" && git pull; else git clone https://github.com/dafthack/HostRecon.git "$direc/Windows/HostRecon"; fi
+if [ -d "$direc/Windows/HostEnum" ]; then cd "$direc/Windows/HostEnum" && git pull; else git clone https://github.com/threatexpress/red-team-scripts.git "$direc/Windows/HostEnum"; fi
+if [ -d "$direc/WinEnum" ]; then cd "$direc/WinEnum" && git pull; else git clone https://github.com/azmatt/windowsEnum "$direc/WinEnum"; fi
 
 # TODO: binaries for Seatbelt and other enumerators (ie, no sherlock)
 
 # Priv Esc Checkers - Linux
-direc="/root/live-build-config/kali-config/common/includes.chroot/root/Priv Esc Checks/Linux"
-mkdir -p $direc 2>/dev/null
-git clone https://github.com/mzet-/linux-exploit-suggester.git $direc/linux-exploit-suggester
-git clone https://github.com/jondonas/linux-exploit-suggester-2.git $direc/perl-linux-exploit-suggester
+direc="/root/live-build-config/kali-config/common/includes.chroot/root/Priv_Esc_Checks"
+mkdir -p "$direc/Linux" 2>/dev/null
+if [ -d "$direc/Linux/linux-exploit-suggester" ]; then cd "$direc/Linux/linux-exploit-suggester" && git pull; else git clone https://github.com/mzet-/linux-exploit-suggester.git "$direc/Linux/linux-exploit-suggester"; fi
+if [ -d "$direc/Linux/perl-linux-exploit-suggester" ]; then cd "$direc/Linux/perl-linux-exploit-suggester" && git pull; else git clone https://github.com/jondonas/linux-exploit-suggester-2.git "$direc/Linux/perl-linux-exploit-suggester"; fi
 
 # Priv Esc Checkers - Windows
-direc="/root/live-build-config/kali-config/common/includes.chroot/root/Priv Esc Checks/Windows"
-mkdir -p $direc 2>/dev/null
-git clone https://github.com/rasta-mouse/Sherlock.git $direc/Sherlock
+mkdir -p "$direc/Windows" 2>/dev/null
+if [ -d "$direc/Windows/Sherlock" ]; then cd "$direc/Windows/Sherlock" && git pull; else git clone https://github.com/rasta-mouse/Sherlock.git "$direc/Windows/Sherlock"; fi
 
 # Pre-Compiled Exploits - Windows
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/Exploits/Windows"
 mkdir -p $direc
-git clone https://github.com/SecWiki/windows-kernel-exploits.git $direc/SecWiki-Kernel-Exploits
+if [ -d "$direc/secWiki-Kernel-Exploits" ]; then cd "$direc/secWiki-Kernel-Exploits" && git pull; else git clone https://github.com/SecWiki/windows-kernel-exploits.git "$direc/secWiki-Kernel-Exploits"; fi
 
 # Move non-binary packages into place 
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/scripts"
@@ -87,15 +80,20 @@ cp -r /root/live-build-config/kali-config/common/includes.chroot/root/Documents/
 
 webDirec="/root/live-build-config/kali-config/common/includes.chroot/root/lists/Web"
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/lists"
-git clone https://github.com/danielmiessler/SecLists.git $direc/secLists
+if [ -d "$direc/secLists" ]; then cd "$direc/secLists" && git pull; else git clone https://github.com/danielmiessler/SecLists.git "$direc/secLists"; fi
 ln -s $direc/secLists/Discovery/Web-Content $webDirec
-git clone https://github.com/fuzzdb-project/fuzzdb.git $direc/fuzzdb
-git clone https://github.com/minimaxir/big-list-of-naughty-strings.git $direc/naughty
-git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git $direc/payloadAllTheThings
+if [ -d "$direc/fuzzdb" ]; then cd "$direc/fuzzdb" && git pull; else git clone https://github.com/fuzzdb-project/fuzzdb.git "$direc/fuzzdb"; fi
+if [ -d "$direc/naughty" ]; then cd "$direc/naughty" && git pull; else git clone https://github.com/minimaxir/big-list-of-naughty-strings.git "$direc/naughty"; fi
+if [ -d "$direc/payloadAllTheThings" ]; then cd "$direc/payloadAllTheThings" && git pull; else git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git "$direc/payloadAllTheThings"; fi
 
-mkdir -p $direc/Password 
-git clone https://github.com/berzerk0/Probable-Wordlists.git $direc/Password/probablyWordlists
-git clone https://github.com/initstring/passphrase-wordlist.git $direc/Password/passphrases
+mkdir -p "$direc/Password"
+if [ -d "$direc/Password/probableWordlists" ]; then cd "$direc/Password/probableWordlists" && git pull; else git clone https://github.com/berzerk0/Probable-Wordlists.git "$direc/Password/probableWordlists"; fi
+if [ -d "$direc/Password/passphrases" ]; then cd "$direc/Password/passphrases" && git pull; else git clone https://github.com/initstring/passphrase-wordlist.git "$direc/Password/passphrases"; fi
+
+
+direc="/root/live-build-config/kali-config/common/includes.chroot/usr/share/dotdotpwn/Reports"
+if [ ! -d $direc ]; then mkdir $direc; fi
+
 
 # Force the install to use a custom preseed.cfg 
 cat << EOF > /root/live-build-config/kali-config/common/includes.binary/isolinux/install.cfg
@@ -111,6 +109,10 @@ EOF
 echo 'systemctl enable ssh' >  /root/live-build-config/kali-config/common/hooks/01-start-ssh.chroot
 chmod +x /root/live-build-config/kali-config/common/hooks/01-start-ssh.chroot
 
+# Have PostgreSQL start by default for metasploit. 
+echo 'systemctl enable postgresql' > /root/live-build-config/kali-config/common/hooks/02-start-postgresql.chroot
+chmod +x /root/live-build-config/kali-config/common/hooks/02-start-postgresql.chroot 
+
 # Preseed. Some examples can be found: https://gitlab.com/kalilinux/recipes/kali-preseed-examples
 # Modify it as needed and place it in: 
 wget "https://raw.githubusercontent.com/rewardone/OSCPRepo/master/Custom Build ISO Image/preseed.cfg" -O /root/live-build-config/kali-config/common/includes.installer/preseed.cfg
@@ -120,4 +122,4 @@ wget "https://raw.githubusercontent.com/rewardone/OSCPRepo/master/Custom Build I
 
 # Now you can proceed to build your ISO, this process may take a while depending on your hardware and internet speeds. 
 # Once completed, your ISO can be found in the live-build root directory.
-/root/live-build-config/./build.sh -v
+#/root/live-build-config/./build.sh -v
