@@ -1,0 +1,2 @@
+systemctl enable ssh
+systemctl start ssh

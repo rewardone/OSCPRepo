@@ -1,0 +1,6 @@
+#!/bin/bash
+#re-adding since nfspy has been removed from kali-rolling repo
+mkdir -p /opt 2>/dev/null
+git clone https://gitlab.com/kalilinux/packages/nfspy.git /opt/nfspy
+apt-get -y install python-fuse
+python2 /opt/nfspy/setup.py install

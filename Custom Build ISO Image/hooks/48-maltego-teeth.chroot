@@ -1,0 +1,7 @@
+#!/bin/bash
+mkdir -p /opt/teeth
+git clone https://gitlab.com/kalilinux/packages/maltego-teeth.git /opt/teeth
+
+# dependencies for teeth. some are no longer in kali repo
+sudo apt-get -y install python-mechanize python-levenshtein python-adns python-msgpack python-bs4
+sudo pip install metaconfig easygui

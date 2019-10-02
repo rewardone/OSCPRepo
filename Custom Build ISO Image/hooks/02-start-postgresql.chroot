@@ -1,0 +1,2 @@
+systemctl enable postgresql
+systemctl start postgresql

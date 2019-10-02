@@ -1,0 +1,3 @@
+#!/bin/bash
+mkdir -p /root/lists 2>/dev/null
+git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git /root/lists/payloadAllTheThings
