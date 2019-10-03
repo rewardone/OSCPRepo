@@ -57,8 +57,17 @@ label install
     menu label ^Install Automated
     linux /install/vmlinuz
     initrd /install/initrd.gz
-    append vga=788 -- quiet file=/cdrom/install/preseed.cfg locale=en_US keymap=us hostname=kali domain=local.lan
+    append vga=788 -- quiet file=/cdrom/install/preseed.cfg locale=en_US.UTF-8 keymap=us hostname=kali domain=local.lan
 EOF
+
+# automatically choose our label 'install' that we just created 
+cat << EOF > /usr/share/live/build/bootloaders/isolinux/isolinux.cfg
+include menu.cfg
+default install
+prompt 0
+timeout 0
+EOF
+
 
 # copy all hooks and make hooks executable
 direc="/root/live-build-config/kali-config/common/hooks/normal"
