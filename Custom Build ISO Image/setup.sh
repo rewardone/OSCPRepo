@@ -68,7 +68,6 @@ prompt 0
 timeout 0
 EOF
 
-
 # copy all hooks and make hooks executable
 direc="/root/live-build-config/kali-config/common/hooks/normal"
 mkdir -p $direc
@@ -78,10 +77,6 @@ chmod +x "$direc/*.chroot"
 # Preseed. Some examples can be found: https://gitlab.com/kalilinux/recipes/kali-preseed-examples
 # Modify it as needed and place it in: 
 cp "tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" /root/live-build-config/kali-config/common/includes.installer/preseed.cfg
-
-# Modify /live-build-config/kali-config/common/bootloaders/grub-pc/grub.cfg 
-# 'set default 5' to auto select 'Install Automated'
-# 'set timeout 10' to set timeout to 1 (-1 for no time)
 
 # Now you can proceed to build your ISO, this process may take a while depending on your hardware and internet speeds. 
 # Once completed, your ISO can be found in the live-build root directory.

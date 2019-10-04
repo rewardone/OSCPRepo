@@ -23,6 +23,10 @@ else
 	echo "${GREEN}Shell successfully changed to '$zsh'.${RESET}"
 fi
 
+# chsh has problems, so manual edit
+check=$(grep "zsh" /etc/passwd)
+if [ -z "${check}" ]; then echo "Configuring /etc/passwd for /usr/bin/zsh"; sed 's/root:x:0:0:root:\/root:/root:x:0:0:root:\/root:\/usr\/bin\/zsh/g' /etc/passwd; else echo "already changed"; fi
+
 git clone https://github.com/chrissicool/zsh-256color.git /root/.oh-my-zsh/custom/plugins/zsh-256color
 git clone https://github.com/zsh-users/zsh-autosuggestions.git /root/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
