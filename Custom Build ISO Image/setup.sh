@@ -1,15 +1,27 @@
 #!/bin/bash
 
-# TODO: Covenant and other C2
-# TODO: binaries for Seatbelt and other enumerators (ie, no sherlock)
+# TODO: Covenant, Merlin, and other C2
+# TODO: pre-built binaries for Seatbelt and other enumerators (ie, no sherlock)
+# If apt is still prompting (due to hooks or otherwise), add this to /etc/apt/apt.conf.d/<your file>. APT::Get::Assume-Yes "true";
+# Other flags you can add to auto/build-config
 
 # Build dev-build environment
+echo "Updating and upgrading installation"
+echo "=============================================================================="
+echo
 apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade 
+
+echo "Downloading and updating live-build-config repo"
+echo "=============================================================================="
+echo
 apt install git live-build cdebootstrap devscripts -y
 direc="/root/live-build-config"
 if [ -d $direct ]; then cd $direc && git pull; else git clone https://gitlab.com/kalilinux/build-scripts/live-build-config.git $direc; fi
 cd "$direc/kali-config"
 
+echo "Downloading live-build-configuration files"
+echo "=============================================================================="
+echo
 # we need the files in the custom iso image directory
 if [ -d "/tmp/OSCPRepo" ]; then cd "/tmp/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "/tmp/OSCPRepo"; fi
 
@@ -23,9 +35,12 @@ cp "/tmp/Custom Build ISO Image/kali.list.chroot" "$vardefault/kali.list.chroot"
 #cp "$vardefault/kali.list.chroot" "$varlxde/kali.list.chroot"
 #cp "$vardefault/kali.list.chroot" "$varxfce/kali.list.chroot"
 
+echo "Checking for packages that may have been removed from kali-rolling"
+echo "=============================================================================="
+echo
 # check if any packages have been removed from kali-rolling before continuing
 REM=""
-for i in $(cat "$vardefault/kali.list.chroot"); do res=""; res=$(apt-cache search $i); if [ -z "${res}" ]; then echo "$i has been removed from kali-rolling"; REM="$i $REM"; fi; done
+for i in $(cat "$vardefault/kali.list.chroot"); do res=""; res=$(apt-cache search $i); if [ -z "${res}" ]; then echo "$i has been removed from kali-rolling. Make a hook or download and add the package manually!"; REM="$i $REM"; fi; done
 if [ ! -z "${REM}" ]; then exit 1; fi;
 
 # Download packages to include on CD if desired
@@ -38,6 +53,9 @@ if [ ! -z "${REM}" ]; then exit 1; fi;
 # Now place in packages.chroot 
 #cp -R /var/cache/apt/archives/*.deb /root/live-build-config/kali-config/common/packages.chroot/
 
+echo "Moving notes, scripts, and lists"
+echo "=============================================================================="
+echo
 # Download non-binary packages for use 
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/Documents"
 mkdir -p "$direc/OSCPRepo"
@@ -51,6 +69,13 @@ direc="/root/live-build-config/kali-config/common/includes.chroot/root/lists"
 mkdir -p $direc
 cp -r /tmp/OSCPRepo/lists $direc
 
+# Preseed. Some examples can be found: https://gitlab.com/kalilinux/recipes/kali-preseed-examples
+# Modify it as needed and place it in: 
+cp "tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" /root/live-build-config/kali-config/common/includes.installer/preseed.cfg
+
+echo "Editing install.cfg to use preseed"
+echo "=============================================================================="
+echo
 # Force the install to use a custom preseed.cfg 
 cat << EOF > /root/live-build-config/kali-config/common/includes.binary/isolinux/install.cfg
 label install
@@ -60,6 +85,9 @@ label install
     append vga=788 -- quiet file=/cdrom/install/preseed.cfg locale=en_US.UTF-8 keymap=us hostname=kali domain=local.lan
 EOF
 
+echo "Editing isolinux to auto select"
+echo "=============================================================================="
+echo
 # automatically choose our label 'install' that we just created 
 cat << EOF > /usr/share/live/build/bootloaders/isolinux/isolinux.cfg
 include menu.cfg
@@ -68,16 +96,18 @@ prompt 0
 timeout 0
 EOF
 
+echo "Setting up hooks"
+echo "=============================================================================="
+echo
 # copy all hooks and make hooks executable
 direc="/root/live-build-config/kali-config/common/hooks/normal"
 mkdir -p $direc
 cp -R "tmp/OSCPRepo/Custom Build ISO Image/hooks/" $direc/
 chmod +x "$direc/*.chroot"
 
-# Preseed. Some examples can be found: https://gitlab.com/kalilinux/recipes/kali-preseed-examples
-# Modify it as needed and place it in: 
-cp "tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" /root/live-build-config/kali-config/common/includes.installer/preseed.cfg
-
+echo "Building....this will take some time..."
+echo "=============================================================================="
+echo
 # Now you can proceed to build your ISO, this process may take a while depending on your hardware and internet speeds. 
 # Once completed, your ISO can be found in the live-build root directory.
 /root/live-build-config/./build.sh --distribution kali-rolling --variant default --verbose

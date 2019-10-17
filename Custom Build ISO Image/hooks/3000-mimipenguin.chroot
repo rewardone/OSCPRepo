@@ -1,0 +1,4 @@
+#!/bin/bash
+mkdir -p /opt/password 2>/dev/null
+git clone https://github.com/huntergregal/mimipenguin.git /opt/password/mimipenguin
+

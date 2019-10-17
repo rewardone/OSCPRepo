@@ -3,5 +3,6 @@
 mkdir -p /opt 2>/dev/null
 git clone https://gitlab.com/kalilinux/packages/nfspy.git /opt/nfspy
 apt-get -y install python-fuse
-cd /opt/nfspy && python2 /opt/nfspy/setup.py install
-cd /
+old_dir=$(pwd)
+cd /opt/nfspy && python2 setup.py install
+cd $old_dir

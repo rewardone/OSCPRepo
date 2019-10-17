@@ -1,0 +1,3 @@
+#!/bin/bash
+mkdir -p /opt/docker/gorsair 2>/dev/null
+git clone https://github.com/Ullaakut/Gorsair.git /opt/docker/gorsair

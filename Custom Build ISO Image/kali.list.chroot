@@ -6,6 +6,7 @@ arping
 beef-xss
 bettercap
 bloodhound
+build-essential
 burpsuite
 cewl
 cifs-utils
@@ -21,14 +22,17 @@ davtest
 dnsenum
 dnsmap
 dnsrecon
+docker
 dotdotpwn
 dradis
 enum4linux
 eyewitness
 exe2hexbat
 exploitdb
+ettercap-text-only
 fcrackzip
 flameshot
+freerdp2-x11
 ftp
 gcc
 git
@@ -40,7 +44,9 @@ hydra
 hydra-gtk
 impacket-scripts
 iodine
+isr-evilgrade
 john
+kerberoast
 laudanum
 maltego
 masscan
@@ -62,6 +68,7 @@ odat
 onesixtyone
 p7zip-full
 patator
+perl
 php
 powercat
 powersploit
@@ -79,7 +86,9 @@ python3-setuptools
 python3-levenshtein
 python-impacket
 recon-ng
+remmina
 responder
+ruby
 samba
 seclists
 shellter
@@ -96,6 +105,7 @@ sudo
 tcpdump
 tftp
 tmux
+unicorn-magic
 vim
 veil
 wafw00f
