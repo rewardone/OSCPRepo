@@ -64,6 +64,7 @@ nfs-common
 nikto
 nishang
 nmap
+npm
 odat
 onesixtyone
 p7zip-full
@@ -106,7 +107,7 @@ tcpdump
 tftp
 tmux
 unicorn-magic
-vim
+vim-gtk3
 veil
 wafw00f
 wce
@@ -119,5 +120,6 @@ whatweb
 xclip
 xinit
 xorg
+xrdp
 yersinia
 zsh

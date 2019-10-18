@@ -1,0 +1,9 @@
+#!/bin/bash
+apt-get -y install curl gnupg
+wget -qO /tmp/dockergpg https://download.docker.com/linux/debian/gpg
+sudo apt-key add /tmp/dockergpg
+rm /tmp/dockergpg
+sudo sh -c 'echo "deb https://download.docker.com/linux/debian buster stable" > /etc/apt/sources.list.d/docker.list'
+apt-get update
+apt-get -y remove docker docker-engine docker.io
+apt-get -y install docker-ce
