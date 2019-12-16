@@ -1,2 +1,3 @@
 #!/bin/bash
-systemctl enable xrdp
+#disabled for now until "xrdp.service does not exist" error can be fixed
+#systemctl enable xrdp

@@ -3,6 +3,7 @@ kali-desktop-gnome
 open-vm-tools
 arachni
 arping
+bbqsql
 beef-xss
 bettercap
 bloodhound
@@ -37,6 +38,7 @@ ftp
 gcc
 git
 gobuster
+golismero
 hashcat
 hashcat-utils
 hashid
@@ -54,10 +56,12 @@ medusa
 metasploit-framework
 mimikatz
 mitmproxy
+msfpc
 nbtscan
 nbtscan-unixwiz
 ncat
 ncrack
+net-tools
 netcat-traditional
 netdiscover
 nfs-common
@@ -67,6 +71,7 @@ nmap
 npm
 odat
 onesixtyone
+oscanner
 p7zip-full
 patator
 perl
@@ -78,6 +83,8 @@ proxychains
 proxytunnel
 ptunnel
 python2
+python-ldap
+python-ldap3
 python-pip
 python3
 python3-dev
@@ -92,6 +99,7 @@ responder
 ruby
 samba
 seclists
+set
 shellter
 smbmap
 snmp
@@ -101,11 +109,13 @@ sqlmap
 ssldump
 sslscan
 sslyze
-stunnel4
+stunel4
 sudo
 tcpdump
 tftp
+thc-ipv6
 tmux
+tnscmd10g
 unicorn-magic
 vim-gtk3
 veil
@@ -113,6 +123,7 @@ wafw00f
 wce
 webhandler
 webshells
+websploit
 windows-binaries
 wireshark
 wfuzz
@@ -120,6 +131,9 @@ whatweb
 xclip
 xinit
 xorg
+xplico
 xrdp
+xsser
 yersinia
+zaproxy
 zsh

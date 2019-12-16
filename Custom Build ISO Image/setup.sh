@@ -16,7 +16,7 @@ echo "==========================================================================
 echo
 apt install git live-build cdebootstrap devscripts -y
 direc="/root/live-build-config"
-if [ -d $direct ]; then cd $direc && git pull; else git clone https://gitlab.com/kalilinux/build-scripts/live-build-config.git $direc; fi
+if [ -d $direc ]; then cd $direc && git pull; else git clone https://gitlab.com/kalilinux/build-scripts/live-build-config.git $direc; fi
 cd "$direc/kali-config"
 
 echo "Downloading live-build-configuration files"
@@ -31,16 +31,17 @@ varxfce="/root/live-build-config/kali-config/variant-xfce/package-lists"
 
 # Overwrite default kali package list at kali-config/variant-default/package-lists/kali.list.chroot
 # with your desired packages. See https://tools.kali.org/kali-metapackages for list of the breakdowns
-cp "/tmp/Custom Build ISO Image/kali.list.chroot" "$vardefault/kali.list.chroot"
-#cp "$vardefault/kali.list.chroot" "$varlxde/kali.list.chroot"
-#cp "$vardefault/kali.list.chroot" "$varxfce/kali.list.chroot"
+# Make sure lxde and xfce have their own package lists to include their specific desktop environments
+cp "/tmp/OSCPRepo/Custom Build ISO Image/kali.list.chroot" "$vardefault/kali.list.chroot"
+cp "/tmp/OSCPRepo/Custom Build ISO Image/lxde/kali.list.chroot" "$varlxde/kali.list.chroot"
+cp "/tmp/OSCPRepo/Custom Build ISO Image/xfce/kali.list.chroot" "$varxfce/kali.list.chroot"
 
 echo "Checking for packages that may have been removed from kali-rolling"
 echo "=============================================================================="
 echo
 # check if any packages have been removed from kali-rolling before continuing
 REM=""
-for i in $(cat "$vardefault/kali.list.chroot"); do res=""; res=$(apt-cache search $i); if [ -z "${res}" ]; then echo "$i has been removed from kali-rolling. Make a hook or download and add the package manually!"; REM="$i $REM"; fi; done
+for i in $(cat "$vardefault/kali.list.chroot" | grep -v "#" | grep -ve "^$"); do res=""; res=$(apt-cache search $i); if [ -z "${res}" ]; then echo "$i has been removed from kali-rolling. Make a hook or download and add the package manually!"; REM="$i $REM"; fi; done
 if [ ! -z "${REM}" ]; then exit 1; fi;
 
 # Download packages to include on CD if desired
@@ -56,24 +57,29 @@ if [ ! -z "${REM}" ]; then exit 1; fi;
 echo "Moving notes, scripts, and lists"
 echo "=============================================================================="
 echo
-# Download non-binary packages for use 
+# Copy OSCP Repo notes into chroot Documents
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/Documents"
 mkdir -p "$direc/OSCPRepo"
 cp -r /tmp/OSCPRepo/KeepNotes "$direc/OSCPRepo/KeepNotes"
+# Issues with training/blogs for some reason, so remove it 
+rm -rf /root/live-build-config/config/includes.chroot/root/Documents/OSCPRepo/KeepNotes/KeepNotes/BookmarkList/training-research-news/
+rm -rf /root/live-build-config/config/includes.chroot/root/Documents/OSCPRepo/KeepNotes/BookmarkList/training-research-news/
 
+# Copy OSCP Repo scripts into chroot scripts
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/scripts"
 mkdir -p $direc
 cp -r /tmp/OSCPRepo/scripts $direc 
 
+# Copy OSCP Repo lists into chroot lists
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/lists"
 mkdir -p $direc
 cp -r /tmp/OSCPRepo/lists $direc
 
 # Preseed. Some examples can be found: https://gitlab.com/kalilinux/recipes/kali-preseed-examples
 # Modify it as needed and place it in: 
-cp "tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" /root/live-build-config/kali-config/common/includes.installer/preseed.cfg
+cp "/tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" /root/live-build-config/kali-config/common/includes.installer/preseed.cfg
 
-echo "Editing install.cfg to use preseed"
+echo "Editing install.cfg to use the custom preseed"
 echo "=============================================================================="
 echo
 # Force the install to use a custom preseed.cfg 
@@ -85,7 +91,7 @@ label install
     append vga=788 -- quiet file=/cdrom/install/preseed.cfg locale=en_US.UTF-8 keymap=us hostname=kali domain=local.lan
 EOF
 
-echo "Editing isolinux to auto select"
+echo "Editing isolinux to auto select our configuration for install by default"
 echo "=============================================================================="
 echo
 # automatically choose our label 'install' that we just created 
@@ -96,20 +102,22 @@ prompt 0
 timeout 0
 EOF
 
-echo "Setting up hooks"
+echo "Setting up custom hooks"
 echo "=============================================================================="
 echo
 # copy all hooks and make hooks executable
 direc="/root/live-build-config/kali-config/common/hooks/normal"
 mkdir -p $direc
-cp -R "tmp/OSCPRepo/Custom Build ISO Image/hooks/" $direc/
-chmod +x "$direc/*.chroot"
+rm -rf $direc/*
+rsync -r "/tmp/OSCPRepo/Custom Build ISO Image/hooks/" $direc
+chmod +x $direc/*.chroot
 
 echo "Building....this will take some time..."
 echo "=============================================================================="
 echo
 # Now you can proceed to build your ISO, this process may take a while depending on your hardware and internet speeds. 
+
 # Once completed, your ISO can be found in the live-build root directory.
-/root/live-build-config/./build.sh --distribution kali-rolling --variant default --verbose
+#/root/live-build-config/./build.sh --distribution kali-rolling --variant default --verbose
 #/root/live-build-config/./build.sh --distribution kali-rolling --variant lxde --verbose
-#/root/live-build-config/./build.sh --distribution kali-rolling --variant xfce --verbose
+/root/live-build-config/./build.sh --distribution kali-rolling --variant xfce --verbose

@@ -1,0 +1,3 @@
+#!/bin/bash
+wget http://keepnote.org/download/keepnote_0.7.8-1_all.deb --output-document /tmp/keepnote.deb
+dpkg -i /tmp/keepnote.deb && rm /tmp/keepnote.deb
