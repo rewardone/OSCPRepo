@@ -1,0 +1,6 @@
+#!/bin/bash
+#enable root login for ssh
+sed 's/#PermitRootLogin prohibit-password/PermitRootLogin Yes/g' /etc/ssh/sshd_config > /tmp/sshd_config
+cp /tmp/sshd_config /etc/ssh/sshd_config
+rm /tmp/sshd_config
+systemctl enable ssh

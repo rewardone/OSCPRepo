@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Need to make sure that firefox is installed first
+apt-get install firefox-esr
+
+# A big source of this document is from: https://support.mozilla.org/en-US/kb/how-stop-firefox-making-automatic-connections
+# Some configuration options and extensions for firefox 
+# This configuration assumes that Firefox and it's extensions remain STATIC. Firefox will be updated only when the ISO is built unless these preferences are changed.
+
+# user.js should override pref.js and Mozilla recommends NOT editing pref.js directly
+# Various options to make Firefox quiet
+# captive-portal-service will stop firefox pinging out every 5 seconds in proxy tools
+
+# profile isn't created upon installation, so make the parent folder and will have to move user.js into the profile later
+mkdir -p /root/.mozilla/firefox/
+cat << EOF > /root/.mozilla/firefox/user.js
+user_pref("app.normandy.enabled", false);
+user_pref("app.normandy.first_run", false);
+user_pref("app.update.enabled", false);
+user_pref("app.update.auto", false);
+user_pref("app.update.silent", true);
+user_pref("app.update.staging.enabled", false);
+user_pref("browser.search.geoip.url", "");
+user_pref("browser.search.update", false);
+user_pref("browser.safebrowsing.downloads.remote.enabled", false);
+user_pref("browser.startup.homepage", "");
+user_pref("browser.startup.homepage_override.mstone", "ignore");
+user_pref("network.captive-portal-service.enabled", false);
+user_pref("datareporting.healthreport.uploadEnabled", false);
+user_pref("datareporting.policy.dataSubmissionEnabled", false);
+user_pref("extensions.blocklist.enabled", false);
+user_pref("extensions.getAddons.cache.enabled", false);
+user_pref("extensions.systemAddon.update.enabled", false);
+user_pref("extensions.update.enabled", false);
+user_pref("fission.autostart", false);
+user_pref("startup.homepage_override_url", "http://example.org/");
+user_pref("startup.homepage_welcome_url", "");
+user_pref("toolkit.telemetry.enabled", false);
+user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
+user_pref("toolkit.telemetry.updatePing.enabled", false);
+user_pref("browser.selfsupport.url", "");
+user_pref("services.sync.nextSync", 0);
+EOF
+
+# Download and add foxyproxy_standard...version will need to be updated over time
+wget https://addons.mozilla.org/firefox/downloads/file/3476518/foxyproxy_standard-7.4.3-an+fx.xpi -O /tmp/foxyproxy_standard-7.4.3.xpi
+mkdir -p /root/.mozilla/extensions
+mv /tmp/foxyproxy_standard-7.4.3.xpi /root/.mozilla/extensions/

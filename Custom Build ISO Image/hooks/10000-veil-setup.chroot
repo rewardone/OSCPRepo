@@ -1,0 +1,4 @@
+#!/bin/bash
+# This additional setup is required even if installing veil through apt
+chmod +x /usr/share/veil/config/setup.sh
+/usr/share/veil/config/./setup.sh --force --silent

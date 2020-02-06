@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Estimated clone size: 1mb
+
 mkdir -p /opt/shells 2>/dev/null
 mkdir -p /opt/shares 2>/dev/null
 git clone https://github.com/trustedsec/nps_payload.git /opt/shells/nps_payload

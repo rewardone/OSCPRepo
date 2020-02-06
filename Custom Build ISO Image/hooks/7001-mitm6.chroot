@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Estimated clone size: 1mb
+
 mkdir -p /opt/mitm6 2>/dev/null
 git clone https://github.com/fox-it/mitm6.git /opt/mitm6
 pip3 install -r /opt/mitm6/requirements.txt
