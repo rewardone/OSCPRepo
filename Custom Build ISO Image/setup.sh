@@ -48,7 +48,7 @@ echo "Downloading live-build-configuration files from OSCPRepo"
 echo "=============================================================================="
 echo
 # we need the files in the custom iso image directory
-#if [ -d "/tmp/OSCPRepo" ]; then cd "/tmp/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "/tmp/OSCPRepo"; fi
+if [ -d "/tmp/OSCPRepo" ]; then cd "/tmp/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "/tmp/OSCPRepo"; fi
 
 vargnome="/root/live-build-config/kali-config/variant-gnome/package-lists"
 varlxde="/root/live-build-config/kali-config/variant-lxde/package-lists"
@@ -98,10 +98,7 @@ echo
 # Copy OSCP Repo notes into chroot Documents
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/Documents"
 mkdir -p "$direc/OSCPRepo"
-cp -r /tmp/OSCPRepo/KeepNotes "$direc/OSCPRepo/KeepNotes"
-# Issues with training/blogs for some reason, so remove it 
-rm -rf /root/live-build-config/config/includes.chroot/root/Documents/OSCPRepo/KeepNotes/KeepNotes/BookmarkList/training-research-news/
-rm -rf /root/live-build-config/config/includes.chroot/root/Documents/OSCPRepo/KeepNotes/BookmarkList/training-research-news/
+cp -r /tmp/OSCPRepo/CherryTrees "$direc/OSCPRepo/CherryTrees"
 
 # Copy OSCP Repo scripts into chroot scripts
 direc="/root/live-build-config/kali-config/common/includes.chroot/root/scripts"
@@ -174,7 +171,7 @@ echo "Building....this will take some time..."
 echo "=============================================================================="
 echo
 # Now you can proceed to build your ISO, this process may take a while depending on your hardware and internet speeds. 
-cd /root/
+cd /root/live-build-config
 # Note that variant-default is now xfce and NOT gnome
 #/root/live-build-config/./build.sh --distribution kali-rolling --variant gnome --verbose
 #/root/live-build-config/./build.sh --distribution kali-rolling --variant lxde --verbose
