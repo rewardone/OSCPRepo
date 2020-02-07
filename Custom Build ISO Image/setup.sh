@@ -10,17 +10,12 @@
 #	agent header to urlretrieve()
 #		apply python UA download patch:
 #		import urllib
+#		import shutil
 #		:55 (after log.debug)...remove request.urlretrieve(url, filename=output)
-#		download_req = request.Request(
-#			url,
-#			headers={
-#				'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'
-#			}
-#		)
-#		response = urllib.request.urlopen(download_req)
-#		with open(output, 'w') as f:
-#			f.write(response.read().decode('utf-8'))
-#		f.close()
+#		download_req = request.Request(url,headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'})
+#		with urllib.request.urlopen(download_req) as response, open(output, 'wb') as out_file:
+#			shutil.copyfileobj(response, out_file)
+#		out_file.close()
 # If apt is still prompting (due to hooks or otherwise), add this to /etc/apt/apt.conf.d/<your file>. APT::Get::Assume-Yes "true";
 # Other flags you can add to auto/build-config: #--apt-indices, --apt-recommends, --cache-packages are true by default
 #    --apt-recommends false \
