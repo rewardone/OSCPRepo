@@ -1,9 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>LSASS</title>
-</head><body>After a user logs on, a variety of credentials are generated and stored in the Local Security Authority Subsystem Service, <a href="http://en.wikipedia.org/wiki/Local_Security_Authority_Subsystem_Service">LSASS, </a>process in memory. This is meant to facilitate single sign-on (SSO) ensuring a user isn’t prompted each time resource access is requested. The credential data may include Kerberos tickets, NTLM password hashes, LM password hashes (if the password is &lt;15 characters, depending on Windows OS version and patch level), and even clear-text passwords (to support WDigest and SSP authentication among others.<br/>
-<br/>
-You can dump passwords from LSASS using mimikatz, procdump, or others<br/>
-Typically, it is best to load mimikatz / WCE / hashdump into memory, but sometimes these solutions are not viable</body></html>

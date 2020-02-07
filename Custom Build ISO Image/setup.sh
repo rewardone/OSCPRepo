@@ -4,6 +4,23 @@
 # TODO: pre-built binaries for Seatbelt and other enumerators (ie, no sherlock)
 # TODO: Experimenting with "installer" only, set in build.sh "TYPE"
 #     also requires apt install debian-cd simple-cdd xorriso
+#     echo "http://http.kali.org/" > /root/live-build-config/.mirror
+#	fix python (/usr/lib/python3/dist-packages/simple_cdd/tools/mirror_download.py):
+#	This is due to http.kali.org not allowing the urlretrieve user agent and no easy way to add a user
+#	agent header to urlretrieve()
+#		apply python UA download patch:
+#		import urllib
+#		:55 (after log.debug)...remove request.urlretrieve(url, filename=output)
+#		download_req = request.Request(
+#			url,
+#			headers={
+#				'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'
+#			}
+#		)
+#		response = urllib.request.urlopen(download_req)
+#		with open(output, 'w') as f:
+#			f.write(response.read().decode('utf-8'))
+#		f.close()
 # If apt is still prompting (due to hooks or otherwise), add this to /etc/apt/apt.conf.d/<your file>. APT::Get::Assume-Yes "true";
 # Other flags you can add to auto/build-config: #--apt-indices, --apt-recommends, --cache-packages are true by default
 #    --apt-recommends false \

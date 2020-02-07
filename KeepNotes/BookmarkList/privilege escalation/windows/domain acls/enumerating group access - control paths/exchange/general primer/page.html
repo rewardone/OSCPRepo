@@ -1,8 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>General Primer</title>
-</head><body>A privilege escalation is possible from the Exchange Windows permissions (EWP) security group to compromise the entire prepared Active Directory domain. Just set the Ds-Replication-Get-Changes-All extended right on the domain object. This is enough to use a DRSUAPI replication tool ala DCSync to get all the domain secrets (Kerberos keys, hashes, etc.).<br/>
-<br/>
-You can control the SID of the EWP group from Organization management, from Account operators or from any Exchange server. Interestingly, the RBAC system is proxified through EWP so a privilege escalation is possible from the Active Directory Permissions RBAC role to compromise the entire prepared Active Directory domain.</body></html>

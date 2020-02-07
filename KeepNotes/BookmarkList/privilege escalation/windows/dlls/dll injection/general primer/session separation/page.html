@@ -1,8 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Session Separation</title>
-</head><body>Things have changed in CreateRemoteThread due to a new feature in Vista: Session Separation. Session Separation ensures that core system processes included services always run in session 0 while all user processes run in different sessions. As a result, any process running in user session failed to inject DLL into system process as CreateRemoteThread did not work across session boundaries. <br/>
-<br/>
-</body></html>

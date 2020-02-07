@@ -1,8 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Covert Data Storage</title>
-</head><body>Attackers have made clever use of the WMI repository itself as a means to store data. One such method may be achieved by creating a WMI class dynamically and storing arbitrary data as the value of a static property of that class . Figure 8 demonstrates storing a string as a value of a static WMI class property:<br/>
-<br/>
-$StaticClass=New-ObjectManagement.ManagementClass(‘root\ cimv2’,$null,$null) $StaticClass.Name =’Win32_EvilClass’ $StaticClass.Put() $StaticClass.Properties.Add(‘EvilProperty’,”This is not the malware you’re looking for”) $StaticClass.Put() &nbsp;</body></html>

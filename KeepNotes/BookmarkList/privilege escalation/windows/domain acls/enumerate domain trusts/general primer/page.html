@@ -1,9 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>General Primer</title>
-</head><body>How Red Teams Abuse Trusts<br/>
-Active Directory is now commonplace in large organizations. Domain/Forest Trusts are a specific topic in Active Directory and Windows Networks that I have always found interesting but failed to understand many times. Microsoft describes this feature across several different articles and in many books but the concepts seem cryptic the way they are presented. @harmj0y summarized it all very well <a href="http://www.harmj0y.net/blog/redteaming/trusts-you-might-have-missed/">here</a>. Basically, Trusts allow two domains or directories to form a relationship. That relationship might include things like authentication, access, or file sharing across domains.<br/>
-<br/>
-It should be obvious why I love to find a large spaghetti mess of interconnected domains when on an engagement… they can be easily abused. The techniques are rather dated but still very useful. @davidpmcguire and @harmj0y did a <a href="http://www.slideshare.net/harmj0y/derbycon-passing-the-torch">talk</a> at Derbycon that summarized the “old” techniques as well as some new Powershell ones. The basic strategy begins with querying all possible domains using the trust relationship. Next, the hacker uses this data to hop around different domains looking for file shares to pilfer while also trying to exploit users logged in from trust domains (admin if you are lucky). By exploiting this linked user, and repeating the cycle on the new domain, you can slowly crawl toward your target.</body></html>

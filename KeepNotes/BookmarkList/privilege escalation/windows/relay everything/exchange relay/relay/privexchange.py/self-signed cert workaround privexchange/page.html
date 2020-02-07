@@ -1,7 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Self-Signed Cert Workaround PrivExchange</title>
-</head><body>If you are playing with the <a href="https://t.co/9bNANG3XP8">http://privexchange.py </a>&nbsp;in your local exchange lab without a valid SSL cert, replace/amend the script with the following:<br/>
-(line 108): uv_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1) uv_context.verify_mode = ssl.CERT_NONE uv_context.check_hostname = False &nbsp;</body></html>

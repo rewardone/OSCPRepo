@@ -1,9 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>CSV Ingestion</title>
-</head><body><b>CSV Ingestion</b><br/>
-Export-BloodHoundCSV takes the custom tagged PowerView object types from Get-BloodHoundData and exports the data to one custom CSV file per object type (sessions, local admin, domain trusts, etc.). For user session data without a logon domain, by default the global catalog is used to attempt to deconflict what domain the user may be located in. If the user exists in more than one domain in the forest, a series of weights is used to modify the attack path likelihood. If you want to skip this global catalog deconfliction approach, specify the <b>-SkipGCDeconfliction</b>&nbsp;flag. The *-CSVFolder C:\Temp* parameter will modify the folder that the files are output to, and<b>&nbsp;-CSVPrefix domainX</b>&nbsp;will prepend the specified flag to the beginning of each output file. An example use case would be Get-BloodHoundData | Export-BloodHoundCSV which would output data to group_memberships.csv, local_admins.csv, trusts.csv, and user_sessions.csv.<br/>
-<br/>
-To upload the .csv files to BloodHound, use the "Upload Data" button on the right size, then select the .csv's file you would like to upload:</body></html>

