@@ -5,17 +5,16 @@ This is a list of resources and scripts that I have been gathering (and continui
 Do you have a million bookmarks saved? Do all of those bookmarks contain unique information? Github repos starred for later?
 I wanted to actually compose and provide a compilation of all of these resources into a single organized notebook. No more need for bookmarked links. No need to open a web browser. Everything will be here for you.
 
-# Keepnote
+# CherryTree
 
-Keepnote continues to be my main notebook application. Included with Kali and has a client for Windows and MacOS.
-CherryTree has many useful features; however, I (personally) want tabbed notebooks (instead of multiple instances of CherryTree) and the ability to Cut/Copy/Paste nodes from one notebook to another. These are on the developers wish list. CherryTree can still import any of my Keepnote folders. Just give it enough time to import. Note that the nodes will be jumbled due to the import, but an alphabetical sort ascending will fix most of it.
+Unable to install KeepNote on Kali-Rolling, the move to CherryTree has happened. Note that the nodes will be jumbled due to the import compared to the KeepNote. Sorting and links will be fixed over time in addition to new content.
 
 # Notable Resources
-UsefulCommands.nbk
+UsefulCommands.ctb
 
 It contains methodologies, commands, and interesting file locations. This has been moving more and more into BookmarkList. The goal will be to ensure UsefulCommands is just that. UsefulCommands. Man pages, reference material, etc. For walkthroughs and detailed information, head to BookmarkList.
 
-BookmarkList.nbk
+BookmarkList.ctb
 
 List after list of compiled bookmarks, github pages, blogs, OSCP reviews, tools, and a lot more compiled into an organized list of bookmarks and references I could go back to (offline). Sources for all resources are still there so you can read the material directly if you desire. This is a work in progress and there are sections I have not read through yet and made child-nodes for yet, but it is still incredibly extensive with more work being done (almost) every day (look at the commit history!)
 
@@ -23,9 +22,11 @@ List after list of compiled bookmarks, github pages, blogs, OSCP reviews, tools,
 
 Recon_Scan.py
 
-A popular script, it's goal is to run nmap, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). Partial Sparta integration is complete, and setup.sh will move those files for you. Also check out Vanquish. From the CLI, reconscan gets the job done with a single ./reconscan.py. It is designed to run multithreaded against multiple targets simultaneously if network bandwidth allows. You can adjust the min-rate in the scripts.
+A popular script in python 2. It's goal is to run nmap, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). Partial Sparta integration is complete, and setup.sh will move those files for you. Also check out Vanquish. 
 
-There is now a setup.sh script in /scripts folder that will clone some required repositories, move folders into place, and should make reconscan ready to go.
+From the CLI, reconscan gets the job done with a single ./reconscan.py. It is designed to run multithreaded against multiple targets simultaneously if network bandwidth allows. You can adjust the min-rate in the scripts.
+
+There is now a setup.sh script in /scripts folder that will clone some required repositories, move folders into place, and should make reconscan ready to go. Recon_Scan will be ported to python 3 and updated in time.
 
 
 # Other Stuff
