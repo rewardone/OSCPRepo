@@ -1,4 +1,0 @@
-#!/bin/bash
-mkdir -p /opt/c2 2>/dev/null
-git clone https://github.com/byt3bl33d3r/SILENTTRINITY.git /opt/c2/silenttrinity
-pip3 install -r /opt/c2/silenttrinity/requirements.txt

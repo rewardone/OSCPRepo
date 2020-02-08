@@ -1,3 +1,0 @@
-#!/bin/bash
-#This is needed for shellter, veil, and others
-dpkg --add-architecture i386 && apt-get update && apt-get install wine32

@@ -48,7 +48,7 @@ echo "Downloading live-build-configuration files from OSCPRepo"
 echo "=============================================================================="
 echo
 # we need the files in the custom iso image directory
-if [ -d "/tmp/OSCPRepo" ]; then cd "/tmp/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "/tmp/OSCPRepo"; fi
+#if [ -d "/tmp/OSCPRepo" ]; then cd "/tmp/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "/tmp/OSCPRepo"; fi
 
 vargnome="/root/live-build-config/kali-config/variant-gnome/package-lists"
 varlxde="/root/live-build-config/kali-config/variant-lxde/package-lists"
@@ -59,7 +59,8 @@ varxfce="/root/live-build-config/kali-config/variant-xfce/package-lists"
 # Make sure lxde and xfce have their own package lists to include their specific desktop environments
 cp "/tmp/OSCPRepo/Custom Build ISO Image/gnome/kali.list.chroot" "$vargnome/kali.list.chroot"
 cp "/tmp/OSCPRepo/Custom Build ISO Image/lxde/kali.list.chroot" "$varlxde/kali.list.chroot"
-cp "/tmp/OSCPRepo/Custom Build ISO Image/xfce/kali.list.chroot" "$varxfce/kali.list.chroot"
+#cp "/tmp/OSCPRepo/Custom Build ISO Image/xfce/kali.list.chroot" "$varxfce/kali.list.chroot"
+cp "/tmp/OSCPRepo/Custom Build ISO Image/xfce/kali.list.chroot" "$varxfce/kali.list.binary"
 
 echo
 echo "=============================================================================="
@@ -140,9 +141,12 @@ echo
 cat << EOF > /usr/share/live/build/bootloaders/isolinux/isolinux.cfg
 include menu.cfg
 default install
-prompt 0
-timeout 0
+prompt 1
+timeout 5
 EOF
+#prompt 0
+#timeout 0
+#EOF
 
 echo
 echo "=============================================================================="
