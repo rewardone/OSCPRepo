@@ -1,0 +1,16 @@
+#!/bin/bash
+cat << EOF > /etc/motd
+*********************************************************************
+**  This system is not designed to have additional data or tools   **
+**  saved to it. Please ensure all data is stored securely on a    **
+**  shared drive. This system will be replaced every time it is    **
+**  updated.                                                       **
+*********************************************************************
+
+The programs included with the Kali GNU/Linux system are free software;
+the exact distribution terms for each program are described in the 
+individual files in /usr/share/doc/*/copyright.
+
+Kali GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+EOF

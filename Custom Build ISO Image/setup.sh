@@ -16,51 +16,104 @@
 #		with urllib.request.urlopen(download_req) as response, open(output, 'wb') as out_file:
 #			shutil.copyfileobj(response, out_file)
 #		out_file.close()
-# If apt is still prompting (due to hooks or otherwise), add this to /etc/apt/apt.conf.d/<your file>. APT::Get::Assume-Yes "true";
-# Other flags you can add to auto/build-config: #--apt-indices, --apt-recommends, --cache-packages are true by default
-#    --apt-recommends false \
-#    --apt-indices false \
-#    --clean \ 
-#    --debian-installer-gui false \
-#    --cache-packages true \ 
 
 # Build dev-build environment
+# variants: xfce, gnome, lxde
+live_build_dir="/root/live-build-config"
+variant="xfce"
+live_build_config_package_list="$live_build_dir/kali-config/variant-$variant/package-lists/kali.list.chroot"
+
+#============TESTING============#
+simple_cdd_profile_name="kali-custom"
+simple_cdd_profile_folder="$live_build_dir/simple-cdd/profiles/$simple_cdd_profile_name"
+simple_cdd_profile_package_list="$simple_cdd_profile_filder/$simple_cdd_profile_name.packages"
+simple_cdd_conf="$live_build_dir/simple-cdd/simple-cdd.conf"
+#============TESTING============#
+
 echo
 echo "=============================================================================="
-echo "Updating and upgrading installation"
+echo "Updating and upgrading installation and headers"
 echo "=============================================================================="
 echo
-apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade 
+apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade
+apt-get -y install linux-headers-$(uname-r)
 
 echo
 echo "=============================================================================="
 echo "Downloading and updating live-build-config repo"
 echo "=============================================================================="
 echo
-apt install git live-build cdebootstrap devscripts -y
-direc="/root/live-build-config"
+
+# git, curl, live-build, cdebootstrap, and devscripts for live build. rsync for this script. TODO, remove rsync dependency.
+apt install git curl rsync live-build cdebootstrap devscripts -y
+direc=$live_build_dir
 if [ -d $direc ]; then cd $direc && git pull; else git clone https://gitlab.com/kalilinux/build-scripts/live-build-config.git $direc; fi
-cd "$direc/kali-config"
+
+
+# If you're going to be running multiple builds, a squid could be useful 
+# Give option to [Y/N]
+# https://github.com/prateepd/kali-live-build/blob/master/squid.conf
+# Squid will be installed and started on 3128
+#echo
+#echo "=============================================================================="
+#echo "Setting up squid"
+#echo "=============================================================================="
+#echo
+#
+# apt-get install squid
+# cat << EOF > /etc/squid/squid.conf
+#acl localnet src 192.168.0.0/16
+#acl SSL_ports port 443
+#acl Safe_ports port 80
+#acl Safe_ports port 443
+#acl CONNECT method CONNECT
+##http_access deny !Safe_ports
+#http_access deny CONNECT !SSL_ports
+#http_access allow localhost manager
+#http_access deny manager
+#http_access allow localnet
+#http_access allow localhost
+#http_access deny all
+#http_port 3128
+#cache_dir ufs /var/spool/squid 4096 16 256
+#maximum_object_size 524388 KB
+#coredump_dir /var/spool/squid
+#refresh_pattern ^ftp:	1440	20%	10080
+#refresh_pattern ^gopher:	1440	0%	1440
+#refresh_pattern -i (/cgi-bin/|\?)	0	0%	0
+#refresh_pattern (Release|Packages(.gz)*)$	0	20%	2880
+#refresh_pattern .	0	20%	4320
+# EOF
+# /etc/init.d/squid start
+# TODO
+# Need to modify $live_build_dir/auto/config lb_opts with --apt-http-proxy=http://localhost:3128
+# BUT need to ensure that this doesn't overwrite any options we want to set down later...
+# maybe store them as a global var, add to it ourselves, and only do one write at the end just before we build...
+
 
 echo
 echo "=============================================================================="
-echo "Downloading live-build-configuration files from OSCPRepo"
+echo "Downloading live-build and simple-cdd configuration files from OSCPRepo"
 echo "=============================================================================="
 echo
-# we need the files in the custom iso image directory
+# we need the files in the custom iso image directory, so ensure we have OSCPRepo
 #if [ -d "/tmp/OSCPRepo" ]; then cd "/tmp/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "/tmp/OSCPRepo"; fi
 
-vargnome="/root/live-build-config/kali-config/variant-gnome/package-lists"
-varlxde="/root/live-build-config/kali-config/variant-lxde/package-lists"
-varxfce="/root/live-build-config/kali-config/variant-xfce/package-lists"
+#TODO currently only one variant at a time...
+# Overwrite default kali package list at kali-config/variant-$variant/package-lists/kali.list.chroot with your desired packages
+# Make sure lxde and xfce have their own package lists to include their specific desktop environments 
+# This script will use the package lists in /tmp/OSCPRepo/Custom Build ISO Image/<variant>/kali.list.chroot
+cp "/tmp/OSCPRepo/Custom Build ISO Image/$variant/kali.list.chroot" "$live_build_config_package_list"
 
-# Overwrite default kali package list at kali-config/variant-default/package-lists/kali.list.chroot
-# with your desired packages. See https://tools.kali.org/kali-metapackages for list of the breakdowns
-# Make sure lxde and xfce have their own package lists to include their specific desktop environments
-cp "/tmp/OSCPRepo/Custom Build ISO Image/gnome/kali.list.chroot" "$vargnome/kali.list.chroot"
-cp "/tmp/OSCPRepo/Custom Build ISO Image/lxde/kali.list.chroot" "$varlxde/kali.list.chroot"
-#cp "/tmp/OSCPRepo/Custom Build ISO Image/xfce/kali.list.chroot" "$varxfce/kali.list.chroot"
-cp "/tmp/OSCPRepo/Custom Build ISO Image/xfce/kali.list.chroot" "$varxfce/kali.list.binary"
+#============TESTING============#
+# Simple-CDD: simple-cdd/profiles/kali-custom and place in kali-custom/kali-custom.packages
+# mkdir -p $simple_cdd_profile_folder
+# cp "/tmp/OSCPRepo/Custom Build ISO Image/$variant/kali.list.chroot" "$simple_cdd_profile_package_list"
+#
+# Add our profile to simple-cdd.conf and auto_select it
+# sed -i 's,#profiles="",'"profiles=\"$simple_cdd_profile_name\""',g' $simple_cdd_conf
+# sed -i 's,#auto_profiles="",'"auto_profiles=\"$simple_cdd_profile_name\""',g' $simple_cdd_conf
+#============TESTING============#
 
 echo
 echo "=============================================================================="
@@ -69,27 +122,49 @@ echo "==========================================================================
 echo
 # check if any packages have been removed from kali-rolling before continuing
 # check in each build list. These can be commented out if not building all three
-#REM=""
-#for i in $(cat "$vargnome/kali.list.chroot" | grep -v "#" | grep -ve "^$"); do res=""; res=$(apt-cache search $i); if [ -z "${res}" ]; then echo "$i has been removed from kali-rolling. Make a hook or download and add the package manually!"; REM="$i $REM"; fi; done
-#if [ ! -z "${REM}" ]; then exit 1; fi;
-
-#REM=""
-#for i in $(cat "$varlxde/kali.list.chroot" | grep -v "#" | grep -ve "^$"); do res=""; res=$(apt-cache search $i); if [ -z "${res}" ]; then echo "$i has been removed from kali-rolling. Make a hook or download and add the package manually!"; REM="$i $REM"; fi; done
-#if [ ! -z "${REM}" ]; then exit 1; fi;
-
 REM=""
-for i in $(cat "$varxfce/kali.list.chroot" | grep -v "#" | grep -ve "^$"); do res=""; res=$(apt-cache search $i); if [ -z "${res}" ]; then echo "$i has been removed from kali-rolling. Make a hook or download and add the package manually!"; REM="$i $REM"; fi; done
+for i in $(cat "/tmp/OSCPRepo/Custom Build ISO Image/$variant/kali.list.chroot" | grep -v "#" | grep -ve "^$"); do res=""; res=$(apt-cache search $i); if [ -z "${res}" ]; then echo "$i has been removed from kali-rolling. Make a hook or download and add the package manually!"; REM="$i $REM"; fi; done
 if [ ! -z "${REM}" ]; then exit 1; fi;
 
 # Download packages to include on locally on the CD if desired
-# Reference: https://www.ostechnix.com/download-packages-dependencies-locally-ubuntu/
+# NOTE: This is REQUIRED in default live-build configurations where the '--installer' flag is 'cdrom' in $lb_opts (auto/config)
+# Reference for downloads: https://www.ostechnix.com/download-packages-dependencies-locally-ubuntu/
 # --reinstall will bypass "already installed" errors, install --download-only 'should' grab dependencies as well
 # fail safe way of downloading everything for local install is to use 'apt-get download':
+# A mirror with apt-move or another utility could also work
 #apt clean
 #for i in $(cat "$vardefault/kali.list.chroot"); do for j in $(apt-cache depends $i | grep -E 'Depends|Recommends|Suggests' | cut -d ':' -f 2,3 | sed -e s/'<'/''/ -e s/'>'/''/); do apt-get download $j 2>/dev/null; done; apt-get download $i 2>/dev/null; done
-
+#
 # Now place the local packages in packages.chroot 
 #cp -R /var/cache/apt/archives/*.deb /root/live-build-config/kali-config/common/packages.chroot/
+
+echo
+echo "=============================================================================="
+echo "Creating custom Tasksel task"
+echo "=============================================================================="
+echo
+
+# Kali wants to use tasksel now, so lets set that up, generate the hook dynamically
+# NOTE: This will only work with '--installer' flag is 'live' in $lb_opts (auto/config)
+# theurbanpenguin.com/creating-tasksel-custom-tasks-ubuntu-16-04/
+tasksel_hook="$live_build_dir/kali-config/common/includes.installer/usr/lib/live-installer.d/0050-custom-tasksel"
+tasksel_file="/target/usr/share/tasksel/descs/kali-custom.desc"
+if [ ! -f "$tasksel_hook" ]; then
+  cat << EOF > $tasksel_hook
+#!/bin/sh
+set -e
+echo 'Task: kali-custom
+Relevance: 1
+Description: Kali-Custom Package List
+ This task installs custom ISO tools as listed in kali.list.chroot
+Packages: list
+EOF
+  for i in $(cat "/tmp/OSCPRepo/Custom Build ISO Image/xfce/kali.list.chroot"); do echo " $i" >> $tasksel_hook; done
+  cat << EOF >> $tasksel_hook
+Section: user' > $tasksel_file
+EOF
+  chmod +x $tasksel_hook
+fi
 
 echo
 echo "=============================================================================="
@@ -97,17 +172,17 @@ echo "Moving notes, scripts, and lists for local inclusion"
 echo "=============================================================================="
 echo
 # Copy OSCP Repo notes into chroot Documents
-direc="/root/live-build-config/kali-config/common/includes.chroot/root/Documents"
+direc="$live_build_dir/kali-config/common/includes.chroot/root/Documents"
 mkdir -p "$direc/OSCPRepo"
 cp -r /tmp/OSCPRepo/CherryTrees "$direc/OSCPRepo/CherryTrees"
 
 # Copy OSCP Repo scripts into chroot scripts
-direc="/root/live-build-config/kali-config/common/includes.chroot/root/scripts"
+direc="$live_build_dir/kali-config/common/includes.chroot/root/scripts"
 mkdir -p $direc
 cp -r /tmp/OSCPRepo/scripts $direc 
 
 # Copy OSCP Repo lists into chroot lists. Zipping first to save space.
-direc="/root/live-build-config/kali-config/common/includes.chroot/usr/share/lists/OSCPRepo"
+direc="$live_build_dir/kali-config/common/includes.chroot/usr/share/lists/OSCPRepo"
 mkdir -p $direc
 tar -zcf /tmp/OSCPRepo_lists.tar.gz /tmp/OSCPRepo/lists/*
 cp /tmp/OSCPRepo_lists.tar.gz $direc
@@ -121,29 +196,42 @@ echo
 
 # Preseed. Some examples can be found: https://gitlab.com/kalilinux/recipes/kali-preseed-examples
 # Modify it as needed and place it in: 
-cp "/tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" /root/live-build-config/kali-config/common/includes.installer/preseed.cfg
+cp "/tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" "$live_build_dir/kali-config/common/includes.installer/preseed.cfg"
+
+# kali documentation places preseed in debian-installer/preseed. Would need to determine the right path for isolinux
+#cp "/tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" "$live_build_dir/kali-config/common/debian-installer/preseed.cfg"
 
 # Force the install to use the custom preseed.cfg 
-cat << EOF > /root/live-build-config/kali-config/common/includes.binary/isolinux/install.cfg
-label install
-    menu label ^Install Automated
-    linux /install/vmlinuz
-    initrd /install/initrd.gz
-    append vga=788 -- quiet file=/cdrom/install/preseed.cfg locale=en_US.UTF-8 keymap=us hostname=kali domain=local.lan
+# this can be placed in /usr/share/live/build/bootloaders/isolinux/install.cfg
+# url=http:// or file=/cdrom/
+# if using includes.binary/isolinux/install.cfg: the preseed path is file=/preseed.cfg
+# if using /usr/share/live/build/bootloaders/isolinux/install.cfg: the preseed path is file=???
+#isolinux_install="/usr/share/live/build/bootloaders/isolinux/install.cfg"
+isolinux_alternate_install="$live_build_dir/kali-config/common/includes.binary/isolinux/install.cfg"
+if ! grep -q "label installauto" $isolinux_alternate_install; then 
+  cat << EOF >> $isolinux_alternate_install
+label installauto
+        menu label ^Install Automated appendpreseed
+        linux /install/vmlinuz
+        initrd /install/initrd.gz
+        append vga=788 @APPEND_INSTALL@ --- quiet file=/preseed.cfg locale=en_US.UTF-8 keymap=us hostname=kali domain=local.lan
 EOF
+fi
 
-echo
-echo "=============================================================================="
-echo "Editing isolinux to auto select our configuration for install by default"
-echo "=============================================================================="
-echo
-# automatically choose our label 'install' that we just created 
-cat << EOF > /usr/share/live/build/bootloaders/isolinux/isolinux.cfg
-include menu.cfg
-default install
-prompt 1
-timeout 5
-EOF
+#echo
+#echo "=============================================================================="
+#echo "Editing isolinux to auto select our configuration for install by default"
+#echo "=============================================================================="
+#echo
+# prompt is 0 or 1
+# timeout in seconds for default choice
+# automatically choose our label 'install' that we just created
+#cat << EOF > /usr/share/live/build/bootloaders/isolinux/isolinux.cfg
+#include menu.cfg
+#default installauto
+#prompt 1
+#timeout 5
+#EOF
 #prompt 0
 #timeout 0
 #EOF
@@ -154,7 +242,7 @@ echo "Copying custom hooks"
 echo "=============================================================================="
 echo
 # copy all hooks and make hooks executable
-direc="/root/live-build-config/kali-config/common/hooks/normal"
+direc="$live_build_dir/kali-config/common/hooks/normal"
 mkdir -p $direc
 rm -rf $direc/*
 rsync -r "/tmp/OSCPRepo/Custom Build ISO Image/hooks/" $direc
@@ -166,19 +254,30 @@ echo "==========================================================================
 echo "Modifying build options in auto/config"
 echo "=============================================================================="
 echo
+# Since they give us lb_opts="", we can add our own options to be appended
 # adding two options, --apt-recommends false and --debian-installer-gui false
-#sed -i 's/--distribution "$dist" \\\n        --debian-installer-distribution "$dist" \\/--distribution "$dist" \\\n        --apt-recommends false \\\n        --debian-installer-gui false \\\n        --debian-installer-distribution "$dist" \\/g' /root/live-build-config/auto/config
+
+# The best way to do an installation from the live disk is to modify --installer to be live instead of cdrom
+# This will copy the entire 'live' environment and just write it to disk
+sed -i 's/--debian-installer cdrom/--debian-installer live/g' "$live_build_dir/auto/config"
+
+# To reduce size (up to 160mb), we can remove memtest
+sed -i 's/--memtest memtest86/--memtest none/g' "$live_build_dir/auto/config"
 
 echo
 echo "=============================================================================="
-echo "Building....this will take some time..."
+echo "Cleaning up and building....this will take some time..."
 echo "=============================================================================="
 echo
+
 # Now you can proceed to build your ISO, this process may take a while depending on your hardware and internet speeds. 
-cd /root/live-build-config
-# Note that variant-default is now xfce and NOT gnome
-#/root/live-build-config/./build.sh --distribution kali-rolling --variant gnome --verbose
-#/root/live-build-config/./build.sh --distribution kali-rolling --variant lxde --verbose
-/root/live-build-config/./build.sh --distribution kali-rolling --variant xfce --verbose
 
-# Once completed, your ISO can be found in the live-build root directory.
+# Just to be safe, we'll clear any files that may have been added/changed between runs. Only keep our changes in kali-config/* and auto/config
+# TODO: NOTE:, between runs, you'll need to copy finished ISOs out of the images dir or they will be deleted!
+cd $live_build_dir
+rm -rf cache/ chroot* live* config/ images/ local/
+
+# Note that variant-default is now xfce and NOT gnome
+$live_build_dir/./build.sh --distribution kali-rolling --variant $variant --verbose
+
+# Once completed, your ISO can be found in the live-build images directory.
