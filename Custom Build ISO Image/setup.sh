@@ -97,7 +97,7 @@ echo "Downloading live-build and simple-cdd configuration files from OSCPRepo"
 echo "=============================================================================="
 echo
 # we need the files in the custom iso image directory, so ensure we have OSCPRepo
-#if [ -d "/tmp/OSCPRepo" ]; then cd "/tmp/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "/tmp/OSCPRepo"; fi
+if [ -d "/tmp/OSCPRepo" ]; then cd "/tmp/OSCPRepo" && git pull; else git clone https://github.com/rewardone/OSCPRepo.git "/tmp/OSCPRepo"; fi
 
 #TODO currently only one variant at a time...
 # Overwrite default kali package list at kali-config/variant-$variant/package-lists/kali.list.chroot with your desired packages
@@ -159,7 +159,7 @@ Description: Kali-Custom Package List
  This task installs custom ISO tools as listed in kali.list.chroot
 Packages: list
 EOF
-  for i in $(cat "/tmp/OSCPRepo/Custom Build ISO Image/xfce/kali.list.chroot"); do echo " $i" >> $tasksel_hook; done
+  for i in $(cat "/tmp/OSCPRepo/Custom Build ISO Image/$variant/kali.list.chroot"); do echo " $i" >> $tasksel_hook; done
   cat << EOF >> $tasksel_hook
 Section: user' > $tasksel_file
 EOF

@@ -26,10 +26,22 @@ Other flags you may look to include in the /live-build-config/auto/config script
 --apt-indices false
 --clean 
 --debian-installer-gui false
---system normal
 --cache-packages true 
+--apt-http-proxy http://your.proxy
+--memtest none
 
 The end product if yo run this script will be a 64-bit kali iso with the ability to install itself completely unattended. The current package list will have around 100 tools, several wordlists, recon scripts, enumeration scripts, the BookmarkList keepnote, and zsh with some plugins. It is a fairly large ISO and as such can only fit either the live or the installer image on one DVD. 
+
+
+Other technical notes for future debugging:
+* It is possible to include a custom tasksel package. This is included in setup.sh now, but not used at the moment during install (live). 
+* --installer live is key to making things easier, but using live-build increases the size of the disk. 
+
+Some great resources:
+http://xpt.sourceforge.net/techdox/nix/live/debian-cd/dcd04-DebianDistributionCD/ar01s02.html
+https://d-i.debian.org/doc/internals/apb.html#idm914
+https://lists.debian.org/debian-live/2011/04/msg00009.html
+
 
 
 Changelog: 
@@ -40,16 +52,16 @@ Changelog:
   atom
   maltego
   maltego-teeth
+  veil
  Added packages:
   openssh-server
  Updated hooks:
   A few hooks have been changed to download .zip instead of cloning repos for size constraints
   cactustorch: added
-  firefox: preferences and extensions added
+  firefox: preferences and extensions added (still needs a hook for user.js)
   keepnote: Removed
   cherrytree: added
   sharpshooter: added
-  veil: setup
   vscode: added
 
 
