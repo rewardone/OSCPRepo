@@ -1,0 +1,8 @@
+#!/bin/bash
+apt-get -y install xorg
+apt-get -y install xrdp xorgxrdp
+apt-get -y install tigervnc-common tigervnc-standalone-server
+
+sed -i"" 's/allowed_users=console/allowed_users=anybody/g' /etc/X11/Xwrapper.config
+
+systemctl enable xrdp

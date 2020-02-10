@@ -211,7 +211,7 @@ isolinux_alternate_install="$live_build_dir/kali-config/common/includes.binary/i
 if ! grep -q "label installauto" $isolinux_alternate_install; then 
   cat << EOF >> $isolinux_alternate_install
 label installauto
-        menu label ^Install Automated appendpreseed
+        menu label ^Install Automated 
         linux /install/vmlinuz
         initrd /install/initrd.gz
         append vga=788 @APPEND_INSTALL@ --- quiet file=/preseed.cfg locale=en_US.UTF-8 keymap=us hostname=kali domain=local.lan
