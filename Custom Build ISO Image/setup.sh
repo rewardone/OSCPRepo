@@ -168,7 +168,7 @@ fi
 
 echo
 echo "=============================================================================="
-echo "Moving notes, scripts, and lists for local inclusion"
+echo "Moving notes, scripts, lists, and binaries for local inclusion"
 echo "=============================================================================="
 echo
 # Copy OSCP Repo notes into chroot Documents
@@ -184,9 +184,14 @@ cp -r /tmp/OSCPRepo/scripts $direc
 # Copy OSCP Repo lists into chroot lists. Zipping first to save space.
 direc="$live_build_dir/kali-config/common/includes.chroot/usr/share/lists/OSCPRepo"
 mkdir -p $direc
-tar -zcf /tmp/OSCPRepo_lists.tar.gz /tmp/OSCPRepo/lists/*
+tar -zcf /tmp/OSCPRepo_lists.tar.gz /tmp/OSCPRepo/lists/* 2>/dev/null
 cp /tmp/OSCPRepo_lists.tar.gz $direc
 rm /tmp/OSCPRepo_lists.tar.gz
+
+# If you've created custom windows executables that you would like to include, place them in tmp/windows-binaries
+direc="$live_build_dir/kali-config/common/includes.chroot/usr/share/windows-binaries"
+mkdir -p $direc
+cp -r /tmp/windows-binaries/* $direc 2>/dev/null
 
 echo
 echo "=============================================================================="
@@ -208,8 +213,18 @@ cp "/tmp/OSCPRepo/Custom Build ISO Image/preseed.cfg" "$live_build_dir/kali-conf
 # if using /usr/share/live/build/bootloaders/isolinux/install.cfg: the preseed path is file=???
 #isolinux_install="/usr/share/live/build/bootloaders/isolinux/install.cfg"
 isolinux_alternate_install="$live_build_dir/kali-config/common/includes.binary/isolinux/install.cfg"
-if ! grep -q "label installauto" $isolinux_alternate_install; then 
-  cat << EOF >> $isolinux_alternate_install
+if [ -f $isolinux_alternate_install ]; then 
+  if ! grep -q "label installauto" $isolinux_alternate_install; then 
+    cat << EOF >> $isolinux_alternate_install
+label installauto
+        menu label ^Install Automated 
+        linux /install/vmlinuz
+        initrd /install/initrd.gz
+        append vga=788 @APPEND_INSTALL@ --- quiet file=/preseed.cfg locale=en_US.UTF-8 keymap=us hostname=kali domain=local.lan
+EOF
+  fi
+  else
+    cat << EOF >> $isolinux_alternate_install
 label installauto
         menu label ^Install Automated 
         linux /install/vmlinuz

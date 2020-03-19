@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+# download zip (smaller), unzip and clean up
+# pip install requirements
+mkdir -p /opt/c2/trevorc2
+wget -O /opt/c2/trevorc2/trevorc2.zip https://github.com/trustedsec/trevorc2/archive/master.zip
+cd /opt/c2/trevorc2 && unzip trevorc2.zip && rm trevorc2.zip
+cp -R /opt/c2/trevorc2/trevorc2-master/* /opt/c2/trevorc2 && rm -rf /opt/c2/trevorc2/trevorc2-master
+
+pip3 install -r /opt/c2/trevorc2/requirements.txt
