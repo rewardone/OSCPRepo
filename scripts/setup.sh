@@ -4,6 +4,10 @@
 # and then reboot!!
 #
 
+# TODO: This will be configuration managed along with the Custom ISO to keep them similar
+# The script will utilize the kali.list.chroot file for package downloads and the .chroot hooks
+# for instalation of other packages/github projects. 
+
 echo "### Downloading things...### \n\n"
 #Packages for crackmapexec: libssl-dev libffi-dev python-dev build-essential
 echo "Install new software: atom build-essential bloodhound crackmapexec exiftool gobuster git nbtscan-unixwiz nfs-common flameshot libffi-dev libldap2-dev libsasl2-dev libssl-dev powershell-preview python-argcomplete python-dev"
