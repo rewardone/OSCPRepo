@@ -20,13 +20,18 @@ chmod +x /tmp/zsh_install.sh
 
 # chsh has problems, so manual edit
 check=$(grep "zsh" /etc/passwd)
-if [ -z "${check}" ]; then echo "Configuring /etc/passwd for /usr/bin/zsh"; sed 's/root:x:0:0:root:\/root:/root:x:0:0:root:\/root:\/usr\/bin\/zsh/g' /etc/passwd > /etc/passwd; else echo "already changed"; fi
+if [ -z "${check}" ]; then 
+  echo "Configuring /etc/passwd for /usr/bin/zsh"; 
+  sed -i 's/root:x:0:0:root:\/root:\/bin\/bash/root:x:0:0:root:\/root:\/usr\/bin\/zsh/g' /etc/passwd; 
+else 
+  echo "already changed"; 
+fi
 
-git clone https://github.com/chrissicool/zsh-256color.git /root/.oh-my-zsh/custom/plugins/zsh-256color
-git clone https://github.com/zsh-users/zsh-autosuggestions.git /root/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-git clone https://github.com/MichaelAquilina/zsh-you-should-use.git /root/.oh-my-zsh/custom/plugins/you-should-use
-git clone --recursive https://github.com/gko/ssh-connect.git /root/.oh-my-zsh/custom/plugins/ssh-connect
+git clone https://github.com/chrissicool/zsh-256color.git /root/.oh-my-zsh/custom/plugins/zsh-256color 2>/dev/null
+git clone https://github.com/zsh-users/zsh-autosuggestions.git /root/.oh-my-zsh/custom/plugins/zsh-autosuggestions 2>/dev/null
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting 2>/dev/null
+git clone https://github.com/MichaelAquilina/zsh-you-should-use.git /root/.oh-my-zsh/custom/plugins/you-should-use 2>/dev/null
+git clone --recursive https://github.com/gko/ssh-connect.git /root/.oh-my-zsh/custom/plugins/ssh-connect 2>/dev/null
 
 mkdir -p /root/.oh-my-zsh/custom/plugins/simple-python-server
 
