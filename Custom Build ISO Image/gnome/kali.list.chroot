@@ -4,7 +4,7 @@ kali-desktop-gnome
 open-vm-tools
 arachni
 arping
-bbqsql
+#bbqsql
 beef-xss
 bettercap
 bettercap-caplets
@@ -45,7 +45,7 @@ ftp
 gcc
 git
 gobuster
-golismero
+#golismero
 hashcat
 hashcat-utils
 hashid
@@ -55,8 +55,13 @@ impacket-scripts
 iodine
 isr-evilgrade
 john
+joomscan
 kerberoast
 laudanum
+libimage-exiftool-perl
+libldap2-dev
+libsasl2-dev
+libssl-dev
 maltego
 masscan
 medusa
@@ -93,6 +98,7 @@ proxychains
 proxytunnel
 ptunnel
 python2-minimal
+#python-argcomplete
 python-ldap3
 python-pip
 python-setuptools
@@ -134,7 +140,7 @@ unicorn-magic
 vim-gtk3
 wafw00f
 wce
-webhandler
+#webhandler
 webshells
 websploit
 weevely
@@ -142,6 +148,7 @@ windows-binaries
 wireshark
 wfuzz
 whatweb
+wpscan
 xclip
 xinit
 xorg

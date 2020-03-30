@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Need to make sure that firefox is installed first
-apt-get install firefox-esr
+apt-get -y install firefox-esr
 
 # A big source of this document is from: https://support.mozilla.org/en-US/kb/how-stop-firefox-making-automatic-connections
 # Some configuration options and extensions for firefox 

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+mkdir -p /opt/getsploit 2>/dev/null
+wget https://github.com/vulnersCom/getsploit/archive/master.zip -O /tmp/getsploit.zip
+
+last=$(pwd)
+cd /tmp && unzip getsploit.zip && rm getsploit.zip
+cd /opt/getsploit && mv /tmp/getsploit-master/* -t /opt/getsploit && chmod +x setup.py && python3 setup.py install
+cd "$last"

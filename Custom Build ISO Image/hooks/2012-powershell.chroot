@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # dependencies
-apt-get install -y curl gnupg apt-transport-https
+apt-get -y install curl gnupg apt-transport-https
 
 # let's get powershell set up via microsoft's instructions
 # docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7
@@ -9,8 +9,8 @@ apt-get install -y curl gnupg apt-transport-https
 
 lastpwd=$(pwd)
 cd /tmp
-sudo sc -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-buster-prod buster main" > /etc/apt/sources.list.d/microsoft.list'
+sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-buster-prod buster main" > /etc/apt/sources.list.d/microsoft.list'
 apt-get update
-apt-get install -y powershell
+apt-get -y install powershell
 
 cd $lastpwd

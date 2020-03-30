@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p /opt/web/CMSScanners/droopescan 2>/dev/null
+wget https://github.com/droope/droopescan/archive/master.zip /opt/web/CMSScanners/droopescan/droopescan.zip

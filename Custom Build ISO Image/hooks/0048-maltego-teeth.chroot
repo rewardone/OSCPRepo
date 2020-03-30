@@ -1,12 +1,14 @@
 #!/bin/bash
 
+# Teeth using Python2 which is deprecated
+
 # Estimated size of clone: 60mb
 # Estimated size of zip: 10mb
 
-mkdir -p /opt/teeth
-#git clone https://gitlab.com/kalilinux/packages/maltego-teeth.git /opt/teeth
-wget https://gitlab.com/kalilinux/packages/maltego-teeth/-/archive/kali/master/maltego-teeth-kali-master.zip -O /opt/teeth/maltego-teeth.zip
+#mkdir -p /opt/teeth
+##git clone https://gitlab.com/kalilinux/packages/maltego-teeth.git /opt/teeth
+#wget https://gitlab.com/kalilinux/packages/maltego-teeth/-/archive/kali/master/maltego-teeth-kali-master.zip -O /opt/teeth/maltego-teeth.zip
 
 # dependencies for teeth. some are no longer in kali repo
-sudo apt-get -y install python-mechanize python-levenshtein python-adns python-msgpack python-bs4
-sudo pip install metaconfig easygui
+#sudo apt-get -y install python-mechanize python-levenshtein python-adns python-msgpack python-bs4
+#sudo pip install metaconfig easygui

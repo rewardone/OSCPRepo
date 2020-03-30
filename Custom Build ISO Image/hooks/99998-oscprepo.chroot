@@ -1,0 +1,34 @@
+#!/bin/bash
+
+wget https://github.com/rewardone/OSCPRepo/archive/master.zip -O /tmp/OSCPRepo.zip
+cd /tmp && unzip /tmp/OSCPRepo.zip && rm /tmp/OSCPRepo.zip
+
+mkdir -p /root/Documents/OSCPRepo
+
+# Copy OSCP Repo notes into Documents
+cp -r /tmp/OSCPRepo-master/CherryTrees /root/Documents
+
+# Copy OSCP Repo scripts into scripts
+cp -r /tmp/OSCPRepo-master/scripts /root/
+
+# Copy OSCP Repo lists into chroot lists. Zipping first to save space.
+tar -zcf /tmp/OSCPRepo_lists.tar.gz /tmp/OSCPRepo-master/lists/* 2>/dev/null
+cp /tmp/OSCPRepo_lists.tar.gz /root/
+rm /tmp/OSCPRepo_lists.tar.gz
+
+# Copy enumerators into local info enum
+mkdir -p "/root/Local_Info_Enum/Linux" 2>/dev/null
+mkdir -p "/root/Local_Info_Enum/Windows" 2>/dev/null
+cp -r "/tmp/OSCPRepo-master/Local Info Enum/Linux/*" /root/Local_Info_Enum/Linux
+cp -r "/tmp/OSCPRepo-master/Local Info Enum/Windows/*" /root/Local_Info_Enum/Windows
+
+# Copy priv checkers into priv checkers
+mkdir -p "/root/Priv_Esc_Checks/Linux" 2>/dev/null
+mkdir -p "/root/Priv_Esc_Checks/Windows" 2>/dev/null
+cp -r "/tmp/OSCPRepo-master/Priv Esc Checks/Linux/*" /root/Priv_Esc_Checks/Linux
+cp -r "/tmp/OSCPRepo-master/Priv Esc Checks/Windows/*" /root/Priv_Esc_Checks/Windows
+
+
+
+# Cleanup
+rm -rf /tmp/OSCPRepo-master

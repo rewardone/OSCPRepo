@@ -171,22 +171,23 @@ echo "==========================================================================
 echo "Moving notes, scripts, lists, and binaries for local inclusion"
 echo "=============================================================================="
 echo
-# Copy OSCP Repo notes into chroot Documents
-direc="$live_build_dir/kali-config/common/includes.chroot/root/Documents"
-mkdir -p "$direc/OSCPRepo"
-cp -r /tmp/OSCPRepo/CherryTrees "$direc/OSCPRepo/CherryTrees"
+# This should be handled by 99998-oscprepo.chroot hook
+# # Copy OSCP Repo notes into chroot Documents
+# direc="$live_build_dir/kali-config/common/includes.chroot/root/Documents"
+# mkdir -p "$direc/OSCPRepo"
+# cp -r /tmp/OSCPRepo/CherryTrees "$direc/OSCPRepo/CherryTrees"
 
-# Copy OSCP Repo scripts into chroot scripts
-direc="$live_build_dir/kali-config/common/includes.chroot/root/scripts"
-mkdir -p $direc
-cp -r /tmp/OSCPRepo/scripts $direc 
+# # Copy OSCP Repo scripts into chroot scripts
+# direc="$live_build_dir/kali-config/common/includes.chroot/root/scripts"
+# mkdir -p $direc
+# cp -r /tmp/OSCPRepo/scripts $direc 
 
-# Copy OSCP Repo lists into chroot lists. Zipping first to save space.
-direc="$live_build_dir/kali-config/common/includes.chroot/usr/share/lists/OSCPRepo"
-mkdir -p $direc
-tar -zcf /tmp/OSCPRepo_lists.tar.gz /tmp/OSCPRepo/lists/* 2>/dev/null
-cp /tmp/OSCPRepo_lists.tar.gz $direc
-rm /tmp/OSCPRepo_lists.tar.gz
+# # Copy OSCP Repo lists into chroot lists. Zipping first to save space.
+# direc="$live_build_dir/kali-config/common/includes.chroot/usr/share/lists/OSCPRepo"
+# mkdir -p $direc
+# tar -zcf /tmp/OSCPRepo_lists.tar.gz /tmp/OSCPRepo/lists/* 2>/dev/null
+# cp /tmp/OSCPRepo_lists.tar.gz $direc
+# rm /tmp/OSCPRepo_lists.tar.gz
 
 # If you've created custom windows executables that you would like to include, place them in tmp/windows-binaries
 direc="$live_build_dir/kali-config/common/includes.chroot/usr/share/windows-binaries"
