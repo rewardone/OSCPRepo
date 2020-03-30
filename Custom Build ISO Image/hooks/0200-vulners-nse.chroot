@@ -5,7 +5,7 @@
 #copy the provided txt file with the default paths to <nmap_dir>/nselib/data/
 
 #/usr/share/nmap/scripts
-git clone https://github.com/vulnersCom/nmap-vulners.git
-cp nmap-vulners/http-vulners-regex.nse /usr/share/nmap/scripts/
-cp nmap-vulners/http-vulners-regex.json /usr/share/nmap/nselib/data/
-cp nmap-vulners/http-vulners-paths.txt /usr/share/nmap/nselib/data/
+git clone https://github.com/vulnersCom/nmap-vulners.git /tmp/nmap-vulners
+cp /tmp/nmap-vulners/http-vulners-regex.nse /usr/share/nmap/scripts/
+cp /tmp/nmap-vulners/http-vulners-regex.json /usr/share/nmap/nselib/data/
+cp /tmp/nmap-vulners/http-vulners-paths.txt /usr/share/nmap/nselib/data/
