@@ -18,15 +18,15 @@ BookmarkList.ctb
 
 List after list of compiled bookmarks, github pages, blogs, OSCP reviews, tools, and a lot more compiled into an organized list of bookmarks and references I could go back to (offline). Sources for all resources are still there so you can read the material directly if you desire. This is a work in progress and there are sections I have not read through yet and made child-nodes for yet, but it is still incredibly extensive with more work being done (almost) every day (look at the commit history!)
 
-![Parent Nodes](https://github.com/rewardone/OSCPRepo/blob/master/KeepNotes/BookmarkList.PNG)
+![Parent Nodes](https://github.com/rewardone/OSCPRepo/blob/master/CherryTrees/BookmarkList.PNG)
 
 Recon_Scan.py
 
-A popular script in python 2. It's goal is to run nmap, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). Partial Sparta integration is complete, and setup.sh will move those files for you. Also check out Vanquish. 
+A popular script in python 3 (python 2 for archive purposes). It's goal is to run nmap, identify popular services, pass that discovery on to other scripts for detailed enumeration etc, and then perform a full nmap scan (in case anything was missed). Partial Sparta integration is complete, and setup.sh will move those files for you. Also check out Vanquish. 
 
 From the CLI, reconscan gets the job done with a single ./reconscan.py. It is designed to run multithreaded against multiple targets simultaneously if network bandwidth allows. You can adjust the min-rate in the scripts.
 
-There is now a setup.sh script in /scripts folder that will clone some required repositories, move folders into place, and should make reconscan ready to go. Recon_Scan will be ported to python 3 and updated in time.
+There is now a setup.sh script in /scripts folder that will clone some required repositories, move folders into place, and should make reconscan ready to go. Recon_Scan has been ported to python 3, but may be rough around the edges. Testing help appreciated.
 
 
 # Other Stuff
@@ -38,6 +38,8 @@ GetGitHubStars
 A quick powershell script that can grab a user's starred repositories and output them to a csv. I wanted to combine them with my own personal comments for a list of all my stars for easier sorting, tagging, etc. Edit commentsToJSON and they will be added to output.csv. Additionally, the script can go and get trending repositories. TODO: add function to star repos in the script; add function to 'blacklist' popular repositories that you no longer want to see.
 
 # Latest Changes
+2020 Update: OSCP is now in version 2. I did not buy access to the new material yet, so updates for version 2 are appreciated. I imagine most of the needed material is still included, but could be more streamlined.
+
 26 Dec 18: OSCP achieved. This marks a milestone in the repo that all information needed to pass the OSCP is included here in the relevant sections. Although information cannot replace hands-on practice, if you need a place to start diving into a particular piece deeper, it's here or linked here. Reconscan hasn't necessarily 'expanded' as much as it can, but it's been crucial in the labs, exams, hackthebox, and ctfs. Even if you don't want to use the script, look at the modules for commands you should include in your methodology. 
 
 22 Aug 18: BlackHat and Defcon were a blast. There was a lot of bugfixing going on. Scripts are becoming more modular and nicer to work with (say hello to nfs and ldap recon). dirbustEVERYTHING has received a lot of attention including the integration of wfuzz and parameth. You can check which nmap scripts are run and which script they are in with the 'nmap to recon scan mapping' sheet (partially complete because I overwrote the master, but I will finish it again later). Some lists/payloads have been tweaked. 
